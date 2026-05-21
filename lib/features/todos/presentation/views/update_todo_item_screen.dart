@@ -357,6 +357,7 @@ class _UpdateTodoItemScreenState extends State<UpdateTodoItemScreen> {
                 if (should && context.mounted) Navigator.of(context).pop();
               },
               child: SheetContentScaffold(
+                extendBodyBehindBottomBar: false,
                 topBar: AppBar(
                   title: const Text("Edit task"),
                   actions: [
@@ -430,6 +431,7 @@ class _UpdateTodoItemScreenState extends State<UpdateTodoItemScreen> {
                               }
                               return null;
                             },
+                            autofocus: true,
                             maxLength: 100,
                             onChanged: (_) => setState(() {}),
                             decoration: InputDecoration(
@@ -502,20 +504,19 @@ class _UpdateTodoItemScreenState extends State<UpdateTodoItemScreen> {
                             ),
                             const SizedBox(height: 8),
                           ],
-                          const Divider(),
+                          TodoItemBottomBar(
+                            dueDate: _dueDate,
+                            priority: _priority,
+                            tagCount: _selectedTags.length,
+                            onTimerTap: _pickDueDate,
+                            onTagTap: _showTagsSheet,
+                            onPriorityTap: _showPrioritySheet,
+                            onMoreTap: _showMoreSheet,
+                          ),
                         ],
                       ),
                     ),
                   ),
-                ),
-                bottomBar: TodoItemBottomBar(
-                  dueDate: _dueDate,
-                  priority: _priority,
-                  tagCount: _selectedTags.length,
-                  onTimerTap: _pickDueDate,
-                  onTagTap: _showTagsSheet,
-                  onPriorityTap: _showPrioritySheet,
-                  onMoreTap: _showMoreSheet,
                 ),
               ),
             );
