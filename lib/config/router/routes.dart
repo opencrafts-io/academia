@@ -245,8 +245,17 @@ class CompleteProfileRoute extends GoRouteData with $CompleteProfileRoute {
           path: "organizer-dashboard",
           routes: [
             TypedGoRoute<AllAttendeesRoute>(path: "all-attendees"),
-            TypedGoRoute<AllScannersRoute>(path: "all-scanners"),
-            TypedGoRoute<AddEventScannerRoute>(path: "add-event-scanner"),
+            TypedGoRoute<AllScannersRoute>(
+              path: "all-scanners",
+              routes: [
+                TypedGoRoute<AddEventScannerRoute>(path: "add-event-scanner"),
+              ],
+            ),
+            TypedGoRoute<AllEventTicketsRoute>(
+              path: "all-event-tickets",
+              routes: [TypedGoRoute<TicketLinksRoute>(path: "ticket-links")],
+            ),
+            TypedGoRoute<EventLinksRoute>(path: "event-links"),
           ],
         ),
       ],
@@ -459,6 +468,37 @@ class AllScannersRoute extends GoRouteData with $AllScannersRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return AllScannersScreen(eventId: eventId);
+  }
+}
+
+class AllEventTicketsRoute extends GoRouteData with $AllEventTicketsRoute {
+  final String eventId;
+
+  const AllEventTicketsRoute({required this.eventId});
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return AllEventTicketsScreen(eventId: eventId);
+  }
+}
+
+class TicketLinksRoute extends GoRouteData with $TicketLinksRoute {
+  final String eventId;
+  final String ticketId;
+
+  const TicketLinksRoute({required this.eventId, required this.ticketId});
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return TicketLinksScreen(ticketId: ticketId);
+  }
+}
+
+class EventLinksRoute extends GoRouteData with $EventLinksRoute {
+  final String eventId;
+
+  const EventLinksRoute({required this.eventId});
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return EventLinksScreen(eventId: eventId);
   }
 }
 

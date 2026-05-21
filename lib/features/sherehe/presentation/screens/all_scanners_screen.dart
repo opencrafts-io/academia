@@ -1,3 +1,4 @@
+import 'package:academia/config/router/routes.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';
@@ -19,9 +20,9 @@ class _AllScannersScreenState extends State<AllScannersScreen> {
   @override
   void initState() {
     super.initState();
-    // context.read<AllScannersBloc>().add(
-    //   FetchAllScanners(eventId: widget.eventId, page: _currentPage, limit: 20),
-    // );
+    context.read<AllScannersBloc>().add(
+      FetchAllScanners(eventId: widget.eventId, page: _currentPage, limit: 20),
+    );
     _scrollController.addListener(_onScroll);
   }
 
@@ -54,7 +55,32 @@ class _AllScannersScreenState extends State<AllScannersScreen> {
       body: BlocListener<ScannerActionsBloc, ScannerActionsState>(
         listener: (context, state) {
           if (state is DeleteScannerSuccess) {
-            Navigator.pop(context); // close screen
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                behavior: SnackBarBehavior.floating,
+                dismissDirection: DismissDirection.horizontal,
+                backgroundColor: Theme.of(context).colorScheme.primary,
+              ),
+            );
+            // Refresh scanners list
+            _currentPage = 1;
+            context.read<AllScannersBloc>().add(
+              FetchAllScanners(
+                eventId: widget.eventId,
+                page: _currentPage,
+                limit: 20,
+              ),
+            );
+          } else if (state is DeleteScannerError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                behavior: SnackBarBehavior.floating,
+                dismissDirection: DismissDirection.horizontal,
+                backgroundColor: Theme.of(context).colorScheme.error,
+              ),
+            );
           }
         },
         child: BlocBuilder<AllScannersBloc, AllScannersState>(
@@ -227,6 +253,12 @@ class _AllScannersScreenState extends State<AllScannersScreen> {
             );
           },
         ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () =>
+            AddEventScannerRoute(eventId: widget.eventId).push(context),
+        label: const Text("Add Scanner"),
+        icon: const Icon(Icons.add),
       ),
     );
   }
