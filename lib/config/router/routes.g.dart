@@ -1080,6 +1080,8 @@ mixin $QrCodeRoute on GoRouteData {
     attendeeId: state.pathParameters['attendeeId']!,
     ticketName: state.uri.queryParameters['ticket-name']!,
     quantity: int.parse(state.uri.queryParameters['quantity']!),
+    ticketStartDate: state.uri.queryParameters['ticket-start-date'],
+    ticketEndDate: state.uri.queryParameters['ticket-end-date'],
   );
 
   QrCodeRoute get _self => this as QrCodeRoute;
@@ -1090,6 +1092,9 @@ mixin $QrCodeRoute on GoRouteData {
     queryParams: {
       'ticket-name': _self.ticketName,
       'quantity': _self.quantity.toString(),
+      if (_self.ticketStartDate != null)
+        'ticket-start-date': _self.ticketStartDate,
+      if (_self.ticketEndDate != null) 'ticket-end-date': _self.ticketEndDate,
     },
   );
 

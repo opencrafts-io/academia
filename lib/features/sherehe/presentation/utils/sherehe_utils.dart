@@ -47,6 +47,21 @@ class ShereheUtils {
     }
   }
 
+  static String calculateDaysBetweenForTicket({
+    String? startDate,
+    String? endDate,
+  }) {
+    try {
+      if (startDate == null || endDate == null) return 'TBC';
+      final start = DateTime.parse(startDate).toLocal();
+      final end = DateTime.parse(endDate).toLocal();
+      final difference = end.difference(start).inDays + 1;
+      return '$difference Day Pass';
+    } catch (_) {
+      return 'TBC';
+    }
+  }
+
   static int getCrossAxisCount(BuildContext context) {
     if (ResponsiveBreakPoints.isMobile(context)) return 1;
     if (ResponsiveBreakPoints.isTablet(context)) return 2;

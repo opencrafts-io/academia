@@ -153,6 +153,8 @@ class _EventTicketsPageState extends State<EventTicketsPage> {
                           quantity: item.ticketQuantity,
                           event: widget.event,
                           attendeeId: item.id,
+                          ticketStartDate: item.ticket?.startDate,
+                          ticketEndDate: item.ticket?.endDate,
                           mode: TicketStubMode.eventTicketPurchased,
                         );
                       },
@@ -173,6 +175,8 @@ class _EventTicketsPageState extends State<EventTicketsPage> {
                         event: widget.event,
                         attendeeId: item.id,
                         mode: TicketStubMode.eventTicketPurchased,
+                        ticketStartDate: item.ticket?.startDate,
+                        ticketEndDate: item.ticket?.endDate,
                       );
                     },
                   ),
@@ -199,6 +203,8 @@ class _EventTicketsPageState extends State<EventTicketsPage> {
                         event: widget.event,
                         attendeeId: item.id,
                         mode: TicketStubMode.eventTicketPurchased,
+                        ticketStartDate: item.ticket?.startDate,
+                        ticketEndDate: item.ticket?.endDate,
                       );
                     },
                   ),

@@ -10,6 +10,8 @@ class QrCodeScreen extends StatefulWidget {
   final String attendeeId;
   final Event event;
   final String ticketName;
+  final String? ticketStartDate;
+  final String? ticketEndDate;
   final int quantity;
 
   const QrCodeScreen({
@@ -18,6 +20,8 @@ class QrCodeScreen extends StatefulWidget {
     required this.attendeeId,
     required this.event,
     required this.ticketName,
+    this.ticketStartDate,
+    this.ticketEndDate,
     required this.quantity,
   });
 
@@ -184,10 +188,17 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                             ] else ...[
                               _TicketInfoWidget(
                                 label1: 'ACCESS',
-                                value1: '2 Day Pass',
+                                value1:
+                                    ShereheUtils.calculateDaysBetweenForTicket(
+                                      startDate: widget.ticketStartDate,
+                                      endDate: widget.ticketEndDate,
+                                    ),
                                 label2: 'DATES',
                                 value2:
-                                    '${ShereheUtils.formatShortMonthDay(widget.event.startDate)} - ${ShereheUtils.formatShortMonthDay(widget.event.endDate)}',
+                                    (widget.ticketStartDate != null &&
+                                        widget.ticketEndDate != null)
+                                    ? '${ShereheUtils.formatShortMonthDay(widget.ticketStartDate!)} - ${ShereheUtils.formatShortMonthDay(widget.ticketEndDate!)}'
+                                    : 'TBC',
                               ),
                             ],
                             const SizedBox(height: 16),

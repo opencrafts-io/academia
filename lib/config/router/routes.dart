@@ -547,12 +547,16 @@ class QrCodeRoute extends GoRouteData with $QrCodeRoute {
   final String attendeeId;
   final String ticketName;
   final int quantity;
+  final String? ticketStartDate;
+  final String? ticketEndDate;
 
   const QrCodeRoute({
     required this.eventId,
     required this.attendeeId,
     required this.ticketName,
     required this.quantity,
+    this.ticketStartDate,
+    this.ticketEndDate,
   });
 
   @override
@@ -565,6 +569,8 @@ class QrCodeRoute extends GoRouteData with $QrCodeRoute {
       ticketName: ticketName,
       quantity: quantity,
       event: event,
+      ticketStartDate: ticketStartDate,
+      ticketEndDate: ticketEndDate,
     );
   }
 }
