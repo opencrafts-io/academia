@@ -19,6 +19,8 @@ Future<File> generateTicketPdf({
   required String attendeeId,
   required String ticketName,
   required int quantity,
+  String? ticketStartDate,
+  String? ticketEndDate,
 }) async {
   final pdf = pw.Document();
 
@@ -92,13 +94,9 @@ Future<File> generateTicketPdf({
                       if (!isMultiEvent) ...[
                         _PdfTicketInfo(
                           label1: 'DATE',
-                          value1: ShereheUtils.formatDate(
-                            event.startDate,
-                          ),
+                          value1: ShereheUtils.formatDate(event.startDate),
                           label2: 'TIME',
-                          value2: ShereheUtils.formatTime(
-                            event.startDate,
-                          ),
+                          value2: ShereheUtils.formatTime(event.startDate),
                         ),
                         pw.SizedBox(height: 15),
                         _PdfTicketInfo(
@@ -110,10 +108,15 @@ Future<File> generateTicketPdf({
                       ] else ...[
                         _PdfTicketInfo(
                           label1: 'ACCESS',
-                          value1: '2 Day Pass',
+                          value1: ShereheUtils.calculateDaysBetweenForTicket(
+                            startDate: ticketStartDate,
+                            endDate: ticketEndDate,
+                          ),
                           label2: 'DATES',
                           value2:
-                              '${ShereheUtils.formatShortMonthDay(event.startDate)} - ${ShereheUtils.formatShortMonthDay(event.endDate)}',
+                              (ticketStartDate != null && ticketEndDate != null)
+                              ? '${ShereheUtils.formatShortMonthDay(ticketStartDate)} - ${ShereheUtils.formatShortMonthDay(ticketEndDate)}'
+                              : 'TBC',
                         ),
                         pw.SizedBox(height: 15),
                         _PdfTicketInfo(
@@ -269,9 +272,7 @@ Future<File> generateTicketPdf({
 
   // Save to **temporary directory**
   final tempDir = await getTemporaryDirectory();
-  final file = File(
-    '${tempDir.path}/ticket_${ticketName}_$eventId.pdf',
-  );
+  final file = File('${tempDir.path}/ticket_${ticketName}_$eventId.pdf');
   await file.writeAsBytes(await pdf.save());
   return file;
 }

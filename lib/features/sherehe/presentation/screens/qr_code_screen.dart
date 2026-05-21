@@ -49,6 +49,8 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
         attendeeId: widget.attendeeId,
         ticketName: widget.ticketName,
         quantity: widget.quantity,
+        ticketStartDate: widget.ticketStartDate,
+        ticketEndDate: widget.ticketEndDate,
       );
 
       if (!mounted) return;
