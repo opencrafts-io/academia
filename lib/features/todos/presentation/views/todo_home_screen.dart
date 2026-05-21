@@ -25,6 +25,27 @@ class _TodoHomeScreenState extends State<TodoHomeScreen>
     super.dispose();
   }
 
+  Future<void> _showHelpDialog() {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog.adaptive(
+        title: const Text("Stay organized"),
+        content: const Text(
+          "Create todos for assignments, exams, and deadlines. "
+          "We'll automatically notify you minutes before each task is due "
+          "and remind you when it's time to get started.",
+          textAlign: TextAlign.justify,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Got it"),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<TodoListCubit, TodoListState>(
@@ -79,6 +100,10 @@ class _TodoHomeScreenState extends State<TodoHomeScreen>
                       },
                     ),
                     actions: [
+                      IconButton(
+                        onPressed: _showHelpDialog,
+                        icon: Icon(Icons.lightbulb_outline),
+                      ),
                       IconButton(
                         onPressed: () {
                           ProfileRoute().push(context);
