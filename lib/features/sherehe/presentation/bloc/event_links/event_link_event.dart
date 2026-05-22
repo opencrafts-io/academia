@@ -10,9 +10,7 @@ abstract class EventLinkEvent extends Equatable {
 class GetEventInvites extends EventLinkEvent {
   final String eventId;
 
-  const GetEventInvites({
-    required this.eventId,
-  });
+  const GetEventInvites({required this.eventId});
 
   @override
   List<Object?> get props => [eventId];
@@ -30,39 +28,32 @@ class CreateEventInvite extends EventLinkEvent {
   });
 
   @override
-  List<Object?> get props => [
-        eventId,
-        maxUses,
-        expiresAt,
-      ];
+  List<Object?> get props => [eventId, maxUses, expiresAt];
 }
 
 class UpdateEventInvite extends EventLinkEvent {
+  final String eventId;
   final String inviteId;
   final int? maxUses;
   final String? expiresAt;
 
   const UpdateEventInvite({
+    required this.eventId,
     required this.inviteId,
     this.maxUses,
     this.expiresAt,
   });
 
   @override
-  List<Object?> get props => [
-        inviteId,
-        maxUses,
-        expiresAt,
-      ];
+  List<Object?> get props => [eventId, inviteId, maxUses, expiresAt];
 }
 
 class DeleteEventInvite extends EventLinkEvent {
+  final String eventId;
   final String inviteId;
 
-  const DeleteEventInvite({
-    required this.inviteId,
-  });
+  const DeleteEventInvite({required this.inviteId, required this.eventId});
 
   @override
-  List<Object?> get props => [inviteId];
+  List<Object?> get props => [inviteId, eventId];
 }

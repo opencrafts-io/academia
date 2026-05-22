@@ -73,6 +73,8 @@ class EventLinkBloc extends Bloc<EventLinkEvent, EventLinkState> {
       (failure) => emit(UpdateEventInviteErrorState(message: failure.message)),
       (invite) => emit(UpdateEventInviteSuccess(invite: invite)),
     );
+
+    add(GetEventInvites(eventId: event.eventId));
   }
 
   Future<void> _onDeleteEventInvite(
@@ -87,5 +89,7 @@ class EventLinkBloc extends Bloc<EventLinkEvent, EventLinkState> {
       (failure) => emit(DeleteEventInviteErrorState(message: failure.message)),
       (message) => emit(DeleteEventInviteSuccess(message: message)),
     );
+
+    add(GetEventInvites(eventId: event.eventId));
   }
 }

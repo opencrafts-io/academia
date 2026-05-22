@@ -11,12 +11,16 @@ class PrivateLinkWidget extends StatefulWidget {
   final int index;
   final LinkType linkType;
   final Invite invite;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
 
   const PrivateLinkWidget({
     super.key,
     required this.index,
     required this.linkType,
     required this.invite,
+    this.onEdit,
+    this.onDelete,
   });
 
   @override
@@ -99,11 +103,11 @@ class _PrivateLinkWidgetState extends State<PrivateLinkWidget> {
                 Row(
                   children: [
                     IconButton(
-                      onPressed: () {},
+                      onPressed: widget.onEdit,
                       icon: const Icon(Icons.edit_outlined),
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: widget.onDelete,
                       icon: const Icon(Icons.delete_outline),
                     ),
                   ],

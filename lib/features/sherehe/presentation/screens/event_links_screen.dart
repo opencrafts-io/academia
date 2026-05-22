@@ -43,6 +43,42 @@ class _EventLinksScreenState extends State<EventLinksScreen> {
               backgroundColor: Theme.of(context).colorScheme.error,
             ),
           );
+        } else if (state is UpdateEventInviteSuccess) {
+          Navigator.of(context).pop();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Ticket link updated successfully."),
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Theme.of(context).colorScheme.primary,
+            ),
+          );
+        } else if (state is UpdateEventInviteErrorState) {
+          Navigator.of(context).pop();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+          );
+        } else if (state is DeleteEventInviteSuccess) {
+          Navigator.of(context).pop();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Theme.of(context).colorScheme.primary,
+            ),
+          );
+        } else if (state is DeleteEventInviteErrorState) {
+          Navigator.of(context).pop();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+          );
         }
       },
       child: Scaffold(
@@ -109,7 +145,7 @@ class _EventLinksScreenState extends State<EventLinksScreen> {
                       children: [
                         SliverList.separated(
                           itemCount: state.invites.length,
-                          separatorBuilder: (_, __) =>
+                          separatorBuilder: (_, _) =>
                               const SizedBox(height: 12),
                           itemBuilder: (context, index) {
                             final invite = state.invites[index];
@@ -118,6 +154,18 @@ class _EventLinksScreenState extends State<EventLinksScreen> {
                               index: index,
                               invite: invite,
                               linkType: LinkType.event,
+                              onEdit: () => showEditLinkBottomSheet(
+                                context: context,
+                                eventId: widget.eventId,
+                                inviteId: invite.id,
+                                maxUses: invite.maxUses,
+                                expiresAt: invite.expiresAt,
+                              ),
+                              onDelete: () => showDeleteInviteDialog(
+                                context: context,
+                                eventId: widget.eventId,
+                                inviteId: invite.id,
+                              ),
                             );
                           },
                         ),

@@ -1218,7 +1218,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
       );
 
       if (response.statusCode == 200) {
-        return right(InviteData.fromJson(response.data['message']));
+        return right(InviteData.fromJson(response.data));
       } else {
         return left(
           ServerFailure(
