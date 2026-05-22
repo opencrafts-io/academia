@@ -9340,6 +9340,516 @@ class GroupTableCompanion extends UpdateCompanion<GroupEntity> {
   }
 }
 
+class $InviteTableTable extends InviteTable
+    with TableInfo<$InviteTableTable, InviteData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $InviteTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _eventIdMeta = const VerificationMeta(
+    'eventId',
+  );
+  @override
+  late final GeneratedColumn<String> eventId = GeneratedColumn<String>(
+    'event_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _tokenMeta = const VerificationMeta('token');
+  @override
+  late final GeneratedColumn<String> token = GeneratedColumn<String>(
+    'token',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _expiresAtMeta = const VerificationMeta(
+    'expiresAt',
+  );
+  @override
+  late final GeneratedColumn<String> expiresAt = GeneratedColumn<String>(
+    'expires_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _maxUsesMeta = const VerificationMeta(
+    'maxUses',
+  );
+  @override
+  late final GeneratedColumn<int> maxUses = GeneratedColumn<int>(
+    'max_uses',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _usedCountMeta = const VerificationMeta(
+    'usedCount',
+  );
+  @override
+  late final GeneratedColumn<int> usedCount = GeneratedColumn<int>(
+    'used_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<String> createdAt = GeneratedColumn<String>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<String> updatedAt = GeneratedColumn<String>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    eventId,
+    token,
+    expiresAt,
+    maxUses,
+    usedCount,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'invite_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<InviteData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('event_id')) {
+      context.handle(
+        _eventIdMeta,
+        eventId.isAcceptableOrUnknown(data['event_id']!, _eventIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_eventIdMeta);
+    }
+    if (data.containsKey('token')) {
+      context.handle(
+        _tokenMeta,
+        token.isAcceptableOrUnknown(data['token']!, _tokenMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_tokenMeta);
+    }
+    if (data.containsKey('expires_at')) {
+      context.handle(
+        _expiresAtMeta,
+        expiresAt.isAcceptableOrUnknown(data['expires_at']!, _expiresAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_expiresAtMeta);
+    }
+    if (data.containsKey('max_uses')) {
+      context.handle(
+        _maxUsesMeta,
+        maxUses.isAcceptableOrUnknown(data['max_uses']!, _maxUsesMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_maxUsesMeta);
+    }
+    if (data.containsKey('used_count')) {
+      context.handle(
+        _usedCountMeta,
+        usedCount.isAcceptableOrUnknown(data['used_count']!, _usedCountMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_usedCountMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => const {};
+  @override
+  InviteData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return InviteData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      eventId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}event_id'],
+      )!,
+      token: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}token'],
+      )!,
+      expiresAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}expires_at'],
+      )!,
+      maxUses: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}max_uses'],
+      )!,
+      usedCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}used_count'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $InviteTableTable createAlias(String alias) {
+    return $InviteTableTable(attachedDatabase, alias);
+  }
+}
+
+class InviteData extends DataClass implements Insertable<InviteData> {
+  final String id;
+  final String eventId;
+  final String token;
+  final String expiresAt;
+  final int maxUses;
+  final int usedCount;
+  final String createdAt;
+  final String updatedAt;
+  const InviteData({
+    required this.id,
+    required this.eventId,
+    required this.token,
+    required this.expiresAt,
+    required this.maxUses,
+    required this.usedCount,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['event_id'] = Variable<String>(eventId);
+    map['token'] = Variable<String>(token);
+    map['expires_at'] = Variable<String>(expiresAt);
+    map['max_uses'] = Variable<int>(maxUses);
+    map['used_count'] = Variable<int>(usedCount);
+    map['created_at'] = Variable<String>(createdAt);
+    map['updated_at'] = Variable<String>(updatedAt);
+    return map;
+  }
+
+  InviteTableCompanion toCompanion(bool nullToAbsent) {
+    return InviteTableCompanion(
+      id: Value(id),
+      eventId: Value(eventId),
+      token: Value(token),
+      expiresAt: Value(expiresAt),
+      maxUses: Value(maxUses),
+      usedCount: Value(usedCount),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory InviteData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return InviteData(
+      id: serializer.fromJson<String>(json['id']),
+      eventId: serializer.fromJson<String>(json['event_id']),
+      token: serializer.fromJson<String>(json['token']),
+      expiresAt: serializer.fromJson<String>(json['expires_at']),
+      maxUses: serializer.fromJson<int>(json['max_uses']),
+      usedCount: serializer.fromJson<int>(json['used_count']),
+      createdAt: serializer.fromJson<String>(json['created_at']),
+      updatedAt: serializer.fromJson<String>(json['updated_at']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'event_id': serializer.toJson<String>(eventId),
+      'token': serializer.toJson<String>(token),
+      'expires_at': serializer.toJson<String>(expiresAt),
+      'max_uses': serializer.toJson<int>(maxUses),
+      'used_count': serializer.toJson<int>(usedCount),
+      'created_at': serializer.toJson<String>(createdAt),
+      'updated_at': serializer.toJson<String>(updatedAt),
+    };
+  }
+
+  InviteData copyWith({
+    String? id,
+    String? eventId,
+    String? token,
+    String? expiresAt,
+    int? maxUses,
+    int? usedCount,
+    String? createdAt,
+    String? updatedAt,
+  }) => InviteData(
+    id: id ?? this.id,
+    eventId: eventId ?? this.eventId,
+    token: token ?? this.token,
+    expiresAt: expiresAt ?? this.expiresAt,
+    maxUses: maxUses ?? this.maxUses,
+    usedCount: usedCount ?? this.usedCount,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  InviteData copyWithCompanion(InviteTableCompanion data) {
+    return InviteData(
+      id: data.id.present ? data.id.value : this.id,
+      eventId: data.eventId.present ? data.eventId.value : this.eventId,
+      token: data.token.present ? data.token.value : this.token,
+      expiresAt: data.expiresAt.present ? data.expiresAt.value : this.expiresAt,
+      maxUses: data.maxUses.present ? data.maxUses.value : this.maxUses,
+      usedCount: data.usedCount.present ? data.usedCount.value : this.usedCount,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InviteData(')
+          ..write('id: $id, ')
+          ..write('eventId: $eventId, ')
+          ..write('token: $token, ')
+          ..write('expiresAt: $expiresAt, ')
+          ..write('maxUses: $maxUses, ')
+          ..write('usedCount: $usedCount, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    eventId,
+    token,
+    expiresAt,
+    maxUses,
+    usedCount,
+    createdAt,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is InviteData &&
+          other.id == this.id &&
+          other.eventId == this.eventId &&
+          other.token == this.token &&
+          other.expiresAt == this.expiresAt &&
+          other.maxUses == this.maxUses &&
+          other.usedCount == this.usedCount &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class InviteTableCompanion extends UpdateCompanion<InviteData> {
+  final Value<String> id;
+  final Value<String> eventId;
+  final Value<String> token;
+  final Value<String> expiresAt;
+  final Value<int> maxUses;
+  final Value<int> usedCount;
+  final Value<String> createdAt;
+  final Value<String> updatedAt;
+  final Value<int> rowid;
+  const InviteTableCompanion({
+    this.id = const Value.absent(),
+    this.eventId = const Value.absent(),
+    this.token = const Value.absent(),
+    this.expiresAt = const Value.absent(),
+    this.maxUses = const Value.absent(),
+    this.usedCount = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  InviteTableCompanion.insert({
+    required String id,
+    required String eventId,
+    required String token,
+    required String expiresAt,
+    required int maxUses,
+    required int usedCount,
+    required String createdAt,
+    required String updatedAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       eventId = Value(eventId),
+       token = Value(token),
+       expiresAt = Value(expiresAt),
+       maxUses = Value(maxUses),
+       usedCount = Value(usedCount),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<InviteData> custom({
+    Expression<String>? id,
+    Expression<String>? eventId,
+    Expression<String>? token,
+    Expression<String>? expiresAt,
+    Expression<int>? maxUses,
+    Expression<int>? usedCount,
+    Expression<String>? createdAt,
+    Expression<String>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (eventId != null) 'event_id': eventId,
+      if (token != null) 'token': token,
+      if (expiresAt != null) 'expires_at': expiresAt,
+      if (maxUses != null) 'max_uses': maxUses,
+      if (usedCount != null) 'used_count': usedCount,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  InviteTableCompanion copyWith({
+    Value<String>? id,
+    Value<String>? eventId,
+    Value<String>? token,
+    Value<String>? expiresAt,
+    Value<int>? maxUses,
+    Value<int>? usedCount,
+    Value<String>? createdAt,
+    Value<String>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return InviteTableCompanion(
+      id: id ?? this.id,
+      eventId: eventId ?? this.eventId,
+      token: token ?? this.token,
+      expiresAt: expiresAt ?? this.expiresAt,
+      maxUses: maxUses ?? this.maxUses,
+      usedCount: usedCount ?? this.usedCount,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (eventId.present) {
+      map['event_id'] = Variable<String>(eventId.value);
+    }
+    if (token.present) {
+      map['token'] = Variable<String>(token.value);
+    }
+    if (expiresAt.present) {
+      map['expires_at'] = Variable<String>(expiresAt.value);
+    }
+    if (maxUses.present) {
+      map['max_uses'] = Variable<int>(maxUses.value);
+    }
+    if (usedCount.present) {
+      map['used_count'] = Variable<int>(usedCount.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<String>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<String>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('InviteTableCompanion(')
+          ..write('id: $id, ')
+          ..write('eventId: $eventId, ')
+          ..write('token: $token, ')
+          ..write('expiresAt: $expiresAt, ')
+          ..write('maxUses: $maxUses, ')
+          ..write('usedCount: $usedCount, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $BlockTableTable extends BlockTable
     with TableInfo<$BlockTableTable, BlockData> {
   @override
@@ -23160,6 +23670,7 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   );
   late final $ScannerTableTable scannerTable = $ScannerTableTable(this);
   late final $GroupTableTable groupTable = $GroupTableTable(this);
+  late final $InviteTableTable inviteTable = $InviteTableTable(this);
   late final $BlockTableTable blockTable = $BlockTableTable(this);
   late final $ReportTableTable reportTable = $ReportTableTable(this);
   late final $AgendaEventTable agendaEvent = $AgendaEventTable(this);
@@ -23208,6 +23719,7 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     ticketStatsTable,
     scannerTable,
     groupTable,
+    inviteTable,
     blockTable,
     reportTable,
     agendaEvent,
@@ -27762,6 +28274,263 @@ typedef $$GroupTableTableProcessedTableManager =
         BaseReferences<_$AppDataBase, $GroupTableTable, GroupEntity>,
       ),
       GroupEntity,
+      PrefetchHooks Function()
+    >;
+typedef $$InviteTableTableCreateCompanionBuilder =
+    InviteTableCompanion Function({
+      required String id,
+      required String eventId,
+      required String token,
+      required String expiresAt,
+      required int maxUses,
+      required int usedCount,
+      required String createdAt,
+      required String updatedAt,
+      Value<int> rowid,
+    });
+typedef $$InviteTableTableUpdateCompanionBuilder =
+    InviteTableCompanion Function({
+      Value<String> id,
+      Value<String> eventId,
+      Value<String> token,
+      Value<String> expiresAt,
+      Value<int> maxUses,
+      Value<int> usedCount,
+      Value<String> createdAt,
+      Value<String> updatedAt,
+      Value<int> rowid,
+    });
+
+class $$InviteTableTableFilterComposer
+    extends Composer<_$AppDataBase, $InviteTableTable> {
+  $$InviteTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get eventId => $composableBuilder(
+    column: $table.eventId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get token => $composableBuilder(
+    column: $table.token,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get expiresAt => $composableBuilder(
+    column: $table.expiresAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get maxUses => $composableBuilder(
+    column: $table.maxUses,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get usedCount => $composableBuilder(
+    column: $table.usedCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$InviteTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $InviteTableTable> {
+  $$InviteTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get eventId => $composableBuilder(
+    column: $table.eventId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get token => $composableBuilder(
+    column: $table.token,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get expiresAt => $composableBuilder(
+    column: $table.expiresAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get maxUses => $composableBuilder(
+    column: $table.maxUses,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get usedCount => $composableBuilder(
+    column: $table.usedCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$InviteTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $InviteTableTable> {
+  $$InviteTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get eventId =>
+      $composableBuilder(column: $table.eventId, builder: (column) => column);
+
+  GeneratedColumn<String> get token =>
+      $composableBuilder(column: $table.token, builder: (column) => column);
+
+  GeneratedColumn<String> get expiresAt =>
+      $composableBuilder(column: $table.expiresAt, builder: (column) => column);
+
+  GeneratedColumn<int> get maxUses =>
+      $composableBuilder(column: $table.maxUses, builder: (column) => column);
+
+  GeneratedColumn<int> get usedCount =>
+      $composableBuilder(column: $table.usedCount, builder: (column) => column);
+
+  GeneratedColumn<String> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<String> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$InviteTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $InviteTableTable,
+          InviteData,
+          $$InviteTableTableFilterComposer,
+          $$InviteTableTableOrderingComposer,
+          $$InviteTableTableAnnotationComposer,
+          $$InviteTableTableCreateCompanionBuilder,
+          $$InviteTableTableUpdateCompanionBuilder,
+          (
+            InviteData,
+            BaseReferences<_$AppDataBase, $InviteTableTable, InviteData>,
+          ),
+          InviteData,
+          PrefetchHooks Function()
+        > {
+  $$InviteTableTableTableManager(_$AppDataBase db, $InviteTableTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$InviteTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$InviteTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$InviteTableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> eventId = const Value.absent(),
+                Value<String> token = const Value.absent(),
+                Value<String> expiresAt = const Value.absent(),
+                Value<int> maxUses = const Value.absent(),
+                Value<int> usedCount = const Value.absent(),
+                Value<String> createdAt = const Value.absent(),
+                Value<String> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => InviteTableCompanion(
+                id: id,
+                eventId: eventId,
+                token: token,
+                expiresAt: expiresAt,
+                maxUses: maxUses,
+                usedCount: usedCount,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String eventId,
+                required String token,
+                required String expiresAt,
+                required int maxUses,
+                required int usedCount,
+                required String createdAt,
+                required String updatedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => InviteTableCompanion.insert(
+                id: id,
+                eventId: eventId,
+                token: token,
+                expiresAt: expiresAt,
+                maxUses: maxUses,
+                usedCount: usedCount,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$InviteTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $InviteTableTable,
+      InviteData,
+      $$InviteTableTableFilterComposer,
+      $$InviteTableTableOrderingComposer,
+      $$InviteTableTableAnnotationComposer,
+      $$InviteTableTableCreateCompanionBuilder,
+      $$InviteTableTableUpdateCompanionBuilder,
+      (
+        InviteData,
+        BaseReferences<_$AppDataBase, $InviteTableTable, InviteData>,
+      ),
+      InviteData,
       PrefetchHooks Function()
     >;
 typedef $$BlockTableTableCreateCompanionBuilder =
@@ -36856,6 +37625,8 @@ class $AppDataBaseManager {
       $$ScannerTableTableTableManager(_db, _db.scannerTable);
   $$GroupTableTableTableManager get groupTable =>
       $$GroupTableTableTableManager(_db, _db.groupTable);
+  $$InviteTableTableTableManager get inviteTable =>
+      $$InviteTableTableTableManager(_db, _db.inviteTable);
   $$BlockTableTableTableManager get blockTable =>
       $$BlockTableTableTableManager(_db, _db.blockTable);
   $$ReportTableTableTableManager get reportTable =>

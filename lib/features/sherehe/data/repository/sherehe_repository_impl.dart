@@ -408,4 +408,52 @@ class ShereheRepositoryImpl implements ShereheRepository {
       (users) => right(users.map((e) => e.toEntity()).toList()),
     );
   }
+
+  @override
+  Future<Either<Failure, List<Invite>>> getEventInvites(String eventId) async {
+    final result = await remoteDataSource.getEventInvites(eventId);
+    return result.fold(
+      (failure) => left(failure),
+      (invites) => right(invites.map((e) => e.toEntity()).toList()),
+    );
+  }
+
+  @override
+  Future<Either<Failure, String>> createEventInvite({
+    required String eventId,
+    required int maxUses,
+    required String expiresAt,
+  }) async {
+    final result = await remoteDataSource.createEventInvite(
+      eventId: eventId,
+      maxUses: maxUses,
+      expiresAt: expiresAt,
+    );
+    return result.fold((failure) => left(failure), (message) => right(message));
+  }
+
+  @override
+  Future<Either<Failure, Invite>> updateEventInvite({
+    required String inviteId,
+    int? maxUses,
+    String? expiresAt,
+  }) async {
+    final result = await remoteDataSource.updateEventInvite(
+      inviteId: inviteId,
+      maxUses: maxUses,
+      expiresAt: expiresAt,
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (invite) => right(invite.toEntity()),
+    );
+  }
+
+  @override
+  Future<Either<Failure, String>> deleteEventInvite({
+    required String inviteId,
+  }) async {
+    final result = await remoteDataSource.deleteEventInvite(inviteId: inviteId);
+    return result.fold((failure) => left(failure), (message) => right(message));
+  }
 }

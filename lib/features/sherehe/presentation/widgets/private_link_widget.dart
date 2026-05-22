@@ -1,5 +1,5 @@
 import 'package:academia/config/config.dart';
-import 'package:academia/features/sherehe/presentation/screens/ticket_links_screen.dart';
+import 'package:academia/features/sherehe/domain/entities/invite.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -10,7 +10,7 @@ enum LinkType { ticket, event }
 class PrivateLinkWidget extends StatefulWidget {
   final int index;
   final LinkType linkType;
-  final InviteModel invite;
+  final Invite invite;
 
   const PrivateLinkWidget({
     super.key,
@@ -158,7 +158,7 @@ class _PrivateLinkWidgetState extends State<PrivateLinkWidget> {
                     icon: Icons.calendar_today_outlined,
                     label: isExpired ? 'Expired' : 'Valid Until',
                     value: DateFormat.yMMMEd().add_jm().format(
-                      widget.invite.expiresAt,
+                      DateTime.parse(widget.invite.expiresAt),
                     ),
                   ),
                 ),

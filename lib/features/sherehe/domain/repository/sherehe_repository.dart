@@ -123,4 +123,24 @@ abstract class ShereheRepository {
   Future<Either<Failure, List<ShereheUser>>> searchUsersByUsername({
     required String query,
   });
+
+  Future<Either<Failure, List<Invite>>> getEventInvites(
+    String eventId,
+  );
+
+  Future<Either<Failure, String>> createEventInvite({
+    required String eventId,
+    required int maxUses,
+    required String expiresAt,
+  });
+
+  Future<Either<Failure, Invite>> updateEventInvite({
+    required String inviteId,
+    int? maxUses,
+    String? expiresAt,
+  });
+
+  Future<Either<Failure, String>> deleteEventInvite({
+    required String inviteId,
+  });
 }

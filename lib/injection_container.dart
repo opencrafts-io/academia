@@ -152,6 +152,11 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   sl.registerLazySingleton(() => DeleteEventScannerUsecase(sl()));
   sl.registerLazySingleton(() => GetEventScannerByUserIdUsecase(sl()));
 
+  sl.registerLazySingleton(() => GetEventInvitesUsecase(sl()));
+  sl.registerLazySingleton(() => CreateEventInviteUsecase(sl()));
+  sl.registerLazySingleton(() => UpdateEventInviteUsecase(sl()));
+  sl.registerLazySingleton(() => DeleteEventInviteUsecase(sl()));
+
   sl.registerFactory(() => ShereheHomeBloc(getEvent: sl()));
 
   sl.registerFactory(
@@ -201,6 +206,14 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
       searchUsersByUsername: sl(),
       addEventScanner: sl(),
       deleteEventScanner: sl(),
+    ),
+  );
+  sl.registerFactory(
+    () => EventLinkBloc(
+      getEventInvites: sl(),
+      createEventInvite: sl(),
+      updateEventInvite: sl(),
+      deleteEventInvite: sl(),
     ),
   );
   sl.registerFactory<ProfileRemoteDatasource>(

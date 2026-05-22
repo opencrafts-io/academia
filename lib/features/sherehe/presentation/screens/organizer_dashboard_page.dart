@@ -108,6 +108,13 @@ class _OrganizerDashboardPageState extends State<OrganizerDashboardPage> {
                   SliverGrid(
                     delegate: SliverChildListDelegate.fixed([
                       _MenuCard(
+                        iconPath: Assets.icons.dashboardIconsLink.path,
+                        title: 'Event Links',
+                        onTap: () => EventLinksRoute(
+                          eventId: widget.eventId,
+                        ).push(context),
+                      ),
+                      _MenuCard(
                         iconPath: Assets.icons.dashboardIconsNotebook.path,
                         title: 'Ticket Management',
                         onTap: () => AllEventTicketsRoute(
@@ -125,13 +132,6 @@ class _OrganizerDashboardPageState extends State<OrganizerDashboardPage> {
                         iconPath: Assets.icons.dashboardIconsBoy.path,
                         title: 'Attendees',
                         onTap: () => AllAttendeesRoute(
-                          eventId: widget.eventId,
-                        ).push(context),
-                      ),
-                      _MenuCard(
-                        iconPath: Assets.icons.dashboardIconsLink.path,
-                        title: 'Event Links',
-                        onTap: () => EventLinksRoute(
                           eventId: widget.eventId,
                         ).push(context),
                       ),
