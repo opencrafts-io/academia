@@ -9362,9 +9362,20 @@ class $InviteTableTable extends InviteTable
   late final GeneratedColumn<String> eventId = GeneratedColumn<String>(
     'event_id',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _ticketIdMeta = const VerificationMeta(
+    'ticketId',
+  );
+  @override
+  late final GeneratedColumn<String> ticketId = GeneratedColumn<String>(
+    'ticket_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _tokenMeta = const VerificationMeta('token');
   @override
@@ -9434,6 +9445,7 @@ class $InviteTableTable extends InviteTable
   List<GeneratedColumn> get $columns => [
     id,
     eventId,
+    ticketId,
     token,
     expiresAt,
     maxUses,
@@ -9463,8 +9475,12 @@ class $InviteTableTable extends InviteTable
         _eventIdMeta,
         eventId.isAcceptableOrUnknown(data['event_id']!, _eventIdMeta),
       );
-    } else if (isInserting) {
-      context.missing(_eventIdMeta);
+    }
+    if (data.containsKey('ticket_id')) {
+      context.handle(
+        _ticketIdMeta,
+        ticketId.isAcceptableOrUnknown(data['ticket_id']!, _ticketIdMeta),
+      );
     }
     if (data.containsKey('token')) {
       context.handle(
@@ -9530,7 +9546,11 @@ class $InviteTableTable extends InviteTable
       eventId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}event_id'],
-      )!,
+      ),
+      ticketId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}ticket_id'],
+      ),
       token: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}token'],
@@ -9566,7 +9586,8 @@ class $InviteTableTable extends InviteTable
 
 class InviteData extends DataClass implements Insertable<InviteData> {
   final String id;
-  final String eventId;
+  final String? eventId;
+  final String? ticketId;
   final String token;
   final String expiresAt;
   final int maxUses;
@@ -9575,7 +9596,8 @@ class InviteData extends DataClass implements Insertable<InviteData> {
   final String updatedAt;
   const InviteData({
     required this.id,
-    required this.eventId,
+    this.eventId,
+    this.ticketId,
     required this.token,
     required this.expiresAt,
     required this.maxUses,
@@ -9587,7 +9609,12 @@ class InviteData extends DataClass implements Insertable<InviteData> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
-    map['event_id'] = Variable<String>(eventId);
+    if (!nullToAbsent || eventId != null) {
+      map['event_id'] = Variable<String>(eventId);
+    }
+    if (!nullToAbsent || ticketId != null) {
+      map['ticket_id'] = Variable<String>(ticketId);
+    }
     map['token'] = Variable<String>(token);
     map['expires_at'] = Variable<String>(expiresAt);
     map['max_uses'] = Variable<int>(maxUses);
@@ -9600,7 +9627,12 @@ class InviteData extends DataClass implements Insertable<InviteData> {
   InviteTableCompanion toCompanion(bool nullToAbsent) {
     return InviteTableCompanion(
       id: Value(id),
-      eventId: Value(eventId),
+      eventId: eventId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(eventId),
+      ticketId: ticketId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(ticketId),
       token: Value(token),
       expiresAt: Value(expiresAt),
       maxUses: Value(maxUses),
@@ -9617,7 +9649,8 @@ class InviteData extends DataClass implements Insertable<InviteData> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return InviteData(
       id: serializer.fromJson<String>(json['id']),
-      eventId: serializer.fromJson<String>(json['event_id']),
+      eventId: serializer.fromJson<String?>(json['event_id']),
+      ticketId: serializer.fromJson<String?>(json['ticket_id']),
       token: serializer.fromJson<String>(json['token']),
       expiresAt: serializer.fromJson<String>(json['expires_at']),
       maxUses: serializer.fromJson<int>(json['max_uses']),
@@ -9631,7 +9664,8 @@ class InviteData extends DataClass implements Insertable<InviteData> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
-      'event_id': serializer.toJson<String>(eventId),
+      'event_id': serializer.toJson<String?>(eventId),
+      'ticket_id': serializer.toJson<String?>(ticketId),
       'token': serializer.toJson<String>(token),
       'expires_at': serializer.toJson<String>(expiresAt),
       'max_uses': serializer.toJson<int>(maxUses),
@@ -9643,7 +9677,8 @@ class InviteData extends DataClass implements Insertable<InviteData> {
 
   InviteData copyWith({
     String? id,
-    String? eventId,
+    Value<String?> eventId = const Value.absent(),
+    Value<String?> ticketId = const Value.absent(),
     String? token,
     String? expiresAt,
     int? maxUses,
@@ -9652,7 +9687,8 @@ class InviteData extends DataClass implements Insertable<InviteData> {
     String? updatedAt,
   }) => InviteData(
     id: id ?? this.id,
-    eventId: eventId ?? this.eventId,
+    eventId: eventId.present ? eventId.value : this.eventId,
+    ticketId: ticketId.present ? ticketId.value : this.ticketId,
     token: token ?? this.token,
     expiresAt: expiresAt ?? this.expiresAt,
     maxUses: maxUses ?? this.maxUses,
@@ -9664,6 +9700,7 @@ class InviteData extends DataClass implements Insertable<InviteData> {
     return InviteData(
       id: data.id.present ? data.id.value : this.id,
       eventId: data.eventId.present ? data.eventId.value : this.eventId,
+      ticketId: data.ticketId.present ? data.ticketId.value : this.ticketId,
       token: data.token.present ? data.token.value : this.token,
       expiresAt: data.expiresAt.present ? data.expiresAt.value : this.expiresAt,
       maxUses: data.maxUses.present ? data.maxUses.value : this.maxUses,
@@ -9678,6 +9715,7 @@ class InviteData extends DataClass implements Insertable<InviteData> {
     return (StringBuffer('InviteData(')
           ..write('id: $id, ')
           ..write('eventId: $eventId, ')
+          ..write('ticketId: $ticketId, ')
           ..write('token: $token, ')
           ..write('expiresAt: $expiresAt, ')
           ..write('maxUses: $maxUses, ')
@@ -9692,6 +9730,7 @@ class InviteData extends DataClass implements Insertable<InviteData> {
   int get hashCode => Object.hash(
     id,
     eventId,
+    ticketId,
     token,
     expiresAt,
     maxUses,
@@ -9705,6 +9744,7 @@ class InviteData extends DataClass implements Insertable<InviteData> {
       (other is InviteData &&
           other.id == this.id &&
           other.eventId == this.eventId &&
+          other.ticketId == this.ticketId &&
           other.token == this.token &&
           other.expiresAt == this.expiresAt &&
           other.maxUses == this.maxUses &&
@@ -9715,7 +9755,8 @@ class InviteData extends DataClass implements Insertable<InviteData> {
 
 class InviteTableCompanion extends UpdateCompanion<InviteData> {
   final Value<String> id;
-  final Value<String> eventId;
+  final Value<String?> eventId;
+  final Value<String?> ticketId;
   final Value<String> token;
   final Value<String> expiresAt;
   final Value<int> maxUses;
@@ -9726,6 +9767,7 @@ class InviteTableCompanion extends UpdateCompanion<InviteData> {
   const InviteTableCompanion({
     this.id = const Value.absent(),
     this.eventId = const Value.absent(),
+    this.ticketId = const Value.absent(),
     this.token = const Value.absent(),
     this.expiresAt = const Value.absent(),
     this.maxUses = const Value.absent(),
@@ -9736,7 +9778,8 @@ class InviteTableCompanion extends UpdateCompanion<InviteData> {
   });
   InviteTableCompanion.insert({
     required String id,
-    required String eventId,
+    this.eventId = const Value.absent(),
+    this.ticketId = const Value.absent(),
     required String token,
     required String expiresAt,
     required int maxUses,
@@ -9745,7 +9788,6 @@ class InviteTableCompanion extends UpdateCompanion<InviteData> {
     required String updatedAt,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
-       eventId = Value(eventId),
        token = Value(token),
        expiresAt = Value(expiresAt),
        maxUses = Value(maxUses),
@@ -9755,6 +9797,7 @@ class InviteTableCompanion extends UpdateCompanion<InviteData> {
   static Insertable<InviteData> custom({
     Expression<String>? id,
     Expression<String>? eventId,
+    Expression<String>? ticketId,
     Expression<String>? token,
     Expression<String>? expiresAt,
     Expression<int>? maxUses,
@@ -9766,6 +9809,7 @@ class InviteTableCompanion extends UpdateCompanion<InviteData> {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (eventId != null) 'event_id': eventId,
+      if (ticketId != null) 'ticket_id': ticketId,
       if (token != null) 'token': token,
       if (expiresAt != null) 'expires_at': expiresAt,
       if (maxUses != null) 'max_uses': maxUses,
@@ -9778,7 +9822,8 @@ class InviteTableCompanion extends UpdateCompanion<InviteData> {
 
   InviteTableCompanion copyWith({
     Value<String>? id,
-    Value<String>? eventId,
+    Value<String?>? eventId,
+    Value<String?>? ticketId,
     Value<String>? token,
     Value<String>? expiresAt,
     Value<int>? maxUses,
@@ -9790,6 +9835,7 @@ class InviteTableCompanion extends UpdateCompanion<InviteData> {
     return InviteTableCompanion(
       id: id ?? this.id,
       eventId: eventId ?? this.eventId,
+      ticketId: ticketId ?? this.ticketId,
       token: token ?? this.token,
       expiresAt: expiresAt ?? this.expiresAt,
       maxUses: maxUses ?? this.maxUses,
@@ -9808,6 +9854,9 @@ class InviteTableCompanion extends UpdateCompanion<InviteData> {
     }
     if (eventId.present) {
       map['event_id'] = Variable<String>(eventId.value);
+    }
+    if (ticketId.present) {
+      map['ticket_id'] = Variable<String>(ticketId.value);
     }
     if (token.present) {
       map['token'] = Variable<String>(token.value);
@@ -9838,6 +9887,7 @@ class InviteTableCompanion extends UpdateCompanion<InviteData> {
     return (StringBuffer('InviteTableCompanion(')
           ..write('id: $id, ')
           ..write('eventId: $eventId, ')
+          ..write('ticketId: $ticketId, ')
           ..write('token: $token, ')
           ..write('expiresAt: $expiresAt, ')
           ..write('maxUses: $maxUses, ')
@@ -28279,7 +28329,8 @@ typedef $$GroupTableTableProcessedTableManager =
 typedef $$InviteTableTableCreateCompanionBuilder =
     InviteTableCompanion Function({
       required String id,
-      required String eventId,
+      Value<String?> eventId,
+      Value<String?> ticketId,
       required String token,
       required String expiresAt,
       required int maxUses,
@@ -28291,7 +28342,8 @@ typedef $$InviteTableTableCreateCompanionBuilder =
 typedef $$InviteTableTableUpdateCompanionBuilder =
     InviteTableCompanion Function({
       Value<String> id,
-      Value<String> eventId,
+      Value<String?> eventId,
+      Value<String?> ticketId,
       Value<String> token,
       Value<String> expiresAt,
       Value<int> maxUses,
@@ -28317,6 +28369,11 @@ class $$InviteTableTableFilterComposer
 
   ColumnFilters<String> get eventId => $composableBuilder(
     column: $table.eventId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get ticketId => $composableBuilder(
+    column: $table.ticketId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -28370,6 +28427,11 @@ class $$InviteTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get ticketId => $composableBuilder(
+    column: $table.ticketId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get token => $composableBuilder(
     column: $table.token,
     builder: (column) => ColumnOrderings(column),
@@ -28415,6 +28477,9 @@ class $$InviteTableTableAnnotationComposer
 
   GeneratedColumn<String> get eventId =>
       $composableBuilder(column: $table.eventId, builder: (column) => column);
+
+  GeneratedColumn<String> get ticketId =>
+      $composableBuilder(column: $table.ticketId, builder: (column) => column);
 
   GeneratedColumn<String> get token =>
       $composableBuilder(column: $table.token, builder: (column) => column);
@@ -28467,7 +28532,8 @@ class $$InviteTableTableTableManager
           updateCompanionCallback:
               ({
                 Value<String> id = const Value.absent(),
-                Value<String> eventId = const Value.absent(),
+                Value<String?> eventId = const Value.absent(),
+                Value<String?> ticketId = const Value.absent(),
                 Value<String> token = const Value.absent(),
                 Value<String> expiresAt = const Value.absent(),
                 Value<int> maxUses = const Value.absent(),
@@ -28478,6 +28544,7 @@ class $$InviteTableTableTableManager
               }) => InviteTableCompanion(
                 id: id,
                 eventId: eventId,
+                ticketId: ticketId,
                 token: token,
                 expiresAt: expiresAt,
                 maxUses: maxUses,
@@ -28489,7 +28556,8 @@ class $$InviteTableTableTableManager
           createCompanionCallback:
               ({
                 required String id,
-                required String eventId,
+                Value<String?> eventId = const Value.absent(),
+                Value<String?> ticketId = const Value.absent(),
                 required String token,
                 required String expiresAt,
                 required int maxUses,
@@ -28500,6 +28568,7 @@ class $$InviteTableTableTableManager
               }) => InviteTableCompanion.insert(
                 id: id,
                 eventId: eventId,
+                ticketId: ticketId,
                 token: token,
                 expiresAt: expiresAt,
                 maxUses: maxUses,

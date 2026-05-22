@@ -5,6 +5,7 @@ extension InviteModelHelper on InviteData {
   Invite toEntity() => Invite(
     id: id,
     eventId: eventId,
+    ticketId: ticketId,
     token: token,
     expiresAt: expiresAt,
     maxUses: maxUses,
@@ -18,6 +19,7 @@ extension InviteEntityHelper on Invite {
   InviteData toModel() => InviteData(
     id: id,
     eventId: eventId,
+    ticketId: ticketId,
     token: token,
     expiresAt: expiresAt,
     maxUses: maxUses,

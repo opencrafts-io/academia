@@ -1,9 +1,9 @@
-import 'package:academia/features/sherehe/presentation/bloc/event_links/event_link_bloc.dart';
+import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-void showCreateLinkBottomSheet(BuildContext context, String eventId) {
+void showCreateTicketLinkBottomSheet(BuildContext context, String ticketId) {
   final formKey = GlobalKey<FormState>();
 
   final maxUsesController = TextEditingController();
@@ -50,14 +50,14 @@ void showCreateLinkBottomSheet(BuildContext context, String eventId) {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Create Event Link",
+                    "Create Ticket Link",
                     style: Theme.of(context).textTheme.headlineSmall,
                   ),
 
                   const SizedBox(height: 8),
 
                   Text(
-                    "Generate a shareable event link with usage limits and expiration.",
+                    "Generate a shareable ticket link with usage limits and expiration.",
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
@@ -110,9 +110,9 @@ void showCreateLinkBottomSheet(BuildContext context, String eventId) {
 
                   const SizedBox(height: 28),
 
-                  BlocBuilder<EventLinkBloc, EventLinkState>(
+                  BlocBuilder<TicketLinkBloc, TicketLinkState>(
                     builder: (context, state) {
-                      final isLoading = state is CreateEventInviteLoading;
+                      final isLoading = state is CreateTicketInviteLoading;
 
                       return SizedBox(
                         width: double.infinity,
@@ -124,9 +124,9 @@ void showCreateLinkBottomSheet(BuildContext context, String eventId) {
                                     return;
                                   }
 
-                                  context.read<EventLinkBloc>().add(
-                                    CreateEventInvite(
-                                      eventId: eventId,
+                                  context.read<TicketLinkBloc>().add(
+                                    CreateTicketInvite(
+                                      ticketId: ticketId,
                                       maxUses: int.parse(
                                         maxUsesController.text.trim(),
                                       ),
@@ -165,9 +165,9 @@ void showCreateLinkBottomSheet(BuildContext context, String eventId) {
   );
 }
 
-void showEditLinkBottomSheet({
+void showEditTicketLinkBottomSheet({
   required BuildContext context,
-  required String eventId,
+  required String ticketId,
   required String inviteId,
   required int maxUses,
   required String expiresAt,
@@ -221,14 +221,14 @@ void showEditLinkBottomSheet({
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Edit Event Link",
+                    "Edit Ticket Link",
                     style: Theme.of(context).textTheme.headlineSmall,
                   ),
 
                   const SizedBox(height: 8),
 
                   Text(
-                    "Edit the usage limits and expiration of this event link.",
+                    "Edit the usage limits and expiration of this ticket link.",
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
@@ -281,9 +281,9 @@ void showEditLinkBottomSheet({
 
                   const SizedBox(height: 28),
 
-                  BlocBuilder<EventLinkBloc, EventLinkState>(
+                  BlocBuilder<TicketLinkBloc, TicketLinkState>(
                     builder: (context, state) {
-                      final isLoading = state is UpdateEventInviteLoading;
+                      final isLoading = state is UpdateTicketInviteLoading;
 
                       return SizedBox(
                         width: double.infinity,
@@ -295,10 +295,10 @@ void showEditLinkBottomSheet({
                                     return;
                                   }
 
-                                  context.read<EventLinkBloc>().add(
-                                    UpdateEventInvite(
+                                  context.read<TicketLinkBloc>().add(
+                                    UpdateTicketInvite(
                                       inviteId: inviteId,
-                                      eventId: eventId,
+                                      ticketId: ticketId,
                                       maxUses: int.parse(
                                         maxUsesController.text.trim(),
                                       ),
@@ -337,10 +337,10 @@ void showEditLinkBottomSheet({
   );
 }
 
-void showDeleteInviteDialog({
+void showDeleteTicketInviteDialog({
   required BuildContext context,
   required String inviteId,
-  required String eventId,
+  required String ticketId,
 }) {
   showDialog(
     context: context,
@@ -405,9 +405,9 @@ void showDeleteInviteDialog({
                 const SizedBox(width: 12),
 
                 Expanded(
-                  child: BlocBuilder<EventLinkBloc, EventLinkState>(
+                  child: BlocBuilder<TicketLinkBloc, TicketLinkState>(
                     builder: (context, state) {
-                      final isLoading = state is DeleteEventInviteLoading;
+                      final isLoading = state is DeleteTicketInviteLoading;
 
                       return FilledButton(
                         style: FilledButton.styleFrom(
@@ -417,10 +417,10 @@ void showDeleteInviteDialog({
                         onPressed: isLoading
                             ? null
                             : () {
-                                context.read<EventLinkBloc>().add(
-                                  DeleteEventInvite(
+                                context.read<TicketLinkBloc>().add(
+                                  DeleteTicketInvite(
                                     inviteId: inviteId,
-                                    eventId: eventId,
+                                    ticketId: ticketId,
                                   ),
                                 );
                               },
@@ -444,42 +444,5 @@ void showDeleteInviteDialog({
         ),
       );
     },
-  );
-}
-
-Future<DateTime?> pickDateTime(
-  BuildContext context, {
-  DateTime? initialDateTime,
-  DateTime? firstDate,
-  DateTime? lastDate,
-}) async {
-  final now = DateTime.now();
-
-  final initial = initialDateTime ?? now;
-
-  final pickedDate = await showDatePicker(
-    context: context,
-    initialDate: initial,
-    firstDate: firstDate ?? now,
-    lastDate: lastDate ?? DateTime(2100),
-  );
-
-  if (pickedDate == null) return null;
-
-  if (!context.mounted) return null;
-
-  final pickedTime = await showTimePicker(
-    context: context,
-    initialTime: TimeOfDay.fromDateTime(initial),
-  );
-
-  if (pickedTime == null) return null;
-
-  return DateTime(
-    pickedDate.year,
-    pickedDate.month,
-    pickedDate.day,
-    pickedTime.hour,
-    pickedTime.minute,
   );
 }

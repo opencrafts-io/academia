@@ -5,7 +5,10 @@ class InviteTable extends Table {
   TextColumn get id => text()();
 
   @JsonKey('event_id')
-  TextColumn get eventId => text()();
+  TextColumn get eventId => text().nullable()();
+
+  @JsonKey('ticket_id')
+  TextColumn get ticketId => text().nullable()();
 
   @JsonKey('token')
   TextColumn get token => text()();

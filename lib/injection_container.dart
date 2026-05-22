@@ -156,6 +156,10 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   sl.registerLazySingleton(() => CreateEventInviteUsecase(sl()));
   sl.registerLazySingleton(() => UpdateEventInviteUsecase(sl()));
   sl.registerLazySingleton(() => DeleteEventInviteUsecase(sl()));
+  sl.registerLazySingleton(() => GetTicketInvitesUsecase(sl()));
+  sl.registerLazySingleton(() => CreateTicketInviteUsecase(sl()));
+  sl.registerLazySingleton(() => UpdateTicketInviteUsecase(sl()));
+  sl.registerLazySingleton(() => DeleteTicketInviteUsecase(sl()));
 
   sl.registerFactory(() => ShereheHomeBloc(getEvent: sl()));
 
@@ -214,6 +218,14 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
       createEventInvite: sl(),
       updateEventInvite: sl(),
       deleteEventInvite: sl(),
+    ),
+  );
+  sl.registerFactory<TicketLinkBloc>(
+    () => TicketLinkBloc(
+      getTicketInvites: sl(),
+      createTicketInvite: sl(),
+      updateTicketInvite: sl(),
+      deleteTicketInvite: sl(),
     ),
   );
   sl.registerFactory<ProfileRemoteDatasource>(

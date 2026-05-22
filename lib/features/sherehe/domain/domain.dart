@@ -41,3 +41,7 @@ export 'usecases/create_event_invite_usecase.dart';
 export 'usecases/update_event_invite_usecase.dart';
 export 'usecases/delete_event_invite_usecase.dart';
 export 'usecases/get_event_invites_usecase.dart';
+export 'usecases/get_ticket_invites_usecase.dart';
+export 'usecases/create_ticket_invite_usecase.dart';
+export 'usecases/update_ticket_invite_usecase.dart';
+export 'usecases/delete_ticket_invite_usecase.dart';

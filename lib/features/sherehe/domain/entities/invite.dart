@@ -2,7 +2,8 @@ import 'package:equatable/equatable.dart';
 
 class Invite extends Equatable {
   final String id;
-  final String eventId;
+  final String? eventId;
+  final String? ticketId;
   final String token;
   final String expiresAt;
   final int maxUses;
@@ -12,7 +13,8 @@ class Invite extends Equatable {
 
   const Invite({
     required this.id,
-    required this.eventId,
+    this.eventId,
+    this.ticketId,
     required this.token,
     required this.expiresAt,
     required this.maxUses,
@@ -24,6 +26,7 @@ class Invite extends Equatable {
   Invite copyWith({
     String? id,
     String? eventId,
+    String? ticketId,
     String? token,
     String? expiresAt,
     int? maxUses,
@@ -34,6 +37,7 @@ class Invite extends Equatable {
     return Invite(
       id: id ?? this.id,
       eventId: eventId ?? this.eventId,
+      ticketId: ticketId ?? this.ticketId,
       token: token ?? this.token,
       expiresAt: expiresAt ?? this.expiresAt,
       maxUses: maxUses ?? this.maxUses,
@@ -56,6 +60,7 @@ class Invite extends Equatable {
   List<Object?> get props => [
     id,
     eventId,
+    ticketId,
     token,
     expiresAt,
     maxUses,

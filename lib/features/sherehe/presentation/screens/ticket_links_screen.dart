@@ -1,39 +1,8 @@
-import 'package:academia/features/sherehe/domain/entities/invite.dart';
+import 'package:academia/core/clippers/spinning_scallop_indicator.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';
-
-final List<Invite> dummyTicketLinks = [
-  Invite(
-    id: "6dff3c91-053b-4a40-b172-145614fdf403",
-    eventId: "event-123",
-    token: "0438f9bbecb99a9159e28ee15615d6c93f5eeb40db73b564776a21d8dc2f3da1",
-    expiresAt: '2024-12-31T23:59:59Z',
-    maxUses: 100,
-    usedCount: 24,
-    createdAt: '2024-01-01T12:00:00Z',
-    updatedAt: '2024-01-01T12:00:00Z',
-  ),
-  Invite(
-    id: "0dbd57b9-5126-46cf-b7d0-1f77fd1e0c6a",
-    eventId: "event-123",
-    token: "f4a9bcce91122aa9159e28ee15615d6c93f5eeb40db73b564776a21d8dc111",
-    expiresAt: '2024-01-03T23:59:59Z',
-    maxUses: 50,
-    usedCount: 42,
-    createdAt: '2024-01-01T12:00:00Z',
-    updatedAt: '2024-01-01T12:00:00Z',
-  ),
-  Invite(
-    id: "ac4f7d3c-b6c5-43c4-bf0f-e2a3d5d7e001",
-    eventId: "event-123",
-    token: "ee89f9bbecb99a9159e28ee15615d6c93f5eeb40db73b564776a21d8dc299",
-    expiresAt: '2024-01-03T23:59:59Z',
-    maxUses: 200,
-    usedCount: 200,
-    createdAt: '2024-01-01T12:00:00Z',
-    updatedAt: '2024-01-01T12:00:00Z',
-  ),
-];
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sliver_tools/sliver_tools.dart';
 
 class TicketLinksScreen extends StatefulWidget {
   final String ticketId;
@@ -46,34 +15,174 @@ class TicketLinksScreen extends StatefulWidget {
 
 class _TicketLinksScreenState extends State<TicketLinksScreen> {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
-        icon: const Icon(Icons.add),
-        label: const Text("Create Link"),
-      ),
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar.large(title: const Text("Ticket Links")),
-          SliverPadding(
-            padding: const EdgeInsets.all(16),
-            sliver: SliverList.separated(
-              itemCount: dummyTicketLinks.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 12),
-              itemBuilder: (context, index) {
-                final invite = dummyTicketLinks[index];
+  void initState() {
+    super.initState();
 
-                return PrivateLinkWidget(
-                  index: index,
-                  invite: invite,
-                  linkType: LinkType.ticket,
-                );
+    context.read<TicketLinkBloc>().add(
+      GetTicketInvites(ticketId: widget.ticketId),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<TicketLinkBloc, TicketLinkState>(
+      listener: (context, state) {
+        if (state is CreateTicketInviteSuccess) {
+          Navigator.of(context).pop();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Theme.of(context).colorScheme.primary,
+            ),
+          );
+        } else if (state is CreateTicketInviteErrorState) {
+          Navigator.of(context).pop();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+          );
+        } else if (state is UpdateTicketInviteSuccess) {
+          Navigator.of(context).pop();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Ticket link updated successfully."),
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Theme.of(context).colorScheme.primary,
+            ),
+          );
+        } else if (state is UpdateTicketInviteErrorState) {
+          Navigator.of(context).pop();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+          );
+        } else if (state is DeleteTicketInviteSuccess) {
+          Navigator.of(context).pop();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Theme.of(context).colorScheme.primary,
+            ),
+          );
+        } else if (state is DeleteTicketInviteErrorState) {
+          Navigator.of(context).pop();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+          );
+        }
+      },
+      child: Scaffold(
+        body: CustomScrollView(
+          slivers: [
+            SliverAppBar.large(title: const Text("Ticket Links")),
+            BlocBuilder<TicketLinkBloc, TicketLinkState>(
+              builder: (context, state) {
+                if (state is GetAllTicketInvitesLoading) {
+                  return SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Center(child: const SpinningScallopIndicator()),
+                  );
+                } else if (state is GetAllTicketInvitesErrorState) {
+                  return SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Center(
+                      child: Text(
+                        "Failed to load ticket links.",
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontStyle: FontStyle.italic,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ),
+                  );
+                } else if (state is GetAllTicketInvitesSuccess) {
+                  if (state.invites.isEmpty) {
+                    return SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.link_off_rounded,
+                              size: 64,
+                              color: Theme.of(context).colorScheme.outline,
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              "No ticket links created yet.",
+                              style: Theme.of(context).textTheme.titleMedium
+                                  ?.copyWith(
+                                    fontStyle: FontStyle.italic,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onSurfaceVariant,
+                                  ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+      
+                  return SliverPadding(
+                    padding: const EdgeInsets.all(16),
+                    sliver: MultiSliver(
+                      children: [
+                        SliverList.separated(
+                          itemCount: state.invites.length,
+                          separatorBuilder: (_, _) => const SizedBox(height: 12),
+                          itemBuilder: (context, index) {
+                            final invite = state.invites[index];
+      
+                            return PrivateLinkWidget(
+                              index: index,
+                              invite: invite,
+                              linkType: LinkType.ticket,
+                              onEdit: () => showEditTicketLinkBottomSheet(
+                                context: context,
+                                ticketId: widget.ticketId,
+                                inviteId: invite.id,
+                                maxUses: invite.maxUses,
+                                expiresAt: invite.expiresAt,
+                              ),
+                              onDelete: () => showDeleteTicketInviteDialog(
+                                context: context,
+                                ticketId: widget.ticketId,
+                                inviteId: invite.id,
+                              ),
+                            );
+                          },
+                        ),
+                        SliverPadding(padding: const EdgeInsets.only(bottom: 80)),
+                      ],
+                    ),
+                  );
+                }
+                return const SliverToBoxAdapter(child: SizedBox.shrink());
               },
             ),
-          ),
-          SliverPadding(padding: const EdgeInsets.only(bottom: 80)),
-        ],
+          ],
+        ),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () =>
+              showCreateTicketLinkBottomSheet(context, widget.ticketId),
+          icon: const Icon(Icons.add),
+          label: const Text("Create Link"),
+        ),
       ),
     );
   }

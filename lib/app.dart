@@ -113,6 +113,7 @@ class _AcademiaState extends State<Academia> {
         BlocProvider(create: (context) => sl<AllScannersBloc>()),
         BlocProvider(create: (context) => sl<ScannerActionsBloc>()),
         BlocProvider(create: (context) => sl<EventLinkBloc>()),
+        BlocProvider(create: (context) => sl<TicketLinkBloc>()),
 
         BlocProvider(create: (context) => sl<FeedBloc>()),
 

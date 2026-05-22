@@ -456,4 +456,56 @@ class ShereheRepositoryImpl implements ShereheRepository {
     final result = await remoteDataSource.deleteEventInvite(inviteId: inviteId);
     return result.fold((failure) => left(failure), (message) => right(message));
   }
+
+  @override
+  Future<Either<Failure, List<Invite>>> getTicketInvites(
+    String ticketId,
+  ) async {
+    final result = await remoteDataSource.getTicketInvites(ticketId);
+    return result.fold(
+      (failure) => left(failure),
+      (invites) => right(invites.map((e) => e.toEntity()).toList()),
+    );
+  }
+
+  @override
+  Future<Either<Failure, String>> createTicketInvite({
+    required String ticketId,
+    required int maxUses,
+    required String expiresAt,
+  }) async {
+    final result = await remoteDataSource.createTicketInvite(
+      ticketId: ticketId,
+      maxUses: maxUses,
+      expiresAt: expiresAt,
+    );
+    return result.fold((failure) => left(failure), (message) => right(message));
+  }
+
+  @override
+  Future<Either<Failure, Invite>> updateTicketInvite({
+    required String inviteId,
+    int? maxUses,
+    String? expiresAt,
+  }) async {
+    final result = await remoteDataSource.updateTicketInvite(
+      inviteId: inviteId,
+      maxUses: maxUses,
+      expiresAt: expiresAt,
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (invite) => right(invite.toEntity()),
+    );
+  }
+
+  @override
+  Future<Either<Failure, String>> deleteTicketInvite({
+    required String inviteId,
+  }) async {
+    final result = await remoteDataSource.deleteTicketInvite(
+      inviteId: inviteId,
+    );
+    return result.fold((failure) => left(failure), (message) => right(message));
+  }
 }
