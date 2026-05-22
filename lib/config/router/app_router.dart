@@ -20,6 +20,7 @@ class AppRouter {
 
   static final router = GoRouter(
     routes: $appRoutes,
+    initialLocation: SplashScreenRoute().location,
     observers: [
       if (sl<FlavorConfig>().isProduction) PosthogObserver(),
       AppNavigationObserver(),

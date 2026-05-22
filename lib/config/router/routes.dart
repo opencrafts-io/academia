@@ -13,6 +13,14 @@ part 'routes.g.dart';
 
 final GlobalKey<NavigatorState> shellNavigatorKey = GlobalKey<NavigatorState>();
 
+@TypedGoRoute<SplashScreenRoute>(path: "/splash")
+class SplashScreenRoute extends GoRouteData with $SplashScreenRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return SplashScreen();
+  }
+}
+
 @TypedStatefulShellRoute<LayoutShellRoute>(
   branches: [
     TypedStatefulShellBranch(routes: [TypedGoRoute<HomeRoute>(path: '/')]),
