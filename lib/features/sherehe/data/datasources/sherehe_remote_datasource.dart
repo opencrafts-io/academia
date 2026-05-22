@@ -1179,7 +1179,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
         },
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         return right(response.data['message']);
       } else {
         return left(

@@ -158,7 +158,7 @@ class _PrivateLinkWidgetState extends State<PrivateLinkWidget> {
                     icon: Icons.calendar_today_outlined,
                     label: isExpired ? 'Expired' : 'Valid Until',
                     value: DateFormat.yMMMEd().add_jm().format(
-                      DateTime.parse(widget.invite.expiresAt),
+                      DateTime.parse(widget.invite.expiresAt).toLocal(),
                     ),
                   ),
                 ),

@@ -23,92 +23,121 @@ class _EventLinksScreenState extends State<EventLinksScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar.large(title: const Text("Event Links")),
-          BlocBuilder<EventLinkBloc, EventLinkState>(
-            builder: (context, state) {
-              if (state is GetAllEventInvitesLoading) {
-                return SliverFillRemaining(
-                  hasScrollBody: false,
-                  child: Center(child: const SpinningScallopIndicator()),
-                );
-              } else if (state is GetAllEventInvitesErrorState) {
-                return SliverFillRemaining(
-                  hasScrollBody: false,
-                  child: Center(
-                    child: Text(
-                      "Failed to load event links.",
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontStyle: FontStyle.italic,
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ),
-                );
-              } else if (state is GetAllEventInvitesSuccess) {
-                if (state.invites.isEmpty) {
+    return BlocListener<EventLinkBloc, EventLinkState>(
+      listener: (context, state) {
+        if (state is CreateEventInviteSuccess) {
+          Navigator.of(context).pop();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Theme.of(context).colorScheme.primary,
+            ),
+          );
+        } else if (state is CreateEventInviteErrorState) {
+          Navigator.of(context).pop();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+          );
+        }
+      },
+      child: Scaffold(
+        body: CustomScrollView(
+          slivers: [
+            SliverAppBar.large(title: const Text("Event Links")),
+            BlocBuilder<EventLinkBloc, EventLinkState>(
+              builder: (context, state) {
+                if (state is GetAllEventInvitesLoading) {
+                  return SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Center(child: const SpinningScallopIndicator()),
+                  );
+                } else if (state is GetAllEventInvitesErrorState) {
                   return SliverFillRemaining(
                     hasScrollBody: false,
                     child: Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.link_off_rounded,
-                            size: 64,
-                            color: Theme.of(context).colorScheme.outline,
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            "No event links created yet.",
-                            style: Theme.of(context).textTheme.titleMedium
-                                ?.copyWith(
-                                  fontStyle: FontStyle.italic,
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onSurfaceVariant,
-                                ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
+                      child: Text(
+                        "Failed to load event links.",
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(
+                              fontStyle: FontStyle.italic,
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurfaceVariant,
+                            ),
                       ),
                     ),
                   );
-                }
-
-                return SliverPadding(
-                  padding: const EdgeInsets.all(16),
-                  sliver: MultiSliver(
-                    children: [
-                      SliverList.separated(
-                        itemCount: state.invites.length,
-                        separatorBuilder: (_, __) => const SizedBox(height: 12),
-                        itemBuilder: (context, index) {
-                          final invite = state.invites[index];
-
-                          return PrivateLinkWidget(
-                            index: index,
-                            invite: invite,
-                            linkType: LinkType.event,
-                          );
-                        },
+                } else if (state is GetAllEventInvitesSuccess) {
+                  if (state.invites.isEmpty) {
+                    return SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.link_off_rounded,
+                              size: 64,
+                              color: Theme.of(context).colorScheme.outline,
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              "No event links created yet.",
+                              style: Theme.of(context).textTheme.titleMedium
+                                  ?.copyWith(
+                                    fontStyle: FontStyle.italic,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onSurfaceVariant,
+                                  ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
                       ),
-                      SliverPadding(padding: const EdgeInsets.only(bottom: 80)),
-                    ],
-                  ),
-                );
-              }
-              return const SliverToBoxAdapter(child: SizedBox.shrink());
-            },
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
-        icon: const Icon(Icons.add),
-        label: const Text("Create Link"),
+                    );
+                  }
+
+                  return SliverPadding(
+                    padding: const EdgeInsets.all(16),
+                    sliver: MultiSliver(
+                      children: [
+                        SliverList.separated(
+                          itemCount: state.invites.length,
+                          separatorBuilder: (_, __) =>
+                              const SizedBox(height: 12),
+                          itemBuilder: (context, index) {
+                            final invite = state.invites[index];
+
+                            return PrivateLinkWidget(
+                              index: index,
+                              invite: invite,
+                              linkType: LinkType.event,
+                            );
+                          },
+                        ),
+                        SliverPadding(
+                          padding: const EdgeInsets.only(bottom: 80),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+                return const SliverToBoxAdapter(child: SizedBox.shrink());
+              },
+            ),
+          ],
+        ),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () => showCreateLinkBottomSheet(context, widget.eventId),
+          icon: const Icon(Icons.add),
+          label: const Text("Create Link"),
+        ),
       ),
     );
   }

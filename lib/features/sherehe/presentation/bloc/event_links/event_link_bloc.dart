@@ -32,12 +32,8 @@ class EventLinkBloc extends Bloc<EventLinkEvent, EventLinkState> {
     final result = await getEventInvites(event.eventId);
 
     result.fold(
-      (failure) => emit(
-        GetAllEventInvitesErrorState(message: failure.message),
-      ),
-      (invites) => emit(
-        GetAllEventInvitesSuccess(invites: invites),
-      ),
+      (failure) => emit(GetAllEventInvitesErrorState(message: failure.message)),
+      (invites) => emit(GetAllEventInvitesSuccess(invites: invites)),
     );
   }
 
@@ -54,13 +50,11 @@ class EventLinkBloc extends Bloc<EventLinkEvent, EventLinkState> {
     );
 
     result.fold(
-      (failure) => emit(
-        CreateEventInviteErrorState(message: failure.message),
-      ),
-      (message) => emit(
-        CreateEventInviteSuccess(message: message),
-      ),
+      (failure) => emit(CreateEventInviteErrorState(message: failure.message)),
+      (message) => emit(CreateEventInviteSuccess(message: message)),
     );
+
+    add(GetEventInvites(eventId: event.eventId));
   }
 
   Future<void> _onUpdateEventInvite(
@@ -76,12 +70,8 @@ class EventLinkBloc extends Bloc<EventLinkEvent, EventLinkState> {
     );
 
     result.fold(
-      (failure) => emit(
-        UpdateEventInviteErrorState(message: failure.message),
-      ),
-      (invite) => emit(
-        UpdateEventInviteSuccess(invite: invite),
-      ),
+      (failure) => emit(UpdateEventInviteErrorState(message: failure.message)),
+      (invite) => emit(UpdateEventInviteSuccess(invite: invite)),
     );
   }
 
@@ -91,17 +81,11 @@ class EventLinkBloc extends Bloc<EventLinkEvent, EventLinkState> {
   ) async {
     emit(DeleteEventInviteLoading());
 
-    final result = await deleteEventInvite(
-      inviteId: event.inviteId,
-    );
+    final result = await deleteEventInvite(inviteId: event.inviteId);
 
     result.fold(
-      (failure) => emit(
-        DeleteEventInviteErrorState(message: failure.message),
-      ),
-      (message) => emit(
-        DeleteEventInviteSuccess(message: message),
-      ),
+      (failure) => emit(DeleteEventInviteErrorState(message: failure.message)),
+      (message) => emit(DeleteEventInviteSuccess(message: message)),
     );
   }
 }
