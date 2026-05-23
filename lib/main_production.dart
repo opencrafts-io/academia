@@ -19,53 +19,27 @@ void main(List<String> args) async {
     () async {
       WidgetsFlutterBinding.ensureInitialized();
 
-      // PostHog Configuration
-      final config = PostHogConfig(
-        'phc_32udm2EGDp8WC0DylStvkmMCvezSDVkDIRKhSMz0IYH',
-      );
-      config.host = 'https://eu.i.posthog.com';
-      config.debug = kDebugMode;
-      config.flushAt = 10;
-      config.captureApplicationLifecycleEvents = true;
-      config.sessionReplay = true;
-      config.sessionReplayConfig.maskAllTexts = false;
-      config.sessionReplayConfig.maskAllImages = false;
-
-      // Enable exception autocapture
-      config.errorTrackingConfig.captureFlutterErrors = true;
-      config.errorTrackingConfig.capturePlatformDispatcherErrors = true;
-      config.errorTrackingConfig.captureIsolateErrors = true;
-      config.errorTrackingConfig.captureNativeExceptions = true;
-      config.errorTrackingConfig.captureSilentFlutterErrors = false;
-
-      await Posthog().setup(config);
+      final (storageDir, _, _) = await (
+        getApplicationDocumentsDirectory(),
+        _initPostHog(),
+        di.init(
+          FlavorConfig(
+            flavor: Flavor.production,
+            appName: "Academia",
+            apiBaseUrl: "https://api.opencrafts.io",
+          ),
+        ),
+      ).wait;
 
       HydratedBloc.storage = await HydratedStorage.build(
         storageDirectory: kIsWeb
             ? HydratedStorageDirectory.web
-            : HydratedStorageDirectory(
-                (await getApplicationDocumentsDirectory()).path,
-              ),
+            : HydratedStorageDirectory(storageDir.path),
       );
 
       if (runWebViewTitleBarWidget(args)) {
         return;
       }
-
-      if (!kIsWeb) {
-        if (Platform.isAndroid || Platform.isIOS) {
-          await Workmanager().initialize(backgroundCallbackDispatcher);
-          await registerDefaultBackgroundTasks();
-        }
-      }
-
-      await di.init(
-        FlavorConfig(
-          flavor: Flavor.production,
-          appName: "Academia",
-          apiBaseUrl: "https://api.opencrafts.io",
-        ),
-      );
 
       runApp(
         PostHogWidget(
@@ -75,9 +49,34 @@ void main(List<String> args) async {
           ),
         ),
       );
+
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
+          await Workmanager().initialize(backgroundCallbackDispatcher);
+          await registerDefaultBackgroundTasks();
+        }
+      });
     },
     (error, stack) {
       Posthog().captureException(error: error, stackTrace: stack);
     },
   );
+}
+
+Future<void> _initPostHog() async {
+  final config =
+      PostHogConfig('phc_32udm2EGDp8WC0DylStvkmMCvezSDVkDIRKhSMz0IYH')
+        ..host = 'https://eu.i.posthog.com'
+        ..debug = kDebugMode
+        ..flushAt = 10
+        ..captureApplicationLifecycleEvents = true
+        ..sessionReplay = true
+        ..sessionReplayConfig.maskAllTexts = false
+        ..sessionReplayConfig.maskAllImages = false
+        ..errorTrackingConfig.captureFlutterErrors = true
+        ..errorTrackingConfig.capturePlatformDispatcherErrors = true
+        ..errorTrackingConfig.captureIsolateErrors = true
+        ..errorTrackingConfig.captureNativeExceptions = true
+        ..errorTrackingConfig.captureSilentFlutterErrors = false;
+  await Posthog().setup(config);
 }

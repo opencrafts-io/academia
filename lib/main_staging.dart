@@ -18,31 +18,26 @@ void main(List<String> args) async {
   await runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
+
+      final (storageDir, _) = await (
+        getApplicationDocumentsDirectory(),
+        di.init(
+          FlavorConfig(
+            flavor: Flavor.staging,
+            appName: "Academia - Staging",
+            apiBaseUrl: "https://api.opencrafts.io",
+          ),
+        ),
+      ).wait;
       HydratedBloc.storage = await HydratedStorage.build(
         storageDirectory: kIsWeb
             ? HydratedStorageDirectory.web
-            : HydratedStorageDirectory(
-                (await getApplicationDocumentsDirectory()).path,
-              ),
+            : HydratedStorageDirectory(storageDir.path),
       );
 
       if (runWebViewTitleBarWidget(args)) {
         return;
       }
-
-      if (!kIsWeb) {
-        if (Platform.isAndroid || Platform.isIOS) {
-          await Workmanager().initialize(backgroundCallbackDispatcher);
-          await registerDefaultBackgroundTasks();
-        }
-      }
-      await di.init(
-        FlavorConfig(
-          flavor: Flavor.staging,
-          appName: "Academia - Staging",
-          apiBaseUrl: "https://api.opencrafts.io",
-        ),
-      );
 
       runApp(
         DioRequestInspectorMain(
@@ -50,6 +45,12 @@ void main(List<String> args) async {
           child: Academia(),
         ),
       );
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
+          await Workmanager().initialize(backgroundCallbackDispatcher);
+          await registerDefaultBackgroundTasks();
+        }
+      });
     },
     (error, stacktrace) {
       Logger().e(
