@@ -161,9 +161,10 @@ class _TodoHomeScreenState extends State<TodoHomeScreen>
         return Scaffold(
           body: RefreshIndicator.adaptive(
             onRefresh: () async {
-              await Future.delayed(const Duration(seconds: 2));
-              if (!context.mounted) return;
-              context.read<TodoListCubit>().loadTodoLists();
+              await (
+                context.read<TodoListCubit>().loadTodoLists(),
+                Future.delayed(const Duration(seconds: 2)),
+              ).wait;
             },
             child: DefaultTabController(
               key: ValueKey(lists.length),
