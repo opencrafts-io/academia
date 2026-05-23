@@ -267,22 +267,11 @@ class _TodoItemsTabState extends State<_TodoItemsTab>
         .toList();
   }
 
-  bool _sliceChanged(TodoItemState prev, TodoItemState curr) {
-    final a = _filter(prev.currentItems);
-    final b = _filter(curr.currentItems);
-    if (a.length != b.length) return true;
-    for (var i = 0; i < a.length; i++) {
-      if (a[i] != b[i]) return true;
-    }
-    return false;
-  }
-
   @override
   Widget build(BuildContext context) {
     super.build(context);
 
     return BlocBuilder<TodoItemCubit, TodoItemState>(
-      buildWhen: _sliceChanged,
       builder: (context, state) {
         final items = _filter(state.currentItems);
 
