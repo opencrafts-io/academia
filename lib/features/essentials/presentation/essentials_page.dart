@@ -151,6 +151,7 @@ class _EssentialsPageState extends State<EssentialsPage> {
             sliver: MultiSliver(
               children: [
                 Card.outlined(
+                  clipBehavior: Clip.hardEdge,
                   child: ListTile(
                     leading: Icon(Icons.settings),
                     title: Text("Settings & Preferences"),
