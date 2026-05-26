@@ -7083,6 +7083,15 @@ class $TicketStatsTableTable extends TicketStatsTable
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _scopeMeta = const VerificationMeta('scope');
+  @override
+  late final GeneratedColumn<String> scope = GeneratedColumn<String>(
+    'scope',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     ticketId,
@@ -7090,6 +7099,7 @@ class $TicketStatsTableTable extends TicketStatsTable
     ticketPrice,
     ticketsSold,
     ticketsRemaining,
+    scope,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -7152,6 +7162,14 @@ class $TicketStatsTableTable extends TicketStatsTable
     } else if (isInserting) {
       context.missing(_ticketsRemainingMeta);
     }
+    if (data.containsKey('scope')) {
+      context.handle(
+        _scopeMeta,
+        scope.isAcceptableOrUnknown(data['scope']!, _scopeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_scopeMeta);
+    }
     return context;
   }
 
@@ -7181,6 +7199,10 @@ class $TicketStatsTableTable extends TicketStatsTable
         DriftSqlType.int,
         data['${effectivePrefix}tickets_remaining'],
       )!,
+      scope: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}scope'],
+      )!,
     );
   }
 
@@ -7196,12 +7218,14 @@ class TicketStatsData extends DataClass implements Insertable<TicketStatsData> {
   final int ticketPrice;
   final int ticketsSold;
   final int ticketsRemaining;
+  final String scope;
   const TicketStatsData({
     required this.ticketId,
     required this.ticketName,
     required this.ticketPrice,
     required this.ticketsSold,
     required this.ticketsRemaining,
+    required this.scope,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -7211,6 +7235,7 @@ class TicketStatsData extends DataClass implements Insertable<TicketStatsData> {
     map['ticket_price'] = Variable<int>(ticketPrice);
     map['tickets_sold'] = Variable<int>(ticketsSold);
     map['tickets_remaining'] = Variable<int>(ticketsRemaining);
+    map['scope'] = Variable<String>(scope);
     return map;
   }
 
@@ -7221,6 +7246,7 @@ class TicketStatsData extends DataClass implements Insertable<TicketStatsData> {
       ticketPrice: Value(ticketPrice),
       ticketsSold: Value(ticketsSold),
       ticketsRemaining: Value(ticketsRemaining),
+      scope: Value(scope),
     );
   }
 
@@ -7235,6 +7261,7 @@ class TicketStatsData extends DataClass implements Insertable<TicketStatsData> {
       ticketPrice: serializer.fromJson<int>(json['ticket_price']),
       ticketsSold: serializer.fromJson<int>(json['tickets_sold']),
       ticketsRemaining: serializer.fromJson<int>(json['tickets_remaining']),
+      scope: serializer.fromJson<String>(json['scope']),
     );
   }
   @override
@@ -7246,6 +7273,7 @@ class TicketStatsData extends DataClass implements Insertable<TicketStatsData> {
       'ticket_price': serializer.toJson<int>(ticketPrice),
       'tickets_sold': serializer.toJson<int>(ticketsSold),
       'tickets_remaining': serializer.toJson<int>(ticketsRemaining),
+      'scope': serializer.toJson<String>(scope),
     };
   }
 
@@ -7255,12 +7283,14 @@ class TicketStatsData extends DataClass implements Insertable<TicketStatsData> {
     int? ticketPrice,
     int? ticketsSold,
     int? ticketsRemaining,
+    String? scope,
   }) => TicketStatsData(
     ticketId: ticketId ?? this.ticketId,
     ticketName: ticketName ?? this.ticketName,
     ticketPrice: ticketPrice ?? this.ticketPrice,
     ticketsSold: ticketsSold ?? this.ticketsSold,
     ticketsRemaining: ticketsRemaining ?? this.ticketsRemaining,
+    scope: scope ?? this.scope,
   );
   TicketStatsData copyWithCompanion(TicketStatsTableCompanion data) {
     return TicketStatsData(
@@ -7277,6 +7307,7 @@ class TicketStatsData extends DataClass implements Insertable<TicketStatsData> {
       ticketsRemaining: data.ticketsRemaining.present
           ? data.ticketsRemaining.value
           : this.ticketsRemaining,
+      scope: data.scope.present ? data.scope.value : this.scope,
     );
   }
 
@@ -7287,7 +7318,8 @@ class TicketStatsData extends DataClass implements Insertable<TicketStatsData> {
           ..write('ticketName: $ticketName, ')
           ..write('ticketPrice: $ticketPrice, ')
           ..write('ticketsSold: $ticketsSold, ')
-          ..write('ticketsRemaining: $ticketsRemaining')
+          ..write('ticketsRemaining: $ticketsRemaining, ')
+          ..write('scope: $scope')
           ..write(')'))
         .toString();
   }
@@ -7299,6 +7331,7 @@ class TicketStatsData extends DataClass implements Insertable<TicketStatsData> {
     ticketPrice,
     ticketsSold,
     ticketsRemaining,
+    scope,
   );
   @override
   bool operator ==(Object other) =>
@@ -7308,7 +7341,8 @@ class TicketStatsData extends DataClass implements Insertable<TicketStatsData> {
           other.ticketName == this.ticketName &&
           other.ticketPrice == this.ticketPrice &&
           other.ticketsSold == this.ticketsSold &&
-          other.ticketsRemaining == this.ticketsRemaining);
+          other.ticketsRemaining == this.ticketsRemaining &&
+          other.scope == this.scope);
 }
 
 class TicketStatsTableCompanion extends UpdateCompanion<TicketStatsData> {
@@ -7317,6 +7351,7 @@ class TicketStatsTableCompanion extends UpdateCompanion<TicketStatsData> {
   final Value<int> ticketPrice;
   final Value<int> ticketsSold;
   final Value<int> ticketsRemaining;
+  final Value<String> scope;
   final Value<int> rowid;
   const TicketStatsTableCompanion({
     this.ticketId = const Value.absent(),
@@ -7324,6 +7359,7 @@ class TicketStatsTableCompanion extends UpdateCompanion<TicketStatsData> {
     this.ticketPrice = const Value.absent(),
     this.ticketsSold = const Value.absent(),
     this.ticketsRemaining = const Value.absent(),
+    this.scope = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   TicketStatsTableCompanion.insert({
@@ -7332,18 +7368,21 @@ class TicketStatsTableCompanion extends UpdateCompanion<TicketStatsData> {
     required int ticketPrice,
     required int ticketsSold,
     required int ticketsRemaining,
+    required String scope,
     this.rowid = const Value.absent(),
   }) : ticketId = Value(ticketId),
        ticketName = Value(ticketName),
        ticketPrice = Value(ticketPrice),
        ticketsSold = Value(ticketsSold),
-       ticketsRemaining = Value(ticketsRemaining);
+       ticketsRemaining = Value(ticketsRemaining),
+       scope = Value(scope);
   static Insertable<TicketStatsData> custom({
     Expression<String>? ticketId,
     Expression<String>? ticketName,
     Expression<int>? ticketPrice,
     Expression<int>? ticketsSold,
     Expression<int>? ticketsRemaining,
+    Expression<String>? scope,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -7352,6 +7391,7 @@ class TicketStatsTableCompanion extends UpdateCompanion<TicketStatsData> {
       if (ticketPrice != null) 'ticket_price': ticketPrice,
       if (ticketsSold != null) 'tickets_sold': ticketsSold,
       if (ticketsRemaining != null) 'tickets_remaining': ticketsRemaining,
+      if (scope != null) 'scope': scope,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -7362,6 +7402,7 @@ class TicketStatsTableCompanion extends UpdateCompanion<TicketStatsData> {
     Value<int>? ticketPrice,
     Value<int>? ticketsSold,
     Value<int>? ticketsRemaining,
+    Value<String>? scope,
     Value<int>? rowid,
   }) {
     return TicketStatsTableCompanion(
@@ -7370,6 +7411,7 @@ class TicketStatsTableCompanion extends UpdateCompanion<TicketStatsData> {
       ticketPrice: ticketPrice ?? this.ticketPrice,
       ticketsSold: ticketsSold ?? this.ticketsSold,
       ticketsRemaining: ticketsRemaining ?? this.ticketsRemaining,
+      scope: scope ?? this.scope,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -7392,6 +7434,9 @@ class TicketStatsTableCompanion extends UpdateCompanion<TicketStatsData> {
     if (ticketsRemaining.present) {
       map['tickets_remaining'] = Variable<int>(ticketsRemaining.value);
     }
+    if (scope.present) {
+      map['scope'] = Variable<String>(scope.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -7406,6 +7451,7 @@ class TicketStatsTableCompanion extends UpdateCompanion<TicketStatsData> {
           ..write('ticketPrice: $ticketPrice, ')
           ..write('ticketsSold: $ticketsSold, ')
           ..write('ticketsRemaining: $ticketsRemaining, ')
+          ..write('scope: $scope, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -27240,6 +27286,7 @@ typedef $$TicketStatsTableTableCreateCompanionBuilder =
       required int ticketPrice,
       required int ticketsSold,
       required int ticketsRemaining,
+      required String scope,
       Value<int> rowid,
     });
 typedef $$TicketStatsTableTableUpdateCompanionBuilder =
@@ -27249,6 +27296,7 @@ typedef $$TicketStatsTableTableUpdateCompanionBuilder =
       Value<int> ticketPrice,
       Value<int> ticketsSold,
       Value<int> ticketsRemaining,
+      Value<String> scope,
       Value<int> rowid,
     });
 
@@ -27283,6 +27331,11 @@ class $$TicketStatsTableTableFilterComposer
 
   ColumnFilters<int> get ticketsRemaining => $composableBuilder(
     column: $table.ticketsRemaining,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get scope => $composableBuilder(
+    column: $table.scope,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -27320,6 +27373,11 @@ class $$TicketStatsTableTableOrderingComposer
     column: $table.ticketsRemaining,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get scope => $composableBuilder(
+    column: $table.scope,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$TicketStatsTableTableAnnotationComposer
@@ -27353,6 +27411,9 @@ class $$TicketStatsTableTableAnnotationComposer
     column: $table.ticketsRemaining,
     builder: (column) => column,
   );
+
+  GeneratedColumn<String> get scope =>
+      $composableBuilder(column: $table.scope, builder: (column) => column);
 }
 
 class $$TicketStatsTableTableTableManager
@@ -27397,6 +27458,7 @@ class $$TicketStatsTableTableTableManager
                 Value<int> ticketPrice = const Value.absent(),
                 Value<int> ticketsSold = const Value.absent(),
                 Value<int> ticketsRemaining = const Value.absent(),
+                Value<String> scope = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => TicketStatsTableCompanion(
                 ticketId: ticketId,
@@ -27404,6 +27466,7 @@ class $$TicketStatsTableTableTableManager
                 ticketPrice: ticketPrice,
                 ticketsSold: ticketsSold,
                 ticketsRemaining: ticketsRemaining,
+                scope: scope,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -27413,6 +27476,7 @@ class $$TicketStatsTableTableTableManager
                 required int ticketPrice,
                 required int ticketsSold,
                 required int ticketsRemaining,
+                required String scope,
                 Value<int> rowid = const Value.absent(),
               }) => TicketStatsTableCompanion.insert(
                 ticketId: ticketId,
@@ -27420,6 +27484,7 @@ class $$TicketStatsTableTableTableManager
                 ticketPrice: ticketPrice,
                 ticketsSold: ticketsSold,
                 ticketsRemaining: ticketsRemaining,
+                scope: scope,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

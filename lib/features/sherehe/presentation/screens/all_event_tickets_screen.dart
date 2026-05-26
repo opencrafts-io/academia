@@ -217,6 +217,7 @@ class _AllEventTicketsScreenState extends State<AllEventTicketsScreen> {
                             (stats) => _TicketTypeTile(
                               type: stats.ticketName,
                               sold: stats.ticketsSold,
+                              scope: stats.scope,
                               remaining: stats.ticketsRemaining,
                               progress:
                                   stats.ticketsSold /
@@ -270,6 +271,7 @@ class _TicketTypeTile extends StatelessWidget {
   final int remaining;
   final VoidCallback onTap;
   final double progress;
+  final String scope;
 
   const _TicketTypeTile({
     required this.type,
@@ -277,10 +279,12 @@ class _TicketTypeTile extends StatelessWidget {
     required this.remaining,
     required this.onTap,
     required this.progress,
+    required this.scope,
   });
 
   @override
   Widget build(BuildContext context) {
+    final scopeType = ScopeTypesX.fromBackend(scope);
     final percentage = (progress * 100).clamp(0, 100).toInt();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -312,16 +316,28 @@ class _TicketTypeTile extends StatelessWidget {
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primaryContainer,
+                        color: scopeType == ScopeTypes.public
+                            ? Theme.of(context).colorScheme.primaryContainer
+                            : scopeType == ScopeTypes.institution
+                            ? Theme.of(context).colorScheme.secondaryContainer
+                            : Theme.of(context).colorScheme.tertiaryContainer,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
-                        "Public",
+                        scopeType.label,
                         style: Theme.of(context).textTheme.labelMedium
                             ?.copyWith(
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.onPrimaryContainer,
+                              color: scopeType == ScopeTypes.public
+                                  ? Theme.of(
+                                      context,
+                                    ).colorScheme.onPrimaryContainer
+                                  : scopeType == ScopeTypes.institution
+                                  ? Theme.of(
+                                      context,
+                                    ).colorScheme.onSecondaryContainer
+                                  : Theme.of(
+                                      context,
+                                    ).colorScheme.onTertiaryContainer,
                               fontWeight: FontWeight.w600,
                             ),
                       ),

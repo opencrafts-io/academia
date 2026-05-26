@@ -9,8 +9,6 @@ import 'package:academia/constants/constants.dart';
 import 'package:academia/config/config.dart';
 import 'package:go_router/go_router.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:dio/dio.dart';
-import 'package:path_provider/path_provider.dart';
 
 class ShereheDetailsPage extends StatefulWidget {
   final String? eventId;
