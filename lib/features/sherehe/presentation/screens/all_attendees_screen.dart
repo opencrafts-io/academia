@@ -6,7 +6,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class AllAttendeesScreen extends StatefulWidget {
   final String eventId;
 
-  const AllAttendeesScreen({super.key, required this.eventId});
+  const AllAttendeesScreen({
+    super.key,
+    required this.eventId,
+  });
 
   @override
   State<AllAttendeesScreen> createState() => _AllAttendeesScreenState();
@@ -60,7 +63,7 @@ class _AllAttendeesScreenState extends State<AllAttendeesScreen> {
                 title: const Text("All Attendees"),
                 pinned: true,
               ),
-      
+
               // INITIAL LOADING
               if (state is AllAttendeesStateLoading) ...[
                 const SliverFillRemaining(
@@ -113,10 +116,7 @@ class _AllAttendeesScreenState extends State<AllAttendeesScreen> {
                         children: [
                           Icon(Icons.person_off, size: 60),
                           SizedBox(height: 16),
-                          Text(
-                            "No attendees yet",
-                            textAlign: TextAlign.center,
-                          ),
+                          Text("No attendees yet", textAlign: TextAlign.center),
                         ],
                       ),
                     ),
@@ -127,7 +127,7 @@ class _AllAttendeesScreenState extends State<AllAttendeesScreen> {
                     separatorBuilder: (_, _) => const SizedBox(height: 8),
                     itemBuilder: (context, index) {
                       final attendee = state.attendees[index];
-      
+
                       return UserTile(
                         name: attendee.user?.username ?? "Guest",
                         subtitle:
@@ -144,11 +144,10 @@ class _AllAttendeesScreenState extends State<AllAttendeesScreen> {
                   separatorBuilder: (_, _) => const SizedBox(height: 8),
                   itemBuilder: (context, index) {
                     final attendee = state.existingAttendee[index];
-      
+
                     return UserTile(
                       name: attendee.user?.username ?? "Guest",
-                      subtitle:
-                          attendee.ticket?.ticketName ?? "Unknown Ticket",
+                      subtitle: attendee.ticket?.ticketName ?? "Unknown Ticket",
                       icon: Icons.person_outline,
                     );
                   },
@@ -167,11 +166,10 @@ class _AllAttendeesScreenState extends State<AllAttendeesScreen> {
                   separatorBuilder: (_, _) => const SizedBox(height: 8),
                   itemBuilder: (context, index) {
                     final attendee = state.existingAttendee[index];
-      
+
                     return UserTile(
                       name: attendee.user?.username ?? "Guest",
-                      subtitle:
-                          attendee.ticket?.ticketName ?? "Unknown Ticket",
+                      subtitle: attendee.ticket?.ticketName ?? "Unknown Ticket",
                       icon: Icons.person_outline,
                     );
                   },
@@ -189,14 +187,13 @@ class _AllAttendeesScreenState extends State<AllAttendeesScreen> {
                         ),
                         const SizedBox(height: 10),
                         FilledButton(
-                          onPressed: () =>
-                              context.read<AllAttendeesBloc>().add(
-                                FetchAllAttendees(
-                                  eventId: widget.eventId,
-                                  page: _currentPage,
-                                  limit: 20,
-                                ),
-                              ),
+                          onPressed: () => context.read<AllAttendeesBloc>().add(
+                            FetchAllAttendees(
+                              eventId: widget.eventId,
+                              page: _currentPage,
+                              limit: 20,
+                            ),
+                          ),
                           child: const Text("Try Again"),
                         ),
                       ],

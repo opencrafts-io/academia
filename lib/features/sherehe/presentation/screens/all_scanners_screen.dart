@@ -6,8 +6,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AllScannersScreen extends StatefulWidget {
   final String eventId;
+  final String eventName;
+  final String eventLocation;
+  final String eventStartDate;
+  final String eventEndDate;
+  final String? eventPosterImage;
 
-  const AllScannersScreen({super.key, required this.eventId});
+  const AllScannersScreen({
+    super.key,
+    required this.eventId,
+    required this.eventName,
+    required this.eventLocation,
+    required this.eventStartDate,
+    required this.eventEndDate,
+    this.eventPosterImage,
+  });
 
   @override
   State<AllScannersScreen> createState() => _AllScannersScreenState();
@@ -255,8 +268,14 @@ class _AllScannersScreenState extends State<AllScannersScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () =>
-            AddEventScannerRoute(eventId: widget.eventId).push(context),
+        onPressed: () => AddEventScannerRoute(
+          eventId: widget.eventId,
+          eventName: widget.eventName,
+          eventLocation: widget.eventLocation,
+          eventStartDate: widget.eventStartDate,
+          eventEndDate: widget.eventEndDate,
+          eventPosterImage: widget.eventPosterImage,
+        ).push(context),
         label: const Text("Add Scanner"),
         icon: const Icon(Icons.add),
       ),

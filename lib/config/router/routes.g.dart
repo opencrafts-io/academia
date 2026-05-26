@@ -815,14 +815,28 @@ mixin $OrganizerDashboardRoute on GoRouteData {
 }
 
 mixin $AllAttendeesRoute on GoRouteData {
-  static AllAttendeesRoute _fromState(GoRouterState state) =>
-      AllAttendeesRoute(eventId: state.pathParameters['eventId']!);
+  static AllAttendeesRoute _fromState(GoRouterState state) => AllAttendeesRoute(
+    eventId: state.pathParameters['eventId']!,
+    eventName: state.uri.queryParameters['event-name']!,
+    eventLocation: state.uri.queryParameters['event-location']!,
+    eventStartDate: state.uri.queryParameters['event-start-date']!,
+    eventEndDate: state.uri.queryParameters['event-end-date']!,
+    eventPosterImage: state.uri.queryParameters['event-poster-image'],
+  );
 
   AllAttendeesRoute get _self => this as AllAttendeesRoute;
 
   @override
   String get location => GoRouteData.$location(
     '/sherehe/get-event/${Uri.encodeComponent(_self.eventId)}/organizer-dashboard/all-attendees',
+    queryParams: {
+      'event-name': _self.eventName,
+      'event-location': _self.eventLocation,
+      'event-start-date': _self.eventStartDate,
+      'event-end-date': _self.eventEndDate,
+      if (_self.eventPosterImage != null)
+        'event-poster-image': _self.eventPosterImage,
+    },
   );
 
   @override
@@ -840,14 +854,28 @@ mixin $AllAttendeesRoute on GoRouteData {
 }
 
 mixin $AllScannersRoute on GoRouteData {
-  static AllScannersRoute _fromState(GoRouterState state) =>
-      AllScannersRoute(eventId: state.pathParameters['eventId']!);
+  static AllScannersRoute _fromState(GoRouterState state) => AllScannersRoute(
+    eventId: state.pathParameters['eventId']!,
+    eventName: state.uri.queryParameters['event-name']!,
+    eventLocation: state.uri.queryParameters['event-location']!,
+    eventStartDate: state.uri.queryParameters['event-start-date']!,
+    eventEndDate: state.uri.queryParameters['event-end-date']!,
+    eventPosterImage: state.uri.queryParameters['event-poster-image'],
+  );
 
   AllScannersRoute get _self => this as AllScannersRoute;
 
   @override
   String get location => GoRouteData.$location(
     '/sherehe/get-event/${Uri.encodeComponent(_self.eventId)}/organizer-dashboard/all-scanners',
+    queryParams: {
+      'event-name': _self.eventName,
+      'event-location': _self.eventLocation,
+      'event-start-date': _self.eventStartDate,
+      'event-end-date': _self.eventEndDate,
+      if (_self.eventPosterImage != null)
+        'event-poster-image': _self.eventPosterImage,
+    },
   );
 
   @override
@@ -866,13 +894,28 @@ mixin $AllScannersRoute on GoRouteData {
 
 mixin $AddEventScannerRoute on GoRouteData {
   static AddEventScannerRoute _fromState(GoRouterState state) =>
-      AddEventScannerRoute(eventId: state.pathParameters['eventId']!);
+      AddEventScannerRoute(
+        eventId: state.pathParameters['eventId']!,
+        eventName: state.uri.queryParameters['event-name']!,
+        eventLocation: state.uri.queryParameters['event-location']!,
+        eventStartDate: state.uri.queryParameters['event-start-date']!,
+        eventEndDate: state.uri.queryParameters['event-end-date']!,
+        eventPosterImage: state.uri.queryParameters['event-poster-image'],
+      );
 
   AddEventScannerRoute get _self => this as AddEventScannerRoute;
 
   @override
   String get location => GoRouteData.$location(
     '/sherehe/get-event/${Uri.encodeComponent(_self.eventId)}/organizer-dashboard/all-scanners/add-event-scanner',
+    queryParams: {
+      'event-name': _self.eventName,
+      'event-location': _self.eventLocation,
+      'event-start-date': _self.eventStartDate,
+      'event-end-date': _self.eventEndDate,
+      if (_self.eventPosterImage != null)
+        'event-poster-image': _self.eventPosterImage,
+    },
   );
 
   @override

@@ -149,6 +149,11 @@ class _OrganizerDashboardPageState extends State<OrganizerDashboardPage> {
                         title: 'Scanners',
                         onTap: () => AllScannersRoute(
                           eventId: widget.eventId,
+                          eventName: widget.eventName,
+                          eventLocation: widget.eventLocation,
+                          eventStartDate: widget.eventStartDate,
+                          eventEndDate: widget.eventEndDate,
+                          eventPosterImage: widget.eventPosterImage,
                         ).push(context),
                       ),
                       _MenuCard(
@@ -156,6 +161,11 @@ class _OrganizerDashboardPageState extends State<OrganizerDashboardPage> {
                         title: 'Attendees',
                         onTap: () => AllAttendeesRoute(
                           eventId: widget.eventId,
+                          eventName: widget.eventName,
+                          eventLocation: widget.eventLocation,
+                          eventStartDate: widget.eventStartDate,
+                          eventEndDate: widget.eventEndDate,
+                          eventPosterImage: widget.eventPosterImage,
                         ).push(context),
                       ),
                     ]),

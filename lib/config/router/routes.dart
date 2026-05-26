@@ -472,8 +472,20 @@ class OrganizerDashboardRoute extends GoRouteData
 
 class AllAttendeesRoute extends GoRouteData with $AllAttendeesRoute {
   final String eventId;
+  final String eventName;
+  final String eventLocation;
+  final String eventStartDate;
+  final String eventEndDate;
+  final String? eventPosterImage;
 
-  const AllAttendeesRoute({required this.eventId});
+  const AllAttendeesRoute({
+    required this.eventId,
+    required this.eventName,
+    required this.eventLocation,
+    required this.eventStartDate,
+    required this.eventEndDate,
+    this.eventPosterImage,
+  });
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return AllAttendeesScreen(eventId: eventId);
@@ -482,11 +494,30 @@ class AllAttendeesRoute extends GoRouteData with $AllAttendeesRoute {
 
 class AllScannersRoute extends GoRouteData with $AllScannersRoute {
   final String eventId;
+  final String eventName;
+  final String eventLocation;
+  final String eventStartDate;
+  final String eventEndDate;
+  final String? eventPosterImage;
 
-  const AllScannersRoute({required this.eventId});
+  const AllScannersRoute({
+    required this.eventId,
+    required this.eventName,
+    required this.eventLocation,
+    required this.eventStartDate,
+    required this.eventEndDate,
+    this.eventPosterImage,
+  });
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return AllScannersScreen(eventId: eventId);
+    return AllScannersScreen(
+      eventId: eventId,
+      eventName: eventName,
+      eventLocation: eventLocation,
+      eventStartDate: eventStartDate,
+      eventEndDate: eventEndDate,
+      eventPosterImage: eventPosterImage,
+    );
   }
 }
 
@@ -581,8 +612,20 @@ class EventLinksRoute extends GoRouteData with $EventLinksRoute {
 
 class AddEventScannerRoute extends GoRouteData with $AddEventScannerRoute {
   final String eventId;
+  final String eventName;
+  final String eventLocation;
+  final String eventStartDate;
+  final String eventEndDate;
+  final String? eventPosterImage;
 
-  const AddEventScannerRoute({required this.eventId});
+  const AddEventScannerRoute({
+    required this.eventId,
+    required this.eventName,
+    required this.eventLocation,
+    required this.eventStartDate,
+    required this.eventEndDate,
+    this.eventPosterImage,
+  });
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return AddEventScannerScreen(eventId: eventId);
