@@ -1,5 +1,6 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/features/sherehe/domain/entities/invite.dart';
+import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -13,6 +14,11 @@ class PrivateLinkWidget extends StatefulWidget {
   final Invite invite;
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
+  final String eventName;
+  final String eventLocation;
+  final String eventStartDate;
+  final String eventEndDate;
+  final String? eventPosterImage;
 
   const PrivateLinkWidget({
     super.key,
@@ -21,6 +27,11 @@ class PrivateLinkWidget extends StatefulWidget {
     required this.invite,
     this.onEdit,
     this.onDelete,
+    required this.eventName,
+    required this.eventLocation,
+    required this.eventStartDate,
+    required this.eventEndDate,
+    this.eventPosterImage,
   });
 
   @override
@@ -28,6 +39,7 @@ class PrivateLinkWidget extends StatefulWidget {
 }
 
 class _PrivateLinkWidgetState extends State<PrivateLinkWidget> {
+  bool _isSharing = false;
   void _copyLink(String link) async {
     await Clipboard.setData(ClipboardData(text: link));
   }
@@ -213,28 +225,84 @@ class _PrivateLinkWidgetState extends State<PrivateLinkWidget> {
                 ),
                 Expanded(
                   child: FilledButton.icon(
-                    onPressed: isExpired
+                    onPressed: isExpired || _isSharing
                         ? null
                         : () async {
+                            setState(() {
+                              _isSharing = true;
+                            });
                             final box =
                                 context.findRenderObject() as RenderBox?;
 
-                            // final text =
-                            //     'You have been invited from Academia to the following event:\n\n '
-                            //     '🎉 ${state.event.eventName}\n\n'
-                            //     '📍 Where: ${state.event.eventLocation}\n'
-                            //     '⏰ When: ${ShereheUtils.formatDate(state.event.startDate)} at ${ShereheUtils.formatTime(state.event.startDate)}\n\n'
-                            //     '🎟 Get your ticket here:\n$link';
+                            final imageUrl = widget.eventPosterImage;
 
-                            await Share.share(
-                              link,
-                              sharePositionOrigin: box != null
-                                  ? box.localToGlobal(Offset.zero) & box.size
-                                  : null,
-                            );
+                            XFile? imageFile;
+
+                            if (imageUrl != null) {
+                              imageFile = await ShereheFilesUtils.downloadImage(
+                                imageUrl,
+                              );
+                            }
+
+                            final isTicketLink =
+                                widget.linkType == LinkType.ticket;
+
+                            final text = isTicketLink
+                                ? '''
+🎟 You have been invited from Academia to access tickets for the following event:
+
+🎉 ${widget.eventName}
+
+📍 Where: ${widget.eventLocation}
+⏰ When: ${ShereheUtils.formatDate(widget.eventStartDate)} at ${ShereheUtils.formatTime(widget.eventStartDate)}
+
+🎫 Get your ticket here:
+$link
+'''
+                                : '''
+🎉 You have been invited from Academia to view the following event:
+
+🎉 ${widget.eventName}
+
+📍 Where: ${widget.eventLocation}
+⏰ When: ${ShereheUtils.formatDate(widget.eventStartDate)} at ${ShereheUtils.formatTime(widget.eventStartDate)}
+
+🔗 View event details here:
+$link
+''';
+
+                            if (imageFile != null) {
+                              await Share.shareXFiles(
+                                [imageFile],
+                                text: text,
+                                sharePositionOrigin: box != null
+                                    ? box.localToGlobal(Offset.zero) & box.size
+                                    : null,
+                              );
+                            } else {
+                              await Share.share(
+                                text,
+                                sharePositionOrigin: box != null
+                                    ? box.localToGlobal(Offset.zero) & box.size
+                                    : null,
+                              );
+                            }
+                            setState(() {
+                              _isSharing = false;
+                            });
                           },
-                    icon: const Icon(Icons.share_outlined),
-                    label: const Text('Share'),
+                    icon: _isSharing
+                        ? SizedBox(
+                            height: 18,
+                            width: 18,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Theme.of(context).colorScheme.onPrimary,
+                            ),
+                          )
+                        : const Icon(Icons.share_outlined),
+
+                    label: Text(_isSharing ? 'Sharing...' : 'Share'),
                   ),
                 ),
               ],

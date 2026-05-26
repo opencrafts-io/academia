@@ -19,7 +19,8 @@ class ShereheRemoteDataSource with DioErrorHandler {
 
   ShereheRemoteDataSource({required this.dioClient, required this.flavor}) {
     if (flavor.isProduction) {
-      servicePrefix = "sherehe";
+      // servicePrefix = "sherehe";
+      servicePrefix = 'qa-sherehe';
     } else if (flavor.isStaging) {
       servicePrefix = 'qa-sherehe';
     } else {

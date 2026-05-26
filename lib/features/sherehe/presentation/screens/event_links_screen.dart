@@ -6,8 +6,21 @@ import 'package:sliver_tools/sliver_tools.dart';
 
 class EventLinksScreen extends StatefulWidget {
   final String eventId;
+  final String eventName;
+  final String eventLocation;
+  final String eventStartDate;
+  final String eventEndDate;
+  final String? eventPosterImage;
 
-  const EventLinksScreen({super.key, required this.eventId});
+  const EventLinksScreen({
+    super.key,
+    required this.eventId,
+    required this.eventName,
+    required this.eventLocation,
+    required this.eventStartDate,
+    required this.eventEndDate,
+    this.eventPosterImage,
+  });
 
   @override
   State<EventLinksScreen> createState() => _EventLinksScreenState();
@@ -152,6 +165,11 @@ class _EventLinksScreenState extends State<EventLinksScreen> {
 
                             return PrivateLinkWidget(
                               index: index,
+                              eventName: widget.eventName,
+                              eventLocation: widget.eventLocation,
+                              eventStartDate: widget.eventStartDate,
+                              eventEndDate: widget.eventEndDate,
+                              eventPosterImage: widget.eventPosterImage,
                               invite: invite,
                               linkType: LinkType.event,
                               onEdit: () => showEditLinkBottomSheet(

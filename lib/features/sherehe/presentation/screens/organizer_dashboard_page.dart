@@ -9,8 +9,21 @@ import 'package:sliver_tools/sliver_tools.dart';
 
 class OrganizerDashboardPage extends StatefulWidget {
   final String eventId;
+  final String eventName;
+  final String eventLocation;
+  final String eventStartDate;
+  final String eventEndDate;
+  final String? eventPosterImage;
 
-  const OrganizerDashboardPage({super.key, required this.eventId});
+  const OrganizerDashboardPage({
+    super.key,
+    required this.eventId,
+    required this.eventName,
+    required this.eventLocation,
+    required this.eventStartDate,
+    required this.eventEndDate,
+    this.eventPosterImage,
+  });
 
   @override
   State<OrganizerDashboardPage> createState() => _OrganizerDashboardPageState();
@@ -112,6 +125,11 @@ class _OrganizerDashboardPageState extends State<OrganizerDashboardPage> {
                         title: 'Event Links',
                         onTap: () => EventLinksRoute(
                           eventId: widget.eventId,
+                          eventName: widget.eventName,
+                          eventLocation: widget.eventLocation,
+                          eventStartDate: widget.eventStartDate,
+                          eventEndDate: widget.eventEndDate,
+                          eventPosterImage: widget.eventPosterImage,
                         ).push(context),
                       ),
                       _MenuCard(
@@ -119,6 +137,11 @@ class _OrganizerDashboardPageState extends State<OrganizerDashboardPage> {
                         title: 'Ticket Management',
                         onTap: () => AllEventTicketsRoute(
                           eventId: widget.eventId,
+                          eventName: widget.eventName,
+                          eventLocation: widget.eventLocation,
+                          eventStartDate: widget.eventStartDate,
+                          eventEndDate: widget.eventEndDate,
+                          eventPosterImage: widget.eventPosterImage,
                         ).push(context),
                       ),
                       _MenuCard(

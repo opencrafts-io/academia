@@ -60,27 +60,6 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
     return text.replaceAll(RegExp(r'\n{3,}'), '\n\n').trim();
   }
 
-  Future<XFile?> _downloadImage(String url) async {
-    try {
-      final dio = Dio();
-
-      final tempDir = await getTemporaryDirectory();
-      final filePath = '${tempDir.path}/event_share.jpg';
-
-      await dio.download(
-        url,
-        filePath,
-        options: Options(
-          responseType: ResponseType.bytes, // ensures raw bytes
-        ),
-      );
-
-      return XFile(filePath);
-    } catch (e) {
-      return null;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ShereheDetailsBloc, ShereheDetailsState>(
@@ -158,7 +137,10 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                                 XFile? imageFile;
 
                                 if (imageUrl != null) {
-                                  imageFile = await _downloadImage(imageUrl);
+                                  imageFile =
+                                      await ShereheFilesUtils.downloadImage(
+                                        imageUrl,
+                                      );
                                 }
 
                                 final text =
@@ -200,6 +182,12 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                                 if (isOrganizer) {
                                   OrganizerDashboardRoute(
                                     eventId: state.event.id,
+                                    eventName: state.event.eventName,
+                                    eventLocation: state.event.eventLocation,
+                                    eventStartDate: state.event.startDate,
+                                    eventEndDate: state.event.endDate,
+                                    eventPosterImage:
+                                        state.event.eventPosterImage,
                                   ).push(context);
                                 }
                                 break;

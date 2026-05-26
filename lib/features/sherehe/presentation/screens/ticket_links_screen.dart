@@ -6,8 +6,21 @@ import 'package:sliver_tools/sliver_tools.dart';
 
 class TicketLinksScreen extends StatefulWidget {
   final String ticketId;
+  final String eventName;
+  final String eventLocation;
+  final String eventStartDate;
+  final String eventEndDate;
+  final String? eventPosterImage;
 
-  const TicketLinksScreen({super.key, required this.ticketId});
+  const TicketLinksScreen({
+    super.key,
+    required this.ticketId,
+    required this.eventName,
+    required this.eventLocation,
+    required this.eventStartDate,
+    required this.eventEndDate,
+    this.eventPosterImage,
+  });
 
   @override
   State<TicketLinksScreen> createState() => _TicketLinksScreenState();
@@ -100,10 +113,13 @@ class _TicketLinksScreenState extends State<TicketLinksScreen> {
                     child: Center(
                       child: Text(
                         "Failed to load ticket links.",
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontStyle: FontStyle.italic,
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(
+                              fontStyle: FontStyle.italic,
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurfaceVariant,
+                            ),
                       ),
                     ),
                   );
@@ -137,20 +153,26 @@ class _TicketLinksScreenState extends State<TicketLinksScreen> {
                       ),
                     );
                   }
-      
+
                   return SliverPadding(
                     padding: const EdgeInsets.all(16),
                     sliver: MultiSliver(
                       children: [
                         SliverList.separated(
                           itemCount: state.invites.length,
-                          separatorBuilder: (_, _) => const SizedBox(height: 12),
+                          separatorBuilder: (_, _) =>
+                              const SizedBox(height: 12),
                           itemBuilder: (context, index) {
                             final invite = state.invites[index];
-      
+
                             return PrivateLinkWidget(
                               index: index,
                               invite: invite,
+                              eventName: widget.eventName,
+                              eventLocation: widget.eventLocation,
+                              eventStartDate: widget.eventStartDate,
+                              eventEndDate: widget.eventEndDate,
+                              eventPosterImage: widget.eventPosterImage,
                               linkType: LinkType.ticket,
                               onEdit: () => showEditTicketLinkBottomSheet(
                                 context: context,
@@ -167,7 +189,9 @@ class _TicketLinksScreenState extends State<TicketLinksScreen> {
                             );
                           },
                         ),
-                        SliverPadding(padding: const EdgeInsets.only(bottom: 80)),
+                        SliverPadding(
+                          padding: const EdgeInsets.only(bottom: 80),
+                        ),
                       ],
                     ),
                   );

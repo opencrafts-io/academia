@@ -6,8 +6,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AllEventTicketsScreen extends StatefulWidget {
   final String eventId;
+  final String eventName;
+  final String eventLocation;
+  final String eventStartDate;
+  final String eventEndDate;
+  final String? eventPosterImage;
 
-  const AllEventTicketsScreen({super.key, required this.eventId});
+  const AllEventTicketsScreen({
+    super.key,
+    required this.eventId,
+    required this.eventName,
+    required this.eventLocation,
+    required this.eventStartDate,
+    required this.eventEndDate,
+    this.eventPosterImage,
+  });
 
   @override
   State<AllEventTicketsScreen> createState() => _AllEventTicketsScreenState();
@@ -62,6 +75,11 @@ class _AllEventTicketsScreenState extends State<AllEventTicketsScreen> {
                 TicketLinksRoute(
                   eventId: widget.eventId,
                   ticketId: ticketId,
+                  eventName: widget.eventName,
+                  eventLocation: widget.eventLocation,
+                  eventStartDate: widget.eventStartDate,
+                  eventEndDate: widget.eventEndDate,
+                  eventPosterImage: widget.eventPosterImage,
                 ).push(context);
               },
             ),
