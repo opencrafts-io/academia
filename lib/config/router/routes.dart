@@ -235,31 +235,6 @@ class CompleteProfileRoute extends GoRouteData with $CompleteProfileRoute {
 @TypedGoRoute<ShereheRoute>(
   path: "/sherehe",
   routes: [
-    TypedGoRoute<ShereheDetailsRoute>(
-      path: "get-event/:eventId",
-      routes: [
-        TypedGoRoute<TicketFlowRoute>(path: "ticket-flow"),
-        TypedGoRoute<QrCodeScannerRoute>(path: "qr-code-scanner"),
-        TypedGoRoute<EventTicketsRoute>(path: "event-tickets"),
-        TypedGoRoute<OrganizerDashboardRoute>(
-          path: "organizer-dashboard",
-          routes: [
-            TypedGoRoute<AllAttendeesRoute>(path: "all-attendees"),
-            TypedGoRoute<AllScannersRoute>(
-              path: "all-scanners",
-              routes: [
-                TypedGoRoute<AddEventScannerRoute>(path: "add-event-scanner"),
-              ],
-            ),
-            TypedGoRoute<AllEventTicketsRoute>(
-              path: "all-event-tickets",
-              routes: [TypedGoRoute<TicketLinksRoute>(path: "ticket-links")],
-            ),
-            TypedGoRoute<EventLinksRoute>(path: "event-links"),
-          ],
-        ),
-      ],
-    ),
     TypedGoRoute<CreateEventRoute>(
       path: "create",
       routes: [
@@ -366,6 +341,31 @@ class ShereheSelectInstitutionsRoute extends GoRouteData
   }
 }
 
+@TypedGoRoute<ShereheDetailsRoute>(
+  path: "/sherehe/get-event/:eventId",
+  routes: [
+    TypedGoRoute<TicketFlowRoute>(path: "ticket-flow"),
+    TypedGoRoute<QrCodeScannerRoute>(path: "qr-code-scanner"),
+    TypedGoRoute<EventTicketsRoute>(path: "event-tickets"),
+    TypedGoRoute<OrganizerDashboardRoute>(
+      path: "organizer-dashboard",
+      routes: [
+        TypedGoRoute<AllAttendeesRoute>(path: "all-attendees"),
+        TypedGoRoute<AllScannersRoute>(
+          path: "all-scanners",
+          routes: [
+            TypedGoRoute<AddEventScannerRoute>(path: "add-event-scanner"),
+          ],
+        ),
+        TypedGoRoute<AllEventTicketsRoute>(
+          path: "all-event-tickets",
+          routes: [TypedGoRoute<TicketLinksRoute>(path: "ticket-links")],
+        ),
+        TypedGoRoute<EventLinksRoute>(path: "event-links"),
+      ],
+    ),
+  ],
+)
 class ShereheDetailsRoute extends GoRouteData with $ShereheDetailsRoute {
   final String eventId;
 

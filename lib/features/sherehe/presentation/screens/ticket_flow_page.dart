@@ -1,3 +1,4 @@
+import 'package:academia/config/config.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/gestures.dart';
@@ -75,8 +76,13 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
                 actions: [
                   FilledButton(
                     onPressed: () {
+                      //pop the alert dialogue first
                       Navigator.pop(context);
-                      context.pop();
+                      if (context.canPop()) {
+                        context.pop();
+                      } else {
+                        HomeRoute().go(context);
+                      }
                     },
                     child: const Text("Quit"),
                   ),
