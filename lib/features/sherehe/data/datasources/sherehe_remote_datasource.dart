@@ -112,10 +112,12 @@ class ShereheRemoteDataSource with DioErrorHandler {
     required String invite,
   }) async {
     try {
-      final response = await dioClient.dio.get("/$servicePrefix/event/$invite");
+      final response = await dioClient.dio.get(
+        "/$servicePrefix/invite/event/$invite",
+      );
 
-      if (response.statusCode == 200) {
-        return right(EventData.fromJson(response.data));
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return right(EventData.fromJson(response.data["Event"]));
       } else {
         return left(
           ServerFailure(
@@ -425,8 +427,8 @@ class ShereheRemoteDataSource with DioErrorHandler {
         "/$servicePrefix/invite/ticket/$invite",
       );
 
-      if (response.statusCode == 200) {
-        return right(TicketData.fromJson(response.data));
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return right(TicketData.fromJson(response.data["Ticket"]));
       } else {
         return left(
           ServerFailure(
@@ -1278,7 +1280,6 @@ class ShereheRemoteDataSource with DioErrorHandler {
       );
     }
   }
-
 
   Future<Either<Failure, List<InviteData>>> getTicketInvites(
     String ticketId,
