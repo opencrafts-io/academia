@@ -224,7 +224,6 @@ class _AddTicketScreenState extends State<AddTicketScreen> {
                           );
                           return;
                         }
-              
                         if (_selectedTicketDateRange == null &&
                             widget.isMultiDayEvent) {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -236,7 +235,7 @@ class _AddTicketScreenState extends State<AddTicketScreen> {
                           );
                           return;
                         }
-              
+
                         if (_formKey.currentState!.validate()) {
                           final addedTicket = TicketUI(
                             ticket: Ticket(
@@ -251,7 +250,8 @@ class _AddTicketScreenState extends State<AddTicketScreen> {
                                     _ticketQtyController.text.trim(),
                                   ) ??
                                   0,
-                              ticketFor: _selectedTicketGroupType?.toBackend ?? 0,
+                              ticketFor:
+                                  _selectedTicketGroupType?.toBackend ?? 0,
                               institutionIds:
                                   _selectedScopeType != ScopeTypes.institution
                                   ? null
