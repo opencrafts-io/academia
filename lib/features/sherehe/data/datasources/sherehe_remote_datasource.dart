@@ -19,8 +19,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
 
   ShereheRemoteDataSource({required this.dioClient, required this.flavor}) {
     if (flavor.isProduction) {
-      // servicePrefix = "sherehe";
-      servicePrefix = 'qa-sherehe';
+      servicePrefix = "sherehe";
     } else if (flavor.isStaging) {
       servicePrefix = 'qa-sherehe';
     } else {
@@ -453,7 +452,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
         ),
       );
     }
-  }
+  }  
 
   Future<Either<Failure, PurchaseTicketResult>> purchaseTicket({
     required String ticketId,

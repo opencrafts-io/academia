@@ -52,7 +52,34 @@ class _OrganizerDashboardPageState extends State<OrganizerDashboardPage> {
           slivers: [
             SliverAppBar.large(
               pinned: true,
-              title: const Text("Event Dashboard"),
+              flexibleSpace: FlexibleSpaceBar(
+                titlePadding: const EdgeInsetsDirectional.only(
+                  start: 16,
+                  bottom: 16,
+                  end: 16,
+                ),
+                title: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Event Dashboard",
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Text(
+                      widget.eventName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
             SliverPadding(
               padding: const EdgeInsets.all(16),
