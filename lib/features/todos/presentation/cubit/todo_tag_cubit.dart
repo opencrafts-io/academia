@@ -104,7 +104,7 @@ class TodoTagCubit extends SafeCubit<TodoTagState> {
 
     final result = await updateTagUseCase(tag);
     result.fold(
-      (_) => emit(currentState), // Roll back on failure
+      (failure) => emit(currentState), // Roll back on failure
       (updated) {
         final latest = state.mapOrNull(success: (s) => s);
         if (latest == null) return;

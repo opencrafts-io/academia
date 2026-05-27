@@ -46,11 +46,16 @@ class TodoTagRepositoryImpl implements TodoTagRepository {
             });
           }),
         );
-
-        return Right(
-          TodoTagPage(
-            items: paginatedDto.results.map((e) => e.toEntity()).toList(),
-            nextUrl: paginatedDto.next,
+        final localResult = await localDataSource.getTags(
+          isPendingDeletion: false,
+        );
+        return localResult.fold(
+          (l) => Left(l),
+          (r) => Right(
+            TodoTagPage(
+              items: r.map((e) => e.toDomain()).toList(),
+              nextUrl: paginatedDto.next,
+            ),
           ),
         );
       },

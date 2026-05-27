@@ -84,6 +84,121 @@ class _TodoTagSheetState extends State<TodoTagSheet> {
     return parsed != null ? Color(parsed) : scheme.primary;
   }
 
+  Future<void> _showEditTagDialog(TodoTagEntity tag) async {
+    final controller = TextEditingController(text: tag.name);
+
+    Color selectedColor = _tagColor(tag, Theme.of(context).colorScheme);
+
+    await showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return AlertDialog(
+              title: const Text("Edit tag"),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      controller: controller,
+                      autofocus: true,
+                      textCapitalization: TextCapitalization.words,
+                      decoration: const InputDecoration(labelText: "Tag name"),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    Wrap(
+                      spacing: 12,
+                      runSpacing: 12,
+                      children: _swatchColors.map((c) {
+                        final isSelected =
+                            c.toARGB32() == selectedColor.toARGB32();
+
+                        return GestureDetector(
+                          onTap: () {
+                            setModalState(() {
+                              selectedColor = c;
+                            });
+                          },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 150),
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: c,
+                              shape: BoxShape.circle,
+                              border: isSelected
+                                  ? Border.all(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurface,
+                                      width: 3,
+                                    )
+                                  : null,
+                            ),
+                            child: isSelected
+                                ? const Icon(
+                                    Icons.check,
+                                    color: Colors.white,
+                                    size: 18,
+                                  )
+                                : null,
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(dialogContext);
+                  },
+                  child: const Text("Cancel"),
+                ),
+
+                TextButton(
+                  onPressed: () {
+                    context.read<TodoTagCubit>().deleteTag(tag.localId);
+                    Navigator.pop(dialogContext);
+                  },
+                  style: TextButton.styleFrom(foregroundColor: Colors.red),
+                  child: const Text("Delete"),
+                ),
+
+                FilledButton(
+                  onPressed: () {
+                    final name = controller.text.trim();
+
+                    if (name.isEmpty) return;
+
+                    final hex =
+                        '#${selectedColor.toARGB32().toRadixString(16).padLeft(8, '0').substring(2).toUpperCase()}';
+
+                    context.read<TodoTagCubit>().updateTag(
+                      tag.copyWith(
+                        name: name,
+                        color: hex,
+                        isDirty: true,
+                        syncStatus: SyncStatus.pending,
+                      ),
+                    );
+
+                    Navigator.pop(dialogContext);
+                  },
+                  child: const Text("Save"),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -119,6 +234,10 @@ class _TodoTagSheetState extends State<TodoTagSheet> {
                 label: Text(_showCreateField ? "Cancel" : "New tag"),
               ),
             ],
+          ),
+          Text(
+            "Swipe a tag to the right to delete it, Long press to edit",
+            style: Theme.of(context).textTheme.bodySmall,
           ),
 
           if (_showCreateField) ...[
@@ -261,22 +380,36 @@ class _TodoTagSheetState extends State<TodoTagSheet> {
                     );
                     final color = _tagColor(tag, scheme);
 
-                    return ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: color.withAlpha(30),
-                        radius: 16,
-                        child: Icon(Icons.circle, color: color, size: 10),
+                    return Dismissible(
+                      direction: DismissDirection.startToEnd,
+                      onDismissed: (direction) {
+                        context.read<TodoTagCubit>().deleteTag(tag.localId);
+                      },
+                      background: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(22),
+                          color: Colors.red,
+                        ),
                       ),
-                      title: Text(tag.name),
-                      trailing: isSelected
-                          ? Icon(Icons.check_circle_rounded, color: color)
-                          : Icon(
-                              Icons.radio_button_unchecked_rounded,
-                              color: scheme.outlineVariant,
-                            ),
-                      onTap: () => _toggleTag(tag),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                      key: Key("tag_${tag.localId}"),
+                      child: ListTile(
+                        onLongPress: () => _showEditTagDialog(tag),
+                        leading: CircleAvatar(
+                          backgroundColor: color.withAlpha(30),
+                          radius: 16,
+                          child: Icon(Icons.circle, color: color, size: 10),
+                        ),
+                        title: Text(tag.name),
+                        trailing: isSelected
+                            ? Icon(Icons.check_circle_rounded, color: color)
+                            : Icon(
+                                Icons.radio_button_unchecked_rounded,
+                                color: scheme.outlineVariant,
+                              ),
+                        onTap: () => _toggleTag(tag),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                     );
                   },
