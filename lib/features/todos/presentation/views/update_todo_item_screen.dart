@@ -202,6 +202,10 @@ class _UpdateTodoItemScreenState extends State<UpdateTodoItemScreen> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 onTap: () {
+                  context.read<TodoItemCubit>().moveItem(
+                    localId: widget.todoLocalId,
+                    targetListLocalId: list.localId,
+                  );
                   setState(() => _selectedList = list);
                   Navigator.pop(context);
                 },

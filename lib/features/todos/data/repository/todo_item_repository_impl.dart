@@ -463,28 +463,29 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
         );
       }
 
-      final updatedItem = await localDataSource.updateTodoItem(
-        TodoItem(
-          localId: item.localId,
-          id: item.id,
-          taskListLocalId: targetListLocalId,
-          title: item.title,
-          notes: item.notes,
-          status: item.status,
-          priority: item.priority,
-          due: item.due,
-          completed: item.completed,
-          subtaskCount: item.subtaskCount,
-          position: item.position,
-          hidden: item.hidden,
-          syncStatus: item.syncStatus,
-          lastSyncedAt: item.lastSyncedAt,
-          createdAt: item.createdAt,
-          updatedAt: DateTime.now(),
-          isPendingDeletion: item.isPendingDeletion,
-          isDirty: true,
-        ),
+      final taskListRes = await listLocalDataSource.getTodoByID(
+        targetListLocalId,
       );
+      if (taskListRes.isLeft()) {
+        return Left(
+          NoDataFoundFailure(
+            message: "Invalid tasklist!",
+            error: (taskListRes as Left),
+          ),
+        );
+      }
+
+      final taskList = (taskListRes as Right).value as TodoList;
+
+      final (remoteRes, updatedItem) = await (
+        remoteDataSource.moveTodoItem(
+          taskId: item.id ?? '',
+          taskListId: taskList.id ?? '',
+        ),
+        localDataSource.updateTodoItem(
+          item.copyWith(taskListLocalId: targetListLocalId, isDirty: true),
+        ),
+      ).wait;
 
       return updatedItem.fold((failure) => Left(failure), (local) async {
         if (local.id == null) return Right(local.toDomain());
