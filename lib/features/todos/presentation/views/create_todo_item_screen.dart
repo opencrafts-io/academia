@@ -1,3 +1,4 @@
+import 'package:academia/config/config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
@@ -103,56 +104,66 @@ class _CreateTodoItemScreenState extends State<CreateTodoItemScreen> {
   }
 
   void _showListPicker() {
-    final lists =
-        context.read<TodoListCubit>().state.mapOrNull(
-          success: (s) => s.todoLists,
-        ) ??
-        [];
-
     showModalBottomSheet(
       context: context,
       showDragHandle: true,
       builder: (context) => Padding(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Select a list",
-              style: Theme.of(
-                context,
-              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 12),
-            ...lists.map((list) {
-              final color = list.color != null
-                  ? Color(list.color!)
-                  : Theme.of(context).colorScheme.primary;
-              final isSelected = _selectedListLocalId == list.localId;
+        child: BlocBuilder<TodoListCubit, TodoListState>(
+          builder: (context, state) {
+            final lists = state.mapOrNull(success: (s) => s.todoLists) ?? [];
 
-              return ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: color.withAlpha(30),
-                  radius: 16,
-                  child: Icon(Icons.list_rounded, color: color, size: 16),
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Select a list",
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    TextButton.icon(
+                      icon: Icon(Icons.add),
+                      onPressed: () => CreateTodoListRoute().push(context),
+                      label: Text("New List"),
+                    ),
+                  ],
                 ),
-                title: Text(list.title),
-                subtitle: list.isDefault ? const Text("Default") : null,
-                trailing: isSelected
-                    ? Icon(Icons.check_circle_rounded, color: color)
-                    : null,
-                selected: isSelected,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                onTap: () {
-                  setState(() => _selectedListLocalId = list.localId);
-                  Navigator.pop(context);
-                },
-              );
-            }),
-          ],
+                const SizedBox(height: 12),
+                ...lists.map((list) {
+                  final color = list.color != null
+                      ? Color(list.color!)
+                      : Theme.of(context).colorScheme.primary;
+                  final isSelected = _selectedListLocalId == list.localId;
+
+                  return ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor: color.withAlpha(30),
+                      radius: 16,
+                      child: Icon(Icons.list_rounded, color: color, size: 16),
+                    ),
+                    title: Text(list.title),
+                    subtitle: list.isDefault ? const Text("Default") : null,
+                    trailing: isSelected
+                        ? Icon(Icons.check_circle_rounded, color: color)
+                        : null,
+                    selected: isSelected,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    onTap: () {
+                      setState(() => _selectedListLocalId = list.localId);
+                      Navigator.pop(context);
+                    },
+                  );
+                }),
+              ],
+            );
+          },
         ),
       ),
     );
