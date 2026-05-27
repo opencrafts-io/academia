@@ -230,8 +230,10 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
         );
       }
 
+      final taskList = (taskListRes as Right).value as TodoList;
+
       final remoteResult = await remoteDataSource.createTodoItem(
-        createdLocal.toDto().copyWith(taskList: (taskListRes as Right).value),
+        createdLocal.toDto().copyWith(taskList: taskList.id),
       );
 
       return remoteResult.fold(
