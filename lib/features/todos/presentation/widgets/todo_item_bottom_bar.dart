@@ -64,10 +64,10 @@ class TodoItemBottomBar extends StatelessWidget {
             onTap: onTagTap,
           ),
           const Spacer(),
-          IconButton.filledTonal(
-            onPressed: onMoreTap,
-            icon: const Icon(Icons.more_horiz_rounded),
-          ),
+          // IconButton.filledTonal(
+          //   onPressed: onMoreTap,
+          //   icon: const Icon(Icons.more_horiz_rounded),
+          // ),
         ],
       ),
     );
