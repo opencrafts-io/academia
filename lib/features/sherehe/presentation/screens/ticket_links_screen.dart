@@ -28,15 +28,6 @@ class TicketLinksScreen extends StatefulWidget {
 
 class _TicketLinksScreenState extends State<TicketLinksScreen> {
   @override
-  void initState() {
-    super.initState();
-
-    context.read<TicketLinkBloc>().add(
-      GetTicketInvites(ticketId: widget.ticketId),
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
     return BlocListener<TicketLinkBloc, TicketLinkState>(
       listener: (context, state) {

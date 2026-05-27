@@ -94,6 +94,15 @@ class _AllScannersScreenState extends State<AllScannersScreen> {
                 backgroundColor: Theme.of(context).colorScheme.error,
               ),
             );
+          } else if (state is AddScannerSuccess) {
+            _currentPage = 1;
+            context.read<AllScannersBloc>().add(
+              FetchAllScanners(
+                eventId: widget.eventId,
+                page: _currentPage,
+                limit: 20,
+              ),
+            );
           }
         },
         child: BlocBuilder<AllScannersBloc, AllScannersState>(

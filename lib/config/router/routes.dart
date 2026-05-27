@@ -436,7 +436,10 @@ class EventTicketsRoute extends GoRouteData with $EventTicketsRoute {
   Widget build(BuildContext context, GoRouterState state) {
     final event = state.extra as Event;
 
-    return EventTicketsPage(eventId: eventId, event: event);
+    return BlocProvider(
+      create: (context) => sl<UserEventTicketsBloc>(),
+      child: EventTicketsPage(eventId: eventId, event: event),
+    );
   }
 }
 
@@ -488,7 +491,10 @@ class AllAttendeesRoute extends GoRouteData with $AllAttendeesRoute {
   });
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return AllAttendeesScreen(eventId: eventId);
+    return BlocProvider(
+      create: (context) => sl<AllAttendeesBloc>(),
+      child: AllAttendeesScreen(eventId: eventId),
+    );
   }
 }
 
@@ -510,13 +516,16 @@ class AllScannersRoute extends GoRouteData with $AllScannersRoute {
   });
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return AllScannersScreen(
-      eventId: eventId,
-      eventName: eventName,
-      eventLocation: eventLocation,
-      eventStartDate: eventStartDate,
-      eventEndDate: eventEndDate,
-      eventPosterImage: eventPosterImage,
+    return BlocProvider(
+      create: (context) => sl<AllScannersBloc>(),
+      child: AllScannersScreen(
+        eventId: eventId,
+        eventName: eventName,
+        eventLocation: eventLocation,
+        eventStartDate: eventStartDate,
+        eventEndDate: eventEndDate,
+        eventPosterImage: eventPosterImage,
+      ),
     );
   }
 }
@@ -539,13 +548,17 @@ class AllEventTicketsRoute extends GoRouteData with $AllEventTicketsRoute {
   });
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return AllEventTicketsScreen(
-      eventId: eventId,
-      eventName: eventName,
-      eventLocation: eventLocation,
-      eventStartDate: eventStartDate,
-      eventEndDate: eventEndDate,
-      eventPosterImage: eventPosterImage,
+    return BlocProvider(
+      create: (context) =>
+          sl<TicketStatsBloc>()..add(GetTicketStats(eventId: eventId)),
+      child: AllEventTicketsScreen(
+        eventId: eventId,
+        eventName: eventName,
+        eventLocation: eventLocation,
+        eventStartDate: eventStartDate,
+        eventEndDate: eventEndDate,
+        eventPosterImage: eventPosterImage,
+      ),
     );
   }
 }
@@ -570,13 +583,17 @@ class TicketLinksRoute extends GoRouteData with $TicketLinksRoute {
   });
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return TicketLinksScreen(
-      ticketId: ticketId,
-      eventName: eventName,
-      eventLocation: eventLocation,
-      eventStartDate: eventStartDate,
-      eventEndDate: eventEndDate,
-      eventPosterImage: eventPosterImage,
+    return BlocProvider(
+      create: (context) =>
+          sl<TicketLinkBloc>()..add(GetTicketInvites(ticketId: ticketId)),
+      child: TicketLinksScreen(
+        ticketId: ticketId,
+        eventName: eventName,
+        eventLocation: eventLocation,
+        eventStartDate: eventStartDate,
+        eventEndDate: eventEndDate,
+        eventPosterImage: eventPosterImage,
+      ),
     );
   }
 }
@@ -599,13 +616,17 @@ class EventLinksRoute extends GoRouteData with $EventLinksRoute {
   });
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return EventLinksScreen(
-      eventId: eventId,
-      eventName: eventName,
-      eventLocation: eventLocation,
-      eventStartDate: eventStartDate,
-      eventEndDate: eventEndDate,
-      eventPosterImage: eventPosterImage,
+    return BlocProvider(
+      create: (context) =>
+          sl<EventLinkBloc>()..add(GetEventInvites(eventId: eventId)),
+      child: EventLinksScreen(
+        eventId: eventId,
+        eventName: eventName,
+        eventLocation: eventLocation,
+        eventStartDate: eventStartDate,
+        eventEndDate: eventEndDate,
+        eventPosterImage: eventPosterImage,
+      ),
     );
   }
 }
@@ -636,7 +657,10 @@ class AddEventScannerRoute extends GoRouteData with $AddEventScannerRoute {
 class PurchasedTicketsRoute extends GoRouteData with $PurchasedTicketsRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return PurchasedTicketsPage();
+    return BlocProvider(
+      create: (context) => sl<AllUserEventTicketsBloc>(),
+      child: PurchasedTicketsPage(),
+    );
   }
 }
 
@@ -644,7 +668,10 @@ class PurchasedTicketsRoute extends GoRouteData with $PurchasedTicketsRoute {
 class OrganizedEventsRoute extends GoRouteData with $OrganizedEventsRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return OrganizedEventsScreen();
+    return BlocProvider(
+      create: (context) => sl<OrganizedEventsBloc>(),
+      child: OrganizedEventsScreen(),
+    );
   }
 }
 
@@ -702,7 +729,10 @@ class QrCodeScannerRoute extends GoRouteData with $QrCodeScannerRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return QrCodeScannerScreen(eventId: eventId);
+    return BlocProvider(
+      create: (context) => sl<ValidateAttendeeBloc>(),
+      child: QrCodeScannerScreen(eventId: eventId),
+    );
   }
 }
 

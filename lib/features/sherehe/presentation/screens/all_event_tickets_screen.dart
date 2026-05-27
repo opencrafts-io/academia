@@ -27,15 +27,6 @@ class AllEventTicketsScreen extends StatefulWidget {
 }
 
 class _AllEventTicketsScreenState extends State<AllEventTicketsScreen> {
-  @override
-  void initState() {
-    super.initState();
-
-    context.read<TicketStatsBloc>().add(
-      GetTicketStats(eventId: widget.eventId),
-    );
-  }
-
   void _showMoreActionsBottomSheet({
     required BuildContext context,
     required String title,
@@ -45,7 +36,7 @@ class _AllEventTicketsScreenState extends State<AllEventTicketsScreen> {
     showModalBottomSheet(
       context: context,
       showDragHandle: true,
-      builder: (context) => Container(
+      builder: (modalContext) => Container(
         height: 280,
         padding: EdgeInsets.all(16),
         child: Column(
@@ -58,7 +49,7 @@ class _AllEventTicketsScreenState extends State<AllEventTicketsScreen> {
               leading: Icon(Icons.add_circle_outline),
               title: Text("Increase Ticket Quantity"),
               onTap: () {
-                Navigator.pop(context); // close bottom sheet
+                Navigator.pop(modalContext); // close bottom sheet
                 _showIncreaseQuantityDialog(
                   context: context,
                   ticketName: title,
@@ -71,7 +62,7 @@ class _AllEventTicketsScreenState extends State<AllEventTicketsScreen> {
               leading: Icon(Icons.link_outlined),
               title: Text("Ticket Links"),
               onTap: () {
-                Navigator.pop(context); // close bottom sheet
+                Navigator.pop(modalContext); // close bottom sheet
                 TicketLinksRoute(
                   eventId: widget.eventId,
                   ticketId: ticketId,
@@ -100,73 +91,76 @@ class _AllEventTicketsScreenState extends State<AllEventTicketsScreen> {
 
     showDialog(
       context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return AlertDialog(
-              title: Text("Increase $ticketName Tickets"),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text("Enter how many tickets you want to add."),
-                  const SizedBox(height: 12),
-                  TextField(
-                    controller: controller,
-                    keyboardType: TextInputType.number,
-                    onChanged: (_) {
-                      if (errorText != null) {
-                        setState(() => errorText = null);
-                      }
-                    },
-                    decoration: InputDecoration(
-                      labelText: "Quantity",
-                      hintText: "e.g. 50",
-                      border: OutlineInputBorder(),
-                      errorText: errorText,
+      builder: (modalContext) {
+        return BlocProvider.value(
+          value: context.read<TicketStatsBloc>(),
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return AlertDialog(
+                title: Text("Increase $ticketName Tickets"),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text("Enter how many tickets you want to add."),
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: controller,
+                      keyboardType: TextInputType.number,
+                      onChanged: (_) {
+                        if (errorText != null) {
+                          setState(() => errorText = null);
+                        }
+                      },
+                      decoration: InputDecoration(
+                        labelText: "Quantity",
+                        hintText: "e.g. 50",
+                        border: OutlineInputBorder(),
+                        errorText: errorText,
+                      ),
                     ),
+                  ],
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("Cancel"),
+                  ),
+                  BlocBuilder<TicketStatsBloc, TicketStatsState>(
+                    builder: (context, state) {
+                      return state is UpdateTicketLoading
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(),
+                            )
+                          : FilledButton(
+                              onPressed: () {
+                                final qty = int.tryParse(controller.text);
+
+                                if (qty == null || qty <= 0) {
+                                  setState(() {
+                                    errorText = "Enter a number greater than 0";
+                                  });
+                                  return;
+                                }
+
+                                context.read<TicketStatsBloc>().add(
+                                  UpdateTicketQuantity(
+                                    ticketId: ticketId,
+                                    ticketQuantity: currentQuantity + qty,
+                                  ),
+                                );
+
+                                Navigator.pop(context);
+                              },
+                              child: const Text("Confirm"),
+                            );
+                    },
                   ),
                 ],
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text("Cancel"),
-                ),
-                BlocBuilder<TicketStatsBloc, TicketStatsState>(
-                  builder: (context, state) {
-                    return state is UpdateTicketLoading
-                        ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(),
-                          )
-                        : FilledButton(
-                            onPressed: () {
-                              final qty = int.tryParse(controller.text);
-
-                              if (qty == null || qty <= 0) {
-                                setState(() {
-                                  errorText = "Enter a number greater than 0";
-                                });
-                                return;
-                              }
-
-                              context.read<TicketStatsBloc>().add(
-                                UpdateTicketQuantity(
-                                  ticketId: ticketId,
-                                  ticketQuantity: currentQuantity + qty,
-                                ),
-                              );
-
-                              Navigator.pop(context);
-                            },
-                            child: const Text("Confirm"),
-                          );
-                  },
-                ),
-              ],
-            );
-          },
+              );
+            },
+          ),
         );
       },
     );
@@ -258,6 +252,7 @@ class _AllEventTicketsScreenState extends State<AllEventTicketsScreen> {
                 return const SliverToBoxAdapter(child: SizedBox.shrink());
               },
             ),
+            SliverPadding(padding: const EdgeInsets.only(bottom: 40)),
           ],
         ),
       ),

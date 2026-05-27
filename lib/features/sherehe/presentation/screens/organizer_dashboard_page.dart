@@ -3,6 +3,7 @@ import 'package:academia/constants/responsive_break_points.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:academia/gen/assets.gen.dart';
+import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sliver_tools/sliver_tools.dart';
@@ -31,185 +32,188 @@ class OrganizerDashboardPage extends StatefulWidget {
 
 class _OrganizerDashboardPageState extends State<OrganizerDashboardPage> {
   @override
-  void initState() {
-    super.initState();
-
-    context.read<AttendeesAndScannerStatsBloc>().add(
-      GetAttendeesAndScanners(eventId: widget.eventId),
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: RefreshIndicator(
-        onRefresh: () async {
-          context.read<AttendeesAndScannerStatsBloc>().add(
-            GetAttendeesAndScanners(eventId: widget.eventId),
-          );
-        },
-        child: CustomScrollView(
-          slivers: [
-            SliverAppBar.large(
-              pinned: true,
-              flexibleSpace: FlexibleSpaceBar(
-                titlePadding: const EdgeInsetsDirectional.only(
-                  start: 16,
-                  bottom: 16,
-                  end: 16,
-                ),
-                title: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Event Dashboard",
-                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        fontWeight: FontWeight.w500,
+    return BlocProvider(
+      create: (context) =>
+          sl<AttendeesAndScannerStatsBloc>()
+            ..add(GetAttendeesAndScanners(eventId: widget.eventId)),
+      child: Builder(
+        builder: (context) {
+          return Scaffold(
+            body: RefreshIndicator(
+              onRefresh: () async {
+                context.read<AttendeesAndScannerStatsBloc>().add(
+                  GetAttendeesAndScanners(eventId: widget.eventId),
+                );
+              },
+              child: CustomScrollView(
+                slivers: [
+                  SliverAppBar.large(
+                    pinned: true,
+                    flexibleSpace: FlexibleSpaceBar(
+                      titlePadding: const EdgeInsetsDirectional.only(
+                        start: 16,
+                        bottom: 16,
+                        end: 16,
                       ),
-                    ),
-                    Text(
-                      widget.eventName,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SliverPadding(
-              padding: const EdgeInsets.all(16),
-              sliver: MultiSliver(
-                children: [
-                  BlocBuilder<
-                    AttendeesAndScannerStatsBloc,
-                    AttendeesAndScannerStatsState
-                  >(
-                    builder: (context, state) {
-                      if (state is LoadedState) {
-                        return SliverGrid(
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                mainAxisSpacing: 12,
-                                crossAxisSpacing: 12,
-                                childAspectRatio: 1.0,
-                              ),
-                          delegate: SliverChildListDelegate.fixed([
-                            _SummaryCard(
-                              icon: Icons.people_outline,
-                              title: "Attendees",
-                              value: state.stats.attendees.toString(),
-                            ),
-                            _SummaryCard(
-                              icon: Icons.qr_code_scanner,
-                              title: "Scanners",
-                              value: state.stats.scanners.toString(),
-                            ),
-                          ]),
-                        );
-                      } else if (state is LoadingState) {
-                        return Padding(
-                          padding: EdgeInsets.symmetric(vertical: 24),
-                          child: Center(child: SpinningScallopIndicator()),
-                        );
-                      } else if (state is ErrorState) {
-                        return Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Text(
-                              "Failed to load stats.",
-                              style: Theme.of(context).textTheme.titleMedium
-                                  ?.copyWith(
-                                    fontStyle: FontStyle.italic,
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.onSurfaceVariant,
-                                  ),
+                      title: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Event Dashboard",
+                            style: Theme.of(context).textTheme.labelMedium
+                                ?.copyWith(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurfaceVariant,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                          ),
+                          Text(
+                            widget.eventName,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                        );
-                      }
-                      return SizedBox.shrink();
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    "Organizer Actions",
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
+                        ],
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 20),
-                  SliverGrid(
-                    delegate: SliverChildListDelegate.fixed([
-                      _MenuCard(
-                        iconPath: Assets.icons.dashboardIconsLink.path,
-                        title: 'Event Links',
-                        onTap: () => EventLinksRoute(
-                          eventId: widget.eventId,
-                          eventName: widget.eventName,
-                          eventLocation: widget.eventLocation,
-                          eventStartDate: widget.eventStartDate,
-                          eventEndDate: widget.eventEndDate,
-                          eventPosterImage: widget.eventPosterImage,
-                        ).push(context),
-                      ),
-                      _MenuCard(
-                        iconPath: Assets.icons.dashboardIconsNotebook.path,
-                        title: 'Ticket Management',
-                        onTap: () => AllEventTicketsRoute(
-                          eventId: widget.eventId,
-                          eventName: widget.eventName,
-                          eventLocation: widget.eventLocation,
-                          eventStartDate: widget.eventStartDate,
-                          eventEndDate: widget.eventEndDate,
-                          eventPosterImage: widget.eventPosterImage,
-                        ).push(context),
-                      ),
-                      _MenuCard(
-                        iconPath: Assets.icons.dashboardIconsMobile.path,
-                        title: 'Scanners',
-                        onTap: () => AllScannersRoute(
-                          eventId: widget.eventId,
-                          eventName: widget.eventName,
-                          eventLocation: widget.eventLocation,
-                          eventStartDate: widget.eventStartDate,
-                          eventEndDate: widget.eventEndDate,
-                          eventPosterImage: widget.eventPosterImage,
-                        ).push(context),
-                      ),
-                      _MenuCard(
-                        iconPath: Assets.icons.dashboardIconsBoy.path,
-                        title: 'Attendees',
-                        onTap: () => AllAttendeesRoute(
-                          eventId: widget.eventId,
-                          eventName: widget.eventName,
-                          eventLocation: widget.eventLocation,
-                          eventStartDate: widget.eventStartDate,
-                          eventEndDate: widget.eventEndDate,
-                          eventPosterImage: widget.eventPosterImage,
-                        ).push(context),
-                      ),
-                    ]),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: ResponsiveBreakPoints.isMobile(context)
-                          ? 2
-                          : 6,
-                      childAspectRatio: 1.2,
-                      mainAxisSpacing: 12,
-                      crossAxisSpacing: 12,
+                  SliverPadding(
+                    padding: const EdgeInsets.all(16),
+                    sliver: MultiSliver(
+                      children: [
+                        BlocBuilder<
+                          AttendeesAndScannerStatsBloc,
+                          AttendeesAndScannerStatsState
+                        >(
+                          builder: (context, state) {
+                            if (state is LoadedState) {
+                              return SliverGrid(
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      mainAxisSpacing: 12,
+                                      crossAxisSpacing: 12,
+                                      childAspectRatio: 1.0,
+                                    ),
+                                delegate: SliverChildListDelegate.fixed([
+                                  _SummaryCard(
+                                    icon: Icons.people_outline,
+                                    title: "Attendees",
+                                    value: state.stats.attendees.toString(),
+                                  ),
+                                  _SummaryCard(
+                                    icon: Icons.qr_code_scanner,
+                                    title: "Scanners",
+                                    value: state.stats.scanners.toString(),
+                                  ),
+                                ]),
+                              );
+                            } else if (state is LoadingState) {
+                              return Padding(
+                                padding: EdgeInsets.symmetric(vertical: 24),
+                                child: Center(child: SpinningScallopIndicator()),
+                              );
+                            } else if (state is ErrorState) {
+                              return Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Text(
+                                    "Failed to load stats.",
+                                    style: Theme.of(context).textTheme.titleMedium
+                                        ?.copyWith(
+                                          fontStyle: FontStyle.italic,
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.onSurfaceVariant,
+                                        ),
+                                  ),
+                                ),
+                              );
+                            }
+                            return SizedBox.shrink();
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        Text(
+                          "Organizer Actions",
+                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        SliverGrid(
+                          delegate: SliverChildListDelegate.fixed([
+                            _MenuCard(
+                              iconPath: Assets.icons.dashboardIconsLink.path,
+                              title: 'Event Links',
+                              onTap: () => EventLinksRoute(
+                                eventId: widget.eventId,
+                                eventName: widget.eventName,
+                                eventLocation: widget.eventLocation,
+                                eventStartDate: widget.eventStartDate,
+                                eventEndDate: widget.eventEndDate,
+                                eventPosterImage: widget.eventPosterImage,
+                              ).push(context),
+                            ),
+                            _MenuCard(
+                              iconPath: Assets.icons.dashboardIconsNotebook.path,
+                              title: 'Ticket Management',
+                              onTap: () => AllEventTicketsRoute(
+                                eventId: widget.eventId,
+                                eventName: widget.eventName,
+                                eventLocation: widget.eventLocation,
+                                eventStartDate: widget.eventStartDate,
+                                eventEndDate: widget.eventEndDate,
+                                eventPosterImage: widget.eventPosterImage,
+                              ).push(context),
+                            ),
+                            _MenuCard(
+                              iconPath: Assets.icons.dashboardIconsMobile.path,
+                              title: 'Scanners',
+                              onTap: () => AllScannersRoute(
+                                eventId: widget.eventId,
+                                eventName: widget.eventName,
+                                eventLocation: widget.eventLocation,
+                                eventStartDate: widget.eventStartDate,
+                                eventEndDate: widget.eventEndDate,
+                                eventPosterImage: widget.eventPosterImage,
+                              ).push(context),
+                            ),
+                            _MenuCard(
+                              iconPath: Assets.icons.dashboardIconsBoy.path,
+                              title: 'Attendees',
+                              onTap: () => AllAttendeesRoute(
+                                eventId: widget.eventId,
+                                eventName: widget.eventName,
+                                eventLocation: widget.eventLocation,
+                                eventStartDate: widget.eventStartDate,
+                                eventEndDate: widget.eventEndDate,
+                                eventPosterImage: widget.eventPosterImage,
+                              ).push(context),
+                            ),
+                          ]),
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: ResponsiveBreakPoints.isMobile(context)
+                                ? 2
+                                : 6,
+                            childAspectRatio: 1.2,
+                            mainAxisSpacing: 12,
+                            crossAxisSpacing: 12,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
+          );
+        }
       ),
     );
   }
