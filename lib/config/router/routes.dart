@@ -639,6 +639,9 @@ class ViewTaskListsRoute extends GoRouteData with $ViewTaskListsRoute {
 }
 
 class CreateTodoItemRoute extends GoRouteData with $CreateTodoItemRoute {
+  final int? taskListLocalID;
+  CreateTodoItemRoute({this.taskListLocalID});
+
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return ModalSheetPage(
@@ -664,7 +667,7 @@ class CreateTodoItemRoute extends GoRouteData with $CreateTodoItemRoute {
             ),
           ),
           physics: BouncingSheetPhysics(),
-          child: CreateTodoItemScreen(),
+          child: CreateTodoItemScreen(taskListLocalID: taskListLocalID),
         ),
       ),
     );

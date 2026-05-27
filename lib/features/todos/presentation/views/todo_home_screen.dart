@@ -158,17 +158,17 @@ class _TodoHomeScreenState extends State<TodoHomeScreen>
       },
       builder: (context, state) {
         final lists = state.mapOrNull(success: (s) => s.todoLists) ?? [];
-        return Scaffold(
-          body: RefreshIndicator.adaptive(
-            onRefresh: () async {
-              await (
-                context.read<TodoListCubit>().loadTodoLists(),
-                Future.delayed(const Duration(seconds: 2)),
-              ).wait;
-            },
-            child: DefaultTabController(
-              key: ValueKey(lists.length),
-              length: lists.length + 1,
+        return DefaultTabController(
+          key: ValueKey(lists.length),
+          length: lists.length + 1,
+          child: Scaffold(
+            body: RefreshIndicator.adaptive(
+              onRefresh: () async {
+                await (
+                  context.read<TodoListCubit>().loadTodoLists(),
+                  Future.delayed(const Duration(seconds: 2)),
+                ).wait;
+              },
               child: CustomScrollView(
                 slivers: [
                   SliverAppBar(
@@ -232,15 +232,29 @@ class _TodoHomeScreenState extends State<TodoHomeScreen>
                 ],
               ),
             ),
-          ),
-          floatingActionButton: FloatingActionButton(
-            child: const Icon(Icons.add),
-            onPressed: () async {
-              final result = await CreateTodoItemRoute().push(context);
-              if (result == true && context.mounted) {
-                context.read<TodoListCubit>().loadTodoLists();
-              }
-            },
+
+            floatingActionButton: Builder(
+              builder: (context) => FloatingActionButton(
+                child: const Icon(Icons.add),
+                onPressed: () async {
+                  final currentIndex = DefaultTabController.of(context).index;
+                  final taskList = context
+                      .read<TodoListCubit>()
+                      .state
+                      .whenOrNull(
+                        success:
+                            (todoLists, nextUrl, isPaginating, isSyncing) =>
+                                todoLists.elementAtOrNull(currentIndex),
+                      );
+                  final result = await CreateTodoItemRoute(
+                    taskListLocalID: taskList?.localId,
+                  ).push(context);
+                  if (result == true && context.mounted) {
+                    context.read<TodoListCubit>().loadTodoLists();
+                  }
+                },
+              ),
+            ),
           ),
         );
       },

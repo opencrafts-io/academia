@@ -12193,9 +12193,6 @@ class $InstitutionKeyTable extends InstitutionKey
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES institution (institution_id)',
-    ),
   );
   static const VerificationMeta _commandIDMeta = const VerificationMeta(
     'commandID',
@@ -12207,9 +12204,6 @@ class $InstitutionKeyTable extends InstitutionKey
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES institution_scrapping_command (command_i_d)',
-    ),
   );
   @override
   late final GeneratedColumnWithTypeConverter<Map<String, dynamic>, String>
@@ -13879,9 +13873,6 @@ class $InstitutionFeeTransactionTable extends InstitutionFeeTransaction
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES institution (institution_id)',
-    ),
   );
   static const VerificationMeta _referenceNumberMeta = const VerificationMeta(
     'referenceNumber',
@@ -14559,9 +14550,6 @@ class $SemesterTable extends Semester
     true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES institution (institution_id)',
-    ),
   );
   static const VerificationMeta _startDateMeta = const VerificationMeta(
     'startDate',
@@ -14958,9 +14946,6 @@ class $CourseTable extends Course with TableInfo<$CourseTable, CourseData> {
     true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES institution (institution_id)',
-    ),
   );
   static const VerificationMeta _semesterMeta = const VerificationMeta(
     'semester',
@@ -14972,9 +14957,6 @@ class $CourseTable extends Course with TableInfo<$CourseTable, CourseData> {
     true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES semester (id)',
-    ),
   );
   static const VerificationMeta _courseCodeMeta = const VerificationMeta(
     'courseCode',
@@ -15699,9 +15681,6 @@ class $TimetableTable extends Timetable
     true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES institution (institution_id)',
-    ),
   );
   static const VerificationMeta _isSyncedMeta = const VerificationMeta(
     'isSynced',
@@ -16264,9 +16243,6 @@ class $TimetableEntryTable extends TimetableEntry
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES course (id)',
-    ),
   );
   static const VerificationMeta _timetableIdMeta = const VerificationMeta(
     'timetableId',
@@ -16278,9 +16254,6 @@ class $TimetableEntryTable extends TimetableEntry
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES timetable (id)',
-    ),
   );
   static const VerificationMeta _rruleMeta = const VerificationMeta('rrule');
   @override
@@ -19693,9 +19666,6 @@ class $ChirpCommunityMembershipTable extends ChirpCommunityMembership
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES chirp_user (user_i_d)',
-    ),
   );
   static const VerificationMeta _roleMeta = const VerificationMeta('role');
   @override
@@ -21584,9 +21554,6 @@ class $StreakMilestoneTable extends StreakMilestone
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES streak_activity (id)',
-    ),
   );
   static const VerificationMeta _daysRequiredMeta = const VerificationMeta(
     'daysRequired',
@@ -23369,9 +23336,6 @@ class $TodoItemsTable extends TodoItems
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES todo_lists (local_id)',
-    ),
   );
   static const VerificationMeta _titleMeta = const VerificationMeta('title');
   @override
@@ -24366,9 +24330,6 @@ class $TodoItemTagsTable extends TodoItemTags
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES todo_items (local_id)',
-    ),
   );
   static const VerificationMeta _tagLocalIdMeta = const VerificationMeta(
     'tagLocalId',
@@ -24380,9 +24341,6 @@ class $TodoItemTagsTable extends TodoItemTags
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES todo_tag_items (local_id)',
-    ),
   );
   @override
   List<GeneratedColumn> get $columns => [todoLocalId, tagLocalId];
@@ -30129,134 +30087,6 @@ typedef $$InstitutionTableUpdateCompanionBuilder =
       Value<String?> stateProvince,
     });
 
-final class $$InstitutionTableReferences
-    extends BaseReferences<_$AppDataBase, $InstitutionTable, InstitutionData> {
-  $$InstitutionTableReferences(super.$_db, super.$_table, super.$_typedResult);
-
-  static MultiTypedResultKey<$InstitutionKeyTable, List<InstitutionKeyData>>
-  _institutionKeyRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
-    db.institutionKey,
-    aliasName: $_aliasNameGenerator(
-      db.institution.institutionId,
-      db.institutionKey.institutionID,
-    ),
-  );
-
-  $$InstitutionKeyTableProcessedTableManager get institutionKeyRefs {
-    final manager = $$InstitutionKeyTableTableManager($_db, $_db.institutionKey)
-        .filter(
-          (f) => f.institutionID.institutionId.sqlEquals(
-            $_itemColumn<int>('institution_id')!,
-          ),
-        );
-
-    final cache = $_typedResult.readTableOrNull(_institutionKeyRefsTable($_db));
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-
-  static MultiTypedResultKey<
-    $InstitutionFeeTransactionTable,
-    List<InstitutionFeeTransactionData>
-  >
-  _institutionFeeTransactionRefsTable(_$AppDataBase db) =>
-      MultiTypedResultKey.fromTable(
-        db.institutionFeeTransaction,
-        aliasName: $_aliasNameGenerator(
-          db.institution.institutionId,
-          db.institutionFeeTransaction.institution,
-        ),
-      );
-
-  $$InstitutionFeeTransactionTableProcessedTableManager
-  get institutionFeeTransactionRefs {
-    final manager =
-        $$InstitutionFeeTransactionTableTableManager(
-          $_db,
-          $_db.institutionFeeTransaction,
-        ).filter(
-          (f) => f.institution.institutionId.sqlEquals(
-            $_itemColumn<int>('institution_id')!,
-          ),
-        );
-
-    final cache = $_typedResult.readTableOrNull(
-      _institutionFeeTransactionRefsTable($_db),
-    );
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-
-  static MultiTypedResultKey<$SemesterTable, List<SemesterData>>
-  _semesterRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
-    db.semester,
-    aliasName: $_aliasNameGenerator(
-      db.institution.institutionId,
-      db.semester.institutionId,
-    ),
-  );
-
-  $$SemesterTableProcessedTableManager get semesterRefs {
-    final manager = $$SemesterTableTableManager($_db, $_db.semester).filter(
-      (f) => f.institutionId.institutionId.sqlEquals(
-        $_itemColumn<int>('institution_id')!,
-      ),
-    );
-
-    final cache = $_typedResult.readTableOrNull(_semesterRefsTable($_db));
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-
-  static MultiTypedResultKey<$CourseTable, List<CourseData>> _courseRefsTable(
-    _$AppDataBase db,
-  ) => MultiTypedResultKey.fromTable(
-    db.course,
-    aliasName: $_aliasNameGenerator(
-      db.institution.institutionId,
-      db.course.institution,
-    ),
-  );
-
-  $$CourseTableProcessedTableManager get courseRefs {
-    final manager = $$CourseTableTableManager($_db, $_db.course).filter(
-      (f) => f.institution.institutionId.sqlEquals(
-        $_itemColumn<int>('institution_id')!,
-      ),
-    );
-
-    final cache = $_typedResult.readTableOrNull(_courseRefsTable($_db));
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-
-  static MultiTypedResultKey<$TimetableTable, List<TimetableData>>
-  _timetableRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
-    db.timetable,
-    aliasName: $_aliasNameGenerator(
-      db.institution.institutionId,
-      db.timetable.institution,
-    ),
-  );
-
-  $$TimetableTableProcessedTableManager get timetableRefs {
-    final manager = $$TimetableTableTableManager($_db, $_db.timetable).filter(
-      (f) => f.institution.institutionId.sqlEquals(
-        $_itemColumn<int>('institution_id')!,
-      ),
-    );
-
-    final cache = $_typedResult.readTableOrNull(_timetableRefsTable($_db));
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-}
-
 class $$InstitutionTableFilterComposer
     extends Composer<_$AppDataBase, $InstitutionTable> {
   $$InstitutionTableFilterComposer({
@@ -30302,133 +30132,6 @@ class $$InstitutionTableFilterComposer
     column: $table.stateProvince,
     builder: (column) => ColumnFilters(column),
   );
-
-  Expression<bool> institutionKeyRefs(
-    Expression<bool> Function($$InstitutionKeyTableFilterComposer f) f,
-  ) {
-    final $$InstitutionKeyTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.institutionId,
-      referencedTable: $db.institutionKey,
-      getReferencedColumn: (t) => t.institutionID,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionKeyTableFilterComposer(
-            $db: $db,
-            $table: $db.institutionKey,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
-
-  Expression<bool> institutionFeeTransactionRefs(
-    Expression<bool> Function($$InstitutionFeeTransactionTableFilterComposer f)
-    f,
-  ) {
-    final $$InstitutionFeeTransactionTableFilterComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.institutionId,
-          referencedTable: $db.institutionFeeTransaction,
-          getReferencedColumn: (t) => t.institution,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer,
-              }) => $$InstitutionFeeTransactionTableFilterComposer(
-                $db: $db,
-                $table: $db.institutionFeeTransaction,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
-    return f(composer);
-  }
-
-  Expression<bool> semesterRefs(
-    Expression<bool> Function($$SemesterTableFilterComposer f) f,
-  ) {
-    final $$SemesterTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.institutionId,
-      referencedTable: $db.semester,
-      getReferencedColumn: (t) => t.institutionId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$SemesterTableFilterComposer(
-            $db: $db,
-            $table: $db.semester,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
-
-  Expression<bool> courseRefs(
-    Expression<bool> Function($$CourseTableFilterComposer f) f,
-  ) {
-    final $$CourseTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.institutionId,
-      referencedTable: $db.course,
-      getReferencedColumn: (t) => t.institution,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$CourseTableFilterComposer(
-            $db: $db,
-            $table: $db.course,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
-
-  Expression<bool> timetableRefs(
-    Expression<bool> Function($$TimetableTableFilterComposer f) f,
-  ) {
-    final $$TimetableTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.institutionId,
-      referencedTable: $db.timetable,
-      getReferencedColumn: (t) => t.institution,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$TimetableTableFilterComposer(
-            $db: $db,
-            $table: $db.timetable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
 class $$InstitutionTableOrderingComposer
@@ -30511,133 +30214,6 @@ class $$InstitutionTableAnnotationComposer
     column: $table.stateProvince,
     builder: (column) => column,
   );
-
-  Expression<T> institutionKeyRefs<T extends Object>(
-    Expression<T> Function($$InstitutionKeyTableAnnotationComposer a) f,
-  ) {
-    final $$InstitutionKeyTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.institutionId,
-      referencedTable: $db.institutionKey,
-      getReferencedColumn: (t) => t.institutionID,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionKeyTableAnnotationComposer(
-            $db: $db,
-            $table: $db.institutionKey,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
-
-  Expression<T> institutionFeeTransactionRefs<T extends Object>(
-    Expression<T> Function($$InstitutionFeeTransactionTableAnnotationComposer a)
-    f,
-  ) {
-    final $$InstitutionFeeTransactionTableAnnotationComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.institutionId,
-          referencedTable: $db.institutionFeeTransaction,
-          getReferencedColumn: (t) => t.institution,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer,
-              }) => $$InstitutionFeeTransactionTableAnnotationComposer(
-                $db: $db,
-                $table: $db.institutionFeeTransaction,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
-    return f(composer);
-  }
-
-  Expression<T> semesterRefs<T extends Object>(
-    Expression<T> Function($$SemesterTableAnnotationComposer a) f,
-  ) {
-    final $$SemesterTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.institutionId,
-      referencedTable: $db.semester,
-      getReferencedColumn: (t) => t.institutionId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$SemesterTableAnnotationComposer(
-            $db: $db,
-            $table: $db.semester,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
-
-  Expression<T> courseRefs<T extends Object>(
-    Expression<T> Function($$CourseTableAnnotationComposer a) f,
-  ) {
-    final $$CourseTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.institutionId,
-      referencedTable: $db.course,
-      getReferencedColumn: (t) => t.institution,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$CourseTableAnnotationComposer(
-            $db: $db,
-            $table: $db.course,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
-
-  Expression<T> timetableRefs<T extends Object>(
-    Expression<T> Function($$TimetableTableAnnotationComposer a) f,
-  ) {
-    final $$TimetableTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.institutionId,
-      referencedTable: $db.timetable,
-      getReferencedColumn: (t) => t.institution,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$TimetableTableAnnotationComposer(
-            $db: $db,
-            $table: $db.timetable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
 class $$InstitutionTableTableManager
@@ -30651,15 +30227,12 @@ class $$InstitutionTableTableManager
           $$InstitutionTableAnnotationComposer,
           $$InstitutionTableCreateCompanionBuilder,
           $$InstitutionTableUpdateCompanionBuilder,
-          (InstitutionData, $$InstitutionTableReferences),
+          (
+            InstitutionData,
+            BaseReferences<_$AppDataBase, $InstitutionTable, InstitutionData>,
+          ),
           InstitutionData,
-          PrefetchHooks Function({
-            bool institutionKeyRefs,
-            bool institutionFeeTransactionRefs,
-            bool semesterRefs,
-            bool courseRefs,
-            bool timetableRefs,
-          })
+          PrefetchHooks Function()
         > {
   $$InstitutionTableTableManager(_$AppDataBase db, $InstitutionTable table)
     : super(
@@ -30709,143 +30282,9 @@ class $$InstitutionTableTableManager
                 stateProvince: stateProvince,
               ),
           withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$InstitutionTableReferences(db, table, e),
-                ),
-              )
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback:
-              ({
-                institutionKeyRefs = false,
-                institutionFeeTransactionRefs = false,
-                semesterRefs = false,
-                courseRefs = false,
-                timetableRefs = false,
-              }) {
-                return PrefetchHooks(
-                  db: db,
-                  explicitlyWatchedTables: [
-                    if (institutionKeyRefs) db.institutionKey,
-                    if (institutionFeeTransactionRefs)
-                      db.institutionFeeTransaction,
-                    if (semesterRefs) db.semester,
-                    if (courseRefs) db.course,
-                    if (timetableRefs) db.timetable,
-                  ],
-                  addJoins: null,
-                  getPrefetchedDataCallback: (items) async {
-                    return [
-                      if (institutionKeyRefs)
-                        await $_getPrefetchedData<
-                          InstitutionData,
-                          $InstitutionTable,
-                          InstitutionKeyData
-                        >(
-                          currentTable: table,
-                          referencedTable: $$InstitutionTableReferences
-                              ._institutionKeyRefsTable(db),
-                          managerFromTypedResult: (p0) =>
-                              $$InstitutionTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).institutionKeyRefs,
-                          referencedItemsForCurrentItem:
-                              (item, referencedItems) => referencedItems.where(
-                                (e) => e.institutionID == item.institutionId,
-                              ),
-                          typedResults: items,
-                        ),
-                      if (institutionFeeTransactionRefs)
-                        await $_getPrefetchedData<
-                          InstitutionData,
-                          $InstitutionTable,
-                          InstitutionFeeTransactionData
-                        >(
-                          currentTable: table,
-                          referencedTable: $$InstitutionTableReferences
-                              ._institutionFeeTransactionRefsTable(db),
-                          managerFromTypedResult: (p0) =>
-                              $$InstitutionTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).institutionFeeTransactionRefs,
-                          referencedItemsForCurrentItem:
-                              (item, referencedItems) => referencedItems.where(
-                                (e) => e.institution == item.institutionId,
-                              ),
-                          typedResults: items,
-                        ),
-                      if (semesterRefs)
-                        await $_getPrefetchedData<
-                          InstitutionData,
-                          $InstitutionTable,
-                          SemesterData
-                        >(
-                          currentTable: table,
-                          referencedTable: $$InstitutionTableReferences
-                              ._semesterRefsTable(db),
-                          managerFromTypedResult: (p0) =>
-                              $$InstitutionTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).semesterRefs,
-                          referencedItemsForCurrentItem:
-                              (item, referencedItems) => referencedItems.where(
-                                (e) => e.institutionId == item.institutionId,
-                              ),
-                          typedResults: items,
-                        ),
-                      if (courseRefs)
-                        await $_getPrefetchedData<
-                          InstitutionData,
-                          $InstitutionTable,
-                          CourseData
-                        >(
-                          currentTable: table,
-                          referencedTable: $$InstitutionTableReferences
-                              ._courseRefsTable(db),
-                          managerFromTypedResult: (p0) =>
-                              $$InstitutionTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).courseRefs,
-                          referencedItemsForCurrentItem:
-                              (item, referencedItems) => referencedItems.where(
-                                (e) => e.institution == item.institutionId,
-                              ),
-                          typedResults: items,
-                        ),
-                      if (timetableRefs)
-                        await $_getPrefetchedData<
-                          InstitutionData,
-                          $InstitutionTable,
-                          TimetableData
-                        >(
-                          currentTable: table,
-                          referencedTable: $$InstitutionTableReferences
-                              ._timetableRefsTable(db),
-                          managerFromTypedResult: (p0) =>
-                              $$InstitutionTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).timetableRefs,
-                          referencedItemsForCurrentItem:
-                              (item, referencedItems) => referencedItems.where(
-                                (e) => e.institution == item.institutionId,
-                              ),
-                          typedResults: items,
-                        ),
-                    ];
-                  },
-                );
-              },
+          prefetchHooksCallback: null,
         ),
       );
 }
@@ -30860,15 +30299,12 @@ typedef $$InstitutionTableProcessedTableManager =
       $$InstitutionTableAnnotationComposer,
       $$InstitutionTableCreateCompanionBuilder,
       $$InstitutionTableUpdateCompanionBuilder,
-      (InstitutionData, $$InstitutionTableReferences),
+      (
+        InstitutionData,
+        BaseReferences<_$AppDataBase, $InstitutionTable, InstitutionData>,
+      ),
       InstitutionData,
-      PrefetchHooks Function({
-        bool institutionKeyRefs,
-        bool institutionFeeTransactionRefs,
-        bool semesterRefs,
-        bool courseRefs,
-        bool timetableRefs,
-      })
+      PrefetchHooks Function()
     >;
 typedef $$InstitutionScrappingCommandTableCreateCompanionBuilder =
     InstitutionScrappingCommandCompanion Function({
@@ -30894,43 +30330,6 @@ typedef $$InstitutionScrappingCommandTableUpdateCompanionBuilder =
       Value<List<dynamic>> instructions,
       Value<int> rowid,
     });
-
-final class $$InstitutionScrappingCommandTableReferences
-    extends
-        BaseReferences<
-          _$AppDataBase,
-          $InstitutionScrappingCommandTable,
-          InstitutionScrappingCommandData
-        > {
-  $$InstitutionScrappingCommandTableReferences(
-    super.$_db,
-    super.$_table,
-    super.$_typedResult,
-  );
-
-  static MultiTypedResultKey<$InstitutionKeyTable, List<InstitutionKeyData>>
-  _institutionKeyRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
-    db.institutionKey,
-    aliasName: $_aliasNameGenerator(
-      db.institutionScrappingCommand.commandID,
-      db.institutionKey.commandID,
-    ),
-  );
-
-  $$InstitutionKeyTableProcessedTableManager get institutionKeyRefs {
-    final manager = $$InstitutionKeyTableTableManager($_db, $_db.institutionKey)
-        .filter(
-          (f) => f.commandID.commandID.sqlEquals(
-            $_itemColumn<String>('command_i_d')!,
-          ),
-        );
-
-    final cache = $_typedResult.readTableOrNull(_institutionKeyRefsTable($_db));
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-}
 
 class $$InstitutionScrappingCommandTableFilterComposer
     extends Composer<_$AppDataBase, $InstitutionScrappingCommandTable> {
@@ -30981,31 +30380,6 @@ class $$InstitutionScrappingCommandTableFilterComposer
     column: $table.instructions,
     builder: (column) => ColumnWithTypeConverterFilters(column),
   );
-
-  Expression<bool> institutionKeyRefs(
-    Expression<bool> Function($$InstitutionKeyTableFilterComposer f) f,
-  ) {
-    final $$InstitutionKeyTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.commandID,
-      referencedTable: $db.institutionKey,
-      getReferencedColumn: (t) => t.commandID,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionKeyTableFilterComposer(
-            $db: $db,
-            $table: $db.institutionKey,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
 class $$InstitutionScrappingCommandTableOrderingComposer
@@ -31099,31 +30473,6 @@ class $$InstitutionScrappingCommandTableAnnotationComposer
         column: $table.instructions,
         builder: (column) => column,
       );
-
-  Expression<T> institutionKeyRefs<T extends Object>(
-    Expression<T> Function($$InstitutionKeyTableAnnotationComposer a) f,
-  ) {
-    final $$InstitutionKeyTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.commandID,
-      referencedTable: $db.institutionKey,
-      getReferencedColumn: (t) => t.commandID,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionKeyTableAnnotationComposer(
-            $db: $db,
-            $table: $db.institutionKey,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
 class $$InstitutionScrappingCommandTableTableManager
@@ -31139,10 +30488,14 @@ class $$InstitutionScrappingCommandTableTableManager
           $$InstitutionScrappingCommandTableUpdateCompanionBuilder,
           (
             InstitutionScrappingCommandData,
-            $$InstitutionScrappingCommandTableReferences,
+            BaseReferences<
+              _$AppDataBase,
+              $InstitutionScrappingCommandTable,
+              InstitutionScrappingCommandData
+            >,
           ),
           InstitutionScrappingCommandData,
-          PrefetchHooks Function({bool institutionKeyRefs})
+          PrefetchHooks Function()
         > {
   $$InstitutionScrappingCommandTableTableManager(
     _$AppDataBase db,
@@ -31211,48 +30564,9 @@ class $$InstitutionScrappingCommandTableTableManager
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$InstitutionScrappingCommandTableReferences(db, table, e),
-                ),
-              )
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback: ({institutionKeyRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [
-                if (institutionKeyRefs) db.institutionKey,
-              ],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (institutionKeyRefs)
-                    await $_getPrefetchedData<
-                      InstitutionScrappingCommandData,
-                      $InstitutionScrappingCommandTable,
-                      InstitutionKeyData
-                    >(
-                      currentTable: table,
-                      referencedTable:
-                          $$InstitutionScrappingCommandTableReferences
-                              ._institutionKeyRefsTable(db),
-                      managerFromTypedResult: (p0) =>
-                          $$InstitutionScrappingCommandTableReferences(
-                            db,
-                            table,
-                            p0,
-                          ).institutionKeyRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where(
-                            (e) => e.commandID == item.commandID,
-                          ),
-                      typedResults: items,
-                    ),
-                ];
-              },
-            );
-          },
+          prefetchHooksCallback: null,
         ),
       );
 }
@@ -31269,10 +30583,14 @@ typedef $$InstitutionScrappingCommandTableProcessedTableManager =
       $$InstitutionScrappingCommandTableUpdateCompanionBuilder,
       (
         InstitutionScrappingCommandData,
-        $$InstitutionScrappingCommandTableReferences,
+        BaseReferences<
+          _$AppDataBase,
+          $InstitutionScrappingCommandTable,
+          InstitutionScrappingCommandData
+        >,
       ),
       InstitutionScrappingCommandData,
-      PrefetchHooks Function({bool institutionKeyRefs})
+      PrefetchHooks Function()
     >;
 typedef $$InstitutionKeyTableCreateCompanionBuilder =
     InstitutionKeyCompanion Function({
@@ -31291,64 +30609,6 @@ typedef $$InstitutionKeyTableUpdateCompanionBuilder =
       Value<int> rowid,
     });
 
-final class $$InstitutionKeyTableReferences
-    extends
-        BaseReferences<
-          _$AppDataBase,
-          $InstitutionKeyTable,
-          InstitutionKeyData
-        > {
-  $$InstitutionKeyTableReferences(
-    super.$_db,
-    super.$_table,
-    super.$_typedResult,
-  );
-
-  static $InstitutionTable _institutionIDTable(_$AppDataBase db) =>
-      db.institution.createAlias(
-        $_aliasNameGenerator(
-          db.institutionKey.institutionID,
-          db.institution.institutionId,
-        ),
-      );
-
-  $$InstitutionTableProcessedTableManager get institutionID {
-    final $_column = $_itemColumn<int>('institution_id')!;
-
-    final manager = $$InstitutionTableTableManager(
-      $_db,
-      $_db.institution,
-    ).filter((f) => f.institutionId.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_institutionIDTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-
-  static $InstitutionScrappingCommandTable _commandIDTable(_$AppDataBase db) =>
-      db.institutionScrappingCommand.createAlias(
-        $_aliasNameGenerator(
-          db.institutionKey.commandID,
-          db.institutionScrappingCommand.commandID,
-        ),
-      );
-
-  $$InstitutionScrappingCommandTableProcessedTableManager get commandID {
-    final $_column = $_itemColumn<String>('command_i_d')!;
-
-    final manager = $$InstitutionScrappingCommandTableTableManager(
-      $_db,
-      $_db.institutionScrappingCommand,
-    ).filter((f) => f.commandID.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_commandIDTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-}
-
 class $$InstitutionKeyTableFilterComposer
     extends Composer<_$AppDataBase, $InstitutionKeyTable> {
   $$InstitutionKeyTableFilterComposer({
@@ -31358,6 +30618,16 @@ class $$InstitutionKeyTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnFilters<int> get institutionID => $composableBuilder(
+    column: $table.institutionID,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get commandID => $composableBuilder(
+    column: $table.commandID,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnWithTypeConverterFilters<
     Map<String, dynamic>,
     Map<String, dynamic>,
@@ -31372,53 +30642,6 @@ class $$InstitutionKeyTableFilterComposer
     column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
   );
-
-  $$InstitutionTableFilterComposer get institutionID {
-    final $$InstitutionTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.institutionID,
-      referencedTable: $db.institution,
-      getReferencedColumn: (t) => t.institutionId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableFilterComposer(
-            $db: $db,
-            $table: $db.institution,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$InstitutionScrappingCommandTableFilterComposer get commandID {
-    final $$InstitutionScrappingCommandTableFilterComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.commandID,
-          referencedTable: $db.institutionScrappingCommand,
-          getReferencedColumn: (t) => t.commandID,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer,
-              }) => $$InstitutionScrappingCommandTableFilterComposer(
-                $db: $db,
-                $table: $db.institutionScrappingCommand,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
-    return composer;
-  }
 }
 
 class $$InstitutionKeyTableOrderingComposer
@@ -31430,6 +30653,16 @@ class $$InstitutionKeyTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnOrderings<int> get institutionID => $composableBuilder(
+    column: $table.institutionID,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get commandID => $composableBuilder(
+    column: $table.commandID,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get keySets => $composableBuilder(
     column: $table.keySets,
     builder: (column) => ColumnOrderings(column),
@@ -31439,53 +30672,6 @@ class $$InstitutionKeyTableOrderingComposer
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
   );
-
-  $$InstitutionTableOrderingComposer get institutionID {
-    final $$InstitutionTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.institutionID,
-      referencedTable: $db.institution,
-      getReferencedColumn: (t) => t.institutionId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableOrderingComposer(
-            $db: $db,
-            $table: $db.institution,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$InstitutionScrappingCommandTableOrderingComposer get commandID {
-    final $$InstitutionScrappingCommandTableOrderingComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.commandID,
-          referencedTable: $db.institutionScrappingCommand,
-          getReferencedColumn: (t) => t.commandID,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer,
-              }) => $$InstitutionScrappingCommandTableOrderingComposer(
-                $db: $db,
-                $table: $db.institutionScrappingCommand,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
-    return composer;
-  }
 }
 
 class $$InstitutionKeyTableAnnotationComposer
@@ -31497,58 +30683,19 @@ class $$InstitutionKeyTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  GeneratedColumn<int> get institutionID => $composableBuilder(
+    column: $table.institutionID,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get commandID =>
+      $composableBuilder(column: $table.commandID, builder: (column) => column);
+
   GeneratedColumnWithTypeConverter<Map<String, dynamic>, String> get keySets =>
       $composableBuilder(column: $table.keySets, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
-
-  $$InstitutionTableAnnotationComposer get institutionID {
-    final $$InstitutionTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.institutionID,
-      referencedTable: $db.institution,
-      getReferencedColumn: (t) => t.institutionId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableAnnotationComposer(
-            $db: $db,
-            $table: $db.institution,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$InstitutionScrappingCommandTableAnnotationComposer get commandID {
-    final $$InstitutionScrappingCommandTableAnnotationComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.commandID,
-          referencedTable: $db.institutionScrappingCommand,
-          getReferencedColumn: (t) => t.commandID,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer,
-              }) => $$InstitutionScrappingCommandTableAnnotationComposer(
-                $db: $db,
-                $table: $db.institutionScrappingCommand,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
-    return composer;
-  }
 }
 
 class $$InstitutionKeyTableTableManager
@@ -31562,9 +30709,16 @@ class $$InstitutionKeyTableTableManager
           $$InstitutionKeyTableAnnotationComposer,
           $$InstitutionKeyTableCreateCompanionBuilder,
           $$InstitutionKeyTableUpdateCompanionBuilder,
-          (InstitutionKeyData, $$InstitutionKeyTableReferences),
+          (
+            InstitutionKeyData,
+            BaseReferences<
+              _$AppDataBase,
+              $InstitutionKeyTable,
+              InstitutionKeyData
+            >,
+          ),
           InstitutionKeyData,
-          PrefetchHooks Function({bool institutionID, bool commandID})
+          PrefetchHooks Function()
         > {
   $$InstitutionKeyTableTableManager(
     _$AppDataBase db,
@@ -31608,69 +30762,9 @@ class $$InstitutionKeyTableTableManager
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$InstitutionKeyTableReferences(db, table, e),
-                ),
-              )
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback: ({institutionID = false, commandID = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [],
-              addJoins:
-                  <
-                    T extends TableManagerState<
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic
-                    >
-                  >(state) {
-                    if (institutionID) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.institutionID,
-                                referencedTable: $$InstitutionKeyTableReferences
-                                    ._institutionIDTable(db),
-                                referencedColumn:
-                                    $$InstitutionKeyTableReferences
-                                        ._institutionIDTable(db)
-                                        .institutionId,
-                              )
-                              as T;
-                    }
-                    if (commandID) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.commandID,
-                                referencedTable: $$InstitutionKeyTableReferences
-                                    ._commandIDTable(db),
-                                referencedColumn:
-                                    $$InstitutionKeyTableReferences
-                                        ._commandIDTable(db)
-                                        .commandID,
-                              )
-                              as T;
-                    }
-
-                    return state;
-                  },
-              getPrefetchedDataCallback: (items) async {
-                return [];
-              },
-            );
-          },
+          prefetchHooksCallback: null,
         ),
       );
 }
@@ -31685,9 +30779,12 @@ typedef $$InstitutionKeyTableProcessedTableManager =
       $$InstitutionKeyTableAnnotationComposer,
       $$InstitutionKeyTableCreateCompanionBuilder,
       $$InstitutionKeyTableUpdateCompanionBuilder,
-      (InstitutionKeyData, $$InstitutionKeyTableReferences),
+      (
+        InstitutionKeyData,
+        BaseReferences<_$AppDataBase, $InstitutionKeyTable, InstitutionKeyData>,
+      ),
       InstitutionKeyData,
-      PrefetchHooks Function({bool institutionID, bool commandID})
+      PrefetchHooks Function()
     >;
 typedef $$InstitutionProfileTableCreateCompanionBuilder =
     InstitutionProfileCompanion Function({
@@ -32315,42 +31412,6 @@ typedef $$InstitutionFeeTransactionTableUpdateCompanionBuilder =
       Value<int> rowid,
     });
 
-final class $$InstitutionFeeTransactionTableReferences
-    extends
-        BaseReferences<
-          _$AppDataBase,
-          $InstitutionFeeTransactionTable,
-          InstitutionFeeTransactionData
-        > {
-  $$InstitutionFeeTransactionTableReferences(
-    super.$_db,
-    super.$_table,
-    super.$_typedResult,
-  );
-
-  static $InstitutionTable _institutionTable(_$AppDataBase db) =>
-      db.institution.createAlias(
-        $_aliasNameGenerator(
-          db.institutionFeeTransaction.institution,
-          db.institution.institutionId,
-        ),
-      );
-
-  $$InstitutionTableProcessedTableManager get institution {
-    final $_column = $_itemColumn<int>('institution')!;
-
-    final manager = $$InstitutionTableTableManager(
-      $_db,
-      $_db.institution,
-    ).filter((f) => f.institutionId.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_institutionTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-}
-
 class $$InstitutionFeeTransactionTableFilterComposer
     extends Composer<_$AppDataBase, $InstitutionFeeTransactionTable> {
   $$InstitutionFeeTransactionTableFilterComposer({
@@ -32362,6 +31423,11 @@ class $$InstitutionFeeTransactionTableFilterComposer
   });
   ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get institution => $composableBuilder(
+    column: $table.institution,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -32404,29 +31470,6 @@ class $$InstitutionFeeTransactionTableFilterComposer
     column: $table.currency,
     builder: (column) => ColumnFilters(column),
   );
-
-  $$InstitutionTableFilterComposer get institution {
-    final $$InstitutionTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.institution,
-      referencedTable: $db.institution,
-      getReferencedColumn: (t) => t.institutionId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableFilterComposer(
-            $db: $db,
-            $table: $db.institution,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
 }
 
 class $$InstitutionFeeTransactionTableOrderingComposer
@@ -32440,6 +31483,11 @@ class $$InstitutionFeeTransactionTableOrderingComposer
   });
   ColumnOrderings<int> get id => $composableBuilder(
     column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get institution => $composableBuilder(
+    column: $table.institution,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -32482,29 +31530,6 @@ class $$InstitutionFeeTransactionTableOrderingComposer
     column: $table.currency,
     builder: (column) => ColumnOrderings(column),
   );
-
-  $$InstitutionTableOrderingComposer get institution {
-    final $$InstitutionTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.institution,
-      referencedTable: $db.institution,
-      getReferencedColumn: (t) => t.institutionId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableOrderingComposer(
-            $db: $db,
-            $table: $db.institution,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
 }
 
 class $$InstitutionFeeTransactionTableAnnotationComposer
@@ -32518,6 +31543,11 @@ class $$InstitutionFeeTransactionTableAnnotationComposer
   });
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get institution => $composableBuilder(
+    column: $table.institution,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get referenceNumber => $composableBuilder(
     column: $table.referenceNumber,
@@ -32550,29 +31580,6 @@ class $$InstitutionFeeTransactionTableAnnotationComposer
 
   GeneratedColumn<String> get currency =>
       $composableBuilder(column: $table.currency, builder: (column) => column);
-
-  $$InstitutionTableAnnotationComposer get institution {
-    final $$InstitutionTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.institution,
-      referencedTable: $db.institution,
-      getReferencedColumn: (t) => t.institutionId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableAnnotationComposer(
-            $db: $db,
-            $table: $db.institution,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
 }
 
 class $$InstitutionFeeTransactionTableTableManager
@@ -32588,10 +31595,14 @@ class $$InstitutionFeeTransactionTableTableManager
           $$InstitutionFeeTransactionTableUpdateCompanionBuilder,
           (
             InstitutionFeeTransactionData,
-            $$InstitutionFeeTransactionTableReferences,
+            BaseReferences<
+              _$AppDataBase,
+              $InstitutionFeeTransactionTable,
+              InstitutionFeeTransactionData
+            >,
           ),
           InstitutionFeeTransactionData,
-          PrefetchHooks Function({bool institution})
+          PrefetchHooks Function()
         > {
   $$InstitutionFeeTransactionTableTableManager(
     _$AppDataBase db,
@@ -32668,56 +31679,9 @@ class $$InstitutionFeeTransactionTableTableManager
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$InstitutionFeeTransactionTableReferences(db, table, e),
-                ),
-              )
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback: ({institution = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [],
-              addJoins:
-                  <
-                    T extends TableManagerState<
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic
-                    >
-                  >(state) {
-                    if (institution) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.institution,
-                                referencedTable:
-                                    $$InstitutionFeeTransactionTableReferences
-                                        ._institutionTable(db),
-                                referencedColumn:
-                                    $$InstitutionFeeTransactionTableReferences
-                                        ._institutionTable(db)
-                                        .institutionId,
-                              )
-                              as T;
-                    }
-
-                    return state;
-                  },
-              getPrefetchedDataCallback: (items) async {
-                return [];
-              },
-            );
-          },
+          prefetchHooksCallback: null,
         ),
       );
 }
@@ -32734,10 +31698,14 @@ typedef $$InstitutionFeeTransactionTableProcessedTableManager =
       $$InstitutionFeeTransactionTableUpdateCompanionBuilder,
       (
         InstitutionFeeTransactionData,
-        $$InstitutionFeeTransactionTableReferences,
+        BaseReferences<
+          _$AppDataBase,
+          $InstitutionFeeTransactionTable,
+          InstitutionFeeTransactionData
+        >,
       ),
       InstitutionFeeTransactionData,
-      PrefetchHooks Function({bool institution})
+      PrefetchHooks Function()
     >;
 typedef $$SemesterTableCreateCompanionBuilder =
     SemesterCompanion Function({
@@ -32757,52 +31725,6 @@ typedef $$SemesterTableUpdateCompanionBuilder =
       Value<DateTime> startDate,
       Value<DateTime> endDate,
     });
-
-final class $$SemesterTableReferences
-    extends BaseReferences<_$AppDataBase, $SemesterTable, SemesterData> {
-  $$SemesterTableReferences(super.$_db, super.$_table, super.$_typedResult);
-
-  static $InstitutionTable _institutionIdTable(_$AppDataBase db) =>
-      db.institution.createAlias(
-        $_aliasNameGenerator(
-          db.semester.institutionId,
-          db.institution.institutionId,
-        ),
-      );
-
-  $$InstitutionTableProcessedTableManager? get institutionId {
-    final $_column = $_itemColumn<int>('institution_id');
-    if ($_column == null) return null;
-    final manager = $$InstitutionTableTableManager(
-      $_db,
-      $_db.institution,
-    ).filter((f) => f.institutionId.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_institutionIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-
-  static MultiTypedResultKey<$CourseTable, List<CourseData>> _courseRefsTable(
-    _$AppDataBase db,
-  ) => MultiTypedResultKey.fromTable(
-    db.course,
-    aliasName: $_aliasNameGenerator(db.semester.id, db.course.semester),
-  );
-
-  $$CourseTableProcessedTableManager get courseRefs {
-    final manager = $$CourseTableTableManager(
-      $_db,
-      $_db.course,
-    ).filter((f) => f.semester.id.sqlEquals($_itemColumn<int>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(_courseRefsTable($_db));
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-}
 
 class $$SemesterTableFilterComposer
     extends Composer<_$AppDataBase, $SemesterTable> {
@@ -32828,6 +31750,11 @@ class $$SemesterTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<int> get institutionId => $composableBuilder(
+    column: $table.institutionId,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<DateTime> get startDate => $composableBuilder(
     column: $table.startDate,
     builder: (column) => ColumnFilters(column),
@@ -32837,54 +31764,6 @@ class $$SemesterTableFilterComposer
     column: $table.endDate,
     builder: (column) => ColumnFilters(column),
   );
-
-  $$InstitutionTableFilterComposer get institutionId {
-    final $$InstitutionTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.institutionId,
-      referencedTable: $db.institution,
-      getReferencedColumn: (t) => t.institutionId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableFilterComposer(
-            $db: $db,
-            $table: $db.institution,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  Expression<bool> courseRefs(
-    Expression<bool> Function($$CourseTableFilterComposer f) f,
-  ) {
-    final $$CourseTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.course,
-      getReferencedColumn: (t) => t.semester,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$CourseTableFilterComposer(
-            $db: $db,
-            $table: $db.course,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
 class $$SemesterTableOrderingComposer
@@ -32911,6 +31790,11 @@ class $$SemesterTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get institutionId => $composableBuilder(
+    column: $table.institutionId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get startDate => $composableBuilder(
     column: $table.startDate,
     builder: (column) => ColumnOrderings(column),
@@ -32920,29 +31804,6 @@ class $$SemesterTableOrderingComposer
     column: $table.endDate,
     builder: (column) => ColumnOrderings(column),
   );
-
-  $$InstitutionTableOrderingComposer get institutionId {
-    final $$InstitutionTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.institutionId,
-      referencedTable: $db.institution,
-      getReferencedColumn: (t) => t.institutionId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableOrderingComposer(
-            $db: $db,
-            $table: $db.institution,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
 }
 
 class $$SemesterTableAnnotationComposer
@@ -32965,59 +31826,16 @@ class $$SemesterTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<int> get institutionId => $composableBuilder(
+    column: $table.institutionId,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<DateTime> get startDate =>
       $composableBuilder(column: $table.startDate, builder: (column) => column);
 
   GeneratedColumn<DateTime> get endDate =>
       $composableBuilder(column: $table.endDate, builder: (column) => column);
-
-  $$InstitutionTableAnnotationComposer get institutionId {
-    final $$InstitutionTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.institutionId,
-      referencedTable: $db.institution,
-      getReferencedColumn: (t) => t.institutionId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableAnnotationComposer(
-            $db: $db,
-            $table: $db.institution,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  Expression<T> courseRefs<T extends Object>(
-    Expression<T> Function($$CourseTableAnnotationComposer a) f,
-  ) {
-    final $$CourseTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.course,
-      getReferencedColumn: (t) => t.semester,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$CourseTableAnnotationComposer(
-            $db: $db,
-            $table: $db.course,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
 class $$SemesterTableTableManager
@@ -33031,9 +31849,12 @@ class $$SemesterTableTableManager
           $$SemesterTableAnnotationComposer,
           $$SemesterTableCreateCompanionBuilder,
           $$SemesterTableUpdateCompanionBuilder,
-          (SemesterData, $$SemesterTableReferences),
+          (
+            SemesterData,
+            BaseReferences<_$AppDataBase, $SemesterTable, SemesterData>,
+          ),
           SemesterData,
-          PrefetchHooks Function({bool institutionId, bool courseRefs})
+          PrefetchHooks Function()
         > {
   $$SemesterTableTableManager(_$AppDataBase db, $SemesterTable table)
     : super(
@@ -33079,70 +31900,9 @@ class $$SemesterTableTableManager
                 endDate: endDate,
               ),
           withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$SemesterTableReferences(db, table, e),
-                ),
-              )
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback: ({institutionId = false, courseRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [if (courseRefs) db.course],
-              addJoins:
-                  <
-                    T extends TableManagerState<
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic
-                    >
-                  >(state) {
-                    if (institutionId) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.institutionId,
-                                referencedTable: $$SemesterTableReferences
-                                    ._institutionIdTable(db),
-                                referencedColumn: $$SemesterTableReferences
-                                    ._institutionIdTable(db)
-                                    .institutionId,
-                              )
-                              as T;
-                    }
-
-                    return state;
-                  },
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (courseRefs)
-                    await $_getPrefetchedData<
-                      SemesterData,
-                      $SemesterTable,
-                      CourseData
-                    >(
-                      currentTable: table,
-                      referencedTable: $$SemesterTableReferences
-                          ._courseRefsTable(db),
-                      managerFromTypedResult: (p0) =>
-                          $$SemesterTableReferences(db, table, p0).courseRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where((e) => e.semester == item.id),
-                      typedResults: items,
-                    ),
-                ];
-              },
-            );
-          },
+          prefetchHooksCallback: null,
         ),
       );
 }
@@ -33157,9 +31917,12 @@ typedef $$SemesterTableProcessedTableManager =
       $$SemesterTableAnnotationComposer,
       $$SemesterTableCreateCompanionBuilder,
       $$SemesterTableUpdateCompanionBuilder,
-      (SemesterData, $$SemesterTableReferences),
+      (
+        SemesterData,
+        BaseReferences<_$AppDataBase, $SemesterTable, SemesterData>,
+      ),
       SemesterData,
-      PrefetchHooks Function({bool institutionId, bool courseRefs})
+      PrefetchHooks Function()
     >;
 typedef $$CourseTableCreateCompanionBuilder =
     CourseCompanion Function({
@@ -33194,68 +31957,6 @@ typedef $$CourseTableUpdateCompanionBuilder =
       Value<int> rowid,
     });
 
-final class $$CourseTableReferences
-    extends BaseReferences<_$AppDataBase, $CourseTable, CourseData> {
-  $$CourseTableReferences(super.$_db, super.$_table, super.$_typedResult);
-
-  static $InstitutionTable _institutionTable(_$AppDataBase db) =>
-      db.institution.createAlias(
-        $_aliasNameGenerator(
-          db.course.institution,
-          db.institution.institutionId,
-        ),
-      );
-
-  $$InstitutionTableProcessedTableManager? get institution {
-    final $_column = $_itemColumn<int>('institution');
-    if ($_column == null) return null;
-    final manager = $$InstitutionTableTableManager(
-      $_db,
-      $_db.institution,
-    ).filter((f) => f.institutionId.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_institutionTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-
-  static $SemesterTable _semesterTable(_$AppDataBase db) => db.semester
-      .createAlias($_aliasNameGenerator(db.course.semester, db.semester.id));
-
-  $$SemesterTableProcessedTableManager? get semester {
-    final $_column = $_itemColumn<int>('semester');
-    if ($_column == null) return null;
-    final manager = $$SemesterTableTableManager(
-      $_db,
-      $_db.semester,
-    ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_semesterTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-
-  static MultiTypedResultKey<$TimetableEntryTable, List<TimetableEntryData>>
-  _timetableEntryRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
-    db.timetableEntry,
-    aliasName: $_aliasNameGenerator(db.course.id, db.timetableEntry.courseId),
-  );
-
-  $$TimetableEntryTableProcessedTableManager get timetableEntryRefs {
-    final manager = $$TimetableEntryTableTableManager(
-      $_db,
-      $_db.timetableEntry,
-    ).filter((f) => f.courseId.id.sqlEquals($_itemColumn<String>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(_timetableEntryRefsTable($_db));
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-}
-
 class $$CourseTableFilterComposer
     extends Composer<_$AppDataBase, $CourseTable> {
   $$CourseTableFilterComposer({
@@ -33272,6 +31973,16 @@ class $$CourseTableFilterComposer
 
   ColumnFilters<int> get serverId => $composableBuilder(
     column: $table.serverId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get institution => $composableBuilder(
+    column: $table.institution,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get semester => $composableBuilder(
+    column: $table.semester,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -33315,77 +32026,6 @@ class $$CourseTableFilterComposer
     column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
-
-  $$InstitutionTableFilterComposer get institution {
-    final $$InstitutionTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.institution,
-      referencedTable: $db.institution,
-      getReferencedColumn: (t) => t.institutionId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableFilterComposer(
-            $db: $db,
-            $table: $db.institution,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$SemesterTableFilterComposer get semester {
-    final $$SemesterTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.semester,
-      referencedTable: $db.semester,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$SemesterTableFilterComposer(
-            $db: $db,
-            $table: $db.semester,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  Expression<bool> timetableEntryRefs(
-    Expression<bool> Function($$TimetableEntryTableFilterComposer f) f,
-  ) {
-    final $$TimetableEntryTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.timetableEntry,
-      getReferencedColumn: (t) => t.courseId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$TimetableEntryTableFilterComposer(
-            $db: $db,
-            $table: $db.timetableEntry,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
 class $$CourseTableOrderingComposer
@@ -33404,6 +32044,16 @@ class $$CourseTableOrderingComposer
 
   ColumnOrderings<int> get serverId => $composableBuilder(
     column: $table.serverId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get institution => $composableBuilder(
+    column: $table.institution,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get semester => $composableBuilder(
+    column: $table.semester,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -33446,52 +32096,6 @@ class $$CourseTableOrderingComposer
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
   );
-
-  $$InstitutionTableOrderingComposer get institution {
-    final $$InstitutionTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.institution,
-      referencedTable: $db.institution,
-      getReferencedColumn: (t) => t.institutionId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableOrderingComposer(
-            $db: $db,
-            $table: $db.institution,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$SemesterTableOrderingComposer get semester {
-    final $$SemesterTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.semester,
-      referencedTable: $db.semester,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$SemesterTableOrderingComposer(
-            $db: $db,
-            $table: $db.semester,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
 }
 
 class $$CourseTableAnnotationComposer
@@ -33508,6 +32112,14 @@ class $$CourseTableAnnotationComposer
 
   GeneratedColumn<int> get serverId =>
       $composableBuilder(column: $table.serverId, builder: (column) => column);
+
+  GeneratedColumn<int> get institution => $composableBuilder(
+    column: $table.institution,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get semester =>
+      $composableBuilder(column: $table.semester, builder: (column) => column);
 
   GeneratedColumn<String> get courseCode => $composableBuilder(
     column: $table.courseCode,
@@ -33538,77 +32150,6 @@ class $$CourseTableAnnotationComposer
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
-
-  $$InstitutionTableAnnotationComposer get institution {
-    final $$InstitutionTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.institution,
-      referencedTable: $db.institution,
-      getReferencedColumn: (t) => t.institutionId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableAnnotationComposer(
-            $db: $db,
-            $table: $db.institution,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$SemesterTableAnnotationComposer get semester {
-    final $$SemesterTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.semester,
-      referencedTable: $db.semester,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$SemesterTableAnnotationComposer(
-            $db: $db,
-            $table: $db.semester,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  Expression<T> timetableEntryRefs<T extends Object>(
-    Expression<T> Function($$TimetableEntryTableAnnotationComposer a) f,
-  ) {
-    final $$TimetableEntryTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.timetableEntry,
-      getReferencedColumn: (t) => t.courseId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$TimetableEntryTableAnnotationComposer(
-            $db: $db,
-            $table: $db.timetableEntry,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
 class $$CourseTableTableManager
@@ -33622,13 +32163,9 @@ class $$CourseTableTableManager
           $$CourseTableAnnotationComposer,
           $$CourseTableCreateCompanionBuilder,
           $$CourseTableUpdateCompanionBuilder,
-          (CourseData, $$CourseTableReferences),
+          (CourseData, BaseReferences<_$AppDataBase, $CourseTable, CourseData>),
           CourseData,
-          PrefetchHooks Function({
-            bool institution,
-            bool semester,
-            bool timetableEntryRefs,
-          })
+          PrefetchHooks Function()
         > {
   $$CourseTableTableManager(_$AppDataBase db, $CourseTable table)
     : super(
@@ -33702,94 +32239,9 @@ class $$CourseTableTableManager
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map(
-                (e) =>
-                    (e.readTable(table), $$CourseTableReferences(db, table, e)),
-              )
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback:
-              ({
-                institution = false,
-                semester = false,
-                timetableEntryRefs = false,
-              }) {
-                return PrefetchHooks(
-                  db: db,
-                  explicitlyWatchedTables: [
-                    if (timetableEntryRefs) db.timetableEntry,
-                  ],
-                  addJoins:
-                      <
-                        T extends TableManagerState<
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic
-                        >
-                      >(state) {
-                        if (institution) {
-                          state =
-                              state.withJoin(
-                                    currentTable: table,
-                                    currentColumn: table.institution,
-                                    referencedTable: $$CourseTableReferences
-                                        ._institutionTable(db),
-                                    referencedColumn: $$CourseTableReferences
-                                        ._institutionTable(db)
-                                        .institutionId,
-                                  )
-                                  as T;
-                        }
-                        if (semester) {
-                          state =
-                              state.withJoin(
-                                    currentTable: table,
-                                    currentColumn: table.semester,
-                                    referencedTable: $$CourseTableReferences
-                                        ._semesterTable(db),
-                                    referencedColumn: $$CourseTableReferences
-                                        ._semesterTable(db)
-                                        .id,
-                                  )
-                                  as T;
-                        }
-
-                        return state;
-                      },
-                  getPrefetchedDataCallback: (items) async {
-                    return [
-                      if (timetableEntryRefs)
-                        await $_getPrefetchedData<
-                          CourseData,
-                          $CourseTable,
-                          TimetableEntryData
-                        >(
-                          currentTable: table,
-                          referencedTable: $$CourseTableReferences
-                              ._timetableEntryRefsTable(db),
-                          managerFromTypedResult: (p0) =>
-                              $$CourseTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).timetableEntryRefs,
-                          referencedItemsForCurrentItem:
-                              (item, referencedItems) => referencedItems.where(
-                                (e) => e.courseId == item.id,
-                              ),
-                          typedResults: items,
-                        ),
-                    ];
-                  },
-                );
-              },
+          prefetchHooksCallback: null,
         ),
       );
 }
@@ -33804,13 +32256,9 @@ typedef $$CourseTableProcessedTableManager =
       $$CourseTableAnnotationComposer,
       $$CourseTableCreateCompanionBuilder,
       $$CourseTableUpdateCompanionBuilder,
-      (CourseData, $$CourseTableReferences),
+      (CourseData, BaseReferences<_$AppDataBase, $CourseTable, CourseData>),
       CourseData,
-      PrefetchHooks Function({
-        bool institution,
-        bool semester,
-        bool timetableEntryRefs,
-      })
+      PrefetchHooks Function()
     >;
 typedef $$TimetableTableCreateCompanionBuilder =
     TimetableCompanion Function({
@@ -33838,54 +32286,6 @@ typedef $$TimetableTableUpdateCompanionBuilder =
       Value<DateTime> updatedAt,
       Value<int> rowid,
     });
-
-final class $$TimetableTableReferences
-    extends BaseReferences<_$AppDataBase, $TimetableTable, TimetableData> {
-  $$TimetableTableReferences(super.$_db, super.$_table, super.$_typedResult);
-
-  static $InstitutionTable _institutionTable(_$AppDataBase db) =>
-      db.institution.createAlias(
-        $_aliasNameGenerator(
-          db.timetable.institution,
-          db.institution.institutionId,
-        ),
-      );
-
-  $$InstitutionTableProcessedTableManager? get institution {
-    final $_column = $_itemColumn<int>('institution');
-    if ($_column == null) return null;
-    final manager = $$InstitutionTableTableManager(
-      $_db,
-      $_db.institution,
-    ).filter((f) => f.institutionId.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_institutionTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-
-  static MultiTypedResultKey<$TimetableEntryTable, List<TimetableEntryData>>
-  _timetableEntryRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
-    db.timetableEntry,
-    aliasName: $_aliasNameGenerator(
-      db.timetable.id,
-      db.timetableEntry.timetableId,
-    ),
-  );
-
-  $$TimetableEntryTableProcessedTableManager get timetableEntryRefs {
-    final manager = $$TimetableEntryTableTableManager(
-      $_db,
-      $_db.timetableEntry,
-    ).filter((f) => f.timetableId.id.sqlEquals($_itemColumn<String>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(_timetableEntryRefsTable($_db));
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-}
 
 class $$TimetableTableFilterComposer
     extends Composer<_$AppDataBase, $TimetableTable> {
@@ -33916,6 +32316,11 @@ class $$TimetableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<int> get institution => $composableBuilder(
+    column: $table.institution,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<bool> get isSynced => $composableBuilder(
     column: $table.isSynced,
     builder: (column) => ColumnFilters(column),
@@ -33935,54 +32340,6 @@ class $$TimetableTableFilterComposer
     column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
-
-  $$InstitutionTableFilterComposer get institution {
-    final $$InstitutionTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.institution,
-      referencedTable: $db.institution,
-      getReferencedColumn: (t) => t.institutionId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableFilterComposer(
-            $db: $db,
-            $table: $db.institution,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  Expression<bool> timetableEntryRefs(
-    Expression<bool> Function($$TimetableEntryTableFilterComposer f) f,
-  ) {
-    final $$TimetableEntryTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.timetableEntry,
-      getReferencedColumn: (t) => t.timetableId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$TimetableEntryTableFilterComposer(
-            $db: $db,
-            $table: $db.timetableEntry,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
 class $$TimetableTableOrderingComposer
@@ -34014,6 +32371,11 @@ class $$TimetableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get institution => $composableBuilder(
+    column: $table.institution,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<bool> get isSynced => $composableBuilder(
     column: $table.isSynced,
     builder: (column) => ColumnOrderings(column),
@@ -34033,29 +32395,6 @@ class $$TimetableTableOrderingComposer
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
   );
-
-  $$InstitutionTableOrderingComposer get institution {
-    final $$InstitutionTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.institution,
-      referencedTable: $db.institution,
-      getReferencedColumn: (t) => t.institutionId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableOrderingComposer(
-            $db: $db,
-            $table: $db.institution,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
 }
 
 class $$TimetableTableAnnotationComposer
@@ -34079,6 +32418,11 @@ class $$TimetableTableAnnotationComposer
   GeneratedColumn<String> get userId =>
       $composableBuilder(column: $table.userId, builder: (column) => column);
 
+  GeneratedColumn<int> get institution => $composableBuilder(
+    column: $table.institution,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<bool> get isSynced =>
       $composableBuilder(column: $table.isSynced, builder: (column) => column);
 
@@ -34090,54 +32434,6 @@ class $$TimetableTableAnnotationComposer
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
-
-  $$InstitutionTableAnnotationComposer get institution {
-    final $$InstitutionTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.institution,
-      referencedTable: $db.institution,
-      getReferencedColumn: (t) => t.institutionId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableAnnotationComposer(
-            $db: $db,
-            $table: $db.institution,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  Expression<T> timetableEntryRefs<T extends Object>(
-    Expression<T> Function($$TimetableEntryTableAnnotationComposer a) f,
-  ) {
-    final $$TimetableEntryTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.timetableEntry,
-      getReferencedColumn: (t) => t.timetableId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$TimetableEntryTableAnnotationComposer(
-            $db: $db,
-            $table: $db.timetableEntry,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
 class $$TimetableTableTableManager
@@ -34151,9 +32447,12 @@ class $$TimetableTableTableManager
           $$TimetableTableAnnotationComposer,
           $$TimetableTableCreateCompanionBuilder,
           $$TimetableTableUpdateCompanionBuilder,
-          (TimetableData, $$TimetableTableReferences),
+          (
+            TimetableData,
+            BaseReferences<_$AppDataBase, $TimetableTable, TimetableData>,
+          ),
           TimetableData,
-          PrefetchHooks Function({bool institution, bool timetableEntryRefs})
+          PrefetchHooks Function()
         > {
   $$TimetableTableTableManager(_$AppDataBase db, $TimetableTable table)
     : super(
@@ -34215,79 +32514,9 @@ class $$TimetableTableTableManager
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$TimetableTableReferences(db, table, e),
-                ),
-              )
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback:
-              ({institution = false, timetableEntryRefs = false}) {
-                return PrefetchHooks(
-                  db: db,
-                  explicitlyWatchedTables: [
-                    if (timetableEntryRefs) db.timetableEntry,
-                  ],
-                  addJoins:
-                      <
-                        T extends TableManagerState<
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic
-                        >
-                      >(state) {
-                        if (institution) {
-                          state =
-                              state.withJoin(
-                                    currentTable: table,
-                                    currentColumn: table.institution,
-                                    referencedTable: $$TimetableTableReferences
-                                        ._institutionTable(db),
-                                    referencedColumn: $$TimetableTableReferences
-                                        ._institutionTable(db)
-                                        .institutionId,
-                                  )
-                                  as T;
-                        }
-
-                        return state;
-                      },
-                  getPrefetchedDataCallback: (items) async {
-                    return [
-                      if (timetableEntryRefs)
-                        await $_getPrefetchedData<
-                          TimetableData,
-                          $TimetableTable,
-                          TimetableEntryData
-                        >(
-                          currentTable: table,
-                          referencedTable: $$TimetableTableReferences
-                              ._timetableEntryRefsTable(db),
-                          managerFromTypedResult: (p0) =>
-                              $$TimetableTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).timetableEntryRefs,
-                          referencedItemsForCurrentItem:
-                              (item, referencedItems) => referencedItems.where(
-                                (e) => e.timetableId == item.id,
-                              ),
-                          typedResults: items,
-                        ),
-                    ];
-                  },
-                );
-              },
+          prefetchHooksCallback: null,
         ),
       );
 }
@@ -34302,9 +32531,12 @@ typedef $$TimetableTableProcessedTableManager =
       $$TimetableTableAnnotationComposer,
       $$TimetableTableCreateCompanionBuilder,
       $$TimetableTableUpdateCompanionBuilder,
-      (TimetableData, $$TimetableTableReferences),
+      (
+        TimetableData,
+        BaseReferences<_$AppDataBase, $TimetableTable, TimetableData>,
+      ),
       TimetableData,
-      PrefetchHooks Function({bool institution, bool timetableEntryRefs})
+      PrefetchHooks Function()
     >;
 typedef $$TimetableEntryTableCreateCompanionBuilder =
     TimetableEntryCompanion Function({
@@ -34345,57 +32577,6 @@ typedef $$TimetableEntryTableUpdateCompanionBuilder =
       Value<int> rowid,
     });
 
-final class $$TimetableEntryTableReferences
-    extends
-        BaseReferences<
-          _$AppDataBase,
-          $TimetableEntryTable,
-          TimetableEntryData
-        > {
-  $$TimetableEntryTableReferences(
-    super.$_db,
-    super.$_table,
-    super.$_typedResult,
-  );
-
-  static $CourseTable _courseIdTable(_$AppDataBase db) => db.course.createAlias(
-    $_aliasNameGenerator(db.timetableEntry.courseId, db.course.id),
-  );
-
-  $$CourseTableProcessedTableManager get courseId {
-    final $_column = $_itemColumn<String>('course_id')!;
-
-    final manager = $$CourseTableTableManager(
-      $_db,
-      $_db.course,
-    ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_courseIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-
-  static $TimetableTable _timetableIdTable(_$AppDataBase db) =>
-      db.timetable.createAlias(
-        $_aliasNameGenerator(db.timetableEntry.timetableId, db.timetable.id),
-      );
-
-  $$TimetableTableProcessedTableManager get timetableId {
-    final $_column = $_itemColumn<String>('timetable_id')!;
-
-    final manager = $$TimetableTableTableManager(
-      $_db,
-      $_db.timetable,
-    ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_timetableIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-}
-
 class $$TimetableEntryTableFilterComposer
     extends Composer<_$AppDataBase, $TimetableEntryTable> {
   $$TimetableEntryTableFilterComposer({
@@ -34422,6 +32603,16 @@ class $$TimetableEntryTableFilterComposer
 
   ColumnFilters<int> get institutionId => $composableBuilder(
     column: $table.institutionId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get courseId => $composableBuilder(
+    column: $table.courseId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get timetableId => $composableBuilder(
+    column: $table.timetableId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -34469,52 +32660,6 @@ class $$TimetableEntryTableFilterComposer
     column: $table.lastUpdated,
     builder: (column) => ColumnFilters(column),
   );
-
-  $$CourseTableFilterComposer get courseId {
-    final $$CourseTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.courseId,
-      referencedTable: $db.course,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$CourseTableFilterComposer(
-            $db: $db,
-            $table: $db.course,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$TimetableTableFilterComposer get timetableId {
-    final $$TimetableTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.timetableId,
-      referencedTable: $db.timetable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$TimetableTableFilterComposer(
-            $db: $db,
-            $table: $db.timetable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
 }
 
 class $$TimetableEntryTableOrderingComposer
@@ -34543,6 +32688,16 @@ class $$TimetableEntryTableOrderingComposer
 
   ColumnOrderings<int> get institutionId => $composableBuilder(
     column: $table.institutionId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get courseId => $composableBuilder(
+    column: $table.courseId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get timetableId => $composableBuilder(
+    column: $table.timetableId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -34590,52 +32745,6 @@ class $$TimetableEntryTableOrderingComposer
     column: $table.lastUpdated,
     builder: (column) => ColumnOrderings(column),
   );
-
-  $$CourseTableOrderingComposer get courseId {
-    final $$CourseTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.courseId,
-      referencedTable: $db.course,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$CourseTableOrderingComposer(
-            $db: $db,
-            $table: $db.course,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$TimetableTableOrderingComposer get timetableId {
-    final $$TimetableTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.timetableId,
-      referencedTable: $db.timetable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$TimetableTableOrderingComposer(
-            $db: $db,
-            $table: $db.timetable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
 }
 
 class $$TimetableEntryTableAnnotationComposer
@@ -34658,6 +32767,14 @@ class $$TimetableEntryTableAnnotationComposer
 
   GeneratedColumn<int> get institutionId => $composableBuilder(
     column: $table.institutionId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get courseId =>
+      $composableBuilder(column: $table.courseId, builder: (column) => column);
+
+  GeneratedColumn<String> get timetableId => $composableBuilder(
+    column: $table.timetableId,
     builder: (column) => column,
   );
 
@@ -34691,52 +32808,6 @@ class $$TimetableEntryTableAnnotationComposer
     column: $table.lastUpdated,
     builder: (column) => column,
   );
-
-  $$CourseTableAnnotationComposer get courseId {
-    final $$CourseTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.courseId,
-      referencedTable: $db.course,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$CourseTableAnnotationComposer(
-            $db: $db,
-            $table: $db.course,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$TimetableTableAnnotationComposer get timetableId {
-    final $$TimetableTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.timetableId,
-      referencedTable: $db.timetable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$TimetableTableAnnotationComposer(
-            $db: $db,
-            $table: $db.timetable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
 }
 
 class $$TimetableEntryTableTableManager
@@ -34750,9 +32821,16 @@ class $$TimetableEntryTableTableManager
           $$TimetableEntryTableAnnotationComposer,
           $$TimetableEntryTableCreateCompanionBuilder,
           $$TimetableEntryTableUpdateCompanionBuilder,
-          (TimetableEntryData, $$TimetableEntryTableReferences),
+          (
+            TimetableEntryData,
+            BaseReferences<
+              _$AppDataBase,
+              $TimetableEntryTable,
+              TimetableEntryData
+            >,
+          ),
           TimetableEntryData,
-          PrefetchHooks Function({bool courseId, bool timetableId})
+          PrefetchHooks Function()
         > {
   $$TimetableEntryTableTableManager(
     _$AppDataBase db,
@@ -34840,69 +32918,9 @@ class $$TimetableEntryTableTableManager
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$TimetableEntryTableReferences(db, table, e),
-                ),
-              )
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback: ({courseId = false, timetableId = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [],
-              addJoins:
-                  <
-                    T extends TableManagerState<
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic
-                    >
-                  >(state) {
-                    if (courseId) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.courseId,
-                                referencedTable: $$TimetableEntryTableReferences
-                                    ._courseIdTable(db),
-                                referencedColumn:
-                                    $$TimetableEntryTableReferences
-                                        ._courseIdTable(db)
-                                        .id,
-                              )
-                              as T;
-                    }
-                    if (timetableId) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.timetableId,
-                                referencedTable: $$TimetableEntryTableReferences
-                                    ._timetableIdTable(db),
-                                referencedColumn:
-                                    $$TimetableEntryTableReferences
-                                        ._timetableIdTable(db)
-                                        .id,
-                              )
-                              as T;
-                    }
-
-                    return state;
-                  },
-              getPrefetchedDataCallback: (items) async {
-                return [];
-              },
-            );
-          },
+          prefetchHooksCallback: null,
         ),
       );
 }
@@ -34917,9 +32935,12 @@ typedef $$TimetableEntryTableProcessedTableManager =
       $$TimetableEntryTableAnnotationComposer,
       $$TimetableEntryTableCreateCompanionBuilder,
       $$TimetableEntryTableUpdateCompanionBuilder,
-      (TimetableEntryData, $$TimetableEntryTableReferences),
+      (
+        TimetableEntryData,
+        BaseReferences<_$AppDataBase, $TimetableEntryTable, TimetableEntryData>,
+      ),
       TimetableEntryData,
-      PrefetchHooks Function({bool courseId, bool timetableId})
+      PrefetchHooks Function()
     >;
 typedef $$ExamTimetableTableCreateCompanionBuilder =
     ExamTimetableCompanion Function({
@@ -35255,42 +33276,6 @@ typedef $$ChirpUserTableUpdateCompanionBuilder =
       Value<int> rowid,
     });
 
-final class $$ChirpUserTableReferences
-    extends BaseReferences<_$AppDataBase, $ChirpUserTable, ChirpUserData> {
-  $$ChirpUserTableReferences(super.$_db, super.$_table, super.$_typedResult);
-
-  static MultiTypedResultKey<
-    $ChirpCommunityMembershipTable,
-    List<ChirpCommunityMembershipData>
-  >
-  _chirpCommunityMembershipRefsTable(_$AppDataBase db) =>
-      MultiTypedResultKey.fromTable(
-        db.chirpCommunityMembership,
-        aliasName: $_aliasNameGenerator(
-          db.chirpUser.userID,
-          db.chirpCommunityMembership.userID,
-        ),
-      );
-
-  $$ChirpCommunityMembershipTableProcessedTableManager
-  get chirpCommunityMembershipRefs {
-    final manager =
-        $$ChirpCommunityMembershipTableTableManager(
-          $_db,
-          $_db.chirpCommunityMembership,
-        ).filter(
-          (f) => f.userID.userID.sqlEquals($_itemColumn<String>('user_i_d')!),
-        );
-
-    final cache = $_typedResult.readTableOrNull(
-      _chirpCommunityMembershipRefsTable($_db),
-    );
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-}
-
 class $$ChirpUserTableFilterComposer
     extends Composer<_$AppDataBase, $ChirpUserTable> {
   $$ChirpUserTableFilterComposer({
@@ -35344,33 +33329,6 @@ class $$ChirpUserTableFilterComposer
     column: $table.cachedAt,
     builder: (column) => ColumnFilters(column),
   );
-
-  Expression<bool> chirpCommunityMembershipRefs(
-    Expression<bool> Function($$ChirpCommunityMembershipTableFilterComposer f)
-    f,
-  ) {
-    final $$ChirpCommunityMembershipTableFilterComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.userID,
-          referencedTable: $db.chirpCommunityMembership,
-          getReferencedColumn: (t) => t.userID,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer,
-              }) => $$ChirpCommunityMembershipTableFilterComposer(
-                $db: $db,
-                $table: $db.chirpCommunityMembership,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
-    return f(composer);
-  }
 }
 
 class $$ChirpUserTableOrderingComposer
@@ -35465,33 +33423,6 @@ class $$ChirpUserTableAnnotationComposer
 
   GeneratedColumn<DateTime> get cachedAt =>
       $composableBuilder(column: $table.cachedAt, builder: (column) => column);
-
-  Expression<T> chirpCommunityMembershipRefs<T extends Object>(
-    Expression<T> Function($$ChirpCommunityMembershipTableAnnotationComposer a)
-    f,
-  ) {
-    final $$ChirpCommunityMembershipTableAnnotationComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.userID,
-          referencedTable: $db.chirpCommunityMembership,
-          getReferencedColumn: (t) => t.userID,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer,
-              }) => $$ChirpCommunityMembershipTableAnnotationComposer(
-                $db: $db,
-                $table: $db.chirpCommunityMembership,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
-    return f(composer);
-  }
 }
 
 class $$ChirpUserTableTableManager
@@ -35505,9 +33436,12 @@ class $$ChirpUserTableTableManager
           $$ChirpUserTableAnnotationComposer,
           $$ChirpUserTableCreateCompanionBuilder,
           $$ChirpUserTableUpdateCompanionBuilder,
-          (ChirpUserData, $$ChirpUserTableReferences),
+          (
+            ChirpUserData,
+            BaseReferences<_$AppDataBase, $ChirpUserTable, ChirpUserData>,
+          ),
           ChirpUserData,
-          PrefetchHooks Function({bool chirpCommunityMembershipRefs})
+          PrefetchHooks Function()
         > {
   $$ChirpUserTableTableManager(_$AppDataBase db, $ChirpUserTable table)
     : super(
@@ -35569,45 +33503,9 @@ class $$ChirpUserTableTableManager
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$ChirpUserTableReferences(db, table, e),
-                ),
-              )
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback: ({chirpCommunityMembershipRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [
-                if (chirpCommunityMembershipRefs) db.chirpCommunityMembership,
-              ],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (chirpCommunityMembershipRefs)
-                    await $_getPrefetchedData<
-                      ChirpUserData,
-                      $ChirpUserTable,
-                      ChirpCommunityMembershipData
-                    >(
-                      currentTable: table,
-                      referencedTable: $$ChirpUserTableReferences
-                          ._chirpCommunityMembershipRefsTable(db),
-                      managerFromTypedResult: (p0) =>
-                          $$ChirpUserTableReferences(
-                            db,
-                            table,
-                            p0,
-                          ).chirpCommunityMembershipRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where((e) => e.userID == item.userID),
-                      typedResults: items,
-                    ),
-                ];
-              },
-            );
-          },
+          prefetchHooksCallback: null,
         ),
       );
 }
@@ -35622,9 +33520,12 @@ typedef $$ChirpUserTableProcessedTableManager =
       $$ChirpUserTableAnnotationComposer,
       $$ChirpUserTableCreateCompanionBuilder,
       $$ChirpUserTableUpdateCompanionBuilder,
-      (ChirpUserData, $$ChirpUserTableReferences),
+      (
+        ChirpUserData,
+        BaseReferences<_$AppDataBase, $ChirpUserTable, ChirpUserData>,
+      ),
       ChirpUserData,
-      PrefetchHooks Function({bool chirpCommunityMembershipRefs})
+      PrefetchHooks Function()
     >;
 typedef $$CommunityTableCreateCompanionBuilder =
     CommunityCompanion Function({
@@ -36257,42 +34158,6 @@ typedef $$ChirpCommunityMembershipTableUpdateCompanionBuilder =
       Value<DateTime?> cachedAt,
     });
 
-final class $$ChirpCommunityMembershipTableReferences
-    extends
-        BaseReferences<
-          _$AppDataBase,
-          $ChirpCommunityMembershipTable,
-          ChirpCommunityMembershipData
-        > {
-  $$ChirpCommunityMembershipTableReferences(
-    super.$_db,
-    super.$_table,
-    super.$_typedResult,
-  );
-
-  static $ChirpUserTable _userIDTable(_$AppDataBase db) =>
-      db.chirpUser.createAlias(
-        $_aliasNameGenerator(
-          db.chirpCommunityMembership.userID,
-          db.chirpUser.userID,
-        ),
-      );
-
-  $$ChirpUserTableProcessedTableManager get userID {
-    final $_column = $_itemColumn<String>('user_i_d')!;
-
-    final manager = $$ChirpUserTableTableManager(
-      $_db,
-      $_db.chirpUser,
-    ).filter((f) => f.userID.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_userIDTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-}
-
 class $$ChirpCommunityMembershipTableFilterComposer
     extends Composer<_$AppDataBase, $ChirpCommunityMembershipTable> {
   $$ChirpCommunityMembershipTableFilterComposer({
@@ -36309,6 +34174,11 @@ class $$ChirpCommunityMembershipTableFilterComposer
 
   ColumnFilters<int> get communityID => $composableBuilder(
     column: $table.communityID,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userID => $composableBuilder(
+    column: $table.userID,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -36346,29 +34216,6 @@ class $$ChirpCommunityMembershipTableFilterComposer
     column: $table.cachedAt,
     builder: (column) => ColumnFilters(column),
   );
-
-  $$ChirpUserTableFilterComposer get userID {
-    final $$ChirpUserTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.userID,
-      referencedTable: $db.chirpUser,
-      getReferencedColumn: (t) => t.userID,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$ChirpUserTableFilterComposer(
-            $db: $db,
-            $table: $db.chirpUser,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
 }
 
 class $$ChirpCommunityMembershipTableOrderingComposer
@@ -36387,6 +34234,11 @@ class $$ChirpCommunityMembershipTableOrderingComposer
 
   ColumnOrderings<int> get communityID => $composableBuilder(
     column: $table.communityID,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userID => $composableBuilder(
+    column: $table.userID,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -36424,29 +34276,6 @@ class $$ChirpCommunityMembershipTableOrderingComposer
     column: $table.cachedAt,
     builder: (column) => ColumnOrderings(column),
   );
-
-  $$ChirpUserTableOrderingComposer get userID {
-    final $$ChirpUserTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.userID,
-      referencedTable: $db.chirpUser,
-      getReferencedColumn: (t) => t.userID,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$ChirpUserTableOrderingComposer(
-            $db: $db,
-            $table: $db.chirpUser,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
 }
 
 class $$ChirpCommunityMembershipTableAnnotationComposer
@@ -36465,6 +34294,9 @@ class $$ChirpCommunityMembershipTableAnnotationComposer
     column: $table.communityID,
     builder: (column) => column,
   );
+
+  GeneratedColumn<String> get userID =>
+      $composableBuilder(column: $table.userID, builder: (column) => column);
 
   GeneratedColumn<String> get role =>
       $composableBuilder(column: $table.role, builder: (column) => column);
@@ -36490,29 +34322,6 @@ class $$ChirpCommunityMembershipTableAnnotationComposer
 
   GeneratedColumn<DateTime> get cachedAt =>
       $composableBuilder(column: $table.cachedAt, builder: (column) => column);
-
-  $$ChirpUserTableAnnotationComposer get userID {
-    final $$ChirpUserTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.userID,
-      referencedTable: $db.chirpUser,
-      getReferencedColumn: (t) => t.userID,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$ChirpUserTableAnnotationComposer(
-            $db: $db,
-            $table: $db.chirpUser,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
 }
 
 class $$ChirpCommunityMembershipTableTableManager
@@ -36528,10 +34337,14 @@ class $$ChirpCommunityMembershipTableTableManager
           $$ChirpCommunityMembershipTableUpdateCompanionBuilder,
           (
             ChirpCommunityMembershipData,
-            $$ChirpCommunityMembershipTableReferences,
+            BaseReferences<
+              _$AppDataBase,
+              $ChirpCommunityMembershipTable,
+              ChirpCommunityMembershipData
+            >,
           ),
           ChirpCommunityMembershipData,
-          PrefetchHooks Function({bool userID})
+          PrefetchHooks Function()
         > {
   $$ChirpCommunityMembershipTableTableManager(
     _$AppDataBase db,
@@ -36604,56 +34417,9 @@ class $$ChirpCommunityMembershipTableTableManager
                 cachedAt: cachedAt,
               ),
           withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$ChirpCommunityMembershipTableReferences(db, table, e),
-                ),
-              )
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback: ({userID = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [],
-              addJoins:
-                  <
-                    T extends TableManagerState<
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic
-                    >
-                  >(state) {
-                    if (userID) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.userID,
-                                referencedTable:
-                                    $$ChirpCommunityMembershipTableReferences
-                                        ._userIDTable(db),
-                                referencedColumn:
-                                    $$ChirpCommunityMembershipTableReferences
-                                        ._userIDTable(db)
-                                        .userID,
-                              )
-                              as T;
-                    }
-
-                    return state;
-                  },
-              getPrefetchedDataCallback: (items) async {
-                return [];
-              },
-            );
-          },
+          prefetchHooksCallback: null,
         ),
       );
 }
@@ -36668,9 +34434,16 @@ typedef $$ChirpCommunityMembershipTableProcessedTableManager =
       $$ChirpCommunityMembershipTableAnnotationComposer,
       $$ChirpCommunityMembershipTableCreateCompanionBuilder,
       $$ChirpCommunityMembershipTableUpdateCompanionBuilder,
-      (ChirpCommunityMembershipData, $$ChirpCommunityMembershipTableReferences),
+      (
+        ChirpCommunityMembershipData,
+        BaseReferences<
+          _$AppDataBase,
+          $ChirpCommunityMembershipTable,
+          ChirpCommunityMembershipData
+        >,
+      ),
       ChirpCommunityMembershipData,
-      PrefetchHooks Function({bool userID})
+      PrefetchHooks Function()
     >;
 typedef $$LeaderboardRankTableCreateCompanionBuilder =
     LeaderboardRankCompanion Function({
@@ -37010,43 +34783,6 @@ typedef $$StreakActivityTableUpdateCompanionBuilder =
       Value<int> rowid,
     });
 
-final class $$StreakActivityTableReferences
-    extends
-        BaseReferences<
-          _$AppDataBase,
-          $StreakActivityTable,
-          StreakActivityData
-        > {
-  $$StreakActivityTableReferences(
-    super.$_db,
-    super.$_table,
-    super.$_typedResult,
-  );
-
-  static MultiTypedResultKey<$StreakMilestoneTable, List<StreakMilestoneData>>
-  _streakMilestoneRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
-    db.streakMilestone,
-    aliasName: $_aliasNameGenerator(
-      db.streakActivity.id,
-      db.streakMilestone.activityID,
-    ),
-  );
-
-  $$StreakMilestoneTableProcessedTableManager get streakMilestoneRefs {
-    final manager = $$StreakMilestoneTableTableManager(
-      $_db,
-      $_db.streakMilestone,
-    ).filter((f) => f.activityID.id.sqlEquals($_itemColumn<String>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(
-      _streakMilestoneRefsTable($_db),
-    );
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-}
-
 class $$StreakActivityTableFilterComposer
     extends Composer<_$AppDataBase, $StreakActivityTable> {
   $$StreakActivityTableFilterComposer({
@@ -37110,31 +34846,6 @@ class $$StreakActivityTableFilterComposer
     column: $table.cachedAt,
     builder: (column) => ColumnFilters(column),
   );
-
-  Expression<bool> streakMilestoneRefs(
-    Expression<bool> Function($$StreakMilestoneTableFilterComposer f) f,
-  ) {
-    final $$StreakMilestoneTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.streakMilestone,
-      getReferencedColumn: (t) => t.activityID,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$StreakMilestoneTableFilterComposer(
-            $db: $db,
-            $table: $db.streakMilestone,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
 class $$StreakActivityTableOrderingComposer
@@ -37251,31 +34962,6 @@ class $$StreakActivityTableAnnotationComposer
 
   GeneratedColumn<DateTime> get cachedAt =>
       $composableBuilder(column: $table.cachedAt, builder: (column) => column);
-
-  Expression<T> streakMilestoneRefs<T extends Object>(
-    Expression<T> Function($$StreakMilestoneTableAnnotationComposer a) f,
-  ) {
-    final $$StreakMilestoneTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.streakMilestone,
-      getReferencedColumn: (t) => t.activityID,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$StreakMilestoneTableAnnotationComposer(
-            $db: $db,
-            $table: $db.streakMilestone,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
 class $$StreakActivityTableTableManager
@@ -37289,9 +34975,16 @@ class $$StreakActivityTableTableManager
           $$StreakActivityTableAnnotationComposer,
           $$StreakActivityTableCreateCompanionBuilder,
           $$StreakActivityTableUpdateCompanionBuilder,
-          (StreakActivityData, $$StreakActivityTableReferences),
+          (
+            StreakActivityData,
+            BaseReferences<
+              _$AppDataBase,
+              $StreakActivityTable,
+              StreakActivityData
+            >,
+          ),
           StreakActivityData,
-          PrefetchHooks Function({bool streakMilestoneRefs})
+          PrefetchHooks Function()
         > {
   $$StreakActivityTableTableManager(
     _$AppDataBase db,
@@ -37363,45 +35056,9 @@ class $$StreakActivityTableTableManager
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$StreakActivityTableReferences(db, table, e),
-                ),
-              )
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback: ({streakMilestoneRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [
-                if (streakMilestoneRefs) db.streakMilestone,
-              ],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (streakMilestoneRefs)
-                    await $_getPrefetchedData<
-                      StreakActivityData,
-                      $StreakActivityTable,
-                      StreakMilestoneData
-                    >(
-                      currentTable: table,
-                      referencedTable: $$StreakActivityTableReferences
-                          ._streakMilestoneRefsTable(db),
-                      managerFromTypedResult: (p0) =>
-                          $$StreakActivityTableReferences(
-                            db,
-                            table,
-                            p0,
-                          ).streakMilestoneRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where((e) => e.activityID == item.id),
-                      typedResults: items,
-                    ),
-                ];
-              },
-            );
-          },
+          prefetchHooksCallback: null,
         ),
       );
 }
@@ -37416,9 +35073,12 @@ typedef $$StreakActivityTableProcessedTableManager =
       $$StreakActivityTableAnnotationComposer,
       $$StreakActivityTableCreateCompanionBuilder,
       $$StreakActivityTableUpdateCompanionBuilder,
-      (StreakActivityData, $$StreakActivityTableReferences),
+      (
+        StreakActivityData,
+        BaseReferences<_$AppDataBase, $StreakActivityTable, StreakActivityData>,
+      ),
       StreakActivityData,
-      PrefetchHooks Function({bool streakMilestoneRefs})
+      PrefetchHooks Function()
     >;
 typedef $$StreakMilestoneTableCreateCompanionBuilder =
     StreakMilestoneCompanion Function({
@@ -37445,42 +35105,6 @@ typedef $$StreakMilestoneTableUpdateCompanionBuilder =
       Value<int> rowid,
     });
 
-final class $$StreakMilestoneTableReferences
-    extends
-        BaseReferences<
-          _$AppDataBase,
-          $StreakMilestoneTable,
-          StreakMilestoneData
-        > {
-  $$StreakMilestoneTableReferences(
-    super.$_db,
-    super.$_table,
-    super.$_typedResult,
-  );
-
-  static $StreakActivityTable _activityIDTable(_$AppDataBase db) =>
-      db.streakActivity.createAlias(
-        $_aliasNameGenerator(
-          db.streakMilestone.activityID,
-          db.streakActivity.id,
-        ),
-      );
-
-  $$StreakActivityTableProcessedTableManager get activityID {
-    final $_column = $_itemColumn<String>('activity_i_d')!;
-
-    final manager = $$StreakActivityTableTableManager(
-      $_db,
-      $_db.streakActivity,
-    ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_activityIDTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-}
-
 class $$StreakMilestoneTableFilterComposer
     extends Composer<_$AppDataBase, $StreakMilestoneTable> {
   $$StreakMilestoneTableFilterComposer({
@@ -37492,6 +35116,11 @@ class $$StreakMilestoneTableFilterComposer
   });
   ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get activityID => $composableBuilder(
+    column: $table.activityID,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -37524,29 +35153,6 @@ class $$StreakMilestoneTableFilterComposer
     column: $table.cachedAt,
     builder: (column) => ColumnFilters(column),
   );
-
-  $$StreakActivityTableFilterComposer get activityID {
-    final $$StreakActivityTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.activityID,
-      referencedTable: $db.streakActivity,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$StreakActivityTableFilterComposer(
-            $db: $db,
-            $table: $db.streakActivity,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
 }
 
 class $$StreakMilestoneTableOrderingComposer
@@ -37560,6 +35166,11 @@ class $$StreakMilestoneTableOrderingComposer
   });
   ColumnOrderings<String> get id => $composableBuilder(
     column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get activityID => $composableBuilder(
+    column: $table.activityID,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -37592,29 +35203,6 @@ class $$StreakMilestoneTableOrderingComposer
     column: $table.cachedAt,
     builder: (column) => ColumnOrderings(column),
   );
-
-  $$StreakActivityTableOrderingComposer get activityID {
-    final $$StreakActivityTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.activityID,
-      referencedTable: $db.streakActivity,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$StreakActivityTableOrderingComposer(
-            $db: $db,
-            $table: $db.streakActivity,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
 }
 
 class $$StreakMilestoneTableAnnotationComposer
@@ -37628,6 +35216,11 @@ class $$StreakMilestoneTableAnnotationComposer
   });
   GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get activityID => $composableBuilder(
+    column: $table.activityID,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<int> get daysRequired => $composableBuilder(
     column: $table.daysRequired,
@@ -37652,29 +35245,6 @@ class $$StreakMilestoneTableAnnotationComposer
 
   GeneratedColumn<DateTime> get cachedAt =>
       $composableBuilder(column: $table.cachedAt, builder: (column) => column);
-
-  $$StreakActivityTableAnnotationComposer get activityID {
-    final $$StreakActivityTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.activityID,
-      referencedTable: $db.streakActivity,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$StreakActivityTableAnnotationComposer(
-            $db: $db,
-            $table: $db.streakActivity,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
 }
 
 class $$StreakMilestoneTableTableManager
@@ -37688,9 +35258,16 @@ class $$StreakMilestoneTableTableManager
           $$StreakMilestoneTableAnnotationComposer,
           $$StreakMilestoneTableCreateCompanionBuilder,
           $$StreakMilestoneTableUpdateCompanionBuilder,
-          (StreakMilestoneData, $$StreakMilestoneTableReferences),
+          (
+            StreakMilestoneData,
+            BaseReferences<
+              _$AppDataBase,
+              $StreakMilestoneTable,
+              StreakMilestoneData
+            >,
+          ),
           StreakMilestoneData,
-          PrefetchHooks Function({bool activityID})
+          PrefetchHooks Function()
         > {
   $$StreakMilestoneTableTableManager(
     _$AppDataBase db,
@@ -37750,56 +35327,9 @@ class $$StreakMilestoneTableTableManager
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$StreakMilestoneTableReferences(db, table, e),
-                ),
-              )
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback: ({activityID = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [],
-              addJoins:
-                  <
-                    T extends TableManagerState<
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic
-                    >
-                  >(state) {
-                    if (activityID) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.activityID,
-                                referencedTable:
-                                    $$StreakMilestoneTableReferences
-                                        ._activityIDTable(db),
-                                referencedColumn:
-                                    $$StreakMilestoneTableReferences
-                                        ._activityIDTable(db)
-                                        .id,
-                              )
-                              as T;
-                    }
-
-                    return state;
-                  },
-              getPrefetchedDataCallback: (items) async {
-                return [];
-              },
-            );
-          },
+          prefetchHooksCallback: null,
         ),
       );
 }
@@ -37814,9 +35344,16 @@ typedef $$StreakMilestoneTableProcessedTableManager =
       $$StreakMilestoneTableAnnotationComposer,
       $$StreakMilestoneTableCreateCompanionBuilder,
       $$StreakMilestoneTableUpdateCompanionBuilder,
-      (StreakMilestoneData, $$StreakMilestoneTableReferences),
+      (
+        StreakMilestoneData,
+        BaseReferences<
+          _$AppDataBase,
+          $StreakMilestoneTable,
+          StreakMilestoneData
+        >,
+      ),
       StreakMilestoneData,
-      PrefetchHooks Function({bool activityID})
+      PrefetchHooks Function()
     >;
 typedef $$TodoListsTableCreateCompanionBuilder =
     TodoListsCompanion Function({
@@ -37848,32 +35385,6 @@ typedef $$TodoListsTableUpdateCompanionBuilder =
       Value<bool> isPendingDeletion,
       Value<bool> isDirty,
     });
-
-final class $$TodoListsTableReferences
-    extends BaseReferences<_$AppDataBase, $TodoListsTable, TodoList> {
-  $$TodoListsTableReferences(super.$_db, super.$_table, super.$_typedResult);
-
-  static MultiTypedResultKey<$TodoItemsTable, List<TodoItem>>
-  _todoItemsRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
-    db.todoItems,
-    aliasName: $_aliasNameGenerator(
-      db.todoLists.localId,
-      db.todoItems.taskListLocalId,
-    ),
-  );
-
-  $$TodoItemsTableProcessedTableManager get todoItemsRefs {
-    final manager = $$TodoItemsTableTableManager($_db, $_db.todoItems).filter(
-      (f) =>
-          f.taskListLocalId.localId.sqlEquals($_itemColumn<int>('local_id')!),
-    );
-
-    final cache = $_typedResult.readTableOrNull(_todoItemsRefsTable($_db));
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-}
 
 class $$TodoListsTableFilterComposer
     extends Composer<_$AppDataBase, $TodoListsTable> {
@@ -37944,31 +35455,6 @@ class $$TodoListsTableFilterComposer
     column: $table.isDirty,
     builder: (column) => ColumnFilters(column),
   );
-
-  Expression<bool> todoItemsRefs(
-    Expression<bool> Function($$TodoItemsTableFilterComposer f) f,
-  ) {
-    final $$TodoItemsTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.localId,
-      referencedTable: $db.todoItems,
-      getReferencedColumn: (t) => t.taskListLocalId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$TodoItemsTableFilterComposer(
-            $db: $db,
-            $table: $db.todoItems,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
 class $$TodoListsTableOrderingComposer
@@ -38092,31 +35578,6 @@ class $$TodoListsTableAnnotationComposer
 
   GeneratedColumn<bool> get isDirty =>
       $composableBuilder(column: $table.isDirty, builder: (column) => column);
-
-  Expression<T> todoItemsRefs<T extends Object>(
-    Expression<T> Function($$TodoItemsTableAnnotationComposer a) f,
-  ) {
-    final $$TodoItemsTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.localId,
-      referencedTable: $db.todoItems,
-      getReferencedColumn: (t) => t.taskListLocalId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$TodoItemsTableAnnotationComposer(
-            $db: $db,
-            $table: $db.todoItems,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
 class $$TodoListsTableTableManager
@@ -38130,9 +35591,9 @@ class $$TodoListsTableTableManager
           $$TodoListsTableAnnotationComposer,
           $$TodoListsTableCreateCompanionBuilder,
           $$TodoListsTableUpdateCompanionBuilder,
-          (TodoList, $$TodoListsTableReferences),
+          (TodoList, BaseReferences<_$AppDataBase, $TodoListsTable, TodoList>),
           TodoList,
-          PrefetchHooks Function({bool todoItemsRefs})
+          PrefetchHooks Function()
         > {
   $$TodoListsTableTableManager(_$AppDataBase db, $TodoListsTable table)
     : super(
@@ -38202,45 +35663,9 @@ class $$TodoListsTableTableManager
                 isDirty: isDirty,
               ),
           withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$TodoListsTableReferences(db, table, e),
-                ),
-              )
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback: ({todoItemsRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [if (todoItemsRefs) db.todoItems],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (todoItemsRefs)
-                    await $_getPrefetchedData<
-                      TodoList,
-                      $TodoListsTable,
-                      TodoItem
-                    >(
-                      currentTable: table,
-                      referencedTable: $$TodoListsTableReferences
-                          ._todoItemsRefsTable(db),
-                      managerFromTypedResult: (p0) =>
-                          $$TodoListsTableReferences(
-                            db,
-                            table,
-                            p0,
-                          ).todoItemsRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where(
-                            (e) => e.taskListLocalId == item.localId,
-                          ),
-                      typedResults: items,
-                    ),
-                ];
-              },
-            );
-          },
+          prefetchHooksCallback: null,
         ),
       );
 }
@@ -38255,9 +35680,9 @@ typedef $$TodoListsTableProcessedTableManager =
       $$TodoListsTableAnnotationComposer,
       $$TodoListsTableCreateCompanionBuilder,
       $$TodoListsTableUpdateCompanionBuilder,
-      (TodoList, $$TodoListsTableReferences),
+      (TodoList, BaseReferences<_$AppDataBase, $TodoListsTable, TodoList>),
       TodoList,
-      PrefetchHooks Function({bool todoItemsRefs})
+      PrefetchHooks Function()
     >;
 typedef $$TodoTagItemsTableCreateCompanionBuilder =
     TodoTagItemsCompanion Function({
@@ -38281,32 +35706,6 @@ typedef $$TodoTagItemsTableUpdateCompanionBuilder =
       Value<bool> isPendingDeletion,
       Value<bool> isDirty,
     });
-
-final class $$TodoTagItemsTableReferences
-    extends BaseReferences<_$AppDataBase, $TodoTagItemsTable, TodoTagItem> {
-  $$TodoTagItemsTableReferences(super.$_db, super.$_table, super.$_typedResult);
-
-  static MultiTypedResultKey<$TodoItemTagsTable, List<TodoItemTag>>
-  _todoItemTagsRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
-    db.todoItemTags,
-    aliasName: $_aliasNameGenerator(
-      db.todoTagItems.localId,
-      db.todoItemTags.tagLocalId,
-    ),
-  );
-
-  $$TodoItemTagsTableProcessedTableManager get todoItemTagsRefs {
-    final manager = $$TodoItemTagsTableTableManager($_db, $_db.todoItemTags)
-        .filter(
-          (f) => f.tagLocalId.localId.sqlEquals($_itemColumn<int>('local_id')!),
-        );
-
-    final cache = $_typedResult.readTableOrNull(_todoItemTagsRefsTable($_db));
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-}
 
 class $$TodoTagItemsTableFilterComposer
     extends Composer<_$AppDataBase, $TodoTagItemsTable> {
@@ -38357,31 +35756,6 @@ class $$TodoTagItemsTableFilterComposer
     column: $table.isDirty,
     builder: (column) => ColumnFilters(column),
   );
-
-  Expression<bool> todoItemTagsRefs(
-    Expression<bool> Function($$TodoItemTagsTableFilterComposer f) f,
-  ) {
-    final $$TodoItemTagsTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.localId,
-      referencedTable: $db.todoItemTags,
-      getReferencedColumn: (t) => t.tagLocalId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$TodoItemTagsTableFilterComposer(
-            $db: $db,
-            $table: $db.todoItemTags,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
 class $$TodoTagItemsTableOrderingComposer
@@ -38471,31 +35845,6 @@ class $$TodoTagItemsTableAnnotationComposer
 
   GeneratedColumn<bool> get isDirty =>
       $composableBuilder(column: $table.isDirty, builder: (column) => column);
-
-  Expression<T> todoItemTagsRefs<T extends Object>(
-    Expression<T> Function($$TodoItemTagsTableAnnotationComposer a) f,
-  ) {
-    final $$TodoItemTagsTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.localId,
-      referencedTable: $db.todoItemTags,
-      getReferencedColumn: (t) => t.tagLocalId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$TodoItemTagsTableAnnotationComposer(
-            $db: $db,
-            $table: $db.todoItemTags,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
 class $$TodoTagItemsTableTableManager
@@ -38509,9 +35858,12 @@ class $$TodoTagItemsTableTableManager
           $$TodoTagItemsTableAnnotationComposer,
           $$TodoTagItemsTableCreateCompanionBuilder,
           $$TodoTagItemsTableUpdateCompanionBuilder,
-          (TodoTagItem, $$TodoTagItemsTableReferences),
+          (
+            TodoTagItem,
+            BaseReferences<_$AppDataBase, $TodoTagItemsTable, TodoTagItem>,
+          ),
           TodoTagItem,
-          PrefetchHooks Function({bool todoItemTagsRefs})
+          PrefetchHooks Function()
         > {
   $$TodoTagItemsTableTableManager(_$AppDataBase db, $TodoTagItemsTable table)
     : super(
@@ -38565,45 +35917,9 @@ class $$TodoTagItemsTableTableManager
                 isDirty: isDirty,
               ),
           withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$TodoTagItemsTableReferences(db, table, e),
-                ),
-              )
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback: ({todoItemTagsRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [if (todoItemTagsRefs) db.todoItemTags],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (todoItemTagsRefs)
-                    await $_getPrefetchedData<
-                      TodoTagItem,
-                      $TodoTagItemsTable,
-                      TodoItemTag
-                    >(
-                      currentTable: table,
-                      referencedTable: $$TodoTagItemsTableReferences
-                          ._todoItemTagsRefsTable(db),
-                      managerFromTypedResult: (p0) =>
-                          $$TodoTagItemsTableReferences(
-                            db,
-                            table,
-                            p0,
-                          ).todoItemTagsRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where(
-                            (e) => e.tagLocalId == item.localId,
-                          ),
-                      typedResults: items,
-                    ),
-                ];
-              },
-            );
-          },
+          prefetchHooksCallback: null,
         ),
       );
 }
@@ -38618,9 +35934,12 @@ typedef $$TodoTagItemsTableProcessedTableManager =
       $$TodoTagItemsTableAnnotationComposer,
       $$TodoTagItemsTableCreateCompanionBuilder,
       $$TodoTagItemsTableUpdateCompanionBuilder,
-      (TodoTagItem, $$TodoTagItemsTableReferences),
+      (
+        TodoTagItem,
+        BaseReferences<_$AppDataBase, $TodoTagItemsTable, TodoTagItem>,
+      ),
       TodoTagItem,
-      PrefetchHooks Function({bool todoItemTagsRefs})
+      PrefetchHooks Function()
     >;
 typedef $$TodoItemsTableCreateCompanionBuilder =
     TodoItemsCompanion Function({
@@ -38665,55 +35984,6 @@ typedef $$TodoItemsTableUpdateCompanionBuilder =
       Value<bool> isDirty,
     });
 
-final class $$TodoItemsTableReferences
-    extends BaseReferences<_$AppDataBase, $TodoItemsTable, TodoItem> {
-  $$TodoItemsTableReferences(super.$_db, super.$_table, super.$_typedResult);
-
-  static $TodoListsTable _taskListLocalIdTable(_$AppDataBase db) =>
-      db.todoLists.createAlias(
-        $_aliasNameGenerator(
-          db.todoItems.taskListLocalId,
-          db.todoLists.localId,
-        ),
-      );
-
-  $$TodoListsTableProcessedTableManager get taskListLocalId {
-    final $_column = $_itemColumn<int>('task_list_local_id')!;
-
-    final manager = $$TodoListsTableTableManager(
-      $_db,
-      $_db.todoLists,
-    ).filter((f) => f.localId.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_taskListLocalIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-
-  static MultiTypedResultKey<$TodoItemTagsTable, List<TodoItemTag>>
-  _todoItemTagsRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
-    db.todoItemTags,
-    aliasName: $_aliasNameGenerator(
-      db.todoItems.localId,
-      db.todoItemTags.todoLocalId,
-    ),
-  );
-
-  $$TodoItemTagsTableProcessedTableManager get todoItemTagsRefs {
-    final manager = $$TodoItemTagsTableTableManager($_db, $_db.todoItemTags)
-        .filter(
-          (f) =>
-              f.todoLocalId.localId.sqlEquals($_itemColumn<int>('local_id')!),
-        );
-
-    final cache = $_typedResult.readTableOrNull(_todoItemTagsRefsTable($_db));
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-}
-
 class $$TodoItemsTableFilterComposer
     extends Composer<_$AppDataBase, $TodoItemsTable> {
   $$TodoItemsTableFilterComposer({
@@ -38730,6 +36000,11 @@ class $$TodoItemsTableFilterComposer
 
   ColumnFilters<String> get id => $composableBuilder(
     column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get taskListLocalId => $composableBuilder(
+    column: $table.taskListLocalId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -38810,54 +36085,6 @@ class $$TodoItemsTableFilterComposer
     column: $table.isDirty,
     builder: (column) => ColumnFilters(column),
   );
-
-  $$TodoListsTableFilterComposer get taskListLocalId {
-    final $$TodoListsTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.taskListLocalId,
-      referencedTable: $db.todoLists,
-      getReferencedColumn: (t) => t.localId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$TodoListsTableFilterComposer(
-            $db: $db,
-            $table: $db.todoLists,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  Expression<bool> todoItemTagsRefs(
-    Expression<bool> Function($$TodoItemTagsTableFilterComposer f) f,
-  ) {
-    final $$TodoItemTagsTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.localId,
-      referencedTable: $db.todoItemTags,
-      getReferencedColumn: (t) => t.todoLocalId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$TodoItemTagsTableFilterComposer(
-            $db: $db,
-            $table: $db.todoItemTags,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
 class $$TodoItemsTableOrderingComposer
@@ -38876,6 +36103,11 @@ class $$TodoItemsTableOrderingComposer
 
   ColumnOrderings<String> get id => $composableBuilder(
     column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get taskListLocalId => $composableBuilder(
+    column: $table.taskListLocalId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -38953,29 +36185,6 @@ class $$TodoItemsTableOrderingComposer
     column: $table.isDirty,
     builder: (column) => ColumnOrderings(column),
   );
-
-  $$TodoListsTableOrderingComposer get taskListLocalId {
-    final $$TodoListsTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.taskListLocalId,
-      referencedTable: $db.todoLists,
-      getReferencedColumn: (t) => t.localId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$TodoListsTableOrderingComposer(
-            $db: $db,
-            $table: $db.todoLists,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
 }
 
 class $$TodoItemsTableAnnotationComposer
@@ -38992,6 +36201,11 @@ class $$TodoItemsTableAnnotationComposer
 
   GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get taskListLocalId => $composableBuilder(
+    column: $table.taskListLocalId,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get title =>
       $composableBuilder(column: $table.title, builder: (column) => column);
@@ -39046,54 +36260,6 @@ class $$TodoItemsTableAnnotationComposer
 
   GeneratedColumn<bool> get isDirty =>
       $composableBuilder(column: $table.isDirty, builder: (column) => column);
-
-  $$TodoListsTableAnnotationComposer get taskListLocalId {
-    final $$TodoListsTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.taskListLocalId,
-      referencedTable: $db.todoLists,
-      getReferencedColumn: (t) => t.localId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$TodoListsTableAnnotationComposer(
-            $db: $db,
-            $table: $db.todoLists,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  Expression<T> todoItemTagsRefs<T extends Object>(
-    Expression<T> Function($$TodoItemTagsTableAnnotationComposer a) f,
-  ) {
-    final $$TodoItemTagsTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.localId,
-      referencedTable: $db.todoItemTags,
-      getReferencedColumn: (t) => t.todoLocalId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$TodoItemTagsTableAnnotationComposer(
-            $db: $db,
-            $table: $db.todoItemTags,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
 class $$TodoItemsTableTableManager
@@ -39107,9 +36273,9 @@ class $$TodoItemsTableTableManager
           $$TodoItemsTableAnnotationComposer,
           $$TodoItemsTableCreateCompanionBuilder,
           $$TodoItemsTableUpdateCompanionBuilder,
-          (TodoItem, $$TodoItemsTableReferences),
+          (TodoItem, BaseReferences<_$AppDataBase, $TodoItemsTable, TodoItem>),
           TodoItem,
-          PrefetchHooks Function({bool taskListLocalId, bool todoItemTagsRefs})
+          PrefetchHooks Function()
         > {
   $$TodoItemsTableTableManager(_$AppDataBase db, $TodoItemsTable table)
     : super(
@@ -39203,79 +36369,9 @@ class $$TodoItemsTableTableManager
                 isDirty: isDirty,
               ),
           withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$TodoItemsTableReferences(db, table, e),
-                ),
-              )
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback:
-              ({taskListLocalId = false, todoItemTagsRefs = false}) {
-                return PrefetchHooks(
-                  db: db,
-                  explicitlyWatchedTables: [
-                    if (todoItemTagsRefs) db.todoItemTags,
-                  ],
-                  addJoins:
-                      <
-                        T extends TableManagerState<
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic
-                        >
-                      >(state) {
-                        if (taskListLocalId) {
-                          state =
-                              state.withJoin(
-                                    currentTable: table,
-                                    currentColumn: table.taskListLocalId,
-                                    referencedTable: $$TodoItemsTableReferences
-                                        ._taskListLocalIdTable(db),
-                                    referencedColumn: $$TodoItemsTableReferences
-                                        ._taskListLocalIdTable(db)
-                                        .localId,
-                                  )
-                                  as T;
-                        }
-
-                        return state;
-                      },
-                  getPrefetchedDataCallback: (items) async {
-                    return [
-                      if (todoItemTagsRefs)
-                        await $_getPrefetchedData<
-                          TodoItem,
-                          $TodoItemsTable,
-                          TodoItemTag
-                        >(
-                          currentTable: table,
-                          referencedTable: $$TodoItemsTableReferences
-                              ._todoItemTagsRefsTable(db),
-                          managerFromTypedResult: (p0) =>
-                              $$TodoItemsTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).todoItemTagsRefs,
-                          referencedItemsForCurrentItem:
-                              (item, referencedItems) => referencedItems.where(
-                                (e) => e.todoLocalId == item.localId,
-                              ),
-                          typedResults: items,
-                        ),
-                    ];
-                  },
-                );
-              },
+          prefetchHooksCallback: null,
         ),
       );
 }
@@ -39290,9 +36386,9 @@ typedef $$TodoItemsTableProcessedTableManager =
       $$TodoItemsTableAnnotationComposer,
       $$TodoItemsTableCreateCompanionBuilder,
       $$TodoItemsTableUpdateCompanionBuilder,
-      (TodoItem, $$TodoItemsTableReferences),
+      (TodoItem, BaseReferences<_$AppDataBase, $TodoItemsTable, TodoItem>),
       TodoItem,
-      PrefetchHooks Function({bool taskListLocalId, bool todoItemTagsRefs})
+      PrefetchHooks Function()
     >;
 typedef $$TodoItemTagsTableCreateCompanionBuilder =
     TodoItemTagsCompanion Function({
@@ -39307,52 +36403,6 @@ typedef $$TodoItemTagsTableUpdateCompanionBuilder =
       Value<int> rowid,
     });
 
-final class $$TodoItemTagsTableReferences
-    extends BaseReferences<_$AppDataBase, $TodoItemTagsTable, TodoItemTag> {
-  $$TodoItemTagsTableReferences(super.$_db, super.$_table, super.$_typedResult);
-
-  static $TodoItemsTable _todoLocalIdTable(_$AppDataBase db) =>
-      db.todoItems.createAlias(
-        $_aliasNameGenerator(db.todoItemTags.todoLocalId, db.todoItems.localId),
-      );
-
-  $$TodoItemsTableProcessedTableManager get todoLocalId {
-    final $_column = $_itemColumn<int>('todo_local_id')!;
-
-    final manager = $$TodoItemsTableTableManager(
-      $_db,
-      $_db.todoItems,
-    ).filter((f) => f.localId.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_todoLocalIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-
-  static $TodoTagItemsTable _tagLocalIdTable(_$AppDataBase db) =>
-      db.todoTagItems.createAlias(
-        $_aliasNameGenerator(
-          db.todoItemTags.tagLocalId,
-          db.todoTagItems.localId,
-        ),
-      );
-
-  $$TodoTagItemsTableProcessedTableManager get tagLocalId {
-    final $_column = $_itemColumn<int>('tag_local_id')!;
-
-    final manager = $$TodoTagItemsTableTableManager(
-      $_db,
-      $_db.todoTagItems,
-    ).filter((f) => f.localId.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_tagLocalIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-}
-
 class $$TodoItemTagsTableFilterComposer
     extends Composer<_$AppDataBase, $TodoItemTagsTable> {
   $$TodoItemTagsTableFilterComposer({
@@ -39362,51 +36412,15 @@ class $$TodoItemTagsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  $$TodoItemsTableFilterComposer get todoLocalId {
-    final $$TodoItemsTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.todoLocalId,
-      referencedTable: $db.todoItems,
-      getReferencedColumn: (t) => t.localId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$TodoItemsTableFilterComposer(
-            $db: $db,
-            $table: $db.todoItems,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
+  ColumnFilters<int> get todoLocalId => $composableBuilder(
+    column: $table.todoLocalId,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  $$TodoTagItemsTableFilterComposer get tagLocalId {
-    final $$TodoTagItemsTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.tagLocalId,
-      referencedTable: $db.todoTagItems,
-      getReferencedColumn: (t) => t.localId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$TodoTagItemsTableFilterComposer(
-            $db: $db,
-            $table: $db.todoTagItems,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
+  ColumnFilters<int> get tagLocalId => $composableBuilder(
+    column: $table.tagLocalId,
+    builder: (column) => ColumnFilters(column),
+  );
 }
 
 class $$TodoItemTagsTableOrderingComposer
@@ -39418,51 +36432,15 @@ class $$TodoItemTagsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  $$TodoItemsTableOrderingComposer get todoLocalId {
-    final $$TodoItemsTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.todoLocalId,
-      referencedTable: $db.todoItems,
-      getReferencedColumn: (t) => t.localId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$TodoItemsTableOrderingComposer(
-            $db: $db,
-            $table: $db.todoItems,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
+  ColumnOrderings<int> get todoLocalId => $composableBuilder(
+    column: $table.todoLocalId,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  $$TodoTagItemsTableOrderingComposer get tagLocalId {
-    final $$TodoTagItemsTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.tagLocalId,
-      referencedTable: $db.todoTagItems,
-      getReferencedColumn: (t) => t.localId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$TodoTagItemsTableOrderingComposer(
-            $db: $db,
-            $table: $db.todoTagItems,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
+  ColumnOrderings<int> get tagLocalId => $composableBuilder(
+    column: $table.tagLocalId,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$TodoItemTagsTableAnnotationComposer
@@ -39474,51 +36452,15 @@ class $$TodoItemTagsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  $$TodoItemsTableAnnotationComposer get todoLocalId {
-    final $$TodoItemsTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.todoLocalId,
-      referencedTable: $db.todoItems,
-      getReferencedColumn: (t) => t.localId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$TodoItemsTableAnnotationComposer(
-            $db: $db,
-            $table: $db.todoItems,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
+  GeneratedColumn<int> get todoLocalId => $composableBuilder(
+    column: $table.todoLocalId,
+    builder: (column) => column,
+  );
 
-  $$TodoTagItemsTableAnnotationComposer get tagLocalId {
-    final $$TodoTagItemsTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.tagLocalId,
-      referencedTable: $db.todoTagItems,
-      getReferencedColumn: (t) => t.localId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$TodoTagItemsTableAnnotationComposer(
-            $db: $db,
-            $table: $db.todoTagItems,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
+  GeneratedColumn<int> get tagLocalId => $composableBuilder(
+    column: $table.tagLocalId,
+    builder: (column) => column,
+  );
 }
 
 class $$TodoItemTagsTableTableManager
@@ -39532,9 +36474,12 @@ class $$TodoItemTagsTableTableManager
           $$TodoItemTagsTableAnnotationComposer,
           $$TodoItemTagsTableCreateCompanionBuilder,
           $$TodoItemTagsTableUpdateCompanionBuilder,
-          (TodoItemTag, $$TodoItemTagsTableReferences),
+          (
+            TodoItemTag,
+            BaseReferences<_$AppDataBase, $TodoItemTagsTable, TodoItemTag>,
+          ),
           TodoItemTag,
-          PrefetchHooks Function({bool todoLocalId, bool tagLocalId})
+          PrefetchHooks Function()
         > {
   $$TodoItemTagsTableTableManager(_$AppDataBase db, $TodoItemTagsTable table)
     : super(
@@ -39568,67 +36513,9 @@ class $$TodoItemTagsTableTableManager
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$TodoItemTagsTableReferences(db, table, e),
-                ),
-              )
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback: ({todoLocalId = false, tagLocalId = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [],
-              addJoins:
-                  <
-                    T extends TableManagerState<
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic
-                    >
-                  >(state) {
-                    if (todoLocalId) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.todoLocalId,
-                                referencedTable: $$TodoItemTagsTableReferences
-                                    ._todoLocalIdTable(db),
-                                referencedColumn: $$TodoItemTagsTableReferences
-                                    ._todoLocalIdTable(db)
-                                    .localId,
-                              )
-                              as T;
-                    }
-                    if (tagLocalId) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.tagLocalId,
-                                referencedTable: $$TodoItemTagsTableReferences
-                                    ._tagLocalIdTable(db),
-                                referencedColumn: $$TodoItemTagsTableReferences
-                                    ._tagLocalIdTable(db)
-                                    .localId,
-                              )
-                              as T;
-                    }
-
-                    return state;
-                  },
-              getPrefetchedDataCallback: (items) async {
-                return [];
-              },
-            );
-          },
+          prefetchHooksCallback: null,
         ),
       );
 }
@@ -39643,9 +36530,12 @@ typedef $$TodoItemTagsTableProcessedTableManager =
       $$TodoItemTagsTableAnnotationComposer,
       $$TodoItemTagsTableCreateCompanionBuilder,
       $$TodoItemTagsTableUpdateCompanionBuilder,
-      (TodoItemTag, $$TodoItemTagsTableReferences),
+      (
+        TodoItemTag,
+        BaseReferences<_$AppDataBase, $TodoItemTagsTable, TodoItemTag>,
+      ),
       TodoItemTag,
-      PrefetchHooks Function({bool todoLocalId, bool tagLocalId})
+      PrefetchHooks Function()
     >;
 
 class $AppDataBaseManager {

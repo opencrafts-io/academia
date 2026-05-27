@@ -1066,10 +1066,24 @@ mixin $ViewTaskListRoute on GoRouteData {
 
 mixin $CreateTodoItemRoute on GoRouteData {
   static CreateTodoItemRoute _fromState(GoRouterState state) =>
-      CreateTodoItemRoute();
+      CreateTodoItemRoute(
+        taskListLocalID: _$convertMapValue(
+          'task-list-local-i-d',
+          state.uri.queryParameters,
+          int.tryParse,
+        ),
+      );
+
+  CreateTodoItemRoute get _self => this as CreateTodoItemRoute;
 
   @override
-  String get location => GoRouteData.$location('/todos/create-todo-item');
+  String get location => GoRouteData.$location(
+    '/todos/create-todo-item',
+    queryParams: {
+      if (_self.taskListLocalID != null)
+        'task-list-local-i-d': _self.taskListLocalID!.toString(),
+    },
+  );
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -1110,6 +1124,15 @@ mixin $UpdateTodoItemRoute on GoRouteData {
 
   @override
   void replace(BuildContext context) => context.replace(location);
+}
+
+T? _$convertMapValue<T>(
+  String key,
+  Map<String, String> map,
+  T? Function(String) converter,
+) {
+  final value = map[key];
+  return value == null ? null : converter(value);
 }
 
 RouteBase get $communitiesRoute => GoRouteData.$route(

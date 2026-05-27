@@ -4,7 +4,8 @@ import 'package:smooth_sheets/smooth_sheets.dart';
 import 'package:academia/features/todos/todos.dart';
 
 class CreateTodoItemScreen extends StatefulWidget {
-  const CreateTodoItemScreen({super.key});
+  const CreateTodoItemScreen({super.key, this.taskListLocalID});
+  final int? taskListLocalID;
 
   @override
   State<CreateTodoItemScreen> createState() => _CreateTodoItemScreenState();
@@ -18,20 +19,12 @@ class _CreateTodoItemScreenState extends State<CreateTodoItemScreen> {
   DateTime? _dueDate;
   TodoPriority _priority = TodoPriority.none;
   final List<TodoTagEntity> _selectedTags = [];
-  TodoListEntity? _selectedList;
+  int? _selectedListLocalId;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_selectedList == null) {
-      final lists =
-          context.read<TodoListCubit>().state.mapOrNull(
-            success: (s) => s.todoLists,
-          ) ??
-          [];
-      _selectedList =
-          lists.where((l) => l.isDefault).firstOrNull ?? lists.firstOrNull;
-    }
+  void initState() {
+    super.initState();
+    _selectedListLocalId = widget.taskListLocalID;
   }
 
   @override
@@ -44,7 +37,7 @@ class _CreateTodoItemScreenState extends State<CreateTodoItemScreen> {
   void _submit() {
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
-    if (_selectedList == null) {
+    if (_selectedListLocalId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please select a list first")),
       );
@@ -53,7 +46,7 @@ class _CreateTodoItemScreenState extends State<CreateTodoItemScreen> {
 
     final entity = TodoItemEntity(
       localId: 0,
-      taskListLocalId: _selectedList!.localId,
+      taskListLocalId: _selectedListLocalId!,
       title: _titleController.text.trim(),
       notes: _notesController.text.trim().isEmpty
           ? null
@@ -136,7 +129,7 @@ class _CreateTodoItemScreenState extends State<CreateTodoItemScreen> {
               final color = list.color != null
                   ? Color(list.color!)
                   : Theme.of(context).colorScheme.primary;
-              final isSelected = _selectedList?.localId == list.localId;
+              final isSelected = _selectedListLocalId == list.localId;
 
               return ListTile(
                 leading: CircleAvatar(
@@ -154,7 +147,7 @@ class _CreateTodoItemScreenState extends State<CreateTodoItemScreen> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 onTap: () {
-                  setState(() => _selectedList = list);
+                  setState(() => _selectedListLocalId = list.localId);
                   Navigator.pop(context);
                 },
               );
@@ -263,6 +256,14 @@ class _CreateTodoItemScreenState extends State<CreateTodoItemScreen> {
     return parsed != null ? Color(parsed) : scheme.primary;
   }
 
+  TodoListEntity? _resolveSelectedList(List<TodoListEntity> lists) {
+    if (lists.isEmpty) return null;
+
+    return lists.where((l) => l.localId == _selectedListLocalId).firstOrNull ??
+        lists.where((l) => l.isDefault).firstOrNull ??
+        lists.firstOrNull;
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -271,6 +272,17 @@ class _CreateTodoItemScreenState extends State<CreateTodoItemScreen> {
         _dueDate != null ||
         _priority != TodoPriority.none ||
         _selectedTags.isNotEmpty;
+    final lists =
+        context.watch<TodoListCubit>().state.mapOrNull(
+          success: (s) => s.todoLists,
+        ) ??
+        [];
+
+    final selectedList = _resolveSelectedList(lists);
+
+    if (_selectedListLocalId == null && selectedList != null) {
+      _selectedListLocalId = selectedList.localId;
+    }
 
     return SheetContentScaffold(
       extendBodyBehindBottomBar: false,
@@ -297,16 +309,16 @@ class _CreateTodoItemScreenState extends State<CreateTodoItemScreen> {
                         Icon(
                           Icons.list_rounded,
                           size: 16,
-                          color: _selectedList?.color != null
-                              ? Color(_selectedList!.color!).withAlpha(128)
+                          color: selectedList?.color != null
+                              ? Color(selectedList!.color!).withAlpha(128)
                               : scheme.onSurfaceVariant,
                         ),
                         const SizedBox(width: 6),
                         Text(
-                          _selectedList?.title ?? "Select a list",
+                          selectedList?.title ?? "Select a list",
                           style: theme.textTheme.labelLarge?.copyWith(
-                            color: _selectedList?.color != null
-                                ? Color(_selectedList!.color!).withAlpha(255)
+                            color: selectedList?.color != null
+                                ? Color(selectedList!.color!).withAlpha(255)
                                 : scheme.onSurfaceVariant,
                             fontWeight: FontWeight.w600,
                           ),
