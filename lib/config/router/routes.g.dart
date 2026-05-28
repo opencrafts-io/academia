@@ -1463,15 +1463,6 @@ mixin $UpdateTodoItemRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-T? _$convertMapValue<T>(
-  String key,
-  Map<String, String> map,
-  T? Function(String) converter,
-) {
-  final value = map[key];
-  return value == null ? null : converter(value);
-}
-
 RouteBase get $communitiesRoute => GoRouteData.$route(
   path: '/communities/:communityId',
   factory: $CommunitiesRoute._fromState,

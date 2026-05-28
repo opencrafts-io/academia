@@ -113,4 +113,13 @@ extension AppDatabaseExtension on AppDataBase {
     await m.createTable(todoItems);
     await m.createTable(todoItemTags);
   }
+
+  Future<void> migrate33To34(Migrator m) async {
+    await m.database.customStatement("DROP TABLE IF EXISTS 'invite_table';");
+    await m.database.customStatement("DROP TABLE IF EXISTS 'ticket_table';");
+    await m.database.customStatement("DROP TABLE IF EXISTS 'ticket_stats_table';");
+    await m.createTable(inviteTable);
+    await m.createTable(ticketTable);
+    await m.createTable(ticketStatsTable);
+  }
 }
