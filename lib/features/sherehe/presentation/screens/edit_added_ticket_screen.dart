@@ -78,7 +78,8 @@ class _EditAddedTicketScreenState extends State<EditAddedTicketScreen> {
         ticketName: nameController.text.trim(),
         ticketPrice: price,
         ticketQuantity: qty,
-        institutionIds: selectedScopeType == ScopeTypes.institution
+        scope: selectedScopeType?.toBackend,
+        institutionIds: selectedScopeType != ScopeTypes.institution
             ? []
             : selectedInstitutions.map((e) => e.institutionId).toList(),
         startDate:
