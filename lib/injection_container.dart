@@ -7,6 +7,8 @@ import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/permissions/permissions.dart';
 import 'package:academia/features/semester/semester.dart';
+import 'package:academia/features/todos/data/repository/todo_item_repository_impl.dart';
+import 'package:academia/features/todos/data/repository/todo_tag_repository_impl.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
@@ -32,13 +34,13 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     await adService.initialize();
     adService.loadInterstitialAd();
 
-    sl.registerSingleton<AdService>(adService);
+    sl.registerLazySingleton<AdService>(() => adService);
   }
 
-  sl.registerSingleton<AuthLocalDatasource>(AuthLocalDatasource());
+  sl.registerLazySingleton<AuthLocalDatasource>(() => AuthLocalDatasource());
 
-  sl.registerFactory<DioClient>(
-    () => DioClient(
+  sl.registerSingleton<DioClient>(
+    DioClient(
       flavor,
       authLocalDatasource: sl.get<AuthLocalDatasource>(),
       requestInspector: isBackground ? null : sl<DioRequestInspector>(),
@@ -46,7 +48,7 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   );
 
   if (!isBackground) {
-    sl.registerFactory<InAppUpdateBloc>(() => InAppUpdateBloc());
+    sl.registerLazySingleton<InAppUpdateBloc>(() => InAppUpdateBloc());
   }
 
   sl.registerFactory(
@@ -90,8 +92,8 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     () => SignOutUsecase(authRepository: sl<AuthRepositoryImpl>()),
   );
 
-  sl.registerSingleton<AuthBloc>(
-    AuthBloc(
+  sl.registerLazySingleton<AuthBloc>(
+    () => AuthBloc(
       signOutUsecase: sl(),
       signInWithProviderUsecase: sl(),
       signInWithAppleUsecase: sl(),
@@ -104,53 +106,51 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   );
 
   //sherehe
-  sl.registerLazySingleton<ShereheRemoteDataSource>(
+  sl.registerFactory<ShereheRemoteDataSource>(
     () => ShereheRemoteDataSource(dioClient: sl.get<DioClient>(), flavor: sl()),
   );
-  sl.registerLazySingleton(
-    () => CreateEventUseCase(sl.get<ShereheRepository>()),
-  );
-  sl.registerLazySingleton<ShereheLocalDataSource>(
+  sl.registerFactory(() => CreateEventUseCase(sl.get<ShereheRepository>()));
+  sl.registerFactory<ShereheLocalDataSource>(
     () => ShereheLocalDataSource(localDB: cacheDB),
   );
 
-  sl.registerSingleton<ShereheRepository>(
-    ShereheRepositoryImpl(
+  sl.registerFactory<ShereheRepository>(
+    () => ShereheRepositoryImpl(
       remoteDataSource: sl.get<ShereheRemoteDataSource>(),
       localDataSource: sl.get<ShereheLocalDataSource>(),
     ),
   );
 
-  sl.registerSingleton<GetEvent>(GetEvent(sl()));
-  sl.registerLazySingleton(() => GetSpecificEvent(sl()));
-  sl.registerLazySingleton(() => GetEventsByOrganizerIdUseCase(sl()));
-  sl.registerLazySingleton(() => GetAttendee(sl()));
-  sl.registerLazySingleton(() => GetAllAttendees(sl()));
-  sl.registerLazySingleton(() => CacheEventsUseCase(sl()));
-  sl.registerLazySingleton(() => GetTicketsByEventIdUseCase(sl()));
-  sl.registerLazySingleton(() => PurchaseTicketUseCase(sl()));
-  sl.registerLazySingleton(() => ConfirmPaymentUseCase(sl()));
-  sl.registerLazySingleton(() => GetAllUserPurchasedTicketsUseCase(sl()));
-  sl.registerLazySingleton(() => SearchUserAttendedEventsUseCase(sl()));
-  sl.registerLazySingleton(() => GetTicketByInviteUsecase(sl()));
-  sl.registerLazySingleton(() => GetEventByInviteUsecase(sl()));
+  sl.registerFactory<GetEvent>(() => GetEvent(sl()));
+  sl.registerFactory(() => GetSpecificEvent(sl()));
+  sl.registerFactory(() => GetEventsByOrganizerIdUseCase(sl()));
+  sl.registerFactory(() => GetAttendee(sl()));
+  sl.registerFactory(() => GetAllAttendees(sl()));
+  sl.registerFactory(() => CacheEventsUseCase(sl()));
+  sl.registerFactory(() => GetTicketsByEventIdUseCase(sl()));
+  sl.registerFactory(() => PurchaseTicketUseCase(sl()));
+  sl.registerFactory(() => ConfirmPaymentUseCase(sl()));
+  sl.registerFactory(() => GetAllUserPurchasedTicketsUseCase(sl()));
+  sl.registerFactory(() => SearchUserAttendedEventsUseCase(sl()));
+  sl.registerFactory(() => GetTicketByInviteUsecase(sl()));
+  sl.registerFactory(() => GetEventByInviteUsecase(sl()));
 
-  sl.registerLazySingleton(() => GetUserPurchasedTicketsForEventUseCase(sl()));
+  sl.registerFactory(() => GetUserPurchasedTicketsForEventUseCase(sl()));
 
-  sl.registerLazySingleton(() => ValidateAttendeeUseCase(sl()));
+  sl.registerFactory(() => ValidateAttendeeUseCase(sl()));
 
-  sl.registerLazySingleton(() => SearchEventsUseCase(sl()));
+  sl.registerFactory(() => SearchEventsUseCase(sl()));
 
-  sl.registerLazySingleton(() => GetAttendeesAndScannersUsecase(sl()));
+  sl.registerFactory(() => GetAttendeesAndScannersUsecase(sl()));
 
-  sl.registerLazySingleton(() => GetDashboardTicketStatsUsecase(sl()));
+  sl.registerFactory(() => GetDashboardTicketStatsUsecase(sl()));
 
-  sl.registerLazySingleton(() => UpdateTicketUsecase(sl()));
-  sl.registerLazySingleton(() => GetAllEventScannersUsecase(sl()));
-  sl.registerLazySingleton(() => SearchUsersByUsernameUsecase(sl()));
-  sl.registerLazySingleton(() => AddEventScannerUsecase(sl()));
-  sl.registerLazySingleton(() => DeleteEventScannerUsecase(sl()));
-  sl.registerLazySingleton(() => GetEventScannerByUserIdUsecase(sl()));
+  sl.registerFactory(() => UpdateTicketUsecase(sl()));
+  sl.registerFactory(() => GetAllEventScannersUsecase(sl()));
+  sl.registerFactory(() => SearchUsersByUsernameUsecase(sl()));
+  sl.registerFactory(() => AddEventScannerUsecase(sl()));
+  sl.registerFactory(() => DeleteEventScannerUsecase(sl()));
+  sl.registerFactory(() => GetEventScannerByUserIdUsecase(sl()));
 
   sl.registerLazySingleton(() => GetEventInvitesUsecase(sl()));
   sl.registerLazySingleton(() => CreateEventInviteUsecase(sl()));
@@ -162,7 +162,7 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   sl.registerLazySingleton(() => DeleteTicketInviteUsecase(sl()));
   sl.registerLazySingleton(() => CreateTicketUsecase(sl()));
 
-  sl.registerFactory(() => ShereheHomeBloc(getEvent: sl()));
+  sl.registerLazySingleton(() => ShereheHomeBloc(getEvent: sl()));
 
   sl.registerFactory(
     () => ShereheDetailsBloc(
@@ -278,8 +278,8 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     ),
   );
 
-  sl.registerSingleton<ProfileBloc>(
-    ProfileBloc(
+  sl.registerLazySingleton<ProfileBloc>(
+    () => ProfileBloc(
       getCachedProfileUsecase: sl.get<GetCachedProfileUsecase>(),
       refreshCurrentUserProfileUsecase: sl
           .get<RefreshCurrentUserProfileUsecase>(),
@@ -291,56 +291,101 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   );
 
   // Todos
-  sl.registerFactory<TodoLocalDatasource>(
-    () => TodoLocalDatasource(localDB: cacheDB),
+  sl.registerLazySingleton<TodoNotificationService>(
+    () => TodoNotificationServiceImpl(),
   );
-  sl.registerFactory<TodoRemoteDatasource>(
-    () => TodoRemoteDatasource(dioClient: sl.get<DioClient>(), flavor: flavor),
+  sl.registerFactory<TodoListLocalDatasource>(
+    () => TodoListLocalDatasource(cacheDB: sl()),
   );
-
-  sl.registerFactory<TodoRepository>(
-    () => TodoRepositoryImpl(
-      todoRemoteDatasource: sl.get<TodoRemoteDatasource>(),
-      todoLocalDatasource: sl.get<TodoLocalDatasource>(),
+  sl.registerFactory<TodoListRemoteDatasource>(
+    () => TodoListRemoteDatasource(dioClient: sl(), flavor: flavor),
+  );
+  sl.registerFactory<TodoTagRemoteDatasource>(
+    () => TodoTagRemoteDatasource(dioClient: sl(), flavor: flavor),
+  );
+  sl.registerFactory<TodoTagLocalDatasource>(
+    () => TodoTagLocalDatasource(cacheDB: sl()),
+  );
+  sl.registerFactory<TodoItemRemoteDatasource>(
+    () => TodoItemRemoteDatasource(dioClient: sl(), flavor: flavor),
+  );
+  sl.registerFactory<TodoItemLocalDatasource>(
+    () => TodoItemLocalDatasource(cacheDB: sl()),
+  );
+  sl.registerFactory<TodoListRepository>(
+    () => TodoListRepositoryImpl(localDataSource: sl(), remoteDataSource: sl()),
+  );
+  sl.registerFactory<TodoItemRepository>(
+    () => TodoItemRepositoryImpl(
+      listLocalDataSource: sl(),
+      localDataSource: sl(),
+      remoteDataSource: sl(),
+      tagLocalDataSource: sl(),
+      todoNotificationService: sl(),
     ),
   );
 
-  sl.registerFactory<GetCachedTodosUsecase>(
-    () => GetCachedTodosUsecase(todoRepository: sl.get<TodoRepository>()),
+  sl.registerFactory<TodoTagRepository>(
+    () => TodoTagRepositoryImpl(localDataSource: sl(), remoteDataSource: sl()),
   );
 
-  sl.registerFactory<RefreshTodosUsecase>(
-    () => RefreshTodosUsecase(todoRepository: sl.get<TodoRepository>()),
-  );
-  sl.registerFactory<CreateTodoUsecase>(
-    () => CreateTodoUsecase(todoRepository: sl.get<TodoRepository>()),
-  );
-  sl.registerFactory<UpdateTodoUsecase>(
-    () => UpdateTodoUsecase(todoRepository: sl.get<TodoRepository>()),
-  );
-  sl.registerFactory<CompleteTodoUsecase>(
-    () => CompleteTodoUsecase(todoRepository: sl.get<TodoRepository>()),
-  );
+  sl.registerFactory<GetTodoLists>(() => GetTodoLists(sl()));
+  sl.registerFactory<CreateTodoList>(() => CreateTodoList(sl()));
+  sl.registerFactory<UpdateTodoList>(() => UpdateTodoList(sl()));
+  sl.registerFactory<DeleteTodoList>(() => DeleteTodoList(sl()));
+  sl.registerFactory<SyncTodoLists>(() => SyncTodoLists(sl()));
+  sl.registerFactory(() => GetDefaultTodoListUsecase(sl()));
 
-  sl.registerFactory<DeleteTodoUsecase>(
-    () => DeleteTodoUsecase(todoRepository: sl.get<TodoRepository>()),
-  );
+  // TodoTag usecases
+  sl.registerFactory<GetTodoTags>(() => GetTodoTags(sl()));
+  sl.registerFactory<CreateTodoTag>(() => CreateTodoTag(sl()));
+  sl.registerFactory<UpdateTodoTag>(() => UpdateTodoTag(sl()));
+  sl.registerFactory<DeleteTodoTag>(() => DeleteTodoTag(sl()));
+  sl.registerFactory<SyncTodoTags>(() => SyncTodoTags(sl()));
 
-  sl.registerFactory<SyncTodosWithGoogleTasksUsecase>(
-    () => SyncTodosWithGoogleTasksUsecase(
-      todoRepository: sl.get<TodoRepository>(),
+  // TodoItem usecases
+  sl.registerFactory<GetTodoItems>(() => GetTodoItems(sl()));
+  sl.registerFactory<GetTodoItemById>(() => GetTodoItemById(sl()));
+  sl.registerFactory<CreateTodoItem>(() => CreateTodoItem(sl()));
+  sl.registerFactory<UpdateTodoItem>(() => UpdateTodoItem(sl()));
+  sl.registerFactory<DeleteTodoItem>(() => DeleteTodoItem(sl()));
+  sl.registerFactory<CompleteTodoItem>(() => CompleteTodoItem(sl()));
+  sl.registerFactory<ReopenTodoItem>(() => ReopenTodoItem(sl()));
+  sl.registerFactory<MoveTodoItem>(() => MoveTodoItem(sl()));
+  sl.registerFactory<SyncTodoItems>(() => SyncTodoItems(sl()));
+
+  sl.registerLazySingleton<TodoListCubit>(
+    () => TodoListCubit(
+      getTodoListsUseCase: sl(),
+      createTodoListUseCase: sl(),
+      updateTodoListUseCase: sl(),
+      deleteTodoListUseCase: sl(),
+      syncTodoListsUseCase: sl(),
+      getDefaultTodoListUsecase: sl(),
     ),
   );
 
-  sl.registerFactory<TodoBloc>(
-    () => TodoBloc(
-      syncTodosWithGoogleTasksUsecase: sl(),
-      getCachedTodosUsecase: sl(),
-      refreshTodosUsecase: sl(),
-      createTodoUsecase: sl(),
-      updateTodoUsecase: sl(),
-      deleteTodoUsecase: sl(),
-      completeTodoUsecase: sl(),
+  sl.registerLazySingleton<TodoTagCubit>(
+    () => TodoTagCubit(
+      getTagsUseCase: sl(),
+      createTagUseCase: sl(),
+      updateTagUseCase: sl(),
+      deleteTagUseCase: sl(),
+      syncTagsUseCase: sl(),
+    ),
+  );
+
+  sl.registerLazySingleton<TodoItemCubit>(
+    () => TodoItemCubit(
+      getItemsUseCase: sl(),
+      getItemByIdUseCase: sl(),
+      createItemUseCase: sl(),
+      updateItemUseCase: sl(),
+      deleteItemUseCase: sl(),
+      completeItemUseCase: sl(),
+      reopenItemUseCase: sl(),
+      moveItemUseCase: sl(),
+      syncItemsUseCase: sl(),
     ),
   );
 

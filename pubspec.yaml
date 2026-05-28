@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 3.2.5+29
+version: 3.2.8+33
 
 environment:
   sdk: ^3.8.1
@@ -40,13 +40,12 @@ dependencies:
   go_router: ^17.1.0
   logger: ^2.6.0
   dynamic_color: ^1.7.0
-  icons_plus: ^5.0.0
   flutter_web_auth_2: ^5.0.1
   desktop_webview_window: ^0.2.3
   dartz: ^0.10.1
   equatable: ^2.0.7
-  drift: ^2.27.0
-  drift_flutter: ^0.3.0
+  drift: ^2.31.0
+  drift_flutter: ^0.2.8
   path_provider: ^2.1.5
   shared_preferences: ^2.5.3
   dio: ^5.8.0+1
@@ -87,7 +86,10 @@ dependencies:
   json_annotation: ^4.9.0
   share_plus: ^10.1.4
   video_trimmer: ^5.0.0
-  image_editor_plus: ^1.0.8
+  image_editor_plus:
+    git:
+      url: https://github.com/IamMuuo/image_editor_plus.git
+      ref: main
   connectivity_plus: ^7.0.0
   chewie: ^1.13.0
   get_thumbnail_video: ^0.7.3
@@ -114,7 +116,7 @@ dependencies:
   device_info_plus: ^12.3.0
   flutter_secure_storage: ^10.0.0
   flutter_animate: ^4.5.2
-
+  font_awesome_flutter: ^11.0.0
 
 dev_dependencies:
   flutter_test:
@@ -127,8 +129,8 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
   go_router_builder: ^4.2.0
-  build_runner: ^2.4.15
-  drift_dev: ^2.27.0
+  build_runner: ^2.15.0
+  drift_dev: ^2.31.0
   json_serializable: ^6.8.0
   freezed: ^3.2.3
   flutter_gen_runner: ^5.12.0

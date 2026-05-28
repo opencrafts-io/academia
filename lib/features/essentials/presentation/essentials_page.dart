@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sliver_tools/sliver_tools.dart';
-import 'package:animated_emoji/animated_emoji.dart';
 import 'package:academia/injection_container.dart';
 import '../widgets/essential_category_tile.dart';
 
@@ -115,11 +114,15 @@ class _EssentialsPageState extends State<EssentialsPage> {
                 Row(
                   children: [
                     Text(
-                      "Essentials ",
+                      "Essentials",
                       style: Theme.of(context).textTheme.headlineLarge
                           ?.copyWith(fontWeight: FontWeight.bold),
                     ),
-                    AnimatedEmoji(AnimatedEmojis.salute, repeat: false),
+                    SizedBox(width: 8),
+                    Assets.icons.animalsIconButterfly.image(
+                      height: 40,
+                      width: 40,
+                    ),
                   ],
                 ),
                 Text(
@@ -148,6 +151,7 @@ class _EssentialsPageState extends State<EssentialsPage> {
             sliver: MultiSliver(
               children: [
                 Card.outlined(
+                  clipBehavior: Clip.hardEdge,
                   child: ListTile(
                     leading: Icon(Icons.settings),
                     title: Text("Settings & Preferences"),

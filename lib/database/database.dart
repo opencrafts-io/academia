@@ -22,10 +22,16 @@ import 'package:academia/features/streaks/data/streak_activity.dart';
 import 'package:academia/features/streaks/data/streak_milestone.dart';
 import 'package:academia/features/timetable/data/models/timetable.dart';
 import 'package:academia/features/timetable/data/models/timetable_entry.dart';
-import 'package:academia/features/todos/data/models/todo.dart';
+import 'package:academia/features/todos/data/models/todo_lists.dart';
+import 'package:academia/features/todos/data/models/todo_items.dart';
+import 'package:academia/features/todos/data/models/todo_tag_items.dart';
+import 'package:academia/features/todos/data/models/todo_item_tags.dart';
+import 'package:academia/features/todos/domain/enums/sync_status.dart';
+import 'package:academia/features/todos/domain/enums/todo_status.dart';
+import 'package:academia/features/todos/domain/enums/todo_priority.dart';
 import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/notifications/data/models/notification_table.dart';
-import 'package:flutter/material.dart' show Color;
+import 'dart:ui' show Color;
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:logger/logger.dart';
@@ -45,7 +51,6 @@ part 'database.g.dart';
     PostTable,
     CommentTable,
 
-    Todo,
     EventTable,
     AttendeeTable,
     TicketTable,
@@ -108,6 +113,12 @@ part 'database.g.dart';
     // ---------------------- STREAKS -----------------------------
     StreakActivity,
     StreakMilestone,
+
+    // ----------------------- TODOS -------------------------------
+    TodoLists,
+    TodoTagItems,
+    TodoItems,
+    TodoItemTags,
   ],
 )
 class AppDataBase extends _$AppDataBase {
@@ -118,7 +129,7 @@ class AppDataBase extends _$AppDataBase {
   AppDataBase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 30;
+  int get schemaVersion => 33;
 
   @override
   MigrationStrategy get migration {
@@ -177,6 +188,15 @@ class AppDataBase extends _$AppDataBase {
               break;
             case 29:
               await migrate29To30(m);
+              break;
+            case 30:
+              await migrate30To31(m);
+              break;
+            case 31:
+              await migrate31To32(m);
+              break;
+            case 32:
+              await migrate32To33(m);
               break;
           }
         }
