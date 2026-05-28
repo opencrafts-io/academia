@@ -252,8 +252,29 @@ class _AllEventTicketsScreenState extends State<AllEventTicketsScreen> {
                 return const SliverToBoxAdapter(child: SizedBox.shrink());
               },
             ),
-            SliverPadding(padding: const EdgeInsets.only(bottom: 40)),
+            SliverPadding(padding: const EdgeInsets.only(bottom: 80)),
           ],
+        ),
+        floatingActionButton: BlocBuilder<TicketStatsBloc, TicketStatsState>(
+          builder: (context, state) {
+            if (state is StatsLoadedState) {
+              if (state.stats.first.ticketName == 'Free Ticket') {
+                return const SizedBox.shrink();
+              }
+
+              return FloatingActionButton.extended(
+                onPressed: () => CreateTicketRoute(
+                  isMultiDayEvent: false,
+                  eventStartDateTime: DateTime.now(),
+                  eventEndDateTime: DateTime.now(),
+                ).push(context),
+                icon: const Icon(Icons.add),
+                label: const Text("Create Event Ticket"),
+              );
+            }
+
+            return const SizedBox.shrink();
+          },
         ),
       ),
     );

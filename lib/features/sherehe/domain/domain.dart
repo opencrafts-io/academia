@@ -45,3 +45,4 @@ export 'usecases/get_ticket_invites_usecase.dart';
 export 'usecases/create_ticket_invite_usecase.dart';
 export 'usecases/update_ticket_invite_usecase.dart';
 export 'usecases/delete_ticket_invite_usecase.dart';
+export 'usecases/create_ticket_usecase.dart';

@@ -27,6 +27,7 @@ export 'screens/add_ticket_screen.dart';
 export 'screens/ticket_links_screen.dart';
 export 'screens/all_event_tickets_screen.dart';
 export 'screens/event_links_screen.dart';
+export 'screens/create_ticket_screen.dart';
 export 'widgets/attendee_card.dart';
 export 'bloc/sherehe_details_bloc.dart';
 export 'widgets/attendee_list.dart';

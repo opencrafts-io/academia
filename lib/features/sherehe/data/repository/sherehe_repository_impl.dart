@@ -172,6 +172,35 @@ class ShereheRepositoryImpl implements ShereheRepository {
   }
 
   @override
+  Future<Either<Failure, Ticket>> createTicket({
+    required String eventId,
+    required String ticketName,
+    required int ticketPrice,
+    required int ticketFor,
+    required int ticketQuantity,
+    required String scope,
+    required List<int>? institutions,
+    required String startDate,
+    required String endDate,
+  }) async {
+    final result = await remoteDataSource.createTicket(
+      eventId: eventId,
+      ticketName: ticketName,
+      ticketPrice: ticketPrice,
+      ticketFor: ticketFor,
+      ticketQuantity: ticketQuantity,
+      scope: scope,
+      institutions: institutions,
+      startDate: startDate,
+      endDate: endDate,
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (ticketData) => right(ticketData.toEntity()),
+    );
+  }
+
+  @override
   Future<Either<Failure, PurchaseTicketResult>> purchaseTicket({
     required String ticketId,
     required int ticketQuantity,

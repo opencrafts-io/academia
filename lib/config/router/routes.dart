@@ -653,6 +653,27 @@ class AddEventScannerRoute extends GoRouteData with $AddEventScannerRoute {
   }
 }
 
+@TypedGoRoute<CreateTicketRoute>(path: "/organizer-dashboard/create-ticket")
+class CreateTicketRoute extends GoRouteData with $CreateTicketRoute {
+  final DateTime eventStartDateTime;
+  final DateTime eventEndDateTime;
+  final bool isMultiDayEvent;
+
+  const CreateTicketRoute({
+    required this.isMultiDayEvent,
+    required this.eventStartDateTime,
+    required this.eventEndDateTime,
+  });
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return CreateTicketScreen(
+      isMultiDayEvent: isMultiDayEvent,
+      eventStartDateTime: eventStartDateTime,
+      eventEndDateTime: eventEndDateTime,
+    );
+  }
+}
+
 @TypedGoRoute<PurchasedTicketsRoute>(path: "/purchased-tickets/all")
 class PurchasedTicketsRoute extends GoRouteData with $PurchasedTicketsRoute {
   @override

@@ -19,6 +19,7 @@ List<RouteBase> get $appRoutes => [
   $shereheDetailsWithTokenRoute,
   $shereheDetailsRoute,
   $ticketFlowWithInviteRoute,
+  $createTicketRoute,
   $purchasedTicketsRoute,
   $organizedEventsRoute,
   $ticketReceiptRoute,
@@ -1066,6 +1067,50 @@ mixin $TicketFlowWithInviteRoute on GoRouteData {
   @override
   String get location => GoRouteData.$location(
     '/sherehe/ticket-flow-with-invite/${Uri.encodeComponent(_self.invite)}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $createTicketRoute => GoRouteData.$route(
+  path: '/organizer-dashboard/create-ticket',
+  factory: $CreateTicketRoute._fromState,
+);
+
+mixin $CreateTicketRoute on GoRouteData {
+  static CreateTicketRoute _fromState(GoRouterState state) => CreateTicketRoute(
+    isMultiDayEvent: _$boolConverter(
+      state.uri.queryParameters['is-multi-day-event']!,
+    ),
+    eventStartDateTime: DateTime.parse(
+      state.uri.queryParameters['event-start-date-time']!,
+    ),
+    eventEndDateTime: DateTime.parse(
+      state.uri.queryParameters['event-end-date-time']!,
+    ),
+  );
+
+  CreateTicketRoute get _self => this as CreateTicketRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/organizer-dashboard/create-ticket',
+    queryParams: {
+      'is-multi-day-event': _self.isMultiDayEvent.toString(),
+      'event-start-date-time': _self.eventStartDateTime.toString(),
+      'event-end-date-time': _self.eventEndDateTime.toString(),
+    },
   );
 
   @override

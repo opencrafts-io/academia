@@ -452,7 +452,62 @@ class ShereheRemoteDataSource with DioErrorHandler {
         ),
       );
     }
-  }  
+  }
+
+  Future<Either<Failure, TicketData>> createTicket({
+    required String eventId,
+    required String ticketName,
+    required int ticketPrice,
+    required int ticketFor,
+    required int ticketQuantity,
+    required String scope,
+    required List<int>? institutions,
+    required String startDate,
+    required String endDate,
+  }) async {
+    try {
+      final response = await dioClient.dio.post(
+        "/$servicePrefix/ticket/",
+        data: {
+          'event_id': eventId,
+          'ticket_name': ticketName,
+          'ticket_price': ticketPrice,
+          'ticket_for': ticketFor,
+          'ticket_quantity': ticketQuantity,
+          'scope': scope,
+          if (institutions != null && institutions.isNotEmpty)
+            'institutions': jsonEncode(institutions),
+          'start_date': startDate,
+          'end_date': endDate,
+        },
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return right(TicketData.fromJson(response.data));
+      } else {
+        return left(
+          ServerFailure(
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when fetching ticket",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when fetching ticket", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error when fetching ticket", error: e);
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred while fetching the ticket",
+          error: e,
+        ),
+      );
+    }
+  }
 
   Future<Either<Failure, PurchaseTicketResult>> purchaseTicket({
     required String ticketId,

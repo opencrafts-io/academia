@@ -160,6 +160,7 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   sl.registerLazySingleton(() => CreateTicketInviteUsecase(sl()));
   sl.registerLazySingleton(() => UpdateTicketInviteUsecase(sl()));
   sl.registerLazySingleton(() => DeleteTicketInviteUsecase(sl()));
+  sl.registerLazySingleton(() => CreateTicketUsecase(sl()));
 
   sl.registerFactory(() => ShereheHomeBloc(getEvent: sl()));
 
@@ -201,7 +202,11 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     () => AttendeesAndScannerStatsBloc(getAttendeesAndScanners: sl()),
   );
   sl.registerFactory(
-    () => TicketStatsBloc(getDashboardTicketStats: sl(), updateTicket: sl()),
+    () => TicketStatsBloc(
+      getDashboardTicketStats: sl(),
+      updateTicket: sl(),
+      createTicket: sl(),
+    ),
   );
   sl.registerFactory(() => AllAttendeesBloc(getAllAttendees: sl()));
   sl.registerFactory(() => AllScannersBloc(getAllScanners: sl()));

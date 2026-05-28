@@ -53,6 +53,18 @@ abstract class ShereheRepository {
 
   Future<Either<Failure, Ticket>> getTicketByInvite({required String invite});
 
+  Future<Either<Failure, Ticket>> createTicket({
+    required String eventId,
+    required String ticketName,
+    required int ticketPrice,
+    required int ticketFor,
+    required int ticketQuantity,
+    required String scope,
+    required List<int>? institutions,
+    required String startDate,
+    required String endDate,
+  });
+
   Future<Either<Failure, PurchaseTicketResult>> purchaseTicket({
     required String ticketId,
     required int ticketQuantity,
