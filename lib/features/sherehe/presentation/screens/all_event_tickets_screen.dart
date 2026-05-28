@@ -263,11 +263,19 @@ class _AllEventTicketsScreenState extends State<AllEventTicketsScreen> {
               }
 
               return FloatingActionButton.extended(
-                onPressed: () => CreateTicketRoute(
-                  isMultiDayEvent: false,
-                  eventStartDateTime: DateTime.now(),
-                  eventEndDateTime: DateTime.now(),
-                ).push(context),
+                onPressed: () async {
+                  final result = await CreateTicketRoute(
+                    eventId: widget.eventId,
+                    eventStartDateTime: DateTime.parse(widget.eventStartDate),
+                    eventEndDateTime: DateTime.parse(widget.eventEndDate),
+                  ).push(context);
+
+                  if (result == true && context.mounted) {
+                    context.read<TicketStatsBloc>().add(
+                      GetTicketStats(eventId: widget.eventId),
+                    );
+                  }
+                },
                 icon: const Icon(Icons.add),
                 label: const Text("Create Event Ticket"),
               );

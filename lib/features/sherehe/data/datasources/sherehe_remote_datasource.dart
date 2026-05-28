@@ -483,7 +483,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return right(TicketData.fromJson(response.data));
+        return right(TicketData.fromJson(response.data['ticket']));
       } else {
         return left(
           ServerFailure(

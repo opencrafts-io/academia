@@ -1115,9 +1115,7 @@ RouteBase get $createTicketRoute => GoRouteData.$route(
 
 mixin $CreateTicketRoute on GoRouteData {
   static CreateTicketRoute _fromState(GoRouterState state) => CreateTicketRoute(
-    isMultiDayEvent: _$boolConverter(
-      state.uri.queryParameters['is-multi-day-event']!,
-    ),
+    eventId: state.uri.queryParameters['event-id']!,
     eventStartDateTime: DateTime.parse(
       state.uri.queryParameters['event-start-date-time']!,
     ),
@@ -1132,7 +1130,7 @@ mixin $CreateTicketRoute on GoRouteData {
   String get location => GoRouteData.$location(
     '/organizer-dashboard/create-ticket',
     queryParams: {
-      'is-multi-day-event': _self.isMultiDayEvent.toString(),
+      'event-id': _self.eventId,
       'event-start-date-time': _self.eventStartDateTime.toString(),
       'event-end-date-time': _self.eventEndDateTime.toString(),
     },
