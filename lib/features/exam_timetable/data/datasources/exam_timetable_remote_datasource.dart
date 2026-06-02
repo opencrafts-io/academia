@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:academia/config/config.dart';
 import 'package:academia/core/error/failures.dart';
 import 'package:academia/core/network/network.dart';
@@ -21,6 +23,49 @@ class ExamTimetableRemoteDatasource with DioErrorHandler {
     } else {
       servicePath = "dev-professor";
     }
+  }
+
+  /// Parses a single API response entry into an [ExamTimetableData].
+  ///
+  /// New API shape:
+  /// ```json
+  /// {
+  ///   "course_code": "NUR 225\nSPECIALTY 1",
+  ///   "start_time": "2026-04-24T05:30:00Z",
+  ///   "end_time":   "2026-04-24T08:30:00Z",
+  ///   "venue":      "DMMLC",
+  ///   "coordinator": "HENRY KILEMI",   // optional
+  ///   "hrs":        "3",               // optional
+  ///   "raw_data": {                    // optional
+  ///     "original_day": "FRI\n24/4/26",
+  ///     "campus":       "ATHI RIVER",
+  ///     "invigilator":  "JOYSTACY/ JOY"
+  ///   }
+  /// }
+  /// ```
+  ExamTimetableData _parseEntry(Map<String, dynamic> json) {
+    final startTimeStr = json['start_time'] as String;
+    final endTimeStr = json['end_time'] as String;
+
+    // Parse ISO 8601 datetimes; the API returns UTC strings.
+    final datetimeStr = DateTime.parse(startTimeStr).toLocal();
+
+    final rawDataJson = json['raw_data'];
+    String? rawDataEncoded;
+    if (rawDataJson is Map<String, dynamic>) {
+      rawDataEncoded = jsonEncode(rawDataJson);
+    }
+
+    return ExamTimetableData(
+      courseCode: (json['course_code'] as String? ?? '').trim(),
+      startTime: startTimeStr,
+      endTime: endTimeStr,
+      venue: (json['venue'] as String? ?? '').trim(),
+      coordinator: (json['coordinator'] as String? ?? '').trim(),
+      hrs: (json['hrs'] as String? ?? '').trim(),
+      rawData: rawDataEncoded,
+      datetimeStr: datetimeStr,
+    );
   }
 
   Future<Either<Failure, List<ExamTimetableData>>> _fetchExamTimetable({
@@ -50,7 +95,7 @@ class ExamTimetableRemoteDatasource with DioErrorHandler {
           );
         }
         final results = (response.data as List)
-            .map((e) => ExamTimetableData.fromJson(e as Map<String, dynamic>))
+            .map((e) => _parseEntry(e as Map<String, dynamic>))
             .toList();
         return Right(results);
       }

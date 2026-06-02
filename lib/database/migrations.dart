@@ -99,4 +99,11 @@ extension AppDatabaseExtension on AppDataBase {
     await m.database.customStatement("DROP TABLE IF EXISTS 'ticket_table';");
     await m.createTable(ticketTable);
   }
+
+  Future<void> migrate30To31(Migrator m) async {
+    // Schema changed: removed day/campus/invigilator columns, made coordinator/hrs
+    // optional with defaults, added raw_data JSON blob column.
+    await m.database.customStatement("DROP TABLE IF EXISTS 'exam_timetable';");
+    await m.createTable(examTimetable);
+  }
 }

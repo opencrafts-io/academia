@@ -2,6 +2,7 @@ import 'package:academia/features/exam_timetable/domain/entity/exam_timetable.da
 import 'package:academia/features/exam_timetable/presentation/bloc/exam_timetable_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class ExamCard extends StatelessWidget {
   final ExamTimetable exam;
@@ -16,19 +17,6 @@ class ExamCard extends StatelessWidget {
     required this.institutionId,
     this.isPast = false,
   });
-
-  // Color _getExamColor(BuildContext context, int index) {
-  //   final colorScheme = Theme.of(context).colorScheme;
-  //   final colors = [
-  //     colorScheme.primaryContainer,
-  //     colorScheme.secondaryContainer,
-  //     colorScheme.tertiaryContainer,
-  //     colorScheme.primary.withValues(alpha: 0.15),
-  //     colorScheme.secondary.withValues(alpha: 0.15),
-  //     colorScheme.tertiary.withValues(alpha: 0.15),
-  //   ];
-  //   return colors[index % colors.length];
-  // }
 
   void _showDeleteDialog(BuildContext context) {
     final theme = Theme.of(context);
@@ -69,6 +57,15 @@ class ExamCard extends StatelessWidget {
     );
   }
 
+  String _formatTime(String isoTime) {
+    try {
+      final dt = DateTime.parse(isoTime).toLocal();
+      return DateFormat('h:mm a').format(dt);
+    } catch (_) {
+      return isoTime;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -81,6 +78,18 @@ class ExamCard extends StatelessWidget {
     final textColor = isPast
         ? colorScheme.onSurfaceVariant
         : colorScheme.onSurface;
+
+    // Build right-column optional info list
+    final rawData = exam.rawData;
+    final campus = rawData?.campus ?? '';
+    final invigilator = rawData?.invigilator ?? '';
+    final courseName = rawData?.courseName ?? '';
+    final group = rawData?.group ?? '';
+    final hasRightColumn = campus.isNotEmpty ||
+        exam.coordinator.isNotEmpty ||
+        invigilator.isNotEmpty ||
+        courseName.isNotEmpty ||
+        group.isNotEmpty;
 
     return Dismissible(
       key: Key(exam.courseCode),
@@ -116,7 +125,7 @@ class ExamCard extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      exam.courseCode,
+                      exam.courseCode.replaceAll('\n', ' · '),
                       style: theme.textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: textColor,
@@ -126,25 +135,26 @@ class ExamCard extends StatelessWidget {
                   const SizedBox(width: 8),
                   Row(
                     children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: isPast
-                              ? colorScheme.surfaceContainer
-                              : Colors.black.withValues(alpha: 0.08),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Text(
-                          '${exam.hrs}h',
-                          style: theme.textTheme.labelMedium?.copyWith(
-                            color: textColor,
-                            fontWeight: FontWeight.w600,
+                      if (exam.hrs.isNotEmpty)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: isPast
+                                ? colorScheme.surfaceContainer
+                                : Colors.black.withValues(alpha: 0.08),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            '${exam.hrs}h',
+                            style: theme.textTheme.labelMedium?.copyWith(
+                              color: textColor,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
-                      ),
                       if (isPast) ...[
                         const SizedBox(width: 6),
                         Container(
@@ -182,14 +192,15 @@ class ExamCard extends StatelessWidget {
                       children: [
                         _CompactInfoRow(
                           icon: Icons.calendar_today,
-                          text: exam.day,
+                          text: exam.displayDay,
                           textColor: textColor,
                           theme: theme,
                         ),
                         const SizedBox(height: 6),
                         _CompactInfoRow(
                           icon: Icons.access_time,
-                          text: "${exam.startTime} - ${exam.endTime}",
+                          text:
+                              '${_formatTime(exam.startTime)} – ${_formatTime(exam.endTime)}',
                           textColor: textColor,
                           theme: theme,
                         ),
@@ -204,24 +215,22 @@ class ExamCard extends StatelessWidget {
                     ),
                   ),
 
-                  // Right column (extra info)
-                  if (exam.campus.isNotEmpty ||
-                      exam.coordinator.isNotEmpty ||
-                      exam.invigilator.isNotEmpty)
+                  // Right column (optional extra info)
+                  if (hasRightColumn)
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (exam.campus.isNotEmpty)
+                          if (campus.isNotEmpty)
                             _CompactInfoRow(
                               icon: Icons.business_outlined,
-                              text: exam.campus,
+                              text: campus,
                               textColor: textColor,
                               theme: theme,
                             ),
-                          if (exam.campus.isNotEmpty &&
+                          if (campus.isNotEmpty &&
                               (exam.coordinator.isNotEmpty ||
-                                  exam.invigilator.isNotEmpty))
+                                  invigilator.isNotEmpty))
                             const SizedBox(height: 6),
                           if (exam.coordinator.isNotEmpty)
                             _CompactInfoRow(
@@ -231,15 +240,37 @@ class ExamCard extends StatelessWidget {
                               theme: theme,
                             ),
                           if (exam.coordinator.isNotEmpty &&
-                              exam.invigilator.isNotEmpty)
+                              invigilator.isNotEmpty)
                             const SizedBox(height: 6),
-                          if (exam.invigilator.isNotEmpty)
+                          if (invigilator.isNotEmpty)
                             _CompactInfoRow(
                               icon: Icons.supervisor_account_outlined,
-                              text: exam.invigilator,
+                              text: invigilator,
                               textColor: textColor,
                               theme: theme,
                             ),
+                          if ((campus.isNotEmpty ||
+                                  exam.coordinator.isNotEmpty ||
+                                  invigilator.isNotEmpty) &&
+                              (courseName.isNotEmpty || group.isNotEmpty))
+                            const SizedBox(height: 6),
+                          if (courseName.isNotEmpty)
+                            _CompactInfoRow(
+                              icon: Icons.book_outlined,
+                              text: courseName,
+                              textColor: textColor,
+                              theme: theme,
+                            ),
+                          if (group.isNotEmpty) ...[
+                            if (courseName.isNotEmpty)
+                              const SizedBox(height: 6),
+                            _CompactInfoRow(
+                              icon: Icons.group_outlined,
+                              text: group,
+                              textColor: textColor,
+                              theme: theme,
+                            ),
+                          ],
                         ],
                       ),
                     ),
