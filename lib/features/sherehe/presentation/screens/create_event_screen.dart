@@ -340,7 +340,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       builder: (BuildContext dialogContext) {
         return StatefulBuilder(
           builder: (context, StateSetter setStateDialog) {
-            return AlertDialog.adaptive(
+            return AlertDialog(
               title: const Text('Select Genres'),
               content: SingleChildScrollView(
                 child: ListBody(
