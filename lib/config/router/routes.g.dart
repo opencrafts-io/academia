@@ -7,6 +7,7 @@ part of 'routes.dart';
 // **************************************************************************
 
 List<RouteBase> get $appRoutes => [
+  $splashScreenRoute,
   $layoutShellRoute,
   $feedRoute,
   $postDetailRoute,
@@ -35,6 +36,30 @@ List<RouteBase> get $appRoutes => [
   $semestersPageRoute,
   $coursesPageRoute,
 ];
+
+RouteBase get $splashScreenRoute =>
+    GoRouteData.$route(path: '/splash', factory: $SplashScreenRoute._fromState);
+
+mixin $SplashScreenRoute on GoRouteData {
+  static SplashScreenRoute _fromState(GoRouterState state) =>
+      SplashScreenRoute();
+
+  @override
+  String get location => GoRouteData.$location('/splash');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
 
 RouteBase get $layoutShellRoute => StatefulShellRouteData.$route(
   factory: $LayoutShellRouteExtension._fromState,
@@ -922,8 +947,34 @@ mixin $QrCodeRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-RouteBase get $todosRoute =>
-    GoRouteData.$route(path: '/todos', factory: $TodosRoute._fromState);
+RouteBase get $todosRoute => GoRouteData.$route(
+  path: '/todos',
+  factory: $TodosRoute._fromState,
+  routes: [
+    GoRouteData.$route(
+      path: 'create-tasklist',
+      factory: $CreateTodoListRoute._fromState,
+    ),
+    GoRouteData.$route(
+      path: 'tasklist',
+      factory: $ViewTaskListsRoute._fromState,
+      routes: [
+        GoRouteData.$route(
+          path: ':taskListId',
+          factory: $ViewTaskListRoute._fromState,
+        ),
+      ],
+    ),
+    GoRouteData.$route(
+      path: 'create-todo-item',
+      factory: $CreateTodoItemRoute._fromState,
+    ),
+    GoRouteData.$route(
+      path: 'todo-item/:todoLocalID',
+      factory: $UpdateTodoItemRoute._fromState,
+    ),
+  ],
+);
 
 mixin $TodosRoute on GoRouteData {
   static TodosRoute _fromState(GoRouterState state) => TodosRoute();
@@ -943,6 +994,145 @@ mixin $TodosRoute on GoRouteData {
 
   @override
   void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $CreateTodoListRoute on GoRouteData {
+  static CreateTodoListRoute _fromState(GoRouterState state) =>
+      CreateTodoListRoute();
+
+  @override
+  String get location => GoRouteData.$location('/todos/create-tasklist');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $ViewTaskListsRoute on GoRouteData {
+  static ViewTaskListsRoute _fromState(GoRouterState state) =>
+      ViewTaskListsRoute();
+
+  @override
+  String get location => GoRouteData.$location('/todos/tasklist');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $ViewTaskListRoute on GoRouteData {
+  static ViewTaskListRoute _fromState(GoRouterState state) => ViewTaskListRoute(
+    taskListId: int.parse(state.pathParameters['taskListId']!),
+  );
+
+  ViewTaskListRoute get _self => this as ViewTaskListRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/todos/tasklist/${Uri.encodeComponent(_self.taskListId.toString())}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $CreateTodoItemRoute on GoRouteData {
+  static CreateTodoItemRoute _fromState(GoRouterState state) =>
+      CreateTodoItemRoute(
+        taskListLocalID: _$convertMapValue(
+          'task-list-local-i-d',
+          state.uri.queryParameters,
+          int.tryParse,
+        ),
+      );
+
+  CreateTodoItemRoute get _self => this as CreateTodoItemRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/todos/create-todo-item',
+    queryParams: {
+      if (_self.taskListLocalID != null)
+        'task-list-local-i-d': _self.taskListLocalID!.toString(),
+    },
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $UpdateTodoItemRoute on GoRouteData {
+  static UpdateTodoItemRoute _fromState(GoRouterState state) =>
+      UpdateTodoItemRoute(
+        todoLocalID: int.parse(state.pathParameters['todoLocalID']!),
+      );
+
+  UpdateTodoItemRoute get _self => this as UpdateTodoItemRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/todos/todo-item/${Uri.encodeComponent(_self.todoLocalID.toString())}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+T? _$convertMapValue<T>(
+  String key,
+  Map<String, String> map,
+  T? Function(String) converter,
+) {
+  final value = map[key];
+  return value == null ? null : converter(value);
 }
 
 RouteBase get $communitiesRoute => GoRouteData.$route(
