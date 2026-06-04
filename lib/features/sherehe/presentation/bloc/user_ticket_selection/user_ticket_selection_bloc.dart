@@ -30,6 +30,7 @@ class UserTicketSelectionBloc
         (failure) => emit(UserTicketError(failure.message)),
         (ticket) => emit(UserTicketLoaded(tickets: [ticket])),
       );
+      return;
     }
 
     // if invite is null, then we try to fetch the tickets by event id. This is the case when the user accesses the page via the sherehe details page

@@ -172,6 +172,35 @@ class ShereheRepositoryImpl implements ShereheRepository {
   }
 
   @override
+  Future<Either<Failure, Ticket>> createTicket({
+    required String eventId,
+    required String ticketName,
+    required int ticketPrice,
+    required int ticketFor,
+    required int ticketQuantity,
+    required String scope,
+    required List<int>? institutions,
+    required String startDate,
+    required String endDate,
+  }) async {
+    final result = await remoteDataSource.createTicket(
+      eventId: eventId,
+      ticketName: ticketName,
+      ticketPrice: ticketPrice,
+      ticketFor: ticketFor,
+      ticketQuantity: ticketQuantity,
+      scope: scope,
+      institutions: institutions,
+      startDate: startDate,
+      endDate: endDate,
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (ticketData) => right(ticketData.toEntity()),
+    );
+  }
+
+  @override
   Future<Either<Failure, PurchaseTicketResult>> purchaseTicket({
     required String ticketId,
     required int ticketQuantity,
@@ -407,5 +436,105 @@ class ShereheRepositoryImpl implements ShereheRepository {
       (failure) => left(failure),
       (users) => right(users.map((e) => e.toEntity()).toList()),
     );
+  }
+
+  @override
+  Future<Either<Failure, List<Invite>>> getEventInvites(String eventId) async {
+    final result = await remoteDataSource.getEventInvites(eventId);
+    return result.fold(
+      (failure) => left(failure),
+      (invites) => right(invites.map((e) => e.toEntity()).toList()),
+    );
+  }
+
+  @override
+  Future<Either<Failure, String>> createEventInvite({
+    required String eventId,
+    required int maxUses,
+    required String expiresAt,
+  }) async {
+    final result = await remoteDataSource.createEventInvite(
+      eventId: eventId,
+      maxUses: maxUses,
+      expiresAt: expiresAt,
+    );
+    return result.fold((failure) => left(failure), (message) => right(message));
+  }
+
+  @override
+  Future<Either<Failure, Invite>> updateEventInvite({
+    required String inviteId,
+    int? maxUses,
+    String? expiresAt,
+  }) async {
+    final result = await remoteDataSource.updateEventInvite(
+      inviteId: inviteId,
+      maxUses: maxUses,
+      expiresAt: expiresAt,
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (invite) => right(invite.toEntity()),
+    );
+  }
+
+  @override
+  Future<Either<Failure, String>> deleteEventInvite({
+    required String inviteId,
+  }) async {
+    final result = await remoteDataSource.deleteEventInvite(inviteId: inviteId);
+    return result.fold((failure) => left(failure), (message) => right(message));
+  }
+
+  @override
+  Future<Either<Failure, List<Invite>>> getTicketInvites(
+    String ticketId,
+  ) async {
+    final result = await remoteDataSource.getTicketInvites(ticketId);
+    return result.fold(
+      (failure) => left(failure),
+      (invites) => right(invites.map((e) => e.toEntity()).toList()),
+    );
+  }
+
+  @override
+  Future<Either<Failure, String>> createTicketInvite({
+    required String ticketId,
+    required int maxUses,
+    required String expiresAt,
+  }) async {
+    final result = await remoteDataSource.createTicketInvite(
+      ticketId: ticketId,
+      maxUses: maxUses,
+      expiresAt: expiresAt,
+    );
+    return result.fold((failure) => left(failure), (message) => right(message));
+  }
+
+  @override
+  Future<Either<Failure, Invite>> updateTicketInvite({
+    required String inviteId,
+    int? maxUses,
+    String? expiresAt,
+  }) async {
+    final result = await remoteDataSource.updateTicketInvite(
+      inviteId: inviteId,
+      maxUses: maxUses,
+      expiresAt: expiresAt,
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (invite) => right(invite.toEntity()),
+    );
+  }
+
+  @override
+  Future<Either<Failure, String>> deleteTicketInvite({
+    required String inviteId,
+  }) async {
+    final result = await remoteDataSource.deleteTicketInvite(
+      inviteId: inviteId,
+    );
+    return result.fold((failure) => left(failure), (message) => right(message));
   }
 }

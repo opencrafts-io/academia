@@ -152,6 +152,16 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   sl.registerFactory(() => DeleteEventScannerUsecase(sl()));
   sl.registerFactory(() => GetEventScannerByUserIdUsecase(sl()));
 
+  sl.registerLazySingleton(() => GetEventInvitesUsecase(sl()));
+  sl.registerLazySingleton(() => CreateEventInviteUsecase(sl()));
+  sl.registerLazySingleton(() => UpdateEventInviteUsecase(sl()));
+  sl.registerLazySingleton(() => DeleteEventInviteUsecase(sl()));
+  sl.registerLazySingleton(() => GetTicketInvitesUsecase(sl()));
+  sl.registerLazySingleton(() => CreateTicketInviteUsecase(sl()));
+  sl.registerLazySingleton(() => UpdateTicketInviteUsecase(sl()));
+  sl.registerLazySingleton(() => DeleteTicketInviteUsecase(sl()));
+  sl.registerLazySingleton(() => CreateTicketUsecase(sl()));
+
   sl.registerLazySingleton(() => ShereheHomeBloc(getEvent: sl()));
 
   sl.registerFactory(
@@ -192,7 +202,11 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     () => AttendeesAndScannerStatsBloc(getAttendeesAndScanners: sl()),
   );
   sl.registerFactory(
-    () => TicketStatsBloc(getDashboardTicketStats: sl(), updateTicket: sl()),
+    () => TicketStatsBloc(
+      getDashboardTicketStats: sl(),
+      updateTicket: sl(),
+      createTicket: sl(),
+    ),
   );
   sl.registerFactory(() => AllAttendeesBloc(getAllAttendees: sl()));
   sl.registerFactory(() => AllScannersBloc(getAllScanners: sl()));
@@ -201,6 +215,22 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
       searchUsersByUsername: sl(),
       addEventScanner: sl(),
       deleteEventScanner: sl(),
+    ),
+  );
+  sl.registerFactory(
+    () => EventLinkBloc(
+      getEventInvites: sl(),
+      createEventInvite: sl(),
+      updateEventInvite: sl(),
+      deleteEventInvite: sl(),
+    ),
+  );
+  sl.registerFactory<TicketLinkBloc>(
+    () => TicketLinkBloc(
+      getTicketInvites: sl(),
+      createTicketInvite: sl(),
+      updateTicketInvite: sl(),
+      deleteTicketInvite: sl(),
     ),
   );
   sl.registerFactory<ProfileRemoteDatasource>(

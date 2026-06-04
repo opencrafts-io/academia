@@ -1,7 +1,6 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/features/admob/admob.dart';
-import 'package:academia/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +20,6 @@ class _ShereheHomeState extends State<ShereheHome>
   final ScrollController _scrollController = ScrollController();
   int _currentPage = 1;
   static const int adInterval = 3;
-  String? _userEmail;
 
   @override
   bool get wantKeepAlive => true;
@@ -29,10 +27,6 @@ class _ShereheHomeState extends State<ShereheHome>
   @override
   void initState() {
     super.initState();
-    final profileState = context.read<ProfileBloc>().state;
-    if (profileState is ProfileLoadedState) {
-      _userEmail = profileState.profile.email;
-    }
     context.read<ShereheHomeBloc>().add(FetchAllEvents(page: _currentPage));
     _scrollController.addListener(_onScroll);
   }
@@ -263,7 +257,6 @@ class _ShereheHomeState extends State<ShereheHome>
           if (result is! Event) return;
 
           _resetAndReload();
-          final maskedEmail = ShereheUtils.maskEmail(_userEmail ?? '');
           final scope = ScopeTypesX.fromBackend(result.scope);
           final isPrivateEvent = scope == ScopeTypes.private;
 
@@ -273,7 +266,8 @@ class _ShereheHomeState extends State<ShereheHome>
 
               showDialog(
                 context: context,
-                builder: (context) => Dialog(
+                barrierDismissible: false,
+                builder: (dialogContext) => Dialog(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(24),
                   ),
@@ -289,15 +283,15 @@ class _ShereheHomeState extends State<ShereheHome>
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
                             color: Theme.of(
-                              context,
+                              dialogContext,
                             ).colorScheme.primaryContainer,
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
-                            Icons.lock_outline,
+                            Icons.lock_outline_rounded,
                             size: 32,
                             color: Theme.of(
-                              context,
+                              dialogContext,
                             ).colorScheme.onPrimaryContainer,
                           ),
                         ),
@@ -306,8 +300,8 @@ class _ShereheHomeState extends State<ShereheHome>
 
                         Text(
                           "Private Event Created",
-                          style: Theme.of(context).textTheme.titleLarge
-                              ?.copyWith(fontWeight: FontWeight.w600),
+                          style: Theme.of(dialogContext).textTheme.titleLarge
+                              ?.copyWith(fontWeight: FontWeight.w700),
                           textAlign: TextAlign.center,
                         ),
 
@@ -315,33 +309,67 @@ class _ShereheHomeState extends State<ShereheHome>
 
                         Text(
                           "Your private event has been created successfully.\n\n"
-                          "A secure link has been sent to:\n$maskedEmail\n\n"
-                          "Please check your inbox to access it.",
-                          style: Theme.of(context).textTheme.bodyMedium
+                          "Only people with your invite link will be able to access this event.",
+                          style: Theme.of(dialogContext).textTheme.bodyMedium
                               ?.copyWith(
                                 color: Theme.of(
-                                  context,
+                                  dialogContext,
                                 ).colorScheme.onSurfaceVariant,
+                                height: 1.5,
                               ),
                           textAlign: TextAlign.center,
                         ),
 
-                        const SizedBox(height: 24),
+                        const SizedBox(height: 28),
 
-                        SizedBox(
-                          width: double.infinity,
-                          child: FilledButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            style: FilledButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(14),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: OutlinedButton(
+                                onPressed: () {
+                                  Navigator.of(dialogContext).pop();
+                                },
+                                style: OutlinedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 14,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(14),
+                                  ),
+                                ),
+                                child: const Text("Close"),
                               ),
                             ),
-                            child: const Text("Got it"),
-                          ),
+
+                            const SizedBox(width: 12),
+
+                            Expanded(
+                              child: FilledButton.icon(
+                                onPressed: () {
+                                  Navigator.of(dialogContext).pop();
+
+                                  OrganizerDashboardRoute(
+                                    eventId: result.id,
+                                    eventName: result.eventName,
+                                    eventLocation: result.eventLocation,
+                                    eventStartDate: result.startDate,
+                                    eventEndDate: result.endDate,
+                                    eventPosterImage: result.eventPosterImage,
+                                  ).push(context);
+                                },
+                                style: FilledButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 14,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(14),
+                                  ),
+                                ),
+                                icon: const Icon(Icons.dashboard_outlined),
+                                label: const Text("Manage"),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
