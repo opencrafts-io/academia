@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:academia/background_task/daily_login_background_task.dart';
 import 'package:academia/config/router/router.dart';
 import 'package:academia/features/course/course.dart';
 import 'package:academia/features/features.dart';
@@ -16,8 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:logger/logger.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:workmanager/workmanager.dart';
 
 class Academia extends StatefulWidget {
   const Academia({super.key});
@@ -31,24 +26,6 @@ class _AcademiaState extends State<Academia> {
 
   @override
   void initState() {
-    SharedPreferences.getInstance().then((prefs) {
-      prefs.setString(
-        "user_activity",
-        jsonEncode({
-          "last_app_launch_date": DateTime.now().toLocal().toString(),
-        }),
-      );
-    });
-
-    final DailyLoginBackgroundTask dailyLoginBackgroundTask =
-        DailyLoginBackgroundTask();
-    Workmanager().registerPeriodicTask(
-      dailyLoginBackgroundTask.taskName,
-      dailyLoginBackgroundTask.taskName,
-      frequency: dailyLoginBackgroundTask.frequency,
-      constraints: dailyLoginBackgroundTask.constraints
-          .toWorkManagerConstraints(),
-    );
     setOptimalDisplayMode();
     super.initState();
   }

@@ -40,6 +40,10 @@ void main(List<String> args) async {
       if (runWebViewTitleBarWidget(args)) {
         return;
       }
+      if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
+        await Workmanager().initialize(backgroundCallbackDispatcher);
+        await registerDefaultBackgroundTasks();
+      }
 
       runApp(
         PostHogWidget(
@@ -49,13 +53,6 @@ void main(List<String> args) async {
           ),
         ),
       );
-
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
-          await Workmanager().initialize(backgroundCallbackDispatcher);
-          await registerDefaultBackgroundTasks();
-        }
-      });
     },
     (error, stack) {
       Posthog().captureException(error: error, stackTrace: stack);

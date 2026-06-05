@@ -85,10 +85,11 @@ Future<void> registerDefaultBackgroundTasks() async {
     ),
   );
 
+
+  // Register TodoList sync task - runs every 1 hour
   await Workmanager().registerPeriodicTask(
-    'io.opencrafts.academia.todoitem.sync',
-    'io.opencrafts.academia.todoitem.sync',
-    initialDelay: const Duration(seconds: 0),
+    'io.opencrafts.academia.todolist.sync',
+    'io.opencrafts.academia.todolist.sync',
     backoffPolicy: BackoffPolicy.exponential,
     backoffPolicyDelay: const Duration(minutes: 15),
     frequency: const Duration(hours: 1),
@@ -99,14 +100,12 @@ Future<void> registerDefaultBackgroundTasks() async {
     ),
   );
 
-  // Register TodoList sync task - runs every 2 hours
   await Workmanager().registerPeriodicTask(
-    'io.opencrafts.academia.todolist.sync',
-    'io.opencrafts.academia.todolist.sync',
-    initialDelay: const Duration(seconds: 0),
+    'io.opencrafts.academia.todoitem.sync',
+    'io.opencrafts.academia.todoitem.sync',
     backoffPolicy: BackoffPolicy.exponential,
     backoffPolicyDelay: const Duration(minutes: 15),
-    frequency: const Duration(hours: 2),
+    frequency: const Duration(hours: 1),
     existingWorkPolicy: ExistingPeriodicWorkPolicy.replace,
     constraints: Constraints(
       requiresBatteryNotLow: true,
