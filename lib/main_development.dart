@@ -38,6 +38,10 @@ void main(List<String> args) async {
       if (runWebViewTitleBarWidget(args)) {
         return;
       }
+      if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
+        await Workmanager().initialize(backgroundCallbackDispatcher);
+        registerDefaultBackgroundTasks();
+      }
 
       runApp(
         DioRequestInspectorMain(
@@ -45,13 +49,6 @@ void main(List<String> args) async {
           child: Academia(),
         ),
       );
-
-      WidgetsFlutterBinding().addPostFrameCallback((_) async {
-        if (!kIsWeb && Platform.isAndroid || Platform.isIOS) {
-          await Workmanager().initialize(backgroundCallbackDispatcher);
-          registerDefaultBackgroundTasks();
-        }
-      });
     },
     (error, stacktrace) {
       Logger().e('Caught an uncaught exception', error: error);
