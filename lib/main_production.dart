@@ -19,9 +19,8 @@ void main(List<String> args) async {
     () async {
       WidgetsFlutterBinding.ensureInitialized();
 
-      final (storageDir, _, _) = await (
+      final (storageDir, _) = await (
         getApplicationDocumentsDirectory(),
-        _initPostHog(),
         di.init(
           FlavorConfig(
             flavor: Flavor.production,
@@ -41,6 +40,13 @@ void main(List<String> args) async {
         return;
       }
 
+      await _initPostHog();
+
+      if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
+        await Workmanager().initialize(backgroundCallbackDispatcher);
+        await registerDefaultBackgroundTasks();
+      }
+
       runApp(
         PostHogWidget(
           child: DioRequestInspectorMain(
@@ -49,16 +55,9 @@ void main(List<String> args) async {
           ),
         ),
       );
-
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
-          await Workmanager().initialize(backgroundCallbackDispatcher);
-          await registerDefaultBackgroundTasks();
-        }
-      });
     },
     (error, stack) {
-      Posthog().captureException(error: error, stackTrace: stack);
+      Posthog().captureRunZonedGuardedError(error: error, stackTrace: stack);
     },
   );
 }
