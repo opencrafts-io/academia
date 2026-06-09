@@ -8,6 +8,7 @@ extension TicketStatsModelHelper on TicketStatsData {
     ticketPrice: ticketPrice,
     ticketsSold: ticketsSold,
     ticketsRemaining: ticketsRemaining,
+    scope: scope,
   );
 }
 
@@ -18,5 +19,6 @@ extension TicketStatsEntityHelper on TicketStats {
     ticketPrice: ticketPrice,
     ticketsSold: ticketsSold,
     ticketsRemaining: ticketsRemaining,
+    scope: scope,
   );
 }

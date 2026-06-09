@@ -1,18 +1,21 @@
 import 'package:academia/features/institution/domain/entities/institution.dart';
 import 'package:academia/features/sherehe/domain/entities/ticket_ui.dart';
-import 'package:academia/features/sherehe/presentation/constants/sherehe_constants.dart';
-import 'package:academia/features/sherehe/presentation/widgets/ticket_visibility_selector.dart';
+import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class EditAddedTicketScreen extends StatefulWidget {
   final TicketUI addedTicket;
-  // final void Function(TicketUI updated) onUpdate;
+  final bool isMultiDayEvent;
+  final DateTime eventStartDateTime;
+  final DateTime eventEndDateTime;
 
   const EditAddedTicketScreen({
     super.key,
     required this.addedTicket,
-    // required this.onUpdate,
+    this.isMultiDayEvent = false,
+    required this.eventStartDateTime,
+    required this.eventEndDateTime,
   });
 
   @override
@@ -26,6 +29,7 @@ class _EditAddedTicketScreenState extends State<EditAddedTicketScreen> {
   late TicketGroupTypes? selectedTicketGroupType;
   late ScopeTypes? selectedScopeType;
   late Set<Institution> selectedInstitutions;
+  late DateTimeRange? selectedTicketDateRange;
 
   @override
   void initState() {
@@ -42,6 +46,7 @@ class _EditAddedTicketScreenState extends State<EditAddedTicketScreen> {
     selectedTicketGroupType = widget.addedTicket.selectedTicketGroupType;
     selectedScopeType = widget.addedTicket.selectedScopeType;
     selectedInstitutions = widget.addedTicket.institutions.toSet();
+    selectedTicketDateRange = widget.addedTicket.selectedTicketDateRange;
 
     nameController.addListener(() => setState(() {}));
     priceController.addListener(() => setState(() {}));
@@ -60,6 +65,7 @@ class _EditAddedTicketScreenState extends State<EditAddedTicketScreen> {
         selectedInstitutions.isEmpty) {
       return false;
     }
+    if (selectedTicketDateRange == null) return false;
 
     return true;
   }
@@ -72,13 +78,21 @@ class _EditAddedTicketScreenState extends State<EditAddedTicketScreen> {
         ticketName: nameController.text.trim(),
         ticketPrice: price,
         ticketQuantity: qty,
-        institutionIds: selectedScopeType == ScopeTypes.institution
+        scope: selectedScopeType?.toBackend,
+        institutionIds: selectedScopeType != ScopeTypes.institution
             ? []
             : selectedInstitutions.map((e) => e.institutionId).toList(),
+        startDate:
+            selectedTicketDateRange?.start.toUtc().toIso8601String() ??
+            widget.eventStartDateTime.toUtc().toIso8601String(),
+        endDate:
+            selectedTicketDateRange?.end.toUtc().toIso8601String() ??
+            widget.eventEndDateTime.toUtc().toIso8601String(),
       ),
       selectedTicketGroupType: selectedTicketGroupType,
       institutions: selectedInstitutions.toList(),
       selectedScopeType: selectedScopeType,
+      selectedTicketDateRange: selectedTicketDateRange,
     );
     context.pop(updatedTicket);
   }
@@ -206,25 +220,43 @@ class _EditAddedTicketScreenState extends State<EditAddedTicketScreen> {
                         });
                       },
                     ),
-                    Row(
-                      spacing: 12,
-                      children: [
-                        Expanded(
-                          child: OutlinedButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: const Text("Cancel"),
-                          ),
-                        ),
-                        Expanded(
-                          child: FilledButton(
-                            onPressed: _canSave ? _save : null,
-                            child: const Text("Save"),
-                          ),
-                        ),
-                      ],
-                    ),
+                    if (widget.isMultiDayEvent)
+                      TicketDateRangeWidget(
+                        selectedTicketDateRange: selectedTicketDateRange,
+                        eventStartDateTime: widget.eventStartDateTime,
+                        eventEndDateTime: widget.eventEndDateTime,
+                        onDateRangeChanged: (dateRange) {
+                          setState(() {
+                            selectedTicketDateRange = dateRange;
+                          });
+                        },
+                      ),
                   ],
                 ),
+              ),
+            ),
+          ),
+          SliverFillRemaining(
+            hasScrollBody: false,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Row(
+                spacing: 12,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text("Cancel"),
+                    ),
+                  ),
+                  Expanded(
+                    child: FilledButton(
+                      onPressed: _canSave ? _save : null,
+                      child: const Text("Save"),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

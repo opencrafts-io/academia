@@ -112,10 +112,12 @@ class ShereheRemoteDataSource with DioErrorHandler {
     required String invite,
   }) async {
     try {
-      final response = await dioClient.dio.get("/$servicePrefix/event/$invite");
+      final response = await dioClient.dio.get(
+        "/$servicePrefix/invite/event/$invite",
+      );
 
-      if (response.statusCode == 200) {
-        return right(EventData.fromJson(response.data));
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return right(EventData.fromJson(response.data["Event"]));
       } else {
         return left(
           ServerFailure(
@@ -425,8 +427,63 @@ class ShereheRemoteDataSource with DioErrorHandler {
         "/$servicePrefix/invite/ticket/$invite",
       );
 
-      if (response.statusCode == 200) {
-        return right(TicketData.fromJson(response.data));
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return right(TicketData.fromJson(response.data["Ticket"]));
+      } else {
+        return left(
+          ServerFailure(
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when fetching ticket",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when fetching ticket", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error when fetching ticket", error: e);
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred while fetching the ticket",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, TicketData>> createTicket({
+    required String eventId,
+    required String ticketName,
+    required int ticketPrice,
+    required int ticketFor,
+    required int ticketQuantity,
+    required String scope,
+    required List<int>? institutions,
+    required String startDate,
+    required String endDate,
+  }) async {
+    try {
+      final response = await dioClient.dio.post(
+        "/$servicePrefix/ticket/",
+        data: {
+          'event_id': eventId,
+          'ticket_name': ticketName,
+          'ticket_price': ticketPrice,
+          'ticket_for': ticketFor,
+          'ticket_quantity': ticketQuantity,
+          'scope': scope,
+          if (institutions != null && institutions.isNotEmpty)
+            'institutions': jsonEncode(institutions),
+          'start_date': startDate,
+          'end_date': endDate,
+        },
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return right(TicketData.fromJson(response.data['ticket']));
       } else {
         return left(
           ServerFailure(
@@ -1115,6 +1172,322 @@ class ShereheRemoteDataSource with DioErrorHandler {
       return left(
         ServerFailure(
           message: "An unexpected error occurred when searching users",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, List<InviteData>>> getEventInvites(
+    String eventId,
+  ) async {
+    try {
+      final response = await dioClient.dio.get(
+        "/$servicePrefix/invite/event/all/$eventId",
+      );
+
+      if (response.statusCode == 200) {
+        return right(
+          (response.data as List).map((e) => InviteData.fromJson(e)).toList(),
+        );
+      } else {
+        return left(
+          ServerFailure(
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when fetching invites",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e(
+        "DioException when fetching invites for event $eventId",
+        error: de,
+      );
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e(
+        "Unknown error when fetching invites for event $eventId",
+        error: e,
+      );
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred while fetching invites",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, String>> createEventInvite({
+    required String eventId,
+    required int maxUses,
+    required String expiresAt,
+  }) async {
+    try {
+      final response = await dioClient.dio.post(
+        "/$servicePrefix/invite/event/",
+        data: {
+          'event_id': eventId,
+          'max_uses': maxUses,
+          'expires_at': expiresAt,
+        },
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return right(response.data['message']);
+      } else {
+        return left(
+          ServerFailure(
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when fetching invites",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when creating invites for event", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error when creating invites for event", error: e);
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred while creating invites",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, InviteData>> updateEventInvite({
+    required String inviteId,
+    int? maxUses,
+    String? expiresAt,
+  }) async {
+    try {
+      final response = await dioClient.dio.put(
+        "/$servicePrefix/invite/event/$inviteId",
+        data: {'max_uses': ?maxUses, 'expires_at': ?expiresAt},
+      );
+
+      if (response.statusCode == 200) {
+        return right(InviteData.fromJson(response.data));
+      } else {
+        return left(
+          ServerFailure(
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when updating invite",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when updating invite", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error when updating invite", error: e);
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred while updating invite",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, String>> deleteEventInvite({
+    required String inviteId,
+  }) async {
+    try {
+      final response = await dioClient.dio.delete(
+        "/$servicePrefix/invite/event/$inviteId",
+      );
+
+      if (response.statusCode == 200) {
+        return right(response.data['message']);
+      } else {
+        return left(
+          ServerFailure(
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when deleting invite",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when deleting invite", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error when deleting invite", error: e);
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred while deleting invite",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, List<InviteData>>> getTicketInvites(
+    String ticketId,
+  ) async {
+    try {
+      final response = await dioClient.dio.get(
+        "/$servicePrefix/invite/ticket/all/$ticketId",
+      );
+
+      if (response.statusCode == 200) {
+        return right(
+          (response.data as List).map((e) => InviteData.fromJson(e)).toList(),
+        );
+      } else {
+        return left(
+          ServerFailure(
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when fetching invites",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e(
+        "DioException when fetching invites for ticket $ticketId",
+        error: de,
+      );
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e(
+        "Unknown error when fetching invites for ticket $ticketId",
+        error: e,
+      );
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred while fetching invites",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, String>> createTicketInvite({
+    required String ticketId,
+    required int maxUses,
+    required String expiresAt,
+  }) async {
+    try {
+      final response = await dioClient.dio.post(
+        "/$servicePrefix/invite/ticket/",
+        data: {
+          'ticket_id': ticketId,
+          'max_uses': maxUses,
+          'expires_at': expiresAt,
+        },
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return right(response.data['message']);
+      } else {
+        return left(
+          ServerFailure(
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when fetching invites",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when creating invites for ticket", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error when creating invites for ticket", error: e);
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred while creating invites",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, InviteData>> updateTicketInvite({
+    required String inviteId,
+    int? maxUses,
+    String? expiresAt,
+  }) async {
+    try {
+      final response = await dioClient.dio.put(
+        "/$servicePrefix/invite/ticket/$inviteId",
+        data: {'max_uses': ?maxUses, 'expires_at': ?expiresAt},
+      );
+
+      if (response.statusCode == 200) {
+        return right(InviteData.fromJson(response.data));
+      } else {
+        return left(
+          ServerFailure(
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when updating invite",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when updating invite", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error when updating invite", error: e);
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred while updating invite",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, String>> deleteTicketInvite({
+    required String inviteId,
+  }) async {
+    try {
+      final response = await dioClient.dio.delete(
+        "/$servicePrefix/invite/ticket/$inviteId",
+      );
+
+      if (response.statusCode == 200) {
+        return right(response.data['message']);
+      } else {
+        return left(
+          ServerFailure(
+            message:
+                response.data['message'] ??
+                response.data["error"] ??
+                "Unexpected response when deleting invite",
+            error: response,
+          ),
+        );
+      }
+    } on DioException catch (de) {
+      _logger.e("DioException when deleting invite", error: de);
+      return handleDioError(de);
+    } catch (e) {
+      _logger.e("Unknown error when deleting invite", error: e);
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred while deleting invite",
           error: e,
         ),
       );

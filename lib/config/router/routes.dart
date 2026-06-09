@@ -243,22 +243,6 @@ class CompleteProfileRoute extends GoRouteData with $CompleteProfileRoute {
 @TypedGoRoute<ShereheRoute>(
   path: "/sherehe",
   routes: [
-    TypedGoRoute<ShereheDetailsRoute>(
-      path: "get-event/:eventId",
-      routes: [
-        TypedGoRoute<TicketFlowRoute>(path: "ticket-flow"),
-        TypedGoRoute<QrCodeScannerRoute>(path: "qr-code-scanner"),
-        TypedGoRoute<EventTicketsRoute>(path: "event-tickets"),
-        TypedGoRoute<OrganizerDashboardRoute>(
-          path: "organizer-dashboard",
-          routes: [
-            TypedGoRoute<AllAttendeesRoute>(path: "all-attendees"),
-            TypedGoRoute<AllScannersRoute>(path: "all-scanners"),
-            TypedGoRoute<AddEventScannerRoute>(path: "add-event-scanner"),
-          ],
-        ),
-      ],
-    ),
     TypedGoRoute<CreateEventRoute>(
       path: "create",
       routes: [
@@ -266,6 +250,7 @@ class CompleteProfileRoute extends GoRouteData with $CompleteProfileRoute {
           path: "sherehe-select-institutions",
         ),
         TypedGoRoute<EditAddedTicketRoute>(path: "edit-added-ticket"),
+        TypedGoRoute<AddTicketRoute>(path: "add-ticket"),
       ],
     ),
   ],
@@ -299,10 +284,44 @@ class CreateEventRoute extends GoRouteData with $CreateEventRoute {
 }
 
 class EditAddedTicketRoute extends GoRouteData with $EditAddedTicketRoute {
+  final bool isMultiDayEvent;
+  final DateTime eventStartDateTime;
+  final DateTime eventEndDateTime;
+
+  const EditAddedTicketRoute({
+    this.isMultiDayEvent = false,
+    required this.eventStartDateTime,
+    required this.eventEndDateTime,
+  });
   @override
   Widget build(BuildContext context, GoRouterState state) {
     final addedTicket = state.extra as TicketUI;
-    return EditAddedTicketScreen(addedTicket: addedTicket);
+    return EditAddedTicketScreen(
+      addedTicket: addedTicket,
+      isMultiDayEvent: isMultiDayEvent,
+      eventStartDateTime: eventStartDateTime,
+      eventEndDateTime: eventEndDateTime,
+    );
+  }
+}
+
+class AddTicketRoute extends GoRouteData with $AddTicketRoute {
+  final DateTime eventStartDateTime;
+  final DateTime eventEndDateTime;
+  final bool isMultiDayEvent;
+
+  const AddTicketRoute({
+    this.isMultiDayEvent = false,
+    required this.eventStartDateTime,
+    required this.eventEndDateTime,
+  });
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return AddTicketScreen(
+      isMultiDayEvent: isMultiDayEvent,
+      eventStartDateTime: eventStartDateTime,
+      eventEndDateTime: eventEndDateTime,
+    );
   }
 }
 
@@ -330,6 +349,31 @@ class ShereheSelectInstitutionsRoute extends GoRouteData
   }
 }
 
+@TypedGoRoute<ShereheDetailsRoute>(
+  path: "/sherehe/get-event/:eventId",
+  routes: [
+    TypedGoRoute<TicketFlowRoute>(path: "ticket-flow"),
+    TypedGoRoute<QrCodeScannerRoute>(path: "qr-code-scanner"),
+    TypedGoRoute<EventTicketsRoute>(path: "event-tickets"),
+    TypedGoRoute<OrganizerDashboardRoute>(
+      path: "organizer-dashboard",
+      routes: [
+        TypedGoRoute<AllAttendeesRoute>(path: "all-attendees"),
+        TypedGoRoute<AllScannersRoute>(
+          path: "all-scanners",
+          routes: [
+            TypedGoRoute<AddEventScannerRoute>(path: "add-event-scanner"),
+          ],
+        ),
+        TypedGoRoute<AllEventTicketsRoute>(
+          path: "all-event-tickets",
+          routes: [TypedGoRoute<TicketLinksRoute>(path: "ticket-links")],
+        ),
+        TypedGoRoute<EventLinksRoute>(path: "event-links"),
+      ],
+    ),
+  ],
+)
 class ShereheDetailsRoute extends GoRouteData with $ShereheDetailsRoute {
   final String eventId;
 
@@ -400,48 +444,242 @@ class EventTicketsRoute extends GoRouteData with $EventTicketsRoute {
   Widget build(BuildContext context, GoRouterState state) {
     final event = state.extra as Event;
 
-    return EventTicketsPage(eventId: eventId, event: event);
+    return BlocProvider(
+      create: (context) => sl<UserEventTicketsBloc>(),
+      child: EventTicketsPage(eventId: eventId, event: event),
+    );
   }
 }
 
 class OrganizerDashboardRoute extends GoRouteData
     with $OrganizerDashboardRoute {
   final String eventId;
+  final String eventName;
+  final String eventLocation;
+  final String eventStartDate;
+  final String eventEndDate;
+  final String? eventPosterImage;
 
-  const OrganizerDashboardRoute({required this.eventId});
+  const OrganizerDashboardRoute({
+    required this.eventId,
+    required this.eventName,
+    required this.eventLocation,
+    required this.eventStartDate,
+    required this.eventEndDate,
+    this.eventPosterImage,
+  });
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return OrganizerDashboardPage(eventId: eventId);
+    return OrganizerDashboardPage(
+      eventId: eventId,
+      eventName: eventName,
+      eventLocation: eventLocation,
+      eventStartDate: eventStartDate,
+      eventEndDate: eventEndDate,
+      eventPosterImage: eventPosterImage,
+    );
   }
 }
 
 class AllAttendeesRoute extends GoRouteData with $AllAttendeesRoute {
   final String eventId;
+  final String eventName;
+  final String eventLocation;
+  final String eventStartDate;
+  final String eventEndDate;
+  final String? eventPosterImage;
 
-  const AllAttendeesRoute({required this.eventId});
+  const AllAttendeesRoute({
+    required this.eventId,
+    required this.eventName,
+    required this.eventLocation,
+    required this.eventStartDate,
+    required this.eventEndDate,
+    this.eventPosterImage,
+  });
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return AllAttendeesScreen(eventId: eventId);
+    return BlocProvider(
+      create: (context) => sl<AllAttendeesBloc>(),
+      child: AllAttendeesScreen(eventId: eventId),
+    );
   }
 }
 
 class AllScannersRoute extends GoRouteData with $AllScannersRoute {
   final String eventId;
+  final String eventName;
+  final String eventLocation;
+  final String eventStartDate;
+  final String eventEndDate;
+  final String? eventPosterImage;
 
-  const AllScannersRoute({required this.eventId});
+  const AllScannersRoute({
+    required this.eventId,
+    required this.eventName,
+    required this.eventLocation,
+    required this.eventStartDate,
+    required this.eventEndDate,
+    this.eventPosterImage,
+  });
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return AllScannersScreen(eventId: eventId);
+    return BlocProvider(
+      create: (context) => sl<AllScannersBloc>(),
+      child: AllScannersScreen(
+        eventId: eventId,
+        eventName: eventName,
+        eventLocation: eventLocation,
+        eventStartDate: eventStartDate,
+        eventEndDate: eventEndDate,
+        eventPosterImage: eventPosterImage,
+      ),
+    );
+  }
+}
+
+class AllEventTicketsRoute extends GoRouteData with $AllEventTicketsRoute {
+  final String eventId;
+  final String eventName;
+  final String eventLocation;
+  final String eventStartDate;
+  final String eventEndDate;
+  final String? eventPosterImage;
+
+  const AllEventTicketsRoute({
+    required this.eventId,
+    required this.eventName,
+    required this.eventLocation,
+    required this.eventStartDate,
+    required this.eventEndDate,
+    this.eventPosterImage,
+  });
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return BlocProvider(
+      create: (context) =>
+          sl<TicketStatsBloc>()..add(GetTicketStats(eventId: eventId)),
+      child: AllEventTicketsScreen(
+        eventId: eventId,
+        eventName: eventName,
+        eventLocation: eventLocation,
+        eventStartDate: eventStartDate,
+        eventEndDate: eventEndDate,
+        eventPosterImage: eventPosterImage,
+      ),
+    );
+  }
+}
+
+class TicketLinksRoute extends GoRouteData with $TicketLinksRoute {
+  final String eventId;
+  final String ticketId;
+  final String eventName;
+  final String eventLocation;
+  final String eventStartDate;
+  final String eventEndDate;
+  final String? eventPosterImage;
+
+  const TicketLinksRoute({
+    required this.eventId,
+    required this.ticketId,
+    required this.eventName,
+    required this.eventLocation,
+    required this.eventStartDate,
+    required this.eventEndDate,
+    this.eventPosterImage,
+  });
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return BlocProvider(
+      create: (context) =>
+          sl<TicketLinkBloc>()..add(GetTicketInvites(ticketId: ticketId)),
+      child: TicketLinksScreen(
+        ticketId: ticketId,
+        eventName: eventName,
+        eventLocation: eventLocation,
+        eventStartDate: eventStartDate,
+        eventEndDate: eventEndDate,
+        eventPosterImage: eventPosterImage,
+      ),
+    );
+  }
+}
+
+class EventLinksRoute extends GoRouteData with $EventLinksRoute {
+  final String eventId;
+  final String eventName;
+  final String eventLocation;
+  final String eventStartDate;
+  final String eventEndDate;
+  final String? eventPosterImage;
+
+  const EventLinksRoute({
+    required this.eventId,
+    required this.eventName,
+    required this.eventLocation,
+    required this.eventStartDate,
+    required this.eventEndDate,
+    this.eventPosterImage,
+  });
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return BlocProvider(
+      create: (context) =>
+          sl<EventLinkBloc>()..add(GetEventInvites(eventId: eventId)),
+      child: EventLinksScreen(
+        eventId: eventId,
+        eventName: eventName,
+        eventLocation: eventLocation,
+        eventStartDate: eventStartDate,
+        eventEndDate: eventEndDate,
+        eventPosterImage: eventPosterImage,
+      ),
+    );
   }
 }
 
 class AddEventScannerRoute extends GoRouteData with $AddEventScannerRoute {
   final String eventId;
+  final String eventName;
+  final String eventLocation;
+  final String eventStartDate;
+  final String eventEndDate;
+  final String? eventPosterImage;
 
-  const AddEventScannerRoute({required this.eventId});
+  const AddEventScannerRoute({
+    required this.eventId,
+    required this.eventName,
+    required this.eventLocation,
+    required this.eventStartDate,
+    required this.eventEndDate,
+    this.eventPosterImage,
+  });
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return AddEventScannerScreen(eventId: eventId);
+  }
+}
+
+@TypedGoRoute<CreateTicketRoute>(path: "/organizer-dashboard/create-ticket")
+class CreateTicketRoute extends GoRouteData with $CreateTicketRoute {
+  final String eventId;
+  final DateTime eventStartDateTime;
+  final DateTime eventEndDateTime;
+
+  const CreateTicketRoute({
+    required this.eventId,
+    required this.eventStartDateTime,
+    required this.eventEndDateTime,
+  });
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return CreateTicketScreen(
+      eventId: eventId,
+      eventStartDateTime: eventStartDateTime,
+      eventEndDateTime: eventEndDateTime,
+    );
   }
 }
 
@@ -449,7 +687,10 @@ class AddEventScannerRoute extends GoRouteData with $AddEventScannerRoute {
 class PurchasedTicketsRoute extends GoRouteData with $PurchasedTicketsRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return PurchasedTicketsPage();
+    return BlocProvider(
+      create: (context) => sl<AllUserEventTicketsBloc>(),
+      child: PurchasedTicketsPage(),
+    );
   }
 }
 
@@ -457,7 +698,10 @@ class PurchasedTicketsRoute extends GoRouteData with $PurchasedTicketsRoute {
 class OrganizedEventsRoute extends GoRouteData with $OrganizedEventsRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return OrganizedEventsScreen();
+    return BlocProvider(
+      create: (context) => sl<OrganizedEventsBloc>(),
+      child: OrganizedEventsScreen(),
+    );
   }
 }
 
@@ -480,12 +724,16 @@ class QrCodeRoute extends GoRouteData with $QrCodeRoute {
   final String attendeeId;
   final String ticketName;
   final int quantity;
+  final String? ticketStartDate;
+  final String? ticketEndDate;
 
   const QrCodeRoute({
     required this.eventId,
     required this.attendeeId,
     required this.ticketName,
     required this.quantity,
+    this.ticketStartDate,
+    this.ticketEndDate,
   });
 
   @override
@@ -498,6 +746,8 @@ class QrCodeRoute extends GoRouteData with $QrCodeRoute {
       ticketName: ticketName,
       quantity: quantity,
       event: event,
+      ticketStartDate: ticketStartDate,
+      ticketEndDate: ticketEndDate,
     );
   }
 }
@@ -509,7 +759,10 @@ class QrCodeScannerRoute extends GoRouteData with $QrCodeScannerRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return QrCodeScannerScreen(eventId: eventId);
+    return BlocProvider(
+      create: (context) => sl<ValidateAttendeeBloc>(),
+      child: QrCodeScannerScreen(eventId: eventId),
+    );
   }
 }
 

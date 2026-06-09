@@ -8,13 +8,16 @@ part 'ticket_stats_state.dart';
 class TicketStatsBloc extends Bloc<TicketStatsEvent, TicketStatsState> {
   final GetDashboardTicketStatsUsecase getDashboardTicketStats;
   final UpdateTicketUsecase updateTicket;
+  final CreateTicketUsecase createTicket;
 
   TicketStatsBloc({
     required this.getDashboardTicketStats,
     required this.updateTicket,
+    required this.createTicket,
   }) : super(StatsInitialState()) {
     on<GetTicketStats>(_onGetTicketStats);
     on<UpdateTicketQuantity>(_onUpdateTicket);
+    on<CreateTicket>(_onAddTicket);
   }
 
   Future<void> _onGetTicketStats(
@@ -45,6 +48,30 @@ class TicketStatsBloc extends Bloc<TicketStatsEvent, TicketStatsState> {
     result.fold(
       (failure) => emit(UpdateTicketError(message: failure.message)),
       (ticket) => emit(UpdateTicketSuccess(ticket: ticket)),
+    );
+  }
+
+  Future<void> _onAddTicket(
+    CreateTicket event,
+    Emitter<TicketStatsState> emit,
+  ) async {
+    emit(AddTicketLoading());
+
+    final result = await createTicket(
+      eventId: event.eventId,
+      ticketName: event.ticketName,
+      ticketFor: event.ticketFor,
+      ticketPrice: event.ticketPrice,
+      ticketQuantity: event.ticketQuantity,
+      scope: event.scope,
+      startDate: event.startDate,
+      endDate: event.endDate,
+      institutions: event.institutions,
+    );
+
+    result.fold(
+      (failure) => emit(AddTicketError(message: failure.message)),
+      (ticket) => emit(AddTicketSuccess(ticket: ticket)),
     );
   }
 }

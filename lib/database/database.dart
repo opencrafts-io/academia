@@ -60,6 +60,7 @@ part 'database.g.dart';
     TicketStatsTable,
     ScannerTable,
     GroupTable,
+    InviteTable,
 
     BlockTable,
     ReportTable,

@@ -74,15 +74,8 @@ class _AddEventScannerScreenState extends State<AddEventScannerScreen> {
     return BlocListener<ScannerActionsBloc, ScannerActionsState>(
       listener: (context, state) {
         if (state is AddScannerSuccess) {
-          context.read<AllScannersBloc>().add(
-            FetchAllScanners(eventId: widget.eventId, page: 1, limit: 20),
-          );
-          context.read<AttendeesAndScannerStatsBloc>().add(
-            GetAttendeesAndScanners(eventId: widget.eventId),
-          );
           Navigator.pop(context); // close dialog
           Navigator.pop(context); // close screen
-
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text("Scanner added successfully"),
