@@ -117,6 +117,7 @@ dependencies:
   flutter_animate: ^4.5.2
   font_awesome_flutter: ^11.0.0
   flutter_inappwebview: 6.2.0-beta.3
+  sqlite3_flutter_libs: ^0.6.0+eol
 
 dev_dependencies:
   flutter_test:
