@@ -186,7 +186,11 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
                 }
 
                 if (state is FreeTicketBooked) {
-                  context.pop();
+                  if (context.canPop()) {
+                    context.pop();
+                  } else {
+                    HomeRoute().go(context);
+                  }
 
                   // Delay snackbar so it shows after pop
                   Future.microtask(() {
@@ -208,7 +212,11 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
                 if (state is ConfirmPaymentLoaded) {
                   switch (state.status) {
                     case 'SUCCESS':
-                      context.pop();
+                      if (context.canPop()) {
+                        context.pop();
+                      } else {
+                        HomeRoute().go(context);
+                      }
 
                       // Delay snackbar so it shows after pop
                       Future.microtask(() {
