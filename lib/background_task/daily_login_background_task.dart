@@ -74,7 +74,7 @@ class DailyLoginBackgroundTask extends BackgroundTask {
     AwesomeNotifications().createNotification(
       content: NotificationContent(
         id: 10, // Use a consistent ID for streak reminders
-        channelKey: NotificationChannelConfig.alerts.channelKey,
+        channelKey: 'local_update_channel',
         title: title,
         body: body,
         summary: "Daily Streak Reminder",

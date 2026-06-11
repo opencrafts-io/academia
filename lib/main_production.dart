@@ -47,6 +47,8 @@ void main(List<String> args) async {
         await registerDefaultBackgroundTasks();
       }
 
+      await di.sl.allReady();
+
       runApp(
         PostHogWidget(
           child: DioRequestInspectorMain(
