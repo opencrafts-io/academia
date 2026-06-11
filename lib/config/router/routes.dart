@@ -60,6 +60,15 @@ class HomeRoute extends GoRouteData with $HomeRoute {
   }
 }
 
+@TypedGoRoute<NotificationPermissionRoute>(path: '/notification-allow')
+class NotificationPermissionRoute extends GoRouteData
+    with $NotificationPermissionRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return NotificationPermissionScreen();
+  }
+}
+
 class EssentialsRoute extends GoRouteData with $EssentialsRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
