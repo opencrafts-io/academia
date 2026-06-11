@@ -60,6 +60,7 @@ part 'database.g.dart';
     TicketStatsTable,
     ScannerTable,
     GroupTable,
+    InviteTable,
 
     BlockTable,
     ReportTable,
@@ -128,7 +129,7 @@ class AppDataBase extends _$AppDataBase {
   AppDataBase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 33;
+  int get schemaVersion => 34;
 
   @override
   MigrationStrategy get migration {
@@ -196,6 +197,9 @@ class AppDataBase extends _$AppDataBase {
               break;
             case 32:
               await migrate32To33(m);
+              break;
+            case 33:
+              await migrate33To34(m);
               break;
           }
         }

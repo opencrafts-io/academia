@@ -38,6 +38,10 @@ void main(List<String> args) async {
       if (runWebViewTitleBarWidget(args)) {
         return;
       }
+      if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
+        await Workmanager().initialize(backgroundCallbackDispatcher);
+        await registerDefaultBackgroundTasks();
+      }
 
       runApp(
         DioRequestInspectorMain(
@@ -45,12 +49,6 @@ void main(List<String> args) async {
           child: Academia(),
         ),
       );
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
-          await Workmanager().initialize(backgroundCallbackDispatcher);
-          await registerDefaultBackgroundTasks();
-        }
-      });
     },
     (error, stacktrace) {
       Logger().e(

@@ -53,6 +53,18 @@ abstract class ShereheRepository {
 
   Future<Either<Failure, Ticket>> getTicketByInvite({required String invite});
 
+  Future<Either<Failure, Ticket>> createTicket({
+    required String eventId,
+    required String ticketName,
+    required int ticketPrice,
+    required int ticketFor,
+    required int ticketQuantity,
+    required String scope,
+    required List<int>? institutions,
+    required String startDate,
+    required String endDate,
+  });
+
   Future<Either<Failure, PurchaseTicketResult>> purchaseTicket({
     required String ticketId,
     required int ticketQuantity,
@@ -122,5 +134,45 @@ abstract class ShereheRepository {
 
   Future<Either<Failure, List<ShereheUser>>> searchUsersByUsername({
     required String query,
+  });
+
+  Future<Either<Failure, List<Invite>>> getEventInvites(
+    String eventId,
+  );
+
+  Future<Either<Failure, String>> createEventInvite({
+    required String eventId,
+    required int maxUses,
+    required String expiresAt,
+  });
+
+  Future<Either<Failure, Invite>> updateEventInvite({
+    required String inviteId,
+    int? maxUses,
+    String? expiresAt,
+  });
+
+  Future<Either<Failure, String>> deleteEventInvite({
+    required String inviteId,
+  });
+
+  Future<Either<Failure, List<Invite>>> getTicketInvites(
+    String ticketId,
+  );
+
+  Future<Either<Failure, String>> createTicketInvite({
+    required String ticketId,
+    required int maxUses,
+    required String expiresAt,
+  });
+
+  Future<Either<Failure, Invite>> updateTicketInvite({
+    required String inviteId,
+    int? maxUses,
+    String? expiresAt,
+  });
+
+  Future<Either<Failure, String>> deleteTicketInvite({
+    required String inviteId,
   });
 }

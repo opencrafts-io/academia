@@ -6,7 +6,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class AllAttendeesScreen extends StatefulWidget {
   final String eventId;
 
-  const AllAttendeesScreen({super.key, required this.eventId});
+  const AllAttendeesScreen({
+    super.key,
+    required this.eventId,
+  });
 
   @override
   State<AllAttendeesScreen> createState() => _AllAttendeesScreenState();
@@ -19,9 +22,9 @@ class _AllAttendeesScreenState extends State<AllAttendeesScreen> {
   @override
   void initState() {
     super.initState();
-    // context.read<AllAttendeesBloc>().add(
-    //   FetchAllAttendees(eventId: widget.eventId, page: _currentPage, limit: 20),
-    // );
+    context.read<AllAttendeesBloc>().add(
+      FetchAllAttendees(eventId: widget.eventId, page: _currentPage, limit: 20),
+    );
     _scrollController.addListener(_onScroll);
   }
 
@@ -90,7 +93,7 @@ class _AllAttendeesScreenState extends State<AllAttendeesScreen> {
                             context.read<AllAttendeesBloc>().add(
                               FetchAllAttendees(
                                 eventId: widget.eventId,
-                                page: 1,
+                                page: _currentPage,
                                 limit: 20,
                               ),
                             );

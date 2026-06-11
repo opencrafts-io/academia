@@ -53,7 +53,7 @@ class ImageUploadPage extends StatelessWidget {
           ),
           EventImageHelperTextWidget(
             text:
-                "Used in event listings and when sharing on the event on Chirp. This is the main image people will see first.",
+                "Used in event listings and when sharing an event on Chirp. This is the main image people will see first.",
           ),
           const SizedBox(height: 20),
           EventImagePickerWidget(

@@ -16,7 +16,6 @@ class TicketPaymentBloc extends Bloc<TicketPaymentEvent, TicketPaymentState> {
   }) : super(PurchaseInitial()) {
     on<PurchaseTicket>(_onPurchaseTicket);
     on<ConfirmPayment>(_onConfirmPayment);
-    on<ResetTicketPaymentState>(_onReset);
   }
 
   Future<void> _onPurchaseTicket(
@@ -67,12 +66,5 @@ class TicketPaymentBloc extends Bloc<TicketPaymentEvent, TicketPaymentState> {
         emit(ConfirmPaymentLoaded(transId: event.transId, status: status));
       },
     );
-  }
-
-  void _onReset(
-    ResetTicketPaymentState event,
-    Emitter<TicketPaymentState> emit,
-  ) {
-    emit(const PurchaseInitial());
   }
 }

@@ -1,14 +1,16 @@
 import 'package:academia/config/config.dart';
-import 'package:academia/features/institution/domain/domain.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class TicketSelectionPage extends StatefulWidget {
+  final DateTime eventStartDateTime;
+  final DateTime eventEndDateTime;
   final List<TicketUI> tickets;
   final Function(TicketUI ticket) onAddTicket;
   final Function(TicketUI ticket) onRemoveTicket;
+  final Function(TicketUI oldTicket, TicketUI updatedTicket) onUpdateTicket;
   final Function(List<TicketUI> tickets) onContinue;
   final Function() onSkip;
   final VoidCallback onPrevious;
@@ -16,8 +18,11 @@ class TicketSelectionPage extends StatefulWidget {
   const TicketSelectionPage({
     super.key,
     required this.tickets,
+    required this.eventStartDateTime,
+    required this.eventEndDateTime,
     required this.onAddTicket,
     required this.onRemoveTicket,
+    required this.onUpdateTicket,
     required this.onContinue,
     required this.onSkip,
     required this.onPrevious,
@@ -28,72 +33,28 @@ class TicketSelectionPage extends StatefulWidget {
 }
 
 class _TicketSelectionPageState extends State<TicketSelectionPage> {
-  final _formKey = GlobalKey<FormState>();
+  bool get isMultiDayEvent =>
+      widget.eventEndDateTime.difference(widget.eventStartDateTime) >
+      const Duration(hours: 24);
+  bool get isFreeEvent => widget.tickets.any((t) => t.ticket.ticketPrice == 0);
 
-  final _ticketNameController = TextEditingController();
-  final _ticketPriceController = TextEditingController();
-  final _ticketQtyController = TextEditingController();
-  TicketGroupTypes? _selectedTicketGroupType;
-  ScopeTypes? _selectedScopeType;
+  void _addTicket(BuildContext context) async {
+    final addedTicket = await context.push(
+      AddTicketRoute(
+        isMultiDayEvent: isMultiDayEvent,
+        eventStartDateTime: widget.eventStartDateTime,
+        eventEndDateTime: widget.eventEndDateTime,
+      ).location,
+    );
 
-  Set<Institution> _selectedInstitutions = {};
-  bool _showTickets = false;
+    if (!context.mounted) return;
 
-  @override
-  void dispose() {
-    _ticketNameController.dispose();
-    _ticketPriceController.dispose();
-    _ticketQtyController.dispose();
-    super.dispose();
-  }
-
-  void _addTicket() {
-    if (_selectedScopeType == ScopeTypes.institution &&
-        _selectedInstitutions.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            "Select at least one institution for restricted tickets",
-          ),
-        ),
-      );
-      return;
-    }
-
-    if (_formKey.currentState!.validate()) {
-      final ticket = Ticket(
-        ticketName: _ticketNameController.text.trim(),
-        ticketPrice: int.tryParse(_ticketPriceController.text.trim()) ?? 0,
-        ticketQuantity: int.tryParse(_ticketQtyController.text.trim()) ?? 0,
-        ticketFor: _selectedTicketGroupType?.toBackend ?? 0,
-        institutionIds: _selectedScopeType != ScopeTypes.institution
-            ? null
-            : _selectedInstitutions.map((e) => e.institutionId).toList(),
-        scope: _selectedScopeType?.toBackend,
-      );
-
-      widget.onAddTicket(
-        TicketUI(
-          ticket: ticket,
-          institutions: List.from(_selectedInstitutions),
-          selectedTicketGroupType: _selectedTicketGroupType,
-          selectedScopeType: _selectedScopeType,
-        ),
-      );
-
-      setState(() {
-        _showTickets = true;
-      });
-      _ticketNameController.clear();
-      _ticketPriceController.clear();
-      _ticketQtyController.clear();
-      _selectedTicketGroupType = null;
-      _selectedInstitutions.clear();
-      _selectedScopeType = null;
+    if (addedTicket != null && addedTicket is TicketUI) {
+      widget.onAddTicket(addedTicket);
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Ticket added"),
+          content: Text("Ticket added Successfully"),
           behavior: SnackBarBehavior.floating,
           backgroundColor: Theme.of(context).colorScheme.primary,
         ),
@@ -153,258 +114,159 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
         ticketFor: 1,
         institutionIds: [],
         scope: ScopeTypes.public.toBackend,
+        startDate: widget.eventStartDateTime.toUtc().toIso8601String(),
+        endDate: widget.eventEndDateTime.toUtc().toIso8601String(),
       );
 
       widget.onContinue([
         TicketUI(
           ticket: freeTicket,
           institutions: [],
-          selectedTicketGroupType: null,
-          selectedScopeType: null,
+          selectedTicketGroupType: TicketGroupTypes.individual,
+          selectedScopeType: ScopeTypes.public,
+          selectedTicketDateRange: null,
         ),
       ]);
     }
   }
 
-  void _submit() {
-    if (widget.tickets.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please add at least one ticket")),
-      );
-      return;
-    }
-    widget.onContinue(widget.tickets);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (widget.tickets.any((t) => t.ticket.ticketPrice == 0)) ...[
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 12.0),
-                  child: Text(
-                    "This is a FREE event.\nDelete the free ticket to add more tickets(if you wish to change it to a Paid event).",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary,
-                      fontWeight: FontWeight.bold,
-                    ),
+      body: CustomScrollView(
+        slivers: [
+          if (isFreeEvent) ...[
+            SliverPadding(
+              padding: const EdgeInsets.only(bottom: 12.0),
+              sliver: SliverToBoxAdapter(
+                child: Text(
+                  "This is a FREE event.\nDelete the free ticket to add more tickets(if you wish to change it to a Paid event).",
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.bold,
                   ),
-                ),
-              ] else ...[
-                Text(
-                  "Create Ticket Types",
-                  style: Theme.of(context).textTheme.headlineSmall,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  "Add different ticket categories such as VIP, Regular, Early Bird, etc.",
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-                ),
-                const SizedBox(height: 16),
-
-                TextFormField(
-                  controller: _ticketNameController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    isDense: true,
-                    labelText: 'Ticket Name',
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                    hintText: 'Enter ticket name',
-                  ),
-
-                  validator: (v) => v == null || v.isEmpty
-                      ? "Please enter ticket name"
-                      : null,
-                ),
-
-                const SizedBox(height: 12),
-
-                TextFormField(
-                  controller: _ticketPriceController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    isDense: true,
-                    labelText: 'Ticket Price',
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                    hintText: 'Enter ticket price',
-                  ),
-                  keyboardType: TextInputType.number,
-                  validator: (value) {
-                    final num? parsed = num.tryParse(value ?? "");
-                    if (parsed == null) return "Please enter Ticket Price";
-                    if (parsed <= 0) return "Please enter a valid Ticket Price";
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: _ticketQtyController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    isDense: true,
-                    labelText: 'Ticket Quantity',
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                    hintText: 'Enter ticket quantity',
-                  ),
-                  keyboardType: TextInputType.number,
-                  validator: (value) {
-                    final int? parsed = int.tryParse(value ?? "");
-                    if (parsed == null) return "Please enter Ticket Quantity";
-                    if (parsed <= 0) {
-                      return "Ticket Quantity must be at least 1";
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 12),
-                DropdownButtonFormField(
-                  initialValue: _selectedTicketGroupType,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    isDense: true,
-                    labelText: "Ticket Type",
-                    hintText: "Select Ticket type",
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                  ),
-                  items: TicketGroupTypes.values.map((type) {
-                    return DropdownMenuItem<TicketGroupTypes>(
-                      value: type,
-                      child: Text(type.label),
-                    );
-                  }).toList(),
-                  onChanged: (val) {
-                    setState(() {
-                      _selectedTicketGroupType = val;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null) return "Please Select ticket type";
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 12),
-                TicketVisibilitySelector(
-                  selectedScopeType: _selectedScopeType,
-                  selectedInstitutions: _selectedInstitutions.toList(),
-                  onScopeChanged: (scope) {
-                    setState(() {
-                      _selectedScopeType = scope;
-                      if (_selectedScopeType != ScopeTypes.institution) {
-                        _selectedInstitutions.clear();
-                      }
-                    });
-                  },
-                  onInstitutionsChanged: (institutions) {
-                    setState(() {
-                      if (institutions != null) {
-                        _selectedInstitutions = institutions.toSet();
-                      }
-                    });
-                  },
-                ),
-                const SizedBox(height: 12),
-                SizedBox(
-                  width: double.infinity,
-                  child: FilledButton.icon(
-                    icon: const Icon(Icons.add),
-                    onPressed: _addTicket,
-                    label: const Text("Add Ticket"),
-                  ),
-                ),
-              ],
-
-              const SizedBox(height: 24),
-
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _showTickets = !_showTickets;
-                  });
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          "Added Tickets",
-                          style: Theme.of(context).textTheme.titleMedium
-                              ?.copyWith(fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(width: 8),
-                        CircleAvatar(
-                          radius: 12,
-                          child: Text(
-                            widget.tickets.length.toString(),
-                            style: const TextStyle(fontSize: 12),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Icon(
-                      _showTickets
-                          ? Icons.keyboard_arrow_up
-                          : Icons.keyboard_arrow_down,
-                    ),
-                  ],
                 ),
               ),
-              const SizedBox(height: 8),
+            ),
+          ] else ...[
+            SliverToBoxAdapter(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Create Ticket Types",
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    "Add different ticket categories such as VIP, Regular, Early Bird, etc.",
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
 
-              if (_showTickets) ...[
-                if (widget.tickets.isEmpty) ...[
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: const Center(
+          if (widget.tickets.isEmpty) ...[
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Center(
                       child: Column(
+                        spacing: 12,
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(Icons.confirmation_number_outlined, size: 64),
-                          SizedBox(height: 12),
                           Text("No tickets added yet"),
+                          FilledButton.icon(
+                            onPressed: () => _addTicket(context),
+                            icon: Icon(Icons.add),
+                            label: Text("Add your first ticket"),
+                          ),
                         ],
                       ),
                     ),
                   ),
-                ] else
-                  Column(
-                    children: widget.tickets.map((ticket) {
-                      return AddedTicketsCard(
-                        addedTicket: ticket,
-                        // onEditTicket: () =>
-                        //     _editTicketDialog(widget.tickets.indexOf(ticket)),
-                        onEditTicket: () async {
-                          final updatedTicket = await context.push(
-                            EditAddedTicketRoute().location,
-                            extra: ticket,
-                          );
-
-                          if (updatedTicket != null &&
-                              updatedTicket is TicketUI) {
-                            setState(() {
-                              widget.tickets[widget.tickets.indexOf(ticket)] =
-                                  updatedTicket;
-                            });
-                          }
-                        },
-                        onRemoveTicket: () => widget.onRemoveTicket(ticket),
-                      );
-                    }).toList(),
+                  Row(
+                    spacing: 12.0,
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: widget.onPrevious,
+                          child: const Text("Back"),
+                        ),
+                      ),
+                      Expanded(
+                        child: FilledButton(
+                          onPressed: _showFreeTicketQuantityDialog,
+                          child: const Text("Skip (Free Event)"),
+                        ),
+                      ),
+                    ],
                   ),
-              ],
+                ],
+              ),
+            ),
+          ] else ...[
+            SliverList.builder(
+              itemCount: widget.tickets.length,
+              itemBuilder: (context, index) {
+                final ticket = widget.tickets[index];
+                return AddedTicketsCard(
+                  addedTicket: ticket,
+                  isMultiDayEvent: isMultiDayEvent,
+                  isFreeEvent: isFreeEvent,
+                  onEditTicket: () async {
+                    final updatedTicket = await context.push(
+                      EditAddedTicketRoute(
+                        isMultiDayEvent: isMultiDayEvent,
+                        eventStartDateTime: widget.eventStartDateTime,
+                        eventEndDateTime: widget.eventEndDateTime,
+                      ).location,
+                      extra: ticket,
+                    );
 
-              const SizedBox(height: 24),
+                    if (!context.mounted) return;
 
-              Row(
+                    if (updatedTicket != null && updatedTicket is TicketUI) {
+                      widget.onUpdateTicket(ticket, updatedTicket);
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Ticket Edited Successfully"),
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.primary,
+                        ),
+                      );
+                    }
+                  },
+                  onRemoveTicket: () => widget.onRemoveTicket(ticket),
+                );
+              },
+            ),
+            if (!isFreeEvent)
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: OutlinedButton.icon(
+                    onPressed: () => _addTicket(context),
+                    icon: const Icon(Icons.add),
+                    label: const Text("Add Another Ticket"),
+                  ),
+                ),
+              ),
+
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 spacing: 12.0,
                 children: [
                   Expanded(
@@ -413,27 +275,17 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                       child: const Text("Back"),
                     ),
                   ),
-
-                  if (widget.tickets.isEmpty)
-                    Expanded(
-                      child: FilledButton(
-                        onPressed: _showFreeTicketQuantityDialog,
-                        child: const Text("Skip (Free Event)"),
-                      ),
+                  Expanded(
+                    child: FilledButton(
+                      onPressed: () => widget.onContinue(widget.tickets),
+                      child: const Text("Continue"),
                     ),
-
-                  if (widget.tickets.isNotEmpty)
-                    Expanded(
-                      child: FilledButton(
-                        onPressed: _submit,
-                        child: const Text("Continue"),
-                      ),
-                    ),
+                  ),
                 ],
               ),
-            ],
-          ),
-        ),
+            ),
+          ],
+        ],
       ),
     );
   }

@@ -18,7 +18,9 @@ List<RouteBase> get $appRoutes => [
   $completeProfileRoute,
   $shereheRoute,
   $shereheDetailsWithTokenRoute,
+  $shereheDetailsRoute,
   $ticketFlowWithInviteRoute,
+  $createTicketRoute,
   $purchasedTicketsRoute,
   $organizedEventsRoute,
   $ticketReceiptRoute,
@@ -415,42 +417,6 @@ RouteBase get $shereheRoute => GoRouteData.$route(
   factory: $ShereheRoute._fromState,
   routes: [
     GoRouteData.$route(
-      path: 'get-event/:eventId',
-      factory: $ShereheDetailsRoute._fromState,
-      routes: [
-        GoRouteData.$route(
-          path: 'ticket-flow',
-          factory: $TicketFlowRoute._fromState,
-        ),
-        GoRouteData.$route(
-          path: 'qr-code-scanner',
-          factory: $QrCodeScannerRoute._fromState,
-        ),
-        GoRouteData.$route(
-          path: 'event-tickets',
-          factory: $EventTicketsRoute._fromState,
-        ),
-        GoRouteData.$route(
-          path: 'organizer-dashboard',
-          factory: $OrganizerDashboardRoute._fromState,
-          routes: [
-            GoRouteData.$route(
-              path: 'all-attendees',
-              factory: $AllAttendeesRoute._fromState,
-            ),
-            GoRouteData.$route(
-              path: 'all-scanners',
-              factory: $AllScannersRoute._fromState,
-            ),
-            GoRouteData.$route(
-              path: 'add-event-scanner',
-              factory: $AddEventScannerRoute._fromState,
-            ),
-          ],
-        ),
-      ],
-    ),
-    GoRouteData.$route(
       path: 'create',
       factory: $CreateEventRoute._fromState,
       routes: [
@@ -461,6 +427,10 @@ RouteBase get $shereheRoute => GoRouteData.$route(
         GoRouteData.$route(
           path: 'edit-added-ticket',
           factory: $EditAddedTicketRoute._fromState,
+        ),
+        GoRouteData.$route(
+          path: 'add-ticket',
+          factory: $AddTicketRoute._fromState,
         ),
       ],
     ),
@@ -486,6 +456,249 @@ mixin $ShereheRoute on GoRouteData {
   @override
   void replace(BuildContext context) => context.replace(location);
 }
+
+mixin $CreateEventRoute on GoRouteData {
+  static CreateEventRoute _fromState(GoRouterState state) => CreateEventRoute();
+
+  @override
+  String get location => GoRouteData.$location('/sherehe/create');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $ShereheSelectInstitutionsRoute on GoRouteData {
+  static ShereheSelectInstitutionsRoute _fromState(GoRouterState state) =>
+      ShereheSelectInstitutionsRoute(
+        title: state.uri.queryParameters['title']!,
+        subtitle: state.uri.queryParameters['subtitle']!,
+      );
+
+  ShereheSelectInstitutionsRoute get _self =>
+      this as ShereheSelectInstitutionsRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/sherehe/create/sherehe-select-institutions',
+    queryParams: {'title': _self.title, 'subtitle': _self.subtitle},
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $EditAddedTicketRoute on GoRouteData {
+  static EditAddedTicketRoute _fromState(GoRouterState state) =>
+      EditAddedTicketRoute(
+        isMultiDayEvent:
+            _$convertMapValue(
+              'is-multi-day-event',
+              state.uri.queryParameters,
+              _$boolConverter,
+            ) ??
+            false,
+        eventStartDateTime: DateTime.parse(
+          state.uri.queryParameters['event-start-date-time']!,
+        ),
+        eventEndDateTime: DateTime.parse(
+          state.uri.queryParameters['event-end-date-time']!,
+        ),
+      );
+
+  EditAddedTicketRoute get _self => this as EditAddedTicketRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/sherehe/create/edit-added-ticket',
+    queryParams: {
+      if (_self.isMultiDayEvent != false)
+        'is-multi-day-event': _self.isMultiDayEvent.toString(),
+      'event-start-date-time': _self.eventStartDateTime.toString(),
+      'event-end-date-time': _self.eventEndDateTime.toString(),
+    },
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $AddTicketRoute on GoRouteData {
+  static AddTicketRoute _fromState(GoRouterState state) => AddTicketRoute(
+    isMultiDayEvent:
+        _$convertMapValue(
+          'is-multi-day-event',
+          state.uri.queryParameters,
+          _$boolConverter,
+        ) ??
+        false,
+    eventStartDateTime: DateTime.parse(
+      state.uri.queryParameters['event-start-date-time']!,
+    ),
+    eventEndDateTime: DateTime.parse(
+      state.uri.queryParameters['event-end-date-time']!,
+    ),
+  );
+
+  AddTicketRoute get _self => this as AddTicketRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/sherehe/create/add-ticket',
+    queryParams: {
+      if (_self.isMultiDayEvent != false)
+        'is-multi-day-event': _self.isMultiDayEvent.toString(),
+      'event-start-date-time': _self.eventStartDateTime.toString(),
+      'event-end-date-time': _self.eventEndDateTime.toString(),
+    },
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+T? _$convertMapValue<T>(
+  String key,
+  Map<String, String> map,
+  T? Function(String) converter,
+) {
+  final value = map[key];
+  return value == null ? null : converter(value);
+}
+
+bool _$boolConverter(String value) {
+  switch (value) {
+    case 'true':
+      return true;
+    case 'false':
+      return false;
+    default:
+      throw UnsupportedError('Cannot convert "$value" into a bool.');
+  }
+}
+
+RouteBase get $shereheDetailsWithTokenRoute => GoRouteData.$route(
+  path: '/sherehe/get-event-with-invite/:invite',
+  factory: $ShereheDetailsWithTokenRoute._fromState,
+);
+
+mixin $ShereheDetailsWithTokenRoute on GoRouteData {
+  static ShereheDetailsWithTokenRoute _fromState(GoRouterState state) =>
+      ShereheDetailsWithTokenRoute(invite: state.pathParameters['invite']!);
+
+  ShereheDetailsWithTokenRoute get _self =>
+      this as ShereheDetailsWithTokenRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/sherehe/get-event-with-invite/${Uri.encodeComponent(_self.invite)}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $shereheDetailsRoute => GoRouteData.$route(
+  path: '/sherehe/get-event/:eventId',
+  factory: $ShereheDetailsRoute._fromState,
+  routes: [
+    GoRouteData.$route(
+      path: 'ticket-flow',
+      factory: $TicketFlowRoute._fromState,
+    ),
+    GoRouteData.$route(
+      path: 'qr-code-scanner',
+      factory: $QrCodeScannerRoute._fromState,
+    ),
+    GoRouteData.$route(
+      path: 'event-tickets',
+      factory: $EventTicketsRoute._fromState,
+    ),
+    GoRouteData.$route(
+      path: 'organizer-dashboard',
+      factory: $OrganizerDashboardRoute._fromState,
+      routes: [
+        GoRouteData.$route(
+          path: 'all-attendees',
+          factory: $AllAttendeesRoute._fromState,
+        ),
+        GoRouteData.$route(
+          path: 'all-scanners',
+          factory: $AllScannersRoute._fromState,
+          routes: [
+            GoRouteData.$route(
+              path: 'add-event-scanner',
+              factory: $AddEventScannerRoute._fromState,
+            ),
+          ],
+        ),
+        GoRouteData.$route(
+          path: 'all-event-tickets',
+          factory: $AllEventTicketsRoute._fromState,
+          routes: [
+            GoRouteData.$route(
+              path: 'ticket-links',
+              factory: $TicketLinksRoute._fromState,
+            ),
+          ],
+        ),
+        GoRouteData.$route(
+          path: 'event-links',
+          factory: $EventLinksRoute._fromState,
+        ),
+      ],
+    ),
+  ],
+);
 
 mixin $ShereheDetailsRoute on GoRouteData {
   static ShereheDetailsRoute _fromState(GoRouterState state) =>
@@ -589,13 +802,28 @@ mixin $EventTicketsRoute on GoRouteData {
 
 mixin $OrganizerDashboardRoute on GoRouteData {
   static OrganizerDashboardRoute _fromState(GoRouterState state) =>
-      OrganizerDashboardRoute(eventId: state.pathParameters['eventId']!);
+      OrganizerDashboardRoute(
+        eventId: state.pathParameters['eventId']!,
+        eventName: state.uri.queryParameters['event-name']!,
+        eventLocation: state.uri.queryParameters['event-location']!,
+        eventStartDate: state.uri.queryParameters['event-start-date']!,
+        eventEndDate: state.uri.queryParameters['event-end-date']!,
+        eventPosterImage: state.uri.queryParameters['event-poster-image'],
+      );
 
   OrganizerDashboardRoute get _self => this as OrganizerDashboardRoute;
 
   @override
   String get location => GoRouteData.$location(
     '/sherehe/get-event/${Uri.encodeComponent(_self.eventId)}/organizer-dashboard',
+    queryParams: {
+      'event-name': _self.eventName,
+      'event-location': _self.eventLocation,
+      'event-start-date': _self.eventStartDate,
+      'event-end-date': _self.eventEndDate,
+      if (_self.eventPosterImage != null)
+        'event-poster-image': _self.eventPosterImage,
+    },
   );
 
   @override
@@ -613,14 +841,28 @@ mixin $OrganizerDashboardRoute on GoRouteData {
 }
 
 mixin $AllAttendeesRoute on GoRouteData {
-  static AllAttendeesRoute _fromState(GoRouterState state) =>
-      AllAttendeesRoute(eventId: state.pathParameters['eventId']!);
+  static AllAttendeesRoute _fromState(GoRouterState state) => AllAttendeesRoute(
+    eventId: state.pathParameters['eventId']!,
+    eventName: state.uri.queryParameters['event-name']!,
+    eventLocation: state.uri.queryParameters['event-location']!,
+    eventStartDate: state.uri.queryParameters['event-start-date']!,
+    eventEndDate: state.uri.queryParameters['event-end-date']!,
+    eventPosterImage: state.uri.queryParameters['event-poster-image'],
+  );
 
   AllAttendeesRoute get _self => this as AllAttendeesRoute;
 
   @override
   String get location => GoRouteData.$location(
     '/sherehe/get-event/${Uri.encodeComponent(_self.eventId)}/organizer-dashboard/all-attendees',
+    queryParams: {
+      'event-name': _self.eventName,
+      'event-location': _self.eventLocation,
+      'event-start-date': _self.eventStartDate,
+      'event-end-date': _self.eventEndDate,
+      if (_self.eventPosterImage != null)
+        'event-poster-image': _self.eventPosterImage,
+    },
   );
 
   @override
@@ -638,14 +880,28 @@ mixin $AllAttendeesRoute on GoRouteData {
 }
 
 mixin $AllScannersRoute on GoRouteData {
-  static AllScannersRoute _fromState(GoRouterState state) =>
-      AllScannersRoute(eventId: state.pathParameters['eventId']!);
+  static AllScannersRoute _fromState(GoRouterState state) => AllScannersRoute(
+    eventId: state.pathParameters['eventId']!,
+    eventName: state.uri.queryParameters['event-name']!,
+    eventLocation: state.uri.queryParameters['event-location']!,
+    eventStartDate: state.uri.queryParameters['event-start-date']!,
+    eventEndDate: state.uri.queryParameters['event-end-date']!,
+    eventPosterImage: state.uri.queryParameters['event-poster-image'],
+  );
 
   AllScannersRoute get _self => this as AllScannersRoute;
 
   @override
   String get location => GoRouteData.$location(
     '/sherehe/get-event/${Uri.encodeComponent(_self.eventId)}/organizer-dashboard/all-scanners',
+    queryParams: {
+      'event-name': _self.eventName,
+      'event-location': _self.eventLocation,
+      'event-start-date': _self.eventStartDate,
+      'event-end-date': _self.eventEndDate,
+      if (_self.eventPosterImage != null)
+        'event-poster-image': _self.eventPosterImage,
+    },
   );
 
   @override
@@ -664,13 +920,28 @@ mixin $AllScannersRoute on GoRouteData {
 
 mixin $AddEventScannerRoute on GoRouteData {
   static AddEventScannerRoute _fromState(GoRouterState state) =>
-      AddEventScannerRoute(eventId: state.pathParameters['eventId']!);
+      AddEventScannerRoute(
+        eventId: state.pathParameters['eventId']!,
+        eventName: state.uri.queryParameters['event-name']!,
+        eventLocation: state.uri.queryParameters['event-location']!,
+        eventStartDate: state.uri.queryParameters['event-start-date']!,
+        eventEndDate: state.uri.queryParameters['event-end-date']!,
+        eventPosterImage: state.uri.queryParameters['event-poster-image'],
+      );
 
   AddEventScannerRoute get _self => this as AddEventScannerRoute;
 
   @override
   String get location => GoRouteData.$location(
-    '/sherehe/get-event/${Uri.encodeComponent(_self.eventId)}/organizer-dashboard/add-event-scanner',
+    '/sherehe/get-event/${Uri.encodeComponent(_self.eventId)}/organizer-dashboard/all-scanners/add-event-scanner',
+    queryParams: {
+      'event-name': _self.eventName,
+      'event-location': _self.eventLocation,
+      'event-start-date': _self.eventStartDate,
+      'event-end-date': _self.eventEndDate,
+      if (_self.eventPosterImage != null)
+        'event-poster-image': _self.eventPosterImage,
+    },
   );
 
   @override
@@ -687,40 +958,30 @@ mixin $AddEventScannerRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin $CreateEventRoute on GoRouteData {
-  static CreateEventRoute _fromState(GoRouterState state) => CreateEventRoute();
-
-  @override
-  String get location => GoRouteData.$location('/sherehe/create');
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-mixin $ShereheSelectInstitutionsRoute on GoRouteData {
-  static ShereheSelectInstitutionsRoute _fromState(GoRouterState state) =>
-      ShereheSelectInstitutionsRoute(
-        title: state.uri.queryParameters['title']!,
-        subtitle: state.uri.queryParameters['subtitle']!,
+mixin $AllEventTicketsRoute on GoRouteData {
+  static AllEventTicketsRoute _fromState(GoRouterState state) =>
+      AllEventTicketsRoute(
+        eventId: state.pathParameters['eventId']!,
+        eventName: state.uri.queryParameters['event-name']!,
+        eventLocation: state.uri.queryParameters['event-location']!,
+        eventStartDate: state.uri.queryParameters['event-start-date']!,
+        eventEndDate: state.uri.queryParameters['event-end-date']!,
+        eventPosterImage: state.uri.queryParameters['event-poster-image'],
       );
 
-  ShereheSelectInstitutionsRoute get _self =>
-      this as ShereheSelectInstitutionsRoute;
+  AllEventTicketsRoute get _self => this as AllEventTicketsRoute;
 
   @override
   String get location => GoRouteData.$location(
-    '/sherehe/create/sherehe-select-institutions',
-    queryParams: {'title': _self.title, 'subtitle': _self.subtitle},
+    '/sherehe/get-event/${Uri.encodeComponent(_self.eventId)}/organizer-dashboard/all-event-tickets',
+    queryParams: {
+      'event-name': _self.eventName,
+      'event-location': _self.eventLocation,
+      'event-start-date': _self.eventStartDate,
+      'event-end-date': _self.eventEndDate,
+      if (_self.eventPosterImage != null)
+        'event-poster-image': _self.eventPosterImage,
+    },
   );
 
   @override
@@ -737,13 +998,32 @@ mixin $ShereheSelectInstitutionsRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin $EditAddedTicketRoute on GoRouteData {
-  static EditAddedTicketRoute _fromState(GoRouterState state) =>
-      EditAddedTicketRoute();
+mixin $TicketLinksRoute on GoRouteData {
+  static TicketLinksRoute _fromState(GoRouterState state) => TicketLinksRoute(
+    eventId: state.pathParameters['eventId']!,
+    ticketId: state.uri.queryParameters['ticket-id']!,
+    eventName: state.uri.queryParameters['event-name']!,
+    eventLocation: state.uri.queryParameters['event-location']!,
+    eventStartDate: state.uri.queryParameters['event-start-date']!,
+    eventEndDate: state.uri.queryParameters['event-end-date']!,
+    eventPosterImage: state.uri.queryParameters['event-poster-image'],
+  );
+
+  TicketLinksRoute get _self => this as TicketLinksRoute;
 
   @override
-  String get location =>
-      GoRouteData.$location('/sherehe/create/edit-added-ticket');
+  String get location => GoRouteData.$location(
+    '/sherehe/get-event/${Uri.encodeComponent(_self.eventId)}/organizer-dashboard/all-event-tickets/ticket-links',
+    queryParams: {
+      'ticket-id': _self.ticketId,
+      'event-name': _self.eventName,
+      'event-location': _self.eventLocation,
+      'event-start-date': _self.eventStartDate,
+      'event-end-date': _self.eventEndDate,
+      if (_self.eventPosterImage != null)
+        'event-poster-image': _self.eventPosterImage,
+    },
+  );
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -759,21 +1039,29 @@ mixin $EditAddedTicketRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-RouteBase get $shereheDetailsWithTokenRoute => GoRouteData.$route(
-  path: '/sherehe/get-event-with-invite/:invite',
-  factory: $ShereheDetailsWithTokenRoute._fromState,
-);
+mixin $EventLinksRoute on GoRouteData {
+  static EventLinksRoute _fromState(GoRouterState state) => EventLinksRoute(
+    eventId: state.pathParameters['eventId']!,
+    eventName: state.uri.queryParameters['event-name']!,
+    eventLocation: state.uri.queryParameters['event-location']!,
+    eventStartDate: state.uri.queryParameters['event-start-date']!,
+    eventEndDate: state.uri.queryParameters['event-end-date']!,
+    eventPosterImage: state.uri.queryParameters['event-poster-image'],
+  );
 
-mixin $ShereheDetailsWithTokenRoute on GoRouteData {
-  static ShereheDetailsWithTokenRoute _fromState(GoRouterState state) =>
-      ShereheDetailsWithTokenRoute(invite: state.pathParameters['invite']!);
-
-  ShereheDetailsWithTokenRoute get _self =>
-      this as ShereheDetailsWithTokenRoute;
+  EventLinksRoute get _self => this as EventLinksRoute;
 
   @override
   String get location => GoRouteData.$location(
-    '/sherehe/get-event-with-invite/${Uri.encodeComponent(_self.invite)}',
+    '/sherehe/get-event/${Uri.encodeComponent(_self.eventId)}/organizer-dashboard/event-links',
+    queryParams: {
+      'event-name': _self.eventName,
+      'event-location': _self.eventLocation,
+      'event-start-date': _self.eventStartDate,
+      'event-end-date': _self.eventEndDate,
+      if (_self.eventPosterImage != null)
+        'event-poster-image': _self.eventPosterImage,
+    },
   );
 
   @override
@@ -804,6 +1092,48 @@ mixin $TicketFlowWithInviteRoute on GoRouteData {
   @override
   String get location => GoRouteData.$location(
     '/sherehe/ticket-flow-with-invite/${Uri.encodeComponent(_self.invite)}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $createTicketRoute => GoRouteData.$route(
+  path: '/organizer-dashboard/create-ticket',
+  factory: $CreateTicketRoute._fromState,
+);
+
+mixin $CreateTicketRoute on GoRouteData {
+  static CreateTicketRoute _fromState(GoRouterState state) => CreateTicketRoute(
+    eventId: state.uri.queryParameters['event-id']!,
+    eventStartDateTime: DateTime.parse(
+      state.uri.queryParameters['event-start-date-time']!,
+    ),
+    eventEndDateTime: DateTime.parse(
+      state.uri.queryParameters['event-end-date-time']!,
+    ),
+  );
+
+  CreateTicketRoute get _self => this as CreateTicketRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/organizer-dashboard/create-ticket',
+    queryParams: {
+      'event-id': _self.eventId,
+      'event-start-date-time': _self.eventStartDateTime.toString(),
+      'event-end-date-time': _self.eventEndDateTime.toString(),
+    },
   );
 
   @override
@@ -920,6 +1250,8 @@ mixin $QrCodeRoute on GoRouteData {
     attendeeId: state.pathParameters['attendeeId']!,
     ticketName: state.uri.queryParameters['ticket-name']!,
     quantity: int.parse(state.uri.queryParameters['quantity']!),
+    ticketStartDate: state.uri.queryParameters['ticket-start-date'],
+    ticketEndDate: state.uri.queryParameters['ticket-end-date'],
   );
 
   QrCodeRoute get _self => this as QrCodeRoute;
@@ -930,6 +1262,9 @@ mixin $QrCodeRoute on GoRouteData {
     queryParams: {
       'ticket-name': _self.ticketName,
       'quantity': _self.quantity.toString(),
+      if (_self.ticketStartDate != null)
+        'ticket-start-date': _self.ticketStartDate,
+      if (_self.ticketEndDate != null) 'ticket-end-date': _self.ticketEndDate,
     },
   );
 
@@ -1124,15 +1459,6 @@ mixin $UpdateTodoItemRoute on GoRouteData {
 
   @override
   void replace(BuildContext context) => context.replace(location);
-}
-
-T? _$convertMapValue<T>(
-  String key,
-  Map<String, String> map,
-  T? Function(String) converter,
-) {
-  final value = map[key];
-  return value == null ? null : converter(value);
 }
 
 RouteBase get $communitiesRoute => GoRouteData.$route(
