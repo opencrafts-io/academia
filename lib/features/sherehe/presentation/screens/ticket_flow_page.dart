@@ -212,25 +212,19 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
                 if (state is ConfirmPaymentLoaded) {
                   switch (state.status) {
                     case 'SUCCESS':
-                      if (context.canPop()) {
-                        context.pop();
-                      } else {
-                        HomeRoute().go(context);
-                      }
-
-                      // Delay snackbar so it shows after pop
-                      Future.microtask(() {
-                        if (!context.mounted) return;
-
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              "Ticket purchased successfully 🎉"
-                              "Go to 'My Tickets' to view your ticket.",
-                            ),
-                          ),
-                        );
-                      });
+                      context.pushReplacement(
+                        QrCodeRoute(
+                          eventId: state.attendee.eventId,
+                          attendeeId: state.attendee.id,
+                          ticketName:
+                              state.attendee.ticket?.ticketName ?? 'N/A',
+                          quantity: state.attendee.ticketQuantity,
+                          ticketStartDate:
+                              state.attendee.ticket?.startDate ?? '',
+                          ticketEndDate: state.attendee.ticket?.endDate ?? '',
+                        ).location,
+                        extra: state.attendee.event,
+                      );
                       break;
 
                     case 'PENDING':

@@ -19,4 +19,6 @@ export 'models/dashboard_stats_model.dart';
 export 'models/dashboard_stats_model_helper.dart';
 export 'models/invite_model.dart';
 export 'models/invite_model_helper.dart';
+export 'models/confirm_payment_model.dart';
+export 'models/confirm_payment_model_helper.dart';
 export 'repository/sherehe_repository_impl.dart';
