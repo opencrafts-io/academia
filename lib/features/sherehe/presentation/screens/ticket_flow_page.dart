@@ -186,27 +186,16 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
                 }
 
                 if (state is FreeTicketBooked) {
-                  if (context.canPop()) {
-                    context.pop();
-                  } else {
-                    HomeRoute().go(context);
-                  }
+                  EventTicketsRoute(
+                    eventId: widget.eventId ?? '',
+                  ).pushReplacement(context);
 
-                  // Delay snackbar so it shows after pop
-                  Future.microtask(() {
-                    if (!context.mounted) return;
-
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          "Ticket booked successfully 🎉"
-                          "\nFind it under the menu (⋮) in the top right, "
-                          "then tap 'My Tickets'.",
-                        ),
-                        duration: const Duration(seconds: 6),
-                      ),
-                    );
-                  });
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Ticket booked successfully 🎉"),
+                      duration: const Duration(seconds: 6),
+                    ),
+                  );
                 }
 
                 if (state is ConfirmPaymentLoaded) {

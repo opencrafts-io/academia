@@ -171,7 +171,7 @@ class _EventTicketsPageState extends State<EventTicketsPage> {
                         return TicketCardWidget(
                           ticket: item.ticket!,
                           quantity: item.ticketQuantity,
-                          event: widget.event,
+                          event: widget.event ?? item.event,
                           attendeeId: item.id,
                           ticketStartDate: item.ticket?.startDate,
                           ticketEndDate: item.ticket?.endDate,
@@ -192,7 +192,7 @@ class _EventTicketsPageState extends State<EventTicketsPage> {
                       return TicketCardWidget(
                         ticket: item.ticket!,
                         quantity: item.ticketQuantity,
-                        event: widget.event,
+                        event: widget.event ?? item.event,
                         attendeeId: item.id,
                         mode: TicketStubMode.eventTicketPurchased,
                         ticketStartDate: item.ticket?.startDate,
@@ -220,7 +220,7 @@ class _EventTicketsPageState extends State<EventTicketsPage> {
                       return TicketCardWidget(
                         ticket: item.ticket!,
                         quantity: item.ticketQuantity,
-                        event: widget.event,
+                        event: widget.event ?? item.event,
                         attendeeId: item.id,
                         mode: TicketStubMode.eventTicketPurchased,
                         ticketStartDate: item.ticket?.startDate,
