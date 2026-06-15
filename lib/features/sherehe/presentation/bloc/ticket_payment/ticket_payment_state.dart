@@ -46,16 +46,16 @@ class ConfirmPaymentLoading extends TicketPaymentState {
 
 class ConfirmPaymentLoaded extends TicketPaymentState {
   final String status;
-  final Attendee attendee;
+  final List<Attendee> attendees;
 
   const ConfirmPaymentLoaded({
     required String transId,
     required this.status,
-    required this.attendee,
+    required this.attendees,
   }) : super(transId: transId);
 
   @override
-  List<Object?> get props => [transId, status, attendee];
+  List<Object?> get props => [transId, status, attendees];
 }
 
 class ConfirmPaymentError extends TicketPaymentState {

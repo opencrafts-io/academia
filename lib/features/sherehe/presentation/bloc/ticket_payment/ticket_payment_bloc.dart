@@ -67,7 +67,7 @@ class TicketPaymentBloc extends Bloc<TicketPaymentEvent, TicketPaymentState> {
           ConfirmPaymentLoaded(
             transId: event.transId,
             status: confirmPaymentData.status,
-            attendee: confirmPaymentData.attendee,
+            attendees: confirmPaymentData.attendees ?? [],
           ),
         );
       },

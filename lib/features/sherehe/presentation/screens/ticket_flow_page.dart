@@ -213,17 +213,17 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
                   switch (state.status) {
                     case 'SUCCESS':
                       context.pushReplacement(
-                        QrCodeRoute(
-                          eventId: state.attendee.eventId,
-                          attendeeId: state.attendee.id,
-                          ticketName:
-                              state.attendee.ticket?.ticketName ?? 'N/A',
-                          quantity: state.attendee.ticketQuantity,
-                          ticketStartDate:
-                              state.attendee.ticket?.startDate ?? '',
-                          ticketEndDate: state.attendee.ticket?.endDate ?? '',
+                        EventTicketsRoute(
+                          eventId: widget.eventId ?? '',
                         ).location,
-                        extra: state.attendee.event,
+                        extra: ConfirmPaymentArgs(attendees: state.attendees),
+                      );
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Ticket booked successfully 🎉"),
+                          duration: const Duration(seconds: 6),
+                        ),
                       );
                       break;
 

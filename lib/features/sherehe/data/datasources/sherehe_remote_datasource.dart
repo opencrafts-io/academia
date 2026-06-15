@@ -583,7 +583,9 @@ class ShereheRemoteDataSource with DioErrorHandler {
         return right(
           ConfirmPaymentModel(
             status: response.data['status'],
-            attendeeData: AttendeeData.fromJson(response.data['attendee']),
+            attendeesData: (response.data['attendee'] as List?)
+                ?.map((e) => AttendeeData.fromJson(e))
+                .toList(),
           ),
         );
       } else {
