@@ -38,7 +38,11 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
       eventEnd.difference(eventStart) > const Duration(hours: 24);
   bool _isGenerating = false;
 
-  Future<void> _downloadTicket({required bool isMultiEvent}) async {
+  Future<void> _downloadTicket({
+    required bool isMultiEvent,
+    required String access,
+    required String dates,
+  }) async {
     if (_isGenerating) return;
 
     setState(() => _isGenerating = true);
@@ -51,8 +55,8 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
         attendeeId: widget.attendeeId,
         ticketName: widget.ticketName,
         quantity: widget.quantity,
-        ticketStartDate: widget.ticketStartDate,
-        ticketEndDate: widget.ticketEndDate,
+        access: access,
+        dates: dates,
       );
 
       if (!mounted) return;
@@ -87,6 +91,10 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final (:access, :dates) = ShereheUtils.getTicketInfo(
+      startDate: widget.ticketStartDate,
+      endDate: widget.ticketEndDate,
+    );
     return Scaffold(
       appBar: AppBar(
         title: const Text("Your Ticket"),
@@ -112,7 +120,11 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                 : const Icon(Icons.download_outlined),
             onPressed: _isGenerating
                 ? null
-                : () => _downloadTicket(isMultiEvent: isMultiDayEvent),
+                : () => _downloadTicket(
+                    isMultiEvent: isMultiDayEvent,
+                    access: access,
+                    dates: dates,
+                  ),
           ),
         ],
       ),
@@ -202,17 +214,9 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                             ] else ...[
                               _TicketInfoWidget(
                                 label1: 'ACCESS',
-                                value1:
-                                    ShereheUtils.calculateDaysBetweenForTicket(
-                                      startDate: widget.ticketStartDate,
-                                      endDate: widget.ticketEndDate,
-                                    ),
+                                value1: access,
                                 label2: 'DATES',
-                                value2:
-                                    (widget.ticketStartDate != null &&
-                                        widget.ticketEndDate != null)
-                                    ? '${ShereheUtils.formatShortMonthDay(widget.ticketStartDate!)} - ${ShereheUtils.formatShortMonthDay(widget.ticketEndDate!)}'
-                                    : 'TBC',
+                                value2: dates,
                               ),
                             ],
                             const SizedBox(height: 16),
