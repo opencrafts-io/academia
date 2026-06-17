@@ -25,6 +25,7 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
   int currentPage = 0;
   Ticket? _selectedTicket;
   int _quantity = 1;
+  String? _eventIdFromTicketInvite;
 
   void _nextPage() {
     _pageController.nextPage(
@@ -61,197 +62,75 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
             ..add(FetchTickets(eventId: widget.eventId, invite: widget.invite)),
         ),
       ],
-      child: Builder(
-        builder: (context) {
-          return Scaffold(
-            appBar: AppBar(
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (_) => AlertDialog(
-                      title: const Text("Quit Ticket Booking"),
-                      content: const Text(
-                        "Are you sure you want to quit the ticket booking process?",
-                      ),
-                      actions: [
-                        FilledButton(
-                          onPressed: () {
-                            //pop the alert dialogue first
-                            Navigator.pop(context);
-                            if (context.canPop()) {
-                              context.pop();
-                            } else {
-                              HomeRoute().go(context);
-                            }
-                          },
-                          child: const Text("Quit"),
-                        ),
-                        OutlinedButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text("Cancel"),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-              title: const Text("Ticket Booking"),
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.help),
-                  tooltip: 'Need help?',
+      child: BlocListener<UserTicketSelectionBloc, UserTicketSelectionState>(
+        listener: (context, state) {
+          if (widget.invite != null && state is UserTicketLoaded) {
+            /*
+            Since we are fetching tickets by invite in this scenario, the list of tickets fetched will be one ticket hence
+            I am using the first ticket in the list to get the eventId. */
+            if (state.tickets.isNotEmpty) {
+              _eventIdFromTicketInvite = state.tickets.first.eventId;
+            }
+          }
+        },
+        child: Builder(
+          builder: (context) {
+            return Scaffold(
+              appBar: AppBar(
+                leading: IconButton(
+                  icon: const Icon(Icons.arrow_back),
                   onPressed: () {
                     showDialog(
                       context: context,
                       builder: (_) => AlertDialog(
-                        title: Text(
-                          "Need Help?",
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                        ),
-                        content: RichText(
-                          text: TextSpan(
-                            style: Theme.of(context).textTheme.bodyMedium,
-                            children: [
-                              const TextSpan(
-                                text:
-                                    "If you experience any issues while purchasing or booking a ticket, "
-                                    "please contact our support team at ",
-                              ),
-                              TextSpan(
-                                text: "hello@opencrafts.io",
-                                style: TextStyle(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  fontWeight: FontWeight.bold,
-                                  decoration: TextDecoration.underline,
-                                ),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () async {
-                                    final uri = Uri(
-                                      scheme: 'mailto',
-                                      path: 'hello@opencrafts.io',
-                                    );
-
-                                    if (await canLaunchUrl(uri)) {
-                                      await launchUrl(uri);
-                                    }
-                                  },
-                              ),
-                            ],
-                          ),
+                        title: const Text("Quit Ticket Booking"),
+                        content: const Text(
+                          "Are you sure you want to quit the ticket booking process?",
                         ),
                         actions: [
                           FilledButton(
+                            onPressed: () {
+                              //pop the alert dialogue first
+                              Navigator.pop(context);
+                              if (context.canPop()) {
+                                context.pop();
+                              } else {
+                                HomeRoute().go(context);
+                              }
+                            },
+                            child: const Text("Quit"),
+                          ),
+                          OutlinedButton(
                             onPressed: () => Navigator.pop(context),
-                            child: const Text("OK"),
+                            child: const Text("Cancel"),
                           ),
                         ],
                       ),
                     );
                   },
                 ),
-              ],
-              bottom: PreferredSize(
-                preferredSize: const Size.fromHeight(4),
-                child: LinearProgressIndicator(
-                  value: progress,
-                  backgroundColor: Theme.of(
-                    context,
-                  ).colorScheme.surfaceContainerHighest,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-              ),
-            ),
-            body: BlocListener<TicketPaymentBloc, TicketPaymentState>(
-              listener: (context, state) {
-                if (state is PurchaseError) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(state.message),
-                      backgroundColor: Theme.of(context).colorScheme.error,
-                    ),
-                  );
-                }
-
-                if (state is ConfirmPaymentError) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(state.message),
-                      backgroundColor: Theme.of(context).colorScheme.error,
-                    ),
-                  );
-                }
-
-                if (state is FreeTicketBooked) {
-                  EventTicketsRoute(
-                    eventId: widget.eventId ?? '',
-                  ).pushReplacement(context);
-
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("Ticket booked successfully 🎉"),
-                      duration: const Duration(seconds: 6),
-                    ),
-                  );
-                }
-
-                if (state is ConfirmPaymentLoaded) {
-                  switch (state.status) {
-                    case 'SUCCESS':
-                      context.pushReplacement(
-                        EventTicketsRoute(
-                          eventId: widget.eventId ?? '',
-                        ).location,
-                        extra: ConfirmPaymentArgs(attendees: state.attendees),
-                      );
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text("Ticket booked successfully 🎉"),
-                          duration: const Duration(seconds: 6),
-                        ),
-                      );
-                      break;
-
-                    case 'PENDING':
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            "Payment is still being processed. "
-                            "Please wait a moment and try again.",
-                          ),
-                        ),
-                      );
-                      break;
-
-                    case 'CANCELLED':
-                    case 'REVERSED':
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            "Payment was cancelled or reversed. "
-                            "Please initiate payment again.",
-                          ),
-                        ),
-                      );
-                      break;
-
-                    case 'FAILED':
-                    default:
+                title: const Text("Ticket Booking"),
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.help),
+                    tooltip: 'Need help?',
+                    onPressed: () {
                       showDialog(
                         context: context,
                         builder: (_) => AlertDialog(
-                          title: const Text("Payment Failed"),
+                          title: Text(
+                            "Need Help?",
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
                           content: RichText(
                             text: TextSpan(
                               style: Theme.of(context).textTheme.bodyMedium,
                               children: [
                                 const TextSpan(
                                   text:
-                                      "The payment failed. If you were charged on your end, "
+                                      "If you experience any issues while purchasing or booking a ticket, "
                                       "please contact our support team at ",
                                 ),
                                 TextSpan(
@@ -279,73 +158,211 @@ class _TicketFlowPageState extends State<TicketFlowPage> {
                             ),
                           ),
                           actions: [
-                            TextButton(
+                            FilledButton(
                               onPressed: () => Navigator.pop(context),
                               child: const Text("OK"),
                             ),
                           ],
                         ),
                       );
-                  }
-                }
-              },
-              child: PageView(
-                controller: _pageController,
-                physics: const NeverScrollableScrollPhysics(),
-                onPageChanged: (index) => setState(() => currentPage = index),
-                children: [
-                  UserTicketSelectionPage(
-                    eventId: widget.eventId ?? '',
-                    selectedTicket: _selectedTicket,
-                    quantity: _quantity,
-                    onTicketSelected: (ticket) {
-                      setState(() {
-                        _selectedTicket = ticket;
-                        _quantity = 1;
-                      });
                     },
-                    onQuantityChanged: (qty) {
-                      setState(() => _quantity = qty);
-                    },
-                    onContinue: _nextPage,
                   ),
-                  if (_selectedTicket != null) ...[
-                    ReviewTicketPage(
-                      ticket: _selectedTicket!,
-                      quantity: _quantity,
-                      onPrevious: _previousPage,
-                      onNext: _nextPage,
-                      isFreeEvent: _selectedTicket!.ticketPrice == 0,
-                    ),
-                    if (_selectedTicket!.ticketPrice > 0)
-                      TicketPaymentPage(
-                        formKey: _paymentPageFormKey,
-                        phoneNumberController: _phoneController,
-                        amount: _selectedTicket!.ticketPrice * _quantity,
-                        onBack: _previousPage,
-                        onInitiateStk: (phone) {
-                          if (_selectedTicket != null) {
-                            context.read<TicketPaymentBloc>().add(
-                              PurchaseTicket(
-                                ticketId: _selectedTicket!.id!,
-                                ticketQuantity: _quantity,
-                                phoneNumber: phone,
-                              ),
-                            );
-                          }
-                        },
-                        onCompletePayment: (transactionID) {
-                          context.read<TicketPaymentBloc>().add(
-                            ConfirmPayment(transId: transactionID),
-                          );
-                        },
-                      ),
-                  ],
                 ],
+                bottom: PreferredSize(
+                  preferredSize: const Size.fromHeight(4),
+                  child: LinearProgressIndicator(
+                    value: progress,
+                    backgroundColor: Theme.of(
+                      context,
+                    ).colorScheme.surfaceContainerHighest,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
               ),
-            ),
-          );
-        },
+              body: BlocListener<TicketPaymentBloc, TicketPaymentState>(
+                listener: (context, state) {
+                  if (state is PurchaseError) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(state.message),
+                        backgroundColor: Theme.of(context).colorScheme.error,
+                      ),
+                    );
+                  }
+
+                  if (state is ConfirmPaymentError) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(state.message),
+                        backgroundColor: Theme.of(context).colorScheme.error,
+                      ),
+                    );
+                  }
+
+                  if (state is FreeTicketBooked) {
+                    EventTicketsRoute(
+                      eventId: widget.eventId ?? _eventIdFromTicketInvite ?? '',
+                    ).pushReplacement(context);
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Ticket booked successfully 🎉"),
+                        duration: const Duration(seconds: 6),
+                      ),
+                    );
+                  }
+
+                  if (state is ConfirmPaymentLoaded) {
+                    switch (state.status) {
+                      case 'SUCCESS':
+                        context.pushReplacement(
+                          EventTicketsRoute(
+                            eventId:
+                                widget.eventId ??
+                                _eventIdFromTicketInvite ??
+                                '',
+                          ).location,
+                          extra: ConfirmPaymentArgs(attendees: state.attendees),
+                        );
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Ticket booked successfully 🎉"),
+                            duration: const Duration(seconds: 6),
+                          ),
+                        );
+                        break;
+
+                      case 'PENDING':
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              "Payment is still being processed. "
+                              "Please wait a moment and try again.",
+                            ),
+                          ),
+                        );
+                        break;
+
+                      case 'CANCELLED':
+                      case 'REVERSED':
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              "Payment was cancelled or reversed. "
+                              "Please initiate payment again.",
+                            ),
+                          ),
+                        );
+                        break;
+
+                      case 'FAILED':
+                      default:
+                        showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: const Text("Payment Failed"),
+                            content: RichText(
+                              text: TextSpan(
+                                style: Theme.of(context).textTheme.bodyMedium,
+                                children: [
+                                  const TextSpan(
+                                    text:
+                                        "The payment failed. If you were charged on your end, "
+                                        "please contact our support team at ",
+                                  ),
+                                  TextSpan(
+                                    text: "hello@opencrafts.io",
+                                    style: TextStyle(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
+                                      fontWeight: FontWeight.bold,
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () async {
+                                        final uri = Uri(
+                                          scheme: 'mailto',
+                                          path: 'hello@opencrafts.io',
+                                        );
+
+                                        if (await canLaunchUrl(uri)) {
+                                          await launchUrl(uri);
+                                        }
+                                      },
+                                  ),
+                                ],
+                              ),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: const Text("OK"),
+                              ),
+                            ],
+                          ),
+                        );
+                    }
+                  }
+                },
+                child: PageView(
+                  controller: _pageController,
+                  physics: const NeverScrollableScrollPhysics(),
+                  onPageChanged: (index) => setState(() => currentPage = index),
+                  children: [
+                    UserTicketSelectionPage(
+                      selectedTicket: _selectedTicket,
+                      quantity: _quantity,
+                      onTicketSelected: (ticket) {
+                        setState(() {
+                          _selectedTicket = ticket;
+                          _quantity = 1;
+                        });
+                      },
+                      onQuantityChanged: (qty) {
+                        setState(() => _quantity = qty);
+                      },
+                      onContinue: _nextPage,
+                    ),
+                    if (_selectedTicket != null) ...[
+                      ReviewTicketPage(
+                        ticket: _selectedTicket!,
+                        quantity: _quantity,
+                        onPrevious: _previousPage,
+                        onNext: _nextPage,
+                        isFreeEvent: _selectedTicket!.ticketPrice == 0,
+                      ),
+                      if (_selectedTicket!.ticketPrice > 0)
+                        TicketPaymentPage(
+                          formKey: _paymentPageFormKey,
+                          phoneNumberController: _phoneController,
+                          amount: _selectedTicket!.ticketPrice * _quantity,
+                          onBack: _previousPage,
+                          onInitiateStk: (phone) {
+                            if (_selectedTicket != null) {
+                              context.read<TicketPaymentBloc>().add(
+                                PurchaseTicket(
+                                  ticketId: _selectedTicket!.id!,
+                                  ticketQuantity: _quantity,
+                                  phoneNumber: phone,
+                                ),
+                              );
+                            }
+                          },
+                          onCompletePayment: (transactionID) {
+                            context.read<TicketPaymentBloc>().add(
+                              ConfirmPayment(transId: transactionID),
+                            );
+                          },
+                        ),
+                    ],
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
