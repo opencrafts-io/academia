@@ -59,7 +59,11 @@ void main(List<String> args) async {
       );
     },
     (error, stack) {
-      Posthog().captureRunZonedGuardedError(error: error, stackTrace: stack);
+      try {
+        Posthog().captureRunZonedGuardedError(error: error, stackTrace: stack);
+      } catch (e) {
+        debugPrint(e.toString());
+      }
     },
   );
 }
