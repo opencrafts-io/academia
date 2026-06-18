@@ -24,25 +24,27 @@ class NotificationServiceImpl implements NotificationService {
   Future<void> _initializeAwesomeNotifications() async {
     await AwesomeNotifications().initialize('resource://drawable/academia', [
       NotificationChannel(
-        channelKey: 'local_reminder_channel',
+        channelKey: 'local_reminder_channel_v2',
         channelName: 'Reminders',
         channelDescription: 'Notification channel for reminders',
         locked: true,
         playSound: true,
         soundSource: 'resource://raw/reminder',
         defaultColor: Color(0xFF1B1D23),
+        importance: NotificationImportance.Max,
       ),
       NotificationChannel(
-        channelKey: 'local_alert_channel',
+        channelKey: 'local_alert_channel_v2',
         channelName: 'Alerts',
         channelDescription: 'Notification channel for important alerts',
         criticalAlerts: true,
         locked: true,
         playSound: true,
         soundSource: 'resource://raw/symphony',
+        defaultPrivacy: NotificationPrivacy.Public,
       ),
       NotificationChannel(
-        channelKey: 'local_update_channel',
+        channelKey: 'local_update_channel_v2',
         channelName: 'Updates',
         channelDescription: 'Notification channel for app updates',
         importance: NotificationImportance.Default,
@@ -50,9 +52,10 @@ class NotificationServiceImpl implements NotificationService {
         locked: true,
         playSound: true,
         soundSource: 'resource://raw/meloboom',
+        defaultPrivacy: NotificationPrivacy.Public,
       ),
       NotificationChannel(
-        channelKey: 'course_alerts',
+        channelKey: 'course_alerts_v2',
         channelName: 'Course Alerts',
         channelDescription: 'Notifications for upcoming classes',
         defaultColor: const Color(0xFF007DFD),
@@ -60,7 +63,7 @@ class NotificationServiceImpl implements NotificationService {
         playSound: true,
         ledColor: const Color(0xFF007DFD),
         soundSource: 'resource://raw/course',
-        defaultPrivacy: NotificationPrivacy.Public,
+        defaultPrivacy: NotificationPrivacy.Private,
         enableVibration: true,
       ),
     ], debug: false);

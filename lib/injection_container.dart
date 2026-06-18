@@ -5,7 +5,6 @@ import 'package:academia/features/auth/data/data.dart';
 import 'package:academia/features/course/course.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
-import 'package:academia/features/permissions/permissions.dart';
 import 'package:academia/features/semester/semester.dart';
 import 'package:academia/features/todos/data/repository/todo_item_repository_impl.dart';
 import 'package:academia/features/todos/data/repository/todo_tag_repository_impl.dart';
@@ -714,6 +713,7 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
       // NOTIFICATIONS
    *************************************************************************/
   sl.registerSingletonAsync<NotificationService>(() async {
+    await NotificationChannelMigration.run();
     final svc = NotificationServiceImpl();
     await svc.init();
     return svc;

@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:academia/background_task/background_task.dart';
-import 'package:academia/features/notifications/notifications.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -74,7 +73,7 @@ class DailyLoginBackgroundTask extends BackgroundTask {
     AwesomeNotifications().createNotification(
       content: NotificationContent(
         id: 10, // Use a consistent ID for streak reminders
-        channelKey: 'local_update_channel',
+        channelKey: 'local_update_channel_v2',
         title: title,
         body: body,
         summary: "Daily Streak Reminder",
