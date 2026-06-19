@@ -23,7 +23,7 @@ class TodoNotificationServiceImpl implements TodoNotificationService {
       await AwesomeNotifications().createNotification(
         content: NotificationContent(
           id: _idFor(todo.localId, slot),
-          channelKey: 'local_reminder_channel',
+          channelKey: 'local_reminder_channel_v2',
           title: _reminderTitle(slot),
           summary: 'Priority: ${todo.priority.name}',
           body: todo.title,
@@ -83,7 +83,7 @@ class TodoNotificationServiceImpl implements TodoNotificationService {
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
         id: _idFor(todo.localId, _ReminderSlot.dayBefore),
-        channelKey: 'local_reminder_channel',
+        channelKey: 'local_reminder_channel_v2',
         title: _deletedTitle(todo),
         body: _deletedBody(todo),
         notificationLayout: NotificationLayout.Default,

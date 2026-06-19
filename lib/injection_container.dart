@@ -5,7 +5,6 @@ import 'package:academia/features/auth/data/data.dart';
 import 'package:academia/features/course/course.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
-import 'package:academia/features/permissions/permissions.dart';
 import 'package:academia/features/semester/semester.dart';
 import 'package:academia/features/todos/data/repository/todo_item_repository_impl.dart';
 import 'package:academia/features/todos/data/repository/todo_tag_repository_impl.dart';
@@ -713,84 +712,12 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   /*************************************************************************
       // NOTIFICATIONS
    *************************************************************************/
-  sl.registerFactory<NotificationRemoteDatasource>(
-    () => NotificationRemoteDatasource(),
-  );
-  sl.registerFactory<NotificationLocalDatasource>(
-    () => NotificationLocalDatasource(localDB: cacheDB),
-  );
-
-  sl.registerFactory<NotificationRepository>(
-    () => NotificationRepositoryImpl(
-      remoteDatasource: sl.get<NotificationRemoteDatasource>(),
-      localDatasource: sl.get<NotificationLocalDatasource>(),
-    ),
-  );
-
-  sl.registerFactory<InitializeLocalNotificationsUsecase>(
-    () => InitializeLocalNotificationsUsecase(
-      notificationRepository: sl.get<NotificationRepository>(),
-    ),
-  );
-
-  sl.registerFactory<InitializeOneSignalUsecase>(
-    () => InitializeOneSignalUsecase(sl.get<NotificationRepository>()),
-  );
-  sl.registerFactory<GetNotificationsUsecase>(
-    () => GetNotificationsUsecase(sl.get<NotificationRepository>()),
-  );
-  sl.registerFactory<MarkNotificationAsReadUsecase>(
-    () => MarkNotificationAsReadUsecase(sl.get<NotificationRepository>()),
-  );
-  sl.registerFactory<MarkAllNotificationsAsReadUsecase>(
-    () => MarkAllNotificationsAsReadUsecase(sl.get<NotificationRepository>()),
-  );
-  sl.registerFactory<DeleteNotificationUsecase>(
-    () => DeleteNotificationUsecase(sl.get<NotificationRepository>()),
-  );
-  sl.registerFactory<ClearAllNotificationsUsecase>(
-    () => ClearAllNotificationsUsecase(sl.get<NotificationRepository>()),
-  );
-  sl.registerFactory<GetNotificationCountUsecase>(
-    () => GetNotificationCountUsecase(sl.get<NotificationRepository>()),
-  );
-  sl.registerFactory<GetUnreadCountUsecase>(
-    () => GetUnreadCountUsecase(sl.get<NotificationRepository>()),
-  );
-  sl.registerFactory<SetNotificationPermissionUsecase>(
-    () => SetNotificationPermissionUsecase(sl.get<NotificationRepository>()),
-  );
-  sl.registerFactory<GetNotificationPermissionUsecase>(
-    () => GetNotificationPermissionUsecase(sl.get<NotificationRepository>()),
-  );
-  sl.registerFactory<SendLocalNotificationUsecase>(
-    () => SendLocalNotificationUsecase(sl.get<NotificationRepository>()),
-  );
-  sl.registerFactory<SetUserDataUsecase>(
-    () => SetUserDataUsecase(repository: sl.get<NotificationRepository>()),
-  );
-
-  sl.registerFactory<NotificationBloc>(
-    () => NotificationBloc(
-      initializeLocalNotificationsUsecase: sl
-          .get<InitializeLocalNotificationsUsecase>(),
-      initializeOneSignalUsecase: sl.get<InitializeOneSignalUsecase>(),
-      getNotificationsUsecase: sl.get<GetNotificationsUsecase>(),
-      markNotificationAsReadUsecase: sl.get<MarkNotificationAsReadUsecase>(),
-      markAllNotificationsAsReadUsecase: sl
-          .get<MarkAllNotificationsAsReadUsecase>(),
-      deleteNotificationUsecase: sl.get<DeleteNotificationUsecase>(),
-      clearAllNotificationsUsecase: sl.get<ClearAllNotificationsUsecase>(),
-      getNotificationCountUsecase: sl.get<GetNotificationCountUsecase>(),
-      getUnreadCountUsecase: sl.get<GetUnreadCountUsecase>(),
-      setNotificationPermissionUsecase: sl
-          .get<SetNotificationPermissionUsecase>(),
-      getNotificationPermissionUsecase: sl
-          .get<GetNotificationPermissionUsecase>(),
-      sendLocalNotificationUsecase: sl.get<SendLocalNotificationUsecase>(),
-      setUserDataUsecase: sl.get<SetUserDataUsecase>(),
-    ),
-  );
+  sl.registerSingletonAsync<NotificationService>(() async {
+    await NotificationChannelMigration.run();
+    final svc = NotificationServiceImpl();
+    await svc.init();
+    return svc;
+  });
 
   // --- Institutions ---
   sl.registerFactory<InstitutionLocalDatasource>(

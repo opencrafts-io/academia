@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:academia/features/todos/domain/domain.dart';
 import 'package:intl/intl.dart';
+import 'package:time_since/time_since.dart';
 
 class TodoCard extends StatelessWidget {
   final TodoItemEntity item;
@@ -40,8 +43,35 @@ class TodoCard extends StatelessWidget {
       direction: DismissDirection.endToStart,
       background: _buildDismissBackground(scheme),
       confirmDismiss: (_) async {
-        onDelete();
-        return false; // Let the cubit handle removal from state
+        late Completer<void> delayCompleter;
+        bool shouldDelete = true;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("${item.title} has been deleted"),
+            duration: Duration(seconds: 5),
+            behavior: SnackBarBehavior.floating,
+            action: SnackBarAction(
+              label: 'Undo',
+              onPressed: () {
+                shouldDelete = false;
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                delayCompleter.complete();
+              },
+            ),
+          ),
+        );
+        delayCompleter = Completer();
+        await Future.any([
+          Future.delayed(Duration(seconds: 5)),
+          delayCompleter.future,
+        ]);
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          if (shouldDelete) {
+            onDelete();
+          }
+        }
+        return false;
       },
       child: ListTile(
         shape: RoundedRectangleBorder(
@@ -50,6 +80,7 @@ class TodoCard extends StatelessWidget {
         leading: Checkbox.adaptive(
           value: _isCompleted,
           onChanged: (_) => _isCompleted ? onReopen() : onComplete(),
+          shape: CircleBorder(),
         ),
         onTap: onTap,
         title: Text(
@@ -115,65 +146,13 @@ class TodoCard extends StatelessWidget {
           spacing: 6,
           runSpacing: 4,
           children: [
-            if (item.due != null) _buildDueChip(context),
+            if (item.due != null) DueDateTime(dateTime: item.due!),
             ...item.tags.map((tag) => _buildTagChip(context, tag)),
           ],
         ),
         const SizedBox(height: 6),
       ],
     );
-  }
-
-  Widget _buildDueChip(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final now = DateTime.now();
-    final due = item.due!;
-    final isOverdue = !_isCompleted && due.isBefore(now);
-    final isDueToday =
-        !_isCompleted &&
-        due.year == now.year &&
-        due.month == now.month &&
-        due.day == now.day;
-
-    final Color chipColor = switch (true) {
-      _ when isOverdue => Colors.red.shade400,
-      _ when isDueToday => Colors.orange.shade400,
-      _ => scheme.onSurfaceVariant,
-    };
-
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(
-          isOverdue
-              ? Icons.warning_amber_rounded
-              : Icons.calendar_today_outlined,
-          size: 12,
-          color: chipColor,
-        ),
-        const SizedBox(width: 3),
-        Text(
-          _formatDue(due, now),
-          style: TextStyle(
-            fontSize: 11,
-            color: chipColor,
-            fontWeight: isOverdue || isDueToday
-                ? FontWeight.w600
-                : FontWeight.normal,
-          ),
-        ),
-      ],
-    );
-  }
-
-  String _formatDue(DateTime due, DateTime now) {
-    final diff = due.difference(now).inDays;
-    if (diff == 0) return "Today";
-    if (diff == 1) return "Tomorrow";
-    if (diff == -1) return "Yesterday";
-    if (diff < 0) return "${diff.abs()}d overdue";
-    if (diff < 7) return DateFormat('EEEE').format(due); // "Monday"
-    return DateFormat('MMM d').format(due); // "Jan 5"
   }
 
   Widget _buildTagChip(BuildContext context, TodoTagEntity tag) {
@@ -240,6 +219,99 @@ class TodoCard extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class DueDateTime extends StatefulWidget {
+  final DateTime dateTime;
+  final bool isCompleted;
+  final IconData? overdueIcon;
+  final IconData? upcomingIcon;
+  final double fontSize;
+  final bool showBold;
+
+  const DueDateTime({
+    super.key,
+    required this.dateTime,
+    this.isCompleted = false,
+    this.overdueIcon = Icons.warning_amber_rounded,
+    this.upcomingIcon = Icons.calendar_today_outlined,
+    this.fontSize = 11,
+    this.showBold = true,
+  });
+
+  @override
+  State<DueDateTime> createState() => _DueDateTimeState();
+}
+
+class _DueDateTimeState extends State<DueDateTime> {
+  late DateTime _due;
+  late bool _isOverdue;
+  late bool _isDueToday;
+
+  @override
+  void initState() {
+    super.initState();
+    _due = widget.dateTime;
+    _updateStatus();
+
+    // Rebuild once a minute to update timeago text
+    Future.delayed(const Duration(minutes: 1), () {
+      if (mounted) {
+        setState(_updateStatus);
+      }
+    });
+  }
+
+  void _updateStatus() {
+    final now = DateTime.now();
+    _isOverdue = !widget.isCompleted && _due.isBefore(now);
+    _isDueToday =
+        !widget.isCompleted &&
+        _due.year == now.year &&
+        _due.month == now.month &&
+        _due.day == now.day;
+  }
+
+  String _formatDisplay() {
+    if (_isOverdue) {
+      return timeSince(_due);
+    } else {
+      return DateFormat('EEE d MMM, HH:mm').format(_due);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
+    final Color chipColor = switch (true) {
+      _ when _isOverdue => Colors.red.shade400,
+      _ when _isDueToday => Colors.orange.shade400,
+      _ => scheme.onSurfaceVariant,
+    };
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          _isOverdue ? widget.overdueIcon : widget.upcomingIcon,
+          size: widget.fontSize + 1,
+          color: chipColor,
+        ),
+        const SizedBox(width: 3),
+        Text(
+          _formatDisplay(),
+          style: TextStyle(
+            fontSize: widget.fontSize,
+            color: chipColor,
+            fontWeight: (widget.showBold && (_isOverdue || _isDueToday))
+                ? FontWeight.w600
+                : FontWeight.normal,
+          ),
+        ),
+      ],
     );
   }
 }

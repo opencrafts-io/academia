@@ -165,7 +165,7 @@ class _TodoHomeScreenState extends State<TodoHomeScreen>
             body: RefreshIndicator.adaptive(
               onRefresh: () async {
                 await (
-                  context.read<TodoListCubit>().loadTodoLists(),
+                  context.read<TodoItemCubit>().loadItems(),
                   Future.delayed(const Duration(seconds: 2)),
                 ).wait;
               },
@@ -246,12 +246,9 @@ class _TodoHomeScreenState extends State<TodoHomeScreen>
                             (todoLists, nextUrl, isPaginating, isSyncing) =>
                                 todoLists.elementAtOrNull(currentIndex),
                       );
-                  final result = await CreateTodoItemRoute(
+                  CreateTodoItemRoute(
                     taskListLocalID: taskList?.localId,
                   ).push(context);
-                  if (result == true && context.mounted) {
-                    context.read<TodoListCubit>().loadTodoLists();
-                  }
                 },
               ),
             ),
