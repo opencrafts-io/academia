@@ -127,10 +127,10 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    final permissions = [AppPermission.notification];
-    if (Platform.isAndroid) {
-      permissions.add(AppPermission.preciseAlarm);
-    }
+    final permissions = [
+      AppPermission.notification,
+      if (Platform.isAndroid) AppPermission.preciseAlarm,
+    ];
     context.read<PermissionCubit>().checkMultiplePermissions(permissions);
   }
 
@@ -146,7 +146,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<PermissionCubit, PermissionState>(
+    return BlocListener<PermissionCubit, PermissionState>(
       listener: (context, state) {
         if (state is PermissionPermanentlyDenied) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -158,111 +158,105 @@ class _HomePageState extends State<HomePage> {
               behavior: SnackBarBehavior.floating,
             ),
           );
+          return;
+        } else if (state is PermissionDenied) {
+          NotificationPermissionRoute().push(context);
         }
       },
-      builder: (context, permissionState) {
-        final showBanner =
-            permissionState is PermissionDenied ||
-            permissionState is PermissionPermanentlyDenied;
-
-        return DefaultTabController(
-          initialIndex: 1,
-          length: 3,
-          child: Scaffold(
-            body: NestedScrollView(
-              headerSliverBuilder: (context, innerBoxIsScrolled) => [
-                SliverOverlapAbsorber(
-                  handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
-                    context,
-                  ),
-                  sliver: SliverAppBar(
-                    pinned: true,
-                    forceElevated: innerBoxIsScrolled,
-                    leading: Assets.icons.academia.image(),
-                    title: InkWell(
-                      onTap: () => _showActionsSheet(context),
-                      child:
-                          Row(
-                                mainAxisSize: MainAxisSize.min,
-                                spacing: 4,
-                                children: [
-                                  Text(
-                                    'Academia',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headlineMedium
-                                        ?.copyWith(fontWeight: FontWeight.bold),
-                                  ),
-                                  const Icon(
-                                    Icons.arrow_drop_down_circle_outlined,
-                                    size: 20,
-                                  ),
-                                ],
-                              )
-                              .animate(
-                                onPlay: (controller) =>
-                                    controller.repeat(reverse: true),
-                              )
-                              .scaleXY(
-                                begin: 1.0,
-                                end: 1.1,
-                                duration: 1000.ms,
-                                curve: Curves.elasticOut,
-                              ),
-                    ),
-                    centerTitle: false,
-                    actions: [
-                      IconButton(
-                        onPressed: () => showSearch(
-                          context: context,
-                          delegate: GlobalSearchDelegate(),
-                        ),
-                        icon: const Icon(Icons.search),
-                        tooltip: 'Search',
-                      ),
-                      IconButton(
-                        onPressed: () => ProfileRoute().push(context),
-                        icon: const UserAvatar(
-                          scallopDepth: 4,
-                          numberOfScallops: 8,
-                        ),
-                        tooltip: 'Profile',
-                      ),
-                    ],
-                    bottom: _HomeTabBar(showBanner: showBanner),
-                  ),
+      listenWhen: (previous, current) =>
+          previous != current && current is PermissionDenied ||
+          current is PermissionPermanentlyDenied,
+      child: DefaultTabController(
+        initialIndex: 1,
+        length: 3,
+        child: Scaffold(
+          body: NestedScrollView(
+            headerSliverBuilder: (context, innerBoxIsScrolled) => [
+              SliverOverlapAbsorber(
+                handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                  context,
                 ),
-              ],
-              body: const TabBarView(
-                children: [LeaderboardHomepage(), FeedPage(), ShereheHome()],
+                sliver: SliverAppBar(
+                  pinned: true,
+                  forceElevated: innerBoxIsScrolled,
+                  leading: Assets.icons.academia.image(),
+                  title: InkWell(
+                    onTap: () => _showActionsSheet(context),
+                    child:
+                        Row(
+                              mainAxisSize: MainAxisSize.min,
+                              spacing: 4,
+                              children: [
+                                Text(
+                                  'Academia',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineMedium
+                                      ?.copyWith(fontWeight: FontWeight.bold),
+                                ),
+                                const Icon(
+                                  Icons.arrow_drop_down_circle_outlined,
+                                  size: 20,
+                                ),
+                              ],
+                            )
+                            .animate(
+                              onPlay: (controller) =>
+                                  controller.repeat(reverse: true),
+                            )
+                            .scaleXY(
+                              begin: 1.0,
+                              end: 1.1,
+                              duration: 1000.ms,
+                              curve: Curves.elasticOut,
+                            ),
+                  ),
+                  centerTitle: false,
+                  actions: [
+                    IconButton(
+                      onPressed: () => showSearch(
+                        context: context,
+                        delegate: GlobalSearchDelegate(),
+                      ),
+                      icon: const Icon(Icons.search),
+                      tooltip: 'Search',
+                    ),
+                    IconButton(
+                      onPressed: () => ProfileRoute().push(context),
+                      icon: const UserAvatar(
+                        scallopDepth: 4,
+                        numberOfScallops: 8,
+                      ),
+                      tooltip: 'Profile',
+                    ),
+                  ],
+                  bottom: _HomeTabBar(),
+                ),
               ),
+            ],
+            body: const TabBarView(
+              children: [LeaderboardHomepage(), FeedPage(), ShereheHome()],
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }
 
 class _HomeTabBar extends StatelessWidget implements PreferredSizeWidget {
-  const _HomeTabBar({required this.showBanner});
-
-  final bool showBanner;
+  const _HomeTabBar();
 
   static const double _tabBarHeight = 48;
-  static const double _bannerHeight = 80;
 
   @override
-  Size get preferredSize => Size.fromHeight(
-    showBanner ? _tabBarHeight + _bannerHeight : _tabBarHeight,
-  );
+  Size get preferredSize => Size.fromHeight(_tabBarHeight);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (showBanner) const PermissionNotificationAlertCard(),
         const TabBar.secondary(
           isScrollable: true,
           tabAlignment: TabAlignment.center,

@@ -551,16 +551,21 @@ class _AddPostPageState extends State<AddPostPage> {
               ),
             ),
 
-            SliverPadding(
-              padding: EdgeInsets.all(12),
-              sliver: SliverToBoxAdapter(
-                child: Align(
-                  alignment: Alignment.center,
-                  child: FilledButton.icon(
-                    style: FilledButton.styleFrom(padding: EdgeInsets.all(22)),
-                    onPressed: () => _submitPost(),
-                    label: Text("Create post"),
-                    icon: Icon(Icons.add),
+            SliverSafeArea(
+              top: false,
+              sliver: SliverPadding(
+                padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+                sliver: SliverToBoxAdapter(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: FilledButton.icon(
+                      style: FilledButton.styleFrom(
+                        padding: const EdgeInsets.all(22),
+                      ),
+                      onPressed: () => _submitPost(),
+                      label: const Text("Create post"),
+                      icon: const Icon(Icons.add),
+                    ),
                   ),
                 ),
               ),

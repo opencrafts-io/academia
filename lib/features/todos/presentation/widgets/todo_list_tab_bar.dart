@@ -1,5 +1,6 @@
 import 'package:academia/features/todos/todos.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TodoListTabBar extends StatelessWidget implements PreferredSizeWidget {
   final List<TodoListEntity> lists;
@@ -32,6 +33,17 @@ class TodoListTabBar extends StatelessWidget implements PreferredSizeWidget {
           tabAlignment: TabAlignment.start,
           tabs: [
             ...lists.map((list) {
+              final todosCount = context.watch<TodoItemCubit>().state.maybeWhen(
+                success: (item, _, _, _) => item
+                    .where(
+                      (item) =>
+                          item.taskListLocalId == list.localId &&
+                          (item.due?.isAfter(DateTime.now()) ?? true) &&
+                          item.completed == null,
+                    )
+                    .length,
+                orElse: () => 0,
+              );
               final color = _colorFromHex(list.color, context);
               return GestureDetector(
                 onLongPress: () => onLongPressList(list),
@@ -39,7 +51,7 @@ class TodoListTabBar extends StatelessWidget implements PreferredSizeWidget {
                   offset: Offset(10, 0),
                   backgroundColor: color.withAlpha(255),
                   isLabelVisible: list.taskCount > 0,
-                  label: Text("${list.taskCount}"),
+                  label: Text("$todosCount"),
                   child: Tab(
                     child: SizedBox(
                       width: 80,

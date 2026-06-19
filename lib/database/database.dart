@@ -30,7 +30,6 @@ import 'package:academia/features/todos/domain/enums/sync_status.dart';
 import 'package:academia/features/todos/domain/enums/todo_status.dart';
 import 'package:academia/features/todos/domain/enums/todo_priority.dart';
 import 'package:academia/features/sherehe/data/data.dart';
-import 'package:academia/features/notifications/data/models/notification_table.dart';
 import 'dart:ui' show Color;
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
@@ -67,9 +66,6 @@ part 'database.g.dart';
 
     // Agenda
     AgendaEvent,
-
-    // Notifications
-    NotificationTable,
 
     // Institution
     Institution,
@@ -201,6 +197,8 @@ class AppDataBase extends _$AppDataBase {
             case 33:
               await migrate33To34(m);
               break;
+            case 34:
+              await migrate34To35(m);
           }
         }
       },

@@ -43,6 +43,8 @@ void main(List<String> args) async {
         await registerDefaultBackgroundTasks();
       }
 
+      await di.sl.allReady();
+
       runApp(
         DioRequestInspectorMain(
           inspector: di.sl<DioRequestInspector>(),

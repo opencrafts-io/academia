@@ -141,16 +141,13 @@ class _PostDetailPageState extends State<PostDetailPage> {
             }
           },
           child: PopScope(
-            // Never allow the default pop — we control the destination
-            canPop: false,
+            canPop: context.canPop(),
             onPopInvokedWithResult: (didPop, result) {
-              if (didPop) return;
-              final updatedPost = context.read<PostCubit>().state;
-              if (context.canPop()) {
-                Navigator.pop(context, updatedPost);
-              } else {
-                context.go(HomeRoute().location);
+              if (didPop) {
+                return;
               }
+              // canPop was false (deeplink root) — redirect to home.
+              context.go(HomeRoute().location);
             },
             child: Scaffold(
               body: BlocBuilder<PostCubit, Post>(
@@ -162,7 +159,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
                   );
                 },
               ),
-              bottomSheet: SafeArea(
+              bottomNavigationBar: SafeArea(
                 child: Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 12,

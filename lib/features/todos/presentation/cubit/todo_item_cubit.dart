@@ -99,7 +99,7 @@ class TodoItemCubit extends SafeCubit<TodoItemState> {
         if (latest == null) return;
         final synced = latest.items.map((existing) {
           // Replace the optimistic placeholder with the confirmed entity
-          return existing.title == item.title &&
+          return existing.localId == 0 &&
                   existing.syncStatus == SyncStatus.pending
               ? newItem
               : existing;
