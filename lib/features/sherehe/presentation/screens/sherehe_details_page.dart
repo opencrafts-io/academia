@@ -85,10 +85,13 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                       padding: const EdgeInsets.all(16.0),
                       child: Text(
                         "Failed to load event details. Please try again later.\n\n${state.message}",
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontStyle: FontStyle.italic,
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(
+                              fontStyle: FontStyle.italic,
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurfaceVariant,
+                            ),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -101,15 +104,16 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                     GetEventScannerByUserId(eventId: state.event.id),
                   );
                 }
-          
-                DateTime normalize(DateTime d) => DateTime(d.year, d.month, d.day);
-          
+
+                DateTime normalize(DateTime d) =>
+                    DateTime(d.year, d.month, d.day);
+
                 final eventEndDate = normalize(
                   DateTime.parse(state.event.endDate).toLocal(),
                 );
-          
+
                 final today = normalize(DateTime.now());
-          
+
                 final isPastEvent = today.isAfter(eventEndDate);
                 return Scaffold(
                   body: CustomScrollView(
@@ -126,12 +130,13 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                               final isOrganizer =
                                   userId != null &&
                                   userId == state.event.organizerId;
-          
+
                               final isScanner =
-                                  scannerState is GetEventScannerByUserIdSuccess;
-          
+                                  scannerState
+                                      is GetEventScannerByUserIdSuccess;
+
                               final canScan = isOrganizer || isScanner;
-          
+
                               return PopupMenuButton<String>(
                                 icon: const Icon(Icons.more_vert),
                                 onSelected: (value) async {
@@ -139,28 +144,30 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                                     case 'share':
                                       final url =
                                           'https://academia.opencrafts.io${ShereheDetailsRoute(eventId: state.event.id).location}';
-          
+
                                       final box =
-                                          context.findRenderObject() as RenderBox?;
-          
-                                      final imageUrl = state.event.eventPosterImage;
-          
+                                          context.findRenderObject()
+                                              as RenderBox?;
+
+                                      final imageUrl =
+                                          state.event.eventPosterImage;
+
                                       XFile? imageFile;
-          
+
                                       if (imageUrl != null) {
                                         imageFile =
                                             await ShereheFilesUtils.downloadImage(
                                               imageUrl,
                                             );
                                       }
-          
+
                                       final text =
                                           'You have been invited from Academia to the following event:\n\n '
                                           '🎉 ${state.event.eventName}\n\n'
                                           '📍 Where: ${state.event.eventLocation}\n'
                                           '⏰ When: ${ShereheUtils.formatDate(state.event.startDate)} at ${ShereheUtils.formatTime(state.event.startDate)}\n\n'
                                           '🎟 Get your ticket here:\n$url';
-          
+
                                       if (imageFile != null) {
                                         await Share.shareXFiles(
                                           [imageFile],
@@ -180,7 +187,7 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                                         );
                                       }
                                       break;
-          
+
                                     case 'scan':
                                       if (canScan) {
                                         QrCodeScannerRoute(
@@ -188,13 +195,14 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                                         ).push(context);
                                       }
                                       break;
-          
+
                                     case 'dashboard':
                                       if (isOrganizer) {
                                         OrganizerDashboardRoute(
                                           eventId: state.event.id,
                                           eventName: state.event.eventName,
-                                          eventLocation: state.event.eventLocation,
+                                          eventLocation:
+                                              state.event.eventLocation,
                                           eventStartDate: state.event.startDate,
                                           eventEndDate: state.event.endDate,
                                           eventPosterImage:
@@ -202,13 +210,15 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                                         ).push(context);
                                       }
                                       break;
-          
+
                                     case 'tickets':
                                       context.push(
                                         EventTicketsRoute(
                                           eventId: state.event.id,
                                         ).location,
-                                        extra: state.event,
+                                        extra: ConfirmPaymentArgs(
+                                          event: state.event,
+                                        ),
                                       );
                                       break;
                                   }
@@ -223,7 +233,7 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                                       visualDensity: VisualDensity.compact,
                                     ),
                                   ),
-          
+
                                   if (canScan)
                                     const PopupMenuItem(
                                       value: 'scan',
@@ -234,7 +244,7 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                                         visualDensity: VisualDensity.compact,
                                       ),
                                     ),
-          
+
                                   if (isOrganizer)
                                     const PopupMenuItem(
                                       value: 'dashboard',
@@ -245,7 +255,7 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                                         visualDensity: VisualDensity.compact,
                                       ),
                                     ),
-          
+
                                   const PopupMenuItem(
                                     value: 'tickets',
                                     child: ListTile(
@@ -283,7 +293,9 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                                       color: Theme.of(
                                         context,
                                       ).colorScheme.errorContainer,
-                                      child: const Icon(Icons.image_not_supported),
+                                      child: const Icon(
+                                        Icons.image_not_supported,
+                                      ),
                                     );
                                   },
                                 )
@@ -340,14 +352,19 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                                 style:
                                     ResponsiveBreakPoints.isTablet(context) ||
                                         ResponsiveBreakPoints.isDesktop(context)
-                                    ? Theme.of(context).textTheme.headlineMedium!
+                                    ? Theme.of(context)
+                                          .textTheme
+                                          .headlineMedium!
                                           .copyWith(fontWeight: FontWeight.bold)
-                                    : Theme.of(context).textTheme.headlineSmall!
-                                          .copyWith(fontWeight: FontWeight.bold),
+                                    : Theme.of(
+                                        context,
+                                      ).textTheme.headlineSmall!.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
                               ),
-          
+
                               const SizedBox(height: 12),
-          
+
                               if (state.event.eventGenre != null &&
                                   state.event.eventGenre!.isNotEmpty)
                                 Wrap(
@@ -358,7 +375,9 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                                       .map(
                                         (genre) => Chip(
                                           shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(20),
+                                            borderRadius: BorderRadius.circular(
+                                              20,
+                                            ),
                                           ),
                                           backgroundColor: Theme.of(
                                             context,
@@ -366,9 +385,9 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                                           label: Text(
                                             genre,
                                             style: TextStyle(
-                                              color: Theme.of(
-                                                context,
-                                              ).colorScheme.onSecondaryContainer,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onSecondaryContainer,
                                               fontWeight: FontWeight.w600,
                                             ),
                                           ),
@@ -376,11 +395,13 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                                       )
                                       .toList(),
                                 ),
-          
+
                               const SizedBox(height: 16),
-          
+
                               Text(
-                                _normalizeDescription(state.event.eventDescription),
+                                _normalizeDescription(
+                                  state.event.eventDescription,
+                                ),
                                 style:
                                     ResponsiveBreakPoints.isTablet(context) ||
                                         ResponsiveBreakPoints.isDesktop(context)
@@ -411,7 +432,8 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                                   padding: const EdgeInsets.all(8),
                                   child: Column(
                                     spacing: 10.0,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         children: [
@@ -450,9 +472,9 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                                   ),
                                 ),
                               ),
-          
+
                               const SizedBox(height: 16),
-          
+
                               ShereheDetailsScheduleCard(
                                 startDate: state.event.startDate,
                                 endDate: state.event.endDate,
@@ -473,7 +495,7 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                           ),
                         ),
                       ),
-          
+
                       BlocProvider(
                         key: ValueKey(state.event.id),
                         create: (_) =>
@@ -491,7 +513,9 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
                       padding: const EdgeInsets.all(16.0),
                       child: SizedBox(
                         width: double.infinity,
-                        height: ResponsiveBreakPoints.isMobile(context) ? 50 : 56,
+                        height: ResponsiveBreakPoints.isMobile(context)
+                            ? 50
+                            : 56,
                         child: FilledButton(
                           onPressed: isPastEvent
                               ? null
@@ -510,7 +534,7 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
               return const SizedBox.shrink();
             },
           );
-        }
+        },
       ),
     );
   }

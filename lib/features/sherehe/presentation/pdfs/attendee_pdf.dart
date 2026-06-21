@@ -19,8 +19,8 @@ Future<File> generateTicketPdf({
   required String attendeeId,
   required String ticketName,
   required int quantity,
-  String? ticketStartDate,
-  String? ticketEndDate,
+  required String access,
+  required String dates,
 }) async {
   final pdf = pw.Document();
 
@@ -108,15 +108,9 @@ Future<File> generateTicketPdf({
                       ] else ...[
                         _PdfTicketInfo(
                           label1: 'ACCESS',
-                          value1: ShereheUtils.calculateDaysBetweenForTicket(
-                            startDate: ticketStartDate,
-                            endDate: ticketEndDate,
-                          ),
+                          value1: access,
                           label2: 'DATES',
-                          value2:
-                              (ticketStartDate != null && ticketEndDate != null)
-                              ? '${ShereheUtils.formatShortMonthDay(ticketStartDate)} - ${ShereheUtils.formatShortMonthDay(ticketEndDate)}'
-                              : 'TBC',
+                          value2: dates,
                         ),
                         pw.SizedBox(height: 15),
                         _PdfTicketInfo(

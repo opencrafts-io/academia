@@ -7,7 +7,9 @@ class ConfirmPaymentUseCase {
 
   ConfirmPaymentUseCase(this.repository);
 
-  Future<Either<Failure, String>> call({required String transId}) async {
+  Future<Either<Failure, ConfirmPaymentEntity>> call({
+    required String transId,
+  }) async {
     return repository.confirmPayment(transId: transId);
   }
 }

@@ -86,6 +86,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         context: context,
         initialTime: TimeOfDay.fromDateTime(currentDateTime),
       );
+      if (!context.mounted) return;
       if (pickedTime != null) {
         final selectedDateTime = DateTime(
           pickedDate.year,
@@ -94,6 +95,25 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           pickedTime.hour,
           pickedTime.minute,
         );
+
+        // Prevent selecting past date/time
+        if (selectedDateTime.isBefore(
+          DateTime(
+            DateTime.now().year,
+            DateTime.now().month,
+            DateTime.now().day,
+            DateTime.now().hour,
+            DateTime.now().minute,
+          ),
+        )) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Date and time cannot be in the past"),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+          return;
+        }
         setState(() {
           if (isStart) {
             _selectedStartDateTime = selectedDateTime;
@@ -102,8 +122,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                 .add_jm()
                 .format(selectedDateTime);
             //reset end date time if it is before start date time
-            if (_selectedEndDateTime != null &&
-                    (_selectedEndDateTime!.isBefore(selectedDateTime)) ||
+            if (_selectedEndDateTime == null) return;
+            if (_selectedEndDateTime!.isBefore(selectedDateTime) ||
                 _selectedEndDateTime!.isAtSameMomentAs(selectedDateTime)) {
               _selectedEndDateTime = null;
               _endDateTimeController.clear();

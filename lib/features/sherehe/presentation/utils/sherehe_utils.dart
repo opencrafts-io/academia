@@ -38,27 +38,27 @@ class ShereheUtils {
     }
   }
 
-  static String formatShortMonthDay(String isoString) {
-    try {
-      final dateTime = DateTime.parse(isoString).toLocal();
-      return DateFormat('MMM d').format(dateTime);
-    } catch (_) {
-      return isoString;
-    }
-  }
-
-  static String calculateDaysBetweenForTicket({
+  static ({String access, String dates}) getTicketInfo({
     String? startDate,
     String? endDate,
   }) {
     try {
-      if (startDate == null || endDate == null) return 'TBC';
+      if (startDate == null || endDate == null) {
+        return (access: 'TBC', dates: 'TBC');
+      }
+
       final start = DateTime.parse(startDate).toLocal();
       final end = DateTime.parse(endDate).toLocal();
+
       final difference = end.difference(start).inDays + 1;
-      return '$difference Day Pass';
+
+      final dates = difference == 1
+          ? DateFormat('MMM d').format(start)
+          : '${DateFormat('MMM d').format(start)} - ${DateFormat('MMM d').format(end)}';
+
+      return (access: '$difference Day Pass', dates: dates);
     } catch (_) {
-      return 'TBC';
+      return (access: 'TBC', dates: 'TBC');
     }
   }
 

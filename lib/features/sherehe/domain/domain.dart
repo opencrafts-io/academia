@@ -9,6 +9,7 @@ export 'entities/ticket_stats.dart';
 export 'entities/sherehe_user.dart';
 export 'entities/scanner.dart';
 export 'entities/invite.dart';
+export 'entities/confirm_payment_entity.dart';
 export 'repository/sherehe_repository.dart';
 export 'usecases/get_all_events.dart';
 export 'usecases/get_attendees.dart';

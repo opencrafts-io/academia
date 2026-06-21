@@ -451,11 +451,15 @@ class EventTicketsRoute extends GoRouteData with $EventTicketsRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    final event = state.extra as Event;
+    final args = state.extra as ConfirmPaymentArgs?;
 
     return BlocProvider(
       create: (context) => sl<UserEventTicketsBloc>(),
-      child: EventTicketsPage(eventId: eventId, event: event),
+      child: EventTicketsPage(
+        eventId: eventId,
+        event: args?.event,
+        attendees: args?.attendees,
+      ),
     );
   }
 }

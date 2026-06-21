@@ -64,3 +64,12 @@ class UserEventTicketPaginationError extends UserEventTicketsState {
   @override
   List<Object?> get props => [existingAttendee, message, hasMore];
 }
+
+class FetchUserAttendeeTicketsSuccess extends UserEventTicketsState {
+  final List<Attendee> attendees;
+
+  const FetchUserAttendeeTicketsSuccess({required this.attendees});
+
+  @override
+  List<Object?> get props => [attendees];
+}

@@ -571,7 +571,7 @@ class ShereheRemoteDataSource with DioErrorHandler {
     }
   }
 
-  Future<Either<Failure, String>> confirmPayment({
+  Future<Either<Failure, ConfirmPaymentModel>> confirmPayment({
     required String transId,
   }) async {
     try {
@@ -579,8 +579,15 @@ class ShereheRemoteDataSource with DioErrorHandler {
         "/$servicePrefix/purchase/$transId",
       );
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return right(response.data['status']);
+      if (response.statusCode == 200) {
+        return right(
+          ConfirmPaymentModel(
+            status: response.data['status'],
+            attendeesData: (response.data['attendee'] as List?)
+                ?.map((e) => AttendeeData.fromJson(e))
+                .toList(),
+          ),
+        );
       } else {
         return left(
           ServerFailure(

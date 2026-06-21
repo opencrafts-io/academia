@@ -62,8 +62,14 @@ class TicketPaymentBloc extends Bloc<TicketPaymentEvent, TicketPaymentState> {
           ConfirmPaymentError(transId: event.transId, message: failure.message),
         );
       },
-      (status) {
-        emit(ConfirmPaymentLoaded(transId: event.transId, status: status));
+      (confirmPaymentData) {
+        emit(
+          ConfirmPaymentLoaded(
+            transId: event.transId,
+            status: confirmPaymentData.status,
+            attendees: confirmPaymentData.attendees ?? [],
+          ),
+        );
       },
     );
   }
