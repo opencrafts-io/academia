@@ -60,7 +60,7 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = true
-            isShrinkResources = true
+            isShrinkResources = false
             // Specifies the location of the R8/ProGuard rules file
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -68,13 +68,9 @@ android {
             )
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            if (signingConfigs.findByName("staging") != null) {
-                signingConfig = signingConfigs.getByName("staging")
-            } else if (signingConfigs.findByName("release") != null) {
-                signingConfig = signingConfigs.getByName("release")
-            } else {
-                signingConfig = signingConfigs.getByName("debug")
-            }
+            signingConfig = signingConfigs.findByName("release") 
+                ?: signingConfigs.findByName("staging") 
+                ?: signingConfigs.getByName("debug")
         }
     }
 

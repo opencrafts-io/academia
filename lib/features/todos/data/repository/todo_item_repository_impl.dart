@@ -111,16 +111,7 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
             isDirty: false,
           );
 
-          if (localModel == null) {
-            final created = await localDataSource.createTodoItem(dataModel);
-            await created.fold((_) => Future.value(), (createdItem) async {
-              final tagLocalIds = await _resolveTagUuidsToLocalIds(dto.tags);
-              await localDataSource.syncTagsForTodoItem(
-                todoLocalId: createdItem.localId,
-                tagLocalIds: tagLocalIds,
-              );
-            });
-          } else {
+          if (localModel != null) {
             await Future.wait([
               localDataSource.updateTodoItem(dataModel),
               _resolveTagUuidsToLocalIds(dto.tags).then(
@@ -130,6 +121,15 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
                 ),
               ),
             ]);
+          } else {
+            final created = await localDataSource.createTodoItem(dataModel);
+            await created.fold((_) => Future.value(), (createdItem) async {
+              final tagLocalIds = await _resolveTagUuidsToLocalIds(dto.tags);
+              await localDataSource.syncTagsForTodoItem(
+                todoLocalId: createdItem.localId,
+                tagLocalIds: tagLocalIds,
+              );
+            });
           }
         });
       }),

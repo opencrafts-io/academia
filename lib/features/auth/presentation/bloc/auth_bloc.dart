@@ -4,6 +4,7 @@ import 'package:academia/features/auth/auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:posthog_flutter/posthog_flutter.dart';
 import 'package:academia/injection_container.dart';
+import 'package:logger/logger.dart';
 
 import 'package:equatable/equatable.dart';
 
@@ -170,21 +171,52 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthCheckStatusEvent event,
     Emitter<AuthState> emit,
   ) async {
-    emit(const AuthLoading()); // Show loading state
+    Logger().i("-- Starting app launch token refresh");
+    emit(const AuthLoading());
     final result = await getPreviousAuthState(NoParams());
-    result.fold(
-      (failure) =>
+
+    await result.fold(
+      (failure) async =>
           emit(AuthError(message: (failure as AuthenticationFailure).message)),
-      (tokens) {
-        if (tokens.any(
+      (tokens) async {
+        if (tokens.isEmpty) {
+          Logger().i("No tokens found. New user or cleared session.");
+          return emit(AuthUnauthenticated());
+        }
+        final targetToken = tokens.firstWhere(
+          (token) => token.provider == "verisafe",
+          orElse: () => tokens.first,
+        );
+
+        final hasValidVerisafeToken = tokens.any(
           (token) =>
               token.provider == "verisafe" &&
-              (token.refreshExpiresAt.isAfter(DateTime.now())),
-        )) {
-          // -- Attempt to refresh verisafe's token
-          refreshVerisafeTokenUsecase(tokens.first);
-          return emit(AuthAuthenticated(token: tokens.first));
+              token.refreshExpiresAt.isAfter(DateTime.now()),
+        );
+
+        if (hasValidVerisafeToken) {
+          final refreshResult = await refreshVerisafeTokenUsecase(targetToken);
+          Logger().i("-- Completed app launch token refresh");
+          return refreshResult.fold(
+            (failure) {
+              // If it's a network issue, let them in anyway using their cached token!
+              if (failure is NetworkFailure) {
+                Logger().i(
+                  "Token refresh failed due to offline status. Proceeding offline.",
+                );
+                return emit(AuthAuthenticated(token: targetToken));
+              }
+              Logger().e(
+                "Token refresh rejected by server: ${failure.message}",
+              );
+              return emit(AuthUnauthenticated());
+            },
+            (newTokens) {
+              return emit(AuthAuthenticated(token: newTokens));
+            },
+          );
         }
+
         return emit(AuthUnauthenticated());
       },
     );

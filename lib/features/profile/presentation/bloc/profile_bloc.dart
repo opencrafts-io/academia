@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 import 'package:posthog_flutter/posthog_flutter.dart';
 import 'package:academia/injection_container.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 part 'profile_event.dart';
 part 'profile_state.dart';
@@ -64,6 +65,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               },
             );
           }
+          OneSignal.login(userProfile.id);
+          OneSignal.User.addEmail(userProfile.email);
+          OneSignal.User.addAliases({"name": userProfile.name});
+          OneSignal.User.addSms(userProfile.phone ?? "NA");
+
           emit(ProfileLoadedState(profile: userProfile));
         },
       );
@@ -92,6 +98,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               },
             );
           }
+          OneSignal.login(userProfile.id);
+          OneSignal.User.addEmail(userProfile.email);
+          OneSignal.User.addAliases({"name": userProfile.name});
+          OneSignal.User.addSms(userProfile.phone ?? "NA");
 
           emit(ProfileLoadedState(profile: userProfile));
         },
@@ -121,6 +131,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
               },
             );
           }
+          OneSignal.login(userProfile.id);
+          OneSignal.User.addEmail(userProfile.email);
+          OneSignal.User.addAliases({"name": userProfile.name});
+          OneSignal.User.addSms(userProfile.phone ?? "NA");
 
           emit(ProfileLoadedState(profile: userProfile));
         },
@@ -129,7 +143,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
     on<RequestAccountDeletionEvent>((event, emit) async {
       emit(ProfileLoadingstate());
-      
+
       final result = await requestAccountDeletionUsecase(NoParams());
       result.fold(
         (failure) {
@@ -144,7 +158,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
     on<RequestAccountRecoveryEvent>((event, emit) async {
       emit(ProfileLoadingstate());
-      
+
       final result = await requestAccountRecoveryUsecase(NoParams());
       result.fold(
         (failure) {

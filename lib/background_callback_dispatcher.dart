@@ -21,10 +21,7 @@ void backgroundCallbackDispatcher() {
         isBackground: true,
       );
 
-      final notificationRepository = di.sl<NotificationRepository>();
-      await notificationRepository.initializeLocalNotifications([
-        NotificationChannelConfig.courseAlerts,
-      ]);
+      await di.sl.allReady();
 
       final dailyLogin = DailyLoginBackgroundTask();
       final courseAlert = CourseAlertBackgroundTask(
@@ -84,7 +81,6 @@ Future<void> registerDefaultBackgroundTasks() async {
       networkType: NetworkType.notRequired,
     ),
   );
-
 
   // Register TodoList sync task - runs every 1 hour
   await Workmanager().registerPeriodicTask(

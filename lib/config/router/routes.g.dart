@@ -9,6 +9,7 @@ part of 'routes.dart';
 List<RouteBase> get $appRoutes => [
   $splashScreenRoute,
   $layoutShellRoute,
+  $notificationPermissionRoute,
   $feedRoute,
   $postDetailRoute,
   $addPostRoute,
@@ -194,6 +195,32 @@ mixin $EssentialsRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/essentials');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $notificationPermissionRoute => GoRouteData.$route(
+  path: '/notification-allow',
+  factory: $NotificationPermissionRoute._fromState,
+);
+
+mixin $NotificationPermissionRoute on GoRouteData {
+  static NotificationPermissionRoute _fromState(GoRouterState state) =>
+      NotificationPermissionRoute();
+
+  @override
+  String get location => GoRouteData.$location('/notification-allow');
 
   @override
   void go(BuildContext context) => context.go(location);

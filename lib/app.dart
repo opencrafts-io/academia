@@ -109,24 +109,6 @@ class _AcademiaState extends State<Academia> {
           create: (context) =>
               sl<AgendaEventBloc>()..add(FetchCachedAgendaEventsEvent()),
         ),
-        BlocProvider(
-          create: (context) => sl<NotificationBloc>()
-            ..add(
-              InitializeLocalNotificationEvent(
-                channels: [
-                  NotificationChannelConfig.reminders,
-                  NotificationChannelConfig.alerts,
-                  NotificationChannelConfig.updates,
-                  NotificationChannelConfig.courseAlerts,
-                ],
-              ),
-            )
-            ..add(
-              InitializeOneSignalEvent(
-                appId: "88ca0bb7-c0d7-4e36-b9e6-ea0e29213593",
-              ),
-            ),
-        ),
         BlocProvider(create: (context) => sl<SemesterCubit>()),
         BlocProvider(create: (context) => sl<CourseCubit>()),
         BlocProvider(create: (context) => sl<InstitutionBloc>()),
@@ -146,13 +128,6 @@ class _AcademiaState extends State<Academia> {
                 AppRouter.router.refresh();
                 if (state is AuthAuthenticated) {
                   context.read<FeedBloc>().add(CheckFeedLikeStatuses());
-                }
-              },
-            ),
-            BlocListener<NotificationBloc, NotificationState>(
-              listener: (context, state) {
-                if (state is NotificationErrorState) {
-                  _logger.e(state.message);
                 }
               },
             ),
