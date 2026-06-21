@@ -77,6 +77,11 @@ class _AddCourseSheetState extends State<AddCourseSheet> {
                 autofocus: true,
                 textCapitalization: TextCapitalization.sentences,
                 autovalidateMode: AutovalidateMode.onUserInteractionIfError,
+                validator: (val) {
+                  final value = val?.trim() ?? '';
+                  if (value.isEmpty) return 'Required field';
+                  return null;
+                },
                 maxLength: 30,
                 keyboardType: TextInputType.name,
                 decoration: InputDecoration(
