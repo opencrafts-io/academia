@@ -41,14 +41,7 @@ class _AddTicketScreenState extends State<AddTicketScreen> {
     if (!widget.isMultiDayEvent) return;
     _selectedTicketDateRange = DateTimeRange(
       start: widget.eventStartDateTime,
-      end: DateTime(
-        widget.eventStartDateTime.year,
-        widget.eventStartDateTime.month,
-        widget.eventStartDateTime.day,
-        23,
-        59,
-        59,
-      ),
+      end: widget.eventEndDateTime,
     );
   }
 

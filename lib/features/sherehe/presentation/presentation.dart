@@ -69,5 +69,6 @@ export 'widgets/event_links_widgets.dart';
 export 'widgets/ticket_links_widgets.dart';
 export 'utils/sherehe_utils.dart';
 export 'utils/sherehe_files_utils.dart';
+export 'utils/confirm_payment_args.dart';
 export 'constants/sherehe_constants.dart';
 export 'pdfs/attendee_pdf.dart';
