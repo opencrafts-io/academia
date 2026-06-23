@@ -131,9 +131,7 @@ extension AppDatabaseExtension on AppDataBase {
     );
   }
 
-  Future<void> migrate33To34(Migrator m) async {
-    // Schema changed: removed day/campus/invigilator columns, made coordinator/hrs
-    // optional with defaults, added raw_data JSON blob column.
+  Future<void> migrate35To36(Migrator m) async {
     await m.database.customStatement("DROP TABLE IF EXISTS 'exam_timetable';");
     await m.createTable(examTimetable);
   }
