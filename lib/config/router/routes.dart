@@ -814,7 +814,7 @@ class CreateTodoListRoute extends GoRouteData with $CreateTodoListRoute {
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return ModalSheetPage(
-      fullscreenDialog: false,
+      fullscreenDialog: true,
       swipeDismissible: true,
       transitionCurve: Curves.bounceIn,
       viewportBuilder: (context, child) =>
@@ -829,7 +829,7 @@ class CreateTodoListRoute extends GoRouteData with $CreateTodoListRoute {
             bottom: MediaQuery.viewInsetsOf(context).bottom,
           ),
           decoration: MaterialSheetDecoration(
-            size: SheetSize.fit,
+            size: SheetSize.stretch,
             clipBehavior: Clip.antiAlias,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
@@ -1394,11 +1394,32 @@ class AddCoursesRoute extends GoRouteData with $AddCoursesRoute {
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return ModalSheetPage(
-      viewportBuilder: (context, child) => SheetViewport(
-        padding: EdgeInsets.only(top: MediaQuery.viewPaddingOf(context).top),
-        child: child,
+      fullscreenDialog: false,
+      swipeDismissible: true,
+      transitionCurve: Curves.bounceIn,
+      viewportBuilder: (context, child) =>
+          SheetViewport(padding: EdgeInsets.zero, child: child),
+      child: SheetKeyboardDismissible(
+        dismissBehavior: SheetKeyboardDismissBehavior.onDragDown(
+          isContentScrollAware: true,
+        ),
+        child: Sheet(
+          scrollConfiguration: const SheetScrollConfiguration(),
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.viewInsetsOf(context).bottom,
+          ),
+          decoration: MaterialSheetDecoration(
+            size: SheetSize.fit,
+            clipBehavior: Clip.antiAlias,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            ),
+          ),
+          physics: BouncingSheetPhysics(),
+
+          child: const AddCourseSheet(),
+        ),
       ),
-      child: Sheet(child: const AddCourseSheet()),
     );
   }
 }
