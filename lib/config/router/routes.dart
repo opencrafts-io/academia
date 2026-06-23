@@ -318,18 +318,27 @@ class AddTicketRoute extends GoRouteData with $AddTicketRoute {
   final DateTime eventStartDateTime;
   final DateTime eventEndDateTime;
   final bool isMultiDayEvent;
+  final bool isTicketPage;
+  final bool isEventScopeInstitution;
 
   const AddTicketRoute({
     this.isMultiDayEvent = false,
     required this.eventStartDateTime,
     required this.eventEndDateTime,
+    required this.isTicketPage,
+    required this.isEventScopeInstitution,
   });
   @override
   Widget build(BuildContext context, GoRouterState state) {
+    final eligibleInstitutions = state.extra as List<Institution>?;
+
     return AddTicketScreen(
       isMultiDayEvent: isMultiDayEvent,
       eventStartDateTime: eventStartDateTime,
       eventEndDateTime: eventEndDateTime,
+      isTicketPage: isTicketPage,
+      isEventScopeInstitution: isEventScopeInstitution,
+      eligibleInstitutions: eligibleInstitutions,
     );
   }
 }
@@ -346,14 +355,16 @@ class ShereheSelectInstitutionsRoute extends GoRouteData
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    final selectedInstitutions = state.extra is List<Institution>
-        ? state.extra as List<Institution>
-        : <Institution>[];
+        final shereheInstitutionsArgs = state.extra is ShereheInstitutionRouteArgs
+            ? state.extra as ShereheInstitutionRouteArgs
+            : ShereheInstitutionRouteArgs(selectedInstitutions: [], eligibleInstitutions: []);
 
     return ShereheSelectInstitutionsScreen(
       title: title,
       subtitle: subtitle,
-      selectedInstitutions: selectedInstitutions,
+      selectedInstitutions: shereheInstitutionsArgs.selectedInstitutions,
+      eligibleInstitutions: shereheInstitutionsArgs.eligibleInstitutions,
+      onlyShowEligibleInstitutions: shereheInstitutionsArgs.onlyShowEligibleInstitutions,
     );
   }
 }
