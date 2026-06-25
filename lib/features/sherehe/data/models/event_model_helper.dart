@@ -1,4 +1,5 @@
 import 'package:academia/database/database.dart';
+import 'package:academia/features/institution/data/models/institution_model_helper.dart';
 import 'package:academia/features/sherehe/data/data.dart';
 import 'package:academia/features/sherehe/domain/entities/event.dart';
 
@@ -20,7 +21,9 @@ extension EventModelHelper on EventData {
     updatedAt: updatedAt,
     deletedAt: deletedAt,
     scope: scope,
-    institutions: institutions != null ? List<int>.from(institutions!) : null,
+    institutions: institutions
+        ?.map((institution) => InstitutionData.fromJson(institution).toEntity())
+        .toList(),
     paymentInfo: paymentInfo != null
         ? PaymentInfoData.fromJson(paymentInfo!).toEntity()
         : null,
@@ -45,7 +48,9 @@ extension EventEntityHelper on Event {
     updatedAt: updatedAt,
     deletedAt: deletedAt,
     scope: scope,
-    institutions: institutions,
+    institutions: institutions
+        ?.map((institution) => institution.toData().toJson())
+        .toList(),
     paymentInfo: paymentInfo?.toModel().toJson(),
   );
 }

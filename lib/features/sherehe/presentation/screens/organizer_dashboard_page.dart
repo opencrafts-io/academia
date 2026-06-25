@@ -1,6 +1,7 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/constants/responsive_break_points.dart';
 import 'package:academia/core/core.dart';
+import 'package:academia/features/institution/domain/entities/institution.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:academia/gen/assets.gen.dart';
 import 'package:academia/injection_container.dart';
@@ -17,7 +18,7 @@ class OrganizerDashboardPage extends StatefulWidget {
   final String eventEndDate;
   final String? eventPosterImage;
   final String eventScope;
-  final List<int>? eventInstitutions;
+  final List<Institution>? eventInstitutions;
 
   const OrganizerDashboardPage({
     super.key,

@@ -507,7 +507,7 @@ class OrganizerDashboardRoute extends GoRouteData
   });
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    final eventInstitutions = state.extra as List<int>?;
+    final eventInstitutions = state.extra as List<Institution>?;
 
     return OrganizerDashboardPage(
       eventId: eventId,

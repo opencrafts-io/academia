@@ -1,3 +1,4 @@
+import 'package:academia/features/institution/domain/entities/institution.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:equatable/equatable.dart';
 
@@ -19,7 +20,7 @@ class Event extends Equatable {
   final String updatedAt;
   final String? deletedAt;
   final String scope;
-  final List<int>? institutions;
+  final List<Institution>? institutions;
   final PaymentInfo? paymentInfo;
 
   const Event({
@@ -62,7 +63,7 @@ class Event extends Equatable {
     String? updatedAt,
     String? deletedAt,
     String? scope,
-    List<int>? institutions,
+    List<Institution>? institutions,
     PaymentInfo? paymentInfo,
   }) {
     return Event(
