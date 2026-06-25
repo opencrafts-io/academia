@@ -238,8 +238,15 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                         isMultiDayEvent: isMultiDayEvent,
                         eventStartDateTime: widget.eventStartDateTime,
                         eventEndDateTime: widget.eventEndDateTime,
+                        isTicketPage: true,
+                        isEventScopeInstitution:
+                            widget.selectedEventScopeType ==
+                            ScopeTypes.institution,
                       ).location,
-                      extra: ticket,
+                      extra: EditAddedTicketArgs(
+                        ticket: ticket,
+                        eligibleInstitutions: widget.eligibleInstitutions,
+                      ),
                     );
 
                     if (!context.mounted) return;

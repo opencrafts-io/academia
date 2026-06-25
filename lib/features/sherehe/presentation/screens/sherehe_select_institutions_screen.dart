@@ -107,6 +107,7 @@ class _ShereheSelectInstitutionsScreenState
                     ),
                   ),
                 ),
+                // IF event is institution-scoped and eligible institutions are provided, show only eligible institutions
                 if (widget.onlyShowEligibleInstitutions == true &&
                     widget.eligibleInstitutions != null &&
                     widget.eligibleInstitutions!.isNotEmpty) ...[
@@ -168,6 +169,7 @@ class _ShereheSelectInstitutionsScreenState
                     }, childCount: widget.eligibleInstitutions!.length),
                   ),
                 ] else ...[
+                  // ELSE Show the default search bar to allow users to search for institutions
                   SliverToBoxAdapter(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),

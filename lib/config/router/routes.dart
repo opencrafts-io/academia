@@ -296,20 +296,27 @@ class EditAddedTicketRoute extends GoRouteData with $EditAddedTicketRoute {
   final bool isMultiDayEvent;
   final DateTime eventStartDateTime;
   final DateTime eventEndDateTime;
+  final bool isTicketPage;
+  final bool isEventScopeInstitution;
 
   const EditAddedTicketRoute({
     this.isMultiDayEvent = false,
     required this.eventStartDateTime,
     required this.eventEndDateTime,
+    required this.isTicketPage,
+    required this.isEventScopeInstitution,
   });
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    final addedTicket = state.extra as TicketUI;
+    final editTicketArgs = state.extra as EditAddedTicketArgs;
     return EditAddedTicketScreen(
-      addedTicket: addedTicket,
+      addedTicket: editTicketArgs.ticket,
       isMultiDayEvent: isMultiDayEvent,
       eventStartDateTime: eventStartDateTime,
       eventEndDateTime: eventEndDateTime,
+      isTicketPage: isTicketPage,
+      isEventScopeInstitution: isEventScopeInstitution,
+      eligibleInstitutions: editTicketArgs.eligibleInstitutions,
     );
   }
 }
@@ -355,16 +362,20 @@ class ShereheSelectInstitutionsRoute extends GoRouteData
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-        final shereheInstitutionsArgs = state.extra is ShereheInstitutionRouteArgs
-            ? state.extra as ShereheInstitutionRouteArgs
-            : ShereheInstitutionRouteArgs(selectedInstitutions: [], eligibleInstitutions: []);
+    final shereheInstitutionsArgs = state.extra is ShereheInstitutionRouteArgs
+        ? state.extra as ShereheInstitutionRouteArgs
+        : ShereheInstitutionRouteArgs(
+            selectedInstitutions: [],
+            eligibleInstitutions: [],
+          );
 
     return ShereheSelectInstitutionsScreen(
       title: title,
       subtitle: subtitle,
       selectedInstitutions: shereheInstitutionsArgs.selectedInstitutions,
       eligibleInstitutions: shereheInstitutionsArgs.eligibleInstitutions,
-      onlyShowEligibleInstitutions: shereheInstitutionsArgs.onlyShowEligibleInstitutions,
+      onlyShowEligibleInstitutions:
+          shereheInstitutionsArgs.onlyShowEligibleInstitutions,
     );
   }
 }

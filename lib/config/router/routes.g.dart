@@ -550,6 +550,12 @@ mixin $EditAddedTicketRoute on GoRouteData {
         eventEndDateTime: DateTime.parse(
           state.uri.queryParameters['event-end-date-time']!,
         ),
+        isTicketPage: _$boolConverter(
+          state.uri.queryParameters['is-ticket-page']!,
+        ),
+        isEventScopeInstitution: _$boolConverter(
+          state.uri.queryParameters['is-event-scope-institution']!,
+        ),
       );
 
   EditAddedTicketRoute get _self => this as EditAddedTicketRoute;
@@ -562,6 +568,8 @@ mixin $EditAddedTicketRoute on GoRouteData {
         'is-multi-day-event': _self.isMultiDayEvent.toString(),
       'event-start-date-time': _self.eventStartDateTime.toString(),
       'event-end-date-time': _self.eventEndDateTime.toString(),
+      'is-ticket-page': _self.isTicketPage.toString(),
+      'is-event-scope-institution': _self.isEventScopeInstitution.toString(),
     },
   );
 
