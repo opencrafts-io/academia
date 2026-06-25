@@ -110,6 +110,31 @@ class _ShereheSelectInstitutionsScreenState
                 if (widget.onlyShowEligibleInstitutions == true &&
                     widget.eligibleInstitutions != null &&
                     widget.eligibleInstitutions!.isNotEmpty) ...[
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                      child: Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.primaryContainer,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          spacing: 8.0,
+                          children: [
+                            const Icon(Icons.info_outline, size: 20),
+                            Expanded(
+                              child: Text(
+                                'This event is institution-scoped. Tickets can only be assigned to institutions that are eligible for this event.',
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                   if (_selectedInstitutions.isNotEmpty)
                     SliverToBoxAdapter(
                       child: ShereheInstitutionChipSelector(
