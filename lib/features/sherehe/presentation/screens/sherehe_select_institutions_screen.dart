@@ -112,22 +112,11 @@ class _ShereheSelectInstitutionsScreenState
                     widget.eligibleInstitutions!.isNotEmpty) ...[
                   if (_selectedInstitutions.isNotEmpty)
                     SliverToBoxAdapter(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Wrap(
-                          spacing: 8,
-                          runSpacing: 6,
-                          children: _selectedInstitutions.map((inst) {
-                            return Chip(
-                              label: Text(inst.name),
-                              onDeleted: () {
-                                setState(
-                                  () => _selectedInstitutions.remove(inst),
-                                );
-                              },
-                            );
-                          }).toList(),
-                        ),
+                      child: ShereheInstitutionChipSelector(
+                        selectedInstitutions: _selectedInstitutions,
+                        onDeleted: (inst) {
+                          setState(() => _selectedInstitutions.remove(inst));
+                        },
                       ),
                     ),
                   SliverList(
@@ -203,22 +192,11 @@ class _ShereheSelectInstitutionsScreenState
                   const SliverToBoxAdapter(child: SizedBox(height: 12)),
                   if (_selectedInstitutions.isNotEmpty)
                     SliverToBoxAdapter(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Wrap(
-                          spacing: 8,
-                          runSpacing: 6,
-                          children: _selectedInstitutions.map((inst) {
-                            return Chip(
-                              label: Text(inst.name),
-                              onDeleted: () {
-                                setState(
-                                  () => _selectedInstitutions.remove(inst),
-                                );
-                              },
-                            );
-                          }).toList(),
-                        ),
+                      child: ShereheInstitutionChipSelector(
+                        selectedInstitutions: _selectedInstitutions,
+                        onDeleted: (inst) {
+                          setState(() => _selectedInstitutions.remove(inst));
+                        },
                       ),
                     ),
 

@@ -68,6 +68,7 @@ export 'widgets/private_link_widget.dart';
 export 'widgets/event_links_widgets.dart';
 export 'widgets/ticket_links_widgets.dart';
 export 'widgets/sherehe_institution_checkbox_list.dart';
+export 'widgets/sherehe_institution_chip_selector.dart';
 export 'utils/sherehe_utils.dart';
 export 'utils/sherehe_files_utils.dart';
 export 'utils/confirm_payment_args.dart';
