@@ -850,6 +850,7 @@ mixin $OrganizerDashboardRoute on GoRouteData {
         eventStartDate: state.uri.queryParameters['event-start-date']!,
         eventEndDate: state.uri.queryParameters['event-end-date']!,
         eventPosterImage: state.uri.queryParameters['event-poster-image'],
+        eventScope: state.uri.queryParameters['event-scope']!,
       );
 
   OrganizerDashboardRoute get _self => this as OrganizerDashboardRoute;
@@ -864,6 +865,7 @@ mixin $OrganizerDashboardRoute on GoRouteData {
       'event-end-date': _self.eventEndDate,
       if (_self.eventPosterImage != null)
         'event-poster-image': _self.eventPosterImage,
+      'event-scope': _self.eventScope,
     },
   );
 
@@ -889,6 +891,7 @@ mixin $AllAttendeesRoute on GoRouteData {
     eventStartDate: state.uri.queryParameters['event-start-date']!,
     eventEndDate: state.uri.queryParameters['event-end-date']!,
     eventPosterImage: state.uri.queryParameters['event-poster-image'],
+    eventScope: state.uri.queryParameters['event-scope']!,
   );
 
   AllAttendeesRoute get _self => this as AllAttendeesRoute;
@@ -903,6 +906,7 @@ mixin $AllAttendeesRoute on GoRouteData {
       'event-end-date': _self.eventEndDate,
       if (_self.eventPosterImage != null)
         'event-poster-image': _self.eventPosterImage,
+      'event-scope': _self.eventScope,
     },
   );
 
@@ -928,6 +932,7 @@ mixin $AllScannersRoute on GoRouteData {
     eventStartDate: state.uri.queryParameters['event-start-date']!,
     eventEndDate: state.uri.queryParameters['event-end-date']!,
     eventPosterImage: state.uri.queryParameters['event-poster-image'],
+    eventScope: state.uri.queryParameters['event-scope']!,
   );
 
   AllScannersRoute get _self => this as AllScannersRoute;
@@ -942,6 +947,7 @@ mixin $AllScannersRoute on GoRouteData {
       'event-end-date': _self.eventEndDate,
       if (_self.eventPosterImage != null)
         'event-poster-image': _self.eventPosterImage,
+      'event-scope': _self.eventScope,
     },
   );
 
@@ -968,6 +974,7 @@ mixin $AddEventScannerRoute on GoRouteData {
         eventStartDate: state.uri.queryParameters['event-start-date']!,
         eventEndDate: state.uri.queryParameters['event-end-date']!,
         eventPosterImage: state.uri.queryParameters['event-poster-image'],
+        eventScope: state.uri.queryParameters['event-scope']!,
       );
 
   AddEventScannerRoute get _self => this as AddEventScannerRoute;
@@ -982,6 +989,7 @@ mixin $AddEventScannerRoute on GoRouteData {
       'event-end-date': _self.eventEndDate,
       if (_self.eventPosterImage != null)
         'event-poster-image': _self.eventPosterImage,
+      'event-scope': _self.eventScope,
     },
   );
 
@@ -1008,6 +1016,10 @@ mixin $AllEventTicketsRoute on GoRouteData {
         eventStartDate: state.uri.queryParameters['event-start-date']!,
         eventEndDate: state.uri.queryParameters['event-end-date']!,
         eventPosterImage: state.uri.queryParameters['event-poster-image'],
+        isEventScopeInstitution: _$boolConverter(
+          state.uri.queryParameters['is-event-scope-institution']!,
+        ),
+        eventScope: state.uri.queryParameters['event-scope']!,
       );
 
   AllEventTicketsRoute get _self => this as AllEventTicketsRoute;
@@ -1022,6 +1034,8 @@ mixin $AllEventTicketsRoute on GoRouteData {
       'event-end-date': _self.eventEndDate,
       if (_self.eventPosterImage != null)
         'event-poster-image': _self.eventPosterImage,
+      'is-event-scope-institution': _self.isEventScopeInstitution.toString(),
+      'event-scope': _self.eventScope,
     },
   );
 
@@ -1048,6 +1062,10 @@ mixin $TicketLinksRoute on GoRouteData {
     eventStartDate: state.uri.queryParameters['event-start-date']!,
     eventEndDate: state.uri.queryParameters['event-end-date']!,
     eventPosterImage: state.uri.queryParameters['event-poster-image'],
+    isEventScopeInstitution: _$boolConverter(
+      state.uri.queryParameters['is-event-scope-institution']!,
+    ),
+    eventScope: state.uri.queryParameters['event-scope']!,
   );
 
   TicketLinksRoute get _self => this as TicketLinksRoute;
@@ -1063,6 +1081,8 @@ mixin $TicketLinksRoute on GoRouteData {
       'event-end-date': _self.eventEndDate,
       if (_self.eventPosterImage != null)
         'event-poster-image': _self.eventPosterImage,
+      'is-event-scope-institution': _self.isEventScopeInstitution.toString(),
+      'event-scope': _self.eventScope,
     },
   );
 
@@ -1088,6 +1108,7 @@ mixin $EventLinksRoute on GoRouteData {
     eventStartDate: state.uri.queryParameters['event-start-date']!,
     eventEndDate: state.uri.queryParameters['event-end-date']!,
     eventPosterImage: state.uri.queryParameters['event-poster-image'],
+    eventScope: state.uri.queryParameters['event-scope']!,
   );
 
   EventLinksRoute get _self => this as EventLinksRoute;
@@ -1102,6 +1123,7 @@ mixin $EventLinksRoute on GoRouteData {
       'event-end-date': _self.eventEndDate,
       if (_self.eventPosterImage != null)
         'event-poster-image': _self.eventPosterImage,
+      'event-scope': _self.eventScope,
     },
   );
 
@@ -1163,6 +1185,9 @@ mixin $CreateTicketRoute on GoRouteData {
     eventEndDateTime: DateTime.parse(
       state.uri.queryParameters['event-end-date-time']!,
     ),
+    isEventScopeInstitution: _$boolConverter(
+      state.uri.queryParameters['is-event-scope-institution']!,
+    ),
   );
 
   CreateTicketRoute get _self => this as CreateTicketRoute;
@@ -1174,6 +1199,7 @@ mixin $CreateTicketRoute on GoRouteData {
       'event-id': _self.eventId,
       'event-start-date-time': _self.eventStartDateTime.toString(),
       'event-end-date-time': _self.eventEndDateTime.toString(),
+      'is-event-scope-institution': _self.isEventScopeInstitution.toString(),
     },
   );
 

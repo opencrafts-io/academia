@@ -494,6 +494,7 @@ class OrganizerDashboardRoute extends GoRouteData
   final String eventStartDate;
   final String eventEndDate;
   final String? eventPosterImage;
+  final String eventScope;
 
   const OrganizerDashboardRoute({
     required this.eventId,
@@ -502,9 +503,12 @@ class OrganizerDashboardRoute extends GoRouteData
     required this.eventStartDate,
     required this.eventEndDate,
     this.eventPosterImage,
+    required this.eventScope,
   });
   @override
   Widget build(BuildContext context, GoRouterState state) {
+    final eventInstitutions = state.extra as List<int>?;
+
     return OrganizerDashboardPage(
       eventId: eventId,
       eventName: eventName,
@@ -512,6 +516,8 @@ class OrganizerDashboardRoute extends GoRouteData
       eventStartDate: eventStartDate,
       eventEndDate: eventEndDate,
       eventPosterImage: eventPosterImage,
+      eventScope: eventScope,
+      eventInstitutions: eventInstitutions,
     );
   }
 }
@@ -523,6 +529,7 @@ class AllAttendeesRoute extends GoRouteData with $AllAttendeesRoute {
   final String eventStartDate;
   final String eventEndDate;
   final String? eventPosterImage;
+  final String eventScope;
 
   const AllAttendeesRoute({
     required this.eventId,
@@ -531,6 +538,7 @@ class AllAttendeesRoute extends GoRouteData with $AllAttendeesRoute {
     required this.eventStartDate,
     required this.eventEndDate,
     this.eventPosterImage,
+    required this.eventScope,
   });
   @override
   Widget build(BuildContext context, GoRouterState state) {
@@ -548,6 +556,7 @@ class AllScannersRoute extends GoRouteData with $AllScannersRoute {
   final String eventStartDate;
   final String eventEndDate;
   final String? eventPosterImage;
+  final String eventScope;
 
   const AllScannersRoute({
     required this.eventId,
@@ -556,6 +565,7 @@ class AllScannersRoute extends GoRouteData with $AllScannersRoute {
     required this.eventStartDate,
     required this.eventEndDate,
     this.eventPosterImage,
+    required this.eventScope,
   });
   @override
   Widget build(BuildContext context, GoRouterState state) {
@@ -568,6 +578,7 @@ class AllScannersRoute extends GoRouteData with $AllScannersRoute {
         eventStartDate: eventStartDate,
         eventEndDate: eventEndDate,
         eventPosterImage: eventPosterImage,
+        eventScope: eventScope,
       ),
     );
   }
@@ -580,6 +591,8 @@ class AllEventTicketsRoute extends GoRouteData with $AllEventTicketsRoute {
   final String eventStartDate;
   final String eventEndDate;
   final String? eventPosterImage;
+  final bool isEventScopeInstitution;
+  final String eventScope;
 
   const AllEventTicketsRoute({
     required this.eventId,
@@ -588,9 +601,13 @@ class AllEventTicketsRoute extends GoRouteData with $AllEventTicketsRoute {
     required this.eventStartDate,
     required this.eventEndDate,
     this.eventPosterImage,
+    required this.isEventScopeInstitution,
+    required this.eventScope,
   });
   @override
   Widget build(BuildContext context, GoRouterState state) {
+    final eligibleInstitutions = state.extra as List<Institution>?;
+
     return BlocProvider(
       create: (context) =>
           sl<TicketStatsBloc>()..add(GetTicketStats(eventId: eventId)),
@@ -601,6 +618,9 @@ class AllEventTicketsRoute extends GoRouteData with $AllEventTicketsRoute {
         eventStartDate: eventStartDate,
         eventEndDate: eventEndDate,
         eventPosterImage: eventPosterImage,
+        eligibleInstitutions: eligibleInstitutions,
+        isEventScopeInstitution: isEventScopeInstitution,
+        eventScope: eventScope,
       ),
     );
   }
@@ -614,6 +634,8 @@ class TicketLinksRoute extends GoRouteData with $TicketLinksRoute {
   final String eventStartDate;
   final String eventEndDate;
   final String? eventPosterImage;
+  final bool isEventScopeInstitution;
+  final String eventScope;
 
   const TicketLinksRoute({
     required this.eventId,
@@ -623,6 +645,8 @@ class TicketLinksRoute extends GoRouteData with $TicketLinksRoute {
     required this.eventStartDate,
     required this.eventEndDate,
     this.eventPosterImage,
+    required this.isEventScopeInstitution,
+    required this.eventScope,
   });
   @override
   Widget build(BuildContext context, GoRouterState state) {
@@ -648,6 +672,7 @@ class EventLinksRoute extends GoRouteData with $EventLinksRoute {
   final String eventStartDate;
   final String eventEndDate;
   final String? eventPosterImage;
+  final String eventScope;
 
   const EventLinksRoute({
     required this.eventId,
@@ -656,6 +681,7 @@ class EventLinksRoute extends GoRouteData with $EventLinksRoute {
     required this.eventStartDate,
     required this.eventEndDate,
     this.eventPosterImage,
+    required this.eventScope,
   });
   @override
   Widget build(BuildContext context, GoRouterState state) {
@@ -681,6 +707,7 @@ class AddEventScannerRoute extends GoRouteData with $AddEventScannerRoute {
   final String eventStartDate;
   final String eventEndDate;
   final String? eventPosterImage;
+  final String eventScope;
 
   const AddEventScannerRoute({
     required this.eventId,
@@ -689,6 +716,7 @@ class AddEventScannerRoute extends GoRouteData with $AddEventScannerRoute {
     required this.eventStartDate,
     required this.eventEndDate,
     this.eventPosterImage,
+    required this.eventScope,
   });
   @override
   Widget build(BuildContext context, GoRouterState state) {
@@ -701,19 +729,25 @@ class CreateTicketRoute extends GoRouteData with $CreateTicketRoute {
   final String eventId;
   final DateTime eventStartDateTime;
   final DateTime eventEndDateTime;
+  final bool isEventScopeInstitution;
 
   const CreateTicketRoute({
     required this.eventId,
     required this.eventStartDateTime,
     required this.eventEndDateTime,
+    required this.isEventScopeInstitution,
   });
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
+    final eligibleInstitutions = state.extra as List<Institution>?;
+
     return CreateTicketScreen(
       eventId: eventId,
       eventStartDateTime: eventStartDateTime,
       eventEndDateTime: eventEndDateTime,
+      isEventScopeInstitution: isEventScopeInstitution,
+      eligibleInstitutions: eligibleInstitutions,
     );
   }
 }

@@ -1,8 +1,10 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/core/core.dart';
+import 'package:academia/features/institution/domain/entities/institution.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class AllEventTicketsScreen extends StatefulWidget {
   final String eventId;
@@ -11,6 +13,9 @@ class AllEventTicketsScreen extends StatefulWidget {
   final String eventStartDate;
   final String eventEndDate;
   final String? eventPosterImage;
+  final bool? isEventScopeInstitution;
+  final String eventScope;
+  final List<Institution>? eligibleInstitutions;
 
   const AllEventTicketsScreen({
     super.key,
@@ -20,6 +25,9 @@ class AllEventTicketsScreen extends StatefulWidget {
     required this.eventStartDate,
     required this.eventEndDate,
     this.eventPosterImage,
+    this.isEventScopeInstitution = false,
+    this.eligibleInstitutions = const [],
+    required this.eventScope,
   });
 
   @override
@@ -71,6 +79,9 @@ class _AllEventTicketsScreenState extends State<AllEventTicketsScreen> {
                   eventStartDate: widget.eventStartDate,
                   eventEndDate: widget.eventEndDate,
                   eventPosterImage: widget.eventPosterImage,
+                  eventScope: widget.eventScope,
+                  isEventScopeInstitution:
+                      widget.isEventScopeInstitution ?? false,
                 ).push(context);
               },
             ),
@@ -264,11 +275,16 @@ class _AllEventTicketsScreenState extends State<AllEventTicketsScreen> {
 
               return FloatingActionButton.extended(
                 onPressed: () async {
-                  final result = await CreateTicketRoute(
-                    eventId: widget.eventId,
-                    eventStartDateTime: DateTime.parse(widget.eventStartDate),
-                    eventEndDateTime: DateTime.parse(widget.eventEndDate),
-                  ).push(context);
+                  final result = await context.push(
+                    CreateTicketRoute(
+                      eventId: widget.eventId,
+                      eventStartDateTime: DateTime.parse(widget.eventStartDate),
+                      eventEndDateTime: DateTime.parse(widget.eventEndDate),
+                      isEventScopeInstitution:
+                          widget.isEventScopeInstitution ?? false,
+                    ).location,
+                    extra: widget.eligibleInstitutions,
+                  );
 
                   if (result == true && context.mounted) {
                     context.read<TicketStatsBloc>().add(
