@@ -274,6 +274,13 @@ class _CommunityHomeState extends State<CommunityHome>
                               behavior: SnackBarBehavior.floating,
                             ),
                           );
+                          _currentPage = 1;
+                          context.read<FeedBloc>().add(
+                            LoadPostsForCommunityEvent(
+                              communityID: widget.communityId,
+                              page: 1,
+                            ),
+                          );
                         } else if (state is PostCreateError) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -287,9 +294,12 @@ class _CommunityHomeState extends State<CommunityHome>
                         onRefresh: () async {
                           _currentPage = 1;
                           context.read<FeedBloc>().add(
-                            LoadFeedEvent(page: _currentPage),
+                            LoadPostsForCommunityEvent(
+                              communityID: widget.communityId,
+                              page: 1,
+                            ),
                           );
-                          await Future.delayed(Duration(seconds: 2));
+                          await Future.delayed(const Duration(seconds: 2));
                         },
                         child: CustomScrollView(
                           controller: _scrollController,
