@@ -73,7 +73,7 @@ class _FullScreenVideoViewer extends StatefulWidget {
 
 class _FullScreenVideoViewerState extends State<_FullScreenVideoViewer> {
   late VideoPlayerController _videoPlayerController;
-  late ChewieController _chewieController;
+  ChewieController? _chewieController;
   bool _isLoading = true;
 
   @override
@@ -81,16 +81,6 @@ class _FullScreenVideoViewerState extends State<_FullScreenVideoViewer> {
     super.initState();
     _videoPlayerController = VideoPlayerController.networkUrl(
       Uri.parse(widget.url),
-    );
-    _chewieController = ChewieController(
-      videoPlayerController: _videoPlayerController,
-      autoPlay: true,
-      looping: false,
-      showControls: true,
-      allowFullScreen: true,
-      materialProgressColors: ChewieProgressColors(
-        playedColor: Theme.of(context).colorScheme.primary,
-      ),
     );
     _videoPlayerController.initialize().then((_) {
       if (mounted) {
@@ -102,9 +92,25 @@ class _FullScreenVideoViewerState extends State<_FullScreenVideoViewer> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _chewieController?.dispose();
+    _chewieController = ChewieController(
+      videoPlayerController: _videoPlayerController,
+      autoPlay: true,
+      looping: false,
+      showControls: true,
+      allowFullScreen: true,
+      materialProgressColors: ChewieProgressColors(
+        playedColor: Theme.of(context).colorScheme.primary,
+      ),
+    );
+  }
+
+  @override
   void dispose() {
     _videoPlayerController.dispose();
-    _chewieController.dispose();
+    _chewieController?.dispose();
     super.dispose();
   }
 
@@ -121,9 +127,9 @@ class _FullScreenVideoViewerState extends State<_FullScreenVideoViewer> {
         ),
       ),
       body: Center(
-        child: _isLoading
+        child: _isLoading || _chewieController == null
             ? const CircularProgressIndicator()
-            : Chewie(controller: _chewieController),
+            : Chewie(controller: _chewieController!),
       ),
     );
   }
