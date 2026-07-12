@@ -97,26 +97,28 @@ class TodoCard extends StatelessWidget {
         isThreeLine: true,
         contentPadding: EdgeInsets.zero,
         subtitle: _buildContent(context),
-        trailing: Column(
-          spacing: 4,
-          children: [
-            if (item.syncStatus == SyncStatus.pending)
-              Icon(
-                Icons.cloud_upload_outlined,
-                size: 14,
-                color: scheme.onSurfaceVariant.withAlpha(128),
-              ),
+        trailing: _isCompleted
+            ? null
+            : Column(
+                spacing: 4,
+                children: [
+                  if (item.syncStatus == SyncStatus.pending)
+                    Icon(
+                      Icons.cloud_upload_outlined,
+                      size: 14,
+                      color: scheme.onSurfaceVariant.withAlpha(128),
+                    ),
 
-            Container(
-              height: 12,
-              width: 12,
-              decoration: BoxDecoration(
-                color: _priorityColor(context),
-                borderRadius: BorderRadiusGeometry.circular(32),
+                  Container(
+                    height: 12,
+                    width: 12,
+                    decoration: BoxDecoration(
+                      color: _priorityColor(context),
+                      borderRadius: BorderRadiusGeometry.circular(32),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -124,6 +126,23 @@ class TodoCard extends StatelessWidget {
   Widget _buildContent(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
+
+    // A completed task is done - showing its (now stale) due date and
+    // priority would make a finished task look urgent/overdue. Show when
+    // it was completed instead.
+    if (_isCompleted) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 4),
+        child: Text(
+          item.completed != null
+              ? "Completed: ${DateFormat('EEE d MMM').format(item.completed!)}"
+              : "Completed",
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: scheme.onSurfaceVariant.withAlpha(180),
+          ),
+        ),
+      );
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -136,7 +155,6 @@ class TodoCard extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: theme.textTheme.bodySmall?.copyWith(
               color: scheme.onSurfaceVariant,
-              decoration: _isCompleted ? TextDecoration.lineThrough : null,
             ),
           ),
         ],
