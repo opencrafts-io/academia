@@ -65,6 +65,7 @@ class _CreateTodoItemScreenState extends State<CreateTodoItemScreen> {
     );
 
     context.read<TodoItemCubit>().createItem(entity);
+    context.read<TodoListCubit>().markListModified(_selectedListLocalId!);
     if (context.mounted) {
       Navigator.of(context).pop(true);
     }

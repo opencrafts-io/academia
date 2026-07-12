@@ -159,7 +159,10 @@ class _TodoHomeScreenState extends State<TodoHomeScreen>
       builder: (context, state) {
         final lists = state.mapOrNull(success: (s) => s.todoLists) ?? [];
         return DefaultTabController(
-          key: ValueKey(lists.length),
+          // Keyed on order (not just length) so that reordering a list to
+          // the front - e.g. after adding a new item to it - resets the
+          // controller and selects that list's tab.
+          key: ValueKey(lists.map((l) => l.localId).join('-')),
           length: lists.length + 1,
           child: Scaffold(
             body: RefreshIndicator.adaptive(
