@@ -1,3 +1,8 @@
+import 'dart:async';
+
+import 'package:academia/config/config.dart';
+import 'package:academia/features/features.dart';
+import 'package:academia/injection_container.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
@@ -89,10 +94,48 @@ class NotificationServiceImpl implements NotificationService {
   @pragma('vm:entry-point')
   static Future<void> _onActionReceived(ReceivedAction action) async {
     debugPrint('Notification action: ${action.payload}');
+
+    final todoLocalId = int.tryParse(action.payload?['localId'] ?? '');
+    if (todoLocalId != null) {
+      await _handleTodoAction(action, todoLocalId);
+      return;
+    }
+
     final url = action.payload?['url'];
     if (url == null) return;
     final uri = Uri.parse(url);
     await launchUrl(uri, mode: LaunchMode.externalNonBrowserApplication);
+  }
+
+  /// Handles the "View To-do"/"Mark Done" action buttons scheduled by
+  /// [TodoNotificationServiceImpl]. Both button types run on the app's main
+  /// isolate (see [ActionType.Default] and [ActionType.SilentAction]), so
+  /// the DI container set up in `main()` is always available here - no
+  /// background-isolate bootstrap is needed.
+  static Future<void> _handleTodoAction(
+    ReceivedAction action,
+    int todoLocalId,
+  ) async {
+    switch (action.buttonKeyPressed) {
+      case 'btn-do':
+        AppRouter.router.push(
+          UpdateTodoItemRoute(todoLocalID: todoLocalId).location,
+        );
+      case 'btn-done':
+        // Go through the usecase directly rather than TodoItemCubit.completeItem:
+        // the cubit is a lazy singleton that may not have loaded this item into
+        // its in-memory state yet (e.g. the todos tab was never opened this
+        // session), in which case completeItem() would silently no-op.
+        await sl<CompleteTodoItem>()(todoLocalId);
+        if (sl.isRegistered<TodoNotificationService>()) {
+          await sl<TodoNotificationService>().cancelReminder(todoLocalId);
+        }
+        // Best-effort refresh so an already-open todos screen picks up the
+        // change instead of showing stale in-memory state.
+        if (sl.isRegistered<TodoItemCubit>()) {
+          unawaited(sl<TodoItemCubit>().loadItems());
+        }
+    }
   }
 
   @pragma('vm:entry-point')
