@@ -8,6 +8,7 @@ class TodoListCubit extends SafeCubit<TodoListState> {
   final DeleteTodoList deleteTodoListUseCase;
   final SyncTodoLists syncTodoListsUseCase;
   final GetDefaultTodoListUsecase getDefaultTodoListUsecase;
+  final MarkTodoListModified markTodoListModifiedUseCase;
 
   TodoListCubit({
     required this.getTodoListsUseCase,
@@ -16,6 +17,7 @@ class TodoListCubit extends SafeCubit<TodoListState> {
     required this.deleteTodoListUseCase,
     required this.syncTodoListsUseCase,
     required this.getDefaultTodoListUsecase,
+    required this.markTodoListModifiedUseCase,
   }) : super(const TodoListState.initial()) {
     _init();
   }
@@ -124,6 +126,31 @@ class TodoListCubit extends SafeCubit<TodoListState> {
 
       emit(latestState.copyWith(todoLists: syncedList));
     });
+  }
+
+  /// Moves the list with [localId] to the front of the in-memory list
+  /// (optimistically), reflecting that it was just modified, e.g. because a
+  /// new item was added to it. Persists the new `updatedAt` locally so the
+  /// order survives reloads.
+  Future<void> markListModified(int localId) async {
+    final currentState = state.mapOrNull(success: (s) => s);
+    if (currentState == null) return;
+
+    final index = currentState.todoLists.indexWhere(
+      (l) => l.localId == localId,
+    );
+    if (index == -1) return;
+
+    final modified = currentState.todoLists[index].copyWith(
+      updatedAt: DateTime.now(),
+    );
+    final reordered = [
+      modified,
+      ...currentState.todoLists.where((l) => l.localId != localId),
+    ];
+    emit(currentState.copyWith(todoLists: reordered));
+
+    await markTodoListModifiedUseCase(localId);
   }
 
   Future<void> sync() async {

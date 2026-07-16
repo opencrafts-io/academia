@@ -3,10 +3,12 @@ import 'package:academia/core/core.dart';
 import 'package:academia/features/chirp/chirp.dart';
 import 'package:academia/gen/assets.gen.dart';
 import 'package:academia/injection_container.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:time_since/time_since.dart';
 
@@ -57,6 +59,21 @@ class _PostContentWidgetState extends State<PostContentWidget> {
     super.dispose();
   }
 
+  /// Downloads the file at [url] to a temp path and returns an [XFile].
+  /// Returns null if the download fails.
+  Future<XFile?> _downloadAttachment(String url) async {
+    try {
+      final tempDir = await getTemporaryDirectory();
+      final fileName = url.split('/').last.split('?').first;
+      final filePath = '${tempDir.path}/$fileName';
+      await Dio().download(url, filePath,
+          options: Options(responseType: ResponseType.bytes));
+      return XFile(filePath);
+    } catch (_) {
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CommentBloc, CommentState>(
@@ -83,19 +100,38 @@ class _PostContentWidgetState extends State<PostContentWidget> {
                 IconButton(
                   icon: const Icon(Icons.share_outlined),
                   tooltip: 'Share post',
-                  onPressed: () {
+                  onPressed: () async {
                     final url =
                         'https://academia.opencrafts.io${PostDetailRoute(postId: widget.post.id).location}';
                     final box =
                         context.findRenderObject() as RenderBox?;
-                    Share.share(
-                      'Check out this post on Academia:\n\n'
-                      '📝 ${widget.post.title}\n\n'
-                      '🔗 $url',
-                      sharePositionOrigin: box != null
-                          ? box.localToGlobal(Offset.zero) & box.size
-                          : null,
-                    );
+                    final sharePositionOrigin = box != null
+                        ? box.localToGlobal(Offset.zero) & box.size
+                        : null;
+                    final text =
+                        'Check out this post on Academia:\n\n'
+                        '📝 ${widget.post.title}\n\n'
+                        '🔗 $url';
+
+                    // Attach the first image if available
+                    final imageAttachment = widget.post.attachments
+                        .where((a) => a.attachmentType.toLowerCase() == 'image')
+                        .firstOrNull;
+
+                    if (imageAttachment != null) {
+                      final xfile =
+                          await _downloadAttachment(imageAttachment.file);
+                      if (xfile != null) {
+                        await Share.shareXFiles(
+                          [xfile],
+                          text: text,
+                          sharePositionOrigin: sharePositionOrigin,
+                        );
+                        return;
+                      }
+                    }
+
+                    Share.share(text, sharePositionOrigin: sharePositionOrigin);
                   },
                 ),
                 IconButton.filled(

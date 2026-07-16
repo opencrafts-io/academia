@@ -29,6 +29,13 @@ abstract class TodoListRepository {
   /// Specific helper to retrieve the user's default list.
   Future<Either<Failure, TodoListEntity>> getDefaultTodoList();
 
+  /// Records that a todo list was just modified (e.g. a new item was added
+  /// to it) by bumping its `updatedAt` timestamp locally, so it sorts to
+  /// the front as "recently updated". Does not push to the remote.
+  Future<Either<Failure, TodoListEntity>> markTodoListModified(
+    int todoListLocalId,
+  );
+
   /// Trigger a manual synchronization between Local and Remote datasources.
   Future<Either<Failure, Unit>> syncTodoLists();
 }
