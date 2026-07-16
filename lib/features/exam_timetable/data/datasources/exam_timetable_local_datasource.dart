@@ -19,8 +19,10 @@ class ExamTimetableLocalDataSource {
       }
 
       query.orderBy([
-        (exam) => OrderingTerm(expression: exam.day, mode: OrderingMode.asc),
-        (exam) => OrderingTerm(expression: exam.startTime, mode: OrderingMode.asc),
+        (exam) =>
+            OrderingTerm(expression: exam.datetimeStr, mode: OrderingMode.asc),
+        (exam) =>
+            OrderingTerm(expression: exam.startTime, mode: OrderingMode.asc),
       ]);
 
       final results = await query.get();

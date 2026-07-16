@@ -130,4 +130,9 @@ extension AppDatabaseExtension on AppDataBase {
       "DROP TABLE IF EXISTS 'notification_table';",
     );
   }
+
+  Future<void> migrate35To36(Migrator m) async {
+    await m.database.customStatement("DROP TABLE IF EXISTS 'exam_timetable';");
+    await m.createTable(examTimetable);
+  }
 }

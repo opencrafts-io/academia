@@ -1,5 +1,6 @@
 import 'package:academia/features/exam_timetable/domain/entity/exam_timetable.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ExamSearchResultCard extends StatelessWidget {
   final ExamTimetable exam;
@@ -12,6 +13,15 @@ class ExamSearchResultCard extends StatelessWidget {
     required this.isSelected,
     required this.onTap,
   });
+
+  String _formatTime(String isoTime) {
+    try {
+      final dt = DateTime.parse(isoTime).toLocal();
+      return DateFormat('h:mm a').format(dt);
+    } catch (_) {
+      return isoTime;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +53,7 @@ class ExamSearchResultCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      exam.courseCode,
+                      exam.courseCode.replaceAll('\n', ' · '),
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                         color: colorScheme.onSurface,
@@ -58,10 +68,14 @@ class ExamSearchResultCard extends StatelessWidget {
                           color: colorScheme.onSurfaceVariant,
                         ),
                         const SizedBox(width: 6),
-                        Text(
-                          exam.day,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: colorScheme.onSurfaceVariant,
+                        Expanded(
+                          child: Text(
+                            exam.displayDay,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],
@@ -76,7 +90,7 @@ class ExamSearchResultCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 6),
                         Text(
-                          "${exam.startTime} - ${exam.endTime}",
+                          '${_formatTime(exam.startTime)} – ${_formatTime(exam.endTime)}',
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: colorScheme.onSurfaceVariant,
                           ),
@@ -92,10 +106,14 @@ class ExamSearchResultCard extends StatelessWidget {
                           color: colorScheme.onSurfaceVariant,
                         ),
                         const SizedBox(width: 6),
-                        Text(
-                          exam.venue,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: colorScheme.onSurfaceVariant,
+                        Expanded(
+                          child: Text(
+                            exam.venue,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],
