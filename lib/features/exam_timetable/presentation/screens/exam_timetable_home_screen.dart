@@ -24,6 +24,7 @@ class _ExamTimetableHomeScreenState extends State<ExamTimetableHomeScreen> {
   Timer? _timer;
   bool _hasAttemptedAutoImport = false;
   bool _autoImportDispatched = false;
+  bool _autoImportResultPending = false;
   late int _institutionId;
 
   @override
@@ -151,6 +152,7 @@ class _ExamTimetableHomeScreenState extends State<ExamTimetableHomeScreen> {
                   success: (courses) {
                     if (courses.isNotEmpty && mounted) {
                       _autoImportDispatched = true;
+                      _autoImportResultPending = true;
                       final courseCodes = courses
                           .map((e) => e.courseCode)
                           .toList();
@@ -180,6 +182,30 @@ class _ExamTimetableHomeScreenState extends State<ExamTimetableHomeScreen> {
                   if (state is ExamTimetableEmpty && !_hasAttemptedAutoImport) {
                     _hasAttemptedAutoImport = true;
                     _loadCoursesFromLocal();
+                  }
+
+                  // Auto-import silently adds exams from every enrolled course
+                  // (see the CourseCubit listener above) — tell the user once
+                  // it lands, since that's otherwise indistinguishable from a
+                  // manual add and now also schedules reminders.
+                  if (_autoImportResultPending &&
+                      (state is ExamTimetableLoaded ||
+                          state is ExamTimetableEmpty ||
+                          state is ExamTimetableError)) {
+                    _autoImportResultPending = false;
+                    if (state is ExamTimetableLoaded) {
+                      final count = state.exams.length;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          behavior: SnackBarBehavior.floating,
+                          content: Text(
+                            'Added $count exam${count == 1 ? '' : 's'} from '
+                            'your enrolled courses — reminders are on',
+                          ),
+                          backgroundColor: colorScheme.primary,
+                        ),
+                      );
+                    }
                   }
                 },
                 builder: (context, state) {
