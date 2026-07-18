@@ -740,8 +740,15 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     () => InstitutionKeyLocalDatasource(appDataBase: sl()),
   );
 
+  sl.registerLazySingleton<InstitutionKeySecureDatasource>(
+    () => InstitutionKeySecureDatasource(),
+  );
+
   sl.registerFactory<InstitutionKeyRepository>(
-    () => InstitutionKeyRepositoryImpl(localDataSource: sl()),
+    () => InstitutionKeyRepositoryImpl(
+      localDataSource: sl(),
+      secureDataSource: sl(),
+    ),
   );
   // --- Student Profile Datasources ---
   sl.registerFactory<InstitutionProfileLocalDatasource>(

@@ -18,6 +18,7 @@ export 'datasources/institution_remote_datasource.dart';
 export 'datasources/institution_command_local_datasource.dart';
 export 'datasources/institution_command_remote_datasource.dart';
 export 'datasources/institution_key_local_datasource.dart';
+export 'datasources/institution_key_secure_datasource.dart';
 export 'datasources/institution_profile_local_datasource.dart';
 export 'datasources/institution_profile_remote_datasource.dart';
 export 'datasources/institution_fees_local_datasource.dart';

@@ -2,6 +2,7 @@ import 'package:academia/features/institution/institution.dart';
 import 'package:dartz/dartz.dart';
 import 'package:academia/core/error/failures.dart';
 import 'package:academia/core/network/network.dart';
+import 'package:logger/logger.dart';
 
 /// Default implementation of [StudentProfileRepository].
 ///
@@ -212,18 +213,16 @@ class StudentProfileRepositoryImpl
       );
     }
 
-    remoteDatasource.fetchCurrentUserProfiles().then((result) {
-      result.fold((failure) => left(failure), (profiles) async {
-        for (final profile in profiles) {
-          localDatasource.saveInstitutionProfile(
-            institutionProfile: profile.toData(),
-          );
-        }
-        return right(null);
-      });
-    });
+    final result = await remoteDatasource.fetchCurrentUserProfiles();
 
-    return right(null);
+    return result.fold((failure) => left(failure), (profiles) async {
+      for (final profile in profiles) {
+        await localDatasource.saveInstitutionProfile(
+          institutionProfile: profile.toData(),
+        );
+      }
+      return right(null);
+    });
   }
 
   /// Creates a new student profile on the remote source and caches it locally.
@@ -249,11 +248,18 @@ class StudentProfileRepositoryImpl
 
     remoteDatasource.createInstitutionProfile(profile: profile.toApiDto()).then(
       (result) {
-        result.fold((error) {}, (createdProfileData) {
-          localDatasource.saveInstitutionProfile(
-            institutionProfile: createdProfileData.toData(),
-          );
-        });
+        result.fold(
+          (error) => Logger().e(
+            "Failed to sync created profile to remote, will remain "
+            "local-only until next sync",
+            error: error,
+          ),
+          (createdProfileData) {
+            localDatasource.saveInstitutionProfile(
+              institutionProfile: createdProfileData.toData(),
+            );
+          },
+        );
       },
     );
     return result.fold((err) => left(err), (v) => right(profile));

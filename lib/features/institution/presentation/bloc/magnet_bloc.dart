@@ -86,43 +86,48 @@ class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
         final String rawJson = jsonEncode(result.data);
         final Map<String, dynamic> computableData = jsonDecode(rawJson);
 
-        compute(parseFeeTransactionsFromScrape, computableData).then((
-          transactions,
-        ) {
-          for (final transaction in transactions) {
-            saveFeeTransaction(transaction);
+        final transactions = await compute(
+          parseFeeTransactionsFromScrape,
+          computableData,
+        );
+        for (final transaction in transactions) {
+          final saveResult = await saveFeeTransaction(transaction);
+          if (saveResult.isLeft()) {
+            Logger().e(
+              "Failed to save fee transaction ${transaction.referenceNumber}, skipping",
+              error: (saveResult as Left).value,
+            );
           }
-        });
+        }
 
-        parseCoursesInBackground(
+        final coursesWithSchedules = await parseCoursesInBackground(
           computableData,
           event.userID,
           timetableId: null,
-        ).then((coursesWithSchedules) async {
-          for (final courseWithSchedule in coursesWithSchedules) {
-            final result = await saveCourseUsecase(courseWithSchedule.course);
-            if (result.isLeft()) {
-              Logger().e(
-                "Failed to save course ${courseWithSchedule.course.courseName} skipping",
-                error: (result as Left).value,
-              );
-              continue;
-            }
-            final entryResult = await createOrUpdateTimetableEntries(
-              CreateOrUpdateTimetableEntriesParams(
-                entries: courseWithSchedule.schedules,
-              ),
+        );
+        for (final courseWithSchedule in coursesWithSchedules) {
+          final result = await saveCourseUsecase(courseWithSchedule.course);
+          if (result.isLeft()) {
+            Logger().e(
+              "Failed to save course ${courseWithSchedule.course.courseName} skipping",
+              error: (result as Left).value,
             );
-
-            if (entryResult.isLeft()) {
-              Logger().e(
-                "Failed to save timetable entries for course ${courseWithSchedule.course.courseName} skipping",
-                error: (entryResult as Left).value,
-              );
-              continue;
-            }
+            continue;
           }
-        });
+          final entryResult = await createOrUpdateTimetableEntries(
+            CreateOrUpdateTimetableEntriesParams(
+              entries: courseWithSchedule.schedules,
+            ),
+          );
+
+          if (entryResult.isLeft()) {
+            Logger().e(
+              "Failed to save timetable entries for course ${courseWithSchedule.course.courseName} skipping",
+              error: (entryResult as Left).value,
+            );
+            continue;
+          }
+        }
 
         await syncInstitutionProfileUsecase(
           SyncProfileParams(
