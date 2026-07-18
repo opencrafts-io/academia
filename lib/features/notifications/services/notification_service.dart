@@ -71,6 +71,20 @@ class NotificationServiceImpl implements NotificationService {
         defaultPrivacy: NotificationPrivacy.Private,
         enableVibration: true,
       ),
+      NotificationChannel(
+        channelKey: 'exam_alerts_v2',
+        channelName: 'Exam Alerts',
+        channelDescription: 'Notifications for upcoming exams',
+        defaultColor: const Color(0xFFFFA000),
+        importance: NotificationImportance.Max,
+        playSound: true,
+        ledColor: const Color(0xFFFFA000),
+        soundSource: 'resource://raw/reminder',
+        criticalAlerts: true,
+        locked: true,
+        defaultPrivacy: NotificationPrivacy.Public,
+        enableVibration: true,
+      ),
     ], debug: false);
   }
 
@@ -98,6 +112,16 @@ class NotificationServiceImpl implements NotificationService {
     final todoLocalId = int.tryParse(action.payload?['localId'] ?? '');
     if (todoLocalId != null) {
       await _handleTodoAction(action, todoLocalId);
+      return;
+    }
+
+    final examInstitutionId = int.tryParse(
+      action.payload?['institutionId'] ?? '',
+    );
+    if (examInstitutionId != null && action.payload?['courseCode'] != null) {
+      AppRouter.router.push(
+        ExamTimetableRoute(institutionId: examInstitutionId).location,
+      );
       return;
     }
 

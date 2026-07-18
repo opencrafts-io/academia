@@ -958,6 +958,10 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   );
 
   // Exam Timetable
+  sl.registerLazySingleton<ExamNotificationService>(
+    () => ExamNotificationServiceImpl(),
+  );
+
   // Data sources
   sl.registerFactory(() => ExamTimetableLocalDataSource(localDB: sl()));
   sl.registerFactory(
@@ -969,6 +973,7 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     () => ExamTimetableRepositoryImpl(
       localDataSource: sl(),
       remoteDataSource: sl(),
+      examNotificationService: sl(),
     ),
   );
 

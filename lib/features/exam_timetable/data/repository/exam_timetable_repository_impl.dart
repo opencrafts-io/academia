@@ -6,10 +6,12 @@ import 'package:dartz/dartz.dart';
 class ExamTimetableRepositoryImpl implements ExamTimetableRepository {
   final ExamTimetableLocalDataSource localDataSource;
   final ExamTimetableRemoteDatasource remoteDataSource;
+  final ExamNotificationService examNotificationService;
 
   ExamTimetableRepositoryImpl({
     required this.localDataSource,
     required this.remoteDataSource,
+    required this.examNotificationService,
   });
 
   @override
@@ -47,7 +49,15 @@ class ExamTimetableRepositoryImpl implements ExamTimetableRepository {
   ) async {
     final dataModels = exams.map((e) => e.toModel()).toList();
 
-    return localDataSource.createOrUpdateExamBatch(dataModels);
+    final result = await localDataSource.createOrUpdateExamBatch(dataModels);
+
+    result.fold((_) {}, (_) {
+      for (final exam in exams) {
+        examNotificationService.scheduleReminder(exam);
+      }
+    });
+
+    return result;
   }
 
   @override
@@ -61,11 +71,22 @@ class ExamTimetableRepositoryImpl implements ExamTimetableRepository {
     );
 
     return result.fold((failure) => left(failure), (examList) async {
+      final domainExams = examList
+          .map((data) => data.toDomainEntity())
+          .toList();
+
       if (examList.isNotEmpty) {
-        await localDataSource.createOrUpdateExamBatch(examList);
+        final saveResult = await localDataSource.createOrUpdateExamBatch(
+          examList,
+        );
+        saveResult.fold((_) {}, (_) {
+          for (final exam in domainExams) {
+            examNotificationService.scheduleReminder(exam);
+          }
+        });
       }
 
-      return right(examList.map((data) => data.toDomainEntity()).toList());
+      return right(domainExams);
     });
   }
 
@@ -74,9 +95,18 @@ class ExamTimetableRepositoryImpl implements ExamTimetableRepository {
     required String courseCode,
     required int institutionId,
   }) async {
-    return localDataSource.deleteExamByCourseCode(
+    final result = await localDataSource.deleteExamByCourseCode(
       courseCode: courseCode,
       institutionId: institutionId,
     );
+
+    result.fold((_) {}, (_) {
+      examNotificationService.cancelReminder(
+        institutionId: institutionId,
+        courseCode: courseCode,
+      );
+    });
+
+    return result;
   }
 }
