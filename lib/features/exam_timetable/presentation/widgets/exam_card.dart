@@ -76,8 +76,8 @@ class ExamCard extends StatelessWidget {
         : colorScheme.tertiaryContainer;
 
     final textColor = isPast
-        ? colorScheme.onSurfaceVariant
-        : colorScheme.onSurface;
+        ? colorScheme.onSecondaryContainer
+        : colorScheme.onTertiaryContainer;
 
     // Build right-column optional info list
     final rawData = exam.rawData;
@@ -85,7 +85,8 @@ class ExamCard extends StatelessWidget {
     final invigilator = rawData?.invigilator ?? '';
     final courseName = rawData?.courseName ?? '';
     final group = rawData?.group ?? '';
-    final hasRightColumn = campus.isNotEmpty ||
+    final hasRightColumn =
+        campus.isNotEmpty ||
         exam.coordinator.isNotEmpty ||
         invigilator.isNotEmpty ||
         courseName.isNotEmpty ||
@@ -144,13 +145,15 @@ class ExamCard extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: isPast
                                 ? colorScheme.surfaceContainer
-                                : Colors.black.withValues(alpha: 0.08),
+                                : textColor.withValues(alpha: 0.08),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(
                             '${exam.hrs}h',
                             style: theme.textTheme.labelMedium?.copyWith(
-                              color: textColor,
+                              color: isPast
+                                  ? colorScheme.onSurfaceVariant
+                                  : textColor,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
