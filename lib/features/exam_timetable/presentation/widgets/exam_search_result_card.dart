@@ -1,4 +1,5 @@
 import 'package:academia/features/exam_timetable/domain/entity/exam_timetable.dart';
+import 'package:academia/features/exam_timetable/presentation/widgets/exam_info_row.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -27,11 +28,17 @@ class ExamSearchResultCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final infoColor = colorScheme.onSurfaceVariant;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: colorScheme.surface,
+        color: isSelected
+            ? Color.alphaBlend(
+                colorScheme.primary.withValues(alpha: 0.08),
+                colorScheme.surface,
+              )
+            : colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isSelected
@@ -59,68 +66,29 @@ class ExamSearchResultCard extends StatelessWidget {
                         color: colorScheme.onSurface,
                       ),
                     ),
-                    const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.calendar_today,
-                          size: 14,
-                          color: colorScheme.onSurfaceVariant,
-                        ),
-                        const SizedBox(width: 6),
-                        Expanded(
-                          child: Text(
-                            exam.displayDay,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: colorScheme.onSurfaceVariant,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
+                    const SizedBox(height: 6),
+                    ExamInfoRow(
+                      icon: Icons.calendar_today_rounded,
+                      text: exam.displayDay,
+                      textColor: infoColor,
                     ),
                     const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.access_time,
-                          size: 14,
-                          color: colorScheme.onSurfaceVariant,
-                        ),
-                        const SizedBox(width: 6),
-                        Text(
+                    ExamInfoRow(
+                      icon: Icons.access_time_rounded,
+                      text:
                           '${_formatTime(exam.startTime)} – ${_formatTime(exam.endTime)}',
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                      ],
+                      textColor: infoColor,
                     ),
                     const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.location_on_outlined,
-                          size: 14,
-                          color: colorScheme.onSurfaceVariant,
-                        ),
-                        const SizedBox(width: 6),
-                        Expanded(
-                          child: Text(
-                            exam.venue,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: colorScheme.onSurfaceVariant,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
+                    ExamInfoRow(
+                      icon: Icons.location_on_rounded,
+                      text: exam.venue,
+                      textColor: infoColor,
                     ),
                   ],
                 ),
               ),
+              const SizedBox(width: 12),
               Container(
                 width: 24,
                 height: 24,
@@ -135,7 +103,11 @@ class ExamSearchResultCard extends StatelessWidget {
                   ),
                 ),
                 child: isSelected
-                    ? Icon(Icons.check, size: 16, color: colorScheme.onPrimary)
+                    ? Icon(
+                        Icons.check_rounded,
+                        size: 16,
+                        color: colorScheme.onPrimary,
+                      )
                     : null,
               ),
             ],

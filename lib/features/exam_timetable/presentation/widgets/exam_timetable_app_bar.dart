@@ -25,7 +25,7 @@ class ExamTimetableAppBar extends StatelessWidget
       backgroundColor: colorScheme.surface,
       elevation: 0,
       leading: IconButton(
-        icon: Icon(Icons.arrow_back, color: colorScheme.onSurface),
+        icon: Icon(Icons.arrow_back_rounded, color: colorScheme.onSurface),
         onPressed: () => Navigator.of(context).pop(),
       ),
       title: InkWell(
@@ -40,13 +40,25 @@ class ExamTimetableAppBar extends StatelessWidget
             borderRadius: BorderRadius.circular(50),
           ),
           alignment: Alignment.centerLeft,
-          child: Text(
-            'Search by course code',
-            style: theme.textTheme.bodyLarge?.copyWith(
-              color: colorScheme.onSurfaceVariant,
-              fontWeight: FontWeight.normal,
-            ),
-            overflow: TextOverflow.ellipsis,
+          child: Row(
+            children: [
+              Icon(
+                Icons.search_rounded,
+                size: 20,
+                color: colorScheme.onPrimaryContainer,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  'Search by course code',
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    color: colorScheme.onPrimaryContainer,
+                    fontWeight: FontWeight.normal,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
           ),
         ),
       ),

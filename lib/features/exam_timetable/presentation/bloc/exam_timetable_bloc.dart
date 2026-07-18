@@ -89,13 +89,14 @@ class ExamTimetableBloc extends Bloc<ExamTimetableEvent, ExamTimetableState> {
   ) async {
     final result = await cacheExamsUseCase(event.exams);
 
-    result.fold((failure) => emit(ExamTimetableError(message: failure.message)), (
-      _,
-    ) {
-      if (event.exams.isNotEmpty) {
-        add(LoadCachedExams(institutionId: event.institutionId));
-      }
-    });
+    result.fold(
+      (failure) => emit(ExamTimetableError(message: failure.message)),
+      (_) {
+        if (event.exams.isNotEmpty) {
+          add(LoadCachedExams(institutionId: event.institutionId));
+        }
+      },
+    );
   }
 
   Future<void> _onRefreshExamTimetable(

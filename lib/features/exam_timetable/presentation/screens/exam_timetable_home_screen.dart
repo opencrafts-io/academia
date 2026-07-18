@@ -111,7 +111,7 @@ class _ExamTimetableHomeScreenState extends State<ExamTimetableHomeScreen> {
       SnackBar(
         content: Row(
           children: [
-            Icon(Icons.swipe_left, color: colorScheme.onPrimary),
+            Icon(Icons.swipe_left_rounded, color: colorScheme.onPrimary),
             const SizedBox(width: 12),
             const Expanded(
               child: Text("Swipe an exam card to the left to delete it."),

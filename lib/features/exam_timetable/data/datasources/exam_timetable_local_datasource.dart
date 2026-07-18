@@ -71,10 +71,7 @@ class ExamTimetableLocalDataSource {
       return right(null);
     } catch (e) {
       return left(
-        CacheFailure(
-          error: e,
-          message: "Failed to save exam timetable batch",
-        ),
+        CacheFailure(error: e, message: "Failed to save exam timetable batch"),
       );
     }
   }
