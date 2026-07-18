@@ -290,7 +290,7 @@ $Res call({
 });
 
 
-
+$InstitutionKeyCopyWith<$Res>? get key;
 
 }
 /// @nodoc
@@ -310,7 +310,19 @@ as InstitutionKey?,
   ));
 }
 
+/// Create a copy of InstitutionKeyState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$InstitutionKeyCopyWith<$Res>? get key {
+    if (_self.key == null) {
+    return null;
+  }
 
+  return $InstitutionKeyCopyWith<$Res>(_self.key!, (value) {
+    return _then(_self.copyWith(key: value));
+  });
+}
 }
 
 /// @nodoc
@@ -357,7 +369,7 @@ $Res call({
 });
 
 
-
+$InstitutionKeyCopyWith<$Res>? get key;
 
 }
 /// @nodoc
@@ -378,7 +390,19 @@ as InstitutionKey?,
   ));
 }
 
+/// Create a copy of InstitutionKeyState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$InstitutionKeyCopyWith<$Res>? get key {
+    if (_self.key == null) {
+    return null;
+  }
 
+  return $InstitutionKeyCopyWith<$Res>(_self.key!, (value) {
+    return _then(_self.copyWith(key: value));
+  });
+}
 }
 
 // dart format on

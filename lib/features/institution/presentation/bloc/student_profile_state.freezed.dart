@@ -297,7 +297,7 @@ $Res call({
 });
 
 
-
+$InstitutionProfileCopyWith<$Res>? get profile;
 
 }
 /// @nodoc
@@ -318,7 +318,19 @@ as List<InstitutionProfile>,
   ));
 }
 
+/// Create a copy of StudentProfileState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$InstitutionProfileCopyWith<$Res>? get profile {
+    if (_self.profile == null) {
+    return null;
+  }
 
+  return $InstitutionProfileCopyWith<$Res>(_self.profile!, (value) {
+    return _then(_self.copyWith(profile: value));
+  });
+}
 }
 
 /// @nodoc
