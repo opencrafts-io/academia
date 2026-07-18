@@ -34,8 +34,7 @@ class InstitutionProfileRemoteDatasource
   /// Returns:
   /// - `Right<List<InstitutionProfile>>` on success
   /// - `Left<Failure>` on error
-  Future<Either<Failure, List<InstitutionProfile>>>
-  fetchInstitutionProfiles({
+  Future<Either<Failure, List<InstitutionProfile>>> fetchInstitutionProfiles({
     int? institutionId,
     String? studentId,
     String? program,
@@ -54,9 +53,8 @@ class InstitutionProfileRemoteDatasource
       if (response.statusCode == 200) {
         final profiles = (response.data as List)
             .map(
-              (profile) => InstitutionProfile.fromJson(
-                profile as Map<String, dynamic>,
-              ),
+              (profile) =>
+                  InstitutionProfile.fromJson(profile as Map<String, dynamic>),
             )
             .toList();
         return right(profiles);
@@ -210,8 +208,7 @@ class InstitutionProfileRemoteDatasource
   /// Returns:
   /// - `Right<InstitutionProfile>` containing the updated profile on success
   /// - `Left<Failure>` on error
-  Future<Either<Failure, InstitutionProfile>>
-  partialUpdateInstitutionProfile({
+  Future<Either<Failure, InstitutionProfile>> partialUpdateInstitutionProfile({
     required int profileId,
     required Map<String, dynamic> updates,
   }) async {

@@ -12,20 +12,17 @@ class EssentialsInstitutionSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<InstitutionBloc, InstitutionState>(
       builder: (context, state) {
-        if (state is InstitutionLoadedState) {
-          return ListView.builder(
+        return state.maybeWhen(
+          loaded: (institutions) => ListView.builder(
             padding: EdgeInsets.zero,
             shrinkWrap: true,
             itemBuilder: (context, index) {
-              final institution = state.institutions[index];
+              final institution = institutions[index];
               return _InstitutionCard(institution: institution);
             },
-            itemCount: state.institutions.length,
-          );
-        }
-
-        if (state is InstitutionLoadingState) {
-          return Skeletonizer(
+            itemCount: institutions.length,
+          ),
+          loading: () => Skeletonizer(
             enabled: true,
             child: Card.filled(
               child: ListTile(
@@ -35,9 +32,9 @@ class EssentialsInstitutionSection extends StatelessWidget {
                 leading: Icon(Icons.school),
               ),
             ),
-          );
-        }
-        return SizedBox.shrink();
+          ),
+          orElse: () => SizedBox.shrink(),
+        );
       },
     );
   }

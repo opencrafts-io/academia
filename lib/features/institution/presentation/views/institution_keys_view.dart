@@ -26,8 +26,9 @@ class _InstitutionKeysViewState extends State<InstitutionKeysView> {
             minimum: EdgeInsets.all(16),
             child: BlocBuilder<ScrappingCommandBloc, ScrappingCommandState>(
               builder: (context, state) {
-                if (state is ScrappingCommandLoading) {
-                  return Column(
+                return state.when(
+                  initial: () => SizedBox.shrink(),
+                  loading: () => Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -35,27 +36,23 @@ class _InstitutionKeysViewState extends State<InstitutionKeysView> {
                       SizedBox(height: 12),
                       Text("Loading institution information"),
                     ],
-                  );
-                } else if (state is ScrappingCommandError) {
-                  return Column(
+                  ),
+                  error: (message, command) => Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text("Holy molly ..."),
                       SizedBox(height: 12),
-                      Text(state.message),
+                      Text(message),
                     ],
-                  );
-                } else if (state is ScrappingCommandInitial) {
-                  return SizedBox.shrink();
-                }
-
-                return (state as ScrappingCommandLoaded).command == null
-                    ? InstitutionNotSupportedView()
-                    : ScrappingCommandForm(
-                        institutionID: widget.institutionID,
-                        command: state.command!,
-                      );
+                  ),
+                  loaded: (command) => command == null
+                      ? InstitutionNotSupportedView()
+                      : ScrappingCommandForm(
+                          institutionID: widget.institutionID,
+                          command: command,
+                        ),
+                );
               },
             ),
           ),
@@ -109,22 +106,24 @@ class _ScrappingCommandFormState extends State<ScrappingCommandForm> {
     super.didChangeDependencies();
     final institutionKeyState = context.read<InstitutionKeyBloc>().state;
 
-    if (institutionKeyState is InstitutionKeyLoaded) {
-      final keySets = institutionKeyState.key?.keySets;
+    institutionKeyState.whenOrNull(
+      loaded: (institutionKey) {
+        final keySets = institutionKey?.keySets;
 
-      if (keySets != null) {
-        for (final entry in keySets.entries) {
-          final key = entry.key;
-          final value = entry.value;
+        if (keySets != null) {
+          for (final entry in keySets.entries) {
+            final key = entry.key;
+            final value = entry.value;
 
-          if (_controllers.containsKey(key)) {
-            _controllers[key]?.text = value ?? '';
+            if (_controllers.containsKey(key)) {
+              _controllers[key]?.text = value ?? '';
+            }
           }
+          // Reset unsaved changes flag after loading initial data
+          _hasUnsavedChanges = false;
         }
-        // Reset unsaved changes flag after loading initial data
-        _hasUnsavedChanges = false;
-      }
-    }
+      },
+    );
   }
 
   @override

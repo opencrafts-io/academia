@@ -1,9 +1,15 @@
 export 'bloc/institution_bloc.dart';
+export 'bloc/institution_state.dart';
 export 'bloc/scrapping_command_bloc.dart';
+export 'bloc/scrapping_command_state.dart';
 export 'bloc/magnet_bloc.dart';
+export 'bloc/magnet_state.dart';
 export 'bloc/institution_key_bloc.dart';
+export 'bloc/institution_key_state.dart';
 export 'bloc/student_profile_bloc.dart';
+export 'bloc/student_profile_state.dart';
 export 'bloc/institution_fees_bloc.dart';
+export 'bloc/institution_fees_state.dart';
 export 'widgets/essentials_institution_section.dart';
 export 'widgets/institution_dashboard.dart';
 export 'widgets/sync_required_card.dart';

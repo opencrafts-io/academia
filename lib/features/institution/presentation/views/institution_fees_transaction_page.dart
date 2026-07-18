@@ -12,61 +12,67 @@ class InstitutionFeesTransactionPage extends StatelessWidget {
     return Scaffold(
       body: BlocBuilder<InstitutionFeesBloc, InstitutionFeesState>(
         builder: (context, state) {
-          if (state.status == FeesStatus.loading) {
-            return const Center(child: LoadingIndicatorM3E());
-          }
+          return state.when(
+            initial: () => const Center(child: LoadingIndicatorM3E()),
+            loading: () => const Center(child: LoadingIndicatorM3E()),
+            failure: (failure) =>
+                Center(child: Text("Error: ${failure.message}")),
+            success: (transactions) {
+              return CustomScrollView(
+                physics: const BouncingScrollPhysics(),
+                slivers: [
+                  SliverAppBar.large(title: const Text('Statement of Account')),
 
-          if (state.status == FeesStatus.failure) {
-            return Center(child: Text("Error: ${state.failure?.message}"));
-          }
-
-          return CustomScrollView(
-            physics: const BouncingScrollPhysics(),
-            slivers: [
-              SliverAppBar.large(title: const Text('Statement of Account')),
-
-              SliverPadding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                sliver: SliverToBoxAdapter(
-                  child: _FeesSummaryCard(
-                    balance: state.currentBalance,
-                    isInDebt: state.isInDebt,
-                    currency: state.transactions.firstOrNull?.currency ?? "KES",
-                  ),
-                ),
-              ),
-
-              const SliverToBoxAdapter(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  child: Text(
-                    "All fees transactions",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                ),
-              ),
-
-              state.transactions.isEmpty
-                  ? const SliverFillRemaining(
-                      child: Center(
-                        child: Text("No transaction history found."),
-                      ),
-                    )
-                  : SliverPadding(
-                      padding: const EdgeInsets.only(bottom: 40),
-                      sliver: SliverList(
-                        delegate: SliverChildBuilderDelegate((context, index) {
-                          final tx = state.transactions[index];
-                          return tx == null
-                              ? SizedBox.shrink()
-                              : _LedgerEntryTile(transaction: tx);
-                        }, childCount: state.transactions.length),
+                  SliverPadding(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    sliver: SliverToBoxAdapter(
+                      child: _FeesSummaryCard(
+                        balance: state.currentBalance,
+                        isInDebt: state.isInDebt,
+                        currency: transactions.firstOrNull?.currency ?? "KES",
                       ),
                     ),
-            ],
+                  ),
+
+                  const SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 12,
+                      ),
+                      child: Text(
+                        "All fees transactions",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  transactions.isEmpty
+                      ? const SliverFillRemaining(
+                          child: Center(
+                            child: Text("No transaction history found."),
+                          ),
+                        )
+                      : SliverPadding(
+                          padding: const EdgeInsets.only(bottom: 40),
+                          sliver: SliverList(
+                            delegate: SliverChildBuilderDelegate((
+                              context,
+                              index,
+                            ) {
+                              final tx = transactions[index];
+                              return tx == null
+                                  ? SizedBox.shrink()
+                                  : _LedgerEntryTile(transaction: tx);
+                            }, childCount: transactions.length),
+                          ),
+                        ),
+                ],
+              );
+            },
           );
         },
       ),

@@ -12,7 +12,8 @@ import 'package:academia/features/course/course.dart';
 import 'package:logger/logger.dart';
 import 'package:uuid/uuid.dart';
 
-part 'magnet_state.dart';
+export 'magnet_state.dart';
+
 part 'magnet_event.dart';
 
 class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
@@ -27,7 +28,7 @@ class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
     required this.saveFeeTransaction,
     required this.saveCourseUsecase,
     required this.createOrUpdateTimetableEntries,
-  }) : super(MagnetInitial()) {
+  }) : super(const MagnetState.initial()) {
     on<InitializeMagnet>(_onInitialize);
     on<ExecuteScrappingCommand>(_onExecute);
   }
@@ -36,12 +37,12 @@ class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
     InitializeMagnet event,
     Emitter<MagnetState> emit,
   ) async {
-    emit(MagnetInitializing());
+    emit(const MagnetState.initializing());
     try {
       _magnet = await Magnet.init(config: event.config);
-      emit(MagnetReady(_magnet!));
+      emit(MagnetState.ready(_magnet!));
     } catch (e) {
-      emit(MagnetError("Failed to wake up the magnet: $e"));
+      emit(MagnetState.error("Failed to wake up the magnet: $e"));
     }
   }
 
@@ -50,14 +51,16 @@ class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
     Emitter<MagnetState> emit,
   ) async {
     if (_magnet == null || !_magnet!.initialized) {
-      emit(const MagnetError("Magnet is not initialized. Check the pipes!"));
+      emit(
+        const MagnetState.error("Magnet is not initialized. Check the pipes!"),
+      );
       return;
     }
 
     // Keep track of the previous state so we can return to "Ready" after success
     // final prevState = state;
     final cmd = _hydrateWithKeys(event.command, event.institutionKey);
-    emit(MagnetProcessing(command: cmd));
+    emit(MagnetState.processing(command: cmd));
 
     try {
       final callback = InstructionCallbackManager();
@@ -70,9 +73,10 @@ class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
       await emit.forEach<InstructionProgressEvent>(
         callback.progressStream,
         onData: (data) {
-          return MagnetProcessing(command: cmd, progress: data);
+          return MagnetState.processing(command: cmd, progress: data);
         },
-        onError: (error, stackTrace) => MagnetError("Stream error: $error"),
+        onError: (error, stackTrace) =>
+            MagnetState.error("Stream error: $error"),
       );
 
       final result = await magnetFuture;
@@ -126,12 +130,12 @@ class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
             institutionId: event.institutionID,
           ),
         );
-        emit(MagnetSuccess(result));
+        emit(MagnetState.success(result));
       } else {
-        emit(MagnetError(result.error ?? "Unknown scrapping error"));
+        emit(MagnetState.error(result.error ?? "Unknown scrapping error"));
       }
     } catch (e) {
-      emit(MagnetError("Sewer apples... Execution failed: $e"));
+      emit(MagnetState.error("Sewer apples... Execution failed: $e"));
     }
   }
 

@@ -7,8 +7,9 @@ import 'package:academia/core/error/failures.dart';
 import 'package:academia/core/usecase/usecase.dart';
 import 'package:academia/features/institution/institution.dart';
 
+export 'student_profile_state.dart';
+
 part 'student_profile_event.dart';
-part 'student_profile_state.dart';
 
 class StudentProfileBloc
     extends Bloc<StudentProfileEvent, StudentProfileState> {
@@ -41,7 +42,7 @@ class StudentProfileBloc
     required this.deleteProfileUsecase,
     required this.deleteUserProfilesUsecase,
     required this.clearProfileCacheUsecase,
-  }) : super(StudentProfileState.initial()) {
+  }) : super(const StudentProfileState.initial()) {
     // Watch Events (Streams)
     on<WatchProfileByIdEvent>(_onWatchProfileById);
     on<WatchProfileByUserAndInstitutionEvent>(
@@ -62,20 +63,21 @@ class StudentProfileBloc
     on<ClearProfileCacheEvent>(_onClearProfileCache);
   }
 
+  /// The profiles accumulated by the current `success` state, or an empty
+  /// list if the state doesn't carry any (e.g. right after emitting loading).
+  List<InstitutionProfile> get _currentProfiles =>
+      state.mapOrNull(success: (s) => s.profiles) ?? [];
+
   Future<void> _onWatchProfileById(
     WatchProfileByIdEvent event,
     Emitter<StudentProfileState> emit,
   ) async {
-    emit(state.copyWith(status: StudentProfileStatus.loading));
+    emit(const StudentProfileState.loading());
     await emit.forEach<Either<Failure, InstitutionProfile?>>(
       watchProfileByIdUsecase(event.profileId),
       onData: (result) => result.fold(
-        (f) => state.copyWith(
-          status: StudentProfileStatus.error,
-          failure: f,
-          errorMessage: f.message,
-        ),
-        (p) => state.copyWith(status: StudentProfileStatus.success, profile: p),
+        (f) => StudentProfileState.error(message: f.message, failure: f),
+        (p) => StudentProfileState.success(profile: p),
       ),
     );
   }
@@ -84,7 +86,7 @@ class StudentProfileBloc
     WatchProfileByUserAndInstitutionEvent event,
     Emitter<StudentProfileState> emit,
   ) async {
-    emit(state.copyWith(status: StudentProfileStatus.loading));
+    emit(const StudentProfileState.loading());
     await emit.forEach<Either<Failure, InstitutionProfile?>>(
       watchProfilesByUserAndInstitutionUsecase(
         WatchProfileByUserAndInstitutionUsecaseParams(
@@ -93,12 +95,8 @@ class StudentProfileBloc
         ),
       ),
       onData: (result) => result.fold(
-        (f) => state.copyWith(
-          status: StudentProfileStatus.error,
-          failure: f,
-          errorMessage: f.message,
-        ),
-        (p) => state.copyWith(status: StudentProfileStatus.success, profile: p),
+        (f) => StudentProfileState.error(message: f.message, failure: f),
+        (p) => StudentProfileState.success(profile: p),
       ),
     );
   }
@@ -107,19 +105,14 @@ class StudentProfileBloc
     WatchProfilesByUserEvent event,
     Emitter<StudentProfileState> emit,
   ) async {
-    emit(state.copyWith(status: StudentProfileStatus.loading));
+    emit(const StudentProfileState.loading());
     await emit.forEach<Either<Failure, List<InstitutionProfile>>>(
       watchProfilesByUserUsecase(
         WatchProfilesByUserParams(userId: event.userId),
       ),
       onData: (result) => result.fold(
-        (f) => state.copyWith(
-          status: StudentProfileStatus.error,
-          failure: f,
-          errorMessage: f.message,
-        ),
-        (ps) =>
-            state.copyWith(status: StudentProfileStatus.success, profiles: ps),
+        (f) => StudentProfileState.error(message: f.message, failure: f),
+        (ps) => StudentProfileState.success(profiles: ps),
       ),
     );
   }
@@ -128,18 +121,14 @@ class StudentProfileBloc
     WatchLatestProfileByStudentEvent event,
     Emitter<StudentProfileState> emit,
   ) async {
-    emit(state.copyWith(status: StudentProfileStatus.loading));
+    emit(const StudentProfileState.loading());
     await emit.forEach<Either<Failure, InstitutionProfile?>>(
       watchLatestProfileByStudentUsecase(
         WatchLatestProfileByStudentParams(studentId: event.studentId),
       ),
       onData: (result) => result.fold(
-        (f) => state.copyWith(
-          status: StudentProfileStatus.error,
-          failure: f,
-          errorMessage: f.message,
-        ),
-        (p) => state.copyWith(status: StudentProfileStatus.success, profile: p),
+        (f) => StudentProfileState.error(message: f.message, failure: f),
+        (p) => StudentProfileState.success(profile: p),
       ),
     );
   }
@@ -148,18 +137,14 @@ class StudentProfileBloc
     FetchProfileByIdEvent event,
     Emitter<StudentProfileState> emit,
   ) async {
-    emit(state.copyWith(status: StudentProfileStatus.loading));
+    emit(const StudentProfileState.loading());
     final result = await fetchProfileByIdUsecase(
       FetchProfileByIdParams(profileId: event.profileId),
     );
     emit(
       result.fold(
-        (f) => state.copyWith(
-          status: StudentProfileStatus.error,
-          failure: f,
-          errorMessage: f.message,
-        ),
-        (p) => state.copyWith(status: StudentProfileStatus.success, profile: p),
+        (f) => StudentProfileState.error(message: f.message, failure: f),
+        (p) => StudentProfileState.success(profile: p),
       ),
     );
   }
@@ -168,7 +153,7 @@ class StudentProfileBloc
     FetchProfilesEvent event,
     Emitter<StudentProfileState> emit,
   ) async {
-    emit(state.copyWith(status: StudentProfileStatus.loading));
+    emit(const StudentProfileState.loading());
     final result = await fetchProfilesUsecase(
       FetchProfilesParams(
         institutionId: event.institutionId,
@@ -178,13 +163,8 @@ class StudentProfileBloc
     );
     emit(
       result.fold(
-        (f) => state.copyWith(
-          status: StudentProfileStatus.error,
-          failure: f,
-          errorMessage: f.message,
-        ),
-        (ps) =>
-            state.copyWith(status: StudentProfileStatus.success, profiles: ps),
+        (f) => StudentProfileState.error(message: f.message, failure: f),
+        (ps) => StudentProfileState.success(profiles: ps),
       ),
     );
   }
@@ -193,16 +173,12 @@ class StudentProfileBloc
     FetchCurrentUserProfileEvent event,
     Emitter<StudentProfileState> emit,
   ) async {
-    emit(state.copyWith(status: StudentProfileStatus.loading));
+    emit(const StudentProfileState.loading());
     final result = await fetchCurrentUserProfileUsecase(NoParams());
     emit(
       result.fold(
-        (f) => state.copyWith(
-          status: StudentProfileStatus.error,
-          failure: f,
-          errorMessage: f.message,
-        ),
-        (p) => state.copyWith(status: StudentProfileStatus.success),
+        (f) => StudentProfileState.error(message: f.message, failure: f),
+        (p) => const StudentProfileState.success(),
       ),
     );
   }
@@ -211,21 +187,17 @@ class StudentProfileBloc
     CreateProfileEvent event,
     Emitter<StudentProfileState> emit,
   ) async {
-    emit(state.copyWith(status: StudentProfileStatus.loading));
+    final previousProfiles = _currentProfiles;
+    emit(const StudentProfileState.loading());
     final result = await createProfileUsecase(
       CreateProfileParams(profile: event.profile),
     );
     emit(
       result.fold(
-        (f) => state.copyWith(
-          status: StudentProfileStatus.error,
-          failure: f,
-          errorMessage: f.message,
-        ),
-        (p) => state.copyWith(
-          status: StudentProfileStatus.success,
+        (f) => StudentProfileState.error(message: f.message, failure: f),
+        (p) => StudentProfileState.success(
           profile: p,
-          profiles: [...?state.profiles, p],
+          profiles: [...previousProfiles, p],
         ),
       ),
     );
@@ -235,22 +207,18 @@ class StudentProfileBloc
     UpdateProfileEvent event,
     Emitter<StudentProfileState> emit,
   ) async {
-    emit(state.copyWith(status: StudentProfileStatus.loading));
+    final previousProfiles = _currentProfiles;
+    emit(const StudentProfileState.loading());
     final result = await updateProfileUsecase(
       UpdateProfileParams(profileId: event.profileId, profile: event.profile),
     );
     emit(
       result.fold(
-        (f) => state.copyWith(
-          status: StudentProfileStatus.error,
-          failure: f,
-          errorMessage: f.message,
-        ),
-        (p) => state.copyWith(
-          status: StudentProfileStatus.success,
+        (f) => StudentProfileState.error(message: f.message, failure: f),
+        (p) => StudentProfileState.success(
           profile: p,
-          profiles: state.profiles
-              ?.map((old) => old.id == p.id ? p : old)
+          profiles: previousProfiles
+              .map((old) => old.id == p.id ? p : old)
               .toList(),
         ),
       ),
@@ -261,7 +229,8 @@ class StudentProfileBloc
     PartialUpdateProfileEvent event,
     Emitter<StudentProfileState> emit,
   ) async {
-    emit(state.copyWith(status: StudentProfileStatus.loading));
+    final previousProfiles = _currentProfiles;
+    emit(const StudentProfileState.loading());
     final result = await partialUpdateProfileUsecase(
       PartialUpdateProfileParams(
         profileId: event.profileId,
@@ -270,16 +239,11 @@ class StudentProfileBloc
     );
     emit(
       result.fold(
-        (f) => state.copyWith(
-          status: StudentProfileStatus.error,
-          failure: f,
-          errorMessage: f.message,
-        ),
-        (p) => state.copyWith(
-          status: StudentProfileStatus.success,
+        (f) => StudentProfileState.error(message: f.message, failure: f),
+        (p) => StudentProfileState.success(
           profile: p,
-          profiles: state.profiles
-              ?.map((old) => old.id == p.id ? p : old)
+          profiles: previousProfiles
+              .map((old) => old.id == p.id ? p : old)
               .toList(),
         ),
       ),
@@ -290,22 +254,17 @@ class StudentProfileBloc
     DeleteProfileEvent event,
     Emitter<StudentProfileState> emit,
   ) async {
-    emit(state.copyWith(status: StudentProfileStatus.loading));
+    final previousProfiles = _currentProfiles;
+    emit(const StudentProfileState.loading());
     final result = await deleteProfileUsecase(
       DeleteProfileParams(profileId: event.profileId),
     );
     emit(
       result.fold(
-        (f) => state.copyWith(
-          status: StudentProfileStatus.error,
-          failure: f,
-          errorMessage: f.message,
-        ),
-        (_) => state.copyWith(
-          status: StudentProfileStatus.success,
-          profile: null,
-          profiles: state.profiles
-              ?.where((p) => p.id != event.profileId)
+        (f) => StudentProfileState.error(message: f.message, failure: f),
+        (_) => StudentProfileState.success(
+          profiles: previousProfiles
+              .where((p) => p.id != event.profileId)
               .toList(),
         ),
       ),
@@ -316,22 +275,14 @@ class StudentProfileBloc
     DeleteUserProfilesEvent event,
     Emitter<StudentProfileState> emit,
   ) async {
-    emit(state.copyWith(status: StudentProfileStatus.loading));
+    emit(const StudentProfileState.loading());
     final result = await deleteUserProfilesUsecase(
       DeleteUserProfilesParams(userId: event.userId),
     );
     emit(
       result.fold(
-        (f) => state.copyWith(
-          status: StudentProfileStatus.error,
-          failure: f,
-          errorMessage: f.message,
-        ),
-        (_) => state.copyWith(
-          status: StudentProfileStatus.success,
-          profile: null,
-          profiles: [],
-        ),
+        (f) => StudentProfileState.error(message: f.message, failure: f),
+        (_) => const StudentProfileState.success(),
       ),
     );
   }
@@ -340,20 +291,12 @@ class StudentProfileBloc
     ClearProfileCacheEvent event,
     Emitter<StudentProfileState> emit,
   ) async {
-    emit(state.copyWith(status: StudentProfileStatus.loading));
+    emit(const StudentProfileState.loading());
     final result = await clearProfileCacheUsecase(NoParams());
     emit(
       result.fold(
-        (f) => state.copyWith(
-          status: StudentProfileStatus.error,
-          failure: f,
-          errorMessage: f.message,
-        ),
-        (_) => state.copyWith(
-          status: StudentProfileStatus.success,
-          profile: null,
-          profiles: [],
-        ),
+        (f) => StudentProfileState.error(message: f.message, failure: f),
+        (_) => const StudentProfileState.success(),
       ),
     );
   }
