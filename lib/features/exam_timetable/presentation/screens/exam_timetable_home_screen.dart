@@ -1,17 +1,14 @@
 import 'dart:async';
-import 'package:academia/config/router/routes.dart';
 import 'package:academia/features/course/course.dart';
-import 'package:academia/features/exam_timetable/presentation/widgets/countdown_timer.dart';
-import 'package:academia/features/exam_timetable/presentation/widgets/exam_card.dart';
+import 'package:academia/features/exam_timetable/domain/entity/exam_timetable.dart';
+import 'package:academia/features/exam_timetable/presentation/bloc/exam_timetable_bloc.dart';
+import 'package:academia/features/exam_timetable/presentation/screens/exam_timetable_search_screen.dart';
+import 'package:academia/features/exam_timetable/presentation/widgets/exam_timetable_app_bar.dart';
+import 'package:academia/features/exam_timetable/presentation/widgets/exam_timetable_list.dart';
 import 'package:academia/features/exam_timetable/presentation/widgets/exams_empty_state.dart';
-import 'package:academia/features/institution/institution.dart';
-import 'package:academia/features/profile/presentation/widgets/user_avatar.dart';
+import 'package:academia/features/exam_timetable/presentation/widgets/institution_switcher_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:academia/features/profile/profile.dart';
-import 'package:academia/features/exam_timetable/presentation/bloc/exam_timetable_bloc.dart';
-import 'package:academia/features/exam_timetable/domain/entity/exam_timetable.dart';
-import 'package:academia/features/exam_timetable/presentation/screens/exam_timetable_search_screen.dart';
 
 class ExamTimetableHomeScreen extends StatefulWidget {
   final int institutionId;
@@ -106,98 +103,6 @@ class _ExamTimetableHomeScreenState extends State<ExamTimetableHomeScreen> {
     _loadCachedExams();
   }
 
-  void _showInstitutionSwitcher(List<Institution> institutions) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(28.0)),
-      ),
-      builder: (sheetContext) {
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 32,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: colorScheme.outlineVariant,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Switch institution',
-                    style: Theme.of(sheetContext).textTheme.titleMedium
-                        ?.copyWith(fontWeight: FontWeight.bold),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Flexible(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: institutions.length,
-                    itemBuilder: (context, index) {
-                      final institution = institutions[index];
-                      final isSelected =
-                          institution.institutionId == _institutionId;
-                      return ListTile(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        leading: Icon(
-                          Icons.school_rounded,
-                          color: colorScheme.onSurfaceVariant,
-                        ),
-                        title: Text(institution.name),
-                        trailing: isSelected
-                            ? Icon(
-                                Icons.check_circle_rounded,
-                                color: colorScheme.primary,
-                              )
-                            : null,
-                        onTap: () {
-                          Navigator.of(sheetContext).pop();
-                          _switchInstitution(institution.institutionId);
-                        },
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  ExamTimetable? _getNextExam(List<ExamTimetable> exams) {
-    // final now = DateTime.now();
-    final upcomingExams = exams.where((exam) => exam.isUpcoming).toList()
-      ..sort((a, b) => a.datetimeStr.compareTo(b.datetimeStr));
-
-    return upcomingExams.isNotEmpty ? upcomingExams.first : null;
-  }
-
-  List<ExamTimetable> _getUpcomingExams(List<ExamTimetable> exams) {
-    return exams.where((exam) => exam.isUpcoming).toList()
-      ..sort((a, b) => a.datetimeStr.compareTo(b.datetimeStr));
-  }
-
-  List<ExamTimetable> _getPastExams(List<ExamTimetable> exams) {
-    return exams.where((exam) => exam.isPast).toList()..sort(
-      (a, b) => b.datetimeStr.compareTo(a.datetimeStr),
-    ); // Most recent first
-  }
-
   void _showSwipeInfo() {
     final colorScheme = Theme.of(context).colorScheme;
 
@@ -223,128 +128,19 @@ class _ExamTimetableHomeScreenState extends State<ExamTimetableHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
-      appBar: AppBar(
-        backgroundColor: colorScheme.surface,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: colorScheme.onSurface),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: InkWell(
-          onTap: _navigateToSearch,
-          borderRadius: BorderRadius.circular(50),
-          child: Container(
-            height: 52,
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: BoxDecoration(
-              color: colorScheme.primaryContainer,
-              borderRadius: BorderRadius.circular(50),
-            ),
-            alignment: Alignment.centerLeft,
-            child: Text(
-              'Search by course code',
-              style: theme.textTheme.bodyLarge?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-                fontWeight: FontWeight.normal,
-              ),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ),
-        actions: [
-          IconButton(
-            tooltip: "Help",
-            onPressed: _showSwipeInfo,
-            icon: Icon(
-              Icons.info_outline_rounded,
-              color: colorScheme.onSurfaceVariant,
-            ),
-          ),
-          IconButton(
-            onPressed: () {
-              ProfileRoute().push(context);
-            },
-            icon: UserAvatar(scallopDepth: 4, numberOfScallops: 12),
-          ),
-        ],
+      appBar: ExamTimetableAppBar(
+        onSearchTap: _navigateToSearch,
+        onHelpTap: _showSwipeInfo,
       ),
       body: Column(
         children: [
-          BlocBuilder<InstitutionBloc, InstitutionState>(
-            builder: (context, institutionState) {
-              final institutions = institutionState.whenOrNull(
-                loaded: (institutions) => institutions,
-              );
-              if (institutions == null || institutions.length < 2) {
-                return const SizedBox.shrink();
-              }
-
-              Institution? current;
-              for (final institution in institutions) {
-                if (institution.institutionId == _institutionId) {
-                  current = institution;
-                  break;
-                }
-              }
-              if (current == null) return const SizedBox.shrink();
-
-              return Padding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: InkWell(
-                    onTap: () => _showInstitutionSwitcher(institutions),
-                    borderRadius: BorderRadius.circular(20),
-                    child: Container(
-                      constraints: const BoxConstraints(minHeight: 48),
-                      alignment: Alignment.center,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
-                      decoration: BoxDecoration(
-                        color: colorScheme.secondaryContainer,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.school_rounded,
-                            size: 18,
-                            color: colorScheme.onSecondaryContainer,
-                          ),
-                          const SizedBox(width: 8),
-                          ConstrainedBox(
-                            constraints: const BoxConstraints(maxWidth: 220),
-                            child: Text(
-                              current.name,
-                              style: theme.textTheme.labelLarge?.copyWith(
-                                color: colorScheme.onSecondaryContainer,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const SizedBox(width: 4),
-                          Icon(
-                            Icons.unfold_more_rounded,
-                            size: 18,
-                            color: colorScheme.onSecondaryContainer,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            },
+          InstitutionSwitcherChip(
+            currentInstitutionId: _institutionId,
+            onSwitch: _switchInstitution,
           ),
           Expanded(
             child: BlocListener<CourseCubit, CourseState>(
@@ -407,151 +203,15 @@ class _ExamTimetableHomeScreenState extends State<ExamTimetableHomeScreen> {
 
                   if (state is ExamTimetableEmpty ||
                       (displayExams != null && displayExams.isEmpty)) {
-                    return EmptyState();
+                    return const EmptyState();
                   }
 
                   if (displayExams != null) {
-                    final upcomingExams = _getUpcomingExams(displayExams);
-                    final pastExams = _getPastExams(displayExams);
-                    final nextExam = _getNextExam(displayExams);
-
-                    return RefreshIndicator(
+                    return ExamTimetableList(
+                      exams: displayExams,
+                      isRefreshing: isRefreshing,
+                      institutionId: _institutionId,
                       onRefresh: _refreshExams,
-                      color: colorScheme.primary,
-                      child: ListView(
-                        padding: const EdgeInsets.only(bottom: 16),
-                        children: [
-                          if (isRefreshing)
-                            LinearProgressIndicator(
-                              color: colorScheme.primary,
-                              backgroundColor:
-                                  colorScheme.surfaceContainerHighest,
-                              minHeight: 2,
-                            ),
-                          if (nextExam != null)
-                            CountdownTimer(
-                              targetDateTime: nextExam.datetimeStr,
-                            ),
-                          // Upcoming
-                          if (upcomingExams.isNotEmpty) ...[
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                16,
-                                16,
-                                16,
-                                12,
-                              ),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    'Upcoming Exams',
-                                    style: theme.textTheme.titleLarge?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: colorScheme.onSurface,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                      vertical: 4,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: colorScheme.tertiaryContainer,
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Text(
-                                      '${upcomingExams.length}',
-                                      style: theme.textTheme.labelMedium
-                                          ?.copyWith(
-                                            color:
-                                                colorScheme.onPrimaryContainer,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                              ),
-                              child: Column(
-                                children: upcomingExams.asMap().entries.map((
-                                  entry,
-                                ) {
-                                  return ExamCard(
-                                    exam: entry.value,
-                                    index: entry.key,
-                                    institutionId: _institutionId,
-                                  );
-                                }).toList(),
-                              ),
-                            ),
-                          ],
-
-                          // Past
-                          if (pastExams.isNotEmpty) ...[
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                16,
-                                24,
-                                16,
-                                12,
-                              ),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    'Past Exams',
-                                    style: theme.textTheme.titleLarge?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: colorScheme.onSurfaceVariant,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                      vertical: 4,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color:
-                                          colorScheme.surfaceContainerHighest,
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Text(
-                                      '${pastExams.length}',
-                                      style: theme.textTheme.labelMedium
-                                          ?.copyWith(
-                                            color: colorScheme.onSurfaceVariant,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                              ),
-                              child: Column(
-                                children: pastExams.asMap().entries.map((
-                                  entry,
-                                ) {
-                                  return ExamCard(
-                                    exam: entry.value,
-                                    index: entry.key,
-                                    institutionId: _institutionId,
-                                    // isPast: true,
-                                  );
-                                }).toList(),
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
                     );
                   }
 
