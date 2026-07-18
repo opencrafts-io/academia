@@ -740,8 +740,15 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     () => InstitutionKeyLocalDatasource(appDataBase: sl()),
   );
 
+  sl.registerLazySingleton<InstitutionKeySecureDatasource>(
+    () => InstitutionKeySecureDatasource(),
+  );
+
   sl.registerFactory<InstitutionKeyRepository>(
-    () => InstitutionKeyRepositoryImpl(localDataSource: sl()),
+    () => InstitutionKeyRepositoryImpl(
+      localDataSource: sl(),
+      secureDataSource: sl(),
+    ),
   );
   // --- Student Profile Datasources ---
   sl.registerFactory<InstitutionProfileLocalDatasource>(
@@ -951,6 +958,10 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   );
 
   // Exam Timetable
+  sl.registerLazySingleton<ExamNotificationService>(
+    () => ExamNotificationServiceImpl(),
+  );
+
   // Data sources
   sl.registerFactory(() => ExamTimetableLocalDataSource(localDB: sl()));
   sl.registerFactory(
@@ -962,6 +973,7 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     () => ExamTimetableRepositoryImpl(
       localDataSource: sl(),
       remoteDataSource: sl(),
+      examNotificationService: sl(),
     ),
   );
 

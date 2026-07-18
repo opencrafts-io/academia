@@ -8,12 +8,8 @@ import 'package:academia/features/chirp/posts/data/models/attachment_model.dart'
 import 'package:academia/features/chirp/posts/data/models/post_model.dart';
 import 'package:academia/features/chirp/posts/data/models/comment_model.dart';
 import 'package:academia/features/course/data/models/course.dart';
-import 'package:academia/features/exam_timetable/data/models/exam_timetable.dart';
-import 'package:academia/features/institution/data/models/institution.dart';
-import 'package:academia/features/institution/data/models/institution_profile.dart';
-import 'package:academia/features/institution/data/models/institution_scrapping_command.dart';
-import 'package:academia/features/institution/data/models/institution_fee_transaction.dart';
-import 'package:academia/features/institution/data/models/institution_key.dart';
+import 'package:academia/database/tables/tables.dart';
+export 'package:academia/database/tables/tables.dart';
 import 'package:academia/features/leaderboard/data/models/leaderboard_rank.dart';
 import 'package:academia/features/chirp/posts/data/models/groups/group_model.dart';
 import 'package:academia/features/profile/data/models/user_profile.dart';
@@ -68,11 +64,11 @@ part 'database.g.dart';
     AgendaEvent,
 
     // Institution
-    Institution,
-    InstitutionScrappingCommand,
-    InstitutionKey,
-    InstitutionProfile,
-    InstitutionFeeTransaction,
+    Institutions,
+    InstitutionScrappingCommands,
+    InstitutionKeys,
+    InstitutionProfiles,
+    InstitutionFeeTransactions,
 
     /************************************************************
     *                           SEMESTER
@@ -89,7 +85,7 @@ part 'database.g.dart';
     TimetableEntry,
 
     // Exam Timetable
-    ExamTimetable,
+    ExamTimetables,
 
     /**************************************************************
     *              CHIRP FEATURE DATA MODELS
@@ -125,7 +121,7 @@ class AppDataBase extends _$AppDataBase {
   AppDataBase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 35;
+  int get schemaVersion => 36;
 
   @override
   MigrationStrategy get migration {
@@ -202,6 +198,7 @@ class AppDataBase extends _$AppDataBase {
               break;
             case 35:
               await migrate35To36(m);
+              break;
           }
         }
       },

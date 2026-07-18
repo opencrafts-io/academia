@@ -11,7 +11,8 @@ abstract class StudentProfileRepository {
 
   /// Watches a specific student profile by
   /// Returns a stream of either failure or profile domain model
-  Stream<Either<Failure, InstitutionProfile?>> watchProfileByUserAndInstitution({
+  Stream<Either<Failure, InstitutionProfile?>>
+  watchProfileByUserAndInstitution({
     required int institutionID,
     required String userID,
   });

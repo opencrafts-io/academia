@@ -63,7 +63,9 @@ class _ShereheSelectInstitutionsScreenState
                         : () {
                             context.pop(_selectedInstitutions);
                           },
-                    child: Text("Done Selecting (${_selectedInstitutions.length})"),
+                    child: Text(
+                      "Done Selecting (${_selectedInstitutions.length})",
+                    ),
                   ),
                 ),
               ),
@@ -83,16 +85,18 @@ class _ShereheSelectInstitutionsScreenState
                       children: [
                         Text(
                           widget.title,
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 6),
                         Text(
                           widget.subtitle,
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
-                          ),
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurfaceVariant,
+                              ),
                         ),
                       ],
                     ),
@@ -106,22 +110,27 @@ class _ShereheSelectInstitutionsScreenState
                       onChanged: (value) {
                         _debounce?.cancel();
                         _search = value;
-          
-                        _debounce = Timer(const Duration(milliseconds: 400), () {
-                          if (_search.trim().isNotEmpty) {
-                            context.read<InstitutionBloc>().add(
-                              SearchInstitutionByNameEvent(_search.trim()),
-                            );
-                          }
-                        });
-          
+
+                        _debounce = Timer(
+                          const Duration(milliseconds: 400),
+                          () {
+                            if (_search.trim().isNotEmpty) {
+                              context.read<InstitutionBloc>().add(
+                                SearchInstitutionByNameEvent(_search.trim()),
+                              );
+                            }
+                          },
+                        );
+
                         setState(() {});
                       },
                       decoration: InputDecoration(
                         hintText: "Search institutions...",
                         prefixIcon: const Icon(Icons.search),
                         filled: true,
-                        fillColor: Theme.of(context).colorScheme.primaryContainer,
+                        fillColor: Theme.of(
+                          context,
+                        ).colorScheme.primaryContainer,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide.none,
@@ -139,9 +148,9 @@ class _ShereheSelectInstitutionsScreenState
                     ),
                   ),
                 ),
-          
+
                 const SliverToBoxAdapter(child: SizedBox(height: 12)),
-          
+
                 if (_selectedInstitutions.isNotEmpty)
                   SliverToBoxAdapter(
                     child: Padding(
@@ -153,95 +162,99 @@ class _ShereheSelectInstitutionsScreenState
                           return Chip(
                             label: Text(inst.name),
                             onDeleted: () {
-                              setState(() => _selectedInstitutions.remove(inst));
+                              setState(
+                                () => _selectedInstitutions.remove(inst),
+                              );
                             },
                           );
                         }).toList(),
                       ),
                     ),
                   ),
-          
+
                 const SliverToBoxAdapter(child: SizedBox(height: 8)),
-          
+
                 BlocBuilder<InstitutionBloc, InstitutionState>(
                   builder: (context, state) {
-                    if (state is InstitutionLoadingState) {
-                      return SliverFillRemaining(
+                    return state.maybeWhen(
+                      loading: () => SliverFillRemaining(
                         hasScrollBody: false,
                         child: const Center(child: SpinningScallopIndicator()),
-                      );
-                    }
-          
-                    if (state is InstitutionErrorState) {
-                      return SliverFillRemaining(
+                      ),
+                      error: (error) => SliverFillRemaining(
                         hasScrollBody: false,
                         child: Center(
                           child: Text(
-                            state.error,
+                            error,
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.error,
                             ),
                           ),
                         ),
-                      );
-                    }
-          
-                    if (state is InstitutionLoadedState) {
-                      if (state.institutions.isEmpty) {
-                        return SliverFillRemaining(
-                          hasScrollBody: false,
-                          child: const Center(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.search_off, size: 48),
-                                SizedBox(height: 8),
-                                Text("No results found"),
-                              ],
+                      ),
+                      loaded: (institutions) {
+                        if (institutions.isEmpty) {
+                          return SliverFillRemaining(
+                            hasScrollBody: false,
+                            child: const Center(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.search_off, size: 48),
+                                  SizedBox(height: 8),
+                                  Text("No results found"),
+                                ],
+                              ),
                             ),
-                          ),
+                          );
+                        }
+
+                        return SliverList(
+                          delegate: SliverChildBuilderDelegate((
+                            context,
+                            index,
+                          ) {
+                            final institution = institutions[index];
+                            final selected = _selectedInstitutions.any(
+                              (e) =>
+                                  e.institutionId == institution.institutionId,
+                            );
+
+                            return CheckboxListTile(
+                              contentPadding: EdgeInsets.symmetric(
+                                horizontal: 16,
+                              ),
+                              title: Text(institution.name),
+                              value: selected,
+                              onChanged: (val) => setState(() {
+                                if (val == true) {
+                                  _selectedInstitutions.add(institution);
+                                } else {
+                                  _selectedInstitutions.removeWhere(
+                                    (e) =>
+                                        e.institutionId ==
+                                        institution.institutionId,
+                                  );
+                                }
+                              }),
+                            );
+                          }, childCount: institutions.length),
                         );
-                      }
-          
-                      return SliverList(
-                        delegate: SliverChildBuilderDelegate((context, index) {
-                          final institution = state.institutions[index];
-                          final selected = _selectedInstitutions.any(
-                            (e) => e.institutionId == institution.institutionId,
-                          );
-          
-                          return CheckboxListTile(
-                            contentPadding: EdgeInsets.symmetric(horizontal: 16),
-                            title: Text(institution.name),
-                            value: selected,
-                            onChanged: (val) => setState(() {
-                              if (val == true) {
-                                _selectedInstitutions.add(institution);
-                              } else {
-                                _selectedInstitutions.removeWhere(
-                                  (e) =>
-                                      e.institutionId == institution.institutionId,
-                                );
-                              }
-                            }),
-                          );
-                        }, childCount: state.institutions.length),
-                      );
-                    }
-          
-                    return SliverFillRemaining(
-                      hasScrollBody: false,
-                      child: Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: const [
-                            Icon(Icons.school_outlined, size: 70),
-                            SizedBox(height: 10),
-                            Text(
-                              "Start by searching for an institution",
-                              style: TextStyle(fontSize: 15),
-                            ),
-                          ],
+                      },
+                      orElse: () => SliverFillRemaining(
+                        hasScrollBody: false,
+                        child: Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: const [
+                              Icon(Icons.school_outlined, size: 70),
+                              SizedBox(height: 10),
+                              Text(
+                                "Start by searching for an institution",
+                                style: TextStyle(fontSize: 15),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     );
@@ -250,7 +263,7 @@ class _ShereheSelectInstitutionsScreenState
               ],
             ),
           );
-        }
+        },
       ),
     );
   }

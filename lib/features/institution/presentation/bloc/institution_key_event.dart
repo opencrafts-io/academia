@@ -26,4 +26,3 @@ class SaveInstitutionKeyEvent extends InstitutionKeyEvent {
   @override
   List<Object?> get props => [key];
 }
-

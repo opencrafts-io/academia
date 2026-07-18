@@ -4,6 +4,9 @@ export 'entity/exam_timetable.dart';
 // Repository
 export 'repository/exam_timetable_repository.dart';
 
+// Services
+export 'services/exam_notification_service.dart';
+
 // Usecases
 export 'usecases/delete_exam_timetable_usecase.dart';
 export 'usecases/get_cached_exams_usecase.dart';

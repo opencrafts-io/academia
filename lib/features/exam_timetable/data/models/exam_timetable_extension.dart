@@ -1,10 +1,11 @@
 import 'dart:convert';
 
-import 'package:academia/database/database.dart';
+import 'package:academia/database/database.dart' as db;
 import 'package:academia/features/exam_timetable/domain/entity/exam_timetable.dart';
 
-extension ExamTimetableExtension on ExamTimetable {
-  ExamTimetableData toModel() => ExamTimetableData(
+extension ExamTimetableModelHelper on ExamTimetable {
+  db.ExamTimetable toModel() => db.ExamTimetable(
+    institutionId: institutionId,
     courseCode: courseCode,
     startTime: startTime,
     endTime: endTime,
@@ -16,7 +17,7 @@ extension ExamTimetableExtension on ExamTimetable {
   );
 }
 
-extension ExamTimetableDataExtension on ExamTimetableData {
+extension ExamTimetableDataModelHelper on db.ExamTimetable {
   ExamRawData? _parseRawData() {
     if (rawData == null || rawData!.isEmpty) return null;
     try {
@@ -28,6 +29,7 @@ extension ExamTimetableDataExtension on ExamTimetableData {
   }
 
   ExamTimetable toEntity() => ExamTimetable(
+    institutionId: institutionId,
     courseCode: courseCode,
     startTime: startTime,
     endTime: endTime,

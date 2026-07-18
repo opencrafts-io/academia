@@ -38,20 +38,21 @@ class _SchoolEditPageState extends State<SchoolEditPage> {
   Widget build(BuildContext context) {
     return BlocListener<InstitutionBloc, InstitutionState>(
       listener: (context, state) {
-        if (state is InstitutionLinkedState) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              duration: Duration(seconds: 7),
-              content: Text(
-                "You were successfully linked to ${_selectedInstitution?.name ?? 'the selected institution'} you'll be prompted soon to import your classes",
+        state.whenOrNull(
+          linked: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                duration: Duration(seconds: 7),
+                content: Text(
+                  "You were successfully linked to ${_selectedInstitution?.name ?? 'the selected institution'} you'll be prompted soon to import your classes",
+                ),
+                behavior: SnackBarBehavior.floating,
               ),
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
+            );
 
-          widget.onNext();
-          return;
-        }
+            widget.onNext();
+          },
+        );
       },
       child: SingleChildScrollView(
         child: Column(
@@ -95,58 +96,52 @@ class _SchoolEditPageState extends State<SchoolEditPage> {
                 return [
                   BlocBuilder<InstitutionBloc, InstitutionState>(
                     builder: (context, state) {
-                      if (state is InstitutionLoadingState) {
-                        return const Center(
+                      return state.maybeWhen(
+                        loading: () => const Center(
                           child: Padding(
                             padding: EdgeInsets.all(8),
                             child: SpinningScallopIndicator(),
                           ),
-                        );
-                      }
-
-                      if (state is InstitutionErrorState) {
-                        return Padding(
+                        ),
+                        error: (error) => Padding(
                           padding: EdgeInsets.all(12),
                           child: Card.filled(
                             color: Theme.of(context).colorScheme.errorContainer,
                             child: Padding(
                               padding: EdgeInsets.all(12),
                               child: Text(
-                                state.error,
+                                error,
                                 style: Theme.of(context).textTheme.titleSmall,
                               ),
                             ),
                           ),
-                        );
-                      }
-
-                      if (state is InstitutionLoadedState) {
-                        final institutions = state.institutions;
-                        if (institutions.isEmpty) {
-                          return const ListTile(
-                            title: Text("No institutions found"),
+                        ),
+                        loaded: (institutions) {
+                          if (institutions.isEmpty) {
+                            return const ListTile(
+                              title: Text("No institutions found"),
+                            );
+                          }
+                          return Column(
+                            children: institutions
+                                .map(
+                                  (ins) => ListTile(
+                                    onTap: () {
+                                      setState(() {
+                                        _selectedInstitution = ins;
+                                        searchController.closeView(ins.name);
+                                      });
+                                    },
+                                    title: Text(ins.name),
+                                    subtitle: Text(ins.domains?.first ?? ""),
+                                    trailing: Text(ins.alphaTwoCode ?? 'TF'),
+                                  ),
+                                )
+                                .toList(),
                           );
-                        }
-                        return Column(
-                          children: institutions
-                              .map(
-                                (ins) => ListTile(
-                                  onTap: () {
-                                    setState(() {
-                                      _selectedInstitution = ins;
-                                      searchController.closeView(ins.name);
-                                    });
-                                  },
-                                  title: Text(ins.name),
-                                  subtitle: Text(ins.domains?.first ?? ""),
-                                  trailing: Text(ins.alphaTwoCode ?? 'TF'),
-                                ),
-                              )
-                              .toList(),
-                        );
-                      }
-
-                      return const SizedBox.shrink();
+                        },
+                        orElse: () => const SizedBox.shrink(),
+                      );
                     },
                   ),
                 ];

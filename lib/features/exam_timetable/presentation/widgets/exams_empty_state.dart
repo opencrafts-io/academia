@@ -18,7 +18,7 @@ class EmptyState extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                // color: colorScheme.surfaceContainerHighest,
+                color: colorScheme.surfaceContainerHighest,
                 shape: BoxShape.circle,
               ),
               child: Assets.icons.animalsIconPenguin.image(
@@ -26,7 +26,7 @@ class EmptyState extends StatelessWidget {
                 width: 200,
               ),
             ),
-            // const SizedBox(height: 24),
+            const SizedBox(height: 24),
             Text(
               'Your timetable is empty. Please search for your courses',
               textAlign: TextAlign.center,

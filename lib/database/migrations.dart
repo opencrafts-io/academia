@@ -3,33 +3,33 @@ import 'database.dart';
 
 extension AppDatabaseExtension on AppDataBase {
   Future<void> migrate14To15(Migrator m) async {
-    await m.createTable(examTimetable);
+    await m.createTable(examTimetables);
   }
 
   Future<void> migrate15To16(Migrator m) async {
-    await m.createTable(institutionScrappingCommand);
+    await m.createTable(institutionScrappingCommands);
   }
 
   Future<void> migrate16To17(Migrator m) async {
-    await m.createTable(institutionKey);
+    await m.createTable(institutionKeys);
   }
 
   Future<void> migrate17To18(Migrator m) async {
-    await m.createTable(institutionProfile);
+    await m.createTable(institutionProfiles);
   }
 
   Future<void> migrate18To19(Migrator m) async {
-    m.drop(institutionProfile);
-    m.create(institutionProfile);
+    m.drop(institutionProfiles);
+    m.create(institutionProfiles);
   }
 
   Future<void> migrate19To20(Migrator m) async {
-    m.drop(institutionProfile);
-    m.create(institutionProfile);
+    m.drop(institutionProfiles);
+    m.create(institutionProfiles);
   }
 
   Future<void> migrate20To21(Migrator m) async {
-    await m.createTable(institutionFeeTransaction);
+    await m.createTable(institutionFeeTransactions);
   }
 
   Future<void> migrate21To22(Migrator m) async {
@@ -132,7 +132,12 @@ extension AppDatabaseExtension on AppDataBase {
   }
 
   Future<void> migrate35To36(Migrator m) async {
+    // Schema changed: added institutionId to the primary key so cached exams
+    // from different institutions sharing a course code no longer collide.
+    // Course codes aren't globally unique, so old rows can't be reliably
+    // reattributed to an institution; the cache clears and repopulates from
+    // the next fetch/auto-import instead.
     await m.database.customStatement("DROP TABLE IF EXISTS 'exam_timetable';");
-    await m.createTable(examTimetable);
+    await m.createTable(examTimetables);
   }
 }

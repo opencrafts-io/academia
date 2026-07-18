@@ -56,60 +56,64 @@ class _InstitutionHomePageState extends State<InstitutionHomePage>
       body: MultiBlocListener(
         listeners: [
           BlocListener<ScrappingCommandBloc, ScrappingCommandState>(
-            listener: (context, state) {
-              if (state is ScrappingCommandLoading) {}
-            },
+            listener: (context, state) {},
           ),
           BlocListener<InstitutionKeyBloc, InstitutionKeyState>(
             listener: (context, state) {
-              if (state is InstitutionKeyError) {
-                ScaffoldMessenger.of(context).clearSnackBars();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text("We couldn't retrieve your keys"),
-                    behavior: SnackBarBehavior.floating,
-                    action: SnackBarAction(
-                      label: "Try again",
-                      onPressed: () => context.read<InstitutionKeyBloc>().add(
-                        GetInstitutionKeyEvent(
-                          institutionID: widget.institutionID,
+              state.whenOrNull(
+                error: (message, key) {
+                  ScaffoldMessenger.of(context).clearSnackBars();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("We couldn't retrieve your keys"),
+                      behavior: SnackBarBehavior.floating,
+                      action: SnackBarAction(
+                        label: "Try again",
+                        onPressed: () => context.read<InstitutionKeyBloc>().add(
+                          GetInstitutionKeyEvent(
+                            institutionID: widget.institutionID,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                );
-              } else if (state is InstitutionKeyLoaded && state.key == null) {
-                showModalBottomSheet(
-                  context: context,
-                  isDismissible: false,
-                  enableDrag: false,
-                  isScrollControlled: true,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(28.0),
-                    ),
-                  ),
-                  builder: (context) {
-                    return InstitutionSetupSheetContent(
-                      institutionID: widget.institutionID,
+                  );
+                },
+                loaded: (key) {
+                  if (key == null) {
+                    showModalBottomSheet(
+                      context: context,
+                      isDismissible: false,
+                      enableDrag: false,
+                      isScrollControlled: true,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(28.0),
+                        ),
+                      ),
+                      builder: (context) {
+                        return InstitutionSetupSheetContent(
+                          institutionID: widget.institutionID,
+                        );
+                      },
                     );
-                  },
-                );
-              }
+                  }
+                },
+              );
             },
           ),
           BlocListener<MagnetBloc, MagnetState>(
             listener: (context, state) async {
-              if (state is MagnetSuccess) {
-                ScaffoldMessenger.of(context).clearSnackBars();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text("All synced — now saving offline…"),
-                    behavior: SnackBarBehavior.floating,
-                  ),
-                );
-              }
-              // }
+              state.whenOrNull(
+                success: (result) {
+                  ScaffoldMessenger.of(context).clearSnackBars();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("All synced — now saving offline…"),
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                },
+              );
             },
           ),
         ],
@@ -139,28 +143,32 @@ class _InstitutionHomePageState extends State<InstitutionHomePage>
                     ),
 
                     BlocBuilder<StudentProfileBloc, StudentProfileState>(
-                      builder: (context, state) =>
-                          InstitutionStudentProfileCard(
-                            onTap: () {
-                              if ((state.profile?.id) != null) {
-                                EditStudentProfileRoute(
-                                  profileId: state.profile!.id!,
-                                  institutionID: widget.institutionID,
-                                ).push(context);
-                                return;
-                              }
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    "Can't update your profile at the moment"
-                                    " please try again later",
-                                  ),
-                                  behavior: SnackBarBehavior.floating,
+                      builder: (context, state) {
+                        final profile = state.whenOrNull(
+                          success: (profile, profiles) => profile,
+                        );
+                        return InstitutionStudentProfileCard(
+                          onTap: () {
+                            if (profile?.id != null) {
+                              EditStudentProfileRoute(
+                                profileId: profile!.id!,
+                                institutionID: widget.institutionID,
+                              ).push(context);
+                              return;
+                            }
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  "Can't update your profile at the moment"
+                                  " please try again later",
                                 ),
-                              );
-                            },
-                            profile: state.profile,
-                          ),
+                                behavior: SnackBarBehavior.floating,
+                              ),
+                            );
+                          },
+                          profile: profile,
+                        );
+                      },
                     ),
 
                     SliverPinnedHeader(
@@ -207,24 +215,26 @@ class _InstitutionHomePageAppBar extends StatelessWidget {
           icon: Icon(Icons.arrow_back),
         ),
         title: Text(
-          state is InstitutionLoadedState
-              ? state.institutions
-                    .firstWhere((ins) => ins.institutionId == institutionID)
-                    .name
-              : "#Error",
+          state.maybeWhen(
+            loaded: (institutions) => institutions
+                .firstWhere((ins) => ins.institutionId == institutionID)
+                .name,
+            orElse: () => "#Error",
+          ),
         ),
         actions: [
           BlocBuilder<ScrappingCommandBloc, ScrappingCommandState>(
-            builder: (context, state) => state is ScrappingCommandLoaded
-                ? IconButton(
-                    onPressed: () {
-                      InstitutionKeysViewRoute(
-                        institutionID: institutionID,
-                      ).push(context);
-                    },
-                    icon: Icon(Icons.key_outlined),
-                  )
-                : LoadingIndicatorM3E(),
+            builder: (context, state) => state.maybeWhen(
+              loaded: (command) => IconButton(
+                onPressed: () {
+                  InstitutionKeysViewRoute(
+                    institutionID: institutionID,
+                  ).push(context);
+                },
+                icon: Icon(Icons.key_outlined),
+              ),
+              orElse: () => LoadingIndicatorM3E(),
+            ),
           ),
         ],
       ),
@@ -241,13 +251,31 @@ class SyncStatusSection extends StatelessWidget {
     final magnetState = context.watch<MagnetBloc>().state;
     final keyState = context.watch<InstitutionKeyBloc>().state;
 
+    final scrappingCommand = scrappingState.maybeWhen(
+      loaded: (command) => command,
+      orElse: () => null,
+    );
+    final institutionKey = keyState.maybeWhen(
+      loaded: (key) => key,
+      orElse: () => null,
+    );
+    final bool magnetIsReadyOrSuccess = magnetState.maybeWhen(
+      ready: (magnet) => true,
+      success: (result) => true,
+      orElse: () => false,
+    );
+    final bool magnetIsProcessing = magnetState.maybeWhen(
+      processing: (command, progress) => true,
+      orElse: () => false,
+    );
+
     // Condition logic moved here for readability
     final bool canExecute =
-        (magnetState is MagnetReady || magnetState is MagnetSuccess) &&
-        scrappingState is ScrappingCommandLoaded &&
-        keyState is InstitutionKeyLoaded;
+        magnetIsReadyOrSuccess &&
+        scrappingCommand != null &&
+        institutionKey != null;
 
-    final bool shouldShow = canExecute && magnetState is! MagnetProcessing;
+    final bool shouldShow = canExecute && !magnetIsProcessing;
 
     return AnimatedSize(
       duration: const Duration(milliseconds: 300),
@@ -259,7 +287,8 @@ class SyncStatusSection extends StatelessWidget {
               ),
               color: Theme.of(context).colorScheme.primaryContainer,
               child: ListTile(
-                onTap: () => _handleSync(context, scrappingState, keyState),
+                onTap: () =>
+                    _handleSync(context, scrappingCommand, institutionKey),
                 leading: const Icon(Icons.sync_rounded),
                 title: const Text("Sync your information"),
                 subtitle: const Text("Update your profile and courses now"),
@@ -276,17 +305,19 @@ class SyncStatusSection extends StatelessWidget {
 
   void _handleSync(
     BuildContext context,
-    ScrappingCommandLoaded scrappingState,
-    InstitutionKeyLoaded keyState,
+    ScrappingCommand? scrappingCommand,
+    InstitutionKey? institutionKey,
   ) {
     final profileState = context.read<ProfileBloc>().state;
-    if (profileState is ProfileLoadedState) {
+    if (profileState is ProfileLoadedState &&
+        scrappingCommand != null &&
+        institutionKey != null) {
       context.read<MagnetBloc>().add(
         ExecuteScrappingCommand(
-          institutionID: keyState.key?.institutionId ?? 0,
+          institutionID: institutionKey.institutionId,
           userID: profileState.profile.id,
-          command: scrappingState.command!,
-          institutionKey: keyState.key!,
+          command: scrappingCommand,
+          institutionKey: institutionKey,
         ),
       );
     }
@@ -391,84 +422,87 @@ class _MagnetLoadingProgressCard extends StatelessWidget {
 
     return BlocBuilder<MagnetBloc, MagnetState>(
       builder: (context, state) {
-        if (state is! MagnetProcessing) return const SizedBox.shrink();
+        return state.maybeWhen(
+          processing: (command, progress) {
+            final percent = (progress?.progressPercent ?? 0) / 100;
 
-        final progress = state.progress;
-        final percent = (progress?.progressPercent ?? 0) / 100;
+            // Dynamic labels based on the instruction type
+            final actionLabel = _getFriendlyLabel(progress?.instructionType);
+            final statusDetail = _getStatusDetail(progress);
 
-        // Dynamic labels based on the instruction type
-        final actionLabel = _getFriendlyLabel(progress?.instructionType);
-        final statusDetail = _getStatusDetail(progress);
-
-        return Card(
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(28),
-            side: BorderSide(color: theme.colorScheme.outlineVariant),
-          ),
-          color: theme.colorScheme.surfaceContainerHigh,
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
+            return Card(
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(28),
+                side: BorderSide(color: theme.colorScheme.outlineVariant),
+              ),
+              color: theme.colorScheme.surfaceContainerHigh,
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    _AnimatedStatusAvatar(status: progress?.status),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            actionLabel,
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: theme.colorScheme.onSurface,
-                            ),
+                    Row(
+                      children: [
+                        _AnimatedStatusAvatar(status: progress?.status),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                actionLabel,
+                                style: theme.textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: theme.colorScheme.onSurface,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                statusDetail,
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(height: 2),
-                          Text(
-                            statusDetail,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant,
-                            ),
+                        ),
+                        // Percentage indicator
+                        Text(
+                          '${(percent * 100).toInt()}%',
+                          style: theme.textTheme.labelLarge?.copyWith(
+                            color: theme.colorScheme.primary,
+                            fontWeight: FontWeight.bold,
                           ),
-                        ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    // Smooth M3 Progress Bar
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: LinearProgressIndicator(
+                        value: percent > 0 ? percent : null,
+                        minHeight: 8,
+                        backgroundColor:
+                            theme.colorScheme.surfaceContainerHighest,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          progress?.status == InstructionStatus.failed
+                              ? theme.colorScheme.error
+                              : theme.colorScheme.primary,
+                        ),
                       ),
                     ),
-                    // Percentage indicator
-                    Text(
-                      '${(percent * 100).toInt()}%',
-                      style: theme.textTheme.labelLarge?.copyWith(
-                        color: theme.colorScheme.primary,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    if (progress?.error != null) ...[
+                      const SizedBox(height: 12),
+                      _ErrorNote(message: progress!.error!),
+                    ],
                   ],
                 ),
-                const SizedBox(height: 20),
-                // Smooth M3 Progress Bar
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(100),
-                  child: LinearProgressIndicator(
-                    value: percent > 0 ? percent : null,
-                    minHeight: 8,
-                    backgroundColor: theme.colorScheme.surfaceContainerHighest,
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      progress?.status == InstructionStatus.failed
-                          ? theme.colorScheme.error
-                          : theme.colorScheme.primary,
-                    ),
-                  ),
-                ),
-                if (progress?.error != null) ...[
-                  const SizedBox(height: 12),
-                  _ErrorNote(message: progress!.error!),
-                ],
-              ],
-            ),
-          ),
+              ),
+            );
+          },
+          orElse: () => const SizedBox.shrink(),
         );
       },
     );

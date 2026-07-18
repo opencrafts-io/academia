@@ -1,7 +1,15 @@
 import 'package:drift/drift.dart';
 
-@DataClassName("ExamTimetableData")
-class ExamTimetable extends Table {
+import 'institutions.dart';
+
+class ExamTimetables extends Table {
+  @override
+  String get tableName => 'exam_timetable';
+
+  @JsonKey("institution_id")
+  IntColumn get institutionId =>
+      integer().references(Institutions, #institutionId)();
+
   @JsonKey("course_code")
   TextColumn get courseCode => text()();
 
@@ -27,5 +35,5 @@ class ExamTimetable extends Table {
   DateTimeColumn get datetimeStr => dateTime()();
 
   @override
-  Set<Column> get primaryKey => {courseCode};
+  Set<Column> get primaryKey => {institutionId, courseCode};
 }

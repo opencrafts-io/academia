@@ -8,7 +8,7 @@ class RefreshExamTimetableUseCase {
   RefreshExamTimetableUseCase(this.repository);
 
   Future<Either<Failure, List<ExamTimetable>>> call({
-    required String institutionId,
+    required int institutionId,
     List<String>? courseCodes,
   }) {
     return repository.refreshExamTimetable(

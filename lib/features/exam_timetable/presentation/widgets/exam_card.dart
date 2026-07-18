@@ -1,5 +1,6 @@
 import 'package:academia/features/exam_timetable/domain/entity/exam_timetable.dart';
 import 'package:academia/features/exam_timetable/presentation/bloc/exam_timetable_bloc.dart';
+import 'package:academia/features/exam_timetable/presentation/widgets/exam_info_row.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -7,7 +8,7 @@ import 'package:intl/intl.dart';
 class ExamCard extends StatelessWidget {
   final ExamTimetable exam;
   final int index;
-  final String institutionId;
+  final int institutionId;
   final bool isPast;
 
   const ExamCard({
@@ -76,8 +77,8 @@ class ExamCard extends StatelessWidget {
         : colorScheme.tertiaryContainer;
 
     final textColor = isPast
-        ? colorScheme.onSurfaceVariant
-        : colorScheme.onSurface;
+        ? colorScheme.onSecondaryContainer
+        : colorScheme.onTertiaryContainer;
 
     // Build right-column optional info list
     final rawData = exam.rawData;
@@ -85,7 +86,8 @@ class ExamCard extends StatelessWidget {
     final invigilator = rawData?.invigilator ?? '';
     final courseName = rawData?.courseName ?? '';
     final group = rawData?.group ?? '';
-    final hasRightColumn = campus.isNotEmpty ||
+    final hasRightColumn =
+        campus.isNotEmpty ||
         exam.coordinator.isNotEmpty ||
         invigilator.isNotEmpty ||
         courseName.isNotEmpty ||
@@ -102,7 +104,7 @@ class ExamCard extends StatelessWidget {
         ),
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 20),
-        child: Icon(Icons.delete_outline, color: colorScheme.onError, size: 28),
+        child: Icon(Icons.delete_rounded, color: colorScheme.onError, size: 28),
       ),
       confirmDismiss: (direction) async {
         _showDeleteDialog(context);
@@ -144,13 +146,15 @@ class ExamCard extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: isPast
                                 ? colorScheme.surfaceContainer
-                                : Colors.black.withValues(alpha: 0.08),
+                                : textColor.withValues(alpha: 0.08),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(
                             '${exam.hrs}h',
                             style: theme.textTheme.labelMedium?.copyWith(
-                              color: textColor,
+                              color: isPast
+                                  ? colorScheme.onSurfaceVariant
+                                  : textColor,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -190,26 +194,23 @@ class ExamCard extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _CompactInfoRow(
-                          icon: Icons.calendar_today,
+                        ExamInfoRow(
+                          icon: Icons.calendar_today_rounded,
                           text: exam.displayDay,
                           textColor: textColor,
-                          theme: theme,
                         ),
                         const SizedBox(height: 6),
-                        _CompactInfoRow(
-                          icon: Icons.access_time,
+                        ExamInfoRow(
+                          icon: Icons.access_time_rounded,
                           text:
                               '${_formatTime(exam.startTime)} – ${_formatTime(exam.endTime)}',
                           textColor: textColor,
-                          theme: theme,
                         ),
                         const SizedBox(height: 6),
-                        _CompactInfoRow(
-                          icon: Icons.location_on_outlined,
+                        ExamInfoRow(
+                          icon: Icons.location_on_rounded,
                           text: exam.venue,
                           textColor: textColor,
-                          theme: theme,
                         ),
                       ],
                     ),
@@ -222,32 +223,29 @@ class ExamCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           if (campus.isNotEmpty)
-                            _CompactInfoRow(
-                              icon: Icons.business_outlined,
+                            ExamInfoRow(
+                              icon: Icons.business_rounded,
                               text: campus,
                               textColor: textColor,
-                              theme: theme,
                             ),
                           if (campus.isNotEmpty &&
                               (exam.coordinator.isNotEmpty ||
                                   invigilator.isNotEmpty))
                             const SizedBox(height: 6),
                           if (exam.coordinator.isNotEmpty)
-                            _CompactInfoRow(
-                              icon: Icons.person_outline,
+                            ExamInfoRow(
+                              icon: Icons.person_rounded,
                               text: exam.coordinator,
                               textColor: textColor,
-                              theme: theme,
                             ),
                           if (exam.coordinator.isNotEmpty &&
                               invigilator.isNotEmpty)
                             const SizedBox(height: 6),
                           if (invigilator.isNotEmpty)
-                            _CompactInfoRow(
-                              icon: Icons.supervisor_account_outlined,
+                            ExamInfoRow(
+                              icon: Icons.supervisor_account_rounded,
                               text: invigilator,
                               textColor: textColor,
-                              theme: theme,
                             ),
                           if ((campus.isNotEmpty ||
                                   exam.coordinator.isNotEmpty ||
@@ -255,20 +253,18 @@ class ExamCard extends StatelessWidget {
                               (courseName.isNotEmpty || group.isNotEmpty))
                             const SizedBox(height: 6),
                           if (courseName.isNotEmpty)
-                            _CompactInfoRow(
-                              icon: Icons.book_outlined,
+                            ExamInfoRow(
+                              icon: Icons.book_rounded,
                               text: courseName,
                               textColor: textColor,
-                              theme: theme,
                             ),
                           if (group.isNotEmpty) ...[
                             if (courseName.isNotEmpty)
                               const SizedBox(height: 6),
-                            _CompactInfoRow(
-                              icon: Icons.group_outlined,
+                            ExamInfoRow(
+                              icon: Icons.group_rounded,
                               text: group,
                               textColor: textColor,
-                              theme: theme,
                             ),
                           ],
                         ],
@@ -280,41 +276,6 @@ class ExamCard extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _CompactInfoRow extends StatelessWidget {
-  final IconData icon;
-  final String text;
-  final Color textColor;
-  final ThemeData theme;
-
-  const _CompactInfoRow({
-    required this.icon,
-    required this.text,
-    required this.textColor,
-    required this.theme,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Icon(icon, size: 14, color: textColor.withValues(alpha: 0.7)),
-        const SizedBox(width: 6),
-        Expanded(
-          child: Text(
-            text,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: textColor,
-              fontSize: 12,
-            ),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-      ],
     );
   }
 }

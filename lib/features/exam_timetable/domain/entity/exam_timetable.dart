@@ -77,6 +77,7 @@ class ExamRawData extends Equatable {
 }
 
 class ExamTimetable extends Equatable {
+  final int institutionId;
   final String courseCode;
   final String startTime;
   final String endTime;
@@ -95,6 +96,7 @@ class ExamTimetable extends Equatable {
   final DateTime datetimeStr;
 
   const ExamTimetable({
+    required this.institutionId,
     required this.courseCode,
     required this.startTime,
     required this.endTime,
@@ -133,6 +135,7 @@ class ExamTimetable extends Equatable {
 
   @override
   List<Object?> get props => [
+    institutionId,
     courseCode,
     startTime,
     endTime,

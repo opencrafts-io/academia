@@ -8,11 +8,13 @@ class ExamTimetableLocalDataSource {
 
   ExamTimetableLocalDataSource({required this.localDB});
 
-  Future<Either<Failure, List<ExamTimetableData>>> getCachedExams({
+  Future<Either<Failure, List<ExamTimetable>>> getCachedExams({
+    required int institutionId,
     List<String>? courseCodes,
   }) async {
     try {
-      final query = localDB.select(localDB.examTimetable);
+      final query = localDB.select(localDB.examTimetables)
+        ..where((t) => t.institutionId.equals(institutionId));
 
       if (courseCodes != null && courseCodes.isNotEmpty) {
         query.where((t) => t.courseCode.isIn(courseCodes));
@@ -31,41 +33,37 @@ class ExamTimetableLocalDataSource {
       return left(
         CacheFailure(
           error: e,
-          message:
-              // "School's Out" - Alice Cooper
-              "School's out! We couldn't retrieve your exam timetable from the local database. The halls are eerily silent!",
+          message: "Failed to retrieve cached exam timetable",
         ),
       );
     }
   }
 
-  Future<Either<Failure, ExamTimetableData>> createOrUpdateExam(
-    ExamTimetableData exam,
+  Future<Either<Failure, ExamTimetable>> createOrUpdateExam(
+    ExamTimetable exam,
   ) async {
     try {
       final created = await localDB
-          .into(localDB.examTimetable)
+          .into(localDB.examTimetables)
           .insertReturning(exam, onConflict: DoUpdate((e) => exam));
       return right(created);
     } catch (e) {
       return left(
         CacheFailure(
           error: e,
-          message:
-              // "Back to School" - Deftones
-              "Back to school malfunction! We couldn't save your exam locally. The database is skipping class!",
+          message: "Failed to save exam to local database",
         ),
       );
     }
   }
 
   Future<Either<Failure, void>> createOrUpdateExamBatch(
-    List<ExamTimetableData> exams,
+    List<ExamTimetable> exams,
   ) async {
     try {
       await localDB.batch((batch) {
         batch.insertAll(
-          localDB.examTimetable,
+          localDB.examTimetables,
           exams,
           mode: InsertMode.insertOrReplace,
         );
@@ -73,23 +71,20 @@ class ExamTimetableLocalDataSource {
       return right(null);
     } catch (e) {
       return left(
-        CacheFailure(
-          error: e,
-          message:
-              // "We're Not Gonna Take It" - Twisted Sister
-              "We're not gonna take it! The batch save failed. The database is in rebellion!",
-        ),
+        CacheFailure(error: e, message: "Failed to save exam timetable batch"),
       );
     }
   }
 
   Future<Either<Failure, void>> deleteExamByCourseCode({
     required String courseCode,
+    required int institutionId,
   }) async {
     try {
-      await (localDB.delete(localDB.examTimetable)..where(
+      await (localDB.delete(localDB.examTimetables)..where(
             (t) =>
-                t.courseCode.equals(courseCode),
+                t.courseCode.equals(courseCode) &
+                t.institutionId.equals(institutionId),
           ))
           .go();
       return right(null);
@@ -97,14 +92,9 @@ class ExamTimetableLocalDataSource {
       return left(
         CacheFailure(
           error: e,
-          message:
-              // "Don't Stand So Close to Me" - The Police
-              "Don't stand so close to me! That exam won't budge from the database. It's clinging on tight!",
+          message: "Failed to delete exam from local database",
         ),
       );
     }
   }
-
-
-
 }
