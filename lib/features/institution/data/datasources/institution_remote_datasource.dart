@@ -1,13 +1,13 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/core/error/failures.dart';
 import 'package:academia/core/network/network.dart';
-import 'package:academia/database/database.dart';
+import 'package:academia/features/institution/data/dtos/institution_api_dto.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
-List<Institution> _parseInstitutions(List<dynamic> raw) {
-  return raw.map((e) => Institution.fromJson(e)).toList();
+List<InstitutionApiDto> _parseInstitutions(List<dynamic> raw) {
+  return raw.map((e) => InstitutionApiDto.fromJson(e)).toList();
 }
 
 class InstitutionRemoteDatasource with DioErrorHandler {
@@ -25,7 +25,7 @@ class InstitutionRemoteDatasource with DioErrorHandler {
     }
   }
 
-  Future<Either<Failure, List<Institution>>> searchForInstitutionByName(
+  Future<Either<Failure, List<InstitutionApiDto>>> searchForInstitutionByName(
     String name, {
     int page = 0,
     pageSize = 100,
@@ -113,7 +113,7 @@ class InstitutionRemoteDatasource with DioErrorHandler {
     }
   }
 
-  Future<Either<Failure, List<Institution>>> getAccountInstitutions(
+  Future<Either<Failure, List<InstitutionApiDto>>> getAccountInstitutions(
     String accountID, {
     int page = 0,
     pageSize = 100,

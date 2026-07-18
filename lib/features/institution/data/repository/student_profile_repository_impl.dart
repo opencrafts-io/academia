@@ -145,7 +145,7 @@ class StudentProfileRepositoryImpl
 
     return result.fold((failure) => left(failure), (profileData) async {
       await localDatasource.saveInstitutionProfile(
-        institutionProfile: profileData,
+        institutionProfile: profileData.toData(),
       );
       return right(profileData.toEntity());
     });
@@ -185,7 +185,7 @@ class StudentProfileRepositoryImpl
 
     return result.fold((failure) => left(failure), (profilesData) async {
       await localDatasource.saveInstitutionProfiles(
-        institutionProfiles: profilesData,
+        institutionProfiles: profilesData.map((data) => data.toData()).toList(),
       );
       return right(profilesData.map((data) => data.toEntity()).toList());
     });
@@ -215,7 +215,9 @@ class StudentProfileRepositoryImpl
     remoteDatasource.fetchCurrentUserProfiles().then((result) {
       result.fold((failure) => left(failure), (profiles) async {
         for (final profile in profiles) {
-          localDatasource.saveInstitutionProfile(institutionProfile: profile);
+          localDatasource.saveInstitutionProfile(
+            institutionProfile: profile.toData(),
+          );
         }
         return right(null);
       });
@@ -245,15 +247,15 @@ class StudentProfileRepositoryImpl
       return right(profile);
     }
 
-    remoteDatasource.createInstitutionProfile(profile: profile.toData()).then((
-      result,
-    ) {
-      result.fold((error) {}, (createdProfileData) {
-        localDatasource.saveInstitutionProfile(
-          institutionProfile: createdProfileData,
-        );
-      });
-    });
+    remoteDatasource.createInstitutionProfile(profile: profile.toApiDto()).then(
+      (result) {
+        result.fold((error) {}, (createdProfileData) {
+          localDatasource.saveInstitutionProfile(
+            institutionProfile: createdProfileData.toData(),
+          );
+        });
+      },
+    );
     return result.fold((err) => left(err), (v) => right(profile));
   }
 
@@ -282,12 +284,12 @@ class StudentProfileRepositoryImpl
 
     final result = await remoteDatasource.updateInstitutionProfile(
       profileId: profileId,
-      profile: profile.toData(),
+      profile: profile.toApiDto(),
     );
 
     return result.fold((failure) => left(failure), (updatedProfileData) async {
       await localDatasource.saveInstitutionProfile(
-        institutionProfile: updatedProfileData,
+        institutionProfile: updatedProfileData.toData(),
       );
       return right(updatedProfileData.toEntity());
     });
@@ -322,7 +324,7 @@ class StudentProfileRepositoryImpl
 
     return result.fold((failure) => left(failure), (updatedProfileData) async {
       await localDatasource.saveInstitutionProfile(
-        institutionProfile: updatedProfileData,
+        institutionProfile: updatedProfileData.toData(),
       );
       return right(updatedProfileData.toEntity());
     });

@@ -1,7 +1,7 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/core/error/failures.dart';
 import 'package:academia/core/network/network.dart';
-import 'package:academia/database/database.dart';
+import 'package:academia/features/institution/data/dtos/institution_profile_api_dto.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
@@ -32,9 +32,10 @@ class InstitutionProfileRemoteDatasource
   /// - `program`: Filter by program name
   ///
   /// Returns:
-  /// - `Right<List<InstitutionProfile>>` on success
+  /// - `Right<List<InstitutionProfileApiDto>>` on success
   /// - `Left<Failure>` on error
-  Future<Either<Failure, List<InstitutionProfile>>> fetchInstitutionProfiles({
+  Future<Either<Failure, List<InstitutionProfileApiDto>>>
+  fetchInstitutionProfiles({
     int? institutionId,
     String? studentId,
     String? program,
@@ -53,8 +54,9 @@ class InstitutionProfileRemoteDatasource
       if (response.statusCode == 200) {
         final profiles = (response.data as List)
             .map(
-              (profile) =>
-                  InstitutionProfile.fromJson(profile as Map<String, dynamic>),
+              (profile) => InstitutionProfileApiDto.fromJson(
+                profile as Map<String, dynamic>,
+              ),
             )
             .toList();
         return right(profiles);
@@ -76,18 +78,17 @@ class InstitutionProfileRemoteDatasource
   /// Fetches a single institution profile by ID.
   ///
   /// Returns:
-  /// - `Right<InstitutionProfile>` on success
+  /// - `Right<InstitutionProfileApiDto>` on success
   /// - `Left<Failure>` if profile not found or server error
-  Future<Either<Failure, InstitutionProfile>> fetchInstitutionProfileById({
-    required int profileId,
-  }) async {
+  Future<Either<Failure, InstitutionProfileApiDto>>
+  fetchInstitutionProfileById({required int profileId}) async {
     try {
       final response = await dioClient.dio.get(
         "/$servicePrefix/profile/$profileId/",
       );
 
       if (response.statusCode == 200) {
-        return right(InstitutionProfile.fromJson(response.data));
+        return right(InstitutionProfileApiDto.fromJson(response.data));
       }
 
       throw "Wrong status code returned from server expected 200 got ${response.statusCode}";
@@ -106,9 +107,9 @@ class InstitutionProfileRemoteDatasource
   /// Fetches the institution profile of the currently authenticated user.
   ///
   /// Returns:
-  /// - `Right<InstitutionProfile>` on success
+  /// - `Right<InstitutionProfileApiDto>` on success
   /// - `Left<Failure>` if no profile found or server error
-  Future<Either<Failure, List<InstitutionProfile>>>
+  Future<Either<Failure, List<InstitutionProfileApiDto>>>
   fetchCurrentUserProfiles() async {
     try {
       final response = await dioClient.dio.get("/$servicePrefix/profile/mine");
@@ -119,8 +120,9 @@ class InstitutionProfileRemoteDatasource
         // 2. Map the list items to your Data model
         final profiles = data
             .map(
-              (json) =>
-                  InstitutionProfile.fromJson(json as Map<String, dynamic>),
+              (json) => InstitutionProfileApiDto.fromJson(
+                json as Map<String, dynamic>,
+              ),
             )
             .toList();
 
@@ -143,10 +145,10 @@ class InstitutionProfileRemoteDatasource
   /// Creates a new institution profile.
   ///
   /// Returns:
-  /// - `Right<InstitutionProfile>` containing the created profile on success
+  /// - `Right<InstitutionProfileApiDto>` containing the created profile on success
   /// - `Left<Failure>` on error
-  Future<Either<Failure, InstitutionProfile>> createInstitutionProfile({
-    required InstitutionProfile profile,
+  Future<Either<Failure, InstitutionProfileApiDto>> createInstitutionProfile({
+    required InstitutionProfileApiDto profile,
   }) async {
     try {
       final response = await dioClient.dio.post(
@@ -155,7 +157,7 @@ class InstitutionProfileRemoteDatasource
       );
 
       if (response.statusCode == 201) {
-        return right(InstitutionProfile.fromJson(response.data));
+        return right(InstitutionProfileApiDto.fromJson(response.data));
       }
 
       throw "Wrong status code returned from server expected 201 got ${response.statusCode}";
@@ -174,11 +176,11 @@ class InstitutionProfileRemoteDatasource
   /// Updates an existing institution profile (full update).
   ///
   /// Returns:
-  /// - `Right<InstitutionProfile>` containing the updated profile on success
+  /// - `Right<InstitutionProfileApiDto>` containing the updated profile on success
   /// - `Left<Failure>` on error
-  Future<Either<Failure, InstitutionProfile>> updateInstitutionProfile({
+  Future<Either<Failure, InstitutionProfileApiDto>> updateInstitutionProfile({
     required int profileId,
-    required InstitutionProfile profile,
+    required InstitutionProfileApiDto profile,
   }) async {
     try {
       final response = await dioClient.dio.put(
@@ -187,7 +189,7 @@ class InstitutionProfileRemoteDatasource
       );
 
       if (response.statusCode == 200) {
-        return right(InstitutionProfile.fromJson(response.data));
+        return right(InstitutionProfileApiDto.fromJson(response.data));
       }
 
       throw "Wrong status code returned from server expected 200 got ${response.statusCode}";
@@ -206,9 +208,10 @@ class InstitutionProfileRemoteDatasource
   /// Partially updates an existing institution profile.
   ///
   /// Returns:
-  /// - `Right<InstitutionProfile>` containing the updated profile on success
+  /// - `Right<InstitutionProfileApiDto>` containing the updated profile on success
   /// - `Left<Failure>` on error
-  Future<Either<Failure, InstitutionProfile>> partialUpdateInstitutionProfile({
+  Future<Either<Failure, InstitutionProfileApiDto>>
+  partialUpdateInstitutionProfile({
     required int profileId,
     required Map<String, dynamic> updates,
   }) async {
@@ -219,7 +222,7 @@ class InstitutionProfileRemoteDatasource
       );
 
       if (response.statusCode == 200) {
-        return right(InstitutionProfile.fromJson(response.data));
+        return right(InstitutionProfileApiDto.fromJson(response.data));
       }
 
       throw "Wrong status code returned from server expected 200 got ${response.statusCode}";

@@ -1,7 +1,7 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/core/error/failures.dart';
 import 'package:academia/core/network/network.dart';
-import 'package:academia/database/database.dart';
+import 'package:academia/features/institution/data/dtos/institution_scrapping_command_api_dto.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
@@ -24,7 +24,7 @@ class InstitutionCommandRemoteDatasource
     }
   }
 
-  Future<Either<Failure, InstitutionScrappingCommand>>
+  Future<Either<Failure, InstitutionScrappingCommandApiDto>>
   fetchInstitutionScrappingCommandByInstitution({
     required int institutionID,
   }) async {
@@ -34,7 +34,7 @@ class InstitutionCommandRemoteDatasource
       );
 
       if (response.statusCode == 200) {
-        return right(InstitutionScrappingCommand.fromJson(response.data));
+        return right(InstitutionScrappingCommandApiDto.fromJson(response.data));
       }
 
       throw ("Wrong status code returned from server expected 200 got ${response.statusCode}");

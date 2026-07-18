@@ -1,6 +1,6 @@
 import 'package:academia/core/error/failures.dart';
 import 'package:academia/core/usecase/usecase.dart';
-import 'package:academia/database/database.dart' as db;
+import 'package:academia/features/institution/data/dtos/institution_profile_api_dto.dart';
 import 'package:academia/features/institution/data/models/institution_profile_helper.dart';
 import 'package:academia/features/institution/domain/domain.dart';
 import 'package:dartz/dartz.dart';
@@ -235,10 +235,7 @@ class SyncInstitutionProfileUsecase
       "updated_at": DateTime.now().toIso8601String(),
     };
 
-    // TODO(part-c): replace with InstitutionProfileApiDto.fromJson(...).toEntity()
-    // once the API DTO layer exists, so this domain usecase stops depending on
-    // the Drift row type to parse raw wire JSON.
-    final profile = db.InstitutionProfile.fromJson(
+    final profile = InstitutionProfileApiDto.fromJson(
       Map<String, dynamic>.from(params.rawData)..addEntries(extra.entries),
     ).toEntity();
 

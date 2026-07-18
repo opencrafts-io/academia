@@ -71,7 +71,7 @@ class InstitutionRepositoryImpl implements InstitutionRepository {
     return result.fold((error) => left(error), (rawInstitutions) {
       for (final institution in rawInstitutions) {
         institutionLocalDatasource.createOrUpdateInstitutionDetails(
-          institution,
+          institution.toData(),
         );
       }
       return right(

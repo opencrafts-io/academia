@@ -26,8 +26,9 @@ class InstitutionScrappingCommandRepositoryImpl
         .then((result) {
           result.fold(
             (error) {},
-            (command) => institutionCommandLocalDatasource
-                .saveInstitutionCommand(institutionCommand: command),
+            (dto) => institutionCommandLocalDatasource.saveInstitutionCommand(
+              institutionCommand: dto.toData(),
+            ),
           );
         });
 

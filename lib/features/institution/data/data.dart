@@ -1,3 +1,9 @@
+export 'dtos/institution_api_dto.dart';
+export 'dtos/institution_scrapping_command_api_dto.dart';
+export 'dtos/institution_profile_api_dto.dart';
+export 'dtos/magnet_fee_statement_dto.dart';
+export 'dtos/magnet_course_dto.dart';
+export 'mappers/course_with_schedules.dart';
 export 'models/institution_model_helper.dart';
 export 'models/institution_key_model_helper.dart';
 export 'models/institution_fee_transaction_model_helper.dart';
