@@ -25,7 +25,7 @@ class ExamTimetableRemoteDatasource with DioErrorHandler {
     }
   }
 
-  /// Parses a single API response entry into an [ExamTimetableData].
+  /// Parses a single API response entry into an [ExamTimetable].
   ///
   /// New API shape:
   /// ```json
@@ -43,7 +43,10 @@ class ExamTimetableRemoteDatasource with DioErrorHandler {
   ///   }
   /// }
   /// ```
-  ExamTimetableData _parseEntry(Map<String, dynamic> json) {
+  ///
+  /// The response entries don't echo back an institution id, so it's
+  /// stamped on from the request scope instead.
+  ExamTimetable _parseEntry(Map<String, dynamic> json, int institutionId) {
     final startTimeStr = json['start_time'] as String;
     final endTimeStr = json['end_time'] as String;
 
@@ -56,7 +59,8 @@ class ExamTimetableRemoteDatasource with DioErrorHandler {
       rawDataEncoded = jsonEncode(rawDataJson);
     }
 
-    return ExamTimetableData(
+    return ExamTimetable(
+      institutionId: institutionId,
       courseCode: (json['course_code'] as String? ?? '').trim(),
       startTime: startTimeStr,
       endTime: endTimeStr,
@@ -68,8 +72,8 @@ class ExamTimetableRemoteDatasource with DioErrorHandler {
     );
   }
 
-  Future<Either<Failure, List<ExamTimetableData>>> _fetchExamTimetable({
-    required String institutionId,
+  Future<Either<Failure, List<ExamTimetable>>> _fetchExamTimetable({
+    required int institutionId,
     List<String>? courseCodes,
     required String operationName,
   }) async {
@@ -95,7 +99,7 @@ class ExamTimetableRemoteDatasource with DioErrorHandler {
           );
         }
         final results = (response.data as List)
-            .map((e) => _parseEntry(e as Map<String, dynamic>))
+            .map((e) => _parseEntry(e as Map<String, dynamic>, institutionId))
             .toList();
         return Right(results);
       }
@@ -119,8 +123,8 @@ class ExamTimetableRemoteDatasource with DioErrorHandler {
     }
   }
 
-  Future<Either<Failure, List<ExamTimetableData>>> getExamTimetable({
-    required String institutionId,
+  Future<Either<Failure, List<ExamTimetable>>> getExamTimetable({
+    required int institutionId,
     required List<String> courseCodes,
   }) async {
     return _fetchExamTimetable(
@@ -130,8 +134,8 @@ class ExamTimetableRemoteDatasource with DioErrorHandler {
     );
   }
 
-  Future<Either<Failure, List<ExamTimetableData>>> refreshExamTimetable({
-    required String institutionId,
+  Future<Either<Failure, List<ExamTimetable>>> refreshExamTimetable({
+    required int institutionId,
     List<String>? courseCodes,
   }) async {
     return _fetchExamTimetable(

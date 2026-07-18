@@ -90,7 +90,7 @@ class _EssentialsPageState extends State<EssentialsPage> {
         adService.showInterstitialAd();
         if (!mounted) return;
         ExamTimetableRoute(
-          institutionId: primaryInstitution.institutionId.toString(),
+          institutionId: primaryInstitution.institutionId,
         ).push(context);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

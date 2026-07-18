@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 class ExamCard extends StatelessWidget {
   final ExamTimetable exam;
   final int index;
-  final String institutionId;
+  final int institutionId;
   final bool isPast;
 
   const ExamCard({

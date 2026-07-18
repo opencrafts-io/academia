@@ -13,7 +13,7 @@ import 'package:academia/features/exam_timetable/domain/entity/exam_timetable.da
 import 'package:academia/features/exam_timetable/presentation/screens/exam_timetable_search_screen.dart';
 
 class ExamTimetableHomeScreen extends StatefulWidget {
-  final String institutionId;
+  final int institutionId;
 
   const ExamTimetableHomeScreen({super.key, required this.institutionId});
 
@@ -43,13 +43,13 @@ class _ExamTimetableHomeScreenState extends State<ExamTimetableHomeScreen> {
   }
 
   void _loadCachedExams() {
-    context.read<ExamTimetableBloc>().add(LoadCachedExams());
+    context.read<ExamTimetableBloc>().add(
+      LoadCachedExams(institutionId: widget.institutionId),
+    );
   }
 
   void _loadCoursesFromLocal() {
-    final institutionID = int.tryParse(widget.institutionId);
-    if (institutionID == null) return;
-    context.read<CourseCubit>().watchByInstitution(institutionID);
+    context.read<CourseCubit>().watchByInstitution(widget.institutionId);
   }
 
   void _navigateToSearch() {

@@ -33,7 +33,7 @@ class ExamTimetableBloc extends Bloc<ExamTimetableEvent, ExamTimetableState> {
     emit(ExamTimetableLoading());
 
     final result = await getCachedExamsUseCase(
-      // institutionId: event.institutionId,
+      institutionId: event.institutionId,
       courseCodes: event.courseCodes,
     );
 
@@ -93,7 +93,7 @@ class ExamTimetableBloc extends Bloc<ExamTimetableEvent, ExamTimetableState> {
       _,
     ) {
       if (event.exams.isNotEmpty) {
-        add(LoadCachedExams());
+        add(LoadCachedExams(institutionId: event.institutionId));
       }
     });
   }
@@ -140,15 +140,15 @@ class ExamTimetableBloc extends Bloc<ExamTimetableEvent, ExamTimetableState> {
   ) async {
     final result = await deleteExamByCourseCodeUseCase(
       courseCode: event.courseCode,
+      institutionId: event.institutionId,
     );
 
     result.fold(
       (failure) => emit(ExamTimetableError(message: failure.message)),
       (_) {
         // Reload cached exams
-        add(LoadCachedExams());
+        add(LoadCachedExams(institutionId: event.institutionId));
       },
     );
   }
-
 }

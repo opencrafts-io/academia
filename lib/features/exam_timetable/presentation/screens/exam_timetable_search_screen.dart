@@ -5,7 +5,7 @@ import 'package:academia/features/exam_timetable/presentation/bloc/exam_timetabl
 import 'package:academia/features/exam_timetable/domain/entity/exam_timetable.dart';
 
 class ExamTimetableSearchScreen extends StatefulWidget {
-  final String institutionId;
+  final int institutionId;
 
   const ExamTimetableSearchScreen({super.key, required this.institutionId});
 
@@ -70,7 +70,10 @@ class _ExamTimetableSearchScreenState extends State<ExamTimetableSearchScreen> {
 
       if (examsToAdd.isNotEmpty) {
         context.read<ExamTimetableBloc>().add(
-          AddExamsToTimetable(exams: examsToAdd),
+          AddExamsToTimetable(
+            institutionId: widget.institutionId,
+            exams: examsToAdd,
+          ),
         );
 
         ScaffoldMessenger.of(context).showSnackBar(

@@ -1792,13 +1792,15 @@ RouteBase get $examTimetableRoute => GoRouteData.$route(
 
 mixin $ExamTimetableRoute on GoRouteData {
   static ExamTimetableRoute _fromState(GoRouterState state) =>
-      ExamTimetableRoute(institutionId: state.pathParameters['institutionId']!);
+      ExamTimetableRoute(
+        institutionId: int.parse(state.pathParameters['institutionId']!),
+      );
 
   ExamTimetableRoute get _self => this as ExamTimetableRoute;
 
   @override
   String get location => GoRouteData.$location(
-    '/exam-timetable/${Uri.encodeComponent(_self.institutionId)}',
+    '/exam-timetable/${Uri.encodeComponent(_self.institutionId.toString())}',
   );
 
   @override
@@ -1818,14 +1820,14 @@ mixin $ExamTimetableRoute on GoRouteData {
 mixin $ExamTimetableSearchRoute on GoRouteData {
   static ExamTimetableSearchRoute _fromState(GoRouterState state) =>
       ExamTimetableSearchRoute(
-        institutionId: state.pathParameters['institutionId']!,
+        institutionId: int.parse(state.pathParameters['institutionId']!),
       );
 
   ExamTimetableSearchRoute get _self => this as ExamTimetableSearchRoute;
 
   @override
   String get location => GoRouteData.$location(
-    '/exam-timetable/${Uri.encodeComponent(_self.institutionId)}/search',
+    '/exam-timetable/${Uri.encodeComponent(_self.institutionId.toString())}/search',
   );
 
   @override

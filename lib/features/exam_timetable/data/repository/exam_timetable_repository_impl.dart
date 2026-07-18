@@ -14,11 +14,11 @@ class ExamTimetableRepositoryImpl implements ExamTimetableRepository {
 
   @override
   Future<Either<Failure, List<ExamTimetable>>> getCachedExams({
-    // required String institutionId,
+    required int institutionId,
     List<String>? courseCodes,
   }) async {
     final result = await localDataSource.getCachedExams(
-      // institutionId: institutionId,
+      institutionId: institutionId,
       courseCodes: courseCodes,
     );
     return result.map(
@@ -28,7 +28,7 @@ class ExamTimetableRepositoryImpl implements ExamTimetableRepository {
 
   @override
   Future<Either<Failure, List<ExamTimetable>>> getExamTimetable({
-    required String institutionId,
+    required int institutionId,
     required List<String> courseCodes,
   }) async {
     final result = await remoteDataSource.getExamTimetable(
@@ -52,7 +52,7 @@ class ExamTimetableRepositoryImpl implements ExamTimetableRepository {
 
   @override
   Future<Either<Failure, List<ExamTimetable>>> refreshExamTimetable({
-    required String institutionId,
+    required int institutionId,
     List<String>? courseCodes,
   }) async {
     final result = await remoteDataSource.refreshExamTimetable(
@@ -72,11 +72,11 @@ class ExamTimetableRepositoryImpl implements ExamTimetableRepository {
   @override
   Future<Either<Failure, void>> deleteExamByCourseCode({
     required String courseCode,
-    // required String institutionId,
+    required int institutionId,
   }) async {
     return localDataSource.deleteExamByCourseCode(
       courseCode: courseCode,
+      institutionId: institutionId,
     );
   }
-
 }

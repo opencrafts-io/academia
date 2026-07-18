@@ -8,7 +8,6 @@ import 'package:academia/features/chirp/posts/data/models/attachment_model.dart'
 import 'package:academia/features/chirp/posts/data/models/post_model.dart';
 import 'package:academia/features/chirp/posts/data/models/comment_model.dart';
 import 'package:academia/features/course/data/models/course.dart';
-import 'package:academia/features/exam_timetable/data/models/exam_timetable.dart';
 import 'package:academia/database/tables/tables.dart';
 export 'package:academia/database/tables/tables.dart';
 import 'package:academia/features/leaderboard/data/models/leaderboard_rank.dart';
@@ -86,7 +85,7 @@ part 'database.g.dart';
     TimetableEntry,
 
     // Exam Timetable
-    ExamTimetable,
+    ExamTimetables,
 
     /**************************************************************
     *              CHIRP FEATURE DATA MODELS
@@ -122,7 +121,7 @@ class AppDataBase extends _$AppDataBase {
   AppDataBase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 35;
+  int get schemaVersion => 36;
 
   @override
   MigrationStrategy get migration {
@@ -199,6 +198,7 @@ class AppDataBase extends _$AppDataBase {
               break;
             case 35:
               await migrate35To36(m);
+              break;
           }
         }
       },

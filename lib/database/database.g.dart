@@ -17220,12 +17220,26 @@ class TimetableEntryCompanion extends UpdateCompanion<TimetableEntryData> {
   }
 }
 
-class $ExamTimetableTable extends ExamTimetable
-    with TableInfo<$ExamTimetableTable, ExamTimetableData> {
+class $ExamTimetablesTable extends ExamTimetables
+    with TableInfo<$ExamTimetablesTable, ExamTimetable> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $ExamTimetableTable(this.attachedDatabase, [this._alias]);
+  $ExamTimetablesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _institutionIdMeta = const VerificationMeta(
+    'institutionId',
+  );
+  @override
+  late final GeneratedColumn<int> institutionId = GeneratedColumn<int>(
+    'institution_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES institution (institution_id)',
+    ),
+  );
   static const VerificationMeta _courseCodeMeta = const VerificationMeta(
     'courseCode',
   );
@@ -17314,6 +17328,7 @@ class $ExamTimetableTable extends ExamTimetable
   );
   @override
   List<GeneratedColumn> get $columns => [
+    institutionId,
     courseCode,
     startTime,
     endTime,
@@ -17330,11 +17345,22 @@ class $ExamTimetableTable extends ExamTimetable
   static const String $name = 'exam_timetable';
   @override
   VerificationContext validateIntegrity(
-    Insertable<ExamTimetableData> instance, {
+    Insertable<ExamTimetable> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('institution_id')) {
+      context.handle(
+        _institutionIdMeta,
+        institutionId.isAcceptableOrUnknown(
+          data['institution_id']!,
+          _institutionIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_institutionIdMeta);
+    }
     if (data.containsKey('course_code')) {
       context.handle(
         _courseCodeMeta,
@@ -17403,11 +17429,15 @@ class $ExamTimetableTable extends ExamTimetable
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {courseCode};
+  Set<GeneratedColumn> get $primaryKey => {institutionId, courseCode};
   @override
-  ExamTimetableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  ExamTimetable map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return ExamTimetableData(
+    return ExamTimetable(
+      institutionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}institution_id'],
+      )!,
       courseCode: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}course_code'],
@@ -17444,13 +17474,13 @@ class $ExamTimetableTable extends ExamTimetable
   }
 
   @override
-  $ExamTimetableTable createAlias(String alias) {
-    return $ExamTimetableTable(attachedDatabase, alias);
+  $ExamTimetablesTable createAlias(String alias) {
+    return $ExamTimetablesTable(attachedDatabase, alias);
   }
 }
 
-class ExamTimetableData extends DataClass
-    implements Insertable<ExamTimetableData> {
+class ExamTimetable extends DataClass implements Insertable<ExamTimetable> {
+  final int institutionId;
   final String courseCode;
   final String startTime;
   final String endTime;
@@ -17463,7 +17493,8 @@ class ExamTimetableData extends DataClass
 
   /// Parsed from start_time ISO string; used for sorting / countdown.
   final DateTime datetimeStr;
-  const ExamTimetableData({
+  const ExamTimetable({
+    required this.institutionId,
     required this.courseCode,
     required this.startTime,
     required this.endTime,
@@ -17476,6 +17507,7 @@ class ExamTimetableData extends DataClass
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    map['institution_id'] = Variable<int>(institutionId);
     map['course_code'] = Variable<String>(courseCode);
     map['start_time'] = Variable<String>(startTime);
     map['end_time'] = Variable<String>(endTime);
@@ -17489,8 +17521,9 @@ class ExamTimetableData extends DataClass
     return map;
   }
 
-  ExamTimetableCompanion toCompanion(bool nullToAbsent) {
-    return ExamTimetableCompanion(
+  ExamTimetablesCompanion toCompanion(bool nullToAbsent) {
+    return ExamTimetablesCompanion(
+      institutionId: Value(institutionId),
       courseCode: Value(courseCode),
       startTime: Value(startTime),
       endTime: Value(endTime),
@@ -17504,12 +17537,13 @@ class ExamTimetableData extends DataClass
     );
   }
 
-  factory ExamTimetableData.fromJson(
+  factory ExamTimetable.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return ExamTimetableData(
+    return ExamTimetable(
+      institutionId: serializer.fromJson<int>(json['institution_id']),
       courseCode: serializer.fromJson<String>(json['course_code']),
       startTime: serializer.fromJson<String>(json['start_time']),
       endTime: serializer.fromJson<String>(json['end_time']),
@@ -17524,6 +17558,7 @@ class ExamTimetableData extends DataClass
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'institution_id': serializer.toJson<int>(institutionId),
       'course_code': serializer.toJson<String>(courseCode),
       'start_time': serializer.toJson<String>(startTime),
       'end_time': serializer.toJson<String>(endTime),
@@ -17535,7 +17570,8 @@ class ExamTimetableData extends DataClass
     };
   }
 
-  ExamTimetableData copyWith({
+  ExamTimetable copyWith({
+    int? institutionId,
     String? courseCode,
     String? startTime,
     String? endTime,
@@ -17544,7 +17580,8 @@ class ExamTimetableData extends DataClass
     String? hrs,
     Value<String?> rawData = const Value.absent(),
     DateTime? datetimeStr,
-  }) => ExamTimetableData(
+  }) => ExamTimetable(
+    institutionId: institutionId ?? this.institutionId,
     courseCode: courseCode ?? this.courseCode,
     startTime: startTime ?? this.startTime,
     endTime: endTime ?? this.endTime,
@@ -17554,8 +17591,11 @@ class ExamTimetableData extends DataClass
     rawData: rawData.present ? rawData.value : this.rawData,
     datetimeStr: datetimeStr ?? this.datetimeStr,
   );
-  ExamTimetableData copyWithCompanion(ExamTimetableCompanion data) {
-    return ExamTimetableData(
+  ExamTimetable copyWithCompanion(ExamTimetablesCompanion data) {
+    return ExamTimetable(
+      institutionId: data.institutionId.present
+          ? data.institutionId.value
+          : this.institutionId,
       courseCode: data.courseCode.present
           ? data.courseCode.value
           : this.courseCode,
@@ -17575,7 +17615,8 @@ class ExamTimetableData extends DataClass
 
   @override
   String toString() {
-    return (StringBuffer('ExamTimetableData(')
+    return (StringBuffer('ExamTimetable(')
+          ..write('institutionId: $institutionId, ')
           ..write('courseCode: $courseCode, ')
           ..write('startTime: $startTime, ')
           ..write('endTime: $endTime, ')
@@ -17590,6 +17631,7 @@ class ExamTimetableData extends DataClass
 
   @override
   int get hashCode => Object.hash(
+    institutionId,
     courseCode,
     startTime,
     endTime,
@@ -17602,7 +17644,8 @@ class ExamTimetableData extends DataClass
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is ExamTimetableData &&
+      (other is ExamTimetable &&
+          other.institutionId == this.institutionId &&
           other.courseCode == this.courseCode &&
           other.startTime == this.startTime &&
           other.endTime == this.endTime &&
@@ -17613,7 +17656,8 @@ class ExamTimetableData extends DataClass
           other.datetimeStr == this.datetimeStr);
 }
 
-class ExamTimetableCompanion extends UpdateCompanion<ExamTimetableData> {
+class ExamTimetablesCompanion extends UpdateCompanion<ExamTimetable> {
+  final Value<int> institutionId;
   final Value<String> courseCode;
   final Value<String> startTime;
   final Value<String> endTime;
@@ -17623,7 +17667,8 @@ class ExamTimetableCompanion extends UpdateCompanion<ExamTimetableData> {
   final Value<String?> rawData;
   final Value<DateTime> datetimeStr;
   final Value<int> rowid;
-  const ExamTimetableCompanion({
+  const ExamTimetablesCompanion({
+    this.institutionId = const Value.absent(),
     this.courseCode = const Value.absent(),
     this.startTime = const Value.absent(),
     this.endTime = const Value.absent(),
@@ -17634,7 +17679,8 @@ class ExamTimetableCompanion extends UpdateCompanion<ExamTimetableData> {
     this.datetimeStr = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  ExamTimetableCompanion.insert({
+  ExamTimetablesCompanion.insert({
+    required int institutionId,
     required String courseCode,
     required String startTime,
     required String endTime,
@@ -17644,12 +17690,14 @@ class ExamTimetableCompanion extends UpdateCompanion<ExamTimetableData> {
     this.rawData = const Value.absent(),
     required DateTime datetimeStr,
     this.rowid = const Value.absent(),
-  }) : courseCode = Value(courseCode),
+  }) : institutionId = Value(institutionId),
+       courseCode = Value(courseCode),
        startTime = Value(startTime),
        endTime = Value(endTime),
        venue = Value(venue),
        datetimeStr = Value(datetimeStr);
-  static Insertable<ExamTimetableData> custom({
+  static Insertable<ExamTimetable> custom({
+    Expression<int>? institutionId,
     Expression<String>? courseCode,
     Expression<String>? startTime,
     Expression<String>? endTime,
@@ -17661,6 +17709,7 @@ class ExamTimetableCompanion extends UpdateCompanion<ExamTimetableData> {
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
+      if (institutionId != null) 'institution_id': institutionId,
       if (courseCode != null) 'course_code': courseCode,
       if (startTime != null) 'start_time': startTime,
       if (endTime != null) 'end_time': endTime,
@@ -17673,7 +17722,8 @@ class ExamTimetableCompanion extends UpdateCompanion<ExamTimetableData> {
     });
   }
 
-  ExamTimetableCompanion copyWith({
+  ExamTimetablesCompanion copyWith({
+    Value<int>? institutionId,
     Value<String>? courseCode,
     Value<String>? startTime,
     Value<String>? endTime,
@@ -17684,7 +17734,8 @@ class ExamTimetableCompanion extends UpdateCompanion<ExamTimetableData> {
     Value<DateTime>? datetimeStr,
     Value<int>? rowid,
   }) {
-    return ExamTimetableCompanion(
+    return ExamTimetablesCompanion(
+      institutionId: institutionId ?? this.institutionId,
       courseCode: courseCode ?? this.courseCode,
       startTime: startTime ?? this.startTime,
       endTime: endTime ?? this.endTime,
@@ -17700,6 +17751,9 @@ class ExamTimetableCompanion extends UpdateCompanion<ExamTimetableData> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (institutionId.present) {
+      map['institution_id'] = Variable<int>(institutionId.value);
+    }
     if (courseCode.present) {
       map['course_code'] = Variable<String>(courseCode.value);
     }
@@ -17732,7 +17786,8 @@ class ExamTimetableCompanion extends UpdateCompanion<ExamTimetableData> {
 
   @override
   String toString() {
-    return (StringBuffer('ExamTimetableCompanion(')
+    return (StringBuffer('ExamTimetablesCompanion(')
+          ..write('institutionId: $institutionId, ')
           ..write('courseCode: $courseCode, ')
           ..write('startTime: $startTime, ')
           ..write('endTime: $endTime, ')
@@ -24667,7 +24722,7 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   late final $CourseTable course = $CourseTable(this);
   late final $TimetableTable timetable = $TimetableTable(this);
   late final $TimetableEntryTable timetableEntry = $TimetableEntryTable(this);
-  late final $ExamTimetableTable examTimetable = $ExamTimetableTable(this);
+  late final $ExamTimetablesTable examTimetables = $ExamTimetablesTable(this);
   late final $ChirpUserTable chirpUser = $ChirpUserTable(this);
   late final $CommunityTable community = $CommunityTable(this);
   late final $ChirpCommunityMembershipTable chirpCommunityMembership =
@@ -24714,7 +24769,7 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     course,
     timetable,
     timetableEntry,
-    examTimetable,
+    examTimetables,
     chirpUser,
     community,
     chirpCommunityMembership,
@@ -30338,6 +30393,29 @@ final class $$InstitutionsTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<$ExamTimetablesTable, List<ExamTimetable>>
+  _examTimetablesRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
+    db.examTimetables,
+    aliasName: $_aliasNameGenerator(
+      db.institutions.institutionId,
+      db.examTimetables.institutionId,
+    ),
+  );
+
+  $$ExamTimetablesTableProcessedTableManager get examTimetablesRefs {
+    final manager = $$ExamTimetablesTableTableManager($_db, $_db.examTimetables)
+        .filter(
+          (f) => f.institutionId.institutionId.sqlEquals(
+            $_itemColumn<int>('institution_id')!,
+          ),
+        );
+
+    final cache = $_typedResult.readTableOrNull(_examTimetablesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$InstitutionsTableFilterComposer
@@ -30504,6 +30582,31 @@ class $$InstitutionsTableFilterComposer
           }) => $$TimetableTableFilterComposer(
             $db: $db,
             $table: $db.timetable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> examTimetablesRefs(
+    Expression<bool> Function($$ExamTimetablesTableFilterComposer f) f,
+  ) {
+    final $$ExamTimetablesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institutionId,
+      referencedTable: $db.examTimetables,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ExamTimetablesTableFilterComposer(
+            $db: $db,
+            $table: $db.examTimetables,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -30723,6 +30826,31 @@ class $$InstitutionsTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> examTimetablesRefs<T extends Object>(
+    Expression<T> Function($$ExamTimetablesTableAnnotationComposer a) f,
+  ) {
+    final $$ExamTimetablesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institutionId,
+      referencedTable: $db.examTimetables,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ExamTimetablesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.examTimetables,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$InstitutionsTableTableManager
@@ -30744,6 +30872,7 @@ class $$InstitutionsTableTableManager
             bool semesterRefs,
             bool courseRefs,
             bool timetableRefs,
+            bool examTimetablesRefs,
           })
         > {
   $$InstitutionsTableTableManager(_$AppDataBase db, $InstitutionsTable table)
@@ -30808,6 +30937,7 @@ class $$InstitutionsTableTableManager
                 semesterRefs = false,
                 courseRefs = false,
                 timetableRefs = false,
+                examTimetablesRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -30818,6 +30948,7 @@ class $$InstitutionsTableTableManager
                     if (semesterRefs) db.semester,
                     if (courseRefs) db.course,
                     if (timetableRefs) db.timetable,
+                    if (examTimetablesRefs) db.examTimetables,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
@@ -30927,6 +31058,27 @@ class $$InstitutionsTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (examTimetablesRefs)
+                        await $_getPrefetchedData<
+                          Institution,
+                          $InstitutionsTable,
+                          ExamTimetable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$InstitutionsTableReferences
+                              ._examTimetablesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$InstitutionsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).examTimetablesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.institutionId == item.institutionId,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -30953,6 +31105,7 @@ typedef $$InstitutionsTableProcessedTableManager =
         bool semesterRefs,
         bool courseRefs,
         bool timetableRefs,
+        bool examTimetablesRefs,
       })
     >;
 typedef $$InstitutionScrappingCommandsTableCreateCompanionBuilder =
@@ -35006,8 +35159,9 @@ typedef $$TimetableEntryTableProcessedTableManager =
       TimetableEntryData,
       PrefetchHooks Function({bool courseId, bool timetableId})
     >;
-typedef $$ExamTimetableTableCreateCompanionBuilder =
-    ExamTimetableCompanion Function({
+typedef $$ExamTimetablesTableCreateCompanionBuilder =
+    ExamTimetablesCompanion Function({
+      required int institutionId,
       required String courseCode,
       required String startTime,
       required String endTime,
@@ -35018,8 +35172,9 @@ typedef $$ExamTimetableTableCreateCompanionBuilder =
       required DateTime datetimeStr,
       Value<int> rowid,
     });
-typedef $$ExamTimetableTableUpdateCompanionBuilder =
-    ExamTimetableCompanion Function({
+typedef $$ExamTimetablesTableUpdateCompanionBuilder =
+    ExamTimetablesCompanion Function({
+      Value<int> institutionId,
       Value<String> courseCode,
       Value<String> startTime,
       Value<String> endTime,
@@ -35031,9 +35186,40 @@ typedef $$ExamTimetableTableUpdateCompanionBuilder =
       Value<int> rowid,
     });
 
-class $$ExamTimetableTableFilterComposer
-    extends Composer<_$AppDataBase, $ExamTimetableTable> {
-  $$ExamTimetableTableFilterComposer({
+final class $$ExamTimetablesTableReferences
+    extends BaseReferences<_$AppDataBase, $ExamTimetablesTable, ExamTimetable> {
+  $$ExamTimetablesTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $InstitutionsTable _institutionIdTable(_$AppDataBase db) =>
+      db.institutions.createAlias(
+        $_aliasNameGenerator(
+          db.examTimetables.institutionId,
+          db.institutions.institutionId,
+        ),
+      );
+
+  $$InstitutionsTableProcessedTableManager get institutionId {
+    final $_column = $_itemColumn<int>('institution_id')!;
+
+    final manager = $$InstitutionsTableTableManager(
+      $_db,
+      $_db.institutions,
+    ).filter((f) => f.institutionId.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_institutionIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$ExamTimetablesTableFilterComposer
+    extends Composer<_$AppDataBase, $ExamTimetablesTable> {
+  $$ExamTimetablesTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -35079,11 +35265,34 @@ class $$ExamTimetableTableFilterComposer
     column: $table.datetimeStr,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$InstitutionsTableFilterComposer get institutionId {
+    final $$InstitutionsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institutionId,
+      referencedTable: $db.institutions,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InstitutionsTableFilterComposer(
+            $db: $db,
+            $table: $db.institutions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
-class $$ExamTimetableTableOrderingComposer
-    extends Composer<_$AppDataBase, $ExamTimetableTable> {
-  $$ExamTimetableTableOrderingComposer({
+class $$ExamTimetablesTableOrderingComposer
+    extends Composer<_$AppDataBase, $ExamTimetablesTable> {
+  $$ExamTimetablesTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -35129,11 +35338,34 @@ class $$ExamTimetableTableOrderingComposer
     column: $table.datetimeStr,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$InstitutionsTableOrderingComposer get institutionId {
+    final $$InstitutionsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institutionId,
+      referencedTable: $db.institutions,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InstitutionsTableOrderingComposer(
+            $db: $db,
+            $table: $db.institutions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
-class $$ExamTimetableTableAnnotationComposer
-    extends Composer<_$AppDataBase, $ExamTimetableTable> {
-  $$ExamTimetableTableAnnotationComposer({
+class $$ExamTimetablesTableAnnotationComposer
+    extends Composer<_$AppDataBase, $ExamTimetablesTable> {
+  $$ExamTimetablesTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -35169,43 +35401,62 @@ class $$ExamTimetableTableAnnotationComposer
     column: $table.datetimeStr,
     builder: (column) => column,
   );
+
+  $$InstitutionsTableAnnotationComposer get institutionId {
+    final $$InstitutionsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institutionId,
+      referencedTable: $db.institutions,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InstitutionsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.institutions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
-class $$ExamTimetableTableTableManager
+class $$ExamTimetablesTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $ExamTimetableTable,
-          ExamTimetableData,
-          $$ExamTimetableTableFilterComposer,
-          $$ExamTimetableTableOrderingComposer,
-          $$ExamTimetableTableAnnotationComposer,
-          $$ExamTimetableTableCreateCompanionBuilder,
-          $$ExamTimetableTableUpdateCompanionBuilder,
-          (
-            ExamTimetableData,
-            BaseReferences<
-              _$AppDataBase,
-              $ExamTimetableTable,
-              ExamTimetableData
-            >,
-          ),
-          ExamTimetableData,
-          PrefetchHooks Function()
+          $ExamTimetablesTable,
+          ExamTimetable,
+          $$ExamTimetablesTableFilterComposer,
+          $$ExamTimetablesTableOrderingComposer,
+          $$ExamTimetablesTableAnnotationComposer,
+          $$ExamTimetablesTableCreateCompanionBuilder,
+          $$ExamTimetablesTableUpdateCompanionBuilder,
+          (ExamTimetable, $$ExamTimetablesTableReferences),
+          ExamTimetable,
+          PrefetchHooks Function({bool institutionId})
         > {
-  $$ExamTimetableTableTableManager(_$AppDataBase db, $ExamTimetableTable table)
-    : super(
+  $$ExamTimetablesTableTableManager(
+    _$AppDataBase db,
+    $ExamTimetablesTable table,
+  ) : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$ExamTimetableTableFilterComposer($db: db, $table: table),
+              $$ExamTimetablesTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$ExamTimetableTableOrderingComposer($db: db, $table: table),
+              $$ExamTimetablesTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$ExamTimetableTableAnnotationComposer($db: db, $table: table),
+              $$ExamTimetablesTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
+                Value<int> institutionId = const Value.absent(),
                 Value<String> courseCode = const Value.absent(),
                 Value<String> startTime = const Value.absent(),
                 Value<String> endTime = const Value.absent(),
@@ -35215,7 +35466,8 @@ class $$ExamTimetableTableTableManager
                 Value<String?> rawData = const Value.absent(),
                 Value<DateTime> datetimeStr = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => ExamTimetableCompanion(
+              }) => ExamTimetablesCompanion(
+                institutionId: institutionId,
                 courseCode: courseCode,
                 startTime: startTime,
                 endTime: endTime,
@@ -35228,6 +35480,7 @@ class $$ExamTimetableTableTableManager
               ),
           createCompanionCallback:
               ({
+                required int institutionId,
                 required String courseCode,
                 required String startTime,
                 required String endTime,
@@ -35237,7 +35490,8 @@ class $$ExamTimetableTableTableManager
                 Value<String?> rawData = const Value.absent(),
                 required DateTime datetimeStr,
                 Value<int> rowid = const Value.absent(),
-              }) => ExamTimetableCompanion.insert(
+              }) => ExamTimetablesCompanion.insert(
+                institutionId: institutionId,
                 courseCode: courseCode,
                 startTime: startTime,
                 endTime: endTime,
@@ -35249,29 +35503,72 @@ class $$ExamTimetableTableTableManager
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$ExamTimetablesTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({institutionId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (institutionId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.institutionId,
+                                referencedTable: $$ExamTimetablesTableReferences
+                                    ._institutionIdTable(db),
+                                referencedColumn:
+                                    $$ExamTimetablesTableReferences
+                                        ._institutionIdTable(db)
+                                        .institutionId,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ),
       );
 }
 
-typedef $$ExamTimetableTableProcessedTableManager =
+typedef $$ExamTimetablesTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $ExamTimetableTable,
-      ExamTimetableData,
-      $$ExamTimetableTableFilterComposer,
-      $$ExamTimetableTableOrderingComposer,
-      $$ExamTimetableTableAnnotationComposer,
-      $$ExamTimetableTableCreateCompanionBuilder,
-      $$ExamTimetableTableUpdateCompanionBuilder,
-      (
-        ExamTimetableData,
-        BaseReferences<_$AppDataBase, $ExamTimetableTable, ExamTimetableData>,
-      ),
-      ExamTimetableData,
-      PrefetchHooks Function()
+      $ExamTimetablesTable,
+      ExamTimetable,
+      $$ExamTimetablesTableFilterComposer,
+      $$ExamTimetablesTableOrderingComposer,
+      $$ExamTimetablesTableAnnotationComposer,
+      $$ExamTimetablesTableCreateCompanionBuilder,
+      $$ExamTimetablesTableUpdateCompanionBuilder,
+      (ExamTimetable, $$ExamTimetablesTableReferences),
+      ExamTimetable,
+      PrefetchHooks Function({bool institutionId})
     >;
 typedef $$ChirpUserTableCreateCompanionBuilder =
     ChirpUserCompanion Function({
@@ -39756,8 +40053,8 @@ class $AppDataBaseManager {
       $$TimetableTableTableManager(_db, _db.timetable);
   $$TimetableEntryTableTableManager get timetableEntry =>
       $$TimetableEntryTableTableManager(_db, _db.timetableEntry);
-  $$ExamTimetableTableTableManager get examTimetable =>
-      $$ExamTimetableTableTableManager(_db, _db.examTimetable);
+  $$ExamTimetablesTableTableManager get examTimetables =>
+      $$ExamTimetablesTableTableManager(_db, _db.examTimetables);
   $$ChirpUserTableTableManager get chirpUser =>
       $$ChirpUserTableTableManager(_db, _db.chirpUser);
   $$CommunityTableTableManager get community =>
