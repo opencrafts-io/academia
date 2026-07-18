@@ -31,7 +31,10 @@ enum Gender {
 
 enum AcademicStatus { active, suspended, completed, inactive, unknown }
 
-class InstitutionProfile extends Table {
+class InstitutionProfiles extends Table {
+  @override
+  String get tableName => 'institution_profile';
+
   IntColumn get id => integer().nullable()();
 
   @JsonKey("user_id")

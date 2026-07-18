@@ -6,8 +6,8 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
-List<InstitutionData> _parseInstitutions(List<dynamic> raw) {
-  return raw.map((e) => InstitutionData.fromJson(e)).toList();
+List<Institution> _parseInstitutions(List<dynamic> raw) {
+  return raw.map((e) => Institution.fromJson(e)).toList();
 }
 
 class InstitutionRemoteDatasource with DioErrorHandler {
@@ -25,7 +25,7 @@ class InstitutionRemoteDatasource with DioErrorHandler {
     }
   }
 
-  Future<Either<Failure, List<InstitutionData>>> searchForInstitutionByName(
+  Future<Either<Failure, List<Institution>>> searchForInstitutionByName(
     String name, {
     int page = 0,
     pageSize = 100,
@@ -113,7 +113,7 @@ class InstitutionRemoteDatasource with DioErrorHandler {
     }
   }
 
-  Future<Either<Failure, List<InstitutionData>>> getAccountInstitutions(
+  Future<Either<Failure, List<Institution>>> getAccountInstitutions(
     String accountID, {
     int page = 0,
     pageSize = 100,

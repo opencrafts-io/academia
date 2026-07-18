@@ -7,29 +7,29 @@ extension AppDatabaseExtension on AppDataBase {
   }
 
   Future<void> migrate15To16(Migrator m) async {
-    await m.createTable(institutionScrappingCommand);
+    await m.createTable(institutionScrappingCommands);
   }
 
   Future<void> migrate16To17(Migrator m) async {
-    await m.createTable(institutionKey);
+    await m.createTable(institutionKeys);
   }
 
   Future<void> migrate17To18(Migrator m) async {
-    await m.createTable(institutionProfile);
+    await m.createTable(institutionProfiles);
   }
 
   Future<void> migrate18To19(Migrator m) async {
-    m.drop(institutionProfile);
-    m.create(institutionProfile);
+    m.drop(institutionProfiles);
+    m.create(institutionProfiles);
   }
 
   Future<void> migrate19To20(Migrator m) async {
-    m.drop(institutionProfile);
-    m.create(institutionProfile);
+    m.drop(institutionProfiles);
+    m.create(institutionProfiles);
   }
 
   Future<void> migrate20To21(Migrator m) async {
-    await m.createTable(institutionFeeTransaction);
+    await m.createTable(institutionFeeTransactions);
   }
 
   Future<void> migrate21To22(Migrator m) async {

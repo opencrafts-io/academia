@@ -24,7 +24,7 @@ class InstitutionCommandRemoteDatasource
     }
   }
 
-  Future<Either<Failure, InstitutionScrappingCommandData>>
+  Future<Either<Failure, InstitutionScrappingCommand>>
   fetchInstitutionScrappingCommandByInstitution({
     required int institutionID,
   }) async {
@@ -34,7 +34,7 @@ class InstitutionCommandRemoteDatasource
       );
 
       if (response.statusCode == 200) {
-        return right(InstitutionScrappingCommandData.fromJson(response.data));
+        return right(InstitutionScrappingCommand.fromJson(response.data));
       }
 
       throw ("Wrong status code returned from server expected 200 got ${response.statusCode}");

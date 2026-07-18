@@ -1,5 +1,5 @@
 import 'package:drift/drift.dart';
-import './institution.dart';
+import 'package:academia/database/tables/tables.dart';
 
 enum Weekday { monday, tuesday, wednesday, thursday, friday, saturday, sunday }
 
@@ -7,7 +7,7 @@ class InstitutionCourseTimetableEntry extends Table {
   IntColumn get id => integer().autoIncrement()();
 
   IntColumn get institution =>
-      integer().nullable().references(Institution, #institutionId)();
+      integer().nullable().references(Institutions, #institutionId)();
 
   @JsonKey("course_code")
   TextColumn get courseCode => text()();

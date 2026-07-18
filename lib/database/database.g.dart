@@ -11281,12 +11281,12 @@ class AgendaEventCompanion extends UpdateCompanion<AgendaEventData> {
   }
 }
 
-class $InstitutionTable extends Institution
-    with TableInfo<$InstitutionTable, InstitutionData> {
+class $InstitutionsTable extends Institutions
+    with TableInfo<$InstitutionsTable, Institution> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $InstitutionTable(this.attachedDatabase, [this._alias]);
+  $InstitutionsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _institutionIdMeta = const VerificationMeta(
     'institutionId',
   );
@@ -11315,7 +11315,7 @@ class $InstitutionTable extends Institution
         true,
         type: DriftSqlType.string,
         requiredDuringInsert: false,
-      ).withConverter<List<dynamic>?>($InstitutionTable.$converterwebPagesn);
+      ).withConverter<List<dynamic>?>($InstitutionsTable.$converterwebPagesn);
   @override
   late final GeneratedColumnWithTypeConverter<List<dynamic>?, String> domains =
       GeneratedColumn<String>(
@@ -11324,7 +11324,7 @@ class $InstitutionTable extends Institution
         true,
         type: DriftSqlType.string,
         requiredDuringInsert: false,
-      ).withConverter<List<dynamic>?>($InstitutionTable.$converterdomainsn);
+      ).withConverter<List<dynamic>?>($InstitutionsTable.$converterdomainsn);
   static const VerificationMeta _alphaTwoCodeMeta = const VerificationMeta(
     'alphaTwoCode',
   );
@@ -11375,7 +11375,7 @@ class $InstitutionTable extends Institution
   static const String $name = 'institution';
   @override
   VerificationContext validateIntegrity(
-    Insertable<InstitutionData> instance, {
+    Insertable<Institution> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -11427,9 +11427,9 @@ class $InstitutionTable extends Institution
   @override
   Set<GeneratedColumn> get $primaryKey => {institutionId};
   @override
-  InstitutionData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Institution map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return InstitutionData(
+    return Institution(
       institutionId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}institution_id'],
@@ -11438,13 +11438,13 @@ class $InstitutionTable extends Institution
         DriftSqlType.string,
         data['${effectivePrefix}name'],
       )!,
-      webPages: $InstitutionTable.$converterwebPagesn.fromSql(
+      webPages: $InstitutionsTable.$converterwebPagesn.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}web_pages'],
         ),
       ),
-      domains: $InstitutionTable.$converterdomainsn.fromSql(
+      domains: $InstitutionsTable.$converterdomainsn.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}domains'],
@@ -11466,8 +11466,8 @@ class $InstitutionTable extends Institution
   }
 
   @override
-  $InstitutionTable createAlias(String alias) {
-    return $InstitutionTable(attachedDatabase, alias);
+  $InstitutionsTable createAlias(String alias) {
+    return $InstitutionsTable(attachedDatabase, alias);
   }
 
   static TypeConverter<List<dynamic>, String> $converterwebPages =
@@ -11480,7 +11480,7 @@ class $InstitutionTable extends Institution
       NullAwareTypeConverter.wrap($converterdomains);
 }
 
-class InstitutionData extends DataClass implements Insertable<InstitutionData> {
+class Institution extends DataClass implements Insertable<Institution> {
   final int institutionId;
   final String name;
   final List<dynamic>? webPages;
@@ -11488,7 +11488,7 @@ class InstitutionData extends DataClass implements Insertable<InstitutionData> {
   final String? alphaTwoCode;
   final String? country;
   final String? stateProvince;
-  const InstitutionData({
+  const Institution({
     required this.institutionId,
     required this.name,
     this.webPages,
@@ -11504,12 +11504,12 @@ class InstitutionData extends DataClass implements Insertable<InstitutionData> {
     map['name'] = Variable<String>(name);
     if (!nullToAbsent || webPages != null) {
       map['web_pages'] = Variable<String>(
-        $InstitutionTable.$converterwebPagesn.toSql(webPages),
+        $InstitutionsTable.$converterwebPagesn.toSql(webPages),
       );
     }
     if (!nullToAbsent || domains != null) {
       map['domains'] = Variable<String>(
-        $InstitutionTable.$converterdomainsn.toSql(domains),
+        $InstitutionsTable.$converterdomainsn.toSql(domains),
       );
     }
     if (!nullToAbsent || alphaTwoCode != null) {
@@ -11524,8 +11524,8 @@ class InstitutionData extends DataClass implements Insertable<InstitutionData> {
     return map;
   }
 
-  InstitutionCompanion toCompanion(bool nullToAbsent) {
-    return InstitutionCompanion(
+  InstitutionsCompanion toCompanion(bool nullToAbsent) {
+    return InstitutionsCompanion(
       institutionId: Value(institutionId),
       name: Value(name),
       webPages: webPages == null && nullToAbsent
@@ -11546,12 +11546,12 @@ class InstitutionData extends DataClass implements Insertable<InstitutionData> {
     );
   }
 
-  factory InstitutionData.fromJson(
+  factory Institution.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return InstitutionData(
+    return Institution(
       institutionId: serializer.fromJson<int>(json['institution_id']),
       name: serializer.fromJson<String>(json['name']),
       webPages: serializer.fromJson<List<dynamic>?>(json['web_pages']),
@@ -11575,7 +11575,7 @@ class InstitutionData extends DataClass implements Insertable<InstitutionData> {
     };
   }
 
-  InstitutionData copyWith({
+  Institution copyWith({
     int? institutionId,
     String? name,
     Value<List<dynamic>?> webPages = const Value.absent(),
@@ -11583,7 +11583,7 @@ class InstitutionData extends DataClass implements Insertable<InstitutionData> {
     Value<String?> alphaTwoCode = const Value.absent(),
     Value<String?> country = const Value.absent(),
     Value<String?> stateProvince = const Value.absent(),
-  }) => InstitutionData(
+  }) => Institution(
     institutionId: institutionId ?? this.institutionId,
     name: name ?? this.name,
     webPages: webPages.present ? webPages.value : this.webPages,
@@ -11594,8 +11594,8 @@ class InstitutionData extends DataClass implements Insertable<InstitutionData> {
         ? stateProvince.value
         : this.stateProvince,
   );
-  InstitutionData copyWithCompanion(InstitutionCompanion data) {
-    return InstitutionData(
+  Institution copyWithCompanion(InstitutionsCompanion data) {
+    return Institution(
       institutionId: data.institutionId.present
           ? data.institutionId.value
           : this.institutionId,
@@ -11614,7 +11614,7 @@ class InstitutionData extends DataClass implements Insertable<InstitutionData> {
 
   @override
   String toString() {
-    return (StringBuffer('InstitutionData(')
+    return (StringBuffer('Institution(')
           ..write('institutionId: $institutionId, ')
           ..write('name: $name, ')
           ..write('webPages: $webPages, ')
@@ -11639,7 +11639,7 @@ class InstitutionData extends DataClass implements Insertable<InstitutionData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is InstitutionData &&
+      (other is Institution &&
           other.institutionId == this.institutionId &&
           other.name == this.name &&
           other.webPages == this.webPages &&
@@ -11649,7 +11649,7 @@ class InstitutionData extends DataClass implements Insertable<InstitutionData> {
           other.stateProvince == this.stateProvince);
 }
 
-class InstitutionCompanion extends UpdateCompanion<InstitutionData> {
+class InstitutionsCompanion extends UpdateCompanion<Institution> {
   final Value<int> institutionId;
   final Value<String> name;
   final Value<List<dynamic>?> webPages;
@@ -11657,7 +11657,7 @@ class InstitutionCompanion extends UpdateCompanion<InstitutionData> {
   final Value<String?> alphaTwoCode;
   final Value<String?> country;
   final Value<String?> stateProvince;
-  const InstitutionCompanion({
+  const InstitutionsCompanion({
     this.institutionId = const Value.absent(),
     this.name = const Value.absent(),
     this.webPages = const Value.absent(),
@@ -11666,7 +11666,7 @@ class InstitutionCompanion extends UpdateCompanion<InstitutionData> {
     this.country = const Value.absent(),
     this.stateProvince = const Value.absent(),
   });
-  InstitutionCompanion.insert({
+  InstitutionsCompanion.insert({
     this.institutionId = const Value.absent(),
     required String name,
     this.webPages = const Value.absent(),
@@ -11675,7 +11675,7 @@ class InstitutionCompanion extends UpdateCompanion<InstitutionData> {
     this.country = const Value.absent(),
     this.stateProvince = const Value.absent(),
   }) : name = Value(name);
-  static Insertable<InstitutionData> custom({
+  static Insertable<Institution> custom({
     Expression<int>? institutionId,
     Expression<String>? name,
     Expression<String>? webPages,
@@ -11695,7 +11695,7 @@ class InstitutionCompanion extends UpdateCompanion<InstitutionData> {
     });
   }
 
-  InstitutionCompanion copyWith({
+  InstitutionsCompanion copyWith({
     Value<int>? institutionId,
     Value<String>? name,
     Value<List<dynamic>?>? webPages,
@@ -11704,7 +11704,7 @@ class InstitutionCompanion extends UpdateCompanion<InstitutionData> {
     Value<String?>? country,
     Value<String?>? stateProvince,
   }) {
-    return InstitutionCompanion(
+    return InstitutionsCompanion(
       institutionId: institutionId ?? this.institutionId,
       name: name ?? this.name,
       webPages: webPages ?? this.webPages,
@@ -11726,12 +11726,12 @@ class InstitutionCompanion extends UpdateCompanion<InstitutionData> {
     }
     if (webPages.present) {
       map['web_pages'] = Variable<String>(
-        $InstitutionTable.$converterwebPagesn.toSql(webPages.value),
+        $InstitutionsTable.$converterwebPagesn.toSql(webPages.value),
       );
     }
     if (domains.present) {
       map['domains'] = Variable<String>(
-        $InstitutionTable.$converterdomainsn.toSql(domains.value),
+        $InstitutionsTable.$converterdomainsn.toSql(domains.value),
       );
     }
     if (alphaTwoCode.present) {
@@ -11748,7 +11748,7 @@ class InstitutionCompanion extends UpdateCompanion<InstitutionData> {
 
   @override
   String toString() {
-    return (StringBuffer('InstitutionCompanion(')
+    return (StringBuffer('InstitutionsCompanion(')
           ..write('institutionId: $institutionId, ')
           ..write('name: $name, ')
           ..write('webPages: $webPages, ')
@@ -11761,16 +11761,16 @@ class InstitutionCompanion extends UpdateCompanion<InstitutionData> {
   }
 }
 
-class $InstitutionScrappingCommandTable extends InstitutionScrappingCommand
+class $InstitutionScrappingCommandsTable extends InstitutionScrappingCommands
     with
         TableInfo<
-          $InstitutionScrappingCommandTable,
-          InstitutionScrappingCommandData
+          $InstitutionScrappingCommandsTable,
+          InstitutionScrappingCommand
         > {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $InstitutionScrappingCommandTable(this.attachedDatabase, [this._alias]);
+  $InstitutionScrappingCommandsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _institutionMeta = const VerificationMeta(
     'institution',
   );
@@ -11858,7 +11858,7 @@ class $InstitutionScrappingCommandTable extends InstitutionScrappingCommand
         type: DriftSqlType.string,
         requiredDuringInsert: true,
       ).withConverter<List<dynamic>>(
-        $InstitutionScrappingCommandTable.$converterinstructions,
+        $InstitutionScrappingCommandsTable.$converterinstructions,
       );
   @override
   List<GeneratedColumn> get $columns => [
@@ -11878,7 +11878,7 @@ class $InstitutionScrappingCommandTable extends InstitutionScrappingCommand
   static const String $name = 'institution_scrapping_command';
   @override
   VerificationContext validateIntegrity(
-    Insertable<InstitutionScrappingCommandData> instance, {
+    Insertable<InstitutionScrappingCommand> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -11946,12 +11946,12 @@ class $InstitutionScrappingCommandTable extends InstitutionScrappingCommand
   @override
   Set<GeneratedColumn> get $primaryKey => {commandID};
   @override
-  InstitutionScrappingCommandData map(
+  InstitutionScrappingCommand map(
     Map<String, dynamic> data, {
     String? tablePrefix,
   }) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return InstitutionScrappingCommandData(
+    return InstitutionScrappingCommand(
       institution: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}institution'],
@@ -11980,7 +11980,7 @@ class $InstitutionScrappingCommandTable extends InstitutionScrappingCommand
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
       ),
-      instructions: $InstitutionScrappingCommandTable.$converterinstructions
+      instructions: $InstitutionScrappingCommandsTable.$converterinstructions
           .fromSql(
             attachedDatabase.typeMapping.read(
               DriftSqlType.string,
@@ -11991,16 +11991,16 @@ class $InstitutionScrappingCommandTable extends InstitutionScrappingCommand
   }
 
   @override
-  $InstitutionScrappingCommandTable createAlias(String alias) {
-    return $InstitutionScrappingCommandTable(attachedDatabase, alias);
+  $InstitutionScrappingCommandsTable createAlias(String alias) {
+    return $InstitutionScrappingCommandsTable(attachedDatabase, alias);
   }
 
   static TypeConverter<List<dynamic>, String> $converterinstructions =
       JsonListConverter();
 }
 
-class InstitutionScrappingCommandData extends DataClass
-    implements Insertable<InstitutionScrappingCommandData> {
+class InstitutionScrappingCommand extends DataClass
+    implements Insertable<InstitutionScrappingCommand> {
   final int institution;
   final String commandID;
   final String name;
@@ -12009,7 +12009,7 @@ class InstitutionScrappingCommandData extends DataClass
   final bool requiresInteraction;
   final DateTime? createdAt;
   final List<dynamic> instructions;
-  const InstitutionScrappingCommandData({
+  const InstitutionScrappingCommand({
     required this.institution,
     required this.commandID,
     required this.name,
@@ -12037,7 +12037,7 @@ class InstitutionScrappingCommandData extends DataClass
     }
     {
       map['instructions'] = Variable<String>(
-        $InstitutionScrappingCommandTable.$converterinstructions.toSql(
+        $InstitutionScrappingCommandsTable.$converterinstructions.toSql(
           instructions,
         ),
       );
@@ -12045,8 +12045,8 @@ class InstitutionScrappingCommandData extends DataClass
     return map;
   }
 
-  InstitutionScrappingCommandCompanion toCompanion(bool nullToAbsent) {
-    return InstitutionScrappingCommandCompanion(
+  InstitutionScrappingCommandsCompanion toCompanion(bool nullToAbsent) {
+    return InstitutionScrappingCommandsCompanion(
       institution: Value(institution),
       commandID: Value(commandID),
       name: Value(name),
@@ -12062,12 +12062,12 @@ class InstitutionScrappingCommandData extends DataClass
     );
   }
 
-  factory InstitutionScrappingCommandData.fromJson(
+  factory InstitutionScrappingCommand.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return InstitutionScrappingCommandData(
+    return InstitutionScrappingCommand(
       institution: serializer.fromJson<int>(json['institution']),
       commandID: serializer.fromJson<String>(json['command_id']),
       name: serializer.fromJson<String>(json['name']),
@@ -12095,7 +12095,7 @@ class InstitutionScrappingCommandData extends DataClass
     };
   }
 
-  InstitutionScrappingCommandData copyWith({
+  InstitutionScrappingCommand copyWith({
     int? institution,
     String? commandID,
     String? name,
@@ -12104,7 +12104,7 @@ class InstitutionScrappingCommandData extends DataClass
     bool? requiresInteraction,
     Value<DateTime?> createdAt = const Value.absent(),
     List<dynamic>? instructions,
-  }) => InstitutionScrappingCommandData(
+  }) => InstitutionScrappingCommand(
     institution: institution ?? this.institution,
     commandID: commandID ?? this.commandID,
     name: name ?? this.name,
@@ -12114,10 +12114,10 @@ class InstitutionScrappingCommandData extends DataClass
     createdAt: createdAt.present ? createdAt.value : this.createdAt,
     instructions: instructions ?? this.instructions,
   );
-  InstitutionScrappingCommandData copyWithCompanion(
-    InstitutionScrappingCommandCompanion data,
+  InstitutionScrappingCommand copyWithCompanion(
+    InstitutionScrappingCommandsCompanion data,
   ) {
-    return InstitutionScrappingCommandData(
+    return InstitutionScrappingCommand(
       institution: data.institution.present
           ? data.institution.value
           : this.institution,
@@ -12139,7 +12139,7 @@ class InstitutionScrappingCommandData extends DataClass
 
   @override
   String toString() {
-    return (StringBuffer('InstitutionScrappingCommandData(')
+    return (StringBuffer('InstitutionScrappingCommand(')
           ..write('institution: $institution, ')
           ..write('commandID: $commandID, ')
           ..write('name: $name, ')
@@ -12166,7 +12166,7 @@ class InstitutionScrappingCommandData extends DataClass
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is InstitutionScrappingCommandData &&
+      (other is InstitutionScrappingCommand &&
           other.institution == this.institution &&
           other.commandID == this.commandID &&
           other.name == this.name &&
@@ -12177,8 +12177,8 @@ class InstitutionScrappingCommandData extends DataClass
           other.instructions == this.instructions);
 }
 
-class InstitutionScrappingCommandCompanion
-    extends UpdateCompanion<InstitutionScrappingCommandData> {
+class InstitutionScrappingCommandsCompanion
+    extends UpdateCompanion<InstitutionScrappingCommand> {
   final Value<int> institution;
   final Value<String> commandID;
   final Value<String> name;
@@ -12188,7 +12188,7 @@ class InstitutionScrappingCommandCompanion
   final Value<DateTime?> createdAt;
   final Value<List<dynamic>> instructions;
   final Value<int> rowid;
-  const InstitutionScrappingCommandCompanion({
+  const InstitutionScrappingCommandsCompanion({
     this.institution = const Value.absent(),
     this.commandID = const Value.absent(),
     this.name = const Value.absent(),
@@ -12199,7 +12199,7 @@ class InstitutionScrappingCommandCompanion
     this.instructions = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  InstitutionScrappingCommandCompanion.insert({
+  InstitutionScrappingCommandsCompanion.insert({
     required int institution,
     required String commandID,
     required String name,
@@ -12213,7 +12213,7 @@ class InstitutionScrappingCommandCompanion
        commandID = Value(commandID),
        name = Value(name),
        instructions = Value(instructions);
-  static Insertable<InstitutionScrappingCommandData> custom({
+  static Insertable<InstitutionScrappingCommand> custom({
     Expression<int>? institution,
     Expression<String>? commandID,
     Expression<String>? name,
@@ -12238,7 +12238,7 @@ class InstitutionScrappingCommandCompanion
     });
   }
 
-  InstitutionScrappingCommandCompanion copyWith({
+  InstitutionScrappingCommandsCompanion copyWith({
     Value<int>? institution,
     Value<String>? commandID,
     Value<String>? name,
@@ -12249,7 +12249,7 @@ class InstitutionScrappingCommandCompanion
     Value<List<dynamic>>? instructions,
     Value<int>? rowid,
   }) {
-    return InstitutionScrappingCommandCompanion(
+    return InstitutionScrappingCommandsCompanion(
       institution: institution ?? this.institution,
       commandID: commandID ?? this.commandID,
       name: name ?? this.name,
@@ -12288,7 +12288,7 @@ class InstitutionScrappingCommandCompanion
     }
     if (instructions.present) {
       map['instructions'] = Variable<String>(
-        $InstitutionScrappingCommandTable.$converterinstructions.toSql(
+        $InstitutionScrappingCommandsTable.$converterinstructions.toSql(
           instructions.value,
         ),
       );
@@ -12301,7 +12301,7 @@ class InstitutionScrappingCommandCompanion
 
   @override
   String toString() {
-    return (StringBuffer('InstitutionScrappingCommandCompanion(')
+    return (StringBuffer('InstitutionScrappingCommandsCompanion(')
           ..write('institution: $institution, ')
           ..write('commandID: $commandID, ')
           ..write('name: $name, ')
@@ -12316,12 +12316,12 @@ class InstitutionScrappingCommandCompanion
   }
 }
 
-class $InstitutionKeyTable extends InstitutionKey
-    with TableInfo<$InstitutionKeyTable, InstitutionKeyData> {
+class $InstitutionKeysTable extends InstitutionKeys
+    with TableInfo<$InstitutionKeysTable, InstitutionKey> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $InstitutionKeyTable(this.attachedDatabase, [this._alias]);
+  $InstitutionKeysTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _institutionIDMeta = const VerificationMeta(
     'institutionID',
   );
@@ -12352,13 +12352,16 @@ class $InstitutionKeyTable extends InstitutionKey
   );
   @override
   late final GeneratedColumnWithTypeConverter<Map<String, dynamic>, String>
-  keySets = GeneratedColumn<String>(
-    'key_sets',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  ).withConverter<Map<String, dynamic>>($InstitutionKeyTable.$converterkeySets);
+  keySets =
+      GeneratedColumn<String>(
+        'key_sets',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<Map<String, dynamic>>(
+        $InstitutionKeysTable.$converterkeySets,
+      );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -12385,7 +12388,7 @@ class $InstitutionKeyTable extends InstitutionKey
   static const String $name = 'institution_key';
   @override
   VerificationContext validateIntegrity(
-    Insertable<InstitutionKeyData> instance, {
+    Insertable<InstitutionKey> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -12421,9 +12424,9 @@ class $InstitutionKeyTable extends InstitutionKey
   @override
   Set<GeneratedColumn> get $primaryKey => {institutionID, commandID};
   @override
-  InstitutionKeyData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  InstitutionKey map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return InstitutionKeyData(
+    return InstitutionKey(
       institutionID: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}institution_id'],
@@ -12432,7 +12435,7 @@ class $InstitutionKeyTable extends InstitutionKey
         DriftSqlType.string,
         data['${effectivePrefix}command_i_d'],
       )!,
-      keySets: $InstitutionKeyTable.$converterkeySets.fromSql(
+      keySets: $InstitutionKeysTable.$converterkeySets.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}key_sets'],
@@ -12446,21 +12449,20 @@ class $InstitutionKeyTable extends InstitutionKey
   }
 
   @override
-  $InstitutionKeyTable createAlias(String alias) {
-    return $InstitutionKeyTable(attachedDatabase, alias);
+  $InstitutionKeysTable createAlias(String alias) {
+    return $InstitutionKeysTable(attachedDatabase, alias);
   }
 
   static TypeConverter<Map<String, dynamic>, String> $converterkeySets =
       JsonConverter();
 }
 
-class InstitutionKeyData extends DataClass
-    implements Insertable<InstitutionKeyData> {
+class InstitutionKey extends DataClass implements Insertable<InstitutionKey> {
   final int institutionID;
   final String commandID;
   final Map<String, dynamic> keySets;
   final DateTime? createdAt;
-  const InstitutionKeyData({
+  const InstitutionKey({
     required this.institutionID,
     required this.commandID,
     required this.keySets,
@@ -12473,7 +12475,7 @@ class InstitutionKeyData extends DataClass
     map['command_i_d'] = Variable<String>(commandID);
     {
       map['key_sets'] = Variable<String>(
-        $InstitutionKeyTable.$converterkeySets.toSql(keySets),
+        $InstitutionKeysTable.$converterkeySets.toSql(keySets),
       );
     }
     if (!nullToAbsent || createdAt != null) {
@@ -12482,8 +12484,8 @@ class InstitutionKeyData extends DataClass
     return map;
   }
 
-  InstitutionKeyCompanion toCompanion(bool nullToAbsent) {
-    return InstitutionKeyCompanion(
+  InstitutionKeysCompanion toCompanion(bool nullToAbsent) {
+    return InstitutionKeysCompanion(
       institutionID: Value(institutionID),
       commandID: Value(commandID),
       keySets: Value(keySets),
@@ -12493,12 +12495,12 @@ class InstitutionKeyData extends DataClass
     );
   }
 
-  factory InstitutionKeyData.fromJson(
+  factory InstitutionKey.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return InstitutionKeyData(
+    return InstitutionKey(
       institutionID: serializer.fromJson<int>(json['institution_id']),
       commandID: serializer.fromJson<String>(json['command_id']),
       keySets: serializer.fromJson<Map<String, dynamic>>(json['key_sets']),
@@ -12516,19 +12518,19 @@ class InstitutionKeyData extends DataClass
     };
   }
 
-  InstitutionKeyData copyWith({
+  InstitutionKey copyWith({
     int? institutionID,
     String? commandID,
     Map<String, dynamic>? keySets,
     Value<DateTime?> createdAt = const Value.absent(),
-  }) => InstitutionKeyData(
+  }) => InstitutionKey(
     institutionID: institutionID ?? this.institutionID,
     commandID: commandID ?? this.commandID,
     keySets: keySets ?? this.keySets,
     createdAt: createdAt.present ? createdAt.value : this.createdAt,
   );
-  InstitutionKeyData copyWithCompanion(InstitutionKeyCompanion data) {
-    return InstitutionKeyData(
+  InstitutionKey copyWithCompanion(InstitutionKeysCompanion data) {
+    return InstitutionKey(
       institutionID: data.institutionID.present
           ? data.institutionID.value
           : this.institutionID,
@@ -12540,7 +12542,7 @@ class InstitutionKeyData extends DataClass
 
   @override
   String toString() {
-    return (StringBuffer('InstitutionKeyData(')
+    return (StringBuffer('InstitutionKey(')
           ..write('institutionID: $institutionID, ')
           ..write('commandID: $commandID, ')
           ..write('keySets: $keySets, ')
@@ -12554,27 +12556,27 @@ class InstitutionKeyData extends DataClass
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is InstitutionKeyData &&
+      (other is InstitutionKey &&
           other.institutionID == this.institutionID &&
           other.commandID == this.commandID &&
           other.keySets == this.keySets &&
           other.createdAt == this.createdAt);
 }
 
-class InstitutionKeyCompanion extends UpdateCompanion<InstitutionKeyData> {
+class InstitutionKeysCompanion extends UpdateCompanion<InstitutionKey> {
   final Value<int> institutionID;
   final Value<String> commandID;
   final Value<Map<String, dynamic>> keySets;
   final Value<DateTime?> createdAt;
   final Value<int> rowid;
-  const InstitutionKeyCompanion({
+  const InstitutionKeysCompanion({
     this.institutionID = const Value.absent(),
     this.commandID = const Value.absent(),
     this.keySets = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  InstitutionKeyCompanion.insert({
+  InstitutionKeysCompanion.insert({
     required int institutionID,
     required String commandID,
     required Map<String, dynamic> keySets,
@@ -12583,7 +12585,7 @@ class InstitutionKeyCompanion extends UpdateCompanion<InstitutionKeyData> {
   }) : institutionID = Value(institutionID),
        commandID = Value(commandID),
        keySets = Value(keySets);
-  static Insertable<InstitutionKeyData> custom({
+  static Insertable<InstitutionKey> custom({
     Expression<int>? institutionID,
     Expression<String>? commandID,
     Expression<String>? keySets,
@@ -12599,14 +12601,14 @@ class InstitutionKeyCompanion extends UpdateCompanion<InstitutionKeyData> {
     });
   }
 
-  InstitutionKeyCompanion copyWith({
+  InstitutionKeysCompanion copyWith({
     Value<int>? institutionID,
     Value<String>? commandID,
     Value<Map<String, dynamic>>? keySets,
     Value<DateTime?>? createdAt,
     Value<int>? rowid,
   }) {
-    return InstitutionKeyCompanion(
+    return InstitutionKeysCompanion(
       institutionID: institutionID ?? this.institutionID,
       commandID: commandID ?? this.commandID,
       keySets: keySets ?? this.keySets,
@@ -12626,7 +12628,7 @@ class InstitutionKeyCompanion extends UpdateCompanion<InstitutionKeyData> {
     }
     if (keySets.present) {
       map['key_sets'] = Variable<String>(
-        $InstitutionKeyTable.$converterkeySets.toSql(keySets.value),
+        $InstitutionKeysTable.$converterkeySets.toSql(keySets.value),
       );
     }
     if (createdAt.present) {
@@ -12640,7 +12642,7 @@ class InstitutionKeyCompanion extends UpdateCompanion<InstitutionKeyData> {
 
   @override
   String toString() {
-    return (StringBuffer('InstitutionKeyCompanion(')
+    return (StringBuffer('InstitutionKeysCompanion(')
           ..write('institutionID: $institutionID, ')
           ..write('commandID: $commandID, ')
           ..write('keySets: $keySets, ')
@@ -12651,12 +12653,12 @@ class InstitutionKeyCompanion extends UpdateCompanion<InstitutionKeyData> {
   }
 }
 
-class $InstitutionProfileTable extends InstitutionProfile
-    with TableInfo<$InstitutionProfileTable, InstitutionProfileData> {
+class $InstitutionProfilesTable extends InstitutionProfiles
+    with TableInfo<$InstitutionProfilesTable, InstitutionProfile> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $InstitutionProfileTable(this.attachedDatabase, [this._alias]);
+  $InstitutionProfilesTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -12719,7 +12721,7 @@ class $InstitutionProfileTable extends InstitutionProfile
         type: DriftSqlType.string,
         requiredDuringInsert: false,
         defaultValue: Constant(Gender.unknown.name),
-      ).withConverter<Gender>($InstitutionProfileTable.$convertergender);
+      ).withConverter<Gender>($InstitutionProfilesTable.$convertergender);
   @override
   late final GeneratedColumnWithTypeConverter<AcademicStatus, String> status =
       GeneratedColumn<String>(
@@ -12730,7 +12732,7 @@ class $InstitutionProfileTable extends InstitutionProfile
         requiredDuringInsert: false,
         defaultValue: Constant(AcademicStatus.unknown.name),
       ).withConverter<AcademicStatus>(
-        $InstitutionProfileTable.$converterstatus,
+        $InstitutionProfilesTable.$converterstatus,
       );
   static const VerificationMeta _emailMeta = const VerificationMeta('email');
   @override
@@ -12886,7 +12888,7 @@ class $InstitutionProfileTable extends InstitutionProfile
         type: DriftSqlType.string,
         requiredDuringInsert: false,
       ).withConverter<Map<String, dynamic>?>(
-        $InstitutionProfileTable.$converterrawDatan,
+        $InstitutionProfilesTable.$converterrawDatan,
       );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
@@ -12946,7 +12948,7 @@ class $InstitutionProfileTable extends InstitutionProfile
   static const String $name = 'institution_profile';
   @override
   VerificationContext validateIntegrity(
-    Insertable<InstitutionProfileData> instance, {
+    Insertable<InstitutionProfile> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -13107,9 +13109,9 @@ class $InstitutionProfileTable extends InstitutionProfile
   @override
   Set<GeneratedColumn> get $primaryKey => {institutionID, userID};
   @override
-  InstitutionProfileData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  InstitutionProfile map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return InstitutionProfileData(
+    return InstitutionProfile(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -13130,13 +13132,13 @@ class $InstitutionProfileTable extends InstitutionProfile
         DriftSqlType.string,
         data['${effectivePrefix}student_name'],
       )!,
-      gender: $InstitutionProfileTable.$convertergender.fromSql(
+      gender: $InstitutionProfilesTable.$convertergender.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}gender'],
         )!,
       ),
-      status: $InstitutionProfileTable.$converterstatus.fromSql(
+      status: $InstitutionProfilesTable.$converterstatus.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}status'],
@@ -13198,7 +13200,7 @@ class $InstitutionProfileTable extends InstitutionProfile
         DriftSqlType.dateTime,
         data['${effectivePrefix}expected_graduation'],
       ),
-      rawData: $InstitutionProfileTable.$converterrawDatan.fromSql(
+      rawData: $InstitutionProfilesTable.$converterrawDatan.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}raw_data'],
@@ -13216,8 +13218,8 @@ class $InstitutionProfileTable extends InstitutionProfile
   }
 
   @override
-  $InstitutionProfileTable createAlias(String alias) {
-    return $InstitutionProfileTable(attachedDatabase, alias);
+  $InstitutionProfilesTable createAlias(String alias) {
+    return $InstitutionProfilesTable(attachedDatabase, alias);
   }
 
   static JsonTypeConverter2<Gender, String, String> $convertergender =
@@ -13230,8 +13232,8 @@ class $InstitutionProfileTable extends InstitutionProfile
       NullAwareTypeConverter.wrap($converterrawData);
 }
 
-class InstitutionProfileData extends DataClass
-    implements Insertable<InstitutionProfileData> {
+class InstitutionProfile extends DataClass
+    implements Insertable<InstitutionProfile> {
   final int? id;
   final String userID;
   final int institutionID;
@@ -13256,7 +13258,7 @@ class InstitutionProfileData extends DataClass
   final Map<String, dynamic>? rawData;
   final DateTime createdAt;
   final DateTime updatedAt;
-  const InstitutionProfileData({
+  const InstitutionProfile({
     this.id,
     required this.userID,
     required this.institutionID,
@@ -13294,12 +13296,12 @@ class InstitutionProfileData extends DataClass
     map['student_name'] = Variable<String>(studentName);
     {
       map['gender'] = Variable<String>(
-        $InstitutionProfileTable.$convertergender.toSql(gender),
+        $InstitutionProfilesTable.$convertergender.toSql(gender),
       );
     }
     {
       map['status'] = Variable<String>(
-        $InstitutionProfileTable.$converterstatus.toSql(status),
+        $InstitutionProfilesTable.$converterstatus.toSql(status),
       );
     }
     if (!nullToAbsent || email != null) {
@@ -13346,7 +13348,7 @@ class InstitutionProfileData extends DataClass
     }
     if (!nullToAbsent || rawData != null) {
       map['raw_data'] = Variable<String>(
-        $InstitutionProfileTable.$converterrawDatan.toSql(rawData),
+        $InstitutionProfilesTable.$converterrawDatan.toSql(rawData),
       );
     }
     map['created_at'] = Variable<DateTime>(createdAt);
@@ -13354,8 +13356,8 @@ class InstitutionProfileData extends DataClass
     return map;
   }
 
-  InstitutionProfileCompanion toCompanion(bool nullToAbsent) {
-    return InstitutionProfileCompanion(
+  InstitutionProfilesCompanion toCompanion(bool nullToAbsent) {
+    return InstitutionProfilesCompanion(
       id: id == null && nullToAbsent ? const Value.absent() : Value(id),
       userID: Value(userID),
       institutionID: Value(institutionID),
@@ -13409,21 +13411,21 @@ class InstitutionProfileData extends DataClass
     );
   }
 
-  factory InstitutionProfileData.fromJson(
+  factory InstitutionProfile.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return InstitutionProfileData(
+    return InstitutionProfile(
       id: serializer.fromJson<int?>(json['id']),
       userID: serializer.fromJson<String>(json['user_id']),
       institutionID: serializer.fromJson<int>(json['institution']),
       studentID: serializer.fromJson<String>(json['student_id']),
       studentName: serializer.fromJson<String>(json['student_name']),
-      gender: $InstitutionProfileTable.$convertergender.fromJson(
+      gender: $InstitutionProfilesTable.$convertergender.fromJson(
         serializer.fromJson<String>(json['gender']),
       ),
-      status: $InstitutionProfileTable.$converterstatus.fromJson(
+      status: $InstitutionProfilesTable.$converterstatus.fromJson(
         serializer.fromJson<String>(json['status']),
       ),
       email: serializer.fromJson<String?>(json['email']),
@@ -13457,10 +13459,10 @@ class InstitutionProfileData extends DataClass
       'student_id': serializer.toJson<String>(studentID),
       'student_name': serializer.toJson<String>(studentName),
       'gender': serializer.toJson<String>(
-        $InstitutionProfileTable.$convertergender.toJson(gender),
+        $InstitutionProfilesTable.$convertergender.toJson(gender),
       ),
       'status': serializer.toJson<String>(
-        $InstitutionProfileTable.$converterstatus.toJson(status),
+        $InstitutionProfilesTable.$converterstatus.toJson(status),
       ),
       'email': serializer.toJson<String?>(email),
       'profile_picture': serializer.toJson<String?>(profilePicture),
@@ -13482,7 +13484,7 @@ class InstitutionProfileData extends DataClass
     };
   }
 
-  InstitutionProfileData copyWith({
+  InstitutionProfile copyWith({
     Value<int?> id = const Value.absent(),
     String? userID,
     int? institutionID,
@@ -13507,7 +13509,7 @@ class InstitutionProfileData extends DataClass
     Value<Map<String, dynamic>?> rawData = const Value.absent(),
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) => InstitutionProfileData(
+  }) => InstitutionProfile(
     id: id.present ? id.value : this.id,
     userID: userID ?? this.userID,
     institutionID: institutionID ?? this.institutionID,
@@ -13541,8 +13543,8 @@ class InstitutionProfileData extends DataClass
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );
-  InstitutionProfileData copyWithCompanion(InstitutionProfileCompanion data) {
-    return InstitutionProfileData(
+  InstitutionProfile copyWithCompanion(InstitutionProfilesCompanion data) {
+    return InstitutionProfile(
       id: data.id.present ? data.id.value : this.id,
       userID: data.userID.present ? data.userID.value : this.userID,
       institutionID: data.institutionID.present
@@ -13588,7 +13590,7 @@ class InstitutionProfileData extends DataClass
 
   @override
   String toString() {
-    return (StringBuffer('InstitutionProfileData(')
+    return (StringBuffer('InstitutionProfile(')
           ..write('id: $id, ')
           ..write('userID: $userID, ')
           ..write('institutionID: $institutionID, ')
@@ -13647,7 +13649,7 @@ class InstitutionProfileData extends DataClass
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is InstitutionProfileData &&
+      (other is InstitutionProfile &&
           other.id == this.id &&
           other.userID == this.userID &&
           other.institutionID == this.institutionID &&
@@ -13674,8 +13676,7 @@ class InstitutionProfileData extends DataClass
           other.updatedAt == this.updatedAt);
 }
 
-class InstitutionProfileCompanion
-    extends UpdateCompanion<InstitutionProfileData> {
+class InstitutionProfilesCompanion extends UpdateCompanion<InstitutionProfile> {
   final Value<int?> id;
   final Value<String> userID;
   final Value<int> institutionID;
@@ -13701,7 +13702,7 @@ class InstitutionProfileCompanion
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<int> rowid;
-  const InstitutionProfileCompanion({
+  const InstitutionProfilesCompanion({
     this.id = const Value.absent(),
     this.userID = const Value.absent(),
     this.institutionID = const Value.absent(),
@@ -13728,7 +13729,7 @@ class InstitutionProfileCompanion
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  InstitutionProfileCompanion.insert({
+  InstitutionProfilesCompanion.insert({
     this.id = const Value.absent(),
     required String userID,
     required int institutionID,
@@ -13757,7 +13758,7 @@ class InstitutionProfileCompanion
   }) : userID = Value(userID),
        institutionID = Value(institutionID),
        studentID = Value(studentID);
-  static Insertable<InstitutionProfileData> custom({
+  static Insertable<InstitutionProfile> custom({
     Expression<int>? id,
     Expression<String>? userID,
     Expression<int>? institutionID,
@@ -13813,7 +13814,7 @@ class InstitutionProfileCompanion
     });
   }
 
-  InstitutionProfileCompanion copyWith({
+  InstitutionProfilesCompanion copyWith({
     Value<int?>? id,
     Value<String>? userID,
     Value<int>? institutionID,
@@ -13840,7 +13841,7 @@ class InstitutionProfileCompanion
     Value<DateTime>? updatedAt,
     Value<int>? rowid,
   }) {
-    return InstitutionProfileCompanion(
+    return InstitutionProfilesCompanion(
       id: id ?? this.id,
       userID: userID ?? this.userID,
       institutionID: institutionID ?? this.institutionID,
@@ -13889,12 +13890,12 @@ class InstitutionProfileCompanion
     }
     if (gender.present) {
       map['gender'] = Variable<String>(
-        $InstitutionProfileTable.$convertergender.toSql(gender.value),
+        $InstitutionProfilesTable.$convertergender.toSql(gender.value),
       );
     }
     if (status.present) {
       map['status'] = Variable<String>(
-        $InstitutionProfileTable.$converterstatus.toSql(status.value),
+        $InstitutionProfilesTable.$converterstatus.toSql(status.value),
       );
     }
     if (email.present) {
@@ -13941,7 +13942,7 @@ class InstitutionProfileCompanion
     }
     if (rawData.present) {
       map['raw_data'] = Variable<String>(
-        $InstitutionProfileTable.$converterrawDatan.toSql(rawData.value),
+        $InstitutionProfilesTable.$converterrawDatan.toSql(rawData.value),
       );
     }
     if (createdAt.present) {
@@ -13958,7 +13959,7 @@ class InstitutionProfileCompanion
 
   @override
   String toString() {
-    return (StringBuffer('InstitutionProfileCompanion(')
+    return (StringBuffer('InstitutionProfilesCompanion(')
           ..write('id: $id, ')
           ..write('userID: $userID, ')
           ..write('institutionID: $institutionID, ')
@@ -13989,16 +13990,13 @@ class InstitutionProfileCompanion
   }
 }
 
-class $InstitutionFeeTransactionTable extends InstitutionFeeTransaction
+class $InstitutionFeeTransactionsTable extends InstitutionFeeTransactions
     with
-        TableInfo<
-          $InstitutionFeeTransactionTable,
-          InstitutionFeeTransactionData
-        > {
+        TableInfo<$InstitutionFeeTransactionsTable, InstitutionFeeTransaction> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $InstitutionFeeTransactionTable(this.attachedDatabase, [this._alias]);
+  $InstitutionFeeTransactionsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -14132,7 +14130,7 @@ class $InstitutionFeeTransactionTable extends InstitutionFeeTransaction
   static const String $name = 'institution_fee_transaction';
   @override
   VerificationContext validateIntegrity(
-    Insertable<InstitutionFeeTransactionData> instance, {
+    Insertable<InstitutionFeeTransaction> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -14217,12 +14215,12 @@ class $InstitutionFeeTransactionTable extends InstitutionFeeTransaction
   @override
   Set<GeneratedColumn> get $primaryKey => {institution, referenceNumber};
   @override
-  InstitutionFeeTransactionData map(
+  InstitutionFeeTransaction map(
     Map<String, dynamic> data, {
     String? tablePrefix,
   }) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return InstitutionFeeTransactionData(
+    return InstitutionFeeTransaction(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -14267,13 +14265,13 @@ class $InstitutionFeeTransactionTable extends InstitutionFeeTransaction
   }
 
   @override
-  $InstitutionFeeTransactionTable createAlias(String alias) {
-    return $InstitutionFeeTransactionTable(attachedDatabase, alias);
+  $InstitutionFeeTransactionsTable createAlias(String alias) {
+    return $InstitutionFeeTransactionsTable(attachedDatabase, alias);
   }
 }
 
-class InstitutionFeeTransactionData extends DataClass
-    implements Insertable<InstitutionFeeTransactionData> {
+class InstitutionFeeTransaction extends DataClass
+    implements Insertable<InstitutionFeeTransaction> {
   final int? id;
   final int institution;
   final String? referenceNumber;
@@ -14284,7 +14282,7 @@ class InstitutionFeeTransactionData extends DataClass
   final String? description;
   final String? title;
   final String? currency;
-  const InstitutionFeeTransactionData({
+  const InstitutionFeeTransaction({
     this.id,
     required this.institution,
     this.referenceNumber,
@@ -14330,8 +14328,8 @@ class InstitutionFeeTransactionData extends DataClass
     return map;
   }
 
-  InstitutionFeeTransactionCompanion toCompanion(bool nullToAbsent) {
-    return InstitutionFeeTransactionCompanion(
+  InstitutionFeeTransactionsCompanion toCompanion(bool nullToAbsent) {
+    return InstitutionFeeTransactionsCompanion(
       id: id == null && nullToAbsent ? const Value.absent() : Value(id),
       institution: Value(institution),
       referenceNumber: referenceNumber == null && nullToAbsent
@@ -14361,12 +14359,12 @@ class InstitutionFeeTransactionData extends DataClass
     );
   }
 
-  factory InstitutionFeeTransactionData.fromJson(
+  factory InstitutionFeeTransaction.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return InstitutionFeeTransactionData(
+    return InstitutionFeeTransaction(
       id: serializer.fromJson<int?>(json['id']),
       institution: serializer.fromJson<int>(json['institution']),
       referenceNumber: serializer.fromJson<String?>(json['reference_number']),
@@ -14396,7 +14394,7 @@ class InstitutionFeeTransactionData extends DataClass
     };
   }
 
-  InstitutionFeeTransactionData copyWith({
+  InstitutionFeeTransaction copyWith({
     Value<int?> id = const Value.absent(),
     int? institution,
     Value<String?> referenceNumber = const Value.absent(),
@@ -14407,7 +14405,7 @@ class InstitutionFeeTransactionData extends DataClass
     Value<String?> description = const Value.absent(),
     Value<String?> title = const Value.absent(),
     Value<String?> currency = const Value.absent(),
-  }) => InstitutionFeeTransactionData(
+  }) => InstitutionFeeTransaction(
     id: id.present ? id.value : this.id,
     institution: institution ?? this.institution,
     referenceNumber: referenceNumber.present
@@ -14423,10 +14421,10 @@ class InstitutionFeeTransactionData extends DataClass
     title: title.present ? title.value : this.title,
     currency: currency.present ? currency.value : this.currency,
   );
-  InstitutionFeeTransactionData copyWithCompanion(
-    InstitutionFeeTransactionCompanion data,
+  InstitutionFeeTransaction copyWithCompanion(
+    InstitutionFeeTransactionsCompanion data,
   ) {
-    return InstitutionFeeTransactionData(
+    return InstitutionFeeTransaction(
       id: data.id.present ? data.id.value : this.id,
       institution: data.institution.present
           ? data.institution.value
@@ -14452,7 +14450,7 @@ class InstitutionFeeTransactionData extends DataClass
 
   @override
   String toString() {
-    return (StringBuffer('InstitutionFeeTransactionData(')
+    return (StringBuffer('InstitutionFeeTransaction(')
           ..write('id: $id, ')
           ..write('institution: $institution, ')
           ..write('referenceNumber: $referenceNumber, ')
@@ -14483,7 +14481,7 @@ class InstitutionFeeTransactionData extends DataClass
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is InstitutionFeeTransactionData &&
+      (other is InstitutionFeeTransaction &&
           other.id == this.id &&
           other.institution == this.institution &&
           other.referenceNumber == this.referenceNumber &&
@@ -14496,8 +14494,8 @@ class InstitutionFeeTransactionData extends DataClass
           other.currency == this.currency);
 }
 
-class InstitutionFeeTransactionCompanion
-    extends UpdateCompanion<InstitutionFeeTransactionData> {
+class InstitutionFeeTransactionsCompanion
+    extends UpdateCompanion<InstitutionFeeTransaction> {
   final Value<int?> id;
   final Value<int> institution;
   final Value<String?> referenceNumber;
@@ -14509,7 +14507,7 @@ class InstitutionFeeTransactionCompanion
   final Value<String?> title;
   final Value<String?> currency;
   final Value<int> rowid;
-  const InstitutionFeeTransactionCompanion({
+  const InstitutionFeeTransactionsCompanion({
     this.id = const Value.absent(),
     this.institution = const Value.absent(),
     this.referenceNumber = const Value.absent(),
@@ -14522,7 +14520,7 @@ class InstitutionFeeTransactionCompanion
     this.currency = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  InstitutionFeeTransactionCompanion.insert({
+  InstitutionFeeTransactionsCompanion.insert({
     this.id = const Value.absent(),
     required int institution,
     this.referenceNumber = const Value.absent(),
@@ -14535,7 +14533,7 @@ class InstitutionFeeTransactionCompanion
     this.currency = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : institution = Value(institution);
-  static Insertable<InstitutionFeeTransactionData> custom({
+  static Insertable<InstitutionFeeTransaction> custom({
     Expression<int>? id,
     Expression<int>? institution,
     Expression<String>? referenceNumber,
@@ -14563,7 +14561,7 @@ class InstitutionFeeTransactionCompanion
     });
   }
 
-  InstitutionFeeTransactionCompanion copyWith({
+  InstitutionFeeTransactionsCompanion copyWith({
     Value<int?>? id,
     Value<int>? institution,
     Value<String?>? referenceNumber,
@@ -14576,7 +14574,7 @@ class InstitutionFeeTransactionCompanion
     Value<String?>? currency,
     Value<int>? rowid,
   }) {
-    return InstitutionFeeTransactionCompanion(
+    return InstitutionFeeTransactionsCompanion(
       id: id ?? this.id,
       institution: institution ?? this.institution,
       referenceNumber: referenceNumber ?? this.referenceNumber,
@@ -14632,7 +14630,7 @@ class InstitutionFeeTransactionCompanion
 
   @override
   String toString() {
-    return (StringBuffer('InstitutionFeeTransactionCompanion(')
+    return (StringBuffer('InstitutionFeeTransactionsCompanion(')
           ..write('id: $id, ')
           ..write('institution: $institution, ')
           ..write('referenceNumber: $referenceNumber, ')
@@ -24655,14 +24653,16 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   late final $BlockTableTable blockTable = $BlockTableTable(this);
   late final $ReportTableTable reportTable = $ReportTableTable(this);
   late final $AgendaEventTable agendaEvent = $AgendaEventTable(this);
-  late final $InstitutionTable institution = $InstitutionTable(this);
-  late final $InstitutionScrappingCommandTable institutionScrappingCommand =
-      $InstitutionScrappingCommandTable(this);
-  late final $InstitutionKeyTable institutionKey = $InstitutionKeyTable(this);
-  late final $InstitutionProfileTable institutionProfile =
-      $InstitutionProfileTable(this);
-  late final $InstitutionFeeTransactionTable institutionFeeTransaction =
-      $InstitutionFeeTransactionTable(this);
+  late final $InstitutionsTable institutions = $InstitutionsTable(this);
+  late final $InstitutionScrappingCommandsTable institutionScrappingCommands =
+      $InstitutionScrappingCommandsTable(this);
+  late final $InstitutionKeysTable institutionKeys = $InstitutionKeysTable(
+    this,
+  );
+  late final $InstitutionProfilesTable institutionProfiles =
+      $InstitutionProfilesTable(this);
+  late final $InstitutionFeeTransactionsTable institutionFeeTransactions =
+      $InstitutionFeeTransactionsTable(this);
   late final $SemesterTable semester = $SemesterTable(this);
   late final $CourseTable course = $CourseTable(this);
   late final $TimetableTable timetable = $TimetableTable(this);
@@ -24705,11 +24705,11 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     blockTable,
     reportTable,
     agendaEvent,
-    institution,
-    institutionScrappingCommand,
-    institutionKey,
-    institutionProfile,
-    institutionFeeTransaction,
+    institutions,
+    institutionScrappingCommands,
+    institutionKeys,
+    institutionProfiles,
+    institutionFeeTransactions,
     semester,
     course,
     timetable,
@@ -30189,8 +30189,8 @@ typedef $$AgendaEventTableProcessedTableManager =
       AgendaEventData,
       PrefetchHooks Function()
     >;
-typedef $$InstitutionTableCreateCompanionBuilder =
-    InstitutionCompanion Function({
+typedef $$InstitutionsTableCreateCompanionBuilder =
+    InstitutionsCompanion Function({
       Value<int> institutionId,
       required String name,
       Value<List<dynamic>?> webPages,
@@ -30199,8 +30199,8 @@ typedef $$InstitutionTableCreateCompanionBuilder =
       Value<String?> country,
       Value<String?> stateProvince,
     });
-typedef $$InstitutionTableUpdateCompanionBuilder =
-    InstitutionCompanion Function({
+typedef $$InstitutionsTableUpdateCompanionBuilder =
+    InstitutionsCompanion Function({
       Value<int> institutionId,
       Value<String> name,
       Value<List<dynamic>?> webPages,
@@ -30210,52 +30210,54 @@ typedef $$InstitutionTableUpdateCompanionBuilder =
       Value<String?> stateProvince,
     });
 
-final class $$InstitutionTableReferences
-    extends BaseReferences<_$AppDataBase, $InstitutionTable, InstitutionData> {
-  $$InstitutionTableReferences(super.$_db, super.$_table, super.$_typedResult);
+final class $$InstitutionsTableReferences
+    extends BaseReferences<_$AppDataBase, $InstitutionsTable, Institution> {
+  $$InstitutionsTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static MultiTypedResultKey<$InstitutionKeyTable, List<InstitutionKeyData>>
-  _institutionKeyRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
-    db.institutionKey,
+  static MultiTypedResultKey<$InstitutionKeysTable, List<InstitutionKey>>
+  _institutionKeysRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
+    db.institutionKeys,
     aliasName: $_aliasNameGenerator(
-      db.institution.institutionId,
-      db.institutionKey.institutionID,
+      db.institutions.institutionId,
+      db.institutionKeys.institutionID,
     ),
   );
 
-  $$InstitutionKeyTableProcessedTableManager get institutionKeyRefs {
-    final manager = $$InstitutionKeyTableTableManager($_db, $_db.institutionKey)
-        .filter(
+  $$InstitutionKeysTableProcessedTableManager get institutionKeysRefs {
+    final manager =
+        $$InstitutionKeysTableTableManager($_db, $_db.institutionKeys).filter(
           (f) => f.institutionID.institutionId.sqlEquals(
             $_itemColumn<int>('institution_id')!,
           ),
         );
 
-    final cache = $_typedResult.readTableOrNull(_institutionKeyRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(
+      _institutionKeysRefsTable($_db),
+    );
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
 
   static MultiTypedResultKey<
-    $InstitutionFeeTransactionTable,
-    List<InstitutionFeeTransactionData>
+    $InstitutionFeeTransactionsTable,
+    List<InstitutionFeeTransaction>
   >
-  _institutionFeeTransactionRefsTable(_$AppDataBase db) =>
+  _institutionFeeTransactionsRefsTable(_$AppDataBase db) =>
       MultiTypedResultKey.fromTable(
-        db.institutionFeeTransaction,
+        db.institutionFeeTransactions,
         aliasName: $_aliasNameGenerator(
-          db.institution.institutionId,
-          db.institutionFeeTransaction.institution,
+          db.institutions.institutionId,
+          db.institutionFeeTransactions.institution,
         ),
       );
 
-  $$InstitutionFeeTransactionTableProcessedTableManager
-  get institutionFeeTransactionRefs {
+  $$InstitutionFeeTransactionsTableProcessedTableManager
+  get institutionFeeTransactionsRefs {
     final manager =
-        $$InstitutionFeeTransactionTableTableManager(
+        $$InstitutionFeeTransactionsTableTableManager(
           $_db,
-          $_db.institutionFeeTransaction,
+          $_db.institutionFeeTransactions,
         ).filter(
           (f) => f.institution.institutionId.sqlEquals(
             $_itemColumn<int>('institution_id')!,
@@ -30263,7 +30265,7 @@ final class $$InstitutionTableReferences
         );
 
     final cache = $_typedResult.readTableOrNull(
-      _institutionFeeTransactionRefsTable($_db),
+      _institutionFeeTransactionsRefsTable($_db),
     );
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
@@ -30274,7 +30276,7 @@ final class $$InstitutionTableReferences
   _semesterRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
     db.semester,
     aliasName: $_aliasNameGenerator(
-      db.institution.institutionId,
+      db.institutions.institutionId,
       db.semester.institutionId,
     ),
   );
@@ -30297,7 +30299,7 @@ final class $$InstitutionTableReferences
   ) => MultiTypedResultKey.fromTable(
     db.course,
     aliasName: $_aliasNameGenerator(
-      db.institution.institutionId,
+      db.institutions.institutionId,
       db.course.institution,
     ),
   );
@@ -30319,7 +30321,7 @@ final class $$InstitutionTableReferences
   _timetableRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
     db.timetable,
     aliasName: $_aliasNameGenerator(
-      db.institution.institutionId,
+      db.institutions.institutionId,
       db.timetable.institution,
     ),
   );
@@ -30338,9 +30340,9 @@ final class $$InstitutionTableReferences
   }
 }
 
-class $$InstitutionTableFilterComposer
-    extends Composer<_$AppDataBase, $InstitutionTable> {
-  $$InstitutionTableFilterComposer({
+class $$InstitutionsTableFilterComposer
+    extends Composer<_$AppDataBase, $InstitutionsTable> {
+  $$InstitutionsTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -30384,22 +30386,22 @@ class $$InstitutionTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  Expression<bool> institutionKeyRefs(
-    Expression<bool> Function($$InstitutionKeyTableFilterComposer f) f,
+  Expression<bool> institutionKeysRefs(
+    Expression<bool> Function($$InstitutionKeysTableFilterComposer f) f,
   ) {
-    final $$InstitutionKeyTableFilterComposer composer = $composerBuilder(
+    final $$InstitutionKeysTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.institutionId,
-      referencedTable: $db.institutionKey,
+      referencedTable: $db.institutionKeys,
       getReferencedColumn: (t) => t.institutionID,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionKeyTableFilterComposer(
+          }) => $$InstitutionKeysTableFilterComposer(
             $db: $db,
-            $table: $db.institutionKey,
+            $table: $db.institutionKeys,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -30409,24 +30411,24 @@ class $$InstitutionTableFilterComposer
     return f(composer);
   }
 
-  Expression<bool> institutionFeeTransactionRefs(
-    Expression<bool> Function($$InstitutionFeeTransactionTableFilterComposer f)
+  Expression<bool> institutionFeeTransactionsRefs(
+    Expression<bool> Function($$InstitutionFeeTransactionsTableFilterComposer f)
     f,
   ) {
-    final $$InstitutionFeeTransactionTableFilterComposer composer =
+    final $$InstitutionFeeTransactionsTableFilterComposer composer =
         $composerBuilder(
           composer: this,
           getCurrentColumn: (t) => t.institutionId,
-          referencedTable: $db.institutionFeeTransaction,
+          referencedTable: $db.institutionFeeTransactions,
           getReferencedColumn: (t) => t.institution,
           builder:
               (
                 joinBuilder, {
                 $addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer,
-              }) => $$InstitutionFeeTransactionTableFilterComposer(
+              }) => $$InstitutionFeeTransactionsTableFilterComposer(
                 $db: $db,
-                $table: $db.institutionFeeTransaction,
+                $table: $db.institutionFeeTransactions,
                 $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
                 joinBuilder: joinBuilder,
                 $removeJoinBuilderFromRootComposer:
@@ -30512,9 +30514,9 @@ class $$InstitutionTableFilterComposer
   }
 }
 
-class $$InstitutionTableOrderingComposer
-    extends Composer<_$AppDataBase, $InstitutionTable> {
-  $$InstitutionTableOrderingComposer({
+class $$InstitutionsTableOrderingComposer
+    extends Composer<_$AppDataBase, $InstitutionsTable> {
+  $$InstitutionsTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -30557,9 +30559,9 @@ class $$InstitutionTableOrderingComposer
   );
 }
 
-class $$InstitutionTableAnnotationComposer
-    extends Composer<_$AppDataBase, $InstitutionTable> {
-  $$InstitutionTableAnnotationComposer({
+class $$InstitutionsTableAnnotationComposer
+    extends Composer<_$AppDataBase, $InstitutionsTable> {
+  $$InstitutionsTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -30593,22 +30595,22 @@ class $$InstitutionTableAnnotationComposer
     builder: (column) => column,
   );
 
-  Expression<T> institutionKeyRefs<T extends Object>(
-    Expression<T> Function($$InstitutionKeyTableAnnotationComposer a) f,
+  Expression<T> institutionKeysRefs<T extends Object>(
+    Expression<T> Function($$InstitutionKeysTableAnnotationComposer a) f,
   ) {
-    final $$InstitutionKeyTableAnnotationComposer composer = $composerBuilder(
+    final $$InstitutionKeysTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.institutionId,
-      referencedTable: $db.institutionKey,
+      referencedTable: $db.institutionKeys,
       getReferencedColumn: (t) => t.institutionID,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionKeyTableAnnotationComposer(
+          }) => $$InstitutionKeysTableAnnotationComposer(
             $db: $db,
-            $table: $db.institutionKey,
+            $table: $db.institutionKeys,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -30618,24 +30620,26 @@ class $$InstitutionTableAnnotationComposer
     return f(composer);
   }
 
-  Expression<T> institutionFeeTransactionRefs<T extends Object>(
-    Expression<T> Function($$InstitutionFeeTransactionTableAnnotationComposer a)
+  Expression<T> institutionFeeTransactionsRefs<T extends Object>(
+    Expression<T> Function(
+      $$InstitutionFeeTransactionsTableAnnotationComposer a,
+    )
     f,
   ) {
-    final $$InstitutionFeeTransactionTableAnnotationComposer composer =
+    final $$InstitutionFeeTransactionsTableAnnotationComposer composer =
         $composerBuilder(
           composer: this,
           getCurrentColumn: (t) => t.institutionId,
-          referencedTable: $db.institutionFeeTransaction,
+          referencedTable: $db.institutionFeeTransactions,
           getReferencedColumn: (t) => t.institution,
           builder:
               (
                 joinBuilder, {
                 $addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer,
-              }) => $$InstitutionFeeTransactionTableAnnotationComposer(
+              }) => $$InstitutionFeeTransactionsTableAnnotationComposer(
                 $db: $db,
-                $table: $db.institutionFeeTransaction,
+                $table: $db.institutionFeeTransactions,
                 $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
                 joinBuilder: joinBuilder,
                 $removeJoinBuilderFromRootComposer:
@@ -30721,38 +30725,38 @@ class $$InstitutionTableAnnotationComposer
   }
 }
 
-class $$InstitutionTableTableManager
+class $$InstitutionsTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $InstitutionTable,
-          InstitutionData,
-          $$InstitutionTableFilterComposer,
-          $$InstitutionTableOrderingComposer,
-          $$InstitutionTableAnnotationComposer,
-          $$InstitutionTableCreateCompanionBuilder,
-          $$InstitutionTableUpdateCompanionBuilder,
-          (InstitutionData, $$InstitutionTableReferences),
-          InstitutionData,
+          $InstitutionsTable,
+          Institution,
+          $$InstitutionsTableFilterComposer,
+          $$InstitutionsTableOrderingComposer,
+          $$InstitutionsTableAnnotationComposer,
+          $$InstitutionsTableCreateCompanionBuilder,
+          $$InstitutionsTableUpdateCompanionBuilder,
+          (Institution, $$InstitutionsTableReferences),
+          Institution,
           PrefetchHooks Function({
-            bool institutionKeyRefs,
-            bool institutionFeeTransactionRefs,
+            bool institutionKeysRefs,
+            bool institutionFeeTransactionsRefs,
             bool semesterRefs,
             bool courseRefs,
             bool timetableRefs,
           })
         > {
-  $$InstitutionTableTableManager(_$AppDataBase db, $InstitutionTable table)
+  $$InstitutionsTableTableManager(_$AppDataBase db, $InstitutionsTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$InstitutionTableFilterComposer($db: db, $table: table),
+              $$InstitutionsTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$InstitutionTableOrderingComposer($db: db, $table: table),
+              $$InstitutionsTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$InstitutionTableAnnotationComposer($db: db, $table: table),
+              $$InstitutionsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> institutionId = const Value.absent(),
@@ -30762,7 +30766,7 @@ class $$InstitutionTableTableManager
                 Value<String?> alphaTwoCode = const Value.absent(),
                 Value<String?> country = const Value.absent(),
                 Value<String?> stateProvince = const Value.absent(),
-              }) => InstitutionCompanion(
+              }) => InstitutionsCompanion(
                 institutionId: institutionId,
                 name: name,
                 webPages: webPages,
@@ -30780,7 +30784,7 @@ class $$InstitutionTableTableManager
                 Value<String?> alphaTwoCode = const Value.absent(),
                 Value<String?> country = const Value.absent(),
                 Value<String?> stateProvince = const Value.absent(),
-              }) => InstitutionCompanion.insert(
+              }) => InstitutionsCompanion.insert(
                 institutionId: institutionId,
                 name: name,
                 webPages: webPages,
@@ -30793,14 +30797,14 @@ class $$InstitutionTableTableManager
               .map(
                 (e) => (
                   e.readTable(table),
-                  $$InstitutionTableReferences(db, table, e),
+                  $$InstitutionsTableReferences(db, table, e),
                 ),
               )
               .toList(),
           prefetchHooksCallback:
               ({
-                institutionKeyRefs = false,
-                institutionFeeTransactionRefs = false,
+                institutionKeysRefs = false,
+                institutionFeeTransactionsRefs = false,
                 semesterRefs = false,
                 courseRefs = false,
                 timetableRefs = false,
@@ -30808,9 +30812,9 @@ class $$InstitutionTableTableManager
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
-                    if (institutionKeyRefs) db.institutionKey,
-                    if (institutionFeeTransactionRefs)
-                      db.institutionFeeTransaction,
+                    if (institutionKeysRefs) db.institutionKeys,
+                    if (institutionFeeTransactionsRefs)
+                      db.institutionFeeTransactions,
                     if (semesterRefs) db.semester,
                     if (courseRefs) db.course,
                     if (timetableRefs) db.timetable,
@@ -30818,42 +30822,42 @@ class $$InstitutionTableTableManager
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
                     return [
-                      if (institutionKeyRefs)
+                      if (institutionKeysRefs)
                         await $_getPrefetchedData<
-                          InstitutionData,
-                          $InstitutionTable,
-                          InstitutionKeyData
+                          Institution,
+                          $InstitutionsTable,
+                          InstitutionKey
                         >(
                           currentTable: table,
-                          referencedTable: $$InstitutionTableReferences
-                              ._institutionKeyRefsTable(db),
+                          referencedTable: $$InstitutionsTableReferences
+                              ._institutionKeysRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$InstitutionTableReferences(
+                              $$InstitutionsTableReferences(
                                 db,
                                 table,
                                 p0,
-                              ).institutionKeyRefs,
+                              ).institutionKeysRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.institutionID == item.institutionId,
                               ),
                           typedResults: items,
                         ),
-                      if (institutionFeeTransactionRefs)
+                      if (institutionFeeTransactionsRefs)
                         await $_getPrefetchedData<
-                          InstitutionData,
-                          $InstitutionTable,
-                          InstitutionFeeTransactionData
+                          Institution,
+                          $InstitutionsTable,
+                          InstitutionFeeTransaction
                         >(
                           currentTable: table,
-                          referencedTable: $$InstitutionTableReferences
-                              ._institutionFeeTransactionRefsTable(db),
+                          referencedTable: $$InstitutionsTableReferences
+                              ._institutionFeeTransactionsRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$InstitutionTableReferences(
+                              $$InstitutionsTableReferences(
                                 db,
                                 table,
                                 p0,
-                              ).institutionFeeTransactionRefs,
+                              ).institutionFeeTransactionsRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.institution == item.institutionId,
@@ -30862,15 +30866,15 @@ class $$InstitutionTableTableManager
                         ),
                       if (semesterRefs)
                         await $_getPrefetchedData<
-                          InstitutionData,
-                          $InstitutionTable,
+                          Institution,
+                          $InstitutionsTable,
                           SemesterData
                         >(
                           currentTable: table,
-                          referencedTable: $$InstitutionTableReferences
+                          referencedTable: $$InstitutionsTableReferences
                               ._semesterRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$InstitutionTableReferences(
+                              $$InstitutionsTableReferences(
                                 db,
                                 table,
                                 p0,
@@ -30883,15 +30887,15 @@ class $$InstitutionTableTableManager
                         ),
                       if (courseRefs)
                         await $_getPrefetchedData<
-                          InstitutionData,
-                          $InstitutionTable,
+                          Institution,
+                          $InstitutionsTable,
                           CourseData
                         >(
                           currentTable: table,
-                          referencedTable: $$InstitutionTableReferences
+                          referencedTable: $$InstitutionsTableReferences
                               ._courseRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$InstitutionTableReferences(
+                              $$InstitutionsTableReferences(
                                 db,
                                 table,
                                 p0,
@@ -30904,15 +30908,15 @@ class $$InstitutionTableTableManager
                         ),
                       if (timetableRefs)
                         await $_getPrefetchedData<
-                          InstitutionData,
-                          $InstitutionTable,
+                          Institution,
+                          $InstitutionsTable,
                           TimetableData
                         >(
                           currentTable: table,
-                          referencedTable: $$InstitutionTableReferences
+                          referencedTable: $$InstitutionsTableReferences
                               ._timetableRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$InstitutionTableReferences(
+                              $$InstitutionsTableReferences(
                                 db,
                                 table,
                                 p0,
@@ -30931,28 +30935,28 @@ class $$InstitutionTableTableManager
       );
 }
 
-typedef $$InstitutionTableProcessedTableManager =
+typedef $$InstitutionsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $InstitutionTable,
-      InstitutionData,
-      $$InstitutionTableFilterComposer,
-      $$InstitutionTableOrderingComposer,
-      $$InstitutionTableAnnotationComposer,
-      $$InstitutionTableCreateCompanionBuilder,
-      $$InstitutionTableUpdateCompanionBuilder,
-      (InstitutionData, $$InstitutionTableReferences),
-      InstitutionData,
+      $InstitutionsTable,
+      Institution,
+      $$InstitutionsTableFilterComposer,
+      $$InstitutionsTableOrderingComposer,
+      $$InstitutionsTableAnnotationComposer,
+      $$InstitutionsTableCreateCompanionBuilder,
+      $$InstitutionsTableUpdateCompanionBuilder,
+      (Institution, $$InstitutionsTableReferences),
+      Institution,
       PrefetchHooks Function({
-        bool institutionKeyRefs,
-        bool institutionFeeTransactionRefs,
+        bool institutionKeysRefs,
+        bool institutionFeeTransactionsRefs,
         bool semesterRefs,
         bool courseRefs,
         bool timetableRefs,
       })
     >;
-typedef $$InstitutionScrappingCommandTableCreateCompanionBuilder =
-    InstitutionScrappingCommandCompanion Function({
+typedef $$InstitutionScrappingCommandsTableCreateCompanionBuilder =
+    InstitutionScrappingCommandsCompanion Function({
       required int institution,
       required String commandID,
       required String name,
@@ -30963,8 +30967,8 @@ typedef $$InstitutionScrappingCommandTableCreateCompanionBuilder =
       required List<dynamic> instructions,
       Value<int> rowid,
     });
-typedef $$InstitutionScrappingCommandTableUpdateCompanionBuilder =
-    InstitutionScrappingCommandCompanion Function({
+typedef $$InstitutionScrappingCommandsTableUpdateCompanionBuilder =
+    InstitutionScrappingCommandsCompanion Function({
       Value<int> institution,
       Value<String> commandID,
       Value<String> name,
@@ -30976,46 +30980,48 @@ typedef $$InstitutionScrappingCommandTableUpdateCompanionBuilder =
       Value<int> rowid,
     });
 
-final class $$InstitutionScrappingCommandTableReferences
+final class $$InstitutionScrappingCommandsTableReferences
     extends
         BaseReferences<
           _$AppDataBase,
-          $InstitutionScrappingCommandTable,
-          InstitutionScrappingCommandData
+          $InstitutionScrappingCommandsTable,
+          InstitutionScrappingCommand
         > {
-  $$InstitutionScrappingCommandTableReferences(
+  $$InstitutionScrappingCommandsTableReferences(
     super.$_db,
     super.$_table,
     super.$_typedResult,
   );
 
-  static MultiTypedResultKey<$InstitutionKeyTable, List<InstitutionKeyData>>
-  _institutionKeyRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
-    db.institutionKey,
+  static MultiTypedResultKey<$InstitutionKeysTable, List<InstitutionKey>>
+  _institutionKeysRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
+    db.institutionKeys,
     aliasName: $_aliasNameGenerator(
-      db.institutionScrappingCommand.commandID,
-      db.institutionKey.commandID,
+      db.institutionScrappingCommands.commandID,
+      db.institutionKeys.commandID,
     ),
   );
 
-  $$InstitutionKeyTableProcessedTableManager get institutionKeyRefs {
-    final manager = $$InstitutionKeyTableTableManager($_db, $_db.institutionKey)
-        .filter(
+  $$InstitutionKeysTableProcessedTableManager get institutionKeysRefs {
+    final manager =
+        $$InstitutionKeysTableTableManager($_db, $_db.institutionKeys).filter(
           (f) => f.commandID.commandID.sqlEquals(
             $_itemColumn<String>('command_i_d')!,
           ),
         );
 
-    final cache = $_typedResult.readTableOrNull(_institutionKeyRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(
+      _institutionKeysRefsTable($_db),
+    );
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
 }
 
-class $$InstitutionScrappingCommandTableFilterComposer
-    extends Composer<_$AppDataBase, $InstitutionScrappingCommandTable> {
-  $$InstitutionScrappingCommandTableFilterComposer({
+class $$InstitutionScrappingCommandsTableFilterComposer
+    extends Composer<_$AppDataBase, $InstitutionScrappingCommandsTable> {
+  $$InstitutionScrappingCommandsTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -31063,22 +31069,22 @@ class $$InstitutionScrappingCommandTableFilterComposer
     builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
-  Expression<bool> institutionKeyRefs(
-    Expression<bool> Function($$InstitutionKeyTableFilterComposer f) f,
+  Expression<bool> institutionKeysRefs(
+    Expression<bool> Function($$InstitutionKeysTableFilterComposer f) f,
   ) {
-    final $$InstitutionKeyTableFilterComposer composer = $composerBuilder(
+    final $$InstitutionKeysTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.commandID,
-      referencedTable: $db.institutionKey,
+      referencedTable: $db.institutionKeys,
       getReferencedColumn: (t) => t.commandID,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionKeyTableFilterComposer(
+          }) => $$InstitutionKeysTableFilterComposer(
             $db: $db,
-            $table: $db.institutionKey,
+            $table: $db.institutionKeys,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -31089,9 +31095,9 @@ class $$InstitutionScrappingCommandTableFilterComposer
   }
 }
 
-class $$InstitutionScrappingCommandTableOrderingComposer
-    extends Composer<_$AppDataBase, $InstitutionScrappingCommandTable> {
-  $$InstitutionScrappingCommandTableOrderingComposer({
+class $$InstitutionScrappingCommandsTableOrderingComposer
+    extends Composer<_$AppDataBase, $InstitutionScrappingCommandsTable> {
+  $$InstitutionScrappingCommandsTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -31139,9 +31145,9 @@ class $$InstitutionScrappingCommandTableOrderingComposer
   );
 }
 
-class $$InstitutionScrappingCommandTableAnnotationComposer
-    extends Composer<_$AppDataBase, $InstitutionScrappingCommandTable> {
-  $$InstitutionScrappingCommandTableAnnotationComposer({
+class $$InstitutionScrappingCommandsTableAnnotationComposer
+    extends Composer<_$AppDataBase, $InstitutionScrappingCommandsTable> {
+  $$InstitutionScrappingCommandsTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -31181,22 +31187,22 @@ class $$InstitutionScrappingCommandTableAnnotationComposer
         builder: (column) => column,
       );
 
-  Expression<T> institutionKeyRefs<T extends Object>(
-    Expression<T> Function($$InstitutionKeyTableAnnotationComposer a) f,
+  Expression<T> institutionKeysRefs<T extends Object>(
+    Expression<T> Function($$InstitutionKeysTableAnnotationComposer a) f,
   ) {
-    final $$InstitutionKeyTableAnnotationComposer composer = $composerBuilder(
+    final $$InstitutionKeysTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.commandID,
-      referencedTable: $db.institutionKey,
+      referencedTable: $db.institutionKeys,
       getReferencedColumn: (t) => t.commandID,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionKeyTableAnnotationComposer(
+          }) => $$InstitutionKeysTableAnnotationComposer(
             $db: $db,
-            $table: $db.institutionKey,
+            $table: $db.institutionKeys,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -31207,43 +31213,43 @@ class $$InstitutionScrappingCommandTableAnnotationComposer
   }
 }
 
-class $$InstitutionScrappingCommandTableTableManager
+class $$InstitutionScrappingCommandsTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $InstitutionScrappingCommandTable,
-          InstitutionScrappingCommandData,
-          $$InstitutionScrappingCommandTableFilterComposer,
-          $$InstitutionScrappingCommandTableOrderingComposer,
-          $$InstitutionScrappingCommandTableAnnotationComposer,
-          $$InstitutionScrappingCommandTableCreateCompanionBuilder,
-          $$InstitutionScrappingCommandTableUpdateCompanionBuilder,
+          $InstitutionScrappingCommandsTable,
+          InstitutionScrappingCommand,
+          $$InstitutionScrappingCommandsTableFilterComposer,
+          $$InstitutionScrappingCommandsTableOrderingComposer,
+          $$InstitutionScrappingCommandsTableAnnotationComposer,
+          $$InstitutionScrappingCommandsTableCreateCompanionBuilder,
+          $$InstitutionScrappingCommandsTableUpdateCompanionBuilder,
           (
-            InstitutionScrappingCommandData,
-            $$InstitutionScrappingCommandTableReferences,
+            InstitutionScrappingCommand,
+            $$InstitutionScrappingCommandsTableReferences,
           ),
-          InstitutionScrappingCommandData,
-          PrefetchHooks Function({bool institutionKeyRefs})
+          InstitutionScrappingCommand,
+          PrefetchHooks Function({bool institutionKeysRefs})
         > {
-  $$InstitutionScrappingCommandTableTableManager(
+  $$InstitutionScrappingCommandsTableTableManager(
     _$AppDataBase db,
-    $InstitutionScrappingCommandTable table,
+    $InstitutionScrappingCommandsTable table,
   ) : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$InstitutionScrappingCommandTableFilterComposer(
+              $$InstitutionScrappingCommandsTableFilterComposer(
                 $db: db,
                 $table: table,
               ),
           createOrderingComposer: () =>
-              $$InstitutionScrappingCommandTableOrderingComposer(
+              $$InstitutionScrappingCommandsTableOrderingComposer(
                 $db: db,
                 $table: table,
               ),
           createComputedFieldComposer: () =>
-              $$InstitutionScrappingCommandTableAnnotationComposer(
+              $$InstitutionScrappingCommandsTableAnnotationComposer(
                 $db: db,
                 $table: table,
               ),
@@ -31258,7 +31264,7 @@ class $$InstitutionScrappingCommandTableTableManager
                 Value<DateTime?> createdAt = const Value.absent(),
                 Value<List<dynamic>> instructions = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => InstitutionScrappingCommandCompanion(
+              }) => InstitutionScrappingCommandsCompanion(
                 institution: institution,
                 commandID: commandID,
                 name: name,
@@ -31280,7 +31286,7 @@ class $$InstitutionScrappingCommandTableTableManager
                 Value<DateTime?> createdAt = const Value.absent(),
                 required List<dynamic> instructions,
                 Value<int> rowid = const Value.absent(),
-              }) => InstitutionScrappingCommandCompanion.insert(
+              }) => InstitutionScrappingCommandsCompanion.insert(
                 institution: institution,
                 commandID: commandID,
                 name: name,
@@ -31295,35 +31301,35 @@ class $$InstitutionScrappingCommandTableTableManager
               .map(
                 (e) => (
                   e.readTable(table),
-                  $$InstitutionScrappingCommandTableReferences(db, table, e),
+                  $$InstitutionScrappingCommandsTableReferences(db, table, e),
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({institutionKeyRefs = false}) {
+          prefetchHooksCallback: ({institutionKeysRefs = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [
-                if (institutionKeyRefs) db.institutionKey,
+                if (institutionKeysRefs) db.institutionKeys,
               ],
               addJoins: null,
               getPrefetchedDataCallback: (items) async {
                 return [
-                  if (institutionKeyRefs)
+                  if (institutionKeysRefs)
                     await $_getPrefetchedData<
-                      InstitutionScrappingCommandData,
-                      $InstitutionScrappingCommandTable,
-                      InstitutionKeyData
+                      InstitutionScrappingCommand,
+                      $InstitutionScrappingCommandsTable,
+                      InstitutionKey
                     >(
                       currentTable: table,
                       referencedTable:
-                          $$InstitutionScrappingCommandTableReferences
-                              ._institutionKeyRefsTable(db),
+                          $$InstitutionScrappingCommandsTableReferences
+                              ._institutionKeysRefsTable(db),
                       managerFromTypedResult: (p0) =>
-                          $$InstitutionScrappingCommandTableReferences(
+                          $$InstitutionScrappingCommandsTableReferences(
                             db,
                             table,
                             p0,
-                          ).institutionKeyRefs,
+                          ).institutionKeysRefs,
                       referencedItemsForCurrentItem: (item, referencedItems) =>
                           referencedItems.where(
                             (e) => e.commandID == item.commandID,
@@ -31338,33 +31344,33 @@ class $$InstitutionScrappingCommandTableTableManager
       );
 }
 
-typedef $$InstitutionScrappingCommandTableProcessedTableManager =
+typedef $$InstitutionScrappingCommandsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $InstitutionScrappingCommandTable,
-      InstitutionScrappingCommandData,
-      $$InstitutionScrappingCommandTableFilterComposer,
-      $$InstitutionScrappingCommandTableOrderingComposer,
-      $$InstitutionScrappingCommandTableAnnotationComposer,
-      $$InstitutionScrappingCommandTableCreateCompanionBuilder,
-      $$InstitutionScrappingCommandTableUpdateCompanionBuilder,
+      $InstitutionScrappingCommandsTable,
+      InstitutionScrappingCommand,
+      $$InstitutionScrappingCommandsTableFilterComposer,
+      $$InstitutionScrappingCommandsTableOrderingComposer,
+      $$InstitutionScrappingCommandsTableAnnotationComposer,
+      $$InstitutionScrappingCommandsTableCreateCompanionBuilder,
+      $$InstitutionScrappingCommandsTableUpdateCompanionBuilder,
       (
-        InstitutionScrappingCommandData,
-        $$InstitutionScrappingCommandTableReferences,
+        InstitutionScrappingCommand,
+        $$InstitutionScrappingCommandsTableReferences,
       ),
-      InstitutionScrappingCommandData,
-      PrefetchHooks Function({bool institutionKeyRefs})
+      InstitutionScrappingCommand,
+      PrefetchHooks Function({bool institutionKeysRefs})
     >;
-typedef $$InstitutionKeyTableCreateCompanionBuilder =
-    InstitutionKeyCompanion Function({
+typedef $$InstitutionKeysTableCreateCompanionBuilder =
+    InstitutionKeysCompanion Function({
       required int institutionID,
       required String commandID,
       required Map<String, dynamic> keySets,
       Value<DateTime?> createdAt,
       Value<int> rowid,
     });
-typedef $$InstitutionKeyTableUpdateCompanionBuilder =
-    InstitutionKeyCompanion Function({
+typedef $$InstitutionKeysTableUpdateCompanionBuilder =
+    InstitutionKeysCompanion Function({
       Value<int> institutionID,
       Value<String> commandID,
       Value<Map<String, dynamic>> keySets,
@@ -31372,33 +31378,29 @@ typedef $$InstitutionKeyTableUpdateCompanionBuilder =
       Value<int> rowid,
     });
 
-final class $$InstitutionKeyTableReferences
+final class $$InstitutionKeysTableReferences
     extends
-        BaseReferences<
-          _$AppDataBase,
-          $InstitutionKeyTable,
-          InstitutionKeyData
-        > {
-  $$InstitutionKeyTableReferences(
+        BaseReferences<_$AppDataBase, $InstitutionKeysTable, InstitutionKey> {
+  $$InstitutionKeysTableReferences(
     super.$_db,
     super.$_table,
     super.$_typedResult,
   );
 
-  static $InstitutionTable _institutionIDTable(_$AppDataBase db) =>
-      db.institution.createAlias(
+  static $InstitutionsTable _institutionIDTable(_$AppDataBase db) =>
+      db.institutions.createAlias(
         $_aliasNameGenerator(
-          db.institutionKey.institutionID,
-          db.institution.institutionId,
+          db.institutionKeys.institutionID,
+          db.institutions.institutionId,
         ),
       );
 
-  $$InstitutionTableProcessedTableManager get institutionID {
+  $$InstitutionsTableProcessedTableManager get institutionID {
     final $_column = $_itemColumn<int>('institution_id')!;
 
-    final manager = $$InstitutionTableTableManager(
+    final manager = $$InstitutionsTableTableManager(
       $_db,
-      $_db.institution,
+      $_db.institutions,
     ).filter((f) => f.institutionId.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_institutionIDTable($_db));
     if (item == null) return manager;
@@ -31407,20 +31409,20 @@ final class $$InstitutionKeyTableReferences
     );
   }
 
-  static $InstitutionScrappingCommandTable _commandIDTable(_$AppDataBase db) =>
-      db.institutionScrappingCommand.createAlias(
+  static $InstitutionScrappingCommandsTable _commandIDTable(_$AppDataBase db) =>
+      db.institutionScrappingCommands.createAlias(
         $_aliasNameGenerator(
-          db.institutionKey.commandID,
-          db.institutionScrappingCommand.commandID,
+          db.institutionKeys.commandID,
+          db.institutionScrappingCommands.commandID,
         ),
       );
 
-  $$InstitutionScrappingCommandTableProcessedTableManager get commandID {
+  $$InstitutionScrappingCommandsTableProcessedTableManager get commandID {
     final $_column = $_itemColumn<String>('command_i_d')!;
 
-    final manager = $$InstitutionScrappingCommandTableTableManager(
+    final manager = $$InstitutionScrappingCommandsTableTableManager(
       $_db,
-      $_db.institutionScrappingCommand,
+      $_db.institutionScrappingCommands,
     ).filter((f) => f.commandID.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_commandIDTable($_db));
     if (item == null) return manager;
@@ -31430,9 +31432,9 @@ final class $$InstitutionKeyTableReferences
   }
 }
 
-class $$InstitutionKeyTableFilterComposer
-    extends Composer<_$AppDataBase, $InstitutionKeyTable> {
-  $$InstitutionKeyTableFilterComposer({
+class $$InstitutionKeysTableFilterComposer
+    extends Composer<_$AppDataBase, $InstitutionKeysTable> {
+  $$InstitutionKeysTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -31454,20 +31456,20 @@ class $$InstitutionKeyTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  $$InstitutionTableFilterComposer get institutionID {
-    final $$InstitutionTableFilterComposer composer = $composerBuilder(
+  $$InstitutionsTableFilterComposer get institutionID {
+    final $$InstitutionsTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.institutionID,
-      referencedTable: $db.institution,
+      referencedTable: $db.institutions,
       getReferencedColumn: (t) => t.institutionId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableFilterComposer(
+          }) => $$InstitutionsTableFilterComposer(
             $db: $db,
-            $table: $db.institution,
+            $table: $db.institutions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -31477,21 +31479,21 @@ class $$InstitutionKeyTableFilterComposer
     return composer;
   }
 
-  $$InstitutionScrappingCommandTableFilterComposer get commandID {
-    final $$InstitutionScrappingCommandTableFilterComposer composer =
+  $$InstitutionScrappingCommandsTableFilterComposer get commandID {
+    final $$InstitutionScrappingCommandsTableFilterComposer composer =
         $composerBuilder(
           composer: this,
           getCurrentColumn: (t) => t.commandID,
-          referencedTable: $db.institutionScrappingCommand,
+          referencedTable: $db.institutionScrappingCommands,
           getReferencedColumn: (t) => t.commandID,
           builder:
               (
                 joinBuilder, {
                 $addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer,
-              }) => $$InstitutionScrappingCommandTableFilterComposer(
+              }) => $$InstitutionScrappingCommandsTableFilterComposer(
                 $db: $db,
-                $table: $db.institutionScrappingCommand,
+                $table: $db.institutionScrappingCommands,
                 $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
                 joinBuilder: joinBuilder,
                 $removeJoinBuilderFromRootComposer:
@@ -31502,9 +31504,9 @@ class $$InstitutionKeyTableFilterComposer
   }
 }
 
-class $$InstitutionKeyTableOrderingComposer
-    extends Composer<_$AppDataBase, $InstitutionKeyTable> {
-  $$InstitutionKeyTableOrderingComposer({
+class $$InstitutionKeysTableOrderingComposer
+    extends Composer<_$AppDataBase, $InstitutionKeysTable> {
+  $$InstitutionKeysTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -31521,20 +31523,20 @@ class $$InstitutionKeyTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$InstitutionTableOrderingComposer get institutionID {
-    final $$InstitutionTableOrderingComposer composer = $composerBuilder(
+  $$InstitutionsTableOrderingComposer get institutionID {
+    final $$InstitutionsTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.institutionID,
-      referencedTable: $db.institution,
+      referencedTable: $db.institutions,
       getReferencedColumn: (t) => t.institutionId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableOrderingComposer(
+          }) => $$InstitutionsTableOrderingComposer(
             $db: $db,
-            $table: $db.institution,
+            $table: $db.institutions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -31544,21 +31546,21 @@ class $$InstitutionKeyTableOrderingComposer
     return composer;
   }
 
-  $$InstitutionScrappingCommandTableOrderingComposer get commandID {
-    final $$InstitutionScrappingCommandTableOrderingComposer composer =
+  $$InstitutionScrappingCommandsTableOrderingComposer get commandID {
+    final $$InstitutionScrappingCommandsTableOrderingComposer composer =
         $composerBuilder(
           composer: this,
           getCurrentColumn: (t) => t.commandID,
-          referencedTable: $db.institutionScrappingCommand,
+          referencedTable: $db.institutionScrappingCommands,
           getReferencedColumn: (t) => t.commandID,
           builder:
               (
                 joinBuilder, {
                 $addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer,
-              }) => $$InstitutionScrappingCommandTableOrderingComposer(
+              }) => $$InstitutionScrappingCommandsTableOrderingComposer(
                 $db: $db,
-                $table: $db.institutionScrappingCommand,
+                $table: $db.institutionScrappingCommands,
                 $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
                 joinBuilder: joinBuilder,
                 $removeJoinBuilderFromRootComposer:
@@ -31569,9 +31571,9 @@ class $$InstitutionKeyTableOrderingComposer
   }
 }
 
-class $$InstitutionKeyTableAnnotationComposer
-    extends Composer<_$AppDataBase, $InstitutionKeyTable> {
-  $$InstitutionKeyTableAnnotationComposer({
+class $$InstitutionKeysTableAnnotationComposer
+    extends Composer<_$AppDataBase, $InstitutionKeysTable> {
+  $$InstitutionKeysTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -31584,20 +31586,20 @@ class $$InstitutionKeyTableAnnotationComposer
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
-  $$InstitutionTableAnnotationComposer get institutionID {
-    final $$InstitutionTableAnnotationComposer composer = $composerBuilder(
+  $$InstitutionsTableAnnotationComposer get institutionID {
+    final $$InstitutionsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.institutionID,
-      referencedTable: $db.institution,
+      referencedTable: $db.institutions,
       getReferencedColumn: (t) => t.institutionId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableAnnotationComposer(
+          }) => $$InstitutionsTableAnnotationComposer(
             $db: $db,
-            $table: $db.institution,
+            $table: $db.institutions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -31607,21 +31609,21 @@ class $$InstitutionKeyTableAnnotationComposer
     return composer;
   }
 
-  $$InstitutionScrappingCommandTableAnnotationComposer get commandID {
-    final $$InstitutionScrappingCommandTableAnnotationComposer composer =
+  $$InstitutionScrappingCommandsTableAnnotationComposer get commandID {
+    final $$InstitutionScrappingCommandsTableAnnotationComposer composer =
         $composerBuilder(
           composer: this,
           getCurrentColumn: (t) => t.commandID,
-          referencedTable: $db.institutionScrappingCommand,
+          referencedTable: $db.institutionScrappingCommands,
           getReferencedColumn: (t) => t.commandID,
           builder:
               (
                 joinBuilder, {
                 $addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer,
-              }) => $$InstitutionScrappingCommandTableAnnotationComposer(
+              }) => $$InstitutionScrappingCommandsTableAnnotationComposer(
                 $db: $db,
-                $table: $db.institutionScrappingCommand,
+                $table: $db.institutionScrappingCommands,
                 $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
                 joinBuilder: joinBuilder,
                 $removeJoinBuilderFromRootComposer:
@@ -31632,34 +31634,34 @@ class $$InstitutionKeyTableAnnotationComposer
   }
 }
 
-class $$InstitutionKeyTableTableManager
+class $$InstitutionKeysTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $InstitutionKeyTable,
-          InstitutionKeyData,
-          $$InstitutionKeyTableFilterComposer,
-          $$InstitutionKeyTableOrderingComposer,
-          $$InstitutionKeyTableAnnotationComposer,
-          $$InstitutionKeyTableCreateCompanionBuilder,
-          $$InstitutionKeyTableUpdateCompanionBuilder,
-          (InstitutionKeyData, $$InstitutionKeyTableReferences),
-          InstitutionKeyData,
+          $InstitutionKeysTable,
+          InstitutionKey,
+          $$InstitutionKeysTableFilterComposer,
+          $$InstitutionKeysTableOrderingComposer,
+          $$InstitutionKeysTableAnnotationComposer,
+          $$InstitutionKeysTableCreateCompanionBuilder,
+          $$InstitutionKeysTableUpdateCompanionBuilder,
+          (InstitutionKey, $$InstitutionKeysTableReferences),
+          InstitutionKey,
           PrefetchHooks Function({bool institutionID, bool commandID})
         > {
-  $$InstitutionKeyTableTableManager(
+  $$InstitutionKeysTableTableManager(
     _$AppDataBase db,
-    $InstitutionKeyTable table,
+    $InstitutionKeysTable table,
   ) : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$InstitutionKeyTableFilterComposer($db: db, $table: table),
+              $$InstitutionKeysTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$InstitutionKeyTableOrderingComposer($db: db, $table: table),
+              $$InstitutionKeysTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$InstitutionKeyTableAnnotationComposer($db: db, $table: table),
+              $$InstitutionKeysTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> institutionID = const Value.absent(),
@@ -31667,7 +31669,7 @@ class $$InstitutionKeyTableTableManager
                 Value<Map<String, dynamic>> keySets = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => InstitutionKeyCompanion(
+              }) => InstitutionKeysCompanion(
                 institutionID: institutionID,
                 commandID: commandID,
                 keySets: keySets,
@@ -31681,7 +31683,7 @@ class $$InstitutionKeyTableTableManager
                 required Map<String, dynamic> keySets,
                 Value<DateTime?> createdAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => InstitutionKeyCompanion.insert(
+              }) => InstitutionKeysCompanion.insert(
                 institutionID: institutionID,
                 commandID: commandID,
                 keySets: keySets,
@@ -31692,7 +31694,7 @@ class $$InstitutionKeyTableTableManager
               .map(
                 (e) => (
                   e.readTable(table),
-                  $$InstitutionKeyTableReferences(db, table, e),
+                  $$InstitutionKeysTableReferences(db, table, e),
                 ),
               )
               .toList(),
@@ -31721,10 +31723,11 @@ class $$InstitutionKeyTableTableManager
                           state.withJoin(
                                 currentTable: table,
                                 currentColumn: table.institutionID,
-                                referencedTable: $$InstitutionKeyTableReferences
-                                    ._institutionIDTable(db),
+                                referencedTable:
+                                    $$InstitutionKeysTableReferences
+                                        ._institutionIDTable(db),
                                 referencedColumn:
-                                    $$InstitutionKeyTableReferences
+                                    $$InstitutionKeysTableReferences
                                         ._institutionIDTable(db)
                                         .institutionId,
                               )
@@ -31735,10 +31738,11 @@ class $$InstitutionKeyTableTableManager
                           state.withJoin(
                                 currentTable: table,
                                 currentColumn: table.commandID,
-                                referencedTable: $$InstitutionKeyTableReferences
-                                    ._commandIDTable(db),
+                                referencedTable:
+                                    $$InstitutionKeysTableReferences
+                                        ._commandIDTable(db),
                                 referencedColumn:
-                                    $$InstitutionKeyTableReferences
+                                    $$InstitutionKeysTableReferences
                                         ._commandIDTable(db)
                                         .commandID,
                               )
@@ -31756,22 +31760,22 @@ class $$InstitutionKeyTableTableManager
       );
 }
 
-typedef $$InstitutionKeyTableProcessedTableManager =
+typedef $$InstitutionKeysTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $InstitutionKeyTable,
-      InstitutionKeyData,
-      $$InstitutionKeyTableFilterComposer,
-      $$InstitutionKeyTableOrderingComposer,
-      $$InstitutionKeyTableAnnotationComposer,
-      $$InstitutionKeyTableCreateCompanionBuilder,
-      $$InstitutionKeyTableUpdateCompanionBuilder,
-      (InstitutionKeyData, $$InstitutionKeyTableReferences),
-      InstitutionKeyData,
+      $InstitutionKeysTable,
+      InstitutionKey,
+      $$InstitutionKeysTableFilterComposer,
+      $$InstitutionKeysTableOrderingComposer,
+      $$InstitutionKeysTableAnnotationComposer,
+      $$InstitutionKeysTableCreateCompanionBuilder,
+      $$InstitutionKeysTableUpdateCompanionBuilder,
+      (InstitutionKey, $$InstitutionKeysTableReferences),
+      InstitutionKey,
       PrefetchHooks Function({bool institutionID, bool commandID})
     >;
-typedef $$InstitutionProfileTableCreateCompanionBuilder =
-    InstitutionProfileCompanion Function({
+typedef $$InstitutionProfilesTableCreateCompanionBuilder =
+    InstitutionProfilesCompanion Function({
       Value<int?> id,
       required String userID,
       required int institutionID,
@@ -31798,8 +31802,8 @@ typedef $$InstitutionProfileTableCreateCompanionBuilder =
       Value<DateTime> updatedAt,
       Value<int> rowid,
     });
-typedef $$InstitutionProfileTableUpdateCompanionBuilder =
-    InstitutionProfileCompanion Function({
+typedef $$InstitutionProfilesTableUpdateCompanionBuilder =
+    InstitutionProfilesCompanion Function({
       Value<int?> id,
       Value<String> userID,
       Value<int> institutionID,
@@ -31827,9 +31831,9 @@ typedef $$InstitutionProfileTableUpdateCompanionBuilder =
       Value<int> rowid,
     });
 
-class $$InstitutionProfileTableFilterComposer
-    extends Composer<_$AppDataBase, $InstitutionProfileTable> {
-  $$InstitutionProfileTableFilterComposer({
+class $$InstitutionProfilesTableFilterComposer
+    extends Composer<_$AppDataBase, $InstitutionProfilesTable> {
+  $$InstitutionProfilesTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -31964,9 +31968,9 @@ class $$InstitutionProfileTableFilterComposer
   );
 }
 
-class $$InstitutionProfileTableOrderingComposer
-    extends Composer<_$AppDataBase, $InstitutionProfileTable> {
-  $$InstitutionProfileTableOrderingComposer({
+class $$InstitutionProfilesTableOrderingComposer
+    extends Composer<_$AppDataBase, $InstitutionProfilesTable> {
+  $$InstitutionProfilesTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -32094,9 +32098,9 @@ class $$InstitutionProfileTableOrderingComposer
   );
 }
 
-class $$InstitutionProfileTableAnnotationComposer
-    extends Composer<_$AppDataBase, $InstitutionProfileTable> {
-  $$InstitutionProfileTableAnnotationComposer({
+class $$InstitutionProfilesTableAnnotationComposer
+    extends Composer<_$AppDataBase, $InstitutionProfilesTable> {
+  $$InstitutionProfilesTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -32192,41 +32196,44 @@ class $$InstitutionProfileTableAnnotationComposer
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
 }
 
-class $$InstitutionProfileTableTableManager
+class $$InstitutionProfilesTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $InstitutionProfileTable,
-          InstitutionProfileData,
-          $$InstitutionProfileTableFilterComposer,
-          $$InstitutionProfileTableOrderingComposer,
-          $$InstitutionProfileTableAnnotationComposer,
-          $$InstitutionProfileTableCreateCompanionBuilder,
-          $$InstitutionProfileTableUpdateCompanionBuilder,
+          $InstitutionProfilesTable,
+          InstitutionProfile,
+          $$InstitutionProfilesTableFilterComposer,
+          $$InstitutionProfilesTableOrderingComposer,
+          $$InstitutionProfilesTableAnnotationComposer,
+          $$InstitutionProfilesTableCreateCompanionBuilder,
+          $$InstitutionProfilesTableUpdateCompanionBuilder,
           (
-            InstitutionProfileData,
+            InstitutionProfile,
             BaseReferences<
               _$AppDataBase,
-              $InstitutionProfileTable,
-              InstitutionProfileData
+              $InstitutionProfilesTable,
+              InstitutionProfile
             >,
           ),
-          InstitutionProfileData,
+          InstitutionProfile,
           PrefetchHooks Function()
         > {
-  $$InstitutionProfileTableTableManager(
+  $$InstitutionProfilesTableTableManager(
     _$AppDataBase db,
-    $InstitutionProfileTable table,
+    $InstitutionProfilesTable table,
   ) : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$InstitutionProfileTableFilterComposer($db: db, $table: table),
+              $$InstitutionProfilesTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$InstitutionProfileTableOrderingComposer($db: db, $table: table),
+              $$InstitutionProfilesTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
           createComputedFieldComposer: () =>
-              $$InstitutionProfileTableAnnotationComposer(
+              $$InstitutionProfilesTableAnnotationComposer(
                 $db: db,
                 $table: table,
               ),
@@ -32257,7 +32264,7 @@ class $$InstitutionProfileTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => InstitutionProfileCompanion(
+              }) => InstitutionProfilesCompanion(
                 id: id,
                 userID: userID,
                 institutionID: institutionID,
@@ -32311,7 +32318,7 @@ class $$InstitutionProfileTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => InstitutionProfileCompanion.insert(
+              }) => InstitutionProfilesCompanion.insert(
                 id: id,
                 userID: userID,
                 institutionID: institutionID,
@@ -32346,29 +32353,29 @@ class $$InstitutionProfileTableTableManager
       );
 }
 
-typedef $$InstitutionProfileTableProcessedTableManager =
+typedef $$InstitutionProfilesTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $InstitutionProfileTable,
-      InstitutionProfileData,
-      $$InstitutionProfileTableFilterComposer,
-      $$InstitutionProfileTableOrderingComposer,
-      $$InstitutionProfileTableAnnotationComposer,
-      $$InstitutionProfileTableCreateCompanionBuilder,
-      $$InstitutionProfileTableUpdateCompanionBuilder,
+      $InstitutionProfilesTable,
+      InstitutionProfile,
+      $$InstitutionProfilesTableFilterComposer,
+      $$InstitutionProfilesTableOrderingComposer,
+      $$InstitutionProfilesTableAnnotationComposer,
+      $$InstitutionProfilesTableCreateCompanionBuilder,
+      $$InstitutionProfilesTableUpdateCompanionBuilder,
       (
-        InstitutionProfileData,
+        InstitutionProfile,
         BaseReferences<
           _$AppDataBase,
-          $InstitutionProfileTable,
-          InstitutionProfileData
+          $InstitutionProfilesTable,
+          InstitutionProfile
         >,
       ),
-      InstitutionProfileData,
+      InstitutionProfile,
       PrefetchHooks Function()
     >;
-typedef $$InstitutionFeeTransactionTableCreateCompanionBuilder =
-    InstitutionFeeTransactionCompanion Function({
+typedef $$InstitutionFeeTransactionsTableCreateCompanionBuilder =
+    InstitutionFeeTransactionsCompanion Function({
       Value<int?> id,
       required int institution,
       Value<String?> referenceNumber,
@@ -32381,8 +32388,8 @@ typedef $$InstitutionFeeTransactionTableCreateCompanionBuilder =
       Value<String?> currency,
       Value<int> rowid,
     });
-typedef $$InstitutionFeeTransactionTableUpdateCompanionBuilder =
-    InstitutionFeeTransactionCompanion Function({
+typedef $$InstitutionFeeTransactionsTableUpdateCompanionBuilder =
+    InstitutionFeeTransactionsCompanion Function({
       Value<int?> id,
       Value<int> institution,
       Value<String?> referenceNumber,
@@ -32396,33 +32403,33 @@ typedef $$InstitutionFeeTransactionTableUpdateCompanionBuilder =
       Value<int> rowid,
     });
 
-final class $$InstitutionFeeTransactionTableReferences
+final class $$InstitutionFeeTransactionsTableReferences
     extends
         BaseReferences<
           _$AppDataBase,
-          $InstitutionFeeTransactionTable,
-          InstitutionFeeTransactionData
+          $InstitutionFeeTransactionsTable,
+          InstitutionFeeTransaction
         > {
-  $$InstitutionFeeTransactionTableReferences(
+  $$InstitutionFeeTransactionsTableReferences(
     super.$_db,
     super.$_table,
     super.$_typedResult,
   );
 
-  static $InstitutionTable _institutionTable(_$AppDataBase db) =>
-      db.institution.createAlias(
+  static $InstitutionsTable _institutionTable(_$AppDataBase db) =>
+      db.institutions.createAlias(
         $_aliasNameGenerator(
-          db.institutionFeeTransaction.institution,
-          db.institution.institutionId,
+          db.institutionFeeTransactions.institution,
+          db.institutions.institutionId,
         ),
       );
 
-  $$InstitutionTableProcessedTableManager get institution {
+  $$InstitutionsTableProcessedTableManager get institution {
     final $_column = $_itemColumn<int>('institution')!;
 
-    final manager = $$InstitutionTableTableManager(
+    final manager = $$InstitutionsTableTableManager(
       $_db,
-      $_db.institution,
+      $_db.institutions,
     ).filter((f) => f.institutionId.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_institutionTable($_db));
     if (item == null) return manager;
@@ -32432,9 +32439,9 @@ final class $$InstitutionFeeTransactionTableReferences
   }
 }
 
-class $$InstitutionFeeTransactionTableFilterComposer
-    extends Composer<_$AppDataBase, $InstitutionFeeTransactionTable> {
-  $$InstitutionFeeTransactionTableFilterComposer({
+class $$InstitutionFeeTransactionsTableFilterComposer
+    extends Composer<_$AppDataBase, $InstitutionFeeTransactionsTable> {
+  $$InstitutionFeeTransactionsTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -32486,20 +32493,20 @@ class $$InstitutionFeeTransactionTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  $$InstitutionTableFilterComposer get institution {
-    final $$InstitutionTableFilterComposer composer = $composerBuilder(
+  $$InstitutionsTableFilterComposer get institution {
+    final $$InstitutionsTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.institution,
-      referencedTable: $db.institution,
+      referencedTable: $db.institutions,
       getReferencedColumn: (t) => t.institutionId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableFilterComposer(
+          }) => $$InstitutionsTableFilterComposer(
             $db: $db,
-            $table: $db.institution,
+            $table: $db.institutions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -32510,9 +32517,9 @@ class $$InstitutionFeeTransactionTableFilterComposer
   }
 }
 
-class $$InstitutionFeeTransactionTableOrderingComposer
-    extends Composer<_$AppDataBase, $InstitutionFeeTransactionTable> {
-  $$InstitutionFeeTransactionTableOrderingComposer({
+class $$InstitutionFeeTransactionsTableOrderingComposer
+    extends Composer<_$AppDataBase, $InstitutionFeeTransactionsTable> {
+  $$InstitutionFeeTransactionsTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -32564,20 +32571,20 @@ class $$InstitutionFeeTransactionTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$InstitutionTableOrderingComposer get institution {
-    final $$InstitutionTableOrderingComposer composer = $composerBuilder(
+  $$InstitutionsTableOrderingComposer get institution {
+    final $$InstitutionsTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.institution,
-      referencedTable: $db.institution,
+      referencedTable: $db.institutions,
       getReferencedColumn: (t) => t.institutionId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableOrderingComposer(
+          }) => $$InstitutionsTableOrderingComposer(
             $db: $db,
-            $table: $db.institution,
+            $table: $db.institutions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -32588,9 +32595,9 @@ class $$InstitutionFeeTransactionTableOrderingComposer
   }
 }
 
-class $$InstitutionFeeTransactionTableAnnotationComposer
-    extends Composer<_$AppDataBase, $InstitutionFeeTransactionTable> {
-  $$InstitutionFeeTransactionTableAnnotationComposer({
+class $$InstitutionFeeTransactionsTableAnnotationComposer
+    extends Composer<_$AppDataBase, $InstitutionFeeTransactionsTable> {
+  $$InstitutionFeeTransactionsTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -32632,20 +32639,20 @@ class $$InstitutionFeeTransactionTableAnnotationComposer
   GeneratedColumn<String> get currency =>
       $composableBuilder(column: $table.currency, builder: (column) => column);
 
-  $$InstitutionTableAnnotationComposer get institution {
-    final $$InstitutionTableAnnotationComposer composer = $composerBuilder(
+  $$InstitutionsTableAnnotationComposer get institution {
+    final $$InstitutionsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.institution,
-      referencedTable: $db.institution,
+      referencedTable: $db.institutions,
       getReferencedColumn: (t) => t.institutionId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableAnnotationComposer(
+          }) => $$InstitutionsTableAnnotationComposer(
             $db: $db,
-            $table: $db.institution,
+            $table: $db.institutions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -32656,43 +32663,43 @@ class $$InstitutionFeeTransactionTableAnnotationComposer
   }
 }
 
-class $$InstitutionFeeTransactionTableTableManager
+class $$InstitutionFeeTransactionsTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $InstitutionFeeTransactionTable,
-          InstitutionFeeTransactionData,
-          $$InstitutionFeeTransactionTableFilterComposer,
-          $$InstitutionFeeTransactionTableOrderingComposer,
-          $$InstitutionFeeTransactionTableAnnotationComposer,
-          $$InstitutionFeeTransactionTableCreateCompanionBuilder,
-          $$InstitutionFeeTransactionTableUpdateCompanionBuilder,
+          $InstitutionFeeTransactionsTable,
+          InstitutionFeeTransaction,
+          $$InstitutionFeeTransactionsTableFilterComposer,
+          $$InstitutionFeeTransactionsTableOrderingComposer,
+          $$InstitutionFeeTransactionsTableAnnotationComposer,
+          $$InstitutionFeeTransactionsTableCreateCompanionBuilder,
+          $$InstitutionFeeTransactionsTableUpdateCompanionBuilder,
           (
-            InstitutionFeeTransactionData,
-            $$InstitutionFeeTransactionTableReferences,
+            InstitutionFeeTransaction,
+            $$InstitutionFeeTransactionsTableReferences,
           ),
-          InstitutionFeeTransactionData,
+          InstitutionFeeTransaction,
           PrefetchHooks Function({bool institution})
         > {
-  $$InstitutionFeeTransactionTableTableManager(
+  $$InstitutionFeeTransactionsTableTableManager(
     _$AppDataBase db,
-    $InstitutionFeeTransactionTable table,
+    $InstitutionFeeTransactionsTable table,
   ) : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$InstitutionFeeTransactionTableFilterComposer(
+              $$InstitutionFeeTransactionsTableFilterComposer(
                 $db: db,
                 $table: table,
               ),
           createOrderingComposer: () =>
-              $$InstitutionFeeTransactionTableOrderingComposer(
+              $$InstitutionFeeTransactionsTableOrderingComposer(
                 $db: db,
                 $table: table,
               ),
           createComputedFieldComposer: () =>
-              $$InstitutionFeeTransactionTableAnnotationComposer(
+              $$InstitutionFeeTransactionsTableAnnotationComposer(
                 $db: db,
                 $table: table,
               ),
@@ -32709,7 +32716,7 @@ class $$InstitutionFeeTransactionTableTableManager
                 Value<String?> title = const Value.absent(),
                 Value<String?> currency = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => InstitutionFeeTransactionCompanion(
+              }) => InstitutionFeeTransactionsCompanion(
                 id: id,
                 institution: institution,
                 referenceNumber: referenceNumber,
@@ -32735,7 +32742,7 @@ class $$InstitutionFeeTransactionTableTableManager
                 Value<String?> title = const Value.absent(),
                 Value<String?> currency = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => InstitutionFeeTransactionCompanion.insert(
+              }) => InstitutionFeeTransactionsCompanion.insert(
                 id: id,
                 institution: institution,
                 referenceNumber: referenceNumber,
@@ -32752,7 +32759,7 @@ class $$InstitutionFeeTransactionTableTableManager
               .map(
                 (e) => (
                   e.readTable(table),
-                  $$InstitutionFeeTransactionTableReferences(db, table, e),
+                  $$InstitutionFeeTransactionsTableReferences(db, table, e),
                 ),
               )
               .toList(),
@@ -32782,10 +32789,10 @@ class $$InstitutionFeeTransactionTableTableManager
                                 currentTable: table,
                                 currentColumn: table.institution,
                                 referencedTable:
-                                    $$InstitutionFeeTransactionTableReferences
+                                    $$InstitutionFeeTransactionsTableReferences
                                         ._institutionTable(db),
                                 referencedColumn:
-                                    $$InstitutionFeeTransactionTableReferences
+                                    $$InstitutionFeeTransactionsTableReferences
                                         ._institutionTable(db)
                                         .institutionId,
                               )
@@ -32803,21 +32810,18 @@ class $$InstitutionFeeTransactionTableTableManager
       );
 }
 
-typedef $$InstitutionFeeTransactionTableProcessedTableManager =
+typedef $$InstitutionFeeTransactionsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $InstitutionFeeTransactionTable,
-      InstitutionFeeTransactionData,
-      $$InstitutionFeeTransactionTableFilterComposer,
-      $$InstitutionFeeTransactionTableOrderingComposer,
-      $$InstitutionFeeTransactionTableAnnotationComposer,
-      $$InstitutionFeeTransactionTableCreateCompanionBuilder,
-      $$InstitutionFeeTransactionTableUpdateCompanionBuilder,
-      (
-        InstitutionFeeTransactionData,
-        $$InstitutionFeeTransactionTableReferences,
-      ),
-      InstitutionFeeTransactionData,
+      $InstitutionFeeTransactionsTable,
+      InstitutionFeeTransaction,
+      $$InstitutionFeeTransactionsTableFilterComposer,
+      $$InstitutionFeeTransactionsTableOrderingComposer,
+      $$InstitutionFeeTransactionsTableAnnotationComposer,
+      $$InstitutionFeeTransactionsTableCreateCompanionBuilder,
+      $$InstitutionFeeTransactionsTableUpdateCompanionBuilder,
+      (InstitutionFeeTransaction, $$InstitutionFeeTransactionsTableReferences),
+      InstitutionFeeTransaction,
       PrefetchHooks Function({bool institution})
     >;
 typedef $$SemesterTableCreateCompanionBuilder =
@@ -32843,20 +32847,20 @@ final class $$SemesterTableReferences
     extends BaseReferences<_$AppDataBase, $SemesterTable, SemesterData> {
   $$SemesterTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $InstitutionTable _institutionIdTable(_$AppDataBase db) =>
-      db.institution.createAlias(
+  static $InstitutionsTable _institutionIdTable(_$AppDataBase db) =>
+      db.institutions.createAlias(
         $_aliasNameGenerator(
           db.semester.institutionId,
-          db.institution.institutionId,
+          db.institutions.institutionId,
         ),
       );
 
-  $$InstitutionTableProcessedTableManager? get institutionId {
+  $$InstitutionsTableProcessedTableManager? get institutionId {
     final $_column = $_itemColumn<int>('institution_id');
     if ($_column == null) return null;
-    final manager = $$InstitutionTableTableManager(
+    final manager = $$InstitutionsTableTableManager(
       $_db,
-      $_db.institution,
+      $_db.institutions,
     ).filter((f) => f.institutionId.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_institutionIdTable($_db));
     if (item == null) return manager;
@@ -32919,20 +32923,20 @@ class $$SemesterTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  $$InstitutionTableFilterComposer get institutionId {
-    final $$InstitutionTableFilterComposer composer = $composerBuilder(
+  $$InstitutionsTableFilterComposer get institutionId {
+    final $$InstitutionsTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.institutionId,
-      referencedTable: $db.institution,
+      referencedTable: $db.institutions,
       getReferencedColumn: (t) => t.institutionId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableFilterComposer(
+          }) => $$InstitutionsTableFilterComposer(
             $db: $db,
-            $table: $db.institution,
+            $table: $db.institutions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -33002,20 +33006,20 @@ class $$SemesterTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$InstitutionTableOrderingComposer get institutionId {
-    final $$InstitutionTableOrderingComposer composer = $composerBuilder(
+  $$InstitutionsTableOrderingComposer get institutionId {
+    final $$InstitutionsTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.institutionId,
-      referencedTable: $db.institution,
+      referencedTable: $db.institutions,
       getReferencedColumn: (t) => t.institutionId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableOrderingComposer(
+          }) => $$InstitutionsTableOrderingComposer(
             $db: $db,
-            $table: $db.institution,
+            $table: $db.institutions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -33052,20 +33056,20 @@ class $$SemesterTableAnnotationComposer
   GeneratedColumn<DateTime> get endDate =>
       $composableBuilder(column: $table.endDate, builder: (column) => column);
 
-  $$InstitutionTableAnnotationComposer get institutionId {
-    final $$InstitutionTableAnnotationComposer composer = $composerBuilder(
+  $$InstitutionsTableAnnotationComposer get institutionId {
+    final $$InstitutionsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.institutionId,
-      referencedTable: $db.institution,
+      referencedTable: $db.institutions,
       getReferencedColumn: (t) => t.institutionId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableAnnotationComposer(
+          }) => $$InstitutionsTableAnnotationComposer(
             $db: $db,
-            $table: $db.institution,
+            $table: $db.institutions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -33279,20 +33283,20 @@ final class $$CourseTableReferences
     extends BaseReferences<_$AppDataBase, $CourseTable, CourseData> {
   $$CourseTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $InstitutionTable _institutionTable(_$AppDataBase db) =>
-      db.institution.createAlias(
+  static $InstitutionsTable _institutionTable(_$AppDataBase db) =>
+      db.institutions.createAlias(
         $_aliasNameGenerator(
           db.course.institution,
-          db.institution.institutionId,
+          db.institutions.institutionId,
         ),
       );
 
-  $$InstitutionTableProcessedTableManager? get institution {
+  $$InstitutionsTableProcessedTableManager? get institution {
     final $_column = $_itemColumn<int>('institution');
     if ($_column == null) return null;
-    final manager = $$InstitutionTableTableManager(
+    final manager = $$InstitutionsTableTableManager(
       $_db,
-      $_db.institution,
+      $_db.institutions,
     ).filter((f) => f.institutionId.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_institutionTable($_db));
     if (item == null) return manager;
@@ -33397,20 +33401,20 @@ class $$CourseTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  $$InstitutionTableFilterComposer get institution {
-    final $$InstitutionTableFilterComposer composer = $composerBuilder(
+  $$InstitutionsTableFilterComposer get institution {
+    final $$InstitutionsTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.institution,
-      referencedTable: $db.institution,
+      referencedTable: $db.institutions,
       getReferencedColumn: (t) => t.institutionId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableFilterComposer(
+          }) => $$InstitutionsTableFilterComposer(
             $db: $db,
-            $table: $db.institution,
+            $table: $db.institutions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -33528,20 +33532,20 @@ class $$CourseTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$InstitutionTableOrderingComposer get institution {
-    final $$InstitutionTableOrderingComposer composer = $composerBuilder(
+  $$InstitutionsTableOrderingComposer get institution {
+    final $$InstitutionsTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.institution,
-      referencedTable: $db.institution,
+      referencedTable: $db.institutions,
       getReferencedColumn: (t) => t.institutionId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableOrderingComposer(
+          }) => $$InstitutionsTableOrderingComposer(
             $db: $db,
-            $table: $db.institution,
+            $table: $db.institutions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -33620,20 +33624,20 @@ class $$CourseTableAnnotationComposer
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
 
-  $$InstitutionTableAnnotationComposer get institution {
-    final $$InstitutionTableAnnotationComposer composer = $composerBuilder(
+  $$InstitutionsTableAnnotationComposer get institution {
+    final $$InstitutionsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.institution,
-      referencedTable: $db.institution,
+      referencedTable: $db.institutions,
       getReferencedColumn: (t) => t.institutionId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableAnnotationComposer(
+          }) => $$InstitutionsTableAnnotationComposer(
             $db: $db,
-            $table: $db.institution,
+            $table: $db.institutions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -33924,20 +33928,20 @@ final class $$TimetableTableReferences
     extends BaseReferences<_$AppDataBase, $TimetableTable, TimetableData> {
   $$TimetableTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $InstitutionTable _institutionTable(_$AppDataBase db) =>
-      db.institution.createAlias(
+  static $InstitutionsTable _institutionTable(_$AppDataBase db) =>
+      db.institutions.createAlias(
         $_aliasNameGenerator(
           db.timetable.institution,
-          db.institution.institutionId,
+          db.institutions.institutionId,
         ),
       );
 
-  $$InstitutionTableProcessedTableManager? get institution {
+  $$InstitutionsTableProcessedTableManager? get institution {
     final $_column = $_itemColumn<int>('institution');
     if ($_column == null) return null;
-    final manager = $$InstitutionTableTableManager(
+    final manager = $$InstitutionsTableTableManager(
       $_db,
-      $_db.institution,
+      $_db.institutions,
     ).filter((f) => f.institutionId.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_institutionTable($_db));
     if (item == null) return manager;
@@ -34017,20 +34021,20 @@ class $$TimetableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  $$InstitutionTableFilterComposer get institution {
-    final $$InstitutionTableFilterComposer composer = $composerBuilder(
+  $$InstitutionsTableFilterComposer get institution {
+    final $$InstitutionsTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.institution,
-      referencedTable: $db.institution,
+      referencedTable: $db.institutions,
       getReferencedColumn: (t) => t.institutionId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableFilterComposer(
+          }) => $$InstitutionsTableFilterComposer(
             $db: $db,
-            $table: $db.institution,
+            $table: $db.institutions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -34115,20 +34119,20 @@ class $$TimetableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$InstitutionTableOrderingComposer get institution {
-    final $$InstitutionTableOrderingComposer composer = $composerBuilder(
+  $$InstitutionsTableOrderingComposer get institution {
+    final $$InstitutionsTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.institution,
-      referencedTable: $db.institution,
+      referencedTable: $db.institutions,
       getReferencedColumn: (t) => t.institutionId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableOrderingComposer(
+          }) => $$InstitutionsTableOrderingComposer(
             $db: $db,
-            $table: $db.institution,
+            $table: $db.institutions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -34172,20 +34176,20 @@ class $$TimetableTableAnnotationComposer
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
 
-  $$InstitutionTableAnnotationComposer get institution {
-    final $$InstitutionTableAnnotationComposer composer = $composerBuilder(
+  $$InstitutionsTableAnnotationComposer get institution {
+    final $$InstitutionsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.institution,
-      referencedTable: $db.institution,
+      referencedTable: $db.institutions,
       getReferencedColumn: (t) => t.institutionId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableAnnotationComposer(
+          }) => $$InstitutionsTableAnnotationComposer(
             $db: $db,
-            $table: $db.institution,
+            $table: $db.institutions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -39726,22 +39730,23 @@ class $AppDataBaseManager {
       $$ReportTableTableTableManager(_db, _db.reportTable);
   $$AgendaEventTableTableManager get agendaEvent =>
       $$AgendaEventTableTableManager(_db, _db.agendaEvent);
-  $$InstitutionTableTableManager get institution =>
-      $$InstitutionTableTableManager(_db, _db.institution);
-  $$InstitutionScrappingCommandTableTableManager
-  get institutionScrappingCommand =>
-      $$InstitutionScrappingCommandTableTableManager(
+  $$InstitutionsTableTableManager get institutions =>
+      $$InstitutionsTableTableManager(_db, _db.institutions);
+  $$InstitutionScrappingCommandsTableTableManager
+  get institutionScrappingCommands =>
+      $$InstitutionScrappingCommandsTableTableManager(
         _db,
-        _db.institutionScrappingCommand,
+        _db.institutionScrappingCommands,
       );
-  $$InstitutionKeyTableTableManager get institutionKey =>
-      $$InstitutionKeyTableTableManager(_db, _db.institutionKey);
-  $$InstitutionProfileTableTableManager get institutionProfile =>
-      $$InstitutionProfileTableTableManager(_db, _db.institutionProfile);
-  $$InstitutionFeeTransactionTableTableManager get institutionFeeTransaction =>
-      $$InstitutionFeeTransactionTableTableManager(
+  $$InstitutionKeysTableTableManager get institutionKeys =>
+      $$InstitutionKeysTableTableManager(_db, _db.institutionKeys);
+  $$InstitutionProfilesTableTableManager get institutionProfiles =>
+      $$InstitutionProfilesTableTableManager(_db, _db.institutionProfiles);
+  $$InstitutionFeeTransactionsTableTableManager
+  get institutionFeeTransactions =>
+      $$InstitutionFeeTransactionsTableTableManager(
         _db,
-        _db.institutionFeeTransaction,
+        _db.institutionFeeTransactions,
       );
   $$SemesterTableTableManager get semester =>
       $$SemesterTableTableManager(_db, _db.semester);

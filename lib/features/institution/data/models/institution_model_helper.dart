@@ -1,8 +1,8 @@
-import 'package:academia/database/database.dart';
+import 'package:academia/database/database.dart' as db;
 import 'package:academia/features/institution/domain/domain.dart';
 
 extension InstitutionModelHelper on Institution {
-  InstitutionData toData() => InstitutionData(
+  db.Institution toData() => db.Institution(
     institutionId: institutionId,
     name: name,
     domains: domains,
@@ -13,7 +13,7 @@ extension InstitutionModelHelper on Institution {
   );
 }
 
-extension InstitutionDataModelHelper on InstitutionData {
+extension InstitutionDataModelHelper on db.Institution {
   Institution toEntity() => Institution(
     institutionId: institutionId,
     name: name,

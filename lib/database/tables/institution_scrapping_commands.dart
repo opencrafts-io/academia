@@ -1,7 +1,10 @@
 import 'package:academia/core/core.dart';
 import 'package:drift/drift.dart';
 
-class InstitutionScrappingCommand extends Table {
+class InstitutionScrappingCommands extends Table {
+  @override
+  String get tableName => 'institution_scrapping_command';
+
   @JsonKey("institution")
   IntColumn get institution => integer().named('institution')();
 

@@ -1,7 +1,10 @@
 import 'package:academia/core/data/json_converter.dart';
 import 'package:drift/drift.dart';
 
-class Institution extends Table {
+class Institutions extends Table {
+  @override
+  String get tableName => 'institution';
+
   @JsonKey("institution_id")
   IntColumn get institutionId => integer().named('institution_id')();
 

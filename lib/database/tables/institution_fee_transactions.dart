@@ -1,11 +1,14 @@
 import 'package:drift/drift.dart';
-import './institution.dart';
+import 'package:academia/database/tables/institutions.dart';
 
-class InstitutionFeeTransaction extends Table {
+class InstitutionFeeTransactions extends Table {
+  @override
+  String get tableName => 'institution_fee_transaction';
+
   IntColumn get id => integer().nullable()();
 
   IntColumn get institution =>
-      integer().references(Institution, #institutionId)();
+      integer().references(Institutions, #institutionId)();
 
   @JsonKey("reference_number")
   TextColumn get referenceNumber =>

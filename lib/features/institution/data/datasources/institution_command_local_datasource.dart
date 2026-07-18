@@ -8,14 +8,14 @@ class InstitutionCommandLocalDatasource {
 
   InstitutionCommandLocalDatasource({required this.appDataBase});
 
-  Stream<Either<Failure, InstitutionScrappingCommandData?>>
+  Stream<Either<Failure, InstitutionScrappingCommand?>>
   watchInstitutionCommandByInstitution({required int institutionID}) {
-    return (appDataBase.select(appDataBase.institutionScrappingCommand)
+    return (appDataBase.select(appDataBase.institutionScrappingCommands)
           ..where((ins) => ins.institution.equals(institutionID))
           ..orderBy([(ins) => OrderingTerm.desc(ins.createdAt)])
           ..limit(1))
         .watchSingleOrNull()
-        .map<Either<Failure, InstitutionScrappingCommandData?>>((data) {
+        .map<Either<Failure, InstitutionScrappingCommand?>>((data) {
           return Right(data);
         })
         .handleError(
@@ -29,11 +29,11 @@ class InstitutionCommandLocalDatasource {
   }
 
   Future<Either<Failure, void>> saveInstitutionCommand({
-    required InstitutionScrappingCommandData institutionCommand,
+    required InstitutionScrappingCommand institutionCommand,
   }) async {
     try {
       await appDataBase
-          .into(appDataBase.institutionScrappingCommand)
+          .into(appDataBase.institutionScrappingCommands)
           .insertOnConflictUpdate(institutionCommand);
 
       return right(null);

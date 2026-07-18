@@ -10,7 +10,7 @@ class InstitutionKeyLocalDatasource {
   /// Watches the most recently created [InstitutionKey] for a given institution.
   ///
   /// The stream emits:
-  /// - `Right<InstitutionKeyData?>` containing the latest key if one exists
+  /// - `Right<InstitutionKey?>` containing the latest key if one exists
   /// - `Right(null)` if the institution has no associated keys
   ///
   /// The underlying query orders keys by `createdAt` in descending order and
@@ -21,15 +21,15 @@ class InstitutionKeyLocalDatasource {
   ///
   /// The stream remains active and will emit new values whenever the
   /// institution’s key set changes.
-  Stream<Either<Failure, InstitutionKeyData?>> watchKeyForInstitution({
+  Stream<Either<Failure, InstitutionKey?>> watchKeyForInstitution({
     required int institutionID,
   }) {
-    return (appDataBase.select(appDataBase.institutionKey)
+    return (appDataBase.select(appDataBase.institutionKeys)
           ..where((ins) => ins.institutionID.equals(institutionID))
           ..orderBy([(ins) => OrderingTerm.desc(ins.createdAt)])
           ..limit(1))
         .watchSingleOrNull()
-        .map<Either<Failure, InstitutionKeyData?>>((data) {
+        .map<Either<Failure, InstitutionKey?>>((data) {
           return Right(data);
         })
         .handleError(
@@ -42,7 +42,7 @@ class InstitutionKeyLocalDatasource {
         );
   }
 
-  /// Persists an [InstitutionKeyData] to the local cache.
+  /// Persists an [InstitutionKey] to the local cache.
   ///
   /// If a key with the same primary or unique constraint already exists,
   /// it will be updated using an insert-on-conflict strategy.
@@ -55,11 +55,11 @@ class InstitutionKeyLocalDatasource {
   /// any stream updates directly, but may trigger listeners watching
   /// the underlying table.
   Future<Either<Failure, void>> saveInstitutionKey({
-    required InstitutionKeyData institutionKey,
+    required InstitutionKey institutionKey,
   }) async {
     try {
       await appDataBase
-          .into(appDataBase.institutionKey)
+          .into(appDataBase.institutionKeys)
           .insertOnConflictUpdate(institutionKey);
 
       return right(null);
