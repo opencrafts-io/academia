@@ -1,10 +1,11 @@
+import 'package:academia/core/core.dart';
 import 'package:academia/features/course/course.dart';
 import 'package:academia/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:loading_indicator_m3e/loading_indicator_m3e.dart';
 import 'package:rrule/rrule.dart';
-import 'package:academia/core/core.dart';
 
 class CourseCard extends StatelessWidget {
   const CourseCard({super.key, required this.course, this.onTap});
@@ -12,51 +13,92 @@ class CourseCard extends StatelessWidget {
   final CourseEntity course;
   final VoidCallback? onTap;
 
+  void _confirmDelete(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) => ConfirmDeleteDialog(
+        title: 'Delete Course?',
+        message:
+            'This will delete "${course.courseName}" and all associated '
+            'schedule entries. This action cannot be undone.',
+        onConfirm: () {
+          context.read<CourseCubit>().removeCourse(course.id!);
+          ScaffoldMessenger.of(context)
+            ..clearSnackBars()
+            ..showSnackBar(
+              SnackBar(
+                behavior: SnackBarBehavior.floating,
+                content: Text('${course.courseName} deleted'),
+                action: SnackBarAction(
+                  label: 'Undo',
+                  onPressed: () => context
+                      .read<CourseCubit>()
+                      .addOrUpdateCourse(course.copyWith(isDeleted: false)),
+                ),
+              ),
+            );
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final avatarColor = course.color ?? colorScheme.primaryContainer;
+    final onAvatarColor =
+        ThemeData.estimateBrightnessForColor(avatarColor) == Brightness.dark
+        ? Colors.white
+        : Colors.black87;
+
     return Dismissible(
       key: Key(course.id ?? ''),
       direction: DismissDirection.endToStart,
+      confirmDismiss: (direction) async {
+        _confirmDelete(context);
+        return false;
+      },
       background: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
-          color: Theme.of(context).colorScheme.errorContainer,
+          borderRadius: BorderRadius.circular(20),
+          color: colorScheme.errorContainer,
+        ),
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: 20),
+        child: Icon(
+          Icons.delete_outline_rounded,
+          color: colorScheme.onErrorContainer,
         ),
       ),
-      onDismissed: (direction) {
-        // Remove the item from the data source.
-        context.read<CourseCubit>().removeCourse(course.id!);
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            behavior: SnackBarBehavior.floating,
-            content: Text('${course.courseName} deleted successfully'),
-          ),
-        );
-      },
-      child: Card.filled(
-        clipBehavior: Clip.hardEdge,
+      child: Card(
         elevation: 0,
-        color: course.color?.withAlpha(128),
+        clipBehavior: Clip.antiAlias,
+        color: colorScheme.surfaceContainer,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: InkWell(
           onTap: onTap,
           child: ExpansionTile(
             shape: const RoundedRectangleBorder(side: BorderSide.none),
             collapsedShape: const RoundedRectangleBorder(side: BorderSide.none),
-            leading: CircleAvatar(child: Icon(Icons.book_outlined)),
+            leading: CircleAvatar(
+              backgroundColor: avatarColor,
+              child: Icon(Icons.book_rounded, color: onAvatarColor),
+            ),
             title: Text(
               course.courseName,
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: theme.colorScheme.onSurface,
+                color: colorScheme.onSurface,
               ),
             ),
             subtitle: Text(
               '${course.courseCode} • ${course.instructor}',
-              style: theme.textTheme.bodySmall,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+              ),
             ),
-            childrenPadding: EdgeInsets.all(12),
+            childrenPadding: const EdgeInsets.all(12),
             children: [
               BlocBuilder<TimetableEntryBloc, TimetableEntryState>(
                 builder: (context, state) {
@@ -66,9 +108,24 @@ class CourseCard extends StatelessWidget {
                         .toList();
 
                     if (entries.isEmpty) {
-                      return const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text("No scheduled sessions"),
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.event_busy_rounded,
+                              size: 16,
+                              color: colorScheme.outline,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              "No scheduled sessions",
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                          ],
+                        ),
                       );
                     }
 
@@ -78,7 +135,39 @@ class CourseCard extends StatelessWidget {
                           .toList(),
                     );
                   }
-                  return const Center(child: CircularProgressIndicator());
+
+                  if (state is TimetableEntryError) {
+                    return Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: colorScheme.errorContainer,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.error_outline_rounded,
+                            size: 18,
+                            color: colorScheme.onErrorContainer,
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              state.message,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: colorScheme.onErrorContainer,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  return const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Center(child: LoadingIndicatorM3E()),
+                  );
                 },
               ),
             ],
@@ -155,7 +244,7 @@ class _TimetableEntryCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
-                        Icons.repeat,
+                        Icons.repeat_rounded,
                         size: 14,
                         color: theme.colorScheme.onPrimaryContainer,
                       ),
@@ -179,7 +268,7 @@ class _TimetableEntryCard extends StatelessWidget {
                 ),
                 SizedBox(width: 8),
                 _MiniTag(
-                  icon: Icons.timer_outlined,
+                  icon: Icons.timer_rounded,
                   text: '${entry.durationMinutes} mins',
                 ),
               ],
@@ -188,7 +277,7 @@ class _TimetableEntryCard extends StatelessWidget {
             Row(
               children: [
                 Icon(
-                  Icons.apartment_outlined,
+                  Icons.apartment_rounded,
                   size: 16,
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -204,7 +293,7 @@ class _TimetableEntryCard extends StatelessWidget {
             Row(
               children: [
                 Icon(
-                  Icons.timer_outlined,
+                  Icons.timer_rounded,
                   size: 16,
                   color: theme.colorScheme.onSurfaceVariant,
                 ),

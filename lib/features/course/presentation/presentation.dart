@@ -4,3 +4,6 @@ export 'views/course_listing_page.dart';
 export 'views/add_course_sheet.dart';
 export 'views/course_detail_page.dart';
 export 'widgets/course_card.dart';
+export 'widgets/course_detail_app_bar.dart';
+export 'widgets/course_info_section.dart';
+export 'widgets/course_schedule_section.dart';
