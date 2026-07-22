@@ -114,47 +114,54 @@ class InstitutionSwitcherChip extends StatelessWidget {
         if (current == null) return const SizedBox.shrink();
 
         return Padding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-          child: Align(
-            alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+          child: Material(
+            color: colorScheme.secondaryContainer,
+            borderRadius: BorderRadius.circular(16),
+            clipBehavior: Clip.antiAlias,
             child: InkWell(
               onTap: () => _showSwitcher(context, institutions),
-              borderRadius: BorderRadius.circular(20),
-              child: Container(
-                constraints: const BoxConstraints(minHeight: 48),
-                alignment: Alignment.center,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 8,
-                ),
-                decoration: BoxDecoration(
-                  color: colorScheme.secondaryContainer,
-                  borderRadius: BorderRadius.circular(20),
-                ),
+              child: Padding(
+                padding: const EdgeInsets.all(12),
                 child: Row(
-                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
-                      Icons.school_rounded,
-                      size: 18,
-                      color: colorScheme.onSecondaryContainer,
-                    ),
-                    const SizedBox(width: 8),
-                    ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 220),
-                      child: Text(
-                        current.name,
-                        style: theme.textTheme.labelLarge?.copyWith(
-                          color: colorScheme.onSecondaryContainer,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        overflow: TextOverflow.ellipsis,
+                    CircleAvatar(
+                      radius: 20,
+                      backgroundColor: colorScheme.onSecondaryContainer
+                          .withValues(alpha: 0.12),
+                      child: Icon(
+                        Icons.school_rounded,
+                        size: 20,
+                        color: colorScheme.onSecondaryContainer,
                       ),
                     ),
-                    const SizedBox(width: 4),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Institution',
+                            style: theme.textTheme.labelSmall?.copyWith(
+                              color: colorScheme.onSecondaryContainer
+                                  .withValues(alpha: 0.7),
+                            ),
+                          ),
+                          Text(
+                            current.name,
+                            style: theme.textTheme.titleSmall?.copyWith(
+                              color: colorScheme.onSecondaryContainer,
+                              fontWeight: FontWeight.w700,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 8),
                     Icon(
                       Icons.unfold_more_rounded,
-                      size: 18,
                       color: colorScheme.onSecondaryContainer,
                     ),
                   ],
