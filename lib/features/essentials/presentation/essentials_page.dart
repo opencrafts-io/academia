@@ -66,21 +66,13 @@ class _EssentialsPageState extends State<EssentialsPage> {
     if (institutions != null && institutions.isNotEmpty) {
       final primaryInstitution = institutions.first;
 
-      context.read<ScrappingCommandBloc>().add(
-        GetScrappingCommandEvent(
-          institutionID: primaryInstitution.institutionId,
-        ),
+      final result = await sl<FetchInstitutionScrappingCommandUsecase>()(
+        primaryInstitution.institutionId,
       );
-      final resolvedState = await context
-          .read<ScrappingCommandBloc>()
-          .stream
-          .firstWhere(
-            (s) => s.maybeWhen(loading: () => false, orElse: () => true),
-          );
 
-      final isSupported = resolvedState.maybeWhen(
-        loaded: (command) => command != null,
-        orElse: () => false,
+      final isSupported = result.fold(
+        (failure) => false,
+        (command) => command != null,
       );
 
       if (!mounted) return;

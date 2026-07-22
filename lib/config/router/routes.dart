@@ -72,10 +72,7 @@ class NotificationPermissionRoute extends GoRouteData
 class EssentialsRoute extends GoRouteData with $EssentialsRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return BlocProvider(
-      create: (_) => sl<ScrappingCommandBloc>(),
-      child: EssentialsPage(),
-    );
+    return EssentialsPage();
   }
 }
 
