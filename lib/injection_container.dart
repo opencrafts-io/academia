@@ -832,6 +832,9 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   sl.registerFactory<GetInstitutionScrappingCommandUsecase>(
     () => GetInstitutionScrappingCommandUsecase(repository: sl()),
   );
+  sl.registerFactory<FetchInstitutionScrappingCommandUsecase>(
+    () => FetchInstitutionScrappingCommandUsecase(repository: sl()),
+  );
 
   // --- Student Profile Usecases ---
   // Watch Usecases

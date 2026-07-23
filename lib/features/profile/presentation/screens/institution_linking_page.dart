@@ -79,20 +79,35 @@ class _InstitutionLinkingPageState extends State<InstitutionLinkingPage> {
             linked: () {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
+                  behavior: SnackBarBehavior.floating,
                   content: Text(
                     "You have linked your account to ${_selectedInstitution?.name ?? ''}",
                   ),
                 ),
               );
-              final profileState = context.read<ProfileBloc>().state;
 
-              if (profileState is! ProfileLoadedState) {
-                return;
+              final profileState = context.read<ProfileBloc>().state;
+              if (profileState is ProfileLoadedState) {
+                // Refresh from the remote source rather than the local
+                // cache: addAccountToInstitution's own re-cache of the
+                // updated list happens as an un-awaited side effect on the
+                // repository, so reading the cache immediately after
+                // `linked` fires can race it and still miss the institution
+                // that was just linked.
+                context.read<InstitutionBloc>().add(
+                  RefreshUserInstitutionsEvent(profileState.profile.id),
+                );
               }
 
-              context.read<InstitutionBloc>().add(
-                GetCachedUserInstitutionsEvent(profileState.profile.id),
-              );
+              // Close the linking sheet now that the link succeeded, instead
+              // of leaving it open on top of a bloc state that's about to be
+              // overwritten by the refresh above (this bloc is shared
+              // app-wide, so its `loaded` state doubles as both "search
+              // results" and "institutions I'm linked to" — staying on this
+              // page past this point meant the search view could end up
+              // showing the refreshed linked-institutions list instead of
+              // search results).
+              context.pop();
             },
           );
         },

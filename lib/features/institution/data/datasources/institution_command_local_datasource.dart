@@ -8,6 +8,26 @@ class InstitutionCommandLocalDatasource {
 
   InstitutionCommandLocalDatasource({required this.appDataBase});
 
+  Future<Either<Failure, InstitutionScrappingCommand?>>
+  getCachedInstitutionCommand({required int institutionID}) async {
+    try {
+      final data =
+          await (appDataBase.select(appDataBase.institutionScrappingCommands)
+                ..where((ins) => ins.institution.equals(institutionID))
+                ..orderBy([(ins) => OrderingTerm.desc(ins.createdAt)])
+                ..limit(1))
+              .getSingleOrNull();
+      return right(data);
+    } catch (e) {
+      return left(
+        CacheFailure(
+          message: "Couldn't load configs for the specified institution",
+          error: e,
+        ),
+      );
+    }
+  }
+
   Stream<Either<Failure, InstitutionScrappingCommand?>>
   watchInstitutionCommandByInstitution({required int institutionID}) {
     return (appDataBase.select(appDataBase.institutionScrappingCommands)
