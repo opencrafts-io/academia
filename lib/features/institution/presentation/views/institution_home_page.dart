@@ -1,12 +1,8 @@
 import 'package:academia/config/router/router.dart';
-import 'package:academia/features/course/course.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
-import 'package:academia/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:loading_indicator_m3e/loading_indicator_m3e.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:magnet/magnet.dart';
 
@@ -127,18 +123,17 @@ class _InstitutionHomePageState extends State<InstitutionHomePage>
           child: CustomScrollView(
             physics: BouncingScrollPhysics(),
             slivers: [
-              _InstitutionHomePageAppBar(institutionID: widget.institutionID),
+              InstitutionHomeAppBar(institutionID: widget.institutionID),
               SliverPadding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 sliver: MultiSliver(
                   children: [
                     SyncStatusSection(),
-                    _MagnetLoadingProgressCard(),
+                    MagnetLoadingProgressCard(),
                     SliverPinnedHeader(
-                      child: Container(
-                        color: Theme.of(context).colorScheme.surface,
-                        padding: EdgeInsetsGeometry.symmetric(vertical: 8),
-                        child: Text("Profile"),
+                      child: InstitutionSectionLabel(
+                        icon: Icons.person_rounded,
+                        title: "Profile",
                       ),
                     ),
 
@@ -172,23 +167,25 @@ class _InstitutionHomePageState extends State<InstitutionHomePage>
                     ),
 
                     SliverPinnedHeader(
-                      child: Container(
-                        color: Theme.of(context).colorScheme.surface,
-                        padding: EdgeInsetsGeometry.symmetric(vertical: 8),
-                        child: Text("Finances"),
+                      child: InstitutionSectionLabel(
+                        icon: Icons.payments_rounded,
+                        title: "Finances",
                       ),
                     ),
 
-                    _FeesSectionCard(institutionID: widget.institutionID),
+                    InstitutionFeesSectionCard(
+                      institutionID: widget.institutionID,
+                    ),
 
                     SliverPinnedHeader(
-                      child: Container(
-                        color: Theme.of(context).colorScheme.surface,
-                        padding: EdgeInsetsGeometry.symmetric(vertical: 8),
-                        child: Text("Courses"),
+                      child: InstitutionSectionLabel(
+                        icon: Icons.menu_book_rounded,
+                        title: "Courses",
                       ),
                     ),
-                    _CoursesSectionCard(institutionId: widget.institutionID),
+                    InstitutionCoursesSectionCard(
+                      institutionId: widget.institutionID,
+                    ),
                     SizedBox(height: 22),
                   ],
                 ),
@@ -196,412 +193,6 @@ class _InstitutionHomePageState extends State<InstitutionHomePage>
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _InstitutionHomePageAppBar extends StatelessWidget {
-  const _InstitutionHomePageAppBar({required this.institutionID});
-
-  final int institutionID;
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<InstitutionBloc, InstitutionState>(
-      builder: (context, state) => SliverAppBar.large(
-        leading: IconButton(
-          onPressed: () => context.pop(),
-          icon: Icon(Icons.arrow_back),
-        ),
-        title: Text(
-          state.maybeWhen(
-            loaded: (institutions) => institutions
-                .firstWhere((ins) => ins.institutionId == institutionID)
-                .name,
-            orElse: () => "#Error",
-          ),
-        ),
-        actions: [
-          BlocBuilder<ScrappingCommandBloc, ScrappingCommandState>(
-            builder: (context, state) => state.maybeWhen(
-              loaded: (command) => IconButton(
-                onPressed: () {
-                  InstitutionKeysViewRoute(
-                    institutionID: institutionID,
-                  ).push(context);
-                },
-                icon: Icon(Icons.key_outlined),
-              ),
-              orElse: () => LoadingIndicatorM3E(),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class SyncStatusSection extends StatelessWidget {
-  const SyncStatusSection({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final scrappingState = context.watch<ScrappingCommandBloc>().state;
-    final magnetState = context.watch<MagnetBloc>().state;
-    final keyState = context.watch<InstitutionKeyBloc>().state;
-
-    final scrappingCommand = scrappingState.maybeWhen(
-      loaded: (command) => command,
-      orElse: () => null,
-    );
-    final institutionKey = keyState.maybeWhen(
-      loaded: (key) => key,
-      orElse: () => null,
-    );
-    final bool magnetIsReadyOrSuccess = magnetState.maybeWhen(
-      ready: (magnet) => true,
-      success: (result) => true,
-      orElse: () => false,
-    );
-    final bool magnetIsProcessing = magnetState.maybeWhen(
-      processing: (command, progress) => true,
-      orElse: () => false,
-    );
-
-    // Condition logic moved here for readability
-    final bool canExecute =
-        magnetIsReadyOrSuccess &&
-        scrappingCommand != null &&
-        institutionKey != null;
-
-    final bool shouldShow = canExecute && !magnetIsProcessing;
-
-    return AnimatedSize(
-      duration: const Duration(milliseconds: 300),
-      child: shouldShow
-          ? Card.filled(
-              margin: EdgeInsets.zero,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(32),
-              ),
-              color: Theme.of(context).colorScheme.primaryContainer,
-              child: ListTile(
-                onTap: () =>
-                    _handleSync(context, scrappingCommand, institutionKey),
-                leading: const Icon(Icons.sync_rounded),
-                title: const Text("Sync your information"),
-                subtitle: const Text("Update your profile and courses now"),
-                trailing: Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  size: 16,
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
-                ),
-              ),
-            )
-          : const SizedBox.shrink(),
-    );
-  }
-
-  void _handleSync(
-    BuildContext context,
-    ScrappingCommand? scrappingCommand,
-    InstitutionKey? institutionKey,
-  ) {
-    final profileState = context.read<ProfileBloc>().state;
-    if (profileState is ProfileLoadedState &&
-        scrappingCommand != null &&
-        institutionKey != null) {
-      context.read<MagnetBloc>().add(
-        ExecuteScrappingCommand(
-          institutionID: institutionKey.institutionId,
-          userID: profileState.profile.id,
-          command: scrappingCommand,
-          institutionKey: institutionKey,
-        ),
-      );
-    }
-  }
-}
-
-class _FeesSectionCard extends StatelessWidget {
-  const _FeesSectionCard({required this.institutionID});
-
-  final int institutionID;
-
-  @override
-  Widget build(BuildContext context) {
-    return Card.filled(
-      clipBehavior: Clip.hardEdge,
-      margin: EdgeInsets.zero,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
-      child: ListTile(
-        onTap: () {
-          InstitutionFeesTransactionRoute(
-            institutionID: institutionID,
-          ).push(context);
-        },
-        leading: Icon(Icons.account_balance_rounded),
-        title: Text("Fees transactions"),
-        subtitle: Text("View your fees transactions"),
-        trailing: Icon(Icons.arrow_forward_rounded),
-      ),
-    );
-  }
-}
-
-class _CoursesSectionCard extends StatelessWidget {
-  const _CoursesSectionCard({required this.institutionId});
-
-  final int institutionId;
-
-  @override
-  Widget build(BuildContext context) {
-    context.read<CourseCubit>().watchByInstitution(institutionId);
-    return BlocBuilder<CourseCubit, CourseState>(
-      builder: (context, state) {
-        return state.when(
-          initial: () => Center(child: LoadingIndicatorM3E()),
-          loading: () => Center(child: LoadingIndicatorM3E()),
-          success: (courses) {
-            if (courses.isEmpty) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Align(
-                    alignment: Alignment.center,
-                    child: Assets.icons.notificationIconAlert.image(width: 250),
-                  ),
-                  Text(
-                    "Oops!",
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text("We couldn't find any courses for this institution yet"),
-                ],
-              );
-            }
-            return ListView.builder(
-              padding: EdgeInsets.zero,
-              itemCount: courses.length,
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                final course = courses[index];
-                return CourseCard(
-                  course: course,
-                  onTap: () async {
-                    await ViewCourseRoute(courseId: course.id!).push(context);
-                    if (context.mounted) {
-                      context.read<CourseCubit>().watchByInstitution(
-                        institutionId,
-                      );
-                      context.read<TimetableEntryBloc>().add(
-                        WatchAllTimetableEntriesEvent(),
-                      );
-                    }
-                  },
-                );
-              },
-            );
-          },
-          error: (message) => Column(children: [Text(message)]),
-        );
-      },
-    );
-  }
-}
-
-class _MagnetLoadingProgressCard extends StatelessWidget {
-  const _MagnetLoadingProgressCard();
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return BlocBuilder<MagnetBloc, MagnetState>(
-      builder: (context, state) {
-        return state.maybeWhen(
-          processing: (command, progress) {
-            final percent = (progress?.progressPercent ?? 0) / 100;
-
-            // Dynamic labels based on the instruction type
-            final actionLabel = _getFriendlyLabel(progress?.instructionType);
-            final statusDetail = _getStatusDetail(progress);
-
-            return Card(
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(28),
-                side: BorderSide(color: theme.colorScheme.outlineVariant),
-              ),
-              color: theme.colorScheme.surfaceContainerHigh,
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      children: [
-                        _AnimatedStatusAvatar(status: progress?.status),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                actionLabel,
-                                style: theme.textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: theme.colorScheme.onSurface,
-                                ),
-                              ),
-                              const SizedBox(height: 2),
-                              Text(
-                                statusDetail,
-                                style: theme.textTheme.bodySmall?.copyWith(
-                                  color: theme.colorScheme.onSurfaceVariant,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        // Percentage indicator
-                        Text(
-                          '${(percent * 100).toInt()}%',
-                          style: theme.textTheme.labelLarge?.copyWith(
-                            color: theme.colorScheme.primary,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    // Smooth M3 Progress Bar
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(100),
-                      child: LinearProgressIndicator(
-                        value: percent > 0 ? percent : null,
-                        minHeight: 8,
-                        backgroundColor:
-                            theme.colorScheme.surfaceContainerHighest,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          progress?.status == InstructionStatus.failed
-                              ? theme.colorScheme.error
-                              : theme.colorScheme.primary,
-                        ),
-                      ),
-                    ),
-                    if (progress?.error != null) ...[
-                      const SizedBox(height: 12),
-                      _ErrorNote(message: progress!.error!),
-                    ],
-                  ],
-                ),
-              ),
-            );
-          },
-          orElse: () => const SizedBox.shrink(),
-        );
-      },
-    );
-  }
-
-  String _getFriendlyLabel(String? type) {
-    switch (type) {
-      case 'extract':
-        return 'Syncing data...';
-      case 'click':
-        return 'Navigating portal...';
-      case 'fill-form':
-        return 'Authenticating...';
-      case 'wait':
-        return 'Optimizing connection...';
-      case 'jsCode':
-        return 'Processing request...';
-      default:
-        return 'Connecting to institution';
-    }
-  }
-
-  String _getStatusDetail(InstructionProgressEvent? progress) {
-    if (progress == null) return "Initializing...";
-    if (progress.status == InstructionStatus.failed) {
-      return "Retrying connection...";
-    }
-    return "Step ${progress.instructionIndex} of ${progress.totalInstructions}";
-  }
-}
-
-class _AnimatedStatusAvatar extends StatelessWidget {
-  final InstructionStatus? status;
-  const _AnimatedStatusAvatar({this.status});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isRunning = status == InstructionStatus.running;
-
-    return Container(
-      width: 48,
-      height: 48,
-      decoration: BoxDecoration(
-        color: isRunning
-            ? theme.colorScheme.primaryContainer
-            : theme.colorScheme.surfaceContainerHighest,
-        shape: BoxShape.circle,
-      ),
-      child: Center(
-        child: isRunning
-            ? SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: theme.colorScheme.primary,
-                ),
-              )
-            : Icon(
-                status == InstructionStatus.completed
-                    ? Icons.check
-                    : Icons.sync,
-                size: 20,
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-      ),
-    );
-  }
-}
-
-class _ErrorNote extends StatelessWidget {
-  final String message;
-  const _ErrorNote({required this.message});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.errorContainer,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.info_outline, size: 14, color: theme.colorScheme.error),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              message,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onErrorContainer,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
       ),
     );
   }
