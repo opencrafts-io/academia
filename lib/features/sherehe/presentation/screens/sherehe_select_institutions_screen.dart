@@ -71,9 +71,6 @@ class _ShereheSelectInstitutionsScreenState
                     child: Text(
                       "Done Selecting (${_selectedInstitutions.length})",
                     ),
-                    child: Text(
-                      "Done Selecting (${_selectedInstitutions.length})",
-                    ),
                   ),
                 ),
               ),
@@ -234,91 +231,93 @@ class _ShereheSelectInstitutionsScreenState
 
                   BlocBuilder<InstitutionBloc, InstitutionState>(
                     builder: (context, state) {
-                      if (state is InstitutionLoadingState) {
-                        return SliverFillRemaining(
-                          hasScrollBody: false,
-                          child: const Center(
-                            child: SpinningScallopIndicator(),
-                          ),
-                        );
-                      }
-
-                      if (state is InstitutionErrorState) {
-                        return SliverFillRemaining(
-                          hasScrollBody: false,
-                          child: Center(
-                            child: Text(
-                              state.error,
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.error,
-                              ),
-                            ),
-                          ),
-                        );
-                      }
-
-                      if (state is InstitutionLoadedState) {
-                        if (state.institutions.isEmpty) {
+                      return state.maybeWhen(
+                        loading: () {
                           return SliverFillRemaining(
                             hasScrollBody: false,
                             child: const Center(
+                              child: SpinningScallopIndicator(),
+                            ),
+                          );
+                        },
+                        error: (error) {
+                          return SliverFillRemaining(
+                            hasScrollBody: false,
+                            child: Center(
+                              child: Text(
+                                error,
+                                style: TextStyle(
+                                  color: Theme.of(context).colorScheme.error,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                        loaded: (institutions) {
+                          if (institutions.isEmpty) {
+                            return SliverFillRemaining(
+                              hasScrollBody: false,
+                              child: const Center(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.search_off, size: 48),
+                                    SizedBox(height: 8),
+                                    Text("No results found"),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }
+
+                          return SliverList(
+                            delegate: SliverChildBuilderDelegate((
+                              context,
+                              index,
+                            ) {
+                              final institution = institutions[index];
+                              final selected = _selectedInstitutions.any(
+                                (e) =>
+                                    e.institutionId ==
+                                    institution.institutionId,
+                              );
+
+                              return ShereheInstitutionCheckboxList(
+                                institutionName: institution.name,
+                                selected: selected,
+                                onChanged: (val) => setState(() {
+                                  if (val == true) {
+                                    _selectedInstitutions.add(institution);
+                                  } else {
+                                    _selectedInstitutions.removeWhere(
+                                      (e) =>
+                                          e.institutionId ==
+                                          institution.institutionId,
+                                    );
+                                  }
+                                }),
+                              );
+                            }, childCount: institutions.length),
+                          );
+                        },
+                        orElse: () {
+                          return SliverFillRemaining(
+                            hasScrollBody: false,
+                            child: Center(
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(Icons.search_off, size: 48),
-                                  SizedBox(height: 8),
-                                  Text("No results found"),
+                                children: const [
+                                  Icon(Icons.school_outlined, size: 70),
+                                  SizedBox(height: 10),
+                                  Text(
+                                    "Start by searching for an institution",
+                                    style: TextStyle(fontSize: 15),
+                                  ),
                                 ],
                               ),
                             ),
                           );
-                        }
-
-                        return SliverList(
-                          delegate: SliverChildBuilderDelegate((
-                            context,
-                            index,
-                          ) {
-                            final institution = state.institutions[index];
-                            final selected = _selectedInstitutions.any(
-                              (e) =>
-                                  e.institutionId == institution.institutionId,
-                            );
-
-                            return ShereheInstitutionCheckboxList(
-                              institutionName: institution.name,
-                              selected: selected,
-                              onChanged: (val) => setState(() {
-                                if (val == true) {
-                                  _selectedInstitutions.add(institution);
-                                } else {
-                                  _selectedInstitutions.removeWhere(
-                                    (e) =>
-                                        e.institutionId ==
-                                        institution.institutionId,
-                                  );
-                                }
-                              }),
-                            );
-                          }, childCount: state.institutions.length),
-                        );
-                      }
-
-                      return SliverFillRemaining(
-                        hasScrollBody: false,
-                        child: Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: const [
-                              Icon(Icons.school_outlined, size: 70),
-                              SizedBox(height: 10),
-                              Text(
-                                "Start by searching for an institution",
-                                style: TextStyle(fontSize: 15),
-                              ),
-                            ],
-                          ),
-                        ),
+                        },
                       );
                     },
                   ),
