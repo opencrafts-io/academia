@@ -1,17 +1,20 @@
-import 'package:academia/features/institution/data/models/institution.dart';
-import 'package:academia/features/institution/data/models/institution_scrapping_command.dart';
+import 'package:academia/database/tables/institutions.dart';
+import 'package:academia/database/tables/institution_scrapping_commands.dart';
 import 'package:drift/drift.dart';
 import 'package:academia/core/core.dart';
 
-class InstitutionKey extends Table {
+class InstitutionKeys extends Table {
+  @override
+  String get tableName => 'institution_key';
+
   @JsonKey("institution_id")
   IntColumn get institutionID => integer()
       .named('institution_id')
-      .references(Institution, #institutionId)();
+      .references(Institutions, #institutionId)();
 
   @JsonKey("command_id")
   TextColumn get commandID =>
-      text().references(InstitutionScrappingCommand, #commandID)();
+      text().references(InstitutionScrappingCommands, #commandID)();
 
   @JsonKey("key_sets")
   TextColumn get keySets => text().map(JsonConverter())();

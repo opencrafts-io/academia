@@ -1149,7 +1149,7 @@ class AchievementDetailPageRoute extends GoRouteData
   routes: [TypedGoRoute<ExamTimetableSearchRoute>(path: "search")],
 )
 class ExamTimetableRoute extends GoRouteData with $ExamTimetableRoute {
-  final String institutionId;
+  final int institutionId;
 
   const ExamTimetableRoute({required this.institutionId});
 
@@ -1161,7 +1161,7 @@ class ExamTimetableRoute extends GoRouteData with $ExamTimetableRoute {
 
 class ExamTimetableSearchRoute extends GoRouteData
     with $ExamTimetableSearchRoute {
-  final String institutionId;
+  final int institutionId;
 
   const ExamTimetableSearchRoute({required this.institutionId});
 

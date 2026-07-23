@@ -1,6 +1,7 @@
 import 'package:academia/core/core.dart';
 import 'package:academia/features/features.dart';
 import 'package:dartz/dartz.dart';
+import 'package:drift/drift.dart' show Value;
 
 class TodoListRepositoryImpl implements TodoListRepository {
   final TodoListLocalDatasource localDataSource;
@@ -146,6 +147,31 @@ class TodoListRepositoryImpl implements TodoListRepository {
       // Fetch fresh if dirty or missing
       final remoteResult = await remoteDataSource.getTodoListById(id);
       return remoteResult.map((dto) => dto.toEntity());
+    });
+  }
+
+  @override
+  Future<Either<Failure, TodoListEntity>> markTodoListModified(
+    int todoListLocalId,
+  ) async {
+    final existingResult = await localDataSource.getTodoByID(todoListLocalId);
+
+    return existingResult.fold((failure) => Left(failure), (existing) async {
+      if (existing == null) {
+        return Left(
+          CacheFailure(
+            message: "No TodoList found with ID $todoListLocalId",
+            error: Exception("TodoList not found"),
+          ),
+        );
+      }
+
+      final touched = existing.copyWith(updatedAt: Value(DateTime.now()));
+      final result = await localDataSource.updateTodoList(touched);
+      return result.fold(
+        (failure) => Left(failure),
+        (updated) => Right(updated.toDomain()),
+      );
     });
   }
 

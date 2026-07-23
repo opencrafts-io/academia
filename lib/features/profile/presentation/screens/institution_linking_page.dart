@@ -75,24 +75,26 @@ class _InstitutionLinkingPageState extends State<InstitutionLinkingPage> {
       ),
       body: BlocListener<InstitutionBloc, InstitutionState>(
         listener: (context, state) {
-          if (state is InstitutionLinkedState) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  "You have linked your account to ${_selectedInstitution?.name ?? ''}",
+          state.whenOrNull(
+            linked: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    "You have linked your account to ${_selectedInstitution?.name ?? ''}",
+                  ),
                 ),
-              ),
-            );
-            final profileState = context.read<ProfileBloc>().state;
+              );
+              final profileState = context.read<ProfileBloc>().state;
 
-            if (profileState is! ProfileLoadedState) {
-              return;
-            }
+              if (profileState is! ProfileLoadedState) {
+                return;
+              }
 
-            context.read<InstitutionBloc>().add(
-              GetCachedUserInstitutionsEvent(profileState.profile.id),
-            );
-          }
+              context.read<InstitutionBloc>().add(
+                GetCachedUserInstitutionsEvent(profileState.profile.id),
+              );
+            },
+          );
         },
         child: SafeArea(
           minimum: EdgeInsets.fromLTRB(32, 8, 32, 32),
@@ -141,14 +143,10 @@ class _InstitutionLinkingPageState extends State<InstitutionLinkingPage> {
                         return [
                           BlocBuilder<InstitutionBloc, InstitutionState>(
                             builder: (context, state) {
-                              if (state is InstitutionLoadingState) {
-                                return const Center(
-                                  child: LoadingIndicatorM3E(),
-                                );
-                              }
-
-                              if (state is InstitutionErrorState) {
-                                return Padding(
+                              return state.maybeWhen(
+                                loading: () =>
+                                    const Center(child: LoadingIndicatorM3E()),
+                                error: (error) => Padding(
                                   padding: EdgeInsets.all(12),
                                   child: Card.filled(
                                     color: Theme.of(
@@ -157,49 +155,46 @@ class _InstitutionLinkingPageState extends State<InstitutionLinkingPage> {
                                     child: Padding(
                                       padding: EdgeInsets.all(12),
                                       child: Text(
-                                        state.error,
+                                        error,
                                         style: Theme.of(
                                           context,
                                         ).textTheme.titleSmall,
                                       ),
                                     ),
                                   ),
-                                );
-                              }
-
-                              if (state is InstitutionLoadedState) {
-                                final institutions = state.institutions;
-                                if (institutions.isEmpty) {
-                                  return const ListTile(
-                                    title: Text("No institutions found"),
+                                ),
+                                loaded: (institutions) {
+                                  if (institutions.isEmpty) {
+                                    return const ListTile(
+                                      title: Text("No institutions found"),
+                                    );
+                                  }
+                                  return Column(
+                                    children: institutions
+                                        .map(
+                                          (ins) => ListTile(
+                                            onTap: () {
+                                              setState(() {
+                                                _selectedInstitution = ins;
+                                                searchController.closeView(
+                                                  ins.name,
+                                                );
+                                              });
+                                            },
+                                            title: Text(ins.name),
+                                            subtitle: Text(
+                                              ins.domains?.firstOrNull ?? "",
+                                            ),
+                                            trailing: Text(
+                                              ins.alphaTwoCode ?? 'TF',
+                                            ),
+                                          ),
+                                        )
+                                        .toList(),
                                   );
-                                }
-                                return Column(
-                                  children: institutions
-                                      .map(
-                                        (ins) => ListTile(
-                                          onTap: () {
-                                            setState(() {
-                                              _selectedInstitution = ins;
-                                              searchController.closeView(
-                                                ins.name,
-                                              );
-                                            });
-                                          },
-                                          title: Text(ins.name),
-                                          subtitle: Text(
-                                            ins.domains?.firstOrNull ?? "",
-                                          ),
-                                          trailing: Text(
-                                            ins.alphaTwoCode ?? 'TF',
-                                          ),
-                                        ),
-                                      )
-                                      .toList(),
-                                );
-                              }
-
-                              return const SizedBox.shrink();
+                                },
+                                orElse: () => const SizedBox.shrink(),
+                              );
                             },
                           ),
                         ];

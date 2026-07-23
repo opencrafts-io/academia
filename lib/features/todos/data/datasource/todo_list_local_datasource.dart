@@ -53,7 +53,10 @@ class TodoListLocalDatasource {
       });
 
       query.orderBy([
-        (t) => OrderingTerm(expression: t.createdAt, mode: OrderingMode.desc),
+        (t) => OrderingTerm(
+          expression: coalesce([t.updatedAt, t.createdAt]),
+          mode: OrderingMode.desc,
+        ),
         (t) => OrderingTerm(expression: t.title, mode: OrderingMode.asc),
       ]);
 

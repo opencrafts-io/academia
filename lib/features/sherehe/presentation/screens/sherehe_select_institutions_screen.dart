@@ -71,6 +71,9 @@ class _ShereheSelectInstitutionsScreenState
                     child: Text(
                       "Done Selecting (${_selectedInstitutions.length})",
                     ),
+                    child: Text(
+                      "Done Selecting (${_selectedInstitutions.length})",
+                    ),
                   ),
                 ),
               ),

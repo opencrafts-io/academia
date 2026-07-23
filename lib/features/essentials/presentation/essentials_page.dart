@@ -59,10 +59,12 @@ class _EssentialsPageState extends State<EssentialsPage> {
 
   void _navigateToExamTimetable() async {
     final institutionState = context.read<InstitutionBloc>().state;
+    final institutions = institutionState.whenOrNull(
+      loaded: (institutions) => institutions,
+    );
 
-    if (institutionState is InstitutionLoadedState &&
-        institutionState.institutions.isNotEmpty) {
-      final primaryInstitution = institutionState.institutions.first;
+    if (institutions != null && institutions.isNotEmpty) {
+      final primaryInstitution = institutions.first;
 
       context.read<ScrappingCommandBloc>().add(
         GetScrappingCommandEvent(
@@ -72,11 +74,14 @@ class _EssentialsPageState extends State<EssentialsPage> {
       final resolvedState = await context
           .read<ScrappingCommandBloc>()
           .stream
-          .firstWhere((s) => s is! ScrappingCommandLoading);
+          .firstWhere(
+            (s) => s.maybeWhen(loading: () => false, orElse: () => true),
+          );
 
-      final isSupported =
-          resolvedState is ScrappingCommandLoaded &&
-          resolvedState.command != null;
+      final isSupported = resolvedState.maybeWhen(
+        loaded: (command) => command != null,
+        orElse: () => false,
+      );
 
       if (!mounted) return;
 
@@ -85,7 +90,7 @@ class _EssentialsPageState extends State<EssentialsPage> {
         adService.showInterstitialAd();
         if (!mounted) return;
         ExamTimetableRoute(
-          institutionId: primaryInstitution.institutionId.toString(),
+          institutionId: primaryInstitution.institutionId,
         ).push(context);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
