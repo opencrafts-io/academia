@@ -95,14 +95,14 @@ class _AddCourseSheetState extends State<AddCourseSheet> {
                 ),
               ),
               const SizedBox(height: 20),
-              _buildM3TextField(
+              M3TextField(
                 label: 'Course Code',
                 controller: _codeController,
                 icon: Icons.fingerprint_rounded,
                 hint: 'e.g. MATH402',
               ),
               const SizedBox(height: 20),
-              _buildM3TextField(
+              M3TextField(
                 label: 'Instructor',
                 controller: _instructorController,
                 icon: Icons.badge_rounded,
@@ -127,48 +127,6 @@ class _AddCourseSheetState extends State<AddCourseSheet> {
         ),
       ),
       bottomBar: _buildBottomAction(colorScheme),
-    );
-  }
-
-  Widget _buildM3TextField({
-    required String label,
-    required TextEditingController controller,
-    required IconData icon,
-    String? hint,
-  }) {
-    return TextFormField(
-      controller: controller,
-      style: Theme.of(context).textTheme.bodyLarge,
-      decoration: InputDecoration(
-        labelText: label,
-        hintText: hint,
-        prefixIcon: Icon(icon),
-        filled: true,
-        fillColor: Theme.of(
-          context,
-        ).colorScheme.surfaceContainerHighest.withAlpha(128),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
-          borderSide: BorderSide.none,
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
-          borderSide: BorderSide.none,
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
-          borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.primary,
-            width: 2,
-          ),
-        ),
-        floatingLabelStyle: TextStyle(
-          fontWeight: FontWeight.bold,
-          color: Theme.of(context).colorScheme.primary,
-        ),
-      ),
-      validator: (val) =>
-          (val == null || val.isEmpty) ? 'Required field' : null,
     );
   }
 

@@ -13,6 +13,8 @@ export 'data/color_converter.dart';
 export 'presentation/views/video_trimmer.dart';
 
 export 'presentation/widgets/color_seed_card.dart';
+export 'presentation/widgets/confirm_delete_dialog.dart';
+export 'presentation/widgets/m3_text_field.dart';
 export 'presentation/widgets/expanding_fab.dart';
 export 'presentation/widgets/rrule_editor_widget.dart';
 export 'presentation/widgets/linkified_text.dart';
