@@ -66,8 +66,11 @@ class _PostContentWidgetState extends State<PostContentWidget> {
       final tempDir = await getTemporaryDirectory();
       final fileName = url.split('/').last.split('?').first;
       final filePath = '${tempDir.path}/$fileName';
-      await Dio().download(url, filePath,
-          options: Options(responseType: ResponseType.bytes));
+      await Dio().download(
+        url,
+        filePath,
+        options: Options(responseType: ResponseType.bytes),
+      );
       return XFile(filePath);
     } catch (_) {
       return null;
@@ -103,8 +106,7 @@ class _PostContentWidgetState extends State<PostContentWidget> {
                   onPressed: () async {
                     final url =
                         'https://academia.opencrafts.io${PostDetailRoute(postId: widget.post.id).location}';
-                    final box =
-                        context.findRenderObject() as RenderBox?;
+                    final box = context.findRenderObject() as RenderBox?;
                     final sharePositionOrigin = box != null
                         ? box.localToGlobal(Offset.zero) & box.size
                         : null;
@@ -119,8 +121,9 @@ class _PostContentWidgetState extends State<PostContentWidget> {
                         .firstOrNull;
 
                     if (imageAttachment != null) {
-                      final xfile =
-                          await _downloadAttachment(imageAttachment.file);
+                      final xfile = await _downloadAttachment(
+                        imageAttachment.file,
+                      );
                       if (xfile != null) {
                         await Share.shareXFiles(
                           [xfile],
@@ -152,333 +155,350 @@ class _PostContentWidgetState extends State<PostContentWidget> {
               ],
             ),
             SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              padding: const EdgeInsets.symmetric(vertical: 8),
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
-                  BlocProvider(
-                    create: (context) =>
-                        sl<ChirpUserCubit>()
-                          ..getChirpUserByID(widget.post.authorId),
-                    child: BlocBuilder<ChirpUserCubit, ChirpUserState>(
-                      builder: (context, state) {
-                        String avatarUrl =
-                            'https://i.pinimg.com/736x/18/b5/b5/18b5b599bb873285bd4def283c0d3c09.jpg';
-                        String username = 'Unknown User';
-
-                        if (state is ChirpUserLoadedState) {
-                          avatarUrl =
-                              state.user.avatarUrl ??
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: BlocProvider(
+                      create: (context) =>
+                          sl<ChirpUserCubit>()
+                            ..getChirpUserByID(widget.post.authorId),
+                      child: BlocBuilder<ChirpUserCubit, ChirpUserState>(
+                        builder: (context, state) {
+                          String avatarUrl =
                               'https://i.pinimg.com/736x/18/b5/b5/18b5b599bb873285bd4def283c0d3c09.jpg';
-                          username = state.user.username ?? 'Unknown User';
-                        }
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                ChirpUserAvatar(
-                                  avatarUrl: avatarUrl,
-                                  numberOfScallops: 6,
-                                ),
-                                const SizedBox(width: 8),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'a/${widget.post.community.name}',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodySmall
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                    ),
-                                    Text(
-                                      "$username • ${timeSince(widget.post.createdAt)}",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodySmall
-                                          ?.copyWith(
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-                            LinkifiedText(
-                              text: widget.post.title,
-                              style: Theme.of(context).textTheme.titleMedium
-                                  ?.copyWith(fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(height: 8),
-                            LinkifiedText(text: widget.post.content),
-                            if (widget.post.attachments.isNotEmpty) ...[
-                              const SizedBox(height: 12),
-                              Wrap(
-                                spacing: 8,
-                                runSpacing: 8,
-                                children: widget.post.attachments
-                                    .map(
-                                      (attachment) => AttachmentWidget(
-                                        attachment: attachment,
-                                      ),
-                                    )
-                                    .toList(),
-                              ),
-                            ],
-                            const SizedBox(height: 8),
-                            BlocConsumer<FeedBloc, FeedState>(
-                              listenWhen: (_, s) => s is PostLikeError,
-                              listener: (context, state) {
-                                if (state is PostLikeError &&
-                                    state.post.id == widget.post.id) {
-                                  context
-                                      .read<PostCubit>()
-                                      .rollbackLike(state.post);
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        'Failed to update like',
-                                        style: TextStyle(
-                                          color: Theme.of(
-                                            context,
-                                          ).colorScheme.onError,
-                                        ),
-                                      ),
-                                      behavior: SnackBarBehavior.floating,
-                                      backgroundColor: Theme.of(
-                                        context,
-                                      ).colorScheme.error,
-                                    ),
-                                  );
-                                }
-                              },
-                              builder: (context, _) {
-                                return BlocBuilder<PostCubit, Post>(
-                                  builder: (context, post) {
-                                    return Row(
-                                      children: [
-                                        PostVoteButton(
-                                          upvotes: post.upvotes,
-                                          downvotes: post.downvotes,
-                                          myVote: post.myVote,
-                                          onUpvote: () {
-                                            final profileState =
-                                                context.read<ProfileBloc>().state;
-                                            if (profileState
-                                                is! ProfileLoadedState) {
-                                              return;
-                                            }
-                                            final cubit =
-                                                context.read<PostCubit>();
-                                            final previousFeedState =
-                                                context.read<FeedBloc>().state;
-                                            final newVote =
-                                                post.myVote == 1 ? 0 : 1;
-                                            cubit.applyVoteOptimistic(newVote);
-                                            context.read<FeedBloc>().add(
-                                              ToggleLikePost(
-                                                post: post,
-                                                voteValue: newVote,
-                                                voterId:
-                                                    profileState.profile.id,
-                                                previousState: previousFeedState,
-                                              ),
-                                            );
-                                          },
-                                          onDownvote: () {
-                                            final profileState =
-                                                context.read<ProfileBloc>().state;
-                                            if (profileState
-                                                is! ProfileLoadedState) {
-                                              return;
-                                            }
-                                            final cubit =
-                                                context.read<PostCubit>();
-                                            final previousFeedState =
-                                                context.read<FeedBloc>().state;
-                                            final newVote =
-                                                post.myVote == -1 ? 0 : -1;
-                                            cubit.applyVoteOptimistic(newVote);
-                                            context.read<FeedBloc>().add(
-                                              ToggleLikePost(
-                                                post: post,
-                                                voteValue: newVote,
-                                                voterId:
-                                                    profileState.profile.id,
-                                                previousState: previousFeedState,
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                        const SizedBox(width: 8),
-                                        FilledButton.icon(
-                                          style: FilledButton.styleFrom(
-                                            padding: const EdgeInsets.all(2),
-                                            backgroundColor: Theme.of(
-                                              context,
-                                            ).colorScheme.tertiaryContainer,
-                                            foregroundColor: Theme.of(
-                                              context,
-                                            ).colorScheme.onTertiaryContainer,
-                                          ),
-                                          icon: const Icon(Icons.chat),
-                                          onPressed: () {},
-                                          label:
-                                              Text('${post.commentCount}'),
-                                        ),
-                                        const SizedBox(width: 8),
-                                        OutlinedButton.icon(
-                                          iconAlignment: IconAlignment.start,
-                                          onPressed: null,
-                                          label: Text(
-                                            post.viewsCount.toString(),
-                                          ),
-                                          icon: const Icon(Icons.visibility),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              },
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 16),
+                          String username = 'Unknown User';
 
-                  // Comments header with loading indicator
-                  Row(
-                    children: [
-                      const Icon(Icons.comment_outlined, size: 20),
-                      const SizedBox(width: 8),
-                      Text(
-                        "${widget.post.commentCount} ${widget.post.commentCount == 1 ? 'Comment' : 'Comments'}",
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(fontWeight: FontWeight.w500),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Comments section
-                  if (state is CommentsLoading)
-                    const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(32.0),
-                        child: SpinningScallopIndicator(),
-                      ),
-                    ),
-
-                  if (state is CommentsLoaded && state.comments.isEmpty)
-                    Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(32.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Lottie.asset(
-                              Assets.lotties.promotionalStaff,
-                              height: 240,
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              "No comments yet",
-                              style: Theme.of(context).textTheme.titleMedium,
-                            ),
-                            Text(
-                              "Be the first to share your thoughts!",
-                              style: Theme.of(context).textTheme.bodyMedium
-                                  ?.copyWith(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.onSurface.withAlpha(100),
+                          if (state is ChirpUserLoadedState) {
+                            avatarUrl =
+                                state.user.avatarUrl ??
+                                'https://i.pinimg.com/736x/18/b5/b5/18b5b599bb873285bd4def283c0d3c09.jpg';
+                            username = state.user.username ?? 'Unknown User';
+                          }
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  ChirpUserAvatar(
+                                    avatarUrl: avatarUrl,
+                                    numberOfScallops: 6,
                                   ),
-                            ),
-                          ],
-                        ),
+                                  const SizedBox(width: 8),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'a/${widget.post.community.name}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall
+                                            ?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                      ),
+                                      Text(
+                                        "$username • ${timeSince(widget.post.createdAt)}",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall
+                                            ?.copyWith(
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+                              LinkifiedText(
+                                text: widget.post.title,
+                                style: Theme.of(context).textTheme.titleMedium
+                                    ?.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(height: 8),
+                              LinkifiedText(text: widget.post.content),
+                            ],
+                          );
+                        },
                       ),
                     ),
-
-                  if (state is CommentsLoaded && state.comments.isNotEmpty)
-                    CommentsListWidget(
-                      comments: state.comments,
-                      onReplyTo: widget.onReplyTo,
-                      onVote: widget.onVote,
+                  ),
+                  if (widget.post.attachments.isNotEmpty) ...[
+                    const SizedBox(height: 12),
+                    FeedAttachmentCarousel(
+                      attachments: widget.post.attachments,
                     ),
-
-                  if (state is CommentsPaginationLoading)
-                    Column(
+                  ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CommentsListWidget(
-                          comments: state.existingComments,
-                          onReplyTo: widget.onReplyTo,
-                          onVote: widget.onVote,
-                        ),
-                        const Center(
-                          child: Padding(
-                            padding: EdgeInsets.all(32.0),
-                            child: SpinningScallopIndicator(),
-                          ),
-                        ),
-                      ],
-                    ),
-
-                  if (state is CommentsPaginationError)
-                    Column(
-                      children: [
-                        CommentsListWidget(
-                          comments: state.existingComments,
-                          onReplyTo: widget.onReplyTo,
-                          onVote: widget.onVote,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          child: TextButton.icon(
-                            onPressed: () {
-                              context.read<CommentBloc>().add(
-                                GetPostComments(
-                                  postId: widget.post.id,
-                                  page: _commentPage,
+                        const SizedBox(height: 8),
+                        BlocConsumer<FeedBloc, FeedState>(
+                          listenWhen: (_, s) => s is PostLikeError,
+                          listener: (context, state) {
+                            if (state is PostLikeError &&
+                                state.post.id == widget.post.id) {
+                              context.read<PostCubit>().rollbackLike(
+                                state.post,
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'Failed to update like',
+                                    style: TextStyle(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onError,
+                                    ),
+                                  ),
+                                  behavior: SnackBarBehavior.floating,
+                                  backgroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.error,
                                 ),
                               );
-                            },
-                            icon: const Icon(Icons.refresh),
-                            label: const Text("Retry loading more comments"),
-                          ),
+                            }
+                          },
+                          builder: (context, _) {
+                            return BlocBuilder<PostCubit, Post>(
+                              builder: (context, post) {
+                                return Row(
+                                  children: [
+                                    PostVoteButton(
+                                      upvotes: post.upvotes,
+                                      downvotes: post.downvotes,
+                                      myVote: post.myVote,
+                                      onUpvote: () {
+                                        final profileState = context
+                                            .read<ProfileBloc>()
+                                            .state;
+                                        if (profileState
+                                            is! ProfileLoadedState) {
+                                          return;
+                                        }
+                                        final cubit = context.read<PostCubit>();
+                                        final previousFeedState = context
+                                            .read<FeedBloc>()
+                                            .state;
+                                        final newVote = post.myVote == 1
+                                            ? 0
+                                            : 1;
+                                        cubit.applyVoteOptimistic(newVote);
+                                        context.read<FeedBloc>().add(
+                                          ToggleLikePost(
+                                            post: post,
+                                            voteValue: newVote,
+                                            voterId: profileState.profile.id,
+                                            previousState: previousFeedState,
+                                          ),
+                                        );
+                                      },
+                                      onDownvote: () {
+                                        final profileState = context
+                                            .read<ProfileBloc>()
+                                            .state;
+                                        if (profileState
+                                            is! ProfileLoadedState) {
+                                          return;
+                                        }
+                                        final cubit = context.read<PostCubit>();
+                                        final previousFeedState = context
+                                            .read<FeedBloc>()
+                                            .state;
+                                        final newVote = post.myVote == -1
+                                            ? 0
+                                            : -1;
+                                        cubit.applyVoteOptimistic(newVote);
+                                        context.read<FeedBloc>().add(
+                                          ToggleLikePost(
+                                            post: post,
+                                            voteValue: newVote,
+                                            voterId: profileState.profile.id,
+                                            previousState: previousFeedState,
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    const SizedBox(width: 8),
+                                    FilledButton.icon(
+                                      style: FilledButton.styleFrom(
+                                        padding: const EdgeInsets.all(2),
+                                        backgroundColor: Theme.of(
+                                          context,
+                                        ).colorScheme.tertiaryContainer,
+                                        foregroundColor: Theme.of(
+                                          context,
+                                        ).colorScheme.onTertiaryContainer,
+                                      ),
+                                      icon: const Icon(Icons.chat),
+                                      onPressed: () {},
+                                      label: Text('${post.commentCount}'),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    OutlinedButton.icon(
+                                      iconAlignment: IconAlignment.start,
+                                      onPressed: null,
+                                      label: Text(post.viewsCount.toString()),
+                                      icon: const Icon(Icons.visibility),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
                         ),
-                      ],
-                    ),
+                        const SizedBox(height: 16),
 
-                  if (state is CommentsError)
-                    Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(32.0),
-                        child: Column(
+                        // Comments header with loading indicator
+                        Row(
                           children: [
-                            Icon(
-                              Icons.error,
-                              size: 64,
-                              color: Theme.of(context).colorScheme.error,
-                            ),
-                            const SizedBox(height: 16),
+                            const Icon(Icons.comment_outlined, size: 20),
+                            const SizedBox(width: 8),
                             Text(
-                              "Failed to load comments",
-                              style: Theme.of(context).textTheme.bodyMedium
-                                  ?.copyWith(
-                                    color: Theme.of(context).colorScheme.error,
-                                  ),
+                              "${widget.post.commentCount} ${widget.post.commentCount == 1 ? 'Comment' : 'Comments'}",
+                              style: Theme.of(context).textTheme.titleMedium
+                                  ?.copyWith(fontWeight: FontWeight.w500),
                             ),
                           ],
                         ),
-                      ),
-                    ),
+                        const SizedBox(height: 16),
 
-                  const SizedBox(height: 120),
+                        // Comments section
+                        if (state is CommentsLoading)
+                          const Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(32.0),
+                              child: SpinningScallopIndicator(),
+                            ),
+                          ),
+
+                        if (state is CommentsLoaded && state.comments.isEmpty)
+                          Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(32.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Lottie.asset(
+                                    Assets.lotties.promotionalStaff,
+                                    height: 240,
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    "No comments yet",
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.titleMedium,
+                                  ),
+                                  Text(
+                                    "Be the first to share your thoughts!",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface
+                                              .withAlpha(100),
+                                        ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                        if (state is CommentsLoaded &&
+                            state.comments.isNotEmpty)
+                          CommentsListWidget(
+                            comments: state.comments,
+                            onReplyTo: widget.onReplyTo,
+                            onVote: widget.onVote,
+                          ),
+
+                        if (state is CommentsPaginationLoading)
+                          Column(
+                            children: [
+                              CommentsListWidget(
+                                comments: state.existingComments,
+                                onReplyTo: widget.onReplyTo,
+                                onVote: widget.onVote,
+                              ),
+                              const Center(
+                                child: Padding(
+                                  padding: EdgeInsets.all(32.0),
+                                  child: SpinningScallopIndicator(),
+                                ),
+                              ),
+                            ],
+                          ),
+
+                        if (state is CommentsPaginationError)
+                          Column(
+                            children: [
+                              CommentsListWidget(
+                                comments: state.existingComments,
+                                onReplyTo: widget.onReplyTo,
+                                onVote: widget.onVote,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                ),
+                                child: TextButton.icon(
+                                  onPressed: () {
+                                    context.read<CommentBloc>().add(
+                                      GetPostComments(
+                                        postId: widget.post.id,
+                                        page: _commentPage,
+                                      ),
+                                    );
+                                  },
+                                  icon: const Icon(Icons.refresh),
+                                  label: const Text(
+                                    "Retry loading more comments",
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+
+                        if (state is CommentsError)
+                          Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(32.0),
+                              child: Column(
+                                children: [
+                                  Icon(
+                                    Icons.error,
+                                    size: 64,
+                                    color: Theme.of(context).colorScheme.error,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    "Failed to load comments",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.error,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                        const SizedBox(height: 120),
+                      ],
+                    ),
+                  ),
                 ]),
               ),
             ),
@@ -488,4 +508,3 @@ class _PostContentWidgetState extends State<PostContentWidget> {
     );
   }
 }
-
