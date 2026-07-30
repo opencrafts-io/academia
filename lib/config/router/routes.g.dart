@@ -17,6 +17,7 @@ List<RouteBase> get $appRoutes => [
   $authRoute,
   $profileRoute,
   $completeProfileRoute,
+  $linkInstitutionRequiredPageRoute,
   $shereheRoute,
   $shereheDetailsWithTokenRoute,
   $shereheDetailsRoute,
@@ -424,6 +425,32 @@ mixin $CompleteProfileRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/complete-profile');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $linkInstitutionRequiredPageRoute => GoRouteData.$route(
+  path: '/link-institution-required',
+  factory: $LinkInstitutionRequiredPageRoute._fromState,
+);
+
+mixin $LinkInstitutionRequiredPageRoute on GoRouteData {
+  static LinkInstitutionRequiredPageRoute _fromState(GoRouterState state) =>
+      const LinkInstitutionRequiredPageRoute();
+
+  @override
+  String get location => GoRouteData.$location('/link-institution-required');
 
   @override
   void go(BuildContext context) => context.go(location);

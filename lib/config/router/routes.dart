@@ -246,6 +246,20 @@ class CompleteProfileRoute extends GoRouteData with $CompleteProfileRoute {
   }
 }
 
+@TypedGoRoute<LinkInstitutionRequiredPageRoute>(
+  path: "/link-institution-required",
+)
+class LinkInstitutionRequiredPageRoute extends GoRouteData
+    with $LinkInstitutionRequiredPageRoute {
+  const LinkInstitutionRequiredPageRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const LinkInstitutionRequiredPage();
+  }
+}
+
+
 @TypedGoRoute<ShereheRoute>(
   path: "/sherehe",
   routes: [

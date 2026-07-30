@@ -92,11 +92,7 @@ class _EssentialsPageState extends State<EssentialsPage> {
         );
       }
     } else {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => const LinkInstitutionRequiredPage(),
-        ),
-      );
+      const LinkInstitutionRequiredPageRoute().push(context);
     }
   }
 
