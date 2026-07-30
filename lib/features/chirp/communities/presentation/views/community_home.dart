@@ -6,7 +6,6 @@ import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lottie/lottie.dart';
 
 class CommunityHome extends StatefulWidget {
   final int communityId;
@@ -109,7 +108,7 @@ class _CommunityHomeState extends State<CommunityHome> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Lottie.asset(Assets.lotties.underMaintenance, height: 300),
+                    Assets.icons.settingsIconWrench.image(height: 160),
                     Text(
                       "Ooops!",
                       style: Theme.of(context).textTheme.headlineSmall,

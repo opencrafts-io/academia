@@ -1,6 +1,5 @@
 import 'package:academia/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 
 class FeedEmptyState extends StatelessWidget {
   const FeedEmptyState({
@@ -21,7 +20,7 @@ class FeedEmptyState extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Lottie.asset(Assets.lotties.chat, height: 260),
+          Assets.icons.messageBubble.image(height: 160),
           const SizedBox(height: 16),
           Text(
             title,
