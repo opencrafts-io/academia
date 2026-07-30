@@ -348,9 +348,9 @@ class CommunityActionSection extends StatelessWidget {
                             final box =
                                 context.findRenderObject() as RenderBox?;
                             Share.share(
-                              'Check out this community on Academia:\n\n'
-                              '👥 $communityName\n\n'
-                              '🔗 $url',
+                              '$communityName\n\n'
+                              'Join this community on Academia\n'
+                              '$url',
                               sharePositionOrigin: box != null
                                   ? box.localToGlobal(Offset.zero) & box.size
                                   : null,

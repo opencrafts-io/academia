@@ -74,9 +74,9 @@ class _PostCardState extends State<PostCard> {
                       ? box.localToGlobal(Offset.zero) & box.size
                       : null;
                   final text =
-                      'Check out this post on Academia:\n\n'
-                      '📝 ${widget.post.title}\n\n'
-                      '🔗 $url';
+                      '${widget.post.title}\n\n'
+                      'Join the discussion on Academia\n'
+                      '$url';
 
                   // Attach the first image if available
                   final imageAttachment = widget.post.attachments

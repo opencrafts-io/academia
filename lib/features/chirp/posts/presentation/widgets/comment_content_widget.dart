@@ -66,9 +66,9 @@ class CommentContentWidget extends StatelessWidget {
                     'https://academia.opencrafts.io${PostDetailRoute(postId: comment.post).location}?commentId=${comment.id}';
                 final box = context.findRenderObject() as RenderBox?;
                 Share.share(
-                  'Check out this comment on Academia:\n\n'
-                  '"💬 $excerpt"\n\n'
-                  '🔗 $url',
+                  '"$excerpt"\n\n'
+                  'Join the conversation on Academia\n'
+                  '$url',
                   sharePositionOrigin: box != null
                       ? box.localToGlobal(Offset.zero) & box.size
                       : null,
