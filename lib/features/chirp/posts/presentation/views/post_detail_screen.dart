@@ -20,7 +20,7 @@ class PostDetailPage extends StatefulWidget {
 class _PostDetailPageState extends State<PostDetailPage> {
   final TextEditingController _controller = TextEditingController();
   Comment? _replyingTo;
-  bool isAddingComment = false;
+  bool _isAddingComment = false;
 
   /// Stores the post fetched via deep-link so we don't re-render
   Post? _resolvedPost;
@@ -65,42 +65,35 @@ class _PostDetailPageState extends State<PostDetailPage> {
 
     final profileState = BlocProvider.of<ProfileBloc>(context).state;
     if (profileState is ProfileLoadedState) {
-      final userId = profileState.profile.id;
-      setState(() {
-        isAddingComment = true;
-      });
+      setState(() => _isAddingComment = true);
       context.read<CommentBloc>().add(
         AddComment(
           postId: postId,
           content: text,
-          authorId: userId,
+          authorId: profileState.profile.id,
           parentId: _replyingTo?.id,
         ),
       );
     }
   }
 
-  void _cancelReply() {
-    setState(() {
-      _replyingTo = null;
-    });
-  }
+  void _cancelReply() => setState(() => _replyingTo = null);
 
   @override
   void initState() {
     super.initState();
     if (widget.initialPost != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        context
-            .read<CommentBloc>()
-            .add(GetPostComments(postId: widget.initialPost!.id));
+        context.read<CommentBloc>().add(
+          GetPostComments(postId: widget.initialPost!.id),
+        );
       });
     } else {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
-          context
-              .read<FeedBloc>()
-              .add(GetPostDetailEvent(postId: widget.postId));
+          context.read<FeedBloc>().add(
+            GetPostDetailEvent(postId: widget.postId),
+          );
         }
       });
     }
@@ -131,7 +124,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
               _controller.clear();
               setState(() {
                 _replyingTo = null;
-                isAddingComment = false;
+                _isAddingComment = false;
               });
               context.read<PostCubit>().incrementCommentCount();
               ScaffoldMessenger.of(context).showSnackBar(
@@ -142,9 +135,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
                 ),
               );
             } else if (state is CommentAddError) {
-              setState(() {
-                isAddingComment = false;
-              });
+              setState(() => _isAddingComment = false);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text("Failed to add comment: ${state.message}"),
@@ -157,163 +148,34 @@ class _PostDetailPageState extends State<PostDetailPage> {
           child: PopScope(
             canPop: context.canPop(),
             onPopInvokedWithResult: (didPop, result) {
-              if (didPop) {
-                return;
-              }
+              if (didPop) return;
               // canPop was false (deeplink root) — redirect to home.
               context.go(HomeRoute().location);
             },
             child: Scaffold(
-              body: BlocBuilder<PostCubit, Post>(
-                builder: (context, updatedPost) {
-                  return PostContentWidget(
-                    post: updatedPost,
-                    onReplyTo: _onReplyTo,
-                    onVote: _onVoteComment,
-                  );
-                },
-              ),
-              bottomNavigationBar: SafeArea(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 10,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).scaffoldBackgroundColor,
-                    border: Border(
-                      top: BorderSide(color: Theme.of(context).dividerColor),
+              // The composer lives at the bottom of `body`'s Column (see
+              // below) rather than in `bottomNavigationBar`, so this is what
+              // actually keeps it clear of the keyboard.
+              resizeToAvoidBottomInset: true,
+              body: Column(
+                children: [
+                  Expanded(
+                    child: BlocBuilder<PostCubit, Post>(
+                      builder: (context, updatedPost) => PostContentWidget(
+                        post: updatedPost,
+                        onReplyTo: _onReplyTo,
+                        onVote: _onVoteComment,
+                      ),
                     ),
                   ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // Reply indicator
-                      if (_replyingTo != null)
-                        BlocProvider(
-                          key: ValueKey(_replyingTo?.authorId ?? ''),
-                          create: (context) => ChirpUserCubit(
-                            getChirpUserByIdUsecase: sl(),
-                            getChirpUserByUsernameUsecase: sl(),
-                          )..getChirpUserByID(_replyingTo?.authorId ?? ''),
-                          child: BlocBuilder<ChirpUserCubit, ChirpUserState>(
-                            builder: (context, state) {
-                              String username = 'Unknown User';
-                              if (state is ChirpUserLoadedState) {
-                                username =
-                                    state.user.username ?? 'Unknown User';
-                              }
-                              return Container(
-                                width: double.infinity,
-                                padding: const EdgeInsets.all(8),
-                                margin: const EdgeInsets.only(bottom: 8),
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .secondaryContainer
-                                      .withAlpha(120),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.reply,
-                                          size: 16,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onSecondaryContainer,
-                                        ),
-                                        const SizedBox(width: 8),
-                                        Expanded(
-                                          child: Text(
-                                            'Replying to @$username',
-                                          ),
-                                        ),
-                                        IconButton(
-                                          icon: const Icon(
-                                            Icons.close,
-                                            size: 16,
-                                          ),
-                                          onPressed: _cancelReply,
-                                          padding: EdgeInsets.zero,
-                                          constraints:
-                                              const BoxConstraints(),
-                                        ),
-                                      ],
-                                    ),
-                                    LinkifiedText(
-                                      text: _replyingTo?.content ?? '',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodySmall,
-                                      textAlign: TextAlign.start,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      selectable: false,
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-
-                      // Input row
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              controller: _controller,
-                              minLines: 1,
-                              maxLines: 5,
-                              enabled: !isAddingComment,
-                              decoration: InputDecoration(
-                                hintText: _replyingTo != null
-                                    ? "Write your reply..."
-                                    : "Add a comment...",
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                  borderSide: BorderSide.none,
-                                ),
-                                fillColor: Theme.of(context)
-                                    .colorScheme
-                                    .secondaryContainer
-                                    .withAlpha(isAddingComment ? 100 : 255),
-                                filled: true,
-                                contentPadding:
-                                    const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 10,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 4),
-                            child: IconButton(
-                              onPressed: isAddingComment
-                                  ? null
-                                  : () => _sendReply(post.id),
-                              icon: isAddingComment
-                                  ? const SizedBox(
-                                      width: 24,
-                                      height: 24,
-                                      child: SpinningScallopIndicator(),
-                                    )
-                                  : const Icon(Icons.send),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                  CommentComposer(
+                    controller: _controller,
+                    replyingTo: _replyingTo,
+                    isSending: _isAddingComment,
+                    onSend: () => _sendReply(post.id),
+                    onCancelReply: _cancelReply,
                   ),
-                ),
+                ],
               ),
             ),
           ),
@@ -341,9 +203,9 @@ class _PostDetailPageState extends State<PostDetailPage> {
           setState(() => _resolvedPost = state.post);
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (mounted) {
-              this.context
-                  .read<CommentBloc>()
-                  .add(GetPostComments(postId: postId));
+              this.context.read<CommentBloc>().add(
+                GetPostComments(postId: postId),
+              );
             }
           });
         }
@@ -364,9 +226,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
               },
               child: Scaffold(
                 appBar: AppBar(
-                  leading: BackButton(
-                    onPressed: () => _handleBack(context),
-                  ),
+                  leading: BackButton(onPressed: () => _handleBack(context)),
                 ),
                 body: Center(
                   child: Padding(
@@ -388,12 +248,12 @@ class _PostDetailPageState extends State<PostDetailPage> {
                         const SizedBox(height: 8),
                         Text(
                           state.message,
-                          style: Theme.of(
-                            context,
-                          ).textTheme.bodyMedium?.copyWith(
-                            color:
-                                Theme.of(context).colorScheme.onSurfaceVariant,
-                          ),
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurfaceVariant,
+                              ),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 24),
