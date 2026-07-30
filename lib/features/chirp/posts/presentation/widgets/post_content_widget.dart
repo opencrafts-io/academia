@@ -1,18 +1,7 @@
-import 'package:academia/config/config.dart';
-import 'package:academia/core/core.dart';
 import 'package:academia/features/chirp/chirp.dart';
 import 'package:academia/gen/assets.gen.dart';
-import 'package:academia/injection_container.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:lottie/lottie.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:time_since/time_since.dart';
-
-import '../../../../profile/profile.dart';
 
 class PostContentWidget extends StatefulWidget {
   final Post post;
@@ -59,21 +48,6 @@ class _PostContentWidgetState extends State<PostContentWidget> {
     super.dispose();
   }
 
-  /// Downloads the file at [url] to a temp path and returns an [XFile].
-  /// Returns null if the download fails.
-  Future<XFile?> _downloadAttachment(String url) async {
-    try {
-      final tempDir = await getTemporaryDirectory();
-      final fileName = url.split('/').last.split('?').first;
-      final filePath = '${tempDir.path}/$fileName';
-      await Dio().download(url, filePath,
-          options: Options(responseType: ResponseType.bytes));
-      return XFile(filePath);
-    } catch (_) {
-      return null;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CommentBloc, CommentState>(
@@ -81,404 +55,46 @@ class _PostContentWidgetState extends State<PostContentWidget> {
         return CustomScrollView(
           controller: _scrollController,
           slivers: [
-            SliverAppBar(
-              floating: true,
-              pinned: true,
-              leading: BackButton(
-                color: Theme.of(context).colorScheme.onSurface,
-                onPressed: () {
-                  final updatedPost = context.read<PostCubit>().state;
-                  if (context.canPop()) {
-                    Navigator.pop(context, updatedPost);
-                  } else {
-                    // Opened via deeplink — no history, go to home
-                    context.go(HomeRoute().location);
-                  }
-                },
-              ),
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.share_outlined),
-                  tooltip: 'Share post',
-                  onPressed: () async {
-                    final url =
-                        'https://academia.opencrafts.io${PostDetailRoute(postId: widget.post.id).location}';
-                    final box =
-                        context.findRenderObject() as RenderBox?;
-                    final sharePositionOrigin = box != null
-                        ? box.localToGlobal(Offset.zero) & box.size
-                        : null;
-                    final text =
-                        'Check out this post on Academia:\n\n'
-                        '📝 ${widget.post.title}\n\n'
-                        '🔗 $url';
-
-                    // Attach the first image if available
-                    final imageAttachment = widget.post.attachments
-                        .where((a) => a.attachmentType.toLowerCase() == 'image')
-                        .firstOrNull;
-
-                    if (imageAttachment != null) {
-                      final xfile =
-                          await _downloadAttachment(imageAttachment.file);
-                      if (xfile != null) {
-                        await Share.shareXFiles(
-                          [xfile],
-                          text: text,
-                          sharePositionOrigin: sharePositionOrigin,
-                        );
-                        return;
-                      }
-                    }
-
-                    Share.share(text, sharePositionOrigin: sharePositionOrigin);
-                  },
-                ),
-                IconButton.filled(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Opening Community"),
-                        behavior: SnackBarBehavior.floating,
-                      ),
-                    );
-
-                    CommunitiesRoute(
-                      communityId: widget.post.community.id,
-                    ).push(context);
-                  },
-                  icon: const Icon(Icons.groups, color: Colors.white),
-                ),
-              ],
-            ),
+            PostDetailAppBar(post: widget.post),
             SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              padding: const EdgeInsets.symmetric(vertical: 8),
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
-                  BlocProvider(
-                    create: (context) =>
-                        sl<ChirpUserCubit>()
-                          ..getChirpUserByID(widget.post.authorId),
-                    child: BlocBuilder<ChirpUserCubit, ChirpUserState>(
-                      builder: (context, state) {
-                        String avatarUrl =
-                            'https://i.pinimg.com/736x/18/b5/b5/18b5b599bb873285bd4def283c0d3c09.jpg';
-                        String username = 'Unknown User';
-
-                        if (state is ChirpUserLoadedState) {
-                          avatarUrl =
-                              state.user.avatarUrl ??
-                              'https://i.pinimg.com/736x/18/b5/b5/18b5b599bb873285bd4def283c0d3c09.jpg';
-                          username = state.user.username ?? 'Unknown User';
-                        }
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: PostDetailHeader(post: widget.post),
+                  ),
+                  if (widget.post.attachments.isNotEmpty) ...[
+                    const SizedBox(height: 12),
+                    FeedAttachmentCarousel(
+                      attachments: widget.post.attachments,
+                    ),
+                  ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 8),
+                        const PostActionRow(),
+                        const SizedBox(height: 16),
+                        Row(
                           children: [
-                            Row(
-                              children: [
-                                ChirpUserAvatar(
-                                  avatarUrl: avatarUrl,
-                                  numberOfScallops: 6,
-                                ),
-                                const SizedBox(width: 8),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'a/${widget.post.community.name}',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodySmall
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                    ),
-                                    Text(
-                                      "$username • ${timeSince(widget.post.createdAt)}",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodySmall
-                                          ?.copyWith(
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-                            LinkifiedText(
-                              text: widget.post.title,
+                            const Icon(Icons.comment_outlined, size: 20),
+                            const SizedBox(width: 8),
+                            Text(
+                              "${widget.post.commentCount} ${widget.post.commentCount == 1 ? 'Comment' : 'Comments'}",
                               style: Theme.of(context).textTheme.titleMedium
-                                  ?.copyWith(fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(height: 8),
-                            LinkifiedText(text: widget.post.content),
-                            if (widget.post.attachments.isNotEmpty) ...[
-                              const SizedBox(height: 12),
-                              Wrap(
-                                spacing: 8,
-                                runSpacing: 8,
-                                children: widget.post.attachments
-                                    .map(
-                                      (attachment) => AttachmentWidget(
-                                        attachment: attachment,
-                                      ),
-                                    )
-                                    .toList(),
-                              ),
-                            ],
-                            const SizedBox(height: 8),
-                            BlocConsumer<FeedBloc, FeedState>(
-                              listenWhen: (_, s) => s is PostLikeError,
-                              listener: (context, state) {
-                                if (state is PostLikeError &&
-                                    state.post.id == widget.post.id) {
-                                  context
-                                      .read<PostCubit>()
-                                      .rollbackLike(state.post);
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        'Failed to update like',
-                                        style: TextStyle(
-                                          color: Theme.of(
-                                            context,
-                                          ).colorScheme.onError,
-                                        ),
-                                      ),
-                                      behavior: SnackBarBehavior.floating,
-                                      backgroundColor: Theme.of(
-                                        context,
-                                      ).colorScheme.error,
-                                    ),
-                                  );
-                                }
-                              },
-                              builder: (context, _) {
-                                return BlocBuilder<PostCubit, Post>(
-                                  builder: (context, post) {
-                                    return Row(
-                                      children: [
-                                        PostVoteButton(
-                                          upvotes: post.upvotes,
-                                          downvotes: post.downvotes,
-                                          myVote: post.myVote,
-                                          onUpvote: () {
-                                            final profileState =
-                                                context.read<ProfileBloc>().state;
-                                            if (profileState
-                                                is! ProfileLoadedState) {
-                                              return;
-                                            }
-                                            final cubit =
-                                                context.read<PostCubit>();
-                                            final previousFeedState =
-                                                context.read<FeedBloc>().state;
-                                            final newVote =
-                                                post.myVote == 1 ? 0 : 1;
-                                            cubit.applyVoteOptimistic(newVote);
-                                            context.read<FeedBloc>().add(
-                                              ToggleLikePost(
-                                                post: post,
-                                                voteValue: newVote,
-                                                voterId:
-                                                    profileState.profile.id,
-                                                previousState: previousFeedState,
-                                              ),
-                                            );
-                                          },
-                                          onDownvote: () {
-                                            final profileState =
-                                                context.read<ProfileBloc>().state;
-                                            if (profileState
-                                                is! ProfileLoadedState) {
-                                              return;
-                                            }
-                                            final cubit =
-                                                context.read<PostCubit>();
-                                            final previousFeedState =
-                                                context.read<FeedBloc>().state;
-                                            final newVote =
-                                                post.myVote == -1 ? 0 : -1;
-                                            cubit.applyVoteOptimistic(newVote);
-                                            context.read<FeedBloc>().add(
-                                              ToggleLikePost(
-                                                post: post,
-                                                voteValue: newVote,
-                                                voterId:
-                                                    profileState.profile.id,
-                                                previousState: previousFeedState,
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                        const SizedBox(width: 8),
-                                        FilledButton.icon(
-                                          style: FilledButton.styleFrom(
-                                            padding: const EdgeInsets.all(2),
-                                            backgroundColor: Theme.of(
-                                              context,
-                                            ).colorScheme.tertiaryContainer,
-                                            foregroundColor: Theme.of(
-                                              context,
-                                            ).colorScheme.onTertiaryContainer,
-                                          ),
-                                          icon: const Icon(Icons.chat),
-                                          onPressed: () {},
-                                          label:
-                                              Text('${post.commentCount}'),
-                                        ),
-                                        const SizedBox(width: 8),
-                                        OutlinedButton.icon(
-                                          iconAlignment: IconAlignment.start,
-                                          onPressed: null,
-                                          label: Text(
-                                            post.viewsCount.toString(),
-                                          ),
-                                          icon: const Icon(Icons.visibility),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              },
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Comments header with loading indicator
-                  Row(
-                    children: [
-                      const Icon(Icons.comment_outlined, size: 20),
-                      const SizedBox(width: 8),
-                      Text(
-                        "${widget.post.commentCount} ${widget.post.commentCount == 1 ? 'Comment' : 'Comments'}",
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(fontWeight: FontWeight.w500),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Comments section
-                  if (state is CommentsLoading)
-                    const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(32.0),
-                        child: SpinningScallopIndicator(),
-                      ),
-                    ),
-
-                  if (state is CommentsLoaded && state.comments.isEmpty)
-                    Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(32.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Lottie.asset(
-                              Assets.lotties.promotionalStaff,
-                              height: 240,
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              "No comments yet",
-                              style: Theme.of(context).textTheme.titleMedium,
-                            ),
-                            Text(
-                              "Be the first to share your thoughts!",
-                              style: Theme.of(context).textTheme.bodyMedium
-                                  ?.copyWith(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.onSurface.withAlpha(100),
-                                  ),
+                                  ?.copyWith(fontWeight: FontWeight.w500),
                             ),
                           ],
                         ),
-                      ),
-                    ),
-
-                  if (state is CommentsLoaded && state.comments.isNotEmpty)
-                    CommentsListWidget(
-                      comments: state.comments,
-                      onReplyTo: widget.onReplyTo,
-                      onVote: widget.onVote,
-                    ),
-
-                  if (state is CommentsPaginationLoading)
-                    Column(
-                      children: [
-                        CommentsListWidget(
-                          comments: state.existingComments,
-                          onReplyTo: widget.onReplyTo,
-                          onVote: widget.onVote,
-                        ),
-                        const Center(
-                          child: Padding(
-                            padding: EdgeInsets.all(32.0),
-                            child: SpinningScallopIndicator(),
-                          ),
-                        ),
+                        const SizedBox(height: 16),
+                        ..._commentsSection(state),
+                        const SizedBox(height: 120),
                       ],
                     ),
-
-                  if (state is CommentsPaginationError)
-                    Column(
-                      children: [
-                        CommentsListWidget(
-                          comments: state.existingComments,
-                          onReplyTo: widget.onReplyTo,
-                          onVote: widget.onVote,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          child: TextButton.icon(
-                            onPressed: () {
-                              context.read<CommentBloc>().add(
-                                GetPostComments(
-                                  postId: widget.post.id,
-                                  page: _commentPage,
-                                ),
-                              );
-                            },
-                            icon: const Icon(Icons.refresh),
-                            label: const Text("Retry loading more comments"),
-                          ),
-                        ),
-                      ],
-                    ),
-
-                  if (state is CommentsError)
-                    Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(32.0),
-                        child: Column(
-                          children: [
-                            Icon(
-                              Icons.error,
-                              size: 64,
-                              color: Theme.of(context).colorScheme.error,
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              "Failed to load comments",
-                              style: Theme.of(context).textTheme.bodyMedium
-                                  ?.copyWith(
-                                    color: Theme.of(context).colorScheme.error,
-                                  ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-
-                  const SizedBox(height: 120),
+                  ),
                 ]),
               ),
             ),
@@ -487,5 +103,110 @@ class _PostContentWidgetState extends State<PostContentWidget> {
       },
     );
   }
-}
 
+  List<Widget> _commentsSection(CommentState state) {
+    if (state is CommentsLoading) {
+      return const [CommentSkeletonLoader()];
+    }
+
+    if (state is CommentsLoaded && state.comments.isEmpty) {
+      return [
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.all(32.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Assets.icons.messageBubble.image(height: 140),
+                const SizedBox(height: 8),
+                Text(
+                  "No comments yet",
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                Text(
+                  "Be the first to share your thoughts!",
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withAlpha(100),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ];
+    }
+
+    if (state is CommentsLoaded && state.comments.isNotEmpty) {
+      return [
+        CommentsListWidget(
+          comments: state.comments,
+          onReplyTo: widget.onReplyTo,
+          onVote: widget.onVote,
+        ),
+      ];
+    }
+
+    if (state is CommentsPaginationLoading) {
+      return [
+        CommentsListWidget(
+          comments: state.existingComments,
+          onReplyTo: widget.onReplyTo,
+          onVote: widget.onVote,
+        ),
+        const CommentSkeletonLoader(itemCount: 2),
+      ];
+    }
+
+    if (state is CommentsPaginationError) {
+      return [
+        CommentsListWidget(
+          comments: state.existingComments,
+          onReplyTo: widget.onReplyTo,
+          onVote: widget.onVote,
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          child: TextButton.icon(
+            onPressed: () {
+              context.read<CommentBloc>().add(
+                GetPostComments(postId: widget.post.id, page: _commentPage),
+              );
+            },
+            icon: const Icon(Icons.refresh),
+            label: const Text("Retry loading more comments"),
+          ),
+        ),
+      ];
+    }
+
+    if (state is CommentsError) {
+      return [
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.all(32.0),
+            child: Column(
+              children: [
+                Icon(
+                  Icons.error,
+                  size: 64,
+                  color: Theme.of(context).colorScheme.error,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  "Failed to load comments",
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ];
+    }
+
+    return const [];
+  }
+}

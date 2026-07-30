@@ -1,43 +1,17 @@
-part of 'community_home_bloc.dart';
+import 'package:academia/features/chirp/communities/domain/entities/community.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-abstract class CommunityHomeState extends Equatable {
-  const CommunityHomeState();
+part 'community_home_state.freezed.dart';
 
-  @override
-  List<Object?> get props => [];
-}
-
-class CommunityHomeInitial extends CommunityHomeState {}
-
-class CommunityHomeLoading extends CommunityHomeState {}
-
-class CommunityHomeLoaded extends CommunityHomeState {
-  final Community community;
-
-  const CommunityHomeLoaded(this.community);
-
-  @override
-  List<Object?> get props => [community];
-}
-
-class CommunityLeft extends CommunityHomeState {}
-
-class CommunityCriticalActionFailure extends CommunityHomeState {
-  final String message;
-
-  const CommunityCriticalActionFailure(this.message);
-
-  @override
-  List<Object?> get props => [message];
-}
-
-class CommunityDeleted extends CommunityHomeState {}
-
-class CommunityHomeFailure extends CommunityHomeState {
-  final String message;
-
-  const CommunityHomeFailure(this.message);
-
-  @override
-  List<Object?> get props => [message];
+@freezed
+sealed class CommunityHomeState with _$CommunityHomeState {
+  const factory CommunityHomeState.initial() = CommunityHomeInitial;
+  const factory CommunityHomeState.loading() = CommunityHomeLoading;
+  const factory CommunityHomeState.loaded(Community community) =
+      CommunityHomeLoaded;
+  const factory CommunityHomeState.criticalActionFailure(String message) =
+      CommunityCriticalActionFailure;
+  const factory CommunityHomeState.deleted() = CommunityDeleted;
+  const factory CommunityHomeState.failure(String message) =
+      CommunityHomeFailure;
 }

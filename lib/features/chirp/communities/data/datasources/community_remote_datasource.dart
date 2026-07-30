@@ -3,8 +3,9 @@ import 'package:academia/core/error/failures.dart';
 import 'package:academia/core/network/connectivity_checker.dart';
 import 'package:academia/core/network/dio_client.dart';
 import 'package:academia/core/network/dio_error_handler.dart';
-import 'package:academia/database/database.dart';
-import 'package:academia/features/chirp/communities/data/models/paginated_user_response.dart';
+import 'package:academia/database/database.dart' as db;
+import 'package:academia/features/chirp/communities/data/dtos/community_api_dto.dart';
+import 'package:academia/features/chirp/communities/data/dtos/paginated_user_response.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
@@ -25,8 +26,8 @@ class CommunityRemoteDatasource with DioErrorHandler, ConnectivityChecker {
     }
   }
 
-  Future<Either<Failure, CommunityData>> createCommunity({
-    required CommunityData community,
+  Future<Either<Failure, CommunityApiDto>> createCommunity({
+    required db.Community community,
   }) async {
     try {
       if (!await isConnectedToInternet()) {
@@ -60,7 +61,7 @@ class CommunityRemoteDatasource with DioErrorHandler, ConnectivityChecker {
         final Map<String, dynamic> json = Map<String, dynamic>.from(
           response.data,
         );
-        return right(CommunityData.fromJson(json));
+        return right(CommunityApiDto.fromJson(json));
       }
       throw ("Programming error");
     } on DioException catch (de) {
@@ -75,7 +76,7 @@ class CommunityRemoteDatasource with DioErrorHandler, ConnectivityChecker {
     }
   }
 
-  Future<Either<Failure, CommunityData>> getCommunityById({
+  Future<Either<Failure, CommunityApiDto>> getCommunityById({
     required int communityId,
   }) async {
     try {
@@ -91,7 +92,7 @@ class CommunityRemoteDatasource with DioErrorHandler, ConnectivityChecker {
         final Map<String, dynamic> json = Map<String, dynamic>.from(
           response.data,
         );
-        return right(CommunityData.fromJson(json));
+        return right(CommunityApiDto.fromJson(json));
       } else {
         return left(
           ServerFailure(
@@ -112,7 +113,7 @@ class CommunityRemoteDatasource with DioErrorHandler, ConnectivityChecker {
     }
   }
 
-  Future<Either<Failure, CommunityData>> moderateCommunity({
+  Future<Either<Failure, CommunityApiDto>> moderateCommunity({
     required String groupId,
     required String action,
     required String userId,
@@ -148,7 +149,7 @@ class CommunityRemoteDatasource with DioErrorHandler, ConnectivityChecker {
         );
         final communityJson = Map<String, dynamic>.from(json["group"]);
 
-        return right(CommunityData.fromJson(communityJson));
+        return right(CommunityApiDto.fromJson(communityJson));
       } else {
         return left(
           ServerFailure(
@@ -169,7 +170,7 @@ class CommunityRemoteDatasource with DioErrorHandler, ConnectivityChecker {
     }
   }
 
-  Future<Either<Failure, CommunityData>> joinCommunity({
+  Future<Either<Failure, CommunityApiDto>> joinCommunity({
     required String groupId,
     required String userId,
     required String userName,
@@ -194,7 +195,7 @@ class CommunityRemoteDatasource with DioErrorHandler, ConnectivityChecker {
         final Map<String, dynamic> json = Map<String, dynamic>.from(
           response.data,
         );
-        return right(CommunityData.fromJson(json['group']));
+        return right(CommunityApiDto.fromJson(json['group']));
       } else {
         return left(
           ServerFailure(
@@ -321,7 +322,7 @@ class CommunityRemoteDatasource with DioErrorHandler, ConnectivityChecker {
     }
   }
 
-  Future<Either<Failure, CommunityData>> addCommunityGuidelines({
+  Future<Either<Failure, CommunityApiDto>> addCommunityGuidelines({
     required List<String> rule,
     required String communityId,
     required String userId,
@@ -341,7 +342,7 @@ class CommunityRemoteDatasource with DioErrorHandler, ConnectivityChecker {
         final Map<String, dynamic> json = Map<String, dynamic>.from(
           response.data,
         );
-        return right(CommunityData.fromJson(json['group']));
+        return right(CommunityApiDto.fromJson(json['group']));
       }
 
       throw "Programming error expected server code 200 got ${response.statusCode}";
@@ -358,7 +359,7 @@ class CommunityRemoteDatasource with DioErrorHandler, ConnectivityChecker {
     }
   }
 
-  Future<Either<Failure, List<CommunityData>>> getPostableCommunities({
+  Future<Either<Failure, List<CommunityApiDto>>> getPostableCommunities({
     int page = 1,
     int pageSize = 50,
   }) async {
@@ -375,7 +376,7 @@ class CommunityRemoteDatasource with DioErrorHandler, ConnectivityChecker {
         final results = response.data["results"] as List;
 
         return right(
-          results.map((raw) => CommunityData.fromJson(raw)).toList(),
+          results.map((raw) => CommunityApiDto.fromJson(raw)).toList(),
         );
       }
       throw "Programming error expected server code 200 got ${response.statusCode}";
@@ -392,7 +393,7 @@ class CommunityRemoteDatasource with DioErrorHandler, ConnectivityChecker {
     }
   }
 
-  Future<Either<Failure, List<CommunityData>>> searchForCommunity(
+  Future<Either<Failure, List<CommunityApiDto>>> searchForCommunity(
     String searchTerm, {
     int page = 1,
     int pageSize = 100,
@@ -410,7 +411,7 @@ class CommunityRemoteDatasource with DioErrorHandler, ConnectivityChecker {
         final results = response.data["results"] as List;
 
         return right(
-          results.map((raw) => CommunityData.fromJson(raw)).toList(),
+          results.map((raw) => CommunityApiDto.fromJson(raw)).toList(),
         );
       }
 

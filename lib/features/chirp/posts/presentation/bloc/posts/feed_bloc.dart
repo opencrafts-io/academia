@@ -5,8 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:logger/logger.dart';
 
+export 'feed_state.dart';
+
 part 'feed_event.dart';
-part 'feed_state.dart';
 
 class FeedBloc extends Bloc<FeedEvent, FeedState> {
   final GetFeedPostsUsecase getFeedPosts;

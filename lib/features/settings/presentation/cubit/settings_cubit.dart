@@ -30,6 +30,9 @@ class SettingsCubit extends HydratedCubit<SettingsState> {
     ),
   );
 
+  void toggleChirpMuteVideos() =>
+      emit(state.copyWith(chirpMuteVideos: !state.chirpMuteVideos));
+
   @override
   SettingsState? fromJson(Map<String, dynamic> json) =>
       SettingsState.fromJson(json);
