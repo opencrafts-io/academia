@@ -470,16 +470,18 @@ class CommentContentWidget extends StatelessWidget {
                 text: comment.content,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
-              if (onVote != null) ...[
-                const SizedBox(height: 4),
-                PostVoteButton(
-                  upvotes: comment.upvotes,
-                  downvotes: comment.downvotes,
-                  myVote: comment.myVote,
-                  onUpvote: () => onVote!(comment, true),
-                  onDownvote: () => onVote!(comment, false),
-                ),
-              ],
+              // Comment voting isn't implemented on the backend yet - hide
+              // the control rather than ship a button that does nothing.
+              // if (onVote != null) ...[
+              //   const SizedBox(height: 4),
+              //   PostVoteButton(
+              //     upvotes: comment.upvotes,
+              //     downvotes: comment.downvotes,
+              //     myVote: comment.myVote,
+              //     onUpvote: () => onVote!(comment, true),
+              //     onDownvote: () => onVote!(comment, false),
+              //   ),
+              // ],
             ],
           ),
         ),
