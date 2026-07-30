@@ -1,6 +1,5 @@
 import 'package:academia/features/agenda/data/models/agenda_event.dart';
 import 'package:academia/features/chirp/communities/data/models/community_model.dart';
-import 'package:academia/features/chirp/memberships/data/models/chirp_community_membership.dart';
 import 'package:academia/features/chirp/posts/data/models/attachment_model.dart';
 import 'package:academia/features/chirp/posts/data/models/post_model.dart';
 import 'package:academia/features/chirp/posts/data/models/comment_model.dart';
@@ -90,7 +89,7 @@ part 'database.g.dart';
     //Communities
     Community,
     // Memberships
-    ChirpCommunityMembership,
+    ChirpCommunityMemberships,
 
     /**************************************************************
     *               LEADERBOARD FEATURE DATA MODELS

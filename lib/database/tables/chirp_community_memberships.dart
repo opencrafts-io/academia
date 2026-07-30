@@ -1,7 +1,10 @@
-import 'package:academia/database/tables/tables.dart';
+import 'package:academia/database/tables/chirp_users.dart';
 import 'package:drift/drift.dart';
 
-class ChirpCommunityMembership extends Table {
+class ChirpCommunityMemberships extends Table {
+  @override
+  String get tableName => 'chirp_community_membership';
+
   @JsonKey("id")
   IntColumn get id => integer()();
 

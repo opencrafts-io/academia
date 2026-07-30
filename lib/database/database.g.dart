@@ -18381,16 +18381,12 @@ class CommunityCompanion extends UpdateCompanion<CommunityData> {
   }
 }
 
-class $ChirpCommunityMembershipTable extends ChirpCommunityMembership
-    with
-        TableInfo<
-          $ChirpCommunityMembershipTable,
-          ChirpCommunityMembershipData
-        > {
+class $ChirpCommunityMembershipsTable extends ChirpCommunityMemberships
+    with TableInfo<$ChirpCommunityMembershipsTable, ChirpCommunityMembership> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $ChirpCommunityMembershipTable(this.attachedDatabase, [this._alias]);
+  $ChirpCommunityMembershipsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -18522,7 +18518,7 @@ class $ChirpCommunityMembershipTable extends ChirpCommunityMembership
   static const String $name = 'chirp_community_membership';
   @override
   VerificationContext validateIntegrity(
-    Insertable<ChirpCommunityMembershipData> instance, {
+    Insertable<ChirpCommunityMembership> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -18605,12 +18601,12 @@ class $ChirpCommunityMembershipTable extends ChirpCommunityMembership
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  ChirpCommunityMembershipData map(
+  ChirpCommunityMembership map(
     Map<String, dynamic> data, {
     String? tablePrefix,
   }) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return ChirpCommunityMembershipData(
+    return ChirpCommunityMembership(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -18655,13 +18651,13 @@ class $ChirpCommunityMembershipTable extends ChirpCommunityMembership
   }
 
   @override
-  $ChirpCommunityMembershipTable createAlias(String alias) {
-    return $ChirpCommunityMembershipTable(attachedDatabase, alias);
+  $ChirpCommunityMembershipsTable createAlias(String alias) {
+    return $ChirpCommunityMembershipsTable(attachedDatabase, alias);
   }
 }
 
-class ChirpCommunityMembershipData extends DataClass
-    implements Insertable<ChirpCommunityMembershipData> {
+class ChirpCommunityMembership extends DataClass
+    implements Insertable<ChirpCommunityMembership> {
   final int id;
   final int communityID;
   final String userID;
@@ -18672,7 +18668,7 @@ class ChirpCommunityMembershipData extends DataClass
   final DateTime? bannedAt;
   final DateTime joinedAt;
   final DateTime? cachedAt;
-  const ChirpCommunityMembershipData({
+  const ChirpCommunityMembership({
     required this.id,
     required this.communityID,
     required this.userID,
@@ -18708,8 +18704,8 @@ class ChirpCommunityMembershipData extends DataClass
     return map;
   }
 
-  ChirpCommunityMembershipCompanion toCompanion(bool nullToAbsent) {
-    return ChirpCommunityMembershipCompanion(
+  ChirpCommunityMembershipsCompanion toCompanion(bool nullToAbsent) {
+    return ChirpCommunityMembershipsCompanion(
       id: Value(id),
       communityID: Value(communityID),
       userID: Value(userID),
@@ -18731,12 +18727,12 @@ class ChirpCommunityMembershipData extends DataClass
     );
   }
 
-  factory ChirpCommunityMembershipData.fromJson(
+  factory ChirpCommunityMembership.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return ChirpCommunityMembershipData(
+    return ChirpCommunityMembership(
       id: serializer.fromJson<int>(json['id']),
       communityID: serializer.fromJson<int>(json['community_id']),
       userID: serializer.fromJson<String>(json['user_id']),
@@ -18766,7 +18762,7 @@ class ChirpCommunityMembershipData extends DataClass
     };
   }
 
-  ChirpCommunityMembershipData copyWith({
+  ChirpCommunityMembership copyWith({
     int? id,
     int? communityID,
     String? userID,
@@ -18777,7 +18773,7 @@ class ChirpCommunityMembershipData extends DataClass
     Value<DateTime?> bannedAt = const Value.absent(),
     DateTime? joinedAt,
     Value<DateTime?> cachedAt = const Value.absent(),
-  }) => ChirpCommunityMembershipData(
+  }) => ChirpCommunityMembership(
     id: id ?? this.id,
     communityID: communityID ?? this.communityID,
     userID: userID ?? this.userID,
@@ -18789,10 +18785,10 @@ class ChirpCommunityMembershipData extends DataClass
     joinedAt: joinedAt ?? this.joinedAt,
     cachedAt: cachedAt.present ? cachedAt.value : this.cachedAt,
   );
-  ChirpCommunityMembershipData copyWithCompanion(
-    ChirpCommunityMembershipCompanion data,
+  ChirpCommunityMembership copyWithCompanion(
+    ChirpCommunityMembershipsCompanion data,
   ) {
-    return ChirpCommunityMembershipData(
+    return ChirpCommunityMembership(
       id: data.id.present ? data.id.value : this.id,
       communityID: data.communityID.present
           ? data.communityID.value
@@ -18814,7 +18810,7 @@ class ChirpCommunityMembershipData extends DataClass
 
   @override
   String toString() {
-    return (StringBuffer('ChirpCommunityMembershipData(')
+    return (StringBuffer('ChirpCommunityMembership(')
           ..write('id: $id, ')
           ..write('communityID: $communityID, ')
           ..write('userID: $userID, ')
@@ -18845,7 +18841,7 @@ class ChirpCommunityMembershipData extends DataClass
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is ChirpCommunityMembershipData &&
+      (other is ChirpCommunityMembership &&
           other.id == this.id &&
           other.communityID == this.communityID &&
           other.userID == this.userID &&
@@ -18858,8 +18854,8 @@ class ChirpCommunityMembershipData extends DataClass
           other.cachedAt == this.cachedAt);
 }
 
-class ChirpCommunityMembershipCompanion
-    extends UpdateCompanion<ChirpCommunityMembershipData> {
+class ChirpCommunityMembershipsCompanion
+    extends UpdateCompanion<ChirpCommunityMembership> {
   final Value<int> id;
   final Value<int> communityID;
   final Value<String> userID;
@@ -18870,7 +18866,7 @@ class ChirpCommunityMembershipCompanion
   final Value<DateTime?> bannedAt;
   final Value<DateTime> joinedAt;
   final Value<DateTime?> cachedAt;
-  const ChirpCommunityMembershipCompanion({
+  const ChirpCommunityMembershipsCompanion({
     this.id = const Value.absent(),
     this.communityID = const Value.absent(),
     this.userID = const Value.absent(),
@@ -18882,7 +18878,7 @@ class ChirpCommunityMembershipCompanion
     this.joinedAt = const Value.absent(),
     this.cachedAt = const Value.absent(),
   });
-  ChirpCommunityMembershipCompanion.insert({
+  ChirpCommunityMembershipsCompanion.insert({
     this.id = const Value.absent(),
     required int communityID,
     required String userID,
@@ -18896,7 +18892,7 @@ class ChirpCommunityMembershipCompanion
   }) : communityID = Value(communityID),
        userID = Value(userID),
        role = Value(role);
-  static Insertable<ChirpCommunityMembershipData> custom({
+  static Insertable<ChirpCommunityMembership> custom({
     Expression<int>? id,
     Expression<int>? communityID,
     Expression<String>? userID,
@@ -18922,7 +18918,7 @@ class ChirpCommunityMembershipCompanion
     });
   }
 
-  ChirpCommunityMembershipCompanion copyWith({
+  ChirpCommunityMembershipsCompanion copyWith({
     Value<int>? id,
     Value<int>? communityID,
     Value<String>? userID,
@@ -18934,7 +18930,7 @@ class ChirpCommunityMembershipCompanion
     Value<DateTime>? joinedAt,
     Value<DateTime?>? cachedAt,
   }) {
-    return ChirpCommunityMembershipCompanion(
+    return ChirpCommunityMembershipsCompanion(
       id: id ?? this.id,
       communityID: communityID ?? this.communityID,
       userID: userID ?? this.userID,
@@ -18986,7 +18982,7 @@ class ChirpCommunityMembershipCompanion
 
   @override
   String toString() {
-    return (StringBuffer('ChirpCommunityMembershipCompanion(')
+    return (StringBuffer('ChirpCommunityMembershipsCompanion(')
           ..write('id: $id, ')
           ..write('communityID: $communityID, ')
           ..write('userID: $userID, ')
@@ -23354,8 +23350,8 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   late final $ExamTimetablesTable examTimetables = $ExamTimetablesTable(this);
   late final $ChirpUsersTable chirpUsers = $ChirpUsersTable(this);
   late final $CommunityTable community = $CommunityTable(this);
-  late final $ChirpCommunityMembershipTable chirpCommunityMembership =
-      $ChirpCommunityMembershipTable(this);
+  late final $ChirpCommunityMembershipsTable chirpCommunityMemberships =
+      $ChirpCommunityMembershipsTable(this);
   late final $LeaderboardRankTable leaderboardRank = $LeaderboardRankTable(
     this,
   );
@@ -23400,7 +23396,7 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     examTimetables,
     chirpUsers,
     community,
-    chirpCommunityMembership,
+    chirpCommunityMemberships,
     leaderboardRank,
     streakActivity,
     streakMilestone,
@@ -33623,30 +33619,30 @@ final class $$ChirpUsersTableReferences
   $$ChirpUsersTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
   static MultiTypedResultKey<
-    $ChirpCommunityMembershipTable,
-    List<ChirpCommunityMembershipData>
+    $ChirpCommunityMembershipsTable,
+    List<ChirpCommunityMembership>
   >
-  _chirpCommunityMembershipRefsTable(_$AppDataBase db) =>
+  _chirpCommunityMembershipsRefsTable(_$AppDataBase db) =>
       MultiTypedResultKey.fromTable(
-        db.chirpCommunityMembership,
+        db.chirpCommunityMemberships,
         aliasName: $_aliasNameGenerator(
           db.chirpUsers.userID,
-          db.chirpCommunityMembership.userID,
+          db.chirpCommunityMemberships.userID,
         ),
       );
 
-  $$ChirpCommunityMembershipTableProcessedTableManager
-  get chirpCommunityMembershipRefs {
+  $$ChirpCommunityMembershipsTableProcessedTableManager
+  get chirpCommunityMembershipsRefs {
     final manager =
-        $$ChirpCommunityMembershipTableTableManager(
+        $$ChirpCommunityMembershipsTableTableManager(
           $_db,
-          $_db.chirpCommunityMembership,
+          $_db.chirpCommunityMemberships,
         ).filter(
           (f) => f.userID.userID.sqlEquals($_itemColumn<String>('user_i_d')!),
         );
 
     final cache = $_typedResult.readTableOrNull(
-      _chirpCommunityMembershipRefsTable($_db),
+      _chirpCommunityMembershipsRefsTable($_db),
     );
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
@@ -33708,24 +33704,24 @@ class $$ChirpUsersTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  Expression<bool> chirpCommunityMembershipRefs(
-    Expression<bool> Function($$ChirpCommunityMembershipTableFilterComposer f)
+  Expression<bool> chirpCommunityMembershipsRefs(
+    Expression<bool> Function($$ChirpCommunityMembershipsTableFilterComposer f)
     f,
   ) {
-    final $$ChirpCommunityMembershipTableFilterComposer composer =
+    final $$ChirpCommunityMembershipsTableFilterComposer composer =
         $composerBuilder(
           composer: this,
           getCurrentColumn: (t) => t.userID,
-          referencedTable: $db.chirpCommunityMembership,
+          referencedTable: $db.chirpCommunityMemberships,
           getReferencedColumn: (t) => t.userID,
           builder:
               (
                 joinBuilder, {
                 $addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer,
-              }) => $$ChirpCommunityMembershipTableFilterComposer(
+              }) => $$ChirpCommunityMembershipsTableFilterComposer(
                 $db: $db,
-                $table: $db.chirpCommunityMembership,
+                $table: $db.chirpCommunityMemberships,
                 $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
                 joinBuilder: joinBuilder,
                 $removeJoinBuilderFromRootComposer:
@@ -33829,24 +33825,24 @@ class $$ChirpUsersTableAnnotationComposer
   GeneratedColumn<DateTime> get cachedAt =>
       $composableBuilder(column: $table.cachedAt, builder: (column) => column);
 
-  Expression<T> chirpCommunityMembershipRefs<T extends Object>(
-    Expression<T> Function($$ChirpCommunityMembershipTableAnnotationComposer a)
+  Expression<T> chirpCommunityMembershipsRefs<T extends Object>(
+    Expression<T> Function($$ChirpCommunityMembershipsTableAnnotationComposer a)
     f,
   ) {
-    final $$ChirpCommunityMembershipTableAnnotationComposer composer =
+    final $$ChirpCommunityMembershipsTableAnnotationComposer composer =
         $composerBuilder(
           composer: this,
           getCurrentColumn: (t) => t.userID,
-          referencedTable: $db.chirpCommunityMembership,
+          referencedTable: $db.chirpCommunityMemberships,
           getReferencedColumn: (t) => t.userID,
           builder:
               (
                 joinBuilder, {
                 $addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer,
-              }) => $$ChirpCommunityMembershipTableAnnotationComposer(
+              }) => $$ChirpCommunityMembershipsTableAnnotationComposer(
                 $db: $db,
-                $table: $db.chirpCommunityMembership,
+                $table: $db.chirpCommunityMemberships,
                 $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
                 joinBuilder: joinBuilder,
                 $removeJoinBuilderFromRootComposer:
@@ -33870,7 +33866,7 @@ class $$ChirpUsersTableTableManager
           $$ChirpUsersTableUpdateCompanionBuilder,
           (ChirpUser, $$ChirpUsersTableReferences),
           ChirpUser,
-          PrefetchHooks Function({bool chirpCommunityMembershipRefs})
+          PrefetchHooks Function({bool chirpCommunityMembershipsRefs})
         > {
   $$ChirpUsersTableTableManager(_$AppDataBase db, $ChirpUsersTable table)
     : super(
@@ -33939,30 +33935,30 @@ class $$ChirpUsersTableTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({chirpCommunityMembershipRefs = false}) {
+          prefetchHooksCallback: ({chirpCommunityMembershipsRefs = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [
-                if (chirpCommunityMembershipRefs) db.chirpCommunityMembership,
+                if (chirpCommunityMembershipsRefs) db.chirpCommunityMemberships,
               ],
               addJoins: null,
               getPrefetchedDataCallback: (items) async {
                 return [
-                  if (chirpCommunityMembershipRefs)
+                  if (chirpCommunityMembershipsRefs)
                     await $_getPrefetchedData<
                       ChirpUser,
                       $ChirpUsersTable,
-                      ChirpCommunityMembershipData
+                      ChirpCommunityMembership
                     >(
                       currentTable: table,
                       referencedTable: $$ChirpUsersTableReferences
-                          ._chirpCommunityMembershipRefsTable(db),
+                          ._chirpCommunityMembershipsRefsTable(db),
                       managerFromTypedResult: (p0) =>
                           $$ChirpUsersTableReferences(
                             db,
                             table,
                             p0,
-                          ).chirpCommunityMembershipRefs,
+                          ).chirpCommunityMembershipsRefs,
                       referencedItemsForCurrentItem: (item, referencedItems) =>
                           referencedItems.where((e) => e.userID == item.userID),
                       typedResults: items,
@@ -33987,7 +33983,7 @@ typedef $$ChirpUsersTableProcessedTableManager =
       $$ChirpUsersTableUpdateCompanionBuilder,
       (ChirpUser, $$ChirpUsersTableReferences),
       ChirpUser,
-      PrefetchHooks Function({bool chirpCommunityMembershipRefs})
+      PrefetchHooks Function({bool chirpCommunityMembershipsRefs})
     >;
 typedef $$CommunityTableCreateCompanionBuilder =
     CommunityCompanion Function({
@@ -34593,8 +34589,8 @@ typedef $$CommunityTableProcessedTableManager =
       CommunityData,
       PrefetchHooks Function()
     >;
-typedef $$ChirpCommunityMembershipTableCreateCompanionBuilder =
-    ChirpCommunityMembershipCompanion Function({
+typedef $$ChirpCommunityMembershipsTableCreateCompanionBuilder =
+    ChirpCommunityMembershipsCompanion Function({
       Value<int> id,
       required int communityID,
       required String userID,
@@ -34606,8 +34602,8 @@ typedef $$ChirpCommunityMembershipTableCreateCompanionBuilder =
       Value<DateTime> joinedAt,
       Value<DateTime?> cachedAt,
     });
-typedef $$ChirpCommunityMembershipTableUpdateCompanionBuilder =
-    ChirpCommunityMembershipCompanion Function({
+typedef $$ChirpCommunityMembershipsTableUpdateCompanionBuilder =
+    ChirpCommunityMembershipsCompanion Function({
       Value<int> id,
       Value<int> communityID,
       Value<String> userID,
@@ -34620,14 +34616,14 @@ typedef $$ChirpCommunityMembershipTableUpdateCompanionBuilder =
       Value<DateTime?> cachedAt,
     });
 
-final class $$ChirpCommunityMembershipTableReferences
+final class $$ChirpCommunityMembershipsTableReferences
     extends
         BaseReferences<
           _$AppDataBase,
-          $ChirpCommunityMembershipTable,
-          ChirpCommunityMembershipData
+          $ChirpCommunityMembershipsTable,
+          ChirpCommunityMembership
         > {
-  $$ChirpCommunityMembershipTableReferences(
+  $$ChirpCommunityMembershipsTableReferences(
     super.$_db,
     super.$_table,
     super.$_typedResult,
@@ -34636,7 +34632,7 @@ final class $$ChirpCommunityMembershipTableReferences
   static $ChirpUsersTable _userIDTable(_$AppDataBase db) =>
       db.chirpUsers.createAlias(
         $_aliasNameGenerator(
-          db.chirpCommunityMembership.userID,
+          db.chirpCommunityMemberships.userID,
           db.chirpUsers.userID,
         ),
       );
@@ -34656,9 +34652,9 @@ final class $$ChirpCommunityMembershipTableReferences
   }
 }
 
-class $$ChirpCommunityMembershipTableFilterComposer
-    extends Composer<_$AppDataBase, $ChirpCommunityMembershipTable> {
-  $$ChirpCommunityMembershipTableFilterComposer({
+class $$ChirpCommunityMembershipsTableFilterComposer
+    extends Composer<_$AppDataBase, $ChirpCommunityMembershipsTable> {
+  $$ChirpCommunityMembershipsTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -34734,9 +34730,9 @@ class $$ChirpCommunityMembershipTableFilterComposer
   }
 }
 
-class $$ChirpCommunityMembershipTableOrderingComposer
-    extends Composer<_$AppDataBase, $ChirpCommunityMembershipTable> {
-  $$ChirpCommunityMembershipTableOrderingComposer({
+class $$ChirpCommunityMembershipsTableOrderingComposer
+    extends Composer<_$AppDataBase, $ChirpCommunityMembershipsTable> {
+  $$ChirpCommunityMembershipsTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -34812,9 +34808,9 @@ class $$ChirpCommunityMembershipTableOrderingComposer
   }
 }
 
-class $$ChirpCommunityMembershipTableAnnotationComposer
-    extends Composer<_$AppDataBase, $ChirpCommunityMembershipTable> {
-  $$ChirpCommunityMembershipTableAnnotationComposer({
+class $$ChirpCommunityMembershipsTableAnnotationComposer
+    extends Composer<_$AppDataBase, $ChirpCommunityMembershipsTable> {
+  $$ChirpCommunityMembershipsTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -34878,43 +34874,43 @@ class $$ChirpCommunityMembershipTableAnnotationComposer
   }
 }
 
-class $$ChirpCommunityMembershipTableTableManager
+class $$ChirpCommunityMembershipsTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $ChirpCommunityMembershipTable,
-          ChirpCommunityMembershipData,
-          $$ChirpCommunityMembershipTableFilterComposer,
-          $$ChirpCommunityMembershipTableOrderingComposer,
-          $$ChirpCommunityMembershipTableAnnotationComposer,
-          $$ChirpCommunityMembershipTableCreateCompanionBuilder,
-          $$ChirpCommunityMembershipTableUpdateCompanionBuilder,
+          $ChirpCommunityMembershipsTable,
+          ChirpCommunityMembership,
+          $$ChirpCommunityMembershipsTableFilterComposer,
+          $$ChirpCommunityMembershipsTableOrderingComposer,
+          $$ChirpCommunityMembershipsTableAnnotationComposer,
+          $$ChirpCommunityMembershipsTableCreateCompanionBuilder,
+          $$ChirpCommunityMembershipsTableUpdateCompanionBuilder,
           (
-            ChirpCommunityMembershipData,
-            $$ChirpCommunityMembershipTableReferences,
+            ChirpCommunityMembership,
+            $$ChirpCommunityMembershipsTableReferences,
           ),
-          ChirpCommunityMembershipData,
+          ChirpCommunityMembership,
           PrefetchHooks Function({bool userID})
         > {
-  $$ChirpCommunityMembershipTableTableManager(
+  $$ChirpCommunityMembershipsTableTableManager(
     _$AppDataBase db,
-    $ChirpCommunityMembershipTable table,
+    $ChirpCommunityMembershipsTable table,
   ) : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$ChirpCommunityMembershipTableFilterComposer(
+              $$ChirpCommunityMembershipsTableFilterComposer(
                 $db: db,
                 $table: table,
               ),
           createOrderingComposer: () =>
-              $$ChirpCommunityMembershipTableOrderingComposer(
+              $$ChirpCommunityMembershipsTableOrderingComposer(
                 $db: db,
                 $table: table,
               ),
           createComputedFieldComposer: () =>
-              $$ChirpCommunityMembershipTableAnnotationComposer(
+              $$ChirpCommunityMembershipsTableAnnotationComposer(
                 $db: db,
                 $table: table,
               ),
@@ -34930,7 +34926,7 @@ class $$ChirpCommunityMembershipTableTableManager
                 Value<DateTime?> bannedAt = const Value.absent(),
                 Value<DateTime> joinedAt = const Value.absent(),
                 Value<DateTime?> cachedAt = const Value.absent(),
-              }) => ChirpCommunityMembershipCompanion(
+              }) => ChirpCommunityMembershipsCompanion(
                 id: id,
                 communityID: communityID,
                 userID: userID,
@@ -34954,7 +34950,7 @@ class $$ChirpCommunityMembershipTableTableManager
                 Value<DateTime?> bannedAt = const Value.absent(),
                 Value<DateTime> joinedAt = const Value.absent(),
                 Value<DateTime?> cachedAt = const Value.absent(),
-              }) => ChirpCommunityMembershipCompanion.insert(
+              }) => ChirpCommunityMembershipsCompanion.insert(
                 id: id,
                 communityID: communityID,
                 userID: userID,
@@ -34970,7 +34966,7 @@ class $$ChirpCommunityMembershipTableTableManager
               .map(
                 (e) => (
                   e.readTable(table),
-                  $$ChirpCommunityMembershipTableReferences(db, table, e),
+                  $$ChirpCommunityMembershipsTableReferences(db, table, e),
                 ),
               )
               .toList(),
@@ -35000,10 +34996,10 @@ class $$ChirpCommunityMembershipTableTableManager
                                 currentTable: table,
                                 currentColumn: table.userID,
                                 referencedTable:
-                                    $$ChirpCommunityMembershipTableReferences
+                                    $$ChirpCommunityMembershipsTableReferences
                                         ._userIDTable(db),
                                 referencedColumn:
-                                    $$ChirpCommunityMembershipTableReferences
+                                    $$ChirpCommunityMembershipsTableReferences
                                         ._userIDTable(db)
                                         .userID,
                               )
@@ -35021,18 +35017,18 @@ class $$ChirpCommunityMembershipTableTableManager
       );
 }
 
-typedef $$ChirpCommunityMembershipTableProcessedTableManager =
+typedef $$ChirpCommunityMembershipsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $ChirpCommunityMembershipTable,
-      ChirpCommunityMembershipData,
-      $$ChirpCommunityMembershipTableFilterComposer,
-      $$ChirpCommunityMembershipTableOrderingComposer,
-      $$ChirpCommunityMembershipTableAnnotationComposer,
-      $$ChirpCommunityMembershipTableCreateCompanionBuilder,
-      $$ChirpCommunityMembershipTableUpdateCompanionBuilder,
-      (ChirpCommunityMembershipData, $$ChirpCommunityMembershipTableReferences),
-      ChirpCommunityMembershipData,
+      $ChirpCommunityMembershipsTable,
+      ChirpCommunityMembership,
+      $$ChirpCommunityMembershipsTableFilterComposer,
+      $$ChirpCommunityMembershipsTableOrderingComposer,
+      $$ChirpCommunityMembershipsTableAnnotationComposer,
+      $$ChirpCommunityMembershipsTableCreateCompanionBuilder,
+      $$ChirpCommunityMembershipsTableUpdateCompanionBuilder,
+      (ChirpCommunityMembership, $$ChirpCommunityMembershipsTableReferences),
+      ChirpCommunityMembership,
       PrefetchHooks Function({bool userID})
     >;
 typedef $$LeaderboardRankTableCreateCompanionBuilder =
@@ -38078,10 +38074,10 @@ class $AppDataBaseManager {
       $$ChirpUsersTableTableManager(_db, _db.chirpUsers);
   $$CommunityTableTableManager get community =>
       $$CommunityTableTableManager(_db, _db.community);
-  $$ChirpCommunityMembershipTableTableManager get chirpCommunityMembership =>
-      $$ChirpCommunityMembershipTableTableManager(
+  $$ChirpCommunityMembershipsTableTableManager get chirpCommunityMemberships =>
+      $$ChirpCommunityMembershipsTableTableManager(
         _db,
-        _db.chirpCommunityMembership,
+        _db.chirpCommunityMemberships,
       );
   $$LeaderboardRankTableTableManager get leaderboardRank =>
       $$LeaderboardRankTableTableManager(_db, _db.leaderboardRank);
