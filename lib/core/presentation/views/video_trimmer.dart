@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:video_trimmer/video_trimmer.dart';
@@ -18,28 +20,38 @@ class _VideoTrimmerPageState extends State<VideoTrimmerPage> {
   double _endValue = 0.0;
 
   bool _isPlaying = false;
-  bool _progressVisibility = false;
+  bool _isSaving = false;
 
   Future<String?> _saveVideo() async {
-    setState(() {
-      _progressVisibility = true;
-    });
-
-    String? savedPath;
-
+    final completer = Completer<String?>();
     await _trimmer.saveTrimmedVideo(
       startValue: _startValue,
       endValue: _endValue,
-      onSave: (val) {
-        savedPath = val;
-      },
       outputType: OutputType.video,
+      onSave: completer.complete,
     );
-    setState(() {
-      _progressVisibility = false;
-    });
+    return completer.future;
+  }
 
-    return savedPath;
+  Future<void> _confirm() async {
+    if (_isSaving) return;
+    setState(() => _isSaving = true);
+
+    final outputPath = await _saveVideo();
+
+    if (!mounted) return;
+    setState(() => _isSaving = false);
+
+    if (outputPath == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Couldn't save video. Please try again."),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+    context.pop(outputPath);
   }
 
   void _loadVideo() {
@@ -54,119 +66,105 @@ class _VideoTrimmerPageState extends State<VideoTrimmerPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Video Trimmer")),
-      body: Builder(
-        builder: (context) => Center(
-          child: Container(
-            padding: EdgeInsets.only(bottom: 30.0),
-            // color: Colors.black,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Visibility(
-                  visible: _progressVisibility,
-                  child: LinearProgressIndicator(),
-                ),
-                Expanded(child: VideoViewer(trimmer: _trimmer)),
+    final darkScheme = ColorScheme.fromSeed(
+      seedColor: Theme.of(context).colorScheme.primary,
+      brightness: Brightness.dark,
+    );
 
-                Center(
-                  child: TrimViewer(
-                    trimmer: _trimmer,
-                    viewerHeight: 50.0,
-                    viewerWidth: MediaQuery.of(context).size.width,
-                    maxVideoLength: const Duration(seconds: 90),
-                    onChangeStart: (value) =>
-                        setState(() => _startValue = value),
-                    onChangeEnd: (value) => setState(() => _endValue = value),
-                    onChangePlaybackState: (value) =>
-                        setState(() => _isPlaying = value),
-                    showDuration: true,
-                    type: ViewerType.auto,
-                    durationStyle: DurationStyle.FORMAT_MM_SS,
-                    editorProperties: TrimEditorProperties(
-                      borderPaintColor: Theme.of(
-                        context,
-                      ).colorScheme.primaryContainer,
-                      scrubberWidth: 10,
-                      scrubberPaintColor: Theme.of(context).colorScheme.primary,
-                      circleSize: 12,
-                      circlePaintColor: Theme.of(context).colorScheme.primary,
-                      borderWidth: 4,
-                    ),
-                  ),
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 12,
-                          horizontal: 2,
-                        ),
-                        child: FilledButton.icon(
-                          style: FilledButton.styleFrom(
-                            padding: EdgeInsets.all(32),
+    return Theme(
+      data: ThemeData(colorScheme: darkScheme, useMaterial3: true),
+      child: Builder(
+        builder: (context) {
+          final colorScheme = Theme.of(context).colorScheme;
+          return Scaffold(
+            backgroundColor: colorScheme.surface,
+            appBar: AppBar(
+              backgroundColor: colorScheme.surface,
+              foregroundColor: colorScheme.onSurface,
+              leading: IconButton(
+                icon: const Icon(Icons.close_rounded),
+                onPressed: () => Navigator.pop(context),
+              ),
+              title: const Text("Trim video"),
+              actions: [
+                IconButton(
+                  icon: _isSaving
+                      ? SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: colorScheme.onSurface,
                           ),
-                          label: Text("${_isPlaying ? 'Pause' : 'Play'} video"),
-                          icon: _isPlaying
-                              ? Icon(Icons.pause)
-                              : Icon(Icons.play_arrow),
-                          onPressed: () async {
-                            bool playbackState = await _trimmer
-                                .videoPlaybackControl(
-                                  startValue: _startValue,
-                                  endValue: _endValue,
-                                );
-                            setState(() {
-                              _isPlaying = playbackState;
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 12,
-                        horizontal: 2,
-                      ),
-                      child: IconButton.filled(
-                        style: IconButton.styleFrom(
-                          padding: EdgeInsets.all(32),
-                        ),
-                        // label: Text("Save"),
-                        icon: Icon(Icons.check),
-                        onPressed: () async {
-                          if (_progressVisibility) return;
-                          late SnackBar snackbar;
-                          final outputPath = await _saveVideo();
-                          if (outputPath == null) {
-                            snackbar = SnackBar(
-                              content: Text(
-                                'Failed to save video, check your storage',
-                              ),
-                              behavior: SnackBarBehavior.floating,
-                            );
-                          } else {
-                            snackbar = SnackBar(
-                              content: Text('Video Saved successfully'),
-                              behavior: SnackBarBehavior.floating,
-                            );
-                          }
-                          if (!context.mounted) return;
-                          ScaffoldMessenger.of(context).showSnackBar(snackbar);
-                          context.pop(outputPath);
-                        },
-                      ),
-                    ),
-                  ],
+                        )
+                      : const Icon(Icons.check_rounded),
+                  onPressed: _isSaving ? null : _confirm,
                 ),
               ],
             ),
-          ),
-        ),
+            body: SafeArea(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (_isSaving) const LinearProgressIndicator(),
+                  Expanded(child: VideoViewer(trimmer: _trimmer)),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    child: TrimViewer(
+                      trimmer: _trimmer,
+                      viewerHeight: 50.0,
+                      viewerWidth: MediaQuery.of(context).size.width - 24,
+                      // Matches Reddit's own video post length cap - generous
+                      // enough that it's never the thing standing between a
+                      // user and their post, but still a real ceiling.
+                      maxVideoLength: const Duration(minutes: 15),
+                      onChangeStart: (value) =>
+                          setState(() => _startValue = value),
+                      onChangeEnd: (value) =>
+                          setState(() => _endValue = value),
+                      onChangePlaybackState: (value) =>
+                          setState(() => _isPlaying = value),
+                      showDuration: true,
+                      type: ViewerType.auto,
+                      durationStyle: DurationStyle.FORMAT_MM_SS,
+                      editorProperties: TrimEditorProperties(
+                        borderPaintColor: colorScheme.primaryContainer,
+                        scrubberWidth: 10,
+                        scrubberPaintColor: colorScheme.primary,
+                        circleSize: 12,
+                        circlePaintColor: colorScheme.primary,
+                        borderWidth: 4,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(12, 4, 12, 12),
+                    child: FilledButton.tonalIcon(
+                      onPressed: () async {
+                        final playing = await _trimmer.videoPlaybackControl(
+                          startValue: _startValue,
+                          endValue: _endValue,
+                        );
+                        if (!mounted) return;
+                        setState(() => _isPlaying = playing);
+                      },
+                      icon: Icon(
+                        _isPlaying
+                            ? Icons.pause_rounded
+                            : Icons.play_arrow_rounded,
+                      ),
+                      label: Text(_isPlaying ? "Pause" : "Play"),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
