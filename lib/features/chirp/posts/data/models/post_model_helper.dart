@@ -1,10 +1,11 @@
-import 'package:academia/database/database.dart';
+import 'package:academia/database/database.dart' hide Community;
+import 'package:academia/database/database.dart' as db;
 import 'package:academia/features/features.dart';
 
 extension PostModelHelper on PostData {
   Post toEntity() => Post(
     id: id,
-    community: CommunityData.fromJson(community).toEntity(),
+    community: db.Community.fromJson(community).toEntity(),
     authorId: authorId,
     title: title,
     content: content,

@@ -16995,12 +16995,12 @@ class ChirpUsersCompanion extends UpdateCompanion<ChirpUser> {
   }
 }
 
-class $CommunityTable extends Community
-    with TableInfo<$CommunityTable, CommunityData> {
+class $CommunitiesTable extends Communities
+    with TableInfo<$CommunitiesTable, Community> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $CommunityTable(this.attachedDatabase, [this._alias]);
+  $CommunitiesTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -17254,7 +17254,7 @@ class $CommunityTable extends Community
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
-  ).withConverter<List<dynamic>>($CommunityTable.$converterguidelines);
+  ).withConverter<List<dynamic>>($CommunitiesTable.$converterguidelines);
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -17324,7 +17324,7 @@ class $CommunityTable extends Community
   static const String $name = 'community';
   @override
   VerificationContext validateIntegrity(
-    Insertable<CommunityData> instance, {
+    Insertable<Community> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -17522,9 +17522,9 @@ class $CommunityTable extends Community
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  CommunityData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Community map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return CommunityData(
+    return Community(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -17609,7 +17609,7 @@ class $CommunityTable extends Community
         DriftSqlType.string,
         data['${effectivePrefix}creator_id'],
       )!,
-      guidelines: $CommunityTable.$converterguidelines.fromSql(
+      guidelines: $CommunitiesTable.$converterguidelines.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}guidelines'],
@@ -17631,15 +17631,15 @@ class $CommunityTable extends Community
   }
 
   @override
-  $CommunityTable createAlias(String alias) {
-    return $CommunityTable(attachedDatabase, alias);
+  $CommunitiesTable createAlias(String alias) {
+    return $CommunitiesTable(attachedDatabase, alias);
   }
 
   static TypeConverter<List<dynamic>, String> $converterguidelines =
       JsonListConverter();
 }
 
-class CommunityData extends DataClass implements Insertable<CommunityData> {
+class Community extends DataClass implements Insertable<Community> {
   final int id;
   final String name;
   final String? description;
@@ -17667,7 +17667,7 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
 
   /// For storing the caching time that will be used in TTL
   final DateTime? cachedAt;
-  const CommunityData({
+  const Community({
     required this.id,
     required this.name,
     this.description,
@@ -17730,7 +17730,7 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
     map['creator_id'] = Variable<String>(creatorId);
     {
       map['guidelines'] = Variable<String>(
-        $CommunityTable.$converterguidelines.toSql(guidelines),
+        $CommunitiesTable.$converterguidelines.toSql(guidelines),
       );
     }
     map['created_at'] = Variable<DateTime>(createdAt);
@@ -17741,8 +17741,8 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
     return map;
   }
 
-  CommunityCompanion toCompanion(bool nullToAbsent) {
-    return CommunityCompanion(
+  CommunitiesCompanion toCompanion(bool nullToAbsent) {
+    return CommunitiesCompanion(
       id: Value(id),
       name: Value(name),
       description: description == null && nullToAbsent
@@ -17783,12 +17783,12 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
     );
   }
 
-  factory CommunityData.fromJson(
+  factory Community.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return CommunityData(
+    return Community(
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
       description: serializer.fromJson<String?>(json['description']),
@@ -17858,7 +17858,7 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
     };
   }
 
-  CommunityData copyWith({
+  Community copyWith({
     int? id,
     String? name,
     Value<String?> description = const Value.absent(),
@@ -17884,7 +17884,7 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
     DateTime? createdAt,
     DateTime? updatedAt,
     Value<DateTime?> cachedAt = const Value.absent(),
-  }) => CommunityData(
+  }) => Community(
     id: id ?? this.id,
     name: name ?? this.name,
     description: description.present ? description.value : this.description,
@@ -17915,8 +17915,8 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
     updatedAt: updatedAt ?? this.updatedAt,
     cachedAt: cachedAt.present ? cachedAt.value : this.cachedAt,
   );
-  CommunityData copyWithCompanion(CommunityCompanion data) {
-    return CommunityData(
+  Community copyWithCompanion(CommunitiesCompanion data) {
+    return Community(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
       description: data.description.present
@@ -17975,7 +17975,7 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
 
   @override
   String toString() {
-    return (StringBuffer('CommunityData(')
+    return (StringBuffer('Community(')
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('description: $description, ')
@@ -18036,7 +18036,7 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is CommunityData &&
+      (other is Community &&
           other.id == this.id &&
           other.name == this.name &&
           other.description == this.description &&
@@ -18064,7 +18064,7 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
           other.cachedAt == this.cachedAt);
 }
 
-class CommunityCompanion extends UpdateCompanion<CommunityData> {
+class CommunitiesCompanion extends UpdateCompanion<Community> {
   final Value<int> id;
   final Value<String> name;
   final Value<String?> description;
@@ -18090,7 +18090,7 @@ class CommunityCompanion extends UpdateCompanion<CommunityData> {
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime?> cachedAt;
-  const CommunityCompanion({
+  const CommunitiesCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
     this.description = const Value.absent(),
@@ -18117,7 +18117,7 @@ class CommunityCompanion extends UpdateCompanion<CommunityData> {
     this.updatedAt = const Value.absent(),
     this.cachedAt = const Value.absent(),
   });
-  CommunityCompanion.insert({
+  CommunitiesCompanion.insert({
     this.id = const Value.absent(),
     required String name,
     this.description = const Value.absent(),
@@ -18149,7 +18149,7 @@ class CommunityCompanion extends UpdateCompanion<CommunityData> {
        guidelines = Value(guidelines),
        createdAt = Value(createdAt),
        updatedAt = Value(updatedAt);
-  static Insertable<CommunityData> custom({
+  static Insertable<Community> custom({
     Expression<int>? id,
     Expression<String>? name,
     Expression<String>? description,
@@ -18209,7 +18209,7 @@ class CommunityCompanion extends UpdateCompanion<CommunityData> {
     });
   }
 
-  CommunityCompanion copyWith({
+  CommunitiesCompanion copyWith({
     Value<int>? id,
     Value<String>? name,
     Value<String?>? description,
@@ -18236,7 +18236,7 @@ class CommunityCompanion extends UpdateCompanion<CommunityData> {
     Value<DateTime>? updatedAt,
     Value<DateTime?>? cachedAt,
   }) {
-    return CommunityCompanion(
+    return CommunitiesCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
       description: description ?? this.description,
@@ -18333,7 +18333,7 @@ class CommunityCompanion extends UpdateCompanion<CommunityData> {
     }
     if (guidelines.present) {
       map['guidelines'] = Variable<String>(
-        $CommunityTable.$converterguidelines.toSql(guidelines.value),
+        $CommunitiesTable.$converterguidelines.toSql(guidelines.value),
       );
     }
     if (createdAt.present) {
@@ -18350,7 +18350,7 @@ class CommunityCompanion extends UpdateCompanion<CommunityData> {
 
   @override
   String toString() {
-    return (StringBuffer('CommunityCompanion(')
+    return (StringBuffer('CommunitiesCompanion(')
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('description: $description, ')
@@ -23349,7 +23349,7 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   late final $TimetableEntryTable timetableEntry = $TimetableEntryTable(this);
   late final $ExamTimetablesTable examTimetables = $ExamTimetablesTable(this);
   late final $ChirpUsersTable chirpUsers = $ChirpUsersTable(this);
-  late final $CommunityTable community = $CommunityTable(this);
+  late final $CommunitiesTable communities = $CommunitiesTable(this);
   late final $ChirpCommunityMembershipsTable chirpCommunityMemberships =
       $ChirpCommunityMembershipsTable(this);
   late final $LeaderboardRankTable leaderboardRank = $LeaderboardRankTable(
@@ -23395,7 +23395,7 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     timetableEntry,
     examTimetables,
     chirpUsers,
-    community,
+    communities,
     chirpCommunityMemberships,
     leaderboardRank,
     streakActivity,
@@ -33985,8 +33985,8 @@ typedef $$ChirpUsersTableProcessedTableManager =
       ChirpUser,
       PrefetchHooks Function({bool chirpCommunityMembershipsRefs})
     >;
-typedef $$CommunityTableCreateCompanionBuilder =
-    CommunityCompanion Function({
+typedef $$CommunitiesTableCreateCompanionBuilder =
+    CommunitiesCompanion Function({
       Value<int> id,
       required String name,
       Value<String?> description,
@@ -34013,8 +34013,8 @@ typedef $$CommunityTableCreateCompanionBuilder =
       required DateTime updatedAt,
       Value<DateTime?> cachedAt,
     });
-typedef $$CommunityTableUpdateCompanionBuilder =
-    CommunityCompanion Function({
+typedef $$CommunitiesTableUpdateCompanionBuilder =
+    CommunitiesCompanion Function({
       Value<int> id,
       Value<String> name,
       Value<String?> description,
@@ -34042,9 +34042,9 @@ typedef $$CommunityTableUpdateCompanionBuilder =
       Value<DateTime?> cachedAt,
     });
 
-class $$CommunityTableFilterComposer
-    extends Composer<_$AppDataBase, $CommunityTable> {
-  $$CommunityTableFilterComposer({
+class $$CommunitiesTableFilterComposer
+    extends Composer<_$AppDataBase, $CommunitiesTable> {
+  $$CommunitiesTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -34178,9 +34178,9 @@ class $$CommunityTableFilterComposer
   );
 }
 
-class $$CommunityTableOrderingComposer
-    extends Composer<_$AppDataBase, $CommunityTable> {
-  $$CommunityTableOrderingComposer({
+class $$CommunitiesTableOrderingComposer
+    extends Composer<_$AppDataBase, $CommunitiesTable> {
+  $$CommunitiesTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -34313,9 +34313,9 @@ class $$CommunityTableOrderingComposer
   );
 }
 
-class $$CommunityTableAnnotationComposer
-    extends Composer<_$AppDataBase, $CommunityTable> {
-  $$CommunityTableAnnotationComposer({
+class $$CommunitiesTableAnnotationComposer
+    extends Composer<_$AppDataBase, $CommunitiesTable> {
+  $$CommunitiesTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -34427,35 +34427,35 @@ class $$CommunityTableAnnotationComposer
       $composableBuilder(column: $table.cachedAt, builder: (column) => column);
 }
 
-class $$CommunityTableTableManager
+class $$CommunitiesTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $CommunityTable,
-          CommunityData,
-          $$CommunityTableFilterComposer,
-          $$CommunityTableOrderingComposer,
-          $$CommunityTableAnnotationComposer,
-          $$CommunityTableCreateCompanionBuilder,
-          $$CommunityTableUpdateCompanionBuilder,
+          $CommunitiesTable,
+          Community,
+          $$CommunitiesTableFilterComposer,
+          $$CommunitiesTableOrderingComposer,
+          $$CommunitiesTableAnnotationComposer,
+          $$CommunitiesTableCreateCompanionBuilder,
+          $$CommunitiesTableUpdateCompanionBuilder,
           (
-            CommunityData,
-            BaseReferences<_$AppDataBase, $CommunityTable, CommunityData>,
+            Community,
+            BaseReferences<_$AppDataBase, $CommunitiesTable, Community>,
           ),
-          CommunityData,
+          Community,
           PrefetchHooks Function()
         > {
-  $$CommunityTableTableManager(_$AppDataBase db, $CommunityTable table)
+  $$CommunitiesTableTableManager(_$AppDataBase db, $CommunitiesTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$CommunityTableFilterComposer($db: db, $table: table),
+              $$CommunitiesTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$CommunityTableOrderingComposer($db: db, $table: table),
+              $$CommunitiesTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$CommunityTableAnnotationComposer($db: db, $table: table),
+              $$CommunitiesTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
@@ -34483,7 +34483,7 @@ class $$CommunityTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<DateTime?> cachedAt = const Value.absent(),
-              }) => CommunityCompanion(
+              }) => CommunitiesCompanion(
                 id: id,
                 name: name,
                 description: description,
@@ -34537,7 +34537,7 @@ class $$CommunityTableTableManager
                 required DateTime createdAt,
                 required DateTime updatedAt,
                 Value<DateTime?> cachedAt = const Value.absent(),
-              }) => CommunityCompanion.insert(
+              }) => CommunitiesCompanion.insert(
                 id: id,
                 name: name,
                 description: description,
@@ -34572,21 +34572,18 @@ class $$CommunityTableTableManager
       );
 }
 
-typedef $$CommunityTableProcessedTableManager =
+typedef $$CommunitiesTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $CommunityTable,
-      CommunityData,
-      $$CommunityTableFilterComposer,
-      $$CommunityTableOrderingComposer,
-      $$CommunityTableAnnotationComposer,
-      $$CommunityTableCreateCompanionBuilder,
-      $$CommunityTableUpdateCompanionBuilder,
-      (
-        CommunityData,
-        BaseReferences<_$AppDataBase, $CommunityTable, CommunityData>,
-      ),
-      CommunityData,
+      $CommunitiesTable,
+      Community,
+      $$CommunitiesTableFilterComposer,
+      $$CommunitiesTableOrderingComposer,
+      $$CommunitiesTableAnnotationComposer,
+      $$CommunitiesTableCreateCompanionBuilder,
+      $$CommunitiesTableUpdateCompanionBuilder,
+      (Community, BaseReferences<_$AppDataBase, $CommunitiesTable, Community>),
+      Community,
       PrefetchHooks Function()
     >;
 typedef $$ChirpCommunityMembershipsTableCreateCompanionBuilder =
@@ -38072,8 +38069,8 @@ class $AppDataBaseManager {
       $$ExamTimetablesTableTableManager(_db, _db.examTimetables);
   $$ChirpUsersTableTableManager get chirpUsers =>
       $$ChirpUsersTableTableManager(_db, _db.chirpUsers);
-  $$CommunityTableTableManager get community =>
-      $$CommunityTableTableManager(_db, _db.community);
+  $$CommunitiesTableTableManager get communities =>
+      $$CommunitiesTableTableManager(_db, _db.communities);
   $$ChirpCommunityMembershipsTableTableManager get chirpCommunityMemberships =>
       $$ChirpCommunityMembershipsTableTableManager(
         _db,

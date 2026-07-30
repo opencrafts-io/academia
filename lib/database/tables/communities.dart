@@ -1,7 +1,10 @@
 import 'package:academia/core/core.dart';
 import 'package:drift/drift.dart';
 
-class Community extends Table {
+class Communities extends Table {
+  @override
+  String get tableName => 'community';
+
   @JsonKey("id")
   IntColumn get id => integer().autoIncrement()();
 

@@ -1,17 +1,16 @@
-import 'package:academia/features/chirp/communities/data/models/community_user_model.dart';
+import 'package:academia/features/chirp/communities/data/dtos/community_user_api_dto.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class PaginatedUserResponse {
-  final int count;
-  final String? next;
-  final String? previous;
-  final List<CommunityUserModel> users;
+part 'paginated_user_response.freezed.dart';
 
-  const PaginatedUserResponse({
-    required this.count,
-    this.next,
-    this.previous,
-    required this.users,
-  });
+@freezed
+abstract class PaginatedUserResponse with _$PaginatedUserResponse {
+  const factory PaginatedUserResponse({
+    required int count,
+    String? next,
+    String? previous,
+    required List<CommunityUserApiDto> users,
+  }) = _PaginatedUserResponse;
 
   factory PaginatedUserResponse.fromJson(Map<String, dynamic> json) {
     final resultsJson = json['results'] as Map<String, dynamic>;
@@ -36,7 +35,8 @@ class PaginatedUserResponse {
       previous: json['previous'] as String?,
       users: userListJson
           .map(
-            (item) => CommunityUserModel.fromJson(item as Map<String, dynamic>),
+            (item) =>
+                CommunityUserApiDto.fromJson(item as Map<String, dynamic>),
           )
           .toList(),
     );

@@ -8,3 +8,4 @@ export 'chirp_users.dart';
 export 'blocks.dart';
 export 'reports.dart';
 export 'chirp_community_memberships.dart';
+export 'communities.dart';
