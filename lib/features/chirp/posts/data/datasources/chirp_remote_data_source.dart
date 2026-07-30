@@ -1,7 +1,6 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/core/network/network.dart';
-import 'package:academia/database/database.dart';
 import 'package:academia/features/chirp/posts/posts.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
@@ -23,7 +22,7 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
     }
   }
 
-  Future<Either<Failure, PaginatedData<PostData>>> getPosts({
+  Future<Either<Failure, PaginatedData<PostApiDto>>> getPosts({
     required int page,
     required int pageSize,
   }) async {
@@ -46,7 +45,7 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
       return Right(
         PaginatedData(
           results: (res.data['results'] as List)
-              .map((json) => PostData.fromJson(json))
+              .map((json) => PostApiDto.fromJson(json))
               .toList(),
           count: res.data['count'],
           next: res.data['next'],
@@ -66,7 +65,7 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
     }
   }
 
-  Future<Either<Failure, PostData>> getPostDetails({
+  Future<Either<Failure, PostApiDto>> getPostDetails({
     required int postId,
   }) async {
     try {
@@ -80,7 +79,7 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
 
       if (res.statusCode == 200) {
         final Map<String, dynamic> json = Map<String, dynamic>.from(res.data);
-        return right(PostData.fromJson(json));
+        return right(PostApiDto.fromJson(json));
       }
 
       return left(
@@ -117,7 +116,7 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
     }
   }
 
-  Future<Either<Failure, PaginatedData<CommentData>>> getPostComments({
+  Future<Either<Failure, PaginatedData<CommentApiDto>>> getPostComments({
     required int postId,
     required int page,
     required int pageSize,
@@ -140,7 +139,7 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
       return Right(
         PaginatedData(
           results: (res.data['results'] as List)
-              .map((json) => CommentData.fromJson(json))
+              .map((json) => CommentApiDto.fromJson(json))
               .toList(),
           count: res.data['count'],
           next: res.data['next'],
@@ -160,7 +159,7 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
     }
   }
 
-  Future<Either<Failure, PostData>> createPost({
+  Future<Either<Failure, PostApiDto>> createPost({
     required String title,
     required String authorId,
     required int communityId,
@@ -186,7 +185,7 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
 
       if (res.statusCode == 201) {
         final Map<String, dynamic> json = Map<String, dynamic>.from(res.data);
-        return right(PostData.fromJson(json));
+        return right(PostApiDto.fromJson(json));
       }
 
       return left(
@@ -204,7 +203,7 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
     }
   }
 
-  Future<Either<Failure, CommentData>> createComment({
+  Future<Either<Failure, CommentApiDto>> createComment({
     required int postId,
     required String authorId,
     required String content,
@@ -233,7 +232,7 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
 
       if (res.statusCode == 201) {
         final Map<String, dynamic> json = Map<String, dynamic>.from(res.data);
-        return right(CommentData.fromJson(json));
+        return right(CommentApiDto.fromJson(json));
       }
 
       return left(
@@ -251,7 +250,7 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
     }
   }
 
-  Future<Either<Failure, AttachmentData>> createPostAttachment({
+  Future<Either<Failure, AttachmentApiDto>> createPostAttachment({
     required int postId,
     required MultipartFile file,
   }) async {
@@ -270,7 +269,7 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
 
       if (res.statusCode == 201) {
         final Map<String, dynamic> json = Map<String, dynamic>.from(res.data);
-        return Right(AttachmentData.fromJson(json));
+        return Right(AttachmentApiDto.fromJson(json));
       }
 
       return Left(
@@ -357,7 +356,7 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
     }
   }
 
-  Future<Either<Failure, PaginatedData<PostData>>> getPostsFromCommunity({
+  Future<Either<Failure, PaginatedData<PostApiDto>>> getPostsFromCommunity({
     required int communityId,
     required int page,
     required int pageSize,
@@ -376,7 +375,7 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
         return right(
           PaginatedData(
             results: (res.data['results'] as List)
-                .map((json) => PostData.fromJson(json))
+                .map((json) => PostApiDto.fromJson(json))
                 .toList(),
             count: res.data['count'],
             next: res.data['next'],

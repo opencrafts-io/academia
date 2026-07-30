@@ -1,7 +1,4 @@
 import 'package:academia/features/agenda/data/models/agenda_event.dart';
-import 'package:academia/features/chirp/posts/data/models/attachment_model.dart';
-import 'package:academia/features/chirp/posts/data/models/post_model.dart';
-import 'package:academia/features/chirp/posts/data/models/comment_model.dart';
 import 'package:academia/features/course/data/models/course.dart';
 import 'package:academia/database/tables/tables.dart';
 export 'package:academia/database/tables/tables.dart';
@@ -36,9 +33,9 @@ part 'database.g.dart';
     UserProfile,
 
     // Posts
-    AttachmentTable,
-    PostTable,
-    CommentTable,
+    Attachments,
+    Posts,
+    Comments,
 
     EventTable,
     AttendeeTable,

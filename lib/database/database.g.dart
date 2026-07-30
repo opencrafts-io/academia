@@ -807,12 +807,12 @@ class UserProfileCompanion extends UpdateCompanion<UserProfileData> {
   }
 }
 
-class $AttachmentTableTable extends AttachmentTable
-    with TableInfo<$AttachmentTableTable, AttachmentData> {
+class $AttachmentsTable extends Attachments
+    with TableInfo<$AttachmentsTable, Attachment> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $AttachmentTableTable(this.attachedDatabase, [this._alias]);
+  $AttachmentsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -902,7 +902,7 @@ class $AttachmentTableTable extends AttachmentTable
   static const String $name = 'attachment_table';
   @override
   VerificationContext validateIntegrity(
-    Insertable<AttachmentData> instance, {
+    Insertable<Attachment> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -967,9 +967,9 @@ class $AttachmentTableTable extends AttachmentTable
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  AttachmentData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Attachment map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return AttachmentData(
+    return Attachment(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -1002,12 +1002,12 @@ class $AttachmentTableTable extends AttachmentTable
   }
 
   @override
-  $AttachmentTableTable createAlias(String alias) {
-    return $AttachmentTableTable(attachedDatabase, alias);
+  $AttachmentsTable createAlias(String alias) {
+    return $AttachmentsTable(attachedDatabase, alias);
   }
 }
 
-class AttachmentData extends DataClass implements Insertable<AttachmentData> {
+class Attachment extends DataClass implements Insertable<Attachment> {
   final int id;
   final String attachmentType;
   final String file;
@@ -1015,7 +1015,7 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
   final String name;
   final DateTime createdAt;
   final int postId;
-  const AttachmentData({
+  const Attachment({
     required this.id,
     required this.attachmentType,
     required this.file,
@@ -1037,8 +1037,8 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
     return map;
   }
 
-  AttachmentTableCompanion toCompanion(bool nullToAbsent) {
-    return AttachmentTableCompanion(
+  AttachmentsCompanion toCompanion(bool nullToAbsent) {
+    return AttachmentsCompanion(
       id: Value(id),
       attachmentType: Value(attachmentType),
       file: Value(file),
@@ -1049,12 +1049,12 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
     );
   }
 
-  factory AttachmentData.fromJson(
+  factory Attachment.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return AttachmentData(
+    return Attachment(
       id: serializer.fromJson<int>(json['id']),
       attachmentType: serializer.fromJson<String>(json['attachment_type']),
       file: serializer.fromJson<String>(json['file']),
@@ -1078,7 +1078,7 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
     };
   }
 
-  AttachmentData copyWith({
+  Attachment copyWith({
     int? id,
     String? attachmentType,
     String? file,
@@ -1086,7 +1086,7 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
     String? name,
     DateTime? createdAt,
     int? postId,
-  }) => AttachmentData(
+  }) => Attachment(
     id: id ?? this.id,
     attachmentType: attachmentType ?? this.attachmentType,
     file: file ?? this.file,
@@ -1095,8 +1095,8 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
     createdAt: createdAt ?? this.createdAt,
     postId: postId ?? this.postId,
   );
-  AttachmentData copyWithCompanion(AttachmentTableCompanion data) {
-    return AttachmentData(
+  Attachment copyWithCompanion(AttachmentsCompanion data) {
+    return Attachment(
       id: data.id.present ? data.id.value : this.id,
       attachmentType: data.attachmentType.present
           ? data.attachmentType.value
@@ -1111,7 +1111,7 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
 
   @override
   String toString() {
-    return (StringBuffer('AttachmentData(')
+    return (StringBuffer('Attachment(')
           ..write('id: $id, ')
           ..write('attachmentType: $attachmentType, ')
           ..write('file: $file, ')
@@ -1129,7 +1129,7 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is AttachmentData &&
+      (other is Attachment &&
           other.id == this.id &&
           other.attachmentType == this.attachmentType &&
           other.file == this.file &&
@@ -1139,7 +1139,7 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
           other.postId == this.postId);
 }
 
-class AttachmentTableCompanion extends UpdateCompanion<AttachmentData> {
+class AttachmentsCompanion extends UpdateCompanion<Attachment> {
   final Value<int> id;
   final Value<String> attachmentType;
   final Value<String> file;
@@ -1147,7 +1147,7 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentData> {
   final Value<String> name;
   final Value<DateTime> createdAt;
   final Value<int> postId;
-  const AttachmentTableCompanion({
+  const AttachmentsCompanion({
     this.id = const Value.absent(),
     this.attachmentType = const Value.absent(),
     this.file = const Value.absent(),
@@ -1156,7 +1156,7 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentData> {
     this.createdAt = const Value.absent(),
     this.postId = const Value.absent(),
   });
-  AttachmentTableCompanion.insert({
+  AttachmentsCompanion.insert({
     this.id = const Value.absent(),
     required String attachmentType,
     required String file,
@@ -1170,7 +1170,7 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentData> {
        name = Value(name),
        createdAt = Value(createdAt),
        postId = Value(postId);
-  static Insertable<AttachmentData> custom({
+  static Insertable<Attachment> custom({
     Expression<int>? id,
     Expression<String>? attachmentType,
     Expression<String>? file,
@@ -1190,7 +1190,7 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentData> {
     });
   }
 
-  AttachmentTableCompanion copyWith({
+  AttachmentsCompanion copyWith({
     Value<int>? id,
     Value<String>? attachmentType,
     Value<String>? file,
@@ -1199,7 +1199,7 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentData> {
     Value<DateTime>? createdAt,
     Value<int>? postId,
   }) {
-    return AttachmentTableCompanion(
+    return AttachmentsCompanion(
       id: id ?? this.id,
       attachmentType: attachmentType ?? this.attachmentType,
       file: file ?? this.file,
@@ -1239,7 +1239,7 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentData> {
 
   @override
   String toString() {
-    return (StringBuffer('AttachmentTableCompanion(')
+    return (StringBuffer('AttachmentsCompanion(')
           ..write('id: $id, ')
           ..write('attachmentType: $attachmentType, ')
           ..write('file: $file, ')
@@ -1252,12 +1252,11 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentData> {
   }
 }
 
-class $PostTableTable extends PostTable
-    with TableInfo<$PostTableTable, PostData> {
+class $PostsTable extends Posts with TableInfo<$PostsTable, Post> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $PostTableTable(this.attachedDatabase, [this._alias]);
+  $PostsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -1279,7 +1278,7 @@ class $PostTableTable extends PostTable
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
-  ).withConverter<Map<String, dynamic>>($PostTableTable.$convertercommunity);
+  ).withConverter<Map<String, dynamic>>($PostsTable.$convertercommunity);
   static const VerificationMeta _authorIdMeta = const VerificationMeta(
     'authorId',
   );
@@ -1343,7 +1342,7 @@ class $PostTableTable extends PostTable
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
-  ).withConverter<List<dynamic>>($PostTableTable.$converterattachments);
+  ).withConverter<List<dynamic>>($PostsTable.$converterattachments);
   static const VerificationMeta _viewsCountMeta = const VerificationMeta(
     'viewsCount',
   );
@@ -1376,7 +1375,7 @@ class $PostTableTable extends PostTable
         false,
         type: DriftSqlType.string,
         requiredDuringInsert: true,
-      ).withConverter<List<dynamic>>($PostTableTable.$convertercomments);
+      ).withConverter<List<dynamic>>($PostsTable.$convertercomments);
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -1435,7 +1434,7 @@ class $PostTableTable extends PostTable
   static const String $name = 'post_table';
   @override
   VerificationContext validateIntegrity(
-    Insertable<PostData> instance, {
+    Insertable<Post> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -1522,14 +1521,14 @@ class $PostTableTable extends PostTable
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  PostData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Post map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return PostData(
+    return Post(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
       )!,
-      community: $PostTableTable.$convertercommunity.fromSql(
+      community: $PostsTable.$convertercommunity.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}community'],
@@ -1555,7 +1554,7 @@ class $PostTableTable extends PostTable
         DriftSqlType.int,
         data['${effectivePrefix}downvotes'],
       )!,
-      attachments: $PostTableTable.$converterattachments.fromSql(
+      attachments: $PostsTable.$converterattachments.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}attachments'],
@@ -1569,7 +1568,7 @@ class $PostTableTable extends PostTable
         DriftSqlType.int,
         data['${effectivePrefix}comment_count'],
       )!,
-      comments: $PostTableTable.$convertercomments.fromSql(
+      comments: $PostsTable.$convertercomments.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}comments'],
@@ -1591,8 +1590,8 @@ class $PostTableTable extends PostTable
   }
 
   @override
-  $PostTableTable createAlias(String alias) {
-    return $PostTableTable(attachedDatabase, alias);
+  $PostsTable createAlias(String alias) {
+    return $PostsTable(attachedDatabase, alias);
   }
 
   static TypeConverter<Map<String, dynamic>, String> $convertercommunity =
@@ -1603,7 +1602,7 @@ class $PostTableTable extends PostTable
       JsonListConverter();
 }
 
-class PostData extends DataClass implements Insertable<PostData> {
+class Post extends DataClass implements Insertable<Post> {
   final int id;
   final Map<String, dynamic> community;
   final String authorId;
@@ -1620,7 +1619,7 @@ class PostData extends DataClass implements Insertable<PostData> {
 
   /// For internal trackog of when the post was lastly cached on the
   final DateTime? cachedAt;
-  const PostData({
+  const Post({
     required this.id,
     required this.community,
     required this.authorId,
@@ -1642,7 +1641,7 @@ class PostData extends DataClass implements Insertable<PostData> {
     map['id'] = Variable<int>(id);
     {
       map['community'] = Variable<String>(
-        $PostTableTable.$convertercommunity.toSql(community),
+        $PostsTable.$convertercommunity.toSql(community),
       );
     }
     map['author_id'] = Variable<String>(authorId);
@@ -1652,14 +1651,14 @@ class PostData extends DataClass implements Insertable<PostData> {
     map['downvotes'] = Variable<int>(downvotes);
     {
       map['attachments'] = Variable<String>(
-        $PostTableTable.$converterattachments.toSql(attachments),
+        $PostsTable.$converterattachments.toSql(attachments),
       );
     }
     map['views_count'] = Variable<int>(viewsCount);
     map['comment_count'] = Variable<int>(commentCount);
     {
       map['comments'] = Variable<String>(
-        $PostTableTable.$convertercomments.toSql(comments),
+        $PostsTable.$convertercomments.toSql(comments),
       );
     }
     map['created_at'] = Variable<DateTime>(createdAt);
@@ -1670,8 +1669,8 @@ class PostData extends DataClass implements Insertable<PostData> {
     return map;
   }
 
-  PostTableCompanion toCompanion(bool nullToAbsent) {
-    return PostTableCompanion(
+  PostsCompanion toCompanion(bool nullToAbsent) {
+    return PostsCompanion(
       id: Value(id),
       community: Value(community),
       authorId: Value(authorId),
@@ -1691,12 +1690,12 @@ class PostData extends DataClass implements Insertable<PostData> {
     );
   }
 
-  factory PostData.fromJson(
+  factory Post.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return PostData(
+    return Post(
       id: serializer.fromJson<int>(json['id']),
       community: serializer.fromJson<Map<String, dynamic>>(json['community']),
       authorId: serializer.fromJson<String>(json['author_id']),
@@ -1734,7 +1733,7 @@ class PostData extends DataClass implements Insertable<PostData> {
     };
   }
 
-  PostData copyWith({
+  Post copyWith({
     int? id,
     Map<String, dynamic>? community,
     String? authorId,
@@ -1749,7 +1748,7 @@ class PostData extends DataClass implements Insertable<PostData> {
     DateTime? createdAt,
     DateTime? updatedAt,
     Value<DateTime?> cachedAt = const Value.absent(),
-  }) => PostData(
+  }) => Post(
     id: id ?? this.id,
     community: community ?? this.community,
     authorId: authorId ?? this.authorId,
@@ -1765,8 +1764,8 @@ class PostData extends DataClass implements Insertable<PostData> {
     updatedAt: updatedAt ?? this.updatedAt,
     cachedAt: cachedAt.present ? cachedAt.value : this.cachedAt,
   );
-  PostData copyWithCompanion(PostTableCompanion data) {
-    return PostData(
+  Post copyWithCompanion(PostsCompanion data) {
+    return Post(
       id: data.id.present ? data.id.value : this.id,
       community: data.community.present ? data.community.value : this.community,
       authorId: data.authorId.present ? data.authorId.value : this.authorId,
@@ -1792,7 +1791,7 @@ class PostData extends DataClass implements Insertable<PostData> {
 
   @override
   String toString() {
-    return (StringBuffer('PostData(')
+    return (StringBuffer('Post(')
           ..write('id: $id, ')
           ..write('community: $community, ')
           ..write('authorId: $authorId, ')
@@ -1831,7 +1830,7 @@ class PostData extends DataClass implements Insertable<PostData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is PostData &&
+      (other is Post &&
           other.id == this.id &&
           other.community == this.community &&
           other.authorId == this.authorId &&
@@ -1848,7 +1847,7 @@ class PostData extends DataClass implements Insertable<PostData> {
           other.cachedAt == this.cachedAt);
 }
 
-class PostTableCompanion extends UpdateCompanion<PostData> {
+class PostsCompanion extends UpdateCompanion<Post> {
   final Value<int> id;
   final Value<Map<String, dynamic>> community;
   final Value<String> authorId;
@@ -1863,7 +1862,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime?> cachedAt;
-  const PostTableCompanion({
+  const PostsCompanion({
     this.id = const Value.absent(),
     this.community = const Value.absent(),
     this.authorId = const Value.absent(),
@@ -1879,7 +1878,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
     this.updatedAt = const Value.absent(),
     this.cachedAt = const Value.absent(),
   });
-  PostTableCompanion.insert({
+  PostsCompanion.insert({
     this.id = const Value.absent(),
     required Map<String, dynamic> community,
     required String authorId,
@@ -1902,7 +1901,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
        comments = Value(comments),
        createdAt = Value(createdAt),
        updatedAt = Value(updatedAt);
-  static Insertable<PostData> custom({
+  static Insertable<Post> custom({
     Expression<int>? id,
     Expression<String>? community,
     Expression<String>? authorId,
@@ -1936,7 +1935,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
     });
   }
 
-  PostTableCompanion copyWith({
+  PostsCompanion copyWith({
     Value<int>? id,
     Value<Map<String, dynamic>>? community,
     Value<String>? authorId,
@@ -1952,7 +1951,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
     Value<DateTime>? updatedAt,
     Value<DateTime?>? cachedAt,
   }) {
-    return PostTableCompanion(
+    return PostsCompanion(
       id: id ?? this.id,
       community: community ?? this.community,
       authorId: authorId ?? this.authorId,
@@ -1978,7 +1977,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
     }
     if (community.present) {
       map['community'] = Variable<String>(
-        $PostTableTable.$convertercommunity.toSql(community.value),
+        $PostsTable.$convertercommunity.toSql(community.value),
       );
     }
     if (authorId.present) {
@@ -1998,7 +1997,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
     }
     if (attachments.present) {
       map['attachments'] = Variable<String>(
-        $PostTableTable.$converterattachments.toSql(attachments.value),
+        $PostsTable.$converterattachments.toSql(attachments.value),
       );
     }
     if (viewsCount.present) {
@@ -2009,7 +2008,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
     }
     if (comments.present) {
       map['comments'] = Variable<String>(
-        $PostTableTable.$convertercomments.toSql(comments.value),
+        $PostsTable.$convertercomments.toSql(comments.value),
       );
     }
     if (createdAt.present) {
@@ -2026,7 +2025,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
 
   @override
   String toString() {
-    return (StringBuffer('PostTableCompanion(')
+    return (StringBuffer('PostsCompanion(')
           ..write('id: $id, ')
           ..write('community: $community, ')
           ..write('authorId: $authorId, ')
@@ -2046,12 +2045,11 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
   }
 }
 
-class $CommentTableTable extends CommentTable
-    with TableInfo<$CommentTableTable, CommentData> {
+class $CommentsTable extends Comments with TableInfo<$CommentsTable, Comment> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $CommentTableTable(this.attachedDatabase, [this._alias]);
+  $CommentsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -2146,7 +2144,7 @@ class $CommentTableTable extends CommentTable
         false,
         type: DriftSqlType.string,
         requiredDuringInsert: true,
-      ).withConverter<List<dynamic>>($CommentTableTable.$converterreplies);
+      ).withConverter<List<dynamic>>($CommentsTable.$converterreplies);
   static const VerificationMeta _parentMeta = const VerificationMeta('parent');
   @override
   late final GeneratedColumn<int> parent = GeneratedColumn<int>(
@@ -2176,7 +2174,7 @@ class $CommentTableTable extends CommentTable
   static const String $name = 'comment_table';
   @override
   VerificationContext validateIntegrity(
-    Insertable<CommentData> instance, {
+    Insertable<Comment> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -2250,9 +2248,9 @@ class $CommentTableTable extends CommentTable
   @override
   Set<GeneratedColumn> get $primaryKey => const {};
   @override
-  CommentData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Comment map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return CommentData(
+    return Comment(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -2285,7 +2283,7 @@ class $CommentTableTable extends CommentTable
         DriftSqlType.int,
         data['${effectivePrefix}downvotes'],
       )!,
-      replies: $CommentTableTable.$converterreplies.fromSql(
+      replies: $CommentsTable.$converterreplies.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}replies'],
@@ -2299,15 +2297,15 @@ class $CommentTableTable extends CommentTable
   }
 
   @override
-  $CommentTableTable createAlias(String alias) {
-    return $CommentTableTable(attachedDatabase, alias);
+  $CommentsTable createAlias(String alias) {
+    return $CommentsTable(attachedDatabase, alias);
   }
 
   static TypeConverter<List<dynamic>, String> $converterreplies =
       JsonListConverter();
 }
 
-class CommentData extends DataClass implements Insertable<CommentData> {
+class Comment extends DataClass implements Insertable<Comment> {
   final int id;
   final int post;
   final String authorId;
@@ -2318,7 +2316,7 @@ class CommentData extends DataClass implements Insertable<CommentData> {
   final int downvotes;
   final List<dynamic> replies;
   final int? parent;
-  const CommentData({
+  const Comment({
     required this.id,
     required this.post,
     required this.authorId,
@@ -2343,7 +2341,7 @@ class CommentData extends DataClass implements Insertable<CommentData> {
     map['downvotes'] = Variable<int>(downvotes);
     {
       map['replies'] = Variable<String>(
-        $CommentTableTable.$converterreplies.toSql(replies),
+        $CommentsTable.$converterreplies.toSql(replies),
       );
     }
     if (!nullToAbsent || parent != null) {
@@ -2352,8 +2350,8 @@ class CommentData extends DataClass implements Insertable<CommentData> {
     return map;
   }
 
-  CommentTableCompanion toCompanion(bool nullToAbsent) {
-    return CommentTableCompanion(
+  CommentsCompanion toCompanion(bool nullToAbsent) {
+    return CommentsCompanion(
       id: Value(id),
       post: Value(post),
       authorId: Value(authorId),
@@ -2369,12 +2367,12 @@ class CommentData extends DataClass implements Insertable<CommentData> {
     );
   }
 
-  factory CommentData.fromJson(
+  factory Comment.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return CommentData(
+    return Comment(
       id: serializer.fromJson<int>(json['id']),
       post: serializer.fromJson<int>(json['post']),
       authorId: serializer.fromJson<String>(json['author_id']),
@@ -2404,7 +2402,7 @@ class CommentData extends DataClass implements Insertable<CommentData> {
     };
   }
 
-  CommentData copyWith({
+  Comment copyWith({
     int? id,
     int? post,
     String? authorId,
@@ -2415,7 +2413,7 @@ class CommentData extends DataClass implements Insertable<CommentData> {
     int? downvotes,
     List<dynamic>? replies,
     Value<int?> parent = const Value.absent(),
-  }) => CommentData(
+  }) => Comment(
     id: id ?? this.id,
     post: post ?? this.post,
     authorId: authorId ?? this.authorId,
@@ -2427,8 +2425,8 @@ class CommentData extends DataClass implements Insertable<CommentData> {
     replies: replies ?? this.replies,
     parent: parent.present ? parent.value : this.parent,
   );
-  CommentData copyWithCompanion(CommentTableCompanion data) {
-    return CommentData(
+  Comment copyWithCompanion(CommentsCompanion data) {
+    return Comment(
       id: data.id.present ? data.id.value : this.id,
       post: data.post.present ? data.post.value : this.post,
       authorId: data.authorId.present ? data.authorId.value : this.authorId,
@@ -2444,7 +2442,7 @@ class CommentData extends DataClass implements Insertable<CommentData> {
 
   @override
   String toString() {
-    return (StringBuffer('CommentData(')
+    return (StringBuffer('Comment(')
           ..write('id: $id, ')
           ..write('post: $post, ')
           ..write('authorId: $authorId, ')
@@ -2475,7 +2473,7 @@ class CommentData extends DataClass implements Insertable<CommentData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is CommentData &&
+      (other is Comment &&
           other.id == this.id &&
           other.post == this.post &&
           other.authorId == this.authorId &&
@@ -2488,7 +2486,7 @@ class CommentData extends DataClass implements Insertable<CommentData> {
           other.parent == this.parent);
 }
 
-class CommentTableCompanion extends UpdateCompanion<CommentData> {
+class CommentsCompanion extends UpdateCompanion<Comment> {
   final Value<int> id;
   final Value<int> post;
   final Value<String> authorId;
@@ -2500,7 +2498,7 @@ class CommentTableCompanion extends UpdateCompanion<CommentData> {
   final Value<List<dynamic>> replies;
   final Value<int?> parent;
   final Value<int> rowid;
-  const CommentTableCompanion({
+  const CommentsCompanion({
     this.id = const Value.absent(),
     this.post = const Value.absent(),
     this.authorId = const Value.absent(),
@@ -2513,7 +2511,7 @@ class CommentTableCompanion extends UpdateCompanion<CommentData> {
     this.parent = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  CommentTableCompanion.insert({
+  CommentsCompanion.insert({
     required int id,
     required int post,
     required String authorId,
@@ -2532,7 +2530,7 @@ class CommentTableCompanion extends UpdateCompanion<CommentData> {
        createdAt = Value(createdAt),
        updatedAt = Value(updatedAt),
        replies = Value(replies);
-  static Insertable<CommentData> custom({
+  static Insertable<Comment> custom({
     Expression<int>? id,
     Expression<int>? post,
     Expression<String>? authorId,
@@ -2560,7 +2558,7 @@ class CommentTableCompanion extends UpdateCompanion<CommentData> {
     });
   }
 
-  CommentTableCompanion copyWith({
+  CommentsCompanion copyWith({
     Value<int>? id,
     Value<int>? post,
     Value<String>? authorId,
@@ -2573,7 +2571,7 @@ class CommentTableCompanion extends UpdateCompanion<CommentData> {
     Value<int?>? parent,
     Value<int>? rowid,
   }) {
-    return CommentTableCompanion(
+    return CommentsCompanion(
       id: id ?? this.id,
       post: post ?? this.post,
       authorId: authorId ?? this.authorId,
@@ -2617,7 +2615,7 @@ class CommentTableCompanion extends UpdateCompanion<CommentData> {
     }
     if (replies.present) {
       map['replies'] = Variable<String>(
-        $CommentTableTable.$converterreplies.toSql(replies.value),
+        $CommentsTable.$converterreplies.toSql(replies.value),
       );
     }
     if (parent.present) {
@@ -2631,7 +2629,7 @@ class CommentTableCompanion extends UpdateCompanion<CommentData> {
 
   @override
   String toString() {
-    return (StringBuffer('CommentTableCompanion(')
+    return (StringBuffer('CommentsCompanion(')
           ..write('id: $id, ')
           ..write('post: $post, ')
           ..write('authorId: $authorId, ')
@@ -23309,11 +23307,9 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   _$AppDataBase(QueryExecutor e) : super(e);
   $AppDataBaseManager get managers => $AppDataBaseManager(this);
   late final $UserProfileTable userProfile = $UserProfileTable(this);
-  late final $AttachmentTableTable attachmentTable = $AttachmentTableTable(
-    this,
-  );
-  late final $PostTableTable postTable = $PostTableTable(this);
-  late final $CommentTableTable commentTable = $CommentTableTable(this);
+  late final $AttachmentsTable attachments = $AttachmentsTable(this);
+  late final $PostsTable posts = $PostsTable(this);
+  late final $CommentsTable comments = $CommentsTable(this);
   late final $EventTableTable eventTable = $EventTableTable(this);
   late final $AttendeeTableTable attendeeTable = $AttendeeTableTable(this);
   late final $TicketTableTable ticketTable = $TicketTableTable(this);
@@ -23369,9 +23365,9 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
     userProfile,
-    attachmentTable,
-    postTable,
-    commentTable,
+    attachments,
+    posts,
+    comments,
     eventTable,
     attendeeTable,
     ticketTable,
@@ -23784,8 +23780,8 @@ typedef $$UserProfileTableProcessedTableManager =
       UserProfileData,
       PrefetchHooks Function()
     >;
-typedef $$AttachmentTableTableCreateCompanionBuilder =
-    AttachmentTableCompanion Function({
+typedef $$AttachmentsTableCreateCompanionBuilder =
+    AttachmentsCompanion Function({
       Value<int> id,
       required String attachmentType,
       required String file,
@@ -23794,8 +23790,8 @@ typedef $$AttachmentTableTableCreateCompanionBuilder =
       required DateTime createdAt,
       required int postId,
     });
-typedef $$AttachmentTableTableUpdateCompanionBuilder =
-    AttachmentTableCompanion Function({
+typedef $$AttachmentsTableUpdateCompanionBuilder =
+    AttachmentsCompanion Function({
       Value<int> id,
       Value<String> attachmentType,
       Value<String> file,
@@ -23805,9 +23801,9 @@ typedef $$AttachmentTableTableUpdateCompanionBuilder =
       Value<int> postId,
     });
 
-class $$AttachmentTableTableFilterComposer
-    extends Composer<_$AppDataBase, $AttachmentTableTable> {
-  $$AttachmentTableTableFilterComposer({
+class $$AttachmentsTableFilterComposer
+    extends Composer<_$AppDataBase, $AttachmentsTable> {
+  $$AttachmentsTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -23850,9 +23846,9 @@ class $$AttachmentTableTableFilterComposer
   );
 }
 
-class $$AttachmentTableTableOrderingComposer
-    extends Composer<_$AppDataBase, $AttachmentTableTable> {
-  $$AttachmentTableTableOrderingComposer({
+class $$AttachmentsTableOrderingComposer
+    extends Composer<_$AppDataBase, $AttachmentsTable> {
+  $$AttachmentsTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -23895,9 +23891,9 @@ class $$AttachmentTableTableOrderingComposer
   );
 }
 
-class $$AttachmentTableTableAnnotationComposer
-    extends Composer<_$AppDataBase, $AttachmentTableTable> {
-  $$AttachmentTableTableAnnotationComposer({
+class $$AttachmentsTableAnnotationComposer
+    extends Composer<_$AppDataBase, $AttachmentsTable> {
+  $$AttachmentsTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -23928,41 +23924,35 @@ class $$AttachmentTableTableAnnotationComposer
       $composableBuilder(column: $table.postId, builder: (column) => column);
 }
 
-class $$AttachmentTableTableTableManager
+class $$AttachmentsTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $AttachmentTableTable,
-          AttachmentData,
-          $$AttachmentTableTableFilterComposer,
-          $$AttachmentTableTableOrderingComposer,
-          $$AttachmentTableTableAnnotationComposer,
-          $$AttachmentTableTableCreateCompanionBuilder,
-          $$AttachmentTableTableUpdateCompanionBuilder,
+          $AttachmentsTable,
+          Attachment,
+          $$AttachmentsTableFilterComposer,
+          $$AttachmentsTableOrderingComposer,
+          $$AttachmentsTableAnnotationComposer,
+          $$AttachmentsTableCreateCompanionBuilder,
+          $$AttachmentsTableUpdateCompanionBuilder,
           (
-            AttachmentData,
-            BaseReferences<
-              _$AppDataBase,
-              $AttachmentTableTable,
-              AttachmentData
-            >,
+            Attachment,
+            BaseReferences<_$AppDataBase, $AttachmentsTable, Attachment>,
           ),
-          AttachmentData,
+          Attachment,
           PrefetchHooks Function()
         > {
-  $$AttachmentTableTableTableManager(
-    _$AppDataBase db,
-    $AttachmentTableTable table,
-  ) : super(
+  $$AttachmentsTableTableManager(_$AppDataBase db, $AttachmentsTable table)
+    : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$AttachmentTableTableFilterComposer($db: db, $table: table),
+              $$AttachmentsTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$AttachmentTableTableOrderingComposer($db: db, $table: table),
+              $$AttachmentsTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$AttachmentTableTableAnnotationComposer($db: db, $table: table),
+              $$AttachmentsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
@@ -23972,7 +23962,7 @@ class $$AttachmentTableTableTableManager
                 Value<String> name = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<int> postId = const Value.absent(),
-              }) => AttachmentTableCompanion(
+              }) => AttachmentsCompanion(
                 id: id,
                 attachmentType: attachmentType,
                 file: file,
@@ -23990,7 +23980,7 @@ class $$AttachmentTableTableTableManager
                 required String name,
                 required DateTime createdAt,
                 required int postId,
-              }) => AttachmentTableCompanion.insert(
+              }) => AttachmentsCompanion.insert(
                 id: id,
                 attachmentType: attachmentType,
                 file: file,
@@ -24007,25 +23997,25 @@ class $$AttachmentTableTableTableManager
       );
 }
 
-typedef $$AttachmentTableTableProcessedTableManager =
+typedef $$AttachmentsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $AttachmentTableTable,
-      AttachmentData,
-      $$AttachmentTableTableFilterComposer,
-      $$AttachmentTableTableOrderingComposer,
-      $$AttachmentTableTableAnnotationComposer,
-      $$AttachmentTableTableCreateCompanionBuilder,
-      $$AttachmentTableTableUpdateCompanionBuilder,
+      $AttachmentsTable,
+      Attachment,
+      $$AttachmentsTableFilterComposer,
+      $$AttachmentsTableOrderingComposer,
+      $$AttachmentsTableAnnotationComposer,
+      $$AttachmentsTableCreateCompanionBuilder,
+      $$AttachmentsTableUpdateCompanionBuilder,
       (
-        AttachmentData,
-        BaseReferences<_$AppDataBase, $AttachmentTableTable, AttachmentData>,
+        Attachment,
+        BaseReferences<_$AppDataBase, $AttachmentsTable, Attachment>,
       ),
-      AttachmentData,
+      Attachment,
       PrefetchHooks Function()
     >;
-typedef $$PostTableTableCreateCompanionBuilder =
-    PostTableCompanion Function({
+typedef $$PostsTableCreateCompanionBuilder =
+    PostsCompanion Function({
       Value<int> id,
       required Map<String, dynamic> community,
       required String authorId,
@@ -24041,8 +24031,8 @@ typedef $$PostTableTableCreateCompanionBuilder =
       required DateTime updatedAt,
       Value<DateTime?> cachedAt,
     });
-typedef $$PostTableTableUpdateCompanionBuilder =
-    PostTableCompanion Function({
+typedef $$PostsTableUpdateCompanionBuilder =
+    PostsCompanion Function({
       Value<int> id,
       Value<Map<String, dynamic>> community,
       Value<String> authorId,
@@ -24059,9 +24049,8 @@ typedef $$PostTableTableUpdateCompanionBuilder =
       Value<DateTime?> cachedAt,
     });
 
-class $$PostTableTableFilterComposer
-    extends Composer<_$AppDataBase, $PostTableTable> {
-  $$PostTableTableFilterComposer({
+class $$PostsTableFilterComposer extends Composer<_$AppDataBase, $PostsTable> {
+  $$PostsTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -24146,9 +24135,9 @@ class $$PostTableTableFilterComposer
   );
 }
 
-class $$PostTableTableOrderingComposer
-    extends Composer<_$AppDataBase, $PostTableTable> {
-  $$PostTableTableOrderingComposer({
+class $$PostsTableOrderingComposer
+    extends Composer<_$AppDataBase, $PostsTable> {
+  $$PostsTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -24226,9 +24215,9 @@ class $$PostTableTableOrderingComposer
   );
 }
 
-class $$PostTableTableAnnotationComposer
-    extends Composer<_$AppDataBase, $PostTableTable> {
-  $$PostTableTableAnnotationComposer({
+class $$PostsTableAnnotationComposer
+    extends Composer<_$AppDataBase, $PostsTable> {
+  $$PostsTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -24286,32 +24275,32 @@ class $$PostTableTableAnnotationComposer
       $composableBuilder(column: $table.cachedAt, builder: (column) => column);
 }
 
-class $$PostTableTableTableManager
+class $$PostsTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $PostTableTable,
-          PostData,
-          $$PostTableTableFilterComposer,
-          $$PostTableTableOrderingComposer,
-          $$PostTableTableAnnotationComposer,
-          $$PostTableTableCreateCompanionBuilder,
-          $$PostTableTableUpdateCompanionBuilder,
-          (PostData, BaseReferences<_$AppDataBase, $PostTableTable, PostData>),
-          PostData,
+          $PostsTable,
+          Post,
+          $$PostsTableFilterComposer,
+          $$PostsTableOrderingComposer,
+          $$PostsTableAnnotationComposer,
+          $$PostsTableCreateCompanionBuilder,
+          $$PostsTableUpdateCompanionBuilder,
+          (Post, BaseReferences<_$AppDataBase, $PostsTable, Post>),
+          Post,
           PrefetchHooks Function()
         > {
-  $$PostTableTableTableManager(_$AppDataBase db, $PostTableTable table)
+  $$PostsTableTableManager(_$AppDataBase db, $PostsTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$PostTableTableFilterComposer($db: db, $table: table),
+              $$PostsTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$PostTableTableOrderingComposer($db: db, $table: table),
+              $$PostsTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$PostTableTableAnnotationComposer($db: db, $table: table),
+              $$PostsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
@@ -24328,7 +24317,7 @@ class $$PostTableTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<DateTime?> cachedAt = const Value.absent(),
-              }) => PostTableCompanion(
+              }) => PostsCompanion(
                 id: id,
                 community: community,
                 authorId: authorId,
@@ -24360,7 +24349,7 @@ class $$PostTableTableTableManager
                 required DateTime createdAt,
                 required DateTime updatedAt,
                 Value<DateTime?> cachedAt = const Value.absent(),
-              }) => PostTableCompanion.insert(
+              }) => PostsCompanion.insert(
                 id: id,
                 community: community,
                 authorId: authorId,
@@ -24384,22 +24373,22 @@ class $$PostTableTableTableManager
       );
 }
 
-typedef $$PostTableTableProcessedTableManager =
+typedef $$PostsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $PostTableTable,
-      PostData,
-      $$PostTableTableFilterComposer,
-      $$PostTableTableOrderingComposer,
-      $$PostTableTableAnnotationComposer,
-      $$PostTableTableCreateCompanionBuilder,
-      $$PostTableTableUpdateCompanionBuilder,
-      (PostData, BaseReferences<_$AppDataBase, $PostTableTable, PostData>),
-      PostData,
+      $PostsTable,
+      Post,
+      $$PostsTableFilterComposer,
+      $$PostsTableOrderingComposer,
+      $$PostsTableAnnotationComposer,
+      $$PostsTableCreateCompanionBuilder,
+      $$PostsTableUpdateCompanionBuilder,
+      (Post, BaseReferences<_$AppDataBase, $PostsTable, Post>),
+      Post,
       PrefetchHooks Function()
     >;
-typedef $$CommentTableTableCreateCompanionBuilder =
-    CommentTableCompanion Function({
+typedef $$CommentsTableCreateCompanionBuilder =
+    CommentsCompanion Function({
       required int id,
       required int post,
       required String authorId,
@@ -24412,8 +24401,8 @@ typedef $$CommentTableTableCreateCompanionBuilder =
       Value<int?> parent,
       Value<int> rowid,
     });
-typedef $$CommentTableTableUpdateCompanionBuilder =
-    CommentTableCompanion Function({
+typedef $$CommentsTableUpdateCompanionBuilder =
+    CommentsCompanion Function({
       Value<int> id,
       Value<int> post,
       Value<String> authorId,
@@ -24427,9 +24416,9 @@ typedef $$CommentTableTableUpdateCompanionBuilder =
       Value<int> rowid,
     });
 
-class $$CommentTableTableFilterComposer
-    extends Composer<_$AppDataBase, $CommentTableTable> {
-  $$CommentTableTableFilterComposer({
+class $$CommentsTableFilterComposer
+    extends Composer<_$AppDataBase, $CommentsTable> {
+  $$CommentsTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -24488,9 +24477,9 @@ class $$CommentTableTableFilterComposer
   );
 }
 
-class $$CommentTableTableOrderingComposer
-    extends Composer<_$AppDataBase, $CommentTableTable> {
-  $$CommentTableTableOrderingComposer({
+class $$CommentsTableOrderingComposer
+    extends Composer<_$AppDataBase, $CommentsTable> {
+  $$CommentsTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -24548,9 +24537,9 @@ class $$CommentTableTableOrderingComposer
   );
 }
 
-class $$CommentTableTableAnnotationComposer
-    extends Composer<_$AppDataBase, $CommentTableTable> {
-  $$CommentTableTableAnnotationComposer({
+class $$CommentsTableAnnotationComposer
+    extends Composer<_$AppDataBase, $CommentsTable> {
+  $$CommentsTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -24588,35 +24577,32 @@ class $$CommentTableTableAnnotationComposer
       $composableBuilder(column: $table.parent, builder: (column) => column);
 }
 
-class $$CommentTableTableTableManager
+class $$CommentsTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $CommentTableTable,
-          CommentData,
-          $$CommentTableTableFilterComposer,
-          $$CommentTableTableOrderingComposer,
-          $$CommentTableTableAnnotationComposer,
-          $$CommentTableTableCreateCompanionBuilder,
-          $$CommentTableTableUpdateCompanionBuilder,
-          (
-            CommentData,
-            BaseReferences<_$AppDataBase, $CommentTableTable, CommentData>,
-          ),
-          CommentData,
+          $CommentsTable,
+          Comment,
+          $$CommentsTableFilterComposer,
+          $$CommentsTableOrderingComposer,
+          $$CommentsTableAnnotationComposer,
+          $$CommentsTableCreateCompanionBuilder,
+          $$CommentsTableUpdateCompanionBuilder,
+          (Comment, BaseReferences<_$AppDataBase, $CommentsTable, Comment>),
+          Comment,
           PrefetchHooks Function()
         > {
-  $$CommentTableTableTableManager(_$AppDataBase db, $CommentTableTable table)
+  $$CommentsTableTableManager(_$AppDataBase db, $CommentsTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$CommentTableTableFilterComposer($db: db, $table: table),
+              $$CommentsTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$CommentTableTableOrderingComposer($db: db, $table: table),
+              $$CommentsTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$CommentTableTableAnnotationComposer($db: db, $table: table),
+              $$CommentsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
@@ -24630,7 +24616,7 @@ class $$CommentTableTableTableManager
                 Value<List<dynamic>> replies = const Value.absent(),
                 Value<int?> parent = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => CommentTableCompanion(
+              }) => CommentsCompanion(
                 id: id,
                 post: post,
                 authorId: authorId,
@@ -24656,7 +24642,7 @@ class $$CommentTableTableTableManager
                 required List<dynamic> replies,
                 Value<int?> parent = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => CommentTableCompanion.insert(
+              }) => CommentsCompanion.insert(
                 id: id,
                 post: post,
                 authorId: authorId,
@@ -24677,21 +24663,18 @@ class $$CommentTableTableTableManager
       );
 }
 
-typedef $$CommentTableTableProcessedTableManager =
+typedef $$CommentsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $CommentTableTable,
-      CommentData,
-      $$CommentTableTableFilterComposer,
-      $$CommentTableTableOrderingComposer,
-      $$CommentTableTableAnnotationComposer,
-      $$CommentTableTableCreateCompanionBuilder,
-      $$CommentTableTableUpdateCompanionBuilder,
-      (
-        CommentData,
-        BaseReferences<_$AppDataBase, $CommentTableTable, CommentData>,
-      ),
-      CommentData,
+      $CommentsTable,
+      Comment,
+      $$CommentsTableFilterComposer,
+      $$CommentsTableOrderingComposer,
+      $$CommentsTableAnnotationComposer,
+      $$CommentsTableCreateCompanionBuilder,
+      $$CommentsTableUpdateCompanionBuilder,
+      (Comment, BaseReferences<_$AppDataBase, $CommentsTable, Comment>),
+      Comment,
       PrefetchHooks Function()
     >;
 typedef $$EventTableTableCreateCompanionBuilder =
@@ -38009,12 +37992,12 @@ class $AppDataBaseManager {
   $AppDataBaseManager(this._db);
   $$UserProfileTableTableManager get userProfile =>
       $$UserProfileTableTableManager(_db, _db.userProfile);
-  $$AttachmentTableTableTableManager get attachmentTable =>
-      $$AttachmentTableTableTableManager(_db, _db.attachmentTable);
-  $$PostTableTableTableManager get postTable =>
-      $$PostTableTableTableManager(_db, _db.postTable);
-  $$CommentTableTableTableManager get commentTable =>
-      $$CommentTableTableTableManager(_db, _db.commentTable);
+  $$AttachmentsTableTableManager get attachments =>
+      $$AttachmentsTableTableManager(_db, _db.attachments);
+  $$PostsTableTableManager get posts =>
+      $$PostsTableTableManager(_db, _db.posts);
+  $$CommentsTableTableManager get comments =>
+      $$CommentsTableTableManager(_db, _db.comments);
   $$EventTableTableTableManager get eventTable =>
       $$EventTableTableTableManager(_db, _db.eventTable);
   $$AttendeeTableTableTableManager get attendeeTable =>

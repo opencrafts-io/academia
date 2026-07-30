@@ -44,9 +44,9 @@ class ChirpRepositoryImpl implements ChirpRepository {
       },
       (posts) async {
         final postEntities = <Post>[];
-        for (final post in posts.results) {
-          await localDataSource.createOrUpdatePost(post);
-          postEntities.add(post.toEntity());
+        for (final postDto in posts.results) {
+          await localDataSource.createOrUpdatePost(postDto.toData());
+          postEntities.add(postDto.toEntity());
         }
         return right(
           PaginatedData(
@@ -67,9 +67,9 @@ class ChirpRepositoryImpl implements ChirpRepository {
 
     return localRes.fold((failure) async {
       final result = await remoteDataSource.getPostDetails(postId: postId);
-      return result.fold((failure) => left(failure), (post) async {
-        await localDataSource.createOrUpdatePost(post);
-        return right(post.toEntity());
+      return result.fold((failure) => left(failure), (postDto) async {
+        await localDataSource.createOrUpdatePost(postDto.toData());
+        return right(postDto.toEntity());
       });
     }, (post) => right(post.toEntity()));
   }
@@ -95,9 +95,9 @@ class ChirpRepositoryImpl implements ChirpRepository {
       communityId: communityId,
       content: content,
     );
-    return result.fold((failure) => left(failure), (created) async {
-      await localDataSource.createOrUpdatePost(created);
-      return right(created.toEntity());
+    return result.fold((failure) => left(failure), (createdDto) async {
+      await localDataSource.createOrUpdatePost(createdDto.toData());
+      return right(createdDto.toEntity());
     });
   }
 

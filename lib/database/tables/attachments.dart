@@ -1,7 +1,9 @@
 import 'package:drift/drift.dart';
 
-@DataClassName('AttachmentData')
-class AttachmentTable extends Table {
+class Attachments extends Table {
+  @override
+  String get tableName => 'attachment_table';
+
   @JsonKey("id")
   IntColumn get id => integer().autoIncrement()();
 

@@ -1,8 +1,10 @@
 import 'package:academia/core/core.dart';
 import 'package:drift/drift.dart';
 
-@DataClassName('PostData')
-class PostTable extends Table {
+class Posts extends Table {
+  @override
+  String get tableName => 'post_table';
+
   @JsonKey("id")
   IntColumn get id => integer().autoIncrement()();
 
@@ -35,7 +37,7 @@ class PostTable extends Table {
   @JsonKey("updated_at")
   DateTimeColumn get updatedAt => dateTime()();
 
-  /// For internal trackog of when the post was lastly cached on the 
+  /// For internal trackog of when the post was lastly cached on the
   // local device
   @JsonKey("cached_at")
   DateTimeColumn get cachedAt =>

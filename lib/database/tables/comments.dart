@@ -1,8 +1,10 @@
 import 'package:academia/core/core.dart';
 import 'package:drift/drift.dart';
 
-@DataClassName('CommentData')
-class CommentTable extends Table {
+class Comments extends Table {
+  @override
+  String get tableName => 'comment_table';
+
   @JsonKey('id')
   IntColumn get id => integer()();
 

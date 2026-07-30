@@ -17,17 +17,17 @@ class ChirpPostLocalDataSource {
   /// createOrUpdatePost
   /// Attempts to cache a Chirp Post. If the post already exists (based on ID),
   /// it is updated with the new information supplied.
-  Future<Either<Failure, PostData>> createOrUpdatePost(
-    PostData post,
+  Future<Either<Failure, Post>> createOrUpdatePost(
+    Post post,
   ) async {
     try {
       await _deleteAllExpiredCachedPosts();
       
-      final manipulated = await db.into(db.postTable).insertReturning(
+      final manipulated = await db.into(db.posts).insertReturning(
             post.copyWith(cachedAt: Value(DateTime.now())),
             onConflict: DoUpdate(
               (old) => post.copyWith(cachedAt: Value(DateTime.now())),
-              target: [db.postTable.id], 
+              target: [db.posts.id], 
             ),
           );
 
@@ -47,10 +47,10 @@ class ChirpPostLocalDataSource {
   /// getCachedPosts
   /// Returns a list of all cached posts.
   /// Internally deletes cache older than the specified [ttl] duration.
-  Future<Either<Failure, List<PostData>>> getCachedPosts() async {
+  Future<Either<Failure, List<Post>>> getCachedPosts() async {
     try {
       await _deleteAllExpiredCachedPosts();
-      final posts = await db.select(db.postTable).get();
+      final posts = await db.select(db.posts).get();
 
       return right(posts);
     } catch (e) {
@@ -68,13 +68,13 @@ class ChirpPostLocalDataSource {
   /// getCachedPostByID
   /// Returns a post by its id specified by [postID].
   /// Internally deletes cache older than the specified [ttl] duration.
-  Future<Either<Failure, PostData>> getCachedPostByID(
+  Future<Either<Failure, Post>> getCachedPostByID(
     int postID,
   ) async {
     try {
       await _deleteAllExpiredCachedPosts();
       final post = await (db.select(
-        db.postTable,
+        db.posts,
       )..where((post) => post.id.equals(postID)))
           .getSingle();
 
@@ -94,9 +94,9 @@ class ChirpPostLocalDataSource {
 
   /// deleteAllCachedPosts
   /// Deletes all cached posts from the local database.
-  Future<Either<Failure, List<PostData>>> deleteAllCachedPosts() async {
+  Future<Either<Failure, List<Post>>> deleteAllCachedPosts() async {
     try {
-      final deleted = await db.delete(db.postTable).goAndReturn();
+      final deleted = await db.delete(db.posts).goAndReturn();
 
       return right(deleted);
     } catch (e) {
@@ -118,7 +118,7 @@ class ChirpPostLocalDataSource {
     int postID,
   ) async {
     try {
-      await (db.delete(db.postTable)
+      await (db.delete(db.posts)
                 ..where((post) => post.id.equals(postID)))
               .go();
 
@@ -146,7 +146,7 @@ class ChirpPostLocalDataSource {
   Future<Either<Failure, void>> _deleteAllExpiredCachedPosts() async {
     try {
       final expirationThreshold = DateTime.now().subtract(ttl);
-      await (db.delete(db.postTable)..where(
+      await (db.delete(db.posts)..where(
               (post) =>
                   post.cachedAt.isSmallerThanValue(expirationThreshold),
             ))
