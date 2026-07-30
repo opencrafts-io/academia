@@ -42,7 +42,21 @@ class _PostDetailPageState extends State<PostDetailPage> {
   }
 
   void _onVoteComment(Comment reply, bool isUpvote) {
-    //TODO: comment upvote functionality
+    final profileState = context.read<ProfileBloc>().state;
+    if (profileState is! ProfileLoadedState) return;
+
+    // Toggle: voting the same direction again retracts the vote.
+    final newVote = isUpvote
+        ? (reply.myVote == 1 ? 0 : 1)
+        : (reply.myVote == -1 ? 0 : -1);
+
+    context.read<CommentBloc>().add(
+      ToggleCommentVote(
+        comment: reply,
+        voteValue: newVote,
+        voterId: profileState.profile.id,
+      ),
+    );
   }
 
   void _sendReply(int postId) {

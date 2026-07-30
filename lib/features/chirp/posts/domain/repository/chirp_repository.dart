@@ -58,4 +58,12 @@ abstract class ChirpRepository {
   });
 
   Future<Either<Failure, int>> checkIsLiked({required int postId});
+
+  Future<Either<Failure, Comment>> toggleCommentLike({
+    required Comment comment,
+    required int voteValue,
+    required String voterId,
+  });
+
+  Future<Either<Failure, int>> checkIsCommentLiked({required int commentId});
 }

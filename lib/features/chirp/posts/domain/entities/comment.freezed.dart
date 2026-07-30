@@ -14,7 +14,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Comment {
 
- int get id; int get post; String get authorId; String get content; DateTime get createdAt; DateTime get updatedAt; int get upvotes; int get downvotes; int? get parent; List<Comment> get replies;
+ int get id; int get post; String get authorId; String get content; DateTime get createdAt; DateTime get updatedAt; int get upvotes; int get downvotes;// 1 = upvoted, -1 = downvoted, 0 = no vote
+ int get myVote; int? get parent; List<Comment> get replies;
 /// Create a copy of Comment
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +26,16 @@ $CommentCopyWith<Comment> get copyWith => _$CommentCopyWithImpl<Comment>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Comment&&(identical(other.id, id) || other.id == id)&&(identical(other.post, post) || other.post == post)&&(identical(other.authorId, authorId) || other.authorId == authorId)&&(identical(other.content, content) || other.content == content)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.upvotes, upvotes) || other.upvotes == upvotes)&&(identical(other.downvotes, downvotes) || other.downvotes == downvotes)&&(identical(other.parent, parent) || other.parent == parent)&&const DeepCollectionEquality().equals(other.replies, replies));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Comment&&(identical(other.id, id) || other.id == id)&&(identical(other.post, post) || other.post == post)&&(identical(other.authorId, authorId) || other.authorId == authorId)&&(identical(other.content, content) || other.content == content)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.upvotes, upvotes) || other.upvotes == upvotes)&&(identical(other.downvotes, downvotes) || other.downvotes == downvotes)&&(identical(other.myVote, myVote) || other.myVote == myVote)&&(identical(other.parent, parent) || other.parent == parent)&&const DeepCollectionEquality().equals(other.replies, replies));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,post,authorId,content,createdAt,updatedAt,upvotes,downvotes,parent,const DeepCollectionEquality().hash(replies));
+int get hashCode => Object.hash(runtimeType,id,post,authorId,content,createdAt,updatedAt,upvotes,downvotes,myVote,parent,const DeepCollectionEquality().hash(replies));
 
 @override
 String toString() {
-  return 'Comment(id: $id, post: $post, authorId: $authorId, content: $content, createdAt: $createdAt, updatedAt: $updatedAt, upvotes: $upvotes, downvotes: $downvotes, parent: $parent, replies: $replies)';
+  return 'Comment(id: $id, post: $post, authorId: $authorId, content: $content, createdAt: $createdAt, updatedAt: $updatedAt, upvotes: $upvotes, downvotes: $downvotes, myVote: $myVote, parent: $parent, replies: $replies)';
 }
 
 
@@ -45,7 +46,7 @@ abstract mixin class $CommentCopyWith<$Res>  {
   factory $CommentCopyWith(Comment value, $Res Function(Comment) _then) = _$CommentCopyWithImpl;
 @useResult
 $Res call({
- int id, int post, String authorId, String content, DateTime createdAt, DateTime updatedAt, int upvotes, int downvotes, int? parent, List<Comment> replies
+ int id, int post, String authorId, String content, DateTime createdAt, DateTime updatedAt, int upvotes, int downvotes, int myVote, int? parent, List<Comment> replies
 });
 
 
@@ -62,7 +63,7 @@ class _$CommentCopyWithImpl<$Res>
 
 /// Create a copy of Comment
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? post = null,Object? authorId = null,Object? content = null,Object? createdAt = null,Object? updatedAt = null,Object? upvotes = null,Object? downvotes = null,Object? parent = freezed,Object? replies = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? post = null,Object? authorId = null,Object? content = null,Object? createdAt = null,Object? updatedAt = null,Object? upvotes = null,Object? downvotes = null,Object? myVote = null,Object? parent = freezed,Object? replies = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,post: null == post ? _self.post : post // ignore: cast_nullable_to_non_nullable
@@ -72,6 +73,7 @@ as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: 
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,upvotes: null == upvotes ? _self.upvotes : upvotes // ignore: cast_nullable_to_non_nullable
 as int,downvotes: null == downvotes ? _self.downvotes : downvotes // ignore: cast_nullable_to_non_nullable
+as int,myVote: null == myVote ? _self.myVote : myVote // ignore: cast_nullable_to_non_nullable
 as int,parent: freezed == parent ? _self.parent : parent // ignore: cast_nullable_to_non_nullable
 as int?,replies: null == replies ? _self.replies : replies // ignore: cast_nullable_to_non_nullable
 as List<Comment>,
@@ -159,10 +161,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  int post,  String authorId,  String content,  DateTime createdAt,  DateTime updatedAt,  int upvotes,  int downvotes,  int? parent,  List<Comment> replies)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  int post,  String authorId,  String content,  DateTime createdAt,  DateTime updatedAt,  int upvotes,  int downvotes,  int myVote,  int? parent,  List<Comment> replies)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Comment() when $default != null:
-return $default(_that.id,_that.post,_that.authorId,_that.content,_that.createdAt,_that.updatedAt,_that.upvotes,_that.downvotes,_that.parent,_that.replies);case _:
+return $default(_that.id,_that.post,_that.authorId,_that.content,_that.createdAt,_that.updatedAt,_that.upvotes,_that.downvotes,_that.myVote,_that.parent,_that.replies);case _:
   return orElse();
 
 }
@@ -180,10 +182,10 @@ return $default(_that.id,_that.post,_that.authorId,_that.content,_that.createdAt
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  int post,  String authorId,  String content,  DateTime createdAt,  DateTime updatedAt,  int upvotes,  int downvotes,  int? parent,  List<Comment> replies)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  int post,  String authorId,  String content,  DateTime createdAt,  DateTime updatedAt,  int upvotes,  int downvotes,  int myVote,  int? parent,  List<Comment> replies)  $default,) {final _that = this;
 switch (_that) {
 case _Comment():
-return $default(_that.id,_that.post,_that.authorId,_that.content,_that.createdAt,_that.updatedAt,_that.upvotes,_that.downvotes,_that.parent,_that.replies);case _:
+return $default(_that.id,_that.post,_that.authorId,_that.content,_that.createdAt,_that.updatedAt,_that.upvotes,_that.downvotes,_that.myVote,_that.parent,_that.replies);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -200,10 +202,10 @@ return $default(_that.id,_that.post,_that.authorId,_that.content,_that.createdAt
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  int post,  String authorId,  String content,  DateTime createdAt,  DateTime updatedAt,  int upvotes,  int downvotes,  int? parent,  List<Comment> replies)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  int post,  String authorId,  String content,  DateTime createdAt,  DateTime updatedAt,  int upvotes,  int downvotes,  int myVote,  int? parent,  List<Comment> replies)?  $default,) {final _that = this;
 switch (_that) {
 case _Comment() when $default != null:
-return $default(_that.id,_that.post,_that.authorId,_that.content,_that.createdAt,_that.updatedAt,_that.upvotes,_that.downvotes,_that.parent,_that.replies);case _:
+return $default(_that.id,_that.post,_that.authorId,_that.content,_that.createdAt,_that.updatedAt,_that.upvotes,_that.downvotes,_that.myVote,_that.parent,_that.replies);case _:
   return null;
 
 }
@@ -215,7 +217,7 @@ return $default(_that.id,_that.post,_that.authorId,_that.content,_that.createdAt
 
 
 class _Comment implements Comment {
-  const _Comment({required this.id, required this.post, required this.authorId, required this.content, required this.createdAt, required this.updatedAt, this.upvotes = 0, this.downvotes = 0, this.parent, final  List<Comment> replies = const []}): _replies = replies;
+  const _Comment({required this.id, required this.post, required this.authorId, required this.content, required this.createdAt, required this.updatedAt, this.upvotes = 0, this.downvotes = 0, this.myVote = 0, this.parent, final  List<Comment> replies = const []}): _replies = replies;
   
 
 @override final  int id;
@@ -226,6 +228,8 @@ class _Comment implements Comment {
 @override final  DateTime updatedAt;
 @override@JsonKey() final  int upvotes;
 @override@JsonKey() final  int downvotes;
+// 1 = upvoted, -1 = downvoted, 0 = no vote
+@override@JsonKey() final  int myVote;
 @override final  int? parent;
  final  List<Comment> _replies;
 @override@JsonKey() List<Comment> get replies {
@@ -245,16 +249,16 @@ _$CommentCopyWith<_Comment> get copyWith => __$CommentCopyWithImpl<_Comment>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Comment&&(identical(other.id, id) || other.id == id)&&(identical(other.post, post) || other.post == post)&&(identical(other.authorId, authorId) || other.authorId == authorId)&&(identical(other.content, content) || other.content == content)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.upvotes, upvotes) || other.upvotes == upvotes)&&(identical(other.downvotes, downvotes) || other.downvotes == downvotes)&&(identical(other.parent, parent) || other.parent == parent)&&const DeepCollectionEquality().equals(other._replies, _replies));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Comment&&(identical(other.id, id) || other.id == id)&&(identical(other.post, post) || other.post == post)&&(identical(other.authorId, authorId) || other.authorId == authorId)&&(identical(other.content, content) || other.content == content)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.upvotes, upvotes) || other.upvotes == upvotes)&&(identical(other.downvotes, downvotes) || other.downvotes == downvotes)&&(identical(other.myVote, myVote) || other.myVote == myVote)&&(identical(other.parent, parent) || other.parent == parent)&&const DeepCollectionEquality().equals(other._replies, _replies));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,post,authorId,content,createdAt,updatedAt,upvotes,downvotes,parent,const DeepCollectionEquality().hash(_replies));
+int get hashCode => Object.hash(runtimeType,id,post,authorId,content,createdAt,updatedAt,upvotes,downvotes,myVote,parent,const DeepCollectionEquality().hash(_replies));
 
 @override
 String toString() {
-  return 'Comment(id: $id, post: $post, authorId: $authorId, content: $content, createdAt: $createdAt, updatedAt: $updatedAt, upvotes: $upvotes, downvotes: $downvotes, parent: $parent, replies: $replies)';
+  return 'Comment(id: $id, post: $post, authorId: $authorId, content: $content, createdAt: $createdAt, updatedAt: $updatedAt, upvotes: $upvotes, downvotes: $downvotes, myVote: $myVote, parent: $parent, replies: $replies)';
 }
 
 
@@ -265,7 +269,7 @@ abstract mixin class _$CommentCopyWith<$Res> implements $CommentCopyWith<$Res> {
   factory _$CommentCopyWith(_Comment value, $Res Function(_Comment) _then) = __$CommentCopyWithImpl;
 @override @useResult
 $Res call({
- int id, int post, String authorId, String content, DateTime createdAt, DateTime updatedAt, int upvotes, int downvotes, int? parent, List<Comment> replies
+ int id, int post, String authorId, String content, DateTime createdAt, DateTime updatedAt, int upvotes, int downvotes, int myVote, int? parent, List<Comment> replies
 });
 
 
@@ -282,7 +286,7 @@ class __$CommentCopyWithImpl<$Res>
 
 /// Create a copy of Comment
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? post = null,Object? authorId = null,Object? content = null,Object? createdAt = null,Object? updatedAt = null,Object? upvotes = null,Object? downvotes = null,Object? parent = freezed,Object? replies = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? post = null,Object? authorId = null,Object? content = null,Object? createdAt = null,Object? updatedAt = null,Object? upvotes = null,Object? downvotes = null,Object? myVote = null,Object? parent = freezed,Object? replies = null,}) {
   return _then(_Comment(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,post: null == post ? _self.post : post // ignore: cast_nullable_to_non_nullable
@@ -292,6 +296,7 @@ as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: 
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,upvotes: null == upvotes ? _self.upvotes : upvotes // ignore: cast_nullable_to_non_nullable
 as int,downvotes: null == downvotes ? _self.downvotes : downvotes // ignore: cast_nullable_to_non_nullable
+as int,myVote: null == myVote ? _self.myVote : myVote // ignore: cast_nullable_to_non_nullable
 as int,parent: freezed == parent ? _self.parent : parent // ignore: cast_nullable_to_non_nullable
 as int?,replies: null == replies ? _self._replies : replies // ignore: cast_nullable_to_non_nullable
 as List<Comment>,

@@ -470,6 +470,16 @@ class CommentContentWidget extends StatelessWidget {
                 text: comment.content,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
+              if (onVote != null) ...[
+                const SizedBox(height: 4),
+                PostVoteButton(
+                  upvotes: comment.upvotes,
+                  downvotes: comment.downvotes,
+                  myVote: comment.myVote,
+                  onUpvote: () => onVote!(comment, true),
+                  onDownvote: () => onVote!(comment, false),
+                ),
+              ],
             ],
           ),
         ),

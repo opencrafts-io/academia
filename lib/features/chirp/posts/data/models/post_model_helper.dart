@@ -55,9 +55,7 @@ extension PostEntityHelper on Post {
     upvotes: upvotes,
     downvotes: downvotes,
     attachments: (attachments.isNotEmpty)
-        ? attachments
-              .map((e) => e.toData(postId: id.toString()).toJson())
-              .toList()
+        ? attachments.map((e) => e.toData(postId: id).toJson()).toList()
         : const [],
     viewsCount: viewsCount,
     commentCount: commentCount,

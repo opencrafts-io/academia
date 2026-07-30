@@ -116,8 +116,13 @@ class _FeedPageState extends State<FeedPage>
         },
         child: RefreshIndicator(
           onRefresh: () async {
+            final bloc = context.read<FeedBloc>();
             _loadFeed();
-            await Future.delayed(const Duration(seconds: 2));
+            await bloc.stream
+                .firstWhere(
+                  (state) => state is FeedLoaded || state is FeedError,
+                )
+                .timeout(const Duration(seconds: 30), onTimeout: () => bloc.state);
           },
           child: CustomScrollView(
             controller: _scrollController,

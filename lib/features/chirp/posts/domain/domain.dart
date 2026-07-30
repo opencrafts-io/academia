@@ -8,6 +8,8 @@ export 'usecases/create_post_usecase.dart';
 export 'usecases/create_post_attachment_usecase.dart';
 export 'usecases/like_post_usecase.dart';
 export 'usecases/check_post_liked_usecase.dart';
+export 'usecases/like_comment_usecase.dart';
+export 'usecases/check_comment_liked_usecase.dart';
 export 'usecases/get_post_comments.dart';
 export 'usecases/get_post_detail_usecase.dart';
 export 'usecases/mark_post_as_viewed_usecase.dart';

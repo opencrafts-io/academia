@@ -31,6 +31,7 @@ class _AddPostPageState extends State<AddPostPage> {
   final List<XFile> attachments = [];
   Community? _selectedCommunity;
   String? authorId;
+  bool _isSubmitting = false;
 
   final TextEditingController _postTitleController = TextEditingController();
   final TextEditingController _postDescriptionController =
@@ -133,6 +134,7 @@ class _AddPostPageState extends State<AddPostPage> {
   }
 
   Future<void> _submitPost() async {
+    if (_isSubmitting) return;
     if (!formState.currentState!.validate()) {
       _showSnackBar("Please provide required details before continuing");
       return;
@@ -142,7 +144,11 @@ class _AddPostPageState extends State<AddPostPage> {
       return;
     }
     if (!mounted) return;
-    context.read<FeedBloc>().add(
+
+    setState(() => _isSubmitting = true);
+
+    final feedBloc = context.read<FeedBloc>();
+    feedBloc.add(
       CreatePostEvent(
         title: _postTitleController.text.trim(),
         authorId: authorId ?? '',
@@ -152,15 +158,31 @@ class _AddPostPageState extends State<AddPostPage> {
       ),
     );
 
-    _showSnackBar("Submitting post...");
-    setState(() {
-      _postTitleController.clear();
-      _postDescriptionController.clear();
-      attachments.clear();
-      _selectedCommunity = null;
-    });
+    final result = await feedBloc.stream
+        .firstWhere((state) => state is PostCreated || state is PostCreateError)
+        .timeout(
+          const Duration(seconds: 120),
+          onTimeout: () => const FeedState.postCreateError(
+            "Post submission timed out. Please try again.",
+          ),
+        );
 
-    context.pop(true);
+    if (!mounted) return;
+
+    if (result is PostCreated) {
+      setState(() {
+        _isSubmitting = false;
+        _postTitleController.clear();
+        _postDescriptionController.clear();
+        attachments.clear();
+        _selectedCommunity = null;
+      });
+      _showSnackBar("Post created successfully!");
+      context.pop(true);
+    } else {
+      setState(() => _isSubmitting = false);
+      _showSnackBar("Failed to create post. Please try again.");
+    }
   }
 
   @override
@@ -562,9 +584,19 @@ class _AddPostPageState extends State<AddPostPage> {
                       style: FilledButton.styleFrom(
                         padding: const EdgeInsets.all(22),
                       ),
-                      onPressed: () => _submitPost(),
-                      label: const Text("Create post"),
-                      icon: const Icon(Icons.add),
+                      onPressed: _isSubmitting ? null : () => _submitPost(),
+                      label: Text(
+                        _isSubmitting ? "Creating post..." : "Create post",
+                      ),
+                      icon: _isSubmitting
+                          ? const SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : const Icon(Icons.add),
                     ),
                   ),
                 ),

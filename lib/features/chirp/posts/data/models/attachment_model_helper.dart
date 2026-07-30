@@ -32,10 +32,10 @@ extension AttachmentEntityHelper on db.Attachment {
 }
 
 extension AttachmentHelper on Attachments {
-  db.Attachment toData({required String postId}) {
+  db.Attachment toData({required int postId}) {
     return db.Attachment(
       id: id,
-      postId: int.tryParse(postId) ?? 0,
+      postId: postId,
       attachmentType: attachmentType,
       name: name,
       size: size,

@@ -115,7 +115,19 @@ class _CommunityHomeState extends State<CommunityHome>
           } else if (state is CommunityHomeLoaded) {
             return RefreshIndicator.adaptive(
               onRefresh: () async {
-                await Future.delayed(const Duration(seconds: 2));
+                final feedBloc = context.read<FeedBloc>();
+                _currentPage = 1;
+                feedBloc.add(
+                  LoadPostsForCommunityEvent(communityID: widget.communityId),
+                );
+                await feedBloc.stream
+                    .firstWhere(
+                      (state) => state is FeedLoaded || state is FeedError,
+                    )
+                    .timeout(
+                      const Duration(seconds: 30),
+                      onTimeout: () => feedBloc.state,
+                    );
               },
               child: BlocProvider(
                 create: (context) =>

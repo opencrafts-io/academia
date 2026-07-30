@@ -493,4 +493,99 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
       );
     }
   }
+
+  // Checks the current authenticated user's vote on a comment
+  Future<Either<Failure, int>> checkIsCommentLiked({
+    required int commentId,
+  }) async {
+    try {
+      if (!await isConnectedToInternet()) {
+        return handleNoConnection();
+      }
+
+      final res = await dioClient.dio.get(
+        '/$servicePrefix/posts/comments/$commentId/vote/',
+        queryParameters: {'comment_id': commentId},
+      );
+
+      if (res.statusCode == 200) {
+        final value = res.data['value'];
+        return right((value as num?)?.toInt() ?? 0);
+      }
+
+      return left(
+        NetworkFailure(message: 'Unexpected response', error: res.data),
+      );
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) {
+        // Not voted
+        return right(0);
+      }
+      return handleDioError(e);
+    } catch (e) {
+      return left(
+        ServerFailure(
+          message:
+              'An unexpected error occurred while checking comment vote status',
+          error: e,
+        ),
+      );
+    }
+  }
+
+  // Submits a vote on a comment.
+  Future<Either<Failure, Map<String, dynamic>>> toggleCommentLike({
+    required int commentId,
+    required int voteValue,
+    required String voterId,
+  }) async {
+    try {
+      if (!await isConnectedToInternet()) {
+        return handleNoConnection();
+      }
+
+      final bool isRetract = voteValue == 0;
+      final endpoint = isRetract
+          ? '/$servicePrefix/posts/comments/$commentId/vote/redact/'
+          : '/$servicePrefix/posts/comments/$commentId/vote/';
+
+      final body = {
+        'voter_id': voterId,
+        'comment_id': commentId,
+        'value': isRetract ? -1 : voteValue,
+      };
+
+      final Response<dynamic> res;
+      if (isRetract) {
+        res = await dioClient.dio.delete(endpoint, data: body);
+      } else {
+        res = await dioClient.dio.post(endpoint, data: body);
+      }
+
+      if (res.statusCode == 200 ||
+          res.statusCode == 201 ||
+          res.statusCode == 204) {
+        final data = res.data is Map<String, dynamic>
+            ? res.data as Map<String, dynamic>
+            : <String, dynamic>{};
+        return right({
+          'upvotes': data['upvotes'] ?? data['likes_count'],
+          'my_vote': isRetract ? 0 : voteValue,
+        });
+      }
+
+      return left(
+        NetworkFailure(message: "Unexpected response", error: res.data),
+      );
+    } on DioException catch (e) {
+      return handleDioError(e);
+    } catch (e) {
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred while casting comment vote",
+          error: e,
+        ),
+      );
+    }
+  }
 }

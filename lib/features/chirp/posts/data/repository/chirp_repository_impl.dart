@@ -236,4 +236,36 @@ class ChirpRepositoryImpl implements ChirpRepository {
   Future<Either<Failure, int>> checkIsLiked({required int postId}) {
     return remoteDataSource.checkIsLiked(postId: postId);
   }
+
+  @override
+  Future<Either<Failure, Comment>> toggleCommentLike({
+    required Comment comment,
+    required int voteValue,
+    required String voterId,
+  }) async {
+    final result = await remoteDataSource.toggleCommentLike(
+      commentId: comment.id,
+      voteValue: voteValue,
+      voterId: voterId,
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (data) {
+        final newVote = (data['my_vote'] as int?) ?? voteValue;
+        final oldVote = comment.myVote;
+        final int upvotesDelta = newVote - oldVote;
+        final updatedComment = comment.copyWith(
+          upvotes:
+              (data['upvotes'] as int?) ?? (comment.upvotes + upvotesDelta),
+          myVote: newVote,
+        );
+        return right(updatedComment);
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, int>> checkIsCommentLiked({required int commentId}) {
+    return remoteDataSource.checkIsCommentLiked(commentId: commentId);
+  }
 }
