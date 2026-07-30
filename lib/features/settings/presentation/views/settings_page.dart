@@ -120,6 +120,25 @@ class SettingsPage extends StatelessWidget {
                               ),
                             ],
                           ),
+                          const SizedBox(height: 20),
+                          _SettingsSection(
+                            icon: Icons.forum_rounded,
+                            title: "Chirp",
+                            children: [
+                              _ToggleRow(
+                                title: "Mute videos",
+                                subTitle:
+                                    "Feed videos autoplay muted by default. "
+                                    "Turning this off autoplays with sound.",
+                                value: state.chirpMuteVideos,
+                                onChanged: (_) {
+                                  context
+                                      .read<SettingsCubit>()
+                                      .toggleChirpMuteVideos();
+                                },
+                              ),
+                            ],
+                          ),
                           const SizedBox(height: 24),
                         ],
                       );

@@ -807,12 +807,12 @@ class UserProfileCompanion extends UpdateCompanion<UserProfileData> {
   }
 }
 
-class $AttachmentTableTable extends AttachmentTable
-    with TableInfo<$AttachmentTableTable, AttachmentData> {
+class $AttachmentsTable extends Attachments
+    with TableInfo<$AttachmentsTable, Attachment> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $AttachmentTableTable(this.attachedDatabase, [this._alias]);
+  $AttachmentsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -902,7 +902,7 @@ class $AttachmentTableTable extends AttachmentTable
   static const String $name = 'attachment_table';
   @override
   VerificationContext validateIntegrity(
-    Insertable<AttachmentData> instance, {
+    Insertable<Attachment> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -967,9 +967,9 @@ class $AttachmentTableTable extends AttachmentTable
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  AttachmentData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Attachment map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return AttachmentData(
+    return Attachment(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -1002,12 +1002,12 @@ class $AttachmentTableTable extends AttachmentTable
   }
 
   @override
-  $AttachmentTableTable createAlias(String alias) {
-    return $AttachmentTableTable(attachedDatabase, alias);
+  $AttachmentsTable createAlias(String alias) {
+    return $AttachmentsTable(attachedDatabase, alias);
   }
 }
 
-class AttachmentData extends DataClass implements Insertable<AttachmentData> {
+class Attachment extends DataClass implements Insertable<Attachment> {
   final int id;
   final String attachmentType;
   final String file;
@@ -1015,7 +1015,7 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
   final String name;
   final DateTime createdAt;
   final int postId;
-  const AttachmentData({
+  const Attachment({
     required this.id,
     required this.attachmentType,
     required this.file,
@@ -1037,8 +1037,8 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
     return map;
   }
 
-  AttachmentTableCompanion toCompanion(bool nullToAbsent) {
-    return AttachmentTableCompanion(
+  AttachmentsCompanion toCompanion(bool nullToAbsent) {
+    return AttachmentsCompanion(
       id: Value(id),
       attachmentType: Value(attachmentType),
       file: Value(file),
@@ -1049,12 +1049,12 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
     );
   }
 
-  factory AttachmentData.fromJson(
+  factory Attachment.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return AttachmentData(
+    return Attachment(
       id: serializer.fromJson<int>(json['id']),
       attachmentType: serializer.fromJson<String>(json['attachment_type']),
       file: serializer.fromJson<String>(json['file']),
@@ -1078,7 +1078,7 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
     };
   }
 
-  AttachmentData copyWith({
+  Attachment copyWith({
     int? id,
     String? attachmentType,
     String? file,
@@ -1086,7 +1086,7 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
     String? name,
     DateTime? createdAt,
     int? postId,
-  }) => AttachmentData(
+  }) => Attachment(
     id: id ?? this.id,
     attachmentType: attachmentType ?? this.attachmentType,
     file: file ?? this.file,
@@ -1095,8 +1095,8 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
     createdAt: createdAt ?? this.createdAt,
     postId: postId ?? this.postId,
   );
-  AttachmentData copyWithCompanion(AttachmentTableCompanion data) {
-    return AttachmentData(
+  Attachment copyWithCompanion(AttachmentsCompanion data) {
+    return Attachment(
       id: data.id.present ? data.id.value : this.id,
       attachmentType: data.attachmentType.present
           ? data.attachmentType.value
@@ -1111,7 +1111,7 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
 
   @override
   String toString() {
-    return (StringBuffer('AttachmentData(')
+    return (StringBuffer('Attachment(')
           ..write('id: $id, ')
           ..write('attachmentType: $attachmentType, ')
           ..write('file: $file, ')
@@ -1129,7 +1129,7 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is AttachmentData &&
+      (other is Attachment &&
           other.id == this.id &&
           other.attachmentType == this.attachmentType &&
           other.file == this.file &&
@@ -1139,7 +1139,7 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
           other.postId == this.postId);
 }
 
-class AttachmentTableCompanion extends UpdateCompanion<AttachmentData> {
+class AttachmentsCompanion extends UpdateCompanion<Attachment> {
   final Value<int> id;
   final Value<String> attachmentType;
   final Value<String> file;
@@ -1147,7 +1147,7 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentData> {
   final Value<String> name;
   final Value<DateTime> createdAt;
   final Value<int> postId;
-  const AttachmentTableCompanion({
+  const AttachmentsCompanion({
     this.id = const Value.absent(),
     this.attachmentType = const Value.absent(),
     this.file = const Value.absent(),
@@ -1156,7 +1156,7 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentData> {
     this.createdAt = const Value.absent(),
     this.postId = const Value.absent(),
   });
-  AttachmentTableCompanion.insert({
+  AttachmentsCompanion.insert({
     this.id = const Value.absent(),
     required String attachmentType,
     required String file,
@@ -1170,7 +1170,7 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentData> {
        name = Value(name),
        createdAt = Value(createdAt),
        postId = Value(postId);
-  static Insertable<AttachmentData> custom({
+  static Insertable<Attachment> custom({
     Expression<int>? id,
     Expression<String>? attachmentType,
     Expression<String>? file,
@@ -1190,7 +1190,7 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentData> {
     });
   }
 
-  AttachmentTableCompanion copyWith({
+  AttachmentsCompanion copyWith({
     Value<int>? id,
     Value<String>? attachmentType,
     Value<String>? file,
@@ -1199,7 +1199,7 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentData> {
     Value<DateTime>? createdAt,
     Value<int>? postId,
   }) {
-    return AttachmentTableCompanion(
+    return AttachmentsCompanion(
       id: id ?? this.id,
       attachmentType: attachmentType ?? this.attachmentType,
       file: file ?? this.file,
@@ -1239,7 +1239,7 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentData> {
 
   @override
   String toString() {
-    return (StringBuffer('AttachmentTableCompanion(')
+    return (StringBuffer('AttachmentsCompanion(')
           ..write('id: $id, ')
           ..write('attachmentType: $attachmentType, ')
           ..write('file: $file, ')
@@ -1252,12 +1252,11 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentData> {
   }
 }
 
-class $PostTableTable extends PostTable
-    with TableInfo<$PostTableTable, PostData> {
+class $PostsTable extends Posts with TableInfo<$PostsTable, Post> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $PostTableTable(this.attachedDatabase, [this._alias]);
+  $PostsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -1279,7 +1278,7 @@ class $PostTableTable extends PostTable
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
-  ).withConverter<Map<String, dynamic>>($PostTableTable.$convertercommunity);
+  ).withConverter<Map<String, dynamic>>($PostsTable.$convertercommunity);
   static const VerificationMeta _authorIdMeta = const VerificationMeta(
     'authorId',
   );
@@ -1343,7 +1342,7 @@ class $PostTableTable extends PostTable
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
-  ).withConverter<List<dynamic>>($PostTableTable.$converterattachments);
+  ).withConverter<List<dynamic>>($PostsTable.$converterattachments);
   static const VerificationMeta _viewsCountMeta = const VerificationMeta(
     'viewsCount',
   );
@@ -1376,7 +1375,7 @@ class $PostTableTable extends PostTable
         false,
         type: DriftSqlType.string,
         requiredDuringInsert: true,
-      ).withConverter<List<dynamic>>($PostTableTable.$convertercomments);
+      ).withConverter<List<dynamic>>($PostsTable.$convertercomments);
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -1435,7 +1434,7 @@ class $PostTableTable extends PostTable
   static const String $name = 'post_table';
   @override
   VerificationContext validateIntegrity(
-    Insertable<PostData> instance, {
+    Insertable<Post> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -1522,14 +1521,14 @@ class $PostTableTable extends PostTable
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  PostData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Post map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return PostData(
+    return Post(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
       )!,
-      community: $PostTableTable.$convertercommunity.fromSql(
+      community: $PostsTable.$convertercommunity.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}community'],
@@ -1555,7 +1554,7 @@ class $PostTableTable extends PostTable
         DriftSqlType.int,
         data['${effectivePrefix}downvotes'],
       )!,
-      attachments: $PostTableTable.$converterattachments.fromSql(
+      attachments: $PostsTable.$converterattachments.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}attachments'],
@@ -1569,7 +1568,7 @@ class $PostTableTable extends PostTable
         DriftSqlType.int,
         data['${effectivePrefix}comment_count'],
       )!,
-      comments: $PostTableTable.$convertercomments.fromSql(
+      comments: $PostsTable.$convertercomments.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}comments'],
@@ -1591,8 +1590,8 @@ class $PostTableTable extends PostTable
   }
 
   @override
-  $PostTableTable createAlias(String alias) {
-    return $PostTableTable(attachedDatabase, alias);
+  $PostsTable createAlias(String alias) {
+    return $PostsTable(attachedDatabase, alias);
   }
 
   static TypeConverter<Map<String, dynamic>, String> $convertercommunity =
@@ -1603,7 +1602,7 @@ class $PostTableTable extends PostTable
       JsonListConverter();
 }
 
-class PostData extends DataClass implements Insertable<PostData> {
+class Post extends DataClass implements Insertable<Post> {
   final int id;
   final Map<String, dynamic> community;
   final String authorId;
@@ -1620,7 +1619,7 @@ class PostData extends DataClass implements Insertable<PostData> {
 
   /// For internal trackog of when the post was lastly cached on the
   final DateTime? cachedAt;
-  const PostData({
+  const Post({
     required this.id,
     required this.community,
     required this.authorId,
@@ -1642,7 +1641,7 @@ class PostData extends DataClass implements Insertable<PostData> {
     map['id'] = Variable<int>(id);
     {
       map['community'] = Variable<String>(
-        $PostTableTable.$convertercommunity.toSql(community),
+        $PostsTable.$convertercommunity.toSql(community),
       );
     }
     map['author_id'] = Variable<String>(authorId);
@@ -1652,14 +1651,14 @@ class PostData extends DataClass implements Insertable<PostData> {
     map['downvotes'] = Variable<int>(downvotes);
     {
       map['attachments'] = Variable<String>(
-        $PostTableTable.$converterattachments.toSql(attachments),
+        $PostsTable.$converterattachments.toSql(attachments),
       );
     }
     map['views_count'] = Variable<int>(viewsCount);
     map['comment_count'] = Variable<int>(commentCount);
     {
       map['comments'] = Variable<String>(
-        $PostTableTable.$convertercomments.toSql(comments),
+        $PostsTable.$convertercomments.toSql(comments),
       );
     }
     map['created_at'] = Variable<DateTime>(createdAt);
@@ -1670,8 +1669,8 @@ class PostData extends DataClass implements Insertable<PostData> {
     return map;
   }
 
-  PostTableCompanion toCompanion(bool nullToAbsent) {
-    return PostTableCompanion(
+  PostsCompanion toCompanion(bool nullToAbsent) {
+    return PostsCompanion(
       id: Value(id),
       community: Value(community),
       authorId: Value(authorId),
@@ -1691,12 +1690,12 @@ class PostData extends DataClass implements Insertable<PostData> {
     );
   }
 
-  factory PostData.fromJson(
+  factory Post.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return PostData(
+    return Post(
       id: serializer.fromJson<int>(json['id']),
       community: serializer.fromJson<Map<String, dynamic>>(json['community']),
       authorId: serializer.fromJson<String>(json['author_id']),
@@ -1734,7 +1733,7 @@ class PostData extends DataClass implements Insertable<PostData> {
     };
   }
 
-  PostData copyWith({
+  Post copyWith({
     int? id,
     Map<String, dynamic>? community,
     String? authorId,
@@ -1749,7 +1748,7 @@ class PostData extends DataClass implements Insertable<PostData> {
     DateTime? createdAt,
     DateTime? updatedAt,
     Value<DateTime?> cachedAt = const Value.absent(),
-  }) => PostData(
+  }) => Post(
     id: id ?? this.id,
     community: community ?? this.community,
     authorId: authorId ?? this.authorId,
@@ -1765,8 +1764,8 @@ class PostData extends DataClass implements Insertable<PostData> {
     updatedAt: updatedAt ?? this.updatedAt,
     cachedAt: cachedAt.present ? cachedAt.value : this.cachedAt,
   );
-  PostData copyWithCompanion(PostTableCompanion data) {
-    return PostData(
+  Post copyWithCompanion(PostsCompanion data) {
+    return Post(
       id: data.id.present ? data.id.value : this.id,
       community: data.community.present ? data.community.value : this.community,
       authorId: data.authorId.present ? data.authorId.value : this.authorId,
@@ -1792,7 +1791,7 @@ class PostData extends DataClass implements Insertable<PostData> {
 
   @override
   String toString() {
-    return (StringBuffer('PostData(')
+    return (StringBuffer('Post(')
           ..write('id: $id, ')
           ..write('community: $community, ')
           ..write('authorId: $authorId, ')
@@ -1831,7 +1830,7 @@ class PostData extends DataClass implements Insertable<PostData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is PostData &&
+      (other is Post &&
           other.id == this.id &&
           other.community == this.community &&
           other.authorId == this.authorId &&
@@ -1848,7 +1847,7 @@ class PostData extends DataClass implements Insertable<PostData> {
           other.cachedAt == this.cachedAt);
 }
 
-class PostTableCompanion extends UpdateCompanion<PostData> {
+class PostsCompanion extends UpdateCompanion<Post> {
   final Value<int> id;
   final Value<Map<String, dynamic>> community;
   final Value<String> authorId;
@@ -1863,7 +1862,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime?> cachedAt;
-  const PostTableCompanion({
+  const PostsCompanion({
     this.id = const Value.absent(),
     this.community = const Value.absent(),
     this.authorId = const Value.absent(),
@@ -1879,7 +1878,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
     this.updatedAt = const Value.absent(),
     this.cachedAt = const Value.absent(),
   });
-  PostTableCompanion.insert({
+  PostsCompanion.insert({
     this.id = const Value.absent(),
     required Map<String, dynamic> community,
     required String authorId,
@@ -1902,7 +1901,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
        comments = Value(comments),
        createdAt = Value(createdAt),
        updatedAt = Value(updatedAt);
-  static Insertable<PostData> custom({
+  static Insertable<Post> custom({
     Expression<int>? id,
     Expression<String>? community,
     Expression<String>? authorId,
@@ -1936,7 +1935,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
     });
   }
 
-  PostTableCompanion copyWith({
+  PostsCompanion copyWith({
     Value<int>? id,
     Value<Map<String, dynamic>>? community,
     Value<String>? authorId,
@@ -1952,7 +1951,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
     Value<DateTime>? updatedAt,
     Value<DateTime?>? cachedAt,
   }) {
-    return PostTableCompanion(
+    return PostsCompanion(
       id: id ?? this.id,
       community: community ?? this.community,
       authorId: authorId ?? this.authorId,
@@ -1978,7 +1977,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
     }
     if (community.present) {
       map['community'] = Variable<String>(
-        $PostTableTable.$convertercommunity.toSql(community.value),
+        $PostsTable.$convertercommunity.toSql(community.value),
       );
     }
     if (authorId.present) {
@@ -1998,7 +1997,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
     }
     if (attachments.present) {
       map['attachments'] = Variable<String>(
-        $PostTableTable.$converterattachments.toSql(attachments.value),
+        $PostsTable.$converterattachments.toSql(attachments.value),
       );
     }
     if (viewsCount.present) {
@@ -2009,7 +2008,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
     }
     if (comments.present) {
       map['comments'] = Variable<String>(
-        $PostTableTable.$convertercomments.toSql(comments.value),
+        $PostsTable.$convertercomments.toSql(comments.value),
       );
     }
     if (createdAt.present) {
@@ -2026,7 +2025,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
 
   @override
   String toString() {
-    return (StringBuffer('PostTableCompanion(')
+    return (StringBuffer('PostsCompanion(')
           ..write('id: $id, ')
           ..write('community: $community, ')
           ..write('authorId: $authorId, ')
@@ -2046,12 +2045,11 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
   }
 }
 
-class $CommentTableTable extends CommentTable
-    with TableInfo<$CommentTableTable, CommentData> {
+class $CommentsTable extends Comments with TableInfo<$CommentsTable, Comment> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $CommentTableTable(this.attachedDatabase, [this._alias]);
+  $CommentsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -2146,7 +2144,7 @@ class $CommentTableTable extends CommentTable
         false,
         type: DriftSqlType.string,
         requiredDuringInsert: true,
-      ).withConverter<List<dynamic>>($CommentTableTable.$converterreplies);
+      ).withConverter<List<dynamic>>($CommentsTable.$converterreplies);
   static const VerificationMeta _parentMeta = const VerificationMeta('parent');
   @override
   late final GeneratedColumn<int> parent = GeneratedColumn<int>(
@@ -2176,7 +2174,7 @@ class $CommentTableTable extends CommentTable
   static const String $name = 'comment_table';
   @override
   VerificationContext validateIntegrity(
-    Insertable<CommentData> instance, {
+    Insertable<Comment> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -2250,9 +2248,9 @@ class $CommentTableTable extends CommentTable
   @override
   Set<GeneratedColumn> get $primaryKey => const {};
   @override
-  CommentData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Comment map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return CommentData(
+    return Comment(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -2285,7 +2283,7 @@ class $CommentTableTable extends CommentTable
         DriftSqlType.int,
         data['${effectivePrefix}downvotes'],
       )!,
-      replies: $CommentTableTable.$converterreplies.fromSql(
+      replies: $CommentsTable.$converterreplies.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}replies'],
@@ -2299,15 +2297,15 @@ class $CommentTableTable extends CommentTable
   }
 
   @override
-  $CommentTableTable createAlias(String alias) {
-    return $CommentTableTable(attachedDatabase, alias);
+  $CommentsTable createAlias(String alias) {
+    return $CommentsTable(attachedDatabase, alias);
   }
 
   static TypeConverter<List<dynamic>, String> $converterreplies =
       JsonListConverter();
 }
 
-class CommentData extends DataClass implements Insertable<CommentData> {
+class Comment extends DataClass implements Insertable<Comment> {
   final int id;
   final int post;
   final String authorId;
@@ -2318,7 +2316,7 @@ class CommentData extends DataClass implements Insertable<CommentData> {
   final int downvotes;
   final List<dynamic> replies;
   final int? parent;
-  const CommentData({
+  const Comment({
     required this.id,
     required this.post,
     required this.authorId,
@@ -2343,7 +2341,7 @@ class CommentData extends DataClass implements Insertable<CommentData> {
     map['downvotes'] = Variable<int>(downvotes);
     {
       map['replies'] = Variable<String>(
-        $CommentTableTable.$converterreplies.toSql(replies),
+        $CommentsTable.$converterreplies.toSql(replies),
       );
     }
     if (!nullToAbsent || parent != null) {
@@ -2352,8 +2350,8 @@ class CommentData extends DataClass implements Insertable<CommentData> {
     return map;
   }
 
-  CommentTableCompanion toCompanion(bool nullToAbsent) {
-    return CommentTableCompanion(
+  CommentsCompanion toCompanion(bool nullToAbsent) {
+    return CommentsCompanion(
       id: Value(id),
       post: Value(post),
       authorId: Value(authorId),
@@ -2369,12 +2367,12 @@ class CommentData extends DataClass implements Insertable<CommentData> {
     );
   }
 
-  factory CommentData.fromJson(
+  factory Comment.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return CommentData(
+    return Comment(
       id: serializer.fromJson<int>(json['id']),
       post: serializer.fromJson<int>(json['post']),
       authorId: serializer.fromJson<String>(json['author_id']),
@@ -2404,7 +2402,7 @@ class CommentData extends DataClass implements Insertable<CommentData> {
     };
   }
 
-  CommentData copyWith({
+  Comment copyWith({
     int? id,
     int? post,
     String? authorId,
@@ -2415,7 +2413,7 @@ class CommentData extends DataClass implements Insertable<CommentData> {
     int? downvotes,
     List<dynamic>? replies,
     Value<int?> parent = const Value.absent(),
-  }) => CommentData(
+  }) => Comment(
     id: id ?? this.id,
     post: post ?? this.post,
     authorId: authorId ?? this.authorId,
@@ -2427,8 +2425,8 @@ class CommentData extends DataClass implements Insertable<CommentData> {
     replies: replies ?? this.replies,
     parent: parent.present ? parent.value : this.parent,
   );
-  CommentData copyWithCompanion(CommentTableCompanion data) {
-    return CommentData(
+  Comment copyWithCompanion(CommentsCompanion data) {
+    return Comment(
       id: data.id.present ? data.id.value : this.id,
       post: data.post.present ? data.post.value : this.post,
       authorId: data.authorId.present ? data.authorId.value : this.authorId,
@@ -2444,7 +2442,7 @@ class CommentData extends DataClass implements Insertable<CommentData> {
 
   @override
   String toString() {
-    return (StringBuffer('CommentData(')
+    return (StringBuffer('Comment(')
           ..write('id: $id, ')
           ..write('post: $post, ')
           ..write('authorId: $authorId, ')
@@ -2475,7 +2473,7 @@ class CommentData extends DataClass implements Insertable<CommentData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is CommentData &&
+      (other is Comment &&
           other.id == this.id &&
           other.post == this.post &&
           other.authorId == this.authorId &&
@@ -2488,7 +2486,7 @@ class CommentData extends DataClass implements Insertable<CommentData> {
           other.parent == this.parent);
 }
 
-class CommentTableCompanion extends UpdateCompanion<CommentData> {
+class CommentsCompanion extends UpdateCompanion<Comment> {
   final Value<int> id;
   final Value<int> post;
   final Value<String> authorId;
@@ -2500,7 +2498,7 @@ class CommentTableCompanion extends UpdateCompanion<CommentData> {
   final Value<List<dynamic>> replies;
   final Value<int?> parent;
   final Value<int> rowid;
-  const CommentTableCompanion({
+  const CommentsCompanion({
     this.id = const Value.absent(),
     this.post = const Value.absent(),
     this.authorId = const Value.absent(),
@@ -2513,7 +2511,7 @@ class CommentTableCompanion extends UpdateCompanion<CommentData> {
     this.parent = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  CommentTableCompanion.insert({
+  CommentsCompanion.insert({
     required int id,
     required int post,
     required String authorId,
@@ -2532,7 +2530,7 @@ class CommentTableCompanion extends UpdateCompanion<CommentData> {
        createdAt = Value(createdAt),
        updatedAt = Value(updatedAt),
        replies = Value(replies);
-  static Insertable<CommentData> custom({
+  static Insertable<Comment> custom({
     Expression<int>? id,
     Expression<int>? post,
     Expression<String>? authorId,
@@ -2560,7 +2558,7 @@ class CommentTableCompanion extends UpdateCompanion<CommentData> {
     });
   }
 
-  CommentTableCompanion copyWith({
+  CommentsCompanion copyWith({
     Value<int>? id,
     Value<int>? post,
     Value<String>? authorId,
@@ -2573,7 +2571,7 @@ class CommentTableCompanion extends UpdateCompanion<CommentData> {
     Value<int?>? parent,
     Value<int>? rowid,
   }) {
-    return CommentTableCompanion(
+    return CommentsCompanion(
       id: id ?? this.id,
       post: post ?? this.post,
       authorId: authorId ?? this.authorId,
@@ -2617,7 +2615,7 @@ class CommentTableCompanion extends UpdateCompanion<CommentData> {
     }
     if (replies.present) {
       map['replies'] = Variable<String>(
-        $CommentTableTable.$converterreplies.toSql(replies.value),
+        $CommentsTable.$converterreplies.toSql(replies.value),
       );
     }
     if (parent.present) {
@@ -2631,7 +2629,7 @@ class CommentTableCompanion extends UpdateCompanion<CommentData> {
 
   @override
   String toString() {
-    return (StringBuffer('CommentTableCompanion(')
+    return (StringBuffer('CommentsCompanion(')
           ..write('id: $id, ')
           ..write('post: $post, ')
           ..write('authorId: $authorId, ')
@@ -7076,1374 +7074,6 @@ class ScannerTableCompanion extends UpdateCompanion<ScannerData> {
   }
 }
 
-class $GroupTableTable extends GroupTable
-    with TableInfo<$GroupTableTable, GroupEntity> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $GroupTableTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-    'id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _createdAtMeta = const VerificationMeta(
-    'createdAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-    'created_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    defaultValue: Constant(DateTime.now()),
-  );
-  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
-    'updatedAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
-    'updated_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    defaultValue: Constant(DateTime.now()),
-  );
-  static const VerificationMeta _nameMeta = const VerificationMeta('name');
-  @override
-  late final GeneratedColumn<String> name = GeneratedColumn<String>(
-    'name',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _descriptionMeta = const VerificationMeta(
-    'description',
-  );
-  @override
-  late final GeneratedColumn<String> description = GeneratedColumn<String>(
-    'description',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _creatorIdMeta = const VerificationMeta(
-    'creatorId',
-  );
-  @override
-  late final GeneratedColumn<String> creatorId = GeneratedColumn<String>(
-    'creator_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _creatorNameMeta = const VerificationMeta(
-    'creatorName',
-  );
-  @override
-  late final GeneratedColumn<String> creatorName = GeneratedColumn<String>(
-    'creator_name',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _adminsMeta = const VerificationMeta('admins');
-  @override
-  late final GeneratedColumn<String> admins = GeneratedColumn<String>(
-    'admins',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _adminNamesMeta = const VerificationMeta(
-    'adminNames',
-  );
-  @override
-  late final GeneratedColumn<String> adminNames = GeneratedColumn<String>(
-    'admin_names',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _moderatorsMeta = const VerificationMeta(
-    'moderators',
-  );
-  @override
-  late final GeneratedColumn<String> moderators = GeneratedColumn<String>(
-    'moderators',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _moderatorNamesMeta = const VerificationMeta(
-    'moderatorNames',
-  );
-  @override
-  late final GeneratedColumn<String> moderatorNames = GeneratedColumn<String>(
-    'moderator_names',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _membersMeta = const VerificationMeta(
-    'members',
-  );
-  @override
-  late final GeneratedColumn<String> members = GeneratedColumn<String>(
-    'members',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _memberNamesMeta = const VerificationMeta(
-    'memberNames',
-  );
-  @override
-  late final GeneratedColumn<String> memberNames = GeneratedColumn<String>(
-    'member_names',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _bannedUsersMeta = const VerificationMeta(
-    'bannedUsers',
-  );
-  @override
-  late final GeneratedColumn<String> bannedUsers = GeneratedColumn<String>(
-    'banned_users',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _bannedUserNamesMeta = const VerificationMeta(
-    'bannedUserNames',
-  );
-  @override
-  late final GeneratedColumn<String> bannedUserNames = GeneratedColumn<String>(
-    'banned_user_names',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _isPrivateMeta = const VerificationMeta(
-    'isPrivate',
-  );
-  @override
-  late final GeneratedColumn<bool> isPrivate = GeneratedColumn<bool>(
-    'is_private',
-    aliasedName,
-    false,
-    type: DriftSqlType.bool,
-    requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("is_private" IN (0, 1))',
-    ),
-  );
-  static const VerificationMeta _rulesMeta = const VerificationMeta('rules');
-  @override
-  late final GeneratedColumn<String> rules = GeneratedColumn<String>(
-    'rules',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _logoMeta = const VerificationMeta('logo');
-  @override
-  late final GeneratedColumn<String> logo = GeneratedColumn<String>(
-    'logo',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _bannerMeta = const VerificationMeta('banner');
-  @override
-  late final GeneratedColumn<String> banner = GeneratedColumn<String>(
-    'banner',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _logoUrlMeta = const VerificationMeta(
-    'logoUrl',
-  );
-  @override
-  late final GeneratedColumn<String> logoUrl = GeneratedColumn<String>(
-    'logo_url',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _bannerUrlMeta = const VerificationMeta(
-    'bannerUrl',
-  );
-  @override
-  late final GeneratedColumn<String> bannerUrl = GeneratedColumn<String>(
-    'banner_url',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _userRoleMeta = const VerificationMeta(
-    'userRole',
-  );
-  @override
-  late final GeneratedColumn<String> userRole = GeneratedColumn<String>(
-    'user_role',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _canPostMeta = const VerificationMeta(
-    'canPost',
-  );
-  @override
-  late final GeneratedColumn<bool> canPost = GeneratedColumn<bool>(
-    'can_post',
-    aliasedName,
-    false,
-    type: DriftSqlType.bool,
-    requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("can_post" IN (0, 1))',
-    ),
-  );
-  static const VerificationMeta _canModerateMeta = const VerificationMeta(
-    'canModerate',
-  );
-  @override
-  late final GeneratedColumn<bool> canModerate = GeneratedColumn<bool>(
-    'can_moderate',
-    aliasedName,
-    false,
-    type: DriftSqlType.bool,
-    requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("can_moderate" IN (0, 1))',
-    ),
-  );
-  static const VerificationMeta _canAdminMeta = const VerificationMeta(
-    'canAdmin',
-  );
-  @override
-  late final GeneratedColumn<bool> canAdmin = GeneratedColumn<bool>(
-    'can_admin',
-    aliasedName,
-    false,
-    type: DriftSqlType.bool,
-    requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("can_admin" IN (0, 1))',
-    ),
-  );
-  @override
-  List<GeneratedColumn> get $columns => [
-    id,
-    createdAt,
-    updatedAt,
-    name,
-    description,
-    creatorId,
-    creatorName,
-    admins,
-    adminNames,
-    moderators,
-    moderatorNames,
-    members,
-    memberNames,
-    bannedUsers,
-    bannedUserNames,
-    isPrivate,
-    rules,
-    logo,
-    banner,
-    logoUrl,
-    bannerUrl,
-    userRole,
-    canPost,
-    canModerate,
-    canAdmin,
-  ];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'group_table';
-  @override
-  VerificationContext validateIntegrity(
-    Insertable<GroupEntity> instance, {
-    bool isInserting = false,
-  }) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
-    }
-    if (data.containsKey('created_at')) {
-      context.handle(
-        _createdAtMeta,
-        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
-      );
-    }
-    if (data.containsKey('updated_at')) {
-      context.handle(
-        _updatedAtMeta,
-        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
-      );
-    }
-    if (data.containsKey('name')) {
-      context.handle(
-        _nameMeta,
-        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_nameMeta);
-    }
-    if (data.containsKey('description')) {
-      context.handle(
-        _descriptionMeta,
-        description.isAcceptableOrUnknown(
-          data['description']!,
-          _descriptionMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_descriptionMeta);
-    }
-    if (data.containsKey('creator_id')) {
-      context.handle(
-        _creatorIdMeta,
-        creatorId.isAcceptableOrUnknown(data['creator_id']!, _creatorIdMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_creatorIdMeta);
-    }
-    if (data.containsKey('creator_name')) {
-      context.handle(
-        _creatorNameMeta,
-        creatorName.isAcceptableOrUnknown(
-          data['creator_name']!,
-          _creatorNameMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_creatorNameMeta);
-    }
-    if (data.containsKey('admins')) {
-      context.handle(
-        _adminsMeta,
-        admins.isAcceptableOrUnknown(data['admins']!, _adminsMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_adminsMeta);
-    }
-    if (data.containsKey('admin_names')) {
-      context.handle(
-        _adminNamesMeta,
-        adminNames.isAcceptableOrUnknown(data['admin_names']!, _adminNamesMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_adminNamesMeta);
-    }
-    if (data.containsKey('moderators')) {
-      context.handle(
-        _moderatorsMeta,
-        moderators.isAcceptableOrUnknown(data['moderators']!, _moderatorsMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_moderatorsMeta);
-    }
-    if (data.containsKey('moderator_names')) {
-      context.handle(
-        _moderatorNamesMeta,
-        moderatorNames.isAcceptableOrUnknown(
-          data['moderator_names']!,
-          _moderatorNamesMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_moderatorNamesMeta);
-    }
-    if (data.containsKey('members')) {
-      context.handle(
-        _membersMeta,
-        members.isAcceptableOrUnknown(data['members']!, _membersMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_membersMeta);
-    }
-    if (data.containsKey('member_names')) {
-      context.handle(
-        _memberNamesMeta,
-        memberNames.isAcceptableOrUnknown(
-          data['member_names']!,
-          _memberNamesMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_memberNamesMeta);
-    }
-    if (data.containsKey('banned_users')) {
-      context.handle(
-        _bannedUsersMeta,
-        bannedUsers.isAcceptableOrUnknown(
-          data['banned_users']!,
-          _bannedUsersMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_bannedUsersMeta);
-    }
-    if (data.containsKey('banned_user_names')) {
-      context.handle(
-        _bannedUserNamesMeta,
-        bannedUserNames.isAcceptableOrUnknown(
-          data['banned_user_names']!,
-          _bannedUserNamesMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_bannedUserNamesMeta);
-    }
-    if (data.containsKey('is_private')) {
-      context.handle(
-        _isPrivateMeta,
-        isPrivate.isAcceptableOrUnknown(data['is_private']!, _isPrivateMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_isPrivateMeta);
-    }
-    if (data.containsKey('rules')) {
-      context.handle(
-        _rulesMeta,
-        rules.isAcceptableOrUnknown(data['rules']!, _rulesMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_rulesMeta);
-    }
-    if (data.containsKey('logo')) {
-      context.handle(
-        _logoMeta,
-        logo.isAcceptableOrUnknown(data['logo']!, _logoMeta),
-      );
-    }
-    if (data.containsKey('banner')) {
-      context.handle(
-        _bannerMeta,
-        banner.isAcceptableOrUnknown(data['banner']!, _bannerMeta),
-      );
-    }
-    if (data.containsKey('logo_url')) {
-      context.handle(
-        _logoUrlMeta,
-        logoUrl.isAcceptableOrUnknown(data['logo_url']!, _logoUrlMeta),
-      );
-    }
-    if (data.containsKey('banner_url')) {
-      context.handle(
-        _bannerUrlMeta,
-        bannerUrl.isAcceptableOrUnknown(data['banner_url']!, _bannerUrlMeta),
-      );
-    }
-    if (data.containsKey('user_role')) {
-      context.handle(
-        _userRoleMeta,
-        userRole.isAcceptableOrUnknown(data['user_role']!, _userRoleMeta),
-      );
-    }
-    if (data.containsKey('can_post')) {
-      context.handle(
-        _canPostMeta,
-        canPost.isAcceptableOrUnknown(data['can_post']!, _canPostMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_canPostMeta);
-    }
-    if (data.containsKey('can_moderate')) {
-      context.handle(
-        _canModerateMeta,
-        canModerate.isAcceptableOrUnknown(
-          data['can_moderate']!,
-          _canModerateMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_canModerateMeta);
-    }
-    if (data.containsKey('can_admin')) {
-      context.handle(
-        _canAdminMeta,
-        canAdmin.isAcceptableOrUnknown(data['can_admin']!, _canAdminMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_canAdminMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  GroupEntity map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return GroupEntity(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}id'],
-      )!,
-      createdAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}created_at'],
-      )!,
-      updatedAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}updated_at'],
-      )!,
-      name: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}name'],
-      )!,
-      description: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}description'],
-      )!,
-      creatorId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}creator_id'],
-      )!,
-      creatorName: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}creator_name'],
-      )!,
-      admins: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}admins'],
-      )!,
-      adminNames: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}admin_names'],
-      )!,
-      moderators: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}moderators'],
-      )!,
-      moderatorNames: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}moderator_names'],
-      )!,
-      members: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}members'],
-      )!,
-      memberNames: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}member_names'],
-      )!,
-      bannedUsers: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}banned_users'],
-      )!,
-      bannedUserNames: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}banned_user_names'],
-      )!,
-      isPrivate: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}is_private'],
-      )!,
-      rules: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}rules'],
-      )!,
-      logo: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}logo'],
-      ),
-      banner: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}banner'],
-      ),
-      logoUrl: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}logo_url'],
-      ),
-      bannerUrl: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}banner_url'],
-      ),
-      userRole: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}user_role'],
-      ),
-      canPost: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}can_post'],
-      )!,
-      canModerate: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}can_moderate'],
-      )!,
-      canAdmin: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}can_admin'],
-      )!,
-    );
-  }
-
-  @override
-  $GroupTableTable createAlias(String alias) {
-    return $GroupTableTable(attachedDatabase, alias);
-  }
-}
-
-class GroupEntity extends DataClass implements Insertable<GroupEntity> {
-  final String id;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String name;
-  final String description;
-  final String creatorId;
-  final String creatorName;
-  final String admins;
-  final String adminNames;
-  final String moderators;
-  final String moderatorNames;
-  final String members;
-  final String memberNames;
-  final String bannedUsers;
-  final String bannedUserNames;
-  final bool isPrivate;
-  final String rules;
-  final String? logo;
-  final String? banner;
-  final String? logoUrl;
-  final String? bannerUrl;
-  final String? userRole;
-  final bool canPost;
-  final bool canModerate;
-  final bool canAdmin;
-  const GroupEntity({
-    required this.id,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.name,
-    required this.description,
-    required this.creatorId,
-    required this.creatorName,
-    required this.admins,
-    required this.adminNames,
-    required this.moderators,
-    required this.moderatorNames,
-    required this.members,
-    required this.memberNames,
-    required this.bannedUsers,
-    required this.bannedUserNames,
-    required this.isPrivate,
-    required this.rules,
-    this.logo,
-    this.banner,
-    this.logoUrl,
-    this.bannerUrl,
-    this.userRole,
-    required this.canPost,
-    required this.canModerate,
-    required this.canAdmin,
-  });
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<String>(id);
-    map['created_at'] = Variable<DateTime>(createdAt);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
-    map['name'] = Variable<String>(name);
-    map['description'] = Variable<String>(description);
-    map['creator_id'] = Variable<String>(creatorId);
-    map['creator_name'] = Variable<String>(creatorName);
-    map['admins'] = Variable<String>(admins);
-    map['admin_names'] = Variable<String>(adminNames);
-    map['moderators'] = Variable<String>(moderators);
-    map['moderator_names'] = Variable<String>(moderatorNames);
-    map['members'] = Variable<String>(members);
-    map['member_names'] = Variable<String>(memberNames);
-    map['banned_users'] = Variable<String>(bannedUsers);
-    map['banned_user_names'] = Variable<String>(bannedUserNames);
-    map['is_private'] = Variable<bool>(isPrivate);
-    map['rules'] = Variable<String>(rules);
-    if (!nullToAbsent || logo != null) {
-      map['logo'] = Variable<String>(logo);
-    }
-    if (!nullToAbsent || banner != null) {
-      map['banner'] = Variable<String>(banner);
-    }
-    if (!nullToAbsent || logoUrl != null) {
-      map['logo_url'] = Variable<String>(logoUrl);
-    }
-    if (!nullToAbsent || bannerUrl != null) {
-      map['banner_url'] = Variable<String>(bannerUrl);
-    }
-    if (!nullToAbsent || userRole != null) {
-      map['user_role'] = Variable<String>(userRole);
-    }
-    map['can_post'] = Variable<bool>(canPost);
-    map['can_moderate'] = Variable<bool>(canModerate);
-    map['can_admin'] = Variable<bool>(canAdmin);
-    return map;
-  }
-
-  GroupTableCompanion toCompanion(bool nullToAbsent) {
-    return GroupTableCompanion(
-      id: Value(id),
-      createdAt: Value(createdAt),
-      updatedAt: Value(updatedAt),
-      name: Value(name),
-      description: Value(description),
-      creatorId: Value(creatorId),
-      creatorName: Value(creatorName),
-      admins: Value(admins),
-      adminNames: Value(adminNames),
-      moderators: Value(moderators),
-      moderatorNames: Value(moderatorNames),
-      members: Value(members),
-      memberNames: Value(memberNames),
-      bannedUsers: Value(bannedUsers),
-      bannedUserNames: Value(bannedUserNames),
-      isPrivate: Value(isPrivate),
-      rules: Value(rules),
-      logo: logo == null && nullToAbsent ? const Value.absent() : Value(logo),
-      banner: banner == null && nullToAbsent
-          ? const Value.absent()
-          : Value(banner),
-      logoUrl: logoUrl == null && nullToAbsent
-          ? const Value.absent()
-          : Value(logoUrl),
-      bannerUrl: bannerUrl == null && nullToAbsent
-          ? const Value.absent()
-          : Value(bannerUrl),
-      userRole: userRole == null && nullToAbsent
-          ? const Value.absent()
-          : Value(userRole),
-      canPost: Value(canPost),
-      canModerate: Value(canModerate),
-      canAdmin: Value(canAdmin),
-    );
-  }
-
-  factory GroupEntity.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return GroupEntity(
-      id: serializer.fromJson<String>(json['id']),
-      createdAt: serializer.fromJson<DateTime>(json['created_at']),
-      updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
-      name: serializer.fromJson<String>(json['name']),
-      description: serializer.fromJson<String>(json['description']),
-      creatorId: serializer.fromJson<String>(json['creator_id']),
-      creatorName: serializer.fromJson<String>(json['creator_name']),
-      admins: serializer.fromJson<String>(json['admins']),
-      adminNames: serializer.fromJson<String>(json['admin_names']),
-      moderators: serializer.fromJson<String>(json['moderators']),
-      moderatorNames: serializer.fromJson<String>(json['moderator_names']),
-      members: serializer.fromJson<String>(json['members']),
-      memberNames: serializer.fromJson<String>(json['member_names']),
-      bannedUsers: serializer.fromJson<String>(json['banned_users']),
-      bannedUserNames: serializer.fromJson<String>(json['banned_user_names']),
-      isPrivate: serializer.fromJson<bool>(json['is_private']),
-      rules: serializer.fromJson<String>(json['rules']),
-      logo: serializer.fromJson<String?>(json['logo']),
-      banner: serializer.fromJson<String?>(json['banner']),
-      logoUrl: serializer.fromJson<String?>(json['logo_url']),
-      bannerUrl: serializer.fromJson<String?>(json['banner_url']),
-      userRole: serializer.fromJson<String?>(json['user_role']),
-      canPost: serializer.fromJson<bool>(json['can_post']),
-      canModerate: serializer.fromJson<bool>(json['can_moderate']),
-      canAdmin: serializer.fromJson<bool>(json['can_admin']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<String>(id),
-      'created_at': serializer.toJson<DateTime>(createdAt),
-      'updated_at': serializer.toJson<DateTime>(updatedAt),
-      'name': serializer.toJson<String>(name),
-      'description': serializer.toJson<String>(description),
-      'creator_id': serializer.toJson<String>(creatorId),
-      'creator_name': serializer.toJson<String>(creatorName),
-      'admins': serializer.toJson<String>(admins),
-      'admin_names': serializer.toJson<String>(adminNames),
-      'moderators': serializer.toJson<String>(moderators),
-      'moderator_names': serializer.toJson<String>(moderatorNames),
-      'members': serializer.toJson<String>(members),
-      'member_names': serializer.toJson<String>(memberNames),
-      'banned_users': serializer.toJson<String>(bannedUsers),
-      'banned_user_names': serializer.toJson<String>(bannedUserNames),
-      'is_private': serializer.toJson<bool>(isPrivate),
-      'rules': serializer.toJson<String>(rules),
-      'logo': serializer.toJson<String?>(logo),
-      'banner': serializer.toJson<String?>(banner),
-      'logo_url': serializer.toJson<String?>(logoUrl),
-      'banner_url': serializer.toJson<String?>(bannerUrl),
-      'user_role': serializer.toJson<String?>(userRole),
-      'can_post': serializer.toJson<bool>(canPost),
-      'can_moderate': serializer.toJson<bool>(canModerate),
-      'can_admin': serializer.toJson<bool>(canAdmin),
-    };
-  }
-
-  GroupEntity copyWith({
-    String? id,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-    String? name,
-    String? description,
-    String? creatorId,
-    String? creatorName,
-    String? admins,
-    String? adminNames,
-    String? moderators,
-    String? moderatorNames,
-    String? members,
-    String? memberNames,
-    String? bannedUsers,
-    String? bannedUserNames,
-    bool? isPrivate,
-    String? rules,
-    Value<String?> logo = const Value.absent(),
-    Value<String?> banner = const Value.absent(),
-    Value<String?> logoUrl = const Value.absent(),
-    Value<String?> bannerUrl = const Value.absent(),
-    Value<String?> userRole = const Value.absent(),
-    bool? canPost,
-    bool? canModerate,
-    bool? canAdmin,
-  }) => GroupEntity(
-    id: id ?? this.id,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-    name: name ?? this.name,
-    description: description ?? this.description,
-    creatorId: creatorId ?? this.creatorId,
-    creatorName: creatorName ?? this.creatorName,
-    admins: admins ?? this.admins,
-    adminNames: adminNames ?? this.adminNames,
-    moderators: moderators ?? this.moderators,
-    moderatorNames: moderatorNames ?? this.moderatorNames,
-    members: members ?? this.members,
-    memberNames: memberNames ?? this.memberNames,
-    bannedUsers: bannedUsers ?? this.bannedUsers,
-    bannedUserNames: bannedUserNames ?? this.bannedUserNames,
-    isPrivate: isPrivate ?? this.isPrivate,
-    rules: rules ?? this.rules,
-    logo: logo.present ? logo.value : this.logo,
-    banner: banner.present ? banner.value : this.banner,
-    logoUrl: logoUrl.present ? logoUrl.value : this.logoUrl,
-    bannerUrl: bannerUrl.present ? bannerUrl.value : this.bannerUrl,
-    userRole: userRole.present ? userRole.value : this.userRole,
-    canPost: canPost ?? this.canPost,
-    canModerate: canModerate ?? this.canModerate,
-    canAdmin: canAdmin ?? this.canAdmin,
-  );
-  GroupEntity copyWithCompanion(GroupTableCompanion data) {
-    return GroupEntity(
-      id: data.id.present ? data.id.value : this.id,
-      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
-      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
-      name: data.name.present ? data.name.value : this.name,
-      description: data.description.present
-          ? data.description.value
-          : this.description,
-      creatorId: data.creatorId.present ? data.creatorId.value : this.creatorId,
-      creatorName: data.creatorName.present
-          ? data.creatorName.value
-          : this.creatorName,
-      admins: data.admins.present ? data.admins.value : this.admins,
-      adminNames: data.adminNames.present
-          ? data.adminNames.value
-          : this.adminNames,
-      moderators: data.moderators.present
-          ? data.moderators.value
-          : this.moderators,
-      moderatorNames: data.moderatorNames.present
-          ? data.moderatorNames.value
-          : this.moderatorNames,
-      members: data.members.present ? data.members.value : this.members,
-      memberNames: data.memberNames.present
-          ? data.memberNames.value
-          : this.memberNames,
-      bannedUsers: data.bannedUsers.present
-          ? data.bannedUsers.value
-          : this.bannedUsers,
-      bannedUserNames: data.bannedUserNames.present
-          ? data.bannedUserNames.value
-          : this.bannedUserNames,
-      isPrivate: data.isPrivate.present ? data.isPrivate.value : this.isPrivate,
-      rules: data.rules.present ? data.rules.value : this.rules,
-      logo: data.logo.present ? data.logo.value : this.logo,
-      banner: data.banner.present ? data.banner.value : this.banner,
-      logoUrl: data.logoUrl.present ? data.logoUrl.value : this.logoUrl,
-      bannerUrl: data.bannerUrl.present ? data.bannerUrl.value : this.bannerUrl,
-      userRole: data.userRole.present ? data.userRole.value : this.userRole,
-      canPost: data.canPost.present ? data.canPost.value : this.canPost,
-      canModerate: data.canModerate.present
-          ? data.canModerate.value
-          : this.canModerate,
-      canAdmin: data.canAdmin.present ? data.canAdmin.value : this.canAdmin,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('GroupEntity(')
-          ..write('id: $id, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt, ')
-          ..write('name: $name, ')
-          ..write('description: $description, ')
-          ..write('creatorId: $creatorId, ')
-          ..write('creatorName: $creatorName, ')
-          ..write('admins: $admins, ')
-          ..write('adminNames: $adminNames, ')
-          ..write('moderators: $moderators, ')
-          ..write('moderatorNames: $moderatorNames, ')
-          ..write('members: $members, ')
-          ..write('memberNames: $memberNames, ')
-          ..write('bannedUsers: $bannedUsers, ')
-          ..write('bannedUserNames: $bannedUserNames, ')
-          ..write('isPrivate: $isPrivate, ')
-          ..write('rules: $rules, ')
-          ..write('logo: $logo, ')
-          ..write('banner: $banner, ')
-          ..write('logoUrl: $logoUrl, ')
-          ..write('bannerUrl: $bannerUrl, ')
-          ..write('userRole: $userRole, ')
-          ..write('canPost: $canPost, ')
-          ..write('canModerate: $canModerate, ')
-          ..write('canAdmin: $canAdmin')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hashAll([
-    id,
-    createdAt,
-    updatedAt,
-    name,
-    description,
-    creatorId,
-    creatorName,
-    admins,
-    adminNames,
-    moderators,
-    moderatorNames,
-    members,
-    memberNames,
-    bannedUsers,
-    bannedUserNames,
-    isPrivate,
-    rules,
-    logo,
-    banner,
-    logoUrl,
-    bannerUrl,
-    userRole,
-    canPost,
-    canModerate,
-    canAdmin,
-  ]);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is GroupEntity &&
-          other.id == this.id &&
-          other.createdAt == this.createdAt &&
-          other.updatedAt == this.updatedAt &&
-          other.name == this.name &&
-          other.description == this.description &&
-          other.creatorId == this.creatorId &&
-          other.creatorName == this.creatorName &&
-          other.admins == this.admins &&
-          other.adminNames == this.adminNames &&
-          other.moderators == this.moderators &&
-          other.moderatorNames == this.moderatorNames &&
-          other.members == this.members &&
-          other.memberNames == this.memberNames &&
-          other.bannedUsers == this.bannedUsers &&
-          other.bannedUserNames == this.bannedUserNames &&
-          other.isPrivate == this.isPrivate &&
-          other.rules == this.rules &&
-          other.logo == this.logo &&
-          other.banner == this.banner &&
-          other.logoUrl == this.logoUrl &&
-          other.bannerUrl == this.bannerUrl &&
-          other.userRole == this.userRole &&
-          other.canPost == this.canPost &&
-          other.canModerate == this.canModerate &&
-          other.canAdmin == this.canAdmin);
-}
-
-class GroupTableCompanion extends UpdateCompanion<GroupEntity> {
-  final Value<String> id;
-  final Value<DateTime> createdAt;
-  final Value<DateTime> updatedAt;
-  final Value<String> name;
-  final Value<String> description;
-  final Value<String> creatorId;
-  final Value<String> creatorName;
-  final Value<String> admins;
-  final Value<String> adminNames;
-  final Value<String> moderators;
-  final Value<String> moderatorNames;
-  final Value<String> members;
-  final Value<String> memberNames;
-  final Value<String> bannedUsers;
-  final Value<String> bannedUserNames;
-  final Value<bool> isPrivate;
-  final Value<String> rules;
-  final Value<String?> logo;
-  final Value<String?> banner;
-  final Value<String?> logoUrl;
-  final Value<String?> bannerUrl;
-  final Value<String?> userRole;
-  final Value<bool> canPost;
-  final Value<bool> canModerate;
-  final Value<bool> canAdmin;
-  final Value<int> rowid;
-  const GroupTableCompanion({
-    this.id = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
-    this.name = const Value.absent(),
-    this.description = const Value.absent(),
-    this.creatorId = const Value.absent(),
-    this.creatorName = const Value.absent(),
-    this.admins = const Value.absent(),
-    this.adminNames = const Value.absent(),
-    this.moderators = const Value.absent(),
-    this.moderatorNames = const Value.absent(),
-    this.members = const Value.absent(),
-    this.memberNames = const Value.absent(),
-    this.bannedUsers = const Value.absent(),
-    this.bannedUserNames = const Value.absent(),
-    this.isPrivate = const Value.absent(),
-    this.rules = const Value.absent(),
-    this.logo = const Value.absent(),
-    this.banner = const Value.absent(),
-    this.logoUrl = const Value.absent(),
-    this.bannerUrl = const Value.absent(),
-    this.userRole = const Value.absent(),
-    this.canPost = const Value.absent(),
-    this.canModerate = const Value.absent(),
-    this.canAdmin = const Value.absent(),
-    this.rowid = const Value.absent(),
-  });
-  GroupTableCompanion.insert({
-    required String id,
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
-    required String name,
-    required String description,
-    required String creatorId,
-    required String creatorName,
-    required String admins,
-    required String adminNames,
-    required String moderators,
-    required String moderatorNames,
-    required String members,
-    required String memberNames,
-    required String bannedUsers,
-    required String bannedUserNames,
-    required bool isPrivate,
-    required String rules,
-    this.logo = const Value.absent(),
-    this.banner = const Value.absent(),
-    this.logoUrl = const Value.absent(),
-    this.bannerUrl = const Value.absent(),
-    this.userRole = const Value.absent(),
-    required bool canPost,
-    required bool canModerate,
-    required bool canAdmin,
-    this.rowid = const Value.absent(),
-  }) : id = Value(id),
-       name = Value(name),
-       description = Value(description),
-       creatorId = Value(creatorId),
-       creatorName = Value(creatorName),
-       admins = Value(admins),
-       adminNames = Value(adminNames),
-       moderators = Value(moderators),
-       moderatorNames = Value(moderatorNames),
-       members = Value(members),
-       memberNames = Value(memberNames),
-       bannedUsers = Value(bannedUsers),
-       bannedUserNames = Value(bannedUserNames),
-       isPrivate = Value(isPrivate),
-       rules = Value(rules),
-       canPost = Value(canPost),
-       canModerate = Value(canModerate),
-       canAdmin = Value(canAdmin);
-  static Insertable<GroupEntity> custom({
-    Expression<String>? id,
-    Expression<DateTime>? createdAt,
-    Expression<DateTime>? updatedAt,
-    Expression<String>? name,
-    Expression<String>? description,
-    Expression<String>? creatorId,
-    Expression<String>? creatorName,
-    Expression<String>? admins,
-    Expression<String>? adminNames,
-    Expression<String>? moderators,
-    Expression<String>? moderatorNames,
-    Expression<String>? members,
-    Expression<String>? memberNames,
-    Expression<String>? bannedUsers,
-    Expression<String>? bannedUserNames,
-    Expression<bool>? isPrivate,
-    Expression<String>? rules,
-    Expression<String>? logo,
-    Expression<String>? banner,
-    Expression<String>? logoUrl,
-    Expression<String>? bannerUrl,
-    Expression<String>? userRole,
-    Expression<bool>? canPost,
-    Expression<bool>? canModerate,
-    Expression<bool>? canAdmin,
-    Expression<int>? rowid,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (createdAt != null) 'created_at': createdAt,
-      if (updatedAt != null) 'updated_at': updatedAt,
-      if (name != null) 'name': name,
-      if (description != null) 'description': description,
-      if (creatorId != null) 'creator_id': creatorId,
-      if (creatorName != null) 'creator_name': creatorName,
-      if (admins != null) 'admins': admins,
-      if (adminNames != null) 'admin_names': adminNames,
-      if (moderators != null) 'moderators': moderators,
-      if (moderatorNames != null) 'moderator_names': moderatorNames,
-      if (members != null) 'members': members,
-      if (memberNames != null) 'member_names': memberNames,
-      if (bannedUsers != null) 'banned_users': bannedUsers,
-      if (bannedUserNames != null) 'banned_user_names': bannedUserNames,
-      if (isPrivate != null) 'is_private': isPrivate,
-      if (rules != null) 'rules': rules,
-      if (logo != null) 'logo': logo,
-      if (banner != null) 'banner': banner,
-      if (logoUrl != null) 'logo_url': logoUrl,
-      if (bannerUrl != null) 'banner_url': bannerUrl,
-      if (userRole != null) 'user_role': userRole,
-      if (canPost != null) 'can_post': canPost,
-      if (canModerate != null) 'can_moderate': canModerate,
-      if (canAdmin != null) 'can_admin': canAdmin,
-      if (rowid != null) 'rowid': rowid,
-    });
-  }
-
-  GroupTableCompanion copyWith({
-    Value<String>? id,
-    Value<DateTime>? createdAt,
-    Value<DateTime>? updatedAt,
-    Value<String>? name,
-    Value<String>? description,
-    Value<String>? creatorId,
-    Value<String>? creatorName,
-    Value<String>? admins,
-    Value<String>? adminNames,
-    Value<String>? moderators,
-    Value<String>? moderatorNames,
-    Value<String>? members,
-    Value<String>? memberNames,
-    Value<String>? bannedUsers,
-    Value<String>? bannedUserNames,
-    Value<bool>? isPrivate,
-    Value<String>? rules,
-    Value<String?>? logo,
-    Value<String?>? banner,
-    Value<String?>? logoUrl,
-    Value<String?>? bannerUrl,
-    Value<String?>? userRole,
-    Value<bool>? canPost,
-    Value<bool>? canModerate,
-    Value<bool>? canAdmin,
-    Value<int>? rowid,
-  }) {
-    return GroupTableCompanion(
-      id: id ?? this.id,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      name: name ?? this.name,
-      description: description ?? this.description,
-      creatorId: creatorId ?? this.creatorId,
-      creatorName: creatorName ?? this.creatorName,
-      admins: admins ?? this.admins,
-      adminNames: adminNames ?? this.adminNames,
-      moderators: moderators ?? this.moderators,
-      moderatorNames: moderatorNames ?? this.moderatorNames,
-      members: members ?? this.members,
-      memberNames: memberNames ?? this.memberNames,
-      bannedUsers: bannedUsers ?? this.bannedUsers,
-      bannedUserNames: bannedUserNames ?? this.bannedUserNames,
-      isPrivate: isPrivate ?? this.isPrivate,
-      rules: rules ?? this.rules,
-      logo: logo ?? this.logo,
-      banner: banner ?? this.banner,
-      logoUrl: logoUrl ?? this.logoUrl,
-      bannerUrl: bannerUrl ?? this.bannerUrl,
-      userRole: userRole ?? this.userRole,
-      canPost: canPost ?? this.canPost,
-      canModerate: canModerate ?? this.canModerate,
-      canAdmin: canAdmin ?? this.canAdmin,
-      rowid: rowid ?? this.rowid,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<String>(id.value);
-    }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
-    }
-    if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
-    }
-    if (name.present) {
-      map['name'] = Variable<String>(name.value);
-    }
-    if (description.present) {
-      map['description'] = Variable<String>(description.value);
-    }
-    if (creatorId.present) {
-      map['creator_id'] = Variable<String>(creatorId.value);
-    }
-    if (creatorName.present) {
-      map['creator_name'] = Variable<String>(creatorName.value);
-    }
-    if (admins.present) {
-      map['admins'] = Variable<String>(admins.value);
-    }
-    if (adminNames.present) {
-      map['admin_names'] = Variable<String>(adminNames.value);
-    }
-    if (moderators.present) {
-      map['moderators'] = Variable<String>(moderators.value);
-    }
-    if (moderatorNames.present) {
-      map['moderator_names'] = Variable<String>(moderatorNames.value);
-    }
-    if (members.present) {
-      map['members'] = Variable<String>(members.value);
-    }
-    if (memberNames.present) {
-      map['member_names'] = Variable<String>(memberNames.value);
-    }
-    if (bannedUsers.present) {
-      map['banned_users'] = Variable<String>(bannedUsers.value);
-    }
-    if (bannedUserNames.present) {
-      map['banned_user_names'] = Variable<String>(bannedUserNames.value);
-    }
-    if (isPrivate.present) {
-      map['is_private'] = Variable<bool>(isPrivate.value);
-    }
-    if (rules.present) {
-      map['rules'] = Variable<String>(rules.value);
-    }
-    if (logo.present) {
-      map['logo'] = Variable<String>(logo.value);
-    }
-    if (banner.present) {
-      map['banner'] = Variable<String>(banner.value);
-    }
-    if (logoUrl.present) {
-      map['logo_url'] = Variable<String>(logoUrl.value);
-    }
-    if (bannerUrl.present) {
-      map['banner_url'] = Variable<String>(bannerUrl.value);
-    }
-    if (userRole.present) {
-      map['user_role'] = Variable<String>(userRole.value);
-    }
-    if (canPost.present) {
-      map['can_post'] = Variable<bool>(canPost.value);
-    }
-    if (canModerate.present) {
-      map['can_moderate'] = Variable<bool>(canModerate.value);
-    }
-    if (canAdmin.present) {
-      map['can_admin'] = Variable<bool>(canAdmin.value);
-    }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('GroupTableCompanion(')
-          ..write('id: $id, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt, ')
-          ..write('name: $name, ')
-          ..write('description: $description, ')
-          ..write('creatorId: $creatorId, ')
-          ..write('creatorName: $creatorName, ')
-          ..write('admins: $admins, ')
-          ..write('adminNames: $adminNames, ')
-          ..write('moderators: $moderators, ')
-          ..write('moderatorNames: $moderatorNames, ')
-          ..write('members: $members, ')
-          ..write('memberNames: $memberNames, ')
-          ..write('bannedUsers: $bannedUsers, ')
-          ..write('bannedUserNames: $bannedUserNames, ')
-          ..write('isPrivate: $isPrivate, ')
-          ..write('rules: $rules, ')
-          ..write('logo: $logo, ')
-          ..write('banner: $banner, ')
-          ..write('logoUrl: $logoUrl, ')
-          ..write('bannerUrl: $bannerUrl, ')
-          ..write('userRole: $userRole, ')
-          ..write('canPost: $canPost, ')
-          ..write('canModerate: $canModerate, ')
-          ..write('canAdmin: $canAdmin, ')
-          ..write('rowid: $rowid')
-          ..write(')'))
-        .toString();
-  }
-}
-
 class $InviteTableTable extends InviteTable
     with TableInfo<$InviteTableTable, InviteData> {
   @override
@@ -9004,12 +7634,11 @@ class InviteTableCompanion extends UpdateCompanion<InviteData> {
   }
 }
 
-class $BlockTableTable extends BlockTable
-    with TableInfo<$BlockTableTable, BlockData> {
+class $BlocksTable extends Blocks with TableInfo<$BlocksTable, Block> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $BlockTableTable(this.attachedDatabase, [this._alias]);
+  $BlocksTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -9119,7 +7748,7 @@ class $BlockTableTable extends BlockTable
   static const String $name = 'block_table';
   @override
   VerificationContext validateIntegrity(
-    Insertable<BlockData> instance, {
+    Insertable<Block> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -9191,9 +7820,9 @@ class $BlockTableTable extends BlockTable
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  BlockData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Block map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return BlockData(
+    return Block(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -9230,12 +7859,12 @@ class $BlockTableTable extends BlockTable
   }
 
   @override
-  $BlockTableTable createAlias(String alias) {
-    return $BlockTableTable(attachedDatabase, alias);
+  $BlocksTable createAlias(String alias) {
+    return $BlocksTable(attachedDatabase, alias);
   }
 }
 
-class BlockData extends DataClass implements Insertable<BlockData> {
+class Block extends DataClass implements Insertable<Block> {
   final int id;
   final String blockType;
   final String? blockedUser;
@@ -9244,7 +7873,7 @@ class BlockData extends DataClass implements Insertable<BlockData> {
   final String? blockedImage;
   final DateTime createdAt;
   final DateTime? cachedAt;
-  const BlockData({
+  const Block({
     required this.id,
     required this.blockType,
     this.blockedUser,
@@ -9278,8 +7907,8 @@ class BlockData extends DataClass implements Insertable<BlockData> {
     return map;
   }
 
-  BlockTableCompanion toCompanion(bool nullToAbsent) {
-    return BlockTableCompanion(
+  BlocksCompanion toCompanion(bool nullToAbsent) {
+    return BlocksCompanion(
       id: Value(id),
       blockType: Value(blockType),
       blockedUser: blockedUser == null && nullToAbsent
@@ -9301,12 +7930,12 @@ class BlockData extends DataClass implements Insertable<BlockData> {
     );
   }
 
-  factory BlockData.fromJson(
+  factory Block.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return BlockData(
+    return Block(
       id: serializer.fromJson<int>(json['id']),
       blockType: serializer.fromJson<String>(json['block_type']),
       blockedUser: serializer.fromJson<String?>(json['blocked_user']),
@@ -9332,7 +7961,7 @@ class BlockData extends DataClass implements Insertable<BlockData> {
     };
   }
 
-  BlockData copyWith({
+  Block copyWith({
     int? id,
     String? blockType,
     Value<String?> blockedUser = const Value.absent(),
@@ -9341,7 +7970,7 @@ class BlockData extends DataClass implements Insertable<BlockData> {
     Value<String?> blockedImage = const Value.absent(),
     DateTime? createdAt,
     Value<DateTime?> cachedAt = const Value.absent(),
-  }) => BlockData(
+  }) => Block(
     id: id ?? this.id,
     blockType: blockType ?? this.blockType,
     blockedUser: blockedUser.present ? blockedUser.value : this.blockedUser,
@@ -9353,8 +7982,8 @@ class BlockData extends DataClass implements Insertable<BlockData> {
     createdAt: createdAt ?? this.createdAt,
     cachedAt: cachedAt.present ? cachedAt.value : this.cachedAt,
   );
-  BlockData copyWithCompanion(BlockTableCompanion data) {
-    return BlockData(
+  Block copyWithCompanion(BlocksCompanion data) {
+    return Block(
       id: data.id.present ? data.id.value : this.id,
       blockType: data.blockType.present ? data.blockType.value : this.blockType,
       blockedUser: data.blockedUser.present
@@ -9376,7 +8005,7 @@ class BlockData extends DataClass implements Insertable<BlockData> {
 
   @override
   String toString() {
-    return (StringBuffer('BlockData(')
+    return (StringBuffer('Block(')
           ..write('id: $id, ')
           ..write('blockType: $blockType, ')
           ..write('blockedUser: $blockedUser, ')
@@ -9403,7 +8032,7 @@ class BlockData extends DataClass implements Insertable<BlockData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is BlockData &&
+      (other is Block &&
           other.id == this.id &&
           other.blockType == this.blockType &&
           other.blockedUser == this.blockedUser &&
@@ -9414,7 +8043,7 @@ class BlockData extends DataClass implements Insertable<BlockData> {
           other.cachedAt == this.cachedAt);
 }
 
-class BlockTableCompanion extends UpdateCompanion<BlockData> {
+class BlocksCompanion extends UpdateCompanion<Block> {
   final Value<int> id;
   final Value<String> blockType;
   final Value<String?> blockedUser;
@@ -9423,7 +8052,7 @@ class BlockTableCompanion extends UpdateCompanion<BlockData> {
   final Value<String?> blockedImage;
   final Value<DateTime> createdAt;
   final Value<DateTime?> cachedAt;
-  const BlockTableCompanion({
+  const BlocksCompanion({
     this.id = const Value.absent(),
     this.blockType = const Value.absent(),
     this.blockedUser = const Value.absent(),
@@ -9433,7 +8062,7 @@ class BlockTableCompanion extends UpdateCompanion<BlockData> {
     this.createdAt = const Value.absent(),
     this.cachedAt = const Value.absent(),
   });
-  BlockTableCompanion.insert({
+  BlocksCompanion.insert({
     this.id = const Value.absent(),
     required String blockType,
     this.blockedUser = const Value.absent(),
@@ -9444,7 +8073,7 @@ class BlockTableCompanion extends UpdateCompanion<BlockData> {
     this.cachedAt = const Value.absent(),
   }) : blockType = Value(blockType),
        createdAt = Value(createdAt);
-  static Insertable<BlockData> custom({
+  static Insertable<Block> custom({
     Expression<int>? id,
     Expression<String>? blockType,
     Expression<String>? blockedUser,
@@ -9466,7 +8095,7 @@ class BlockTableCompanion extends UpdateCompanion<BlockData> {
     });
   }
 
-  BlockTableCompanion copyWith({
+  BlocksCompanion copyWith({
     Value<int>? id,
     Value<String>? blockType,
     Value<String?>? blockedUser,
@@ -9476,7 +8105,7 @@ class BlockTableCompanion extends UpdateCompanion<BlockData> {
     Value<DateTime>? createdAt,
     Value<DateTime?>? cachedAt,
   }) {
-    return BlockTableCompanion(
+    return BlocksCompanion(
       id: id ?? this.id,
       blockType: blockType ?? this.blockType,
       blockedUser: blockedUser ?? this.blockedUser,
@@ -9520,7 +8149,7 @@ class BlockTableCompanion extends UpdateCompanion<BlockData> {
 
   @override
   String toString() {
-    return (StringBuffer('BlockTableCompanion(')
+    return (StringBuffer('BlocksCompanion(')
           ..write('id: $id, ')
           ..write('blockType: $blockType, ')
           ..write('blockedUser: $blockedUser, ')
@@ -9534,12 +8163,11 @@ class BlockTableCompanion extends UpdateCompanion<BlockData> {
   }
 }
 
-class $ReportTableTable extends ReportTable
-    with TableInfo<$ReportTableTable, ReportData> {
+class $ReportsTable extends Reports with TableInfo<$ReportsTable, Report> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $ReportTableTable(this.attachedDatabase, [this._alias]);
+  $ReportsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -9682,7 +8310,7 @@ class $ReportTableTable extends ReportTable
   static const String $name = 'report_table';
   @override
   VerificationContext validateIntegrity(
-    Insertable<ReportData> instance, {
+    Insertable<Report> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -9774,9 +8402,9 @@ class $ReportTableTable extends ReportTable
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  ReportData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Report map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return ReportData(
+    return Report(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -9825,12 +8453,12 @@ class $ReportTableTable extends ReportTable
   }
 
   @override
-  $ReportTableTable createAlias(String alias) {
-    return $ReportTableTable(attachedDatabase, alias);
+  $ReportsTable createAlias(String alias) {
+    return $ReportsTable(attachedDatabase, alias);
   }
 }
 
-class ReportData extends DataClass implements Insertable<ReportData> {
+class Report extends DataClass implements Insertable<Report> {
   final int id;
   final String reportType;
   final String? reportedUser;
@@ -9842,7 +8470,7 @@ class ReportData extends DataClass implements Insertable<ReportData> {
   final DateTime createdAt;
   final DateTime? updatedAt;
   final DateTime? cachedAt;
-  const ReportData({
+  const Report({
     required this.id,
     required this.reportType,
     this.reportedUser,
@@ -9884,8 +8512,8 @@ class ReportData extends DataClass implements Insertable<ReportData> {
     return map;
   }
 
-  ReportTableCompanion toCompanion(bool nullToAbsent) {
-    return ReportTableCompanion(
+  ReportsCompanion toCompanion(bool nullToAbsent) {
+    return ReportsCompanion(
       id: Value(id),
       reportType: Value(reportType),
       reportedUser: reportedUser == null && nullToAbsent
@@ -9912,12 +8540,12 @@ class ReportData extends DataClass implements Insertable<ReportData> {
     );
   }
 
-  factory ReportData.fromJson(
+  factory Report.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return ReportData(
+    return Report(
       id: serializer.fromJson<int>(json['id']),
       reportType: serializer.fromJson<String>(json['report_type']),
       reportedUser: serializer.fromJson<String?>(json['reported_user']),
@@ -9949,7 +8577,7 @@ class ReportData extends DataClass implements Insertable<ReportData> {
     };
   }
 
-  ReportData copyWith({
+  Report copyWith({
     int? id,
     String? reportType,
     Value<String?> reportedUser = const Value.absent(),
@@ -9961,7 +8589,7 @@ class ReportData extends DataClass implements Insertable<ReportData> {
     DateTime? createdAt,
     Value<DateTime?> updatedAt = const Value.absent(),
     Value<DateTime?> cachedAt = const Value.absent(),
-  }) => ReportData(
+  }) => Report(
     id: id ?? this.id,
     reportType: reportType ?? this.reportType,
     reportedUser: reportedUser.present ? reportedUser.value : this.reportedUser,
@@ -9978,8 +8606,8 @@ class ReportData extends DataClass implements Insertable<ReportData> {
     updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
     cachedAt: cachedAt.present ? cachedAt.value : this.cachedAt,
   );
-  ReportData copyWithCompanion(ReportTableCompanion data) {
-    return ReportData(
+  Report copyWithCompanion(ReportsCompanion data) {
+    return Report(
       id: data.id.present ? data.id.value : this.id,
       reportType: data.reportType.present
           ? data.reportType.value
@@ -10006,7 +8634,7 @@ class ReportData extends DataClass implements Insertable<ReportData> {
 
   @override
   String toString() {
-    return (StringBuffer('ReportData(')
+    return (StringBuffer('Report(')
           ..write('id: $id, ')
           ..write('reportType: $reportType, ')
           ..write('reportedUser: $reportedUser, ')
@@ -10039,7 +8667,7 @@ class ReportData extends DataClass implements Insertable<ReportData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is ReportData &&
+      (other is Report &&
           other.id == this.id &&
           other.reportType == this.reportType &&
           other.reportedUser == this.reportedUser &&
@@ -10053,7 +8681,7 @@ class ReportData extends DataClass implements Insertable<ReportData> {
           other.cachedAt == this.cachedAt);
 }
 
-class ReportTableCompanion extends UpdateCompanion<ReportData> {
+class ReportsCompanion extends UpdateCompanion<Report> {
   final Value<int> id;
   final Value<String> reportType;
   final Value<String?> reportedUser;
@@ -10065,7 +8693,7 @@ class ReportTableCompanion extends UpdateCompanion<ReportData> {
   final Value<DateTime> createdAt;
   final Value<DateTime?> updatedAt;
   final Value<DateTime?> cachedAt;
-  const ReportTableCompanion({
+  const ReportsCompanion({
     this.id = const Value.absent(),
     this.reportType = const Value.absent(),
     this.reportedUser = const Value.absent(),
@@ -10078,7 +8706,7 @@ class ReportTableCompanion extends UpdateCompanion<ReportData> {
     this.updatedAt = const Value.absent(),
     this.cachedAt = const Value.absent(),
   });
-  ReportTableCompanion.insert({
+  ReportsCompanion.insert({
     this.id = const Value.absent(),
     required String reportType,
     this.reportedUser = const Value.absent(),
@@ -10093,7 +8721,7 @@ class ReportTableCompanion extends UpdateCompanion<ReportData> {
   }) : reportType = Value(reportType),
        reason = Value(reason),
        createdAt = Value(createdAt);
-  static Insertable<ReportData> custom({
+  static Insertable<Report> custom({
     Expression<int>? id,
     Expression<String>? reportType,
     Expression<String>? reportedUser,
@@ -10121,7 +8749,7 @@ class ReportTableCompanion extends UpdateCompanion<ReportData> {
     });
   }
 
-  ReportTableCompanion copyWith({
+  ReportsCompanion copyWith({
     Value<int>? id,
     Value<String>? reportType,
     Value<String?>? reportedUser,
@@ -10134,7 +8762,7 @@ class ReportTableCompanion extends UpdateCompanion<ReportData> {
     Value<DateTime?>? updatedAt,
     Value<DateTime?>? cachedAt,
   }) {
-    return ReportTableCompanion(
+    return ReportsCompanion(
       id: id ?? this.id,
       reportType: reportType ?? this.reportType,
       reportedUser: reportedUser ?? this.reportedUser,
@@ -10190,7 +8818,7 @@ class ReportTableCompanion extends UpdateCompanion<ReportData> {
 
   @override
   String toString() {
-    return (StringBuffer('ReportTableCompanion(')
+    return (StringBuffer('ReportsCompanion(')
           ..write('id: $id, ')
           ..write('reportType: $reportType, ')
           ..write('reportedUser: $reportedUser, ')
@@ -17802,12 +16430,12 @@ class ExamTimetablesCompanion extends UpdateCompanion<ExamTimetable> {
   }
 }
 
-class $ChirpUserTable extends ChirpUser
-    with TableInfo<$ChirpUserTable, ChirpUserData> {
+class $ChirpUsersTable extends ChirpUsers
+    with TableInfo<$ChirpUsersTable, ChirpUser> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $ChirpUserTable(this.attachedDatabase, [this._alias]);
+  $ChirpUsersTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _userIDMeta = const VerificationMeta('userID');
   @override
   late final GeneratedColumn<String> userID = GeneratedColumn<String>(
@@ -17924,7 +16552,7 @@ class $ChirpUserTable extends ChirpUser
   static const String $name = 'chirp_user';
   @override
   VerificationContext validateIntegrity(
-    Insertable<ChirpUserData> instance, {
+    Insertable<ChirpUser> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -17991,9 +16619,9 @@ class $ChirpUserTable extends ChirpUser
   @override
   Set<GeneratedColumn> get $primaryKey => {userID};
   @override
-  ChirpUserData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  ChirpUser map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return ChirpUserData(
+    return ChirpUser(
       userID: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_i_d'],
@@ -18034,12 +16662,12 @@ class $ChirpUserTable extends ChirpUser
   }
 
   @override
-  $ChirpUserTable createAlias(String alias) {
-    return $ChirpUserTable(attachedDatabase, alias);
+  $ChirpUsersTable createAlias(String alias) {
+    return $ChirpUsersTable(attachedDatabase, alias);
   }
 }
 
-class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
+class ChirpUser extends DataClass implements Insertable<ChirpUser> {
   final String userID;
   final String? email;
   final String? phone;
@@ -18051,7 +16679,7 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
 
   /// For storing the caching time that will be used in TTL
   final DateTime? cachedAt;
-  const ChirpUserData({
+  const ChirpUser({
     required this.userID,
     this.email,
     this.phone,
@@ -18087,8 +16715,8 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
     return map;
   }
 
-  ChirpUserCompanion toCompanion(bool nullToAbsent) {
-    return ChirpUserCompanion(
+  ChirpUsersCompanion toCompanion(bool nullToAbsent) {
+    return ChirpUsersCompanion(
       userID: Value(userID),
       email: email == null && nullToAbsent
           ? const Value.absent()
@@ -18111,12 +16739,12 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
     );
   }
 
-  factory ChirpUserData.fromJson(
+  factory ChirpUser.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return ChirpUserData(
+    return ChirpUser(
       userID: serializer.fromJson<String>(json['user_id']),
       email: serializer.fromJson<String?>(json['email']),
       phone: serializer.fromJson<String?>(json['phone']),
@@ -18144,7 +16772,7 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
     };
   }
 
-  ChirpUserData copyWith({
+  ChirpUser copyWith({
     String? userID,
     Value<String?> email = const Value.absent(),
     Value<String?> phone = const Value.absent(),
@@ -18154,7 +16782,7 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
     DateTime? createdAt,
     DateTime? updatedAt,
     Value<DateTime?> cachedAt = const Value.absent(),
-  }) => ChirpUserData(
+  }) => ChirpUser(
     userID: userID ?? this.userID,
     email: email.present ? email.value : this.email,
     phone: phone.present ? phone.value : this.phone,
@@ -18165,8 +16793,8 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
     updatedAt: updatedAt ?? this.updatedAt,
     cachedAt: cachedAt.present ? cachedAt.value : this.cachedAt,
   );
-  ChirpUserData copyWithCompanion(ChirpUserCompanion data) {
-    return ChirpUserData(
+  ChirpUser copyWithCompanion(ChirpUsersCompanion data) {
+    return ChirpUser(
       userID: data.userID.present ? data.userID.value : this.userID,
       email: data.email.present ? data.email.value : this.email,
       phone: data.phone.present ? data.phone.value : this.phone,
@@ -18183,7 +16811,7 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
 
   @override
   String toString() {
-    return (StringBuffer('ChirpUserData(')
+    return (StringBuffer('ChirpUser(')
           ..write('userID: $userID, ')
           ..write('email: $email, ')
           ..write('phone: $phone, ')
@@ -18212,7 +16840,7 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is ChirpUserData &&
+      (other is ChirpUser &&
           other.userID == this.userID &&
           other.email == this.email &&
           other.phone == this.phone &&
@@ -18224,7 +16852,7 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
           other.cachedAt == this.cachedAt);
 }
 
-class ChirpUserCompanion extends UpdateCompanion<ChirpUserData> {
+class ChirpUsersCompanion extends UpdateCompanion<ChirpUser> {
   final Value<String> userID;
   final Value<String?> email;
   final Value<String?> phone;
@@ -18235,7 +16863,7 @@ class ChirpUserCompanion extends UpdateCompanion<ChirpUserData> {
   final Value<DateTime> updatedAt;
   final Value<DateTime?> cachedAt;
   final Value<int> rowid;
-  const ChirpUserCompanion({
+  const ChirpUsersCompanion({
     this.userID = const Value.absent(),
     this.email = const Value.absent(),
     this.phone = const Value.absent(),
@@ -18247,7 +16875,7 @@ class ChirpUserCompanion extends UpdateCompanion<ChirpUserData> {
     this.cachedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  ChirpUserCompanion.insert({
+  ChirpUsersCompanion.insert({
     required String userID,
     this.email = const Value.absent(),
     this.phone = const Value.absent(),
@@ -18259,7 +16887,7 @@ class ChirpUserCompanion extends UpdateCompanion<ChirpUserData> {
     this.cachedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : userID = Value(userID);
-  static Insertable<ChirpUserData> custom({
+  static Insertable<ChirpUser> custom({
     Expression<String>? userID,
     Expression<String>? email,
     Expression<String>? phone,
@@ -18285,7 +16913,7 @@ class ChirpUserCompanion extends UpdateCompanion<ChirpUserData> {
     });
   }
 
-  ChirpUserCompanion copyWith({
+  ChirpUsersCompanion copyWith({
     Value<String>? userID,
     Value<String?>? email,
     Value<String?>? phone,
@@ -18297,7 +16925,7 @@ class ChirpUserCompanion extends UpdateCompanion<ChirpUserData> {
     Value<DateTime?>? cachedAt,
     Value<int>? rowid,
   }) {
-    return ChirpUserCompanion(
+    return ChirpUsersCompanion(
       userID: userID ?? this.userID,
       email: email ?? this.email,
       phone: phone ?? this.phone,
@@ -18349,7 +16977,7 @@ class ChirpUserCompanion extends UpdateCompanion<ChirpUserData> {
 
   @override
   String toString() {
-    return (StringBuffer('ChirpUserCompanion(')
+    return (StringBuffer('ChirpUsersCompanion(')
           ..write('userID: $userID, ')
           ..write('email: $email, ')
           ..write('phone: $phone, ')
@@ -18365,12 +16993,12 @@ class ChirpUserCompanion extends UpdateCompanion<ChirpUserData> {
   }
 }
 
-class $CommunityTable extends Community
-    with TableInfo<$CommunityTable, CommunityData> {
+class $CommunitiesTable extends Communities
+    with TableInfo<$CommunitiesTable, Community> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $CommunityTable(this.attachedDatabase, [this._alias]);
+  $CommunitiesTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -18624,7 +17252,7 @@ class $CommunityTable extends Community
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
-  ).withConverter<List<dynamic>>($CommunityTable.$converterguidelines);
+  ).withConverter<List<dynamic>>($CommunitiesTable.$converterguidelines);
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -18694,7 +17322,7 @@ class $CommunityTable extends Community
   static const String $name = 'community';
   @override
   VerificationContext validateIntegrity(
-    Insertable<CommunityData> instance, {
+    Insertable<Community> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -18892,9 +17520,9 @@ class $CommunityTable extends Community
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  CommunityData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Community map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return CommunityData(
+    return Community(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -18979,7 +17607,7 @@ class $CommunityTable extends Community
         DriftSqlType.string,
         data['${effectivePrefix}creator_id'],
       )!,
-      guidelines: $CommunityTable.$converterguidelines.fromSql(
+      guidelines: $CommunitiesTable.$converterguidelines.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}guidelines'],
@@ -19001,15 +17629,15 @@ class $CommunityTable extends Community
   }
 
   @override
-  $CommunityTable createAlias(String alias) {
-    return $CommunityTable(attachedDatabase, alias);
+  $CommunitiesTable createAlias(String alias) {
+    return $CommunitiesTable(attachedDatabase, alias);
   }
 
   static TypeConverter<List<dynamic>, String> $converterguidelines =
       JsonListConverter();
 }
 
-class CommunityData extends DataClass implements Insertable<CommunityData> {
+class Community extends DataClass implements Insertable<Community> {
   final int id;
   final String name;
   final String? description;
@@ -19037,7 +17665,7 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
 
   /// For storing the caching time that will be used in TTL
   final DateTime? cachedAt;
-  const CommunityData({
+  const Community({
     required this.id,
     required this.name,
     this.description,
@@ -19100,7 +17728,7 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
     map['creator_id'] = Variable<String>(creatorId);
     {
       map['guidelines'] = Variable<String>(
-        $CommunityTable.$converterguidelines.toSql(guidelines),
+        $CommunitiesTable.$converterguidelines.toSql(guidelines),
       );
     }
     map['created_at'] = Variable<DateTime>(createdAt);
@@ -19111,8 +17739,8 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
     return map;
   }
 
-  CommunityCompanion toCompanion(bool nullToAbsent) {
-    return CommunityCompanion(
+  CommunitiesCompanion toCompanion(bool nullToAbsent) {
+    return CommunitiesCompanion(
       id: Value(id),
       name: Value(name),
       description: description == null && nullToAbsent
@@ -19153,12 +17781,12 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
     );
   }
 
-  factory CommunityData.fromJson(
+  factory Community.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return CommunityData(
+    return Community(
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
       description: serializer.fromJson<String?>(json['description']),
@@ -19228,7 +17856,7 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
     };
   }
 
-  CommunityData copyWith({
+  Community copyWith({
     int? id,
     String? name,
     Value<String?> description = const Value.absent(),
@@ -19254,7 +17882,7 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
     DateTime? createdAt,
     DateTime? updatedAt,
     Value<DateTime?> cachedAt = const Value.absent(),
-  }) => CommunityData(
+  }) => Community(
     id: id ?? this.id,
     name: name ?? this.name,
     description: description.present ? description.value : this.description,
@@ -19285,8 +17913,8 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
     updatedAt: updatedAt ?? this.updatedAt,
     cachedAt: cachedAt.present ? cachedAt.value : this.cachedAt,
   );
-  CommunityData copyWithCompanion(CommunityCompanion data) {
-    return CommunityData(
+  Community copyWithCompanion(CommunitiesCompanion data) {
+    return Community(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
       description: data.description.present
@@ -19345,7 +17973,7 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
 
   @override
   String toString() {
-    return (StringBuffer('CommunityData(')
+    return (StringBuffer('Community(')
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('description: $description, ')
@@ -19406,7 +18034,7 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is CommunityData &&
+      (other is Community &&
           other.id == this.id &&
           other.name == this.name &&
           other.description == this.description &&
@@ -19434,7 +18062,7 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
           other.cachedAt == this.cachedAt);
 }
 
-class CommunityCompanion extends UpdateCompanion<CommunityData> {
+class CommunitiesCompanion extends UpdateCompanion<Community> {
   final Value<int> id;
   final Value<String> name;
   final Value<String?> description;
@@ -19460,7 +18088,7 @@ class CommunityCompanion extends UpdateCompanion<CommunityData> {
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime?> cachedAt;
-  const CommunityCompanion({
+  const CommunitiesCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
     this.description = const Value.absent(),
@@ -19487,7 +18115,7 @@ class CommunityCompanion extends UpdateCompanion<CommunityData> {
     this.updatedAt = const Value.absent(),
     this.cachedAt = const Value.absent(),
   });
-  CommunityCompanion.insert({
+  CommunitiesCompanion.insert({
     this.id = const Value.absent(),
     required String name,
     this.description = const Value.absent(),
@@ -19519,7 +18147,7 @@ class CommunityCompanion extends UpdateCompanion<CommunityData> {
        guidelines = Value(guidelines),
        createdAt = Value(createdAt),
        updatedAt = Value(updatedAt);
-  static Insertable<CommunityData> custom({
+  static Insertable<Community> custom({
     Expression<int>? id,
     Expression<String>? name,
     Expression<String>? description,
@@ -19579,7 +18207,7 @@ class CommunityCompanion extends UpdateCompanion<CommunityData> {
     });
   }
 
-  CommunityCompanion copyWith({
+  CommunitiesCompanion copyWith({
     Value<int>? id,
     Value<String>? name,
     Value<String?>? description,
@@ -19606,7 +18234,7 @@ class CommunityCompanion extends UpdateCompanion<CommunityData> {
     Value<DateTime>? updatedAt,
     Value<DateTime?>? cachedAt,
   }) {
-    return CommunityCompanion(
+    return CommunitiesCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
       description: description ?? this.description,
@@ -19703,7 +18331,7 @@ class CommunityCompanion extends UpdateCompanion<CommunityData> {
     }
     if (guidelines.present) {
       map['guidelines'] = Variable<String>(
-        $CommunityTable.$converterguidelines.toSql(guidelines.value),
+        $CommunitiesTable.$converterguidelines.toSql(guidelines.value),
       );
     }
     if (createdAt.present) {
@@ -19720,7 +18348,7 @@ class CommunityCompanion extends UpdateCompanion<CommunityData> {
 
   @override
   String toString() {
-    return (StringBuffer('CommunityCompanion(')
+    return (StringBuffer('CommunitiesCompanion(')
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('description: $description, ')
@@ -19751,16 +18379,12 @@ class CommunityCompanion extends UpdateCompanion<CommunityData> {
   }
 }
 
-class $ChirpCommunityMembershipTable extends ChirpCommunityMembership
-    with
-        TableInfo<
-          $ChirpCommunityMembershipTable,
-          ChirpCommunityMembershipData
-        > {
+class $ChirpCommunityMembershipsTable extends ChirpCommunityMemberships
+    with TableInfo<$ChirpCommunityMembershipsTable, ChirpCommunityMembership> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $ChirpCommunityMembershipTable(this.attachedDatabase, [this._alias]);
+  $ChirpCommunityMembershipsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -19892,7 +18516,7 @@ class $ChirpCommunityMembershipTable extends ChirpCommunityMembership
   static const String $name = 'chirp_community_membership';
   @override
   VerificationContext validateIntegrity(
-    Insertable<ChirpCommunityMembershipData> instance, {
+    Insertable<ChirpCommunityMembership> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -19975,12 +18599,12 @@ class $ChirpCommunityMembershipTable extends ChirpCommunityMembership
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  ChirpCommunityMembershipData map(
+  ChirpCommunityMembership map(
     Map<String, dynamic> data, {
     String? tablePrefix,
   }) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return ChirpCommunityMembershipData(
+    return ChirpCommunityMembership(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -20025,13 +18649,13 @@ class $ChirpCommunityMembershipTable extends ChirpCommunityMembership
   }
 
   @override
-  $ChirpCommunityMembershipTable createAlias(String alias) {
-    return $ChirpCommunityMembershipTable(attachedDatabase, alias);
+  $ChirpCommunityMembershipsTable createAlias(String alias) {
+    return $ChirpCommunityMembershipsTable(attachedDatabase, alias);
   }
 }
 
-class ChirpCommunityMembershipData extends DataClass
-    implements Insertable<ChirpCommunityMembershipData> {
+class ChirpCommunityMembership extends DataClass
+    implements Insertable<ChirpCommunityMembership> {
   final int id;
   final int communityID;
   final String userID;
@@ -20042,7 +18666,7 @@ class ChirpCommunityMembershipData extends DataClass
   final DateTime? bannedAt;
   final DateTime joinedAt;
   final DateTime? cachedAt;
-  const ChirpCommunityMembershipData({
+  const ChirpCommunityMembership({
     required this.id,
     required this.communityID,
     required this.userID,
@@ -20078,8 +18702,8 @@ class ChirpCommunityMembershipData extends DataClass
     return map;
   }
 
-  ChirpCommunityMembershipCompanion toCompanion(bool nullToAbsent) {
-    return ChirpCommunityMembershipCompanion(
+  ChirpCommunityMembershipsCompanion toCompanion(bool nullToAbsent) {
+    return ChirpCommunityMembershipsCompanion(
       id: Value(id),
       communityID: Value(communityID),
       userID: Value(userID),
@@ -20101,12 +18725,12 @@ class ChirpCommunityMembershipData extends DataClass
     );
   }
 
-  factory ChirpCommunityMembershipData.fromJson(
+  factory ChirpCommunityMembership.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return ChirpCommunityMembershipData(
+    return ChirpCommunityMembership(
       id: serializer.fromJson<int>(json['id']),
       communityID: serializer.fromJson<int>(json['community_id']),
       userID: serializer.fromJson<String>(json['user_id']),
@@ -20136,7 +18760,7 @@ class ChirpCommunityMembershipData extends DataClass
     };
   }
 
-  ChirpCommunityMembershipData copyWith({
+  ChirpCommunityMembership copyWith({
     int? id,
     int? communityID,
     String? userID,
@@ -20147,7 +18771,7 @@ class ChirpCommunityMembershipData extends DataClass
     Value<DateTime?> bannedAt = const Value.absent(),
     DateTime? joinedAt,
     Value<DateTime?> cachedAt = const Value.absent(),
-  }) => ChirpCommunityMembershipData(
+  }) => ChirpCommunityMembership(
     id: id ?? this.id,
     communityID: communityID ?? this.communityID,
     userID: userID ?? this.userID,
@@ -20159,10 +18783,10 @@ class ChirpCommunityMembershipData extends DataClass
     joinedAt: joinedAt ?? this.joinedAt,
     cachedAt: cachedAt.present ? cachedAt.value : this.cachedAt,
   );
-  ChirpCommunityMembershipData copyWithCompanion(
-    ChirpCommunityMembershipCompanion data,
+  ChirpCommunityMembership copyWithCompanion(
+    ChirpCommunityMembershipsCompanion data,
   ) {
-    return ChirpCommunityMembershipData(
+    return ChirpCommunityMembership(
       id: data.id.present ? data.id.value : this.id,
       communityID: data.communityID.present
           ? data.communityID.value
@@ -20184,7 +18808,7 @@ class ChirpCommunityMembershipData extends DataClass
 
   @override
   String toString() {
-    return (StringBuffer('ChirpCommunityMembershipData(')
+    return (StringBuffer('ChirpCommunityMembership(')
           ..write('id: $id, ')
           ..write('communityID: $communityID, ')
           ..write('userID: $userID, ')
@@ -20215,7 +18839,7 @@ class ChirpCommunityMembershipData extends DataClass
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is ChirpCommunityMembershipData &&
+      (other is ChirpCommunityMembership &&
           other.id == this.id &&
           other.communityID == this.communityID &&
           other.userID == this.userID &&
@@ -20228,8 +18852,8 @@ class ChirpCommunityMembershipData extends DataClass
           other.cachedAt == this.cachedAt);
 }
 
-class ChirpCommunityMembershipCompanion
-    extends UpdateCompanion<ChirpCommunityMembershipData> {
+class ChirpCommunityMembershipsCompanion
+    extends UpdateCompanion<ChirpCommunityMembership> {
   final Value<int> id;
   final Value<int> communityID;
   final Value<String> userID;
@@ -20240,7 +18864,7 @@ class ChirpCommunityMembershipCompanion
   final Value<DateTime?> bannedAt;
   final Value<DateTime> joinedAt;
   final Value<DateTime?> cachedAt;
-  const ChirpCommunityMembershipCompanion({
+  const ChirpCommunityMembershipsCompanion({
     this.id = const Value.absent(),
     this.communityID = const Value.absent(),
     this.userID = const Value.absent(),
@@ -20252,7 +18876,7 @@ class ChirpCommunityMembershipCompanion
     this.joinedAt = const Value.absent(),
     this.cachedAt = const Value.absent(),
   });
-  ChirpCommunityMembershipCompanion.insert({
+  ChirpCommunityMembershipsCompanion.insert({
     this.id = const Value.absent(),
     required int communityID,
     required String userID,
@@ -20266,7 +18890,7 @@ class ChirpCommunityMembershipCompanion
   }) : communityID = Value(communityID),
        userID = Value(userID),
        role = Value(role);
-  static Insertable<ChirpCommunityMembershipData> custom({
+  static Insertable<ChirpCommunityMembership> custom({
     Expression<int>? id,
     Expression<int>? communityID,
     Expression<String>? userID,
@@ -20292,7 +18916,7 @@ class ChirpCommunityMembershipCompanion
     });
   }
 
-  ChirpCommunityMembershipCompanion copyWith({
+  ChirpCommunityMembershipsCompanion copyWith({
     Value<int>? id,
     Value<int>? communityID,
     Value<String>? userID,
@@ -20304,7 +18928,7 @@ class ChirpCommunityMembershipCompanion
     Value<DateTime>? joinedAt,
     Value<DateTime?>? cachedAt,
   }) {
-    return ChirpCommunityMembershipCompanion(
+    return ChirpCommunityMembershipsCompanion(
       id: id ?? this.id,
       communityID: communityID ?? this.communityID,
       userID: userID ?? this.userID,
@@ -20356,7 +18980,7 @@ class ChirpCommunityMembershipCompanion
 
   @override
   String toString() {
-    return (StringBuffer('ChirpCommunityMembershipCompanion(')
+    return (StringBuffer('ChirpCommunityMembershipsCompanion(')
           ..write('id: $id, ')
           ..write('communityID: $communityID, ')
           ..write('userID: $userID, ')
@@ -24683,11 +23307,9 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   _$AppDataBase(QueryExecutor e) : super(e);
   $AppDataBaseManager get managers => $AppDataBaseManager(this);
   late final $UserProfileTable userProfile = $UserProfileTable(this);
-  late final $AttachmentTableTable attachmentTable = $AttachmentTableTable(
-    this,
-  );
-  late final $PostTableTable postTable = $PostTableTable(this);
-  late final $CommentTableTable commentTable = $CommentTableTable(this);
+  late final $AttachmentsTable attachments = $AttachmentsTable(this);
+  late final $PostsTable posts = $PostsTable(this);
+  late final $CommentsTable comments = $CommentsTable(this);
   late final $EventTableTable eventTable = $EventTableTable(this);
   late final $AttendeeTableTable attendeeTable = $AttendeeTableTable(this);
   late final $TicketTableTable ticketTable = $TicketTableTable(this);
@@ -24703,10 +23325,9 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     this,
   );
   late final $ScannerTableTable scannerTable = $ScannerTableTable(this);
-  late final $GroupTableTable groupTable = $GroupTableTable(this);
   late final $InviteTableTable inviteTable = $InviteTableTable(this);
-  late final $BlockTableTable blockTable = $BlockTableTable(this);
-  late final $ReportTableTable reportTable = $ReportTableTable(this);
+  late final $BlocksTable blocks = $BlocksTable(this);
+  late final $ReportsTable reports = $ReportsTable(this);
   late final $AgendaEventTable agendaEvent = $AgendaEventTable(this);
   late final $InstitutionsTable institutions = $InstitutionsTable(this);
   late final $InstitutionScrappingCommandsTable institutionScrappingCommands =
@@ -24723,10 +23344,10 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   late final $TimetableTable timetable = $TimetableTable(this);
   late final $TimetableEntryTable timetableEntry = $TimetableEntryTable(this);
   late final $ExamTimetablesTable examTimetables = $ExamTimetablesTable(this);
-  late final $ChirpUserTable chirpUser = $ChirpUserTable(this);
-  late final $CommunityTable community = $CommunityTable(this);
-  late final $ChirpCommunityMembershipTable chirpCommunityMembership =
-      $ChirpCommunityMembershipTable(this);
+  late final $ChirpUsersTable chirpUsers = $ChirpUsersTable(this);
+  late final $CommunitiesTable communities = $CommunitiesTable(this);
+  late final $ChirpCommunityMembershipsTable chirpCommunityMemberships =
+      $ChirpCommunityMembershipsTable(this);
   late final $LeaderboardRankTable leaderboardRank = $LeaderboardRankTable(
     this,
   );
@@ -24744,9 +23365,9 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
     userProfile,
-    attachmentTable,
-    postTable,
-    commentTable,
+    attachments,
+    posts,
+    comments,
     eventTable,
     attendeeTable,
     ticketTable,
@@ -24755,10 +23376,9 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     dashboardStatsTable,
     ticketStatsTable,
     scannerTable,
-    groupTable,
     inviteTable,
-    blockTable,
-    reportTable,
+    blocks,
+    reports,
     agendaEvent,
     institutions,
     institutionScrappingCommands,
@@ -24770,9 +23390,9 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     timetable,
     timetableEntry,
     examTimetables,
-    chirpUser,
-    community,
-    chirpCommunityMembership,
+    chirpUsers,
+    communities,
+    chirpCommunityMemberships,
     leaderboardRank,
     streakActivity,
     streakMilestone,
@@ -25160,8 +23780,8 @@ typedef $$UserProfileTableProcessedTableManager =
       UserProfileData,
       PrefetchHooks Function()
     >;
-typedef $$AttachmentTableTableCreateCompanionBuilder =
-    AttachmentTableCompanion Function({
+typedef $$AttachmentsTableCreateCompanionBuilder =
+    AttachmentsCompanion Function({
       Value<int> id,
       required String attachmentType,
       required String file,
@@ -25170,8 +23790,8 @@ typedef $$AttachmentTableTableCreateCompanionBuilder =
       required DateTime createdAt,
       required int postId,
     });
-typedef $$AttachmentTableTableUpdateCompanionBuilder =
-    AttachmentTableCompanion Function({
+typedef $$AttachmentsTableUpdateCompanionBuilder =
+    AttachmentsCompanion Function({
       Value<int> id,
       Value<String> attachmentType,
       Value<String> file,
@@ -25181,9 +23801,9 @@ typedef $$AttachmentTableTableUpdateCompanionBuilder =
       Value<int> postId,
     });
 
-class $$AttachmentTableTableFilterComposer
-    extends Composer<_$AppDataBase, $AttachmentTableTable> {
-  $$AttachmentTableTableFilterComposer({
+class $$AttachmentsTableFilterComposer
+    extends Composer<_$AppDataBase, $AttachmentsTable> {
+  $$AttachmentsTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -25226,9 +23846,9 @@ class $$AttachmentTableTableFilterComposer
   );
 }
 
-class $$AttachmentTableTableOrderingComposer
-    extends Composer<_$AppDataBase, $AttachmentTableTable> {
-  $$AttachmentTableTableOrderingComposer({
+class $$AttachmentsTableOrderingComposer
+    extends Composer<_$AppDataBase, $AttachmentsTable> {
+  $$AttachmentsTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -25271,9 +23891,9 @@ class $$AttachmentTableTableOrderingComposer
   );
 }
 
-class $$AttachmentTableTableAnnotationComposer
-    extends Composer<_$AppDataBase, $AttachmentTableTable> {
-  $$AttachmentTableTableAnnotationComposer({
+class $$AttachmentsTableAnnotationComposer
+    extends Composer<_$AppDataBase, $AttachmentsTable> {
+  $$AttachmentsTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -25304,41 +23924,35 @@ class $$AttachmentTableTableAnnotationComposer
       $composableBuilder(column: $table.postId, builder: (column) => column);
 }
 
-class $$AttachmentTableTableTableManager
+class $$AttachmentsTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $AttachmentTableTable,
-          AttachmentData,
-          $$AttachmentTableTableFilterComposer,
-          $$AttachmentTableTableOrderingComposer,
-          $$AttachmentTableTableAnnotationComposer,
-          $$AttachmentTableTableCreateCompanionBuilder,
-          $$AttachmentTableTableUpdateCompanionBuilder,
+          $AttachmentsTable,
+          Attachment,
+          $$AttachmentsTableFilterComposer,
+          $$AttachmentsTableOrderingComposer,
+          $$AttachmentsTableAnnotationComposer,
+          $$AttachmentsTableCreateCompanionBuilder,
+          $$AttachmentsTableUpdateCompanionBuilder,
           (
-            AttachmentData,
-            BaseReferences<
-              _$AppDataBase,
-              $AttachmentTableTable,
-              AttachmentData
-            >,
+            Attachment,
+            BaseReferences<_$AppDataBase, $AttachmentsTable, Attachment>,
           ),
-          AttachmentData,
+          Attachment,
           PrefetchHooks Function()
         > {
-  $$AttachmentTableTableTableManager(
-    _$AppDataBase db,
-    $AttachmentTableTable table,
-  ) : super(
+  $$AttachmentsTableTableManager(_$AppDataBase db, $AttachmentsTable table)
+    : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$AttachmentTableTableFilterComposer($db: db, $table: table),
+              $$AttachmentsTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$AttachmentTableTableOrderingComposer($db: db, $table: table),
+              $$AttachmentsTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$AttachmentTableTableAnnotationComposer($db: db, $table: table),
+              $$AttachmentsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
@@ -25348,7 +23962,7 @@ class $$AttachmentTableTableTableManager
                 Value<String> name = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<int> postId = const Value.absent(),
-              }) => AttachmentTableCompanion(
+              }) => AttachmentsCompanion(
                 id: id,
                 attachmentType: attachmentType,
                 file: file,
@@ -25366,7 +23980,7 @@ class $$AttachmentTableTableTableManager
                 required String name,
                 required DateTime createdAt,
                 required int postId,
-              }) => AttachmentTableCompanion.insert(
+              }) => AttachmentsCompanion.insert(
                 id: id,
                 attachmentType: attachmentType,
                 file: file,
@@ -25383,25 +23997,25 @@ class $$AttachmentTableTableTableManager
       );
 }
 
-typedef $$AttachmentTableTableProcessedTableManager =
+typedef $$AttachmentsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $AttachmentTableTable,
-      AttachmentData,
-      $$AttachmentTableTableFilterComposer,
-      $$AttachmentTableTableOrderingComposer,
-      $$AttachmentTableTableAnnotationComposer,
-      $$AttachmentTableTableCreateCompanionBuilder,
-      $$AttachmentTableTableUpdateCompanionBuilder,
+      $AttachmentsTable,
+      Attachment,
+      $$AttachmentsTableFilterComposer,
+      $$AttachmentsTableOrderingComposer,
+      $$AttachmentsTableAnnotationComposer,
+      $$AttachmentsTableCreateCompanionBuilder,
+      $$AttachmentsTableUpdateCompanionBuilder,
       (
-        AttachmentData,
-        BaseReferences<_$AppDataBase, $AttachmentTableTable, AttachmentData>,
+        Attachment,
+        BaseReferences<_$AppDataBase, $AttachmentsTable, Attachment>,
       ),
-      AttachmentData,
+      Attachment,
       PrefetchHooks Function()
     >;
-typedef $$PostTableTableCreateCompanionBuilder =
-    PostTableCompanion Function({
+typedef $$PostsTableCreateCompanionBuilder =
+    PostsCompanion Function({
       Value<int> id,
       required Map<String, dynamic> community,
       required String authorId,
@@ -25417,8 +24031,8 @@ typedef $$PostTableTableCreateCompanionBuilder =
       required DateTime updatedAt,
       Value<DateTime?> cachedAt,
     });
-typedef $$PostTableTableUpdateCompanionBuilder =
-    PostTableCompanion Function({
+typedef $$PostsTableUpdateCompanionBuilder =
+    PostsCompanion Function({
       Value<int> id,
       Value<Map<String, dynamic>> community,
       Value<String> authorId,
@@ -25435,9 +24049,8 @@ typedef $$PostTableTableUpdateCompanionBuilder =
       Value<DateTime?> cachedAt,
     });
 
-class $$PostTableTableFilterComposer
-    extends Composer<_$AppDataBase, $PostTableTable> {
-  $$PostTableTableFilterComposer({
+class $$PostsTableFilterComposer extends Composer<_$AppDataBase, $PostsTable> {
+  $$PostsTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -25522,9 +24135,9 @@ class $$PostTableTableFilterComposer
   );
 }
 
-class $$PostTableTableOrderingComposer
-    extends Composer<_$AppDataBase, $PostTableTable> {
-  $$PostTableTableOrderingComposer({
+class $$PostsTableOrderingComposer
+    extends Composer<_$AppDataBase, $PostsTable> {
+  $$PostsTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -25602,9 +24215,9 @@ class $$PostTableTableOrderingComposer
   );
 }
 
-class $$PostTableTableAnnotationComposer
-    extends Composer<_$AppDataBase, $PostTableTable> {
-  $$PostTableTableAnnotationComposer({
+class $$PostsTableAnnotationComposer
+    extends Composer<_$AppDataBase, $PostsTable> {
+  $$PostsTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -25662,32 +24275,32 @@ class $$PostTableTableAnnotationComposer
       $composableBuilder(column: $table.cachedAt, builder: (column) => column);
 }
 
-class $$PostTableTableTableManager
+class $$PostsTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $PostTableTable,
-          PostData,
-          $$PostTableTableFilterComposer,
-          $$PostTableTableOrderingComposer,
-          $$PostTableTableAnnotationComposer,
-          $$PostTableTableCreateCompanionBuilder,
-          $$PostTableTableUpdateCompanionBuilder,
-          (PostData, BaseReferences<_$AppDataBase, $PostTableTable, PostData>),
-          PostData,
+          $PostsTable,
+          Post,
+          $$PostsTableFilterComposer,
+          $$PostsTableOrderingComposer,
+          $$PostsTableAnnotationComposer,
+          $$PostsTableCreateCompanionBuilder,
+          $$PostsTableUpdateCompanionBuilder,
+          (Post, BaseReferences<_$AppDataBase, $PostsTable, Post>),
+          Post,
           PrefetchHooks Function()
         > {
-  $$PostTableTableTableManager(_$AppDataBase db, $PostTableTable table)
+  $$PostsTableTableManager(_$AppDataBase db, $PostsTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$PostTableTableFilterComposer($db: db, $table: table),
+              $$PostsTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$PostTableTableOrderingComposer($db: db, $table: table),
+              $$PostsTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$PostTableTableAnnotationComposer($db: db, $table: table),
+              $$PostsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
@@ -25704,7 +24317,7 @@ class $$PostTableTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<DateTime?> cachedAt = const Value.absent(),
-              }) => PostTableCompanion(
+              }) => PostsCompanion(
                 id: id,
                 community: community,
                 authorId: authorId,
@@ -25736,7 +24349,7 @@ class $$PostTableTableTableManager
                 required DateTime createdAt,
                 required DateTime updatedAt,
                 Value<DateTime?> cachedAt = const Value.absent(),
-              }) => PostTableCompanion.insert(
+              }) => PostsCompanion.insert(
                 id: id,
                 community: community,
                 authorId: authorId,
@@ -25760,22 +24373,22 @@ class $$PostTableTableTableManager
       );
 }
 
-typedef $$PostTableTableProcessedTableManager =
+typedef $$PostsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $PostTableTable,
-      PostData,
-      $$PostTableTableFilterComposer,
-      $$PostTableTableOrderingComposer,
-      $$PostTableTableAnnotationComposer,
-      $$PostTableTableCreateCompanionBuilder,
-      $$PostTableTableUpdateCompanionBuilder,
-      (PostData, BaseReferences<_$AppDataBase, $PostTableTable, PostData>),
-      PostData,
+      $PostsTable,
+      Post,
+      $$PostsTableFilterComposer,
+      $$PostsTableOrderingComposer,
+      $$PostsTableAnnotationComposer,
+      $$PostsTableCreateCompanionBuilder,
+      $$PostsTableUpdateCompanionBuilder,
+      (Post, BaseReferences<_$AppDataBase, $PostsTable, Post>),
+      Post,
       PrefetchHooks Function()
     >;
-typedef $$CommentTableTableCreateCompanionBuilder =
-    CommentTableCompanion Function({
+typedef $$CommentsTableCreateCompanionBuilder =
+    CommentsCompanion Function({
       required int id,
       required int post,
       required String authorId,
@@ -25788,8 +24401,8 @@ typedef $$CommentTableTableCreateCompanionBuilder =
       Value<int?> parent,
       Value<int> rowid,
     });
-typedef $$CommentTableTableUpdateCompanionBuilder =
-    CommentTableCompanion Function({
+typedef $$CommentsTableUpdateCompanionBuilder =
+    CommentsCompanion Function({
       Value<int> id,
       Value<int> post,
       Value<String> authorId,
@@ -25803,9 +24416,9 @@ typedef $$CommentTableTableUpdateCompanionBuilder =
       Value<int> rowid,
     });
 
-class $$CommentTableTableFilterComposer
-    extends Composer<_$AppDataBase, $CommentTableTable> {
-  $$CommentTableTableFilterComposer({
+class $$CommentsTableFilterComposer
+    extends Composer<_$AppDataBase, $CommentsTable> {
+  $$CommentsTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -25864,9 +24477,9 @@ class $$CommentTableTableFilterComposer
   );
 }
 
-class $$CommentTableTableOrderingComposer
-    extends Composer<_$AppDataBase, $CommentTableTable> {
-  $$CommentTableTableOrderingComposer({
+class $$CommentsTableOrderingComposer
+    extends Composer<_$AppDataBase, $CommentsTable> {
+  $$CommentsTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -25924,9 +24537,9 @@ class $$CommentTableTableOrderingComposer
   );
 }
 
-class $$CommentTableTableAnnotationComposer
-    extends Composer<_$AppDataBase, $CommentTableTable> {
-  $$CommentTableTableAnnotationComposer({
+class $$CommentsTableAnnotationComposer
+    extends Composer<_$AppDataBase, $CommentsTable> {
+  $$CommentsTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -25964,35 +24577,32 @@ class $$CommentTableTableAnnotationComposer
       $composableBuilder(column: $table.parent, builder: (column) => column);
 }
 
-class $$CommentTableTableTableManager
+class $$CommentsTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $CommentTableTable,
-          CommentData,
-          $$CommentTableTableFilterComposer,
-          $$CommentTableTableOrderingComposer,
-          $$CommentTableTableAnnotationComposer,
-          $$CommentTableTableCreateCompanionBuilder,
-          $$CommentTableTableUpdateCompanionBuilder,
-          (
-            CommentData,
-            BaseReferences<_$AppDataBase, $CommentTableTable, CommentData>,
-          ),
-          CommentData,
+          $CommentsTable,
+          Comment,
+          $$CommentsTableFilterComposer,
+          $$CommentsTableOrderingComposer,
+          $$CommentsTableAnnotationComposer,
+          $$CommentsTableCreateCompanionBuilder,
+          $$CommentsTableUpdateCompanionBuilder,
+          (Comment, BaseReferences<_$AppDataBase, $CommentsTable, Comment>),
+          Comment,
           PrefetchHooks Function()
         > {
-  $$CommentTableTableTableManager(_$AppDataBase db, $CommentTableTable table)
+  $$CommentsTableTableManager(_$AppDataBase db, $CommentsTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$CommentTableTableFilterComposer($db: db, $table: table),
+              $$CommentsTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$CommentTableTableOrderingComposer($db: db, $table: table),
+              $$CommentsTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$CommentTableTableAnnotationComposer($db: db, $table: table),
+              $$CommentsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
@@ -26006,7 +24616,7 @@ class $$CommentTableTableTableManager
                 Value<List<dynamic>> replies = const Value.absent(),
                 Value<int?> parent = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => CommentTableCompanion(
+              }) => CommentsCompanion(
                 id: id,
                 post: post,
                 authorId: authorId,
@@ -26032,7 +24642,7 @@ class $$CommentTableTableTableManager
                 required List<dynamic> replies,
                 Value<int?> parent = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => CommentTableCompanion.insert(
+              }) => CommentsCompanion.insert(
                 id: id,
                 post: post,
                 authorId: authorId,
@@ -26053,21 +24663,18 @@ class $$CommentTableTableTableManager
       );
 }
 
-typedef $$CommentTableTableProcessedTableManager =
+typedef $$CommentsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $CommentTableTable,
-      CommentData,
-      $$CommentTableTableFilterComposer,
-      $$CommentTableTableOrderingComposer,
-      $$CommentTableTableAnnotationComposer,
-      $$CommentTableTableCreateCompanionBuilder,
-      $$CommentTableTableUpdateCompanionBuilder,
-      (
-        CommentData,
-        BaseReferences<_$AppDataBase, $CommentTableTable, CommentData>,
-      ),
-      CommentData,
+      $CommentsTable,
+      Comment,
+      $$CommentsTableFilterComposer,
+      $$CommentsTableOrderingComposer,
+      $$CommentsTableAnnotationComposer,
+      $$CommentsTableCreateCompanionBuilder,
+      $$CommentsTableUpdateCompanionBuilder,
+      (Comment, BaseReferences<_$AppDataBase, $CommentsTable, Comment>),
+      Comment,
       PrefetchHooks Function()
     >;
 typedef $$EventTableTableCreateCompanionBuilder =
@@ -28313,604 +26920,6 @@ typedef $$ScannerTableTableProcessedTableManager =
       ScannerData,
       PrefetchHooks Function()
     >;
-typedef $$GroupTableTableCreateCompanionBuilder =
-    GroupTableCompanion Function({
-      required String id,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
-      required String name,
-      required String description,
-      required String creatorId,
-      required String creatorName,
-      required String admins,
-      required String adminNames,
-      required String moderators,
-      required String moderatorNames,
-      required String members,
-      required String memberNames,
-      required String bannedUsers,
-      required String bannedUserNames,
-      required bool isPrivate,
-      required String rules,
-      Value<String?> logo,
-      Value<String?> banner,
-      Value<String?> logoUrl,
-      Value<String?> bannerUrl,
-      Value<String?> userRole,
-      required bool canPost,
-      required bool canModerate,
-      required bool canAdmin,
-      Value<int> rowid,
-    });
-typedef $$GroupTableTableUpdateCompanionBuilder =
-    GroupTableCompanion Function({
-      Value<String> id,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
-      Value<String> name,
-      Value<String> description,
-      Value<String> creatorId,
-      Value<String> creatorName,
-      Value<String> admins,
-      Value<String> adminNames,
-      Value<String> moderators,
-      Value<String> moderatorNames,
-      Value<String> members,
-      Value<String> memberNames,
-      Value<String> bannedUsers,
-      Value<String> bannedUserNames,
-      Value<bool> isPrivate,
-      Value<String> rules,
-      Value<String?> logo,
-      Value<String?> banner,
-      Value<String?> logoUrl,
-      Value<String?> bannerUrl,
-      Value<String?> userRole,
-      Value<bool> canPost,
-      Value<bool> canModerate,
-      Value<bool> canAdmin,
-      Value<int> rowid,
-    });
-
-class $$GroupTableTableFilterComposer
-    extends Composer<_$AppDataBase, $GroupTableTable> {
-  $$GroupTableTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<String> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
-    column: $table.updatedAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get name => $composableBuilder(
-    column: $table.name,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get description => $composableBuilder(
-    column: $table.description,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get creatorId => $composableBuilder(
-    column: $table.creatorId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get creatorName => $composableBuilder(
-    column: $table.creatorName,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get admins => $composableBuilder(
-    column: $table.admins,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get adminNames => $composableBuilder(
-    column: $table.adminNames,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get moderators => $composableBuilder(
-    column: $table.moderators,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get moderatorNames => $composableBuilder(
-    column: $table.moderatorNames,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get members => $composableBuilder(
-    column: $table.members,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get memberNames => $composableBuilder(
-    column: $table.memberNames,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get bannedUsers => $composableBuilder(
-    column: $table.bannedUsers,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get bannedUserNames => $composableBuilder(
-    column: $table.bannedUserNames,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<bool> get isPrivate => $composableBuilder(
-    column: $table.isPrivate,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get rules => $composableBuilder(
-    column: $table.rules,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get logo => $composableBuilder(
-    column: $table.logo,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get banner => $composableBuilder(
-    column: $table.banner,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get logoUrl => $composableBuilder(
-    column: $table.logoUrl,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get bannerUrl => $composableBuilder(
-    column: $table.bannerUrl,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get userRole => $composableBuilder(
-    column: $table.userRole,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<bool> get canPost => $composableBuilder(
-    column: $table.canPost,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<bool> get canModerate => $composableBuilder(
-    column: $table.canModerate,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<bool> get canAdmin => $composableBuilder(
-    column: $table.canAdmin,
-    builder: (column) => ColumnFilters(column),
-  );
-}
-
-class $$GroupTableTableOrderingComposer
-    extends Composer<_$AppDataBase, $GroupTableTable> {
-  $$GroupTableTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<String> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
-    column: $table.updatedAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get name => $composableBuilder(
-    column: $table.name,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get description => $composableBuilder(
-    column: $table.description,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get creatorId => $composableBuilder(
-    column: $table.creatorId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get creatorName => $composableBuilder(
-    column: $table.creatorName,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get admins => $composableBuilder(
-    column: $table.admins,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get adminNames => $composableBuilder(
-    column: $table.adminNames,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get moderators => $composableBuilder(
-    column: $table.moderators,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get moderatorNames => $composableBuilder(
-    column: $table.moderatorNames,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get members => $composableBuilder(
-    column: $table.members,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get memberNames => $composableBuilder(
-    column: $table.memberNames,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get bannedUsers => $composableBuilder(
-    column: $table.bannedUsers,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get bannedUserNames => $composableBuilder(
-    column: $table.bannedUserNames,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<bool> get isPrivate => $composableBuilder(
-    column: $table.isPrivate,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get rules => $composableBuilder(
-    column: $table.rules,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get logo => $composableBuilder(
-    column: $table.logo,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get banner => $composableBuilder(
-    column: $table.banner,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get logoUrl => $composableBuilder(
-    column: $table.logoUrl,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get bannerUrl => $composableBuilder(
-    column: $table.bannerUrl,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get userRole => $composableBuilder(
-    column: $table.userRole,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<bool> get canPost => $composableBuilder(
-    column: $table.canPost,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<bool> get canModerate => $composableBuilder(
-    column: $table.canModerate,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<bool> get canAdmin => $composableBuilder(
-    column: $table.canAdmin,
-    builder: (column) => ColumnOrderings(column),
-  );
-}
-
-class $$GroupTableTableAnnotationComposer
-    extends Composer<_$AppDataBase, $GroupTableTable> {
-  $$GroupTableTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<String> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get createdAt =>
-      $composableBuilder(column: $table.createdAt, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get updatedAt =>
-      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
-
-  GeneratedColumn<String> get name =>
-      $composableBuilder(column: $table.name, builder: (column) => column);
-
-  GeneratedColumn<String> get description => $composableBuilder(
-    column: $table.description,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get creatorId =>
-      $composableBuilder(column: $table.creatorId, builder: (column) => column);
-
-  GeneratedColumn<String> get creatorName => $composableBuilder(
-    column: $table.creatorName,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get admins =>
-      $composableBuilder(column: $table.admins, builder: (column) => column);
-
-  GeneratedColumn<String> get adminNames => $composableBuilder(
-    column: $table.adminNames,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get moderators => $composableBuilder(
-    column: $table.moderators,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get moderatorNames => $composableBuilder(
-    column: $table.moderatorNames,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get members =>
-      $composableBuilder(column: $table.members, builder: (column) => column);
-
-  GeneratedColumn<String> get memberNames => $composableBuilder(
-    column: $table.memberNames,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get bannedUsers => $composableBuilder(
-    column: $table.bannedUsers,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get bannedUserNames => $composableBuilder(
-    column: $table.bannedUserNames,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<bool> get isPrivate =>
-      $composableBuilder(column: $table.isPrivate, builder: (column) => column);
-
-  GeneratedColumn<String> get rules =>
-      $composableBuilder(column: $table.rules, builder: (column) => column);
-
-  GeneratedColumn<String> get logo =>
-      $composableBuilder(column: $table.logo, builder: (column) => column);
-
-  GeneratedColumn<String> get banner =>
-      $composableBuilder(column: $table.banner, builder: (column) => column);
-
-  GeneratedColumn<String> get logoUrl =>
-      $composableBuilder(column: $table.logoUrl, builder: (column) => column);
-
-  GeneratedColumn<String> get bannerUrl =>
-      $composableBuilder(column: $table.bannerUrl, builder: (column) => column);
-
-  GeneratedColumn<String> get userRole =>
-      $composableBuilder(column: $table.userRole, builder: (column) => column);
-
-  GeneratedColumn<bool> get canPost =>
-      $composableBuilder(column: $table.canPost, builder: (column) => column);
-
-  GeneratedColumn<bool> get canModerate => $composableBuilder(
-    column: $table.canModerate,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<bool> get canAdmin =>
-      $composableBuilder(column: $table.canAdmin, builder: (column) => column);
-}
-
-class $$GroupTableTableTableManager
-    extends
-        RootTableManager<
-          _$AppDataBase,
-          $GroupTableTable,
-          GroupEntity,
-          $$GroupTableTableFilterComposer,
-          $$GroupTableTableOrderingComposer,
-          $$GroupTableTableAnnotationComposer,
-          $$GroupTableTableCreateCompanionBuilder,
-          $$GroupTableTableUpdateCompanionBuilder,
-          (
-            GroupEntity,
-            BaseReferences<_$AppDataBase, $GroupTableTable, GroupEntity>,
-          ),
-          GroupEntity,
-          PrefetchHooks Function()
-        > {
-  $$GroupTableTableTableManager(_$AppDataBase db, $GroupTableTable table)
-    : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$GroupTableTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$GroupTableTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$GroupTableTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback:
-              ({
-                Value<String> id = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
-                Value<String> name = const Value.absent(),
-                Value<String> description = const Value.absent(),
-                Value<String> creatorId = const Value.absent(),
-                Value<String> creatorName = const Value.absent(),
-                Value<String> admins = const Value.absent(),
-                Value<String> adminNames = const Value.absent(),
-                Value<String> moderators = const Value.absent(),
-                Value<String> moderatorNames = const Value.absent(),
-                Value<String> members = const Value.absent(),
-                Value<String> memberNames = const Value.absent(),
-                Value<String> bannedUsers = const Value.absent(),
-                Value<String> bannedUserNames = const Value.absent(),
-                Value<bool> isPrivate = const Value.absent(),
-                Value<String> rules = const Value.absent(),
-                Value<String?> logo = const Value.absent(),
-                Value<String?> banner = const Value.absent(),
-                Value<String?> logoUrl = const Value.absent(),
-                Value<String?> bannerUrl = const Value.absent(),
-                Value<String?> userRole = const Value.absent(),
-                Value<bool> canPost = const Value.absent(),
-                Value<bool> canModerate = const Value.absent(),
-                Value<bool> canAdmin = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => GroupTableCompanion(
-                id: id,
-                createdAt: createdAt,
-                updatedAt: updatedAt,
-                name: name,
-                description: description,
-                creatorId: creatorId,
-                creatorName: creatorName,
-                admins: admins,
-                adminNames: adminNames,
-                moderators: moderators,
-                moderatorNames: moderatorNames,
-                members: members,
-                memberNames: memberNames,
-                bannedUsers: bannedUsers,
-                bannedUserNames: bannedUserNames,
-                isPrivate: isPrivate,
-                rules: rules,
-                logo: logo,
-                banner: banner,
-                logoUrl: logoUrl,
-                bannerUrl: bannerUrl,
-                userRole: userRole,
-                canPost: canPost,
-                canModerate: canModerate,
-                canAdmin: canAdmin,
-                rowid: rowid,
-              ),
-          createCompanionCallback:
-              ({
-                required String id,
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
-                required String name,
-                required String description,
-                required String creatorId,
-                required String creatorName,
-                required String admins,
-                required String adminNames,
-                required String moderators,
-                required String moderatorNames,
-                required String members,
-                required String memberNames,
-                required String bannedUsers,
-                required String bannedUserNames,
-                required bool isPrivate,
-                required String rules,
-                Value<String?> logo = const Value.absent(),
-                Value<String?> banner = const Value.absent(),
-                Value<String?> logoUrl = const Value.absent(),
-                Value<String?> bannerUrl = const Value.absent(),
-                Value<String?> userRole = const Value.absent(),
-                required bool canPost,
-                required bool canModerate,
-                required bool canAdmin,
-                Value<int> rowid = const Value.absent(),
-              }) => GroupTableCompanion.insert(
-                id: id,
-                createdAt: createdAt,
-                updatedAt: updatedAt,
-                name: name,
-                description: description,
-                creatorId: creatorId,
-                creatorName: creatorName,
-                admins: admins,
-                adminNames: adminNames,
-                moderators: moderators,
-                moderatorNames: moderatorNames,
-                members: members,
-                memberNames: memberNames,
-                bannedUsers: bannedUsers,
-                bannedUserNames: bannedUserNames,
-                isPrivate: isPrivate,
-                rules: rules,
-                logo: logo,
-                banner: banner,
-                logoUrl: logoUrl,
-                bannerUrl: bannerUrl,
-                userRole: userRole,
-                canPost: canPost,
-                canModerate: canModerate,
-                canAdmin: canAdmin,
-                rowid: rowid,
-              ),
-          withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
-              .toList(),
-          prefetchHooksCallback: null,
-        ),
-      );
-}
-
-typedef $$GroupTableTableProcessedTableManager =
-    ProcessedTableManager<
-      _$AppDataBase,
-      $GroupTableTable,
-      GroupEntity,
-      $$GroupTableTableFilterComposer,
-      $$GroupTableTableOrderingComposer,
-      $$GroupTableTableAnnotationComposer,
-      $$GroupTableTableCreateCompanionBuilder,
-      $$GroupTableTableUpdateCompanionBuilder,
-      (
-        GroupEntity,
-        BaseReferences<_$AppDataBase, $GroupTableTable, GroupEntity>,
-      ),
-      GroupEntity,
-      PrefetchHooks Function()
-    >;
 typedef $$InviteTableTableCreateCompanionBuilder =
     InviteTableCompanion Function({
       required String id,
@@ -29187,8 +27196,8 @@ typedef $$InviteTableTableProcessedTableManager =
       InviteData,
       PrefetchHooks Function()
     >;
-typedef $$BlockTableTableCreateCompanionBuilder =
-    BlockTableCompanion Function({
+typedef $$BlocksTableCreateCompanionBuilder =
+    BlocksCompanion Function({
       Value<int> id,
       required String blockType,
       Value<String?> blockedUser,
@@ -29198,8 +27207,8 @@ typedef $$BlockTableTableCreateCompanionBuilder =
       required DateTime createdAt,
       Value<DateTime?> cachedAt,
     });
-typedef $$BlockTableTableUpdateCompanionBuilder =
-    BlockTableCompanion Function({
+typedef $$BlocksTableUpdateCompanionBuilder =
+    BlocksCompanion Function({
       Value<int> id,
       Value<String> blockType,
       Value<String?> blockedUser,
@@ -29210,9 +27219,9 @@ typedef $$BlockTableTableUpdateCompanionBuilder =
       Value<DateTime?> cachedAt,
     });
 
-class $$BlockTableTableFilterComposer
-    extends Composer<_$AppDataBase, $BlockTableTable> {
-  $$BlockTableTableFilterComposer({
+class $$BlocksTableFilterComposer
+    extends Composer<_$AppDataBase, $BlocksTable> {
+  $$BlocksTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -29260,9 +27269,9 @@ class $$BlockTableTableFilterComposer
   );
 }
 
-class $$BlockTableTableOrderingComposer
-    extends Composer<_$AppDataBase, $BlockTableTable> {
-  $$BlockTableTableOrderingComposer({
+class $$BlocksTableOrderingComposer
+    extends Composer<_$AppDataBase, $BlocksTable> {
+  $$BlocksTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -29310,9 +27319,9 @@ class $$BlockTableTableOrderingComposer
   );
 }
 
-class $$BlockTableTableAnnotationComposer
-    extends Composer<_$AppDataBase, $BlockTableTable> {
-  $$BlockTableTableAnnotationComposer({
+class $$BlocksTableAnnotationComposer
+    extends Composer<_$AppDataBase, $BlocksTable> {
+  $$BlocksTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -29352,35 +27361,32 @@ class $$BlockTableTableAnnotationComposer
       $composableBuilder(column: $table.cachedAt, builder: (column) => column);
 }
 
-class $$BlockTableTableTableManager
+class $$BlocksTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $BlockTableTable,
-          BlockData,
-          $$BlockTableTableFilterComposer,
-          $$BlockTableTableOrderingComposer,
-          $$BlockTableTableAnnotationComposer,
-          $$BlockTableTableCreateCompanionBuilder,
-          $$BlockTableTableUpdateCompanionBuilder,
-          (
-            BlockData,
-            BaseReferences<_$AppDataBase, $BlockTableTable, BlockData>,
-          ),
-          BlockData,
+          $BlocksTable,
+          Block,
+          $$BlocksTableFilterComposer,
+          $$BlocksTableOrderingComposer,
+          $$BlocksTableAnnotationComposer,
+          $$BlocksTableCreateCompanionBuilder,
+          $$BlocksTableUpdateCompanionBuilder,
+          (Block, BaseReferences<_$AppDataBase, $BlocksTable, Block>),
+          Block,
           PrefetchHooks Function()
         > {
-  $$BlockTableTableTableManager(_$AppDataBase db, $BlockTableTable table)
+  $$BlocksTableTableManager(_$AppDataBase db, $BlocksTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$BlockTableTableFilterComposer($db: db, $table: table),
+              $$BlocksTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$BlockTableTableOrderingComposer($db: db, $table: table),
+              $$BlocksTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$BlockTableTableAnnotationComposer($db: db, $table: table),
+              $$BlocksTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
@@ -29391,7 +27397,7 @@ class $$BlockTableTableTableManager
                 Value<String?> blockedImage = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime?> cachedAt = const Value.absent(),
-              }) => BlockTableCompanion(
+              }) => BlocksCompanion(
                 id: id,
                 blockType: blockType,
                 blockedUser: blockedUser,
@@ -29411,7 +27417,7 @@ class $$BlockTableTableTableManager
                 Value<String?> blockedImage = const Value.absent(),
                 required DateTime createdAt,
                 Value<DateTime?> cachedAt = const Value.absent(),
-              }) => BlockTableCompanion.insert(
+              }) => BlocksCompanion.insert(
                 id: id,
                 blockType: blockType,
                 blockedUser: blockedUser,
@@ -29429,22 +27435,22 @@ class $$BlockTableTableTableManager
       );
 }
 
-typedef $$BlockTableTableProcessedTableManager =
+typedef $$BlocksTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $BlockTableTable,
-      BlockData,
-      $$BlockTableTableFilterComposer,
-      $$BlockTableTableOrderingComposer,
-      $$BlockTableTableAnnotationComposer,
-      $$BlockTableTableCreateCompanionBuilder,
-      $$BlockTableTableUpdateCompanionBuilder,
-      (BlockData, BaseReferences<_$AppDataBase, $BlockTableTable, BlockData>),
-      BlockData,
+      $BlocksTable,
+      Block,
+      $$BlocksTableFilterComposer,
+      $$BlocksTableOrderingComposer,
+      $$BlocksTableAnnotationComposer,
+      $$BlocksTableCreateCompanionBuilder,
+      $$BlocksTableUpdateCompanionBuilder,
+      (Block, BaseReferences<_$AppDataBase, $BlocksTable, Block>),
+      Block,
       PrefetchHooks Function()
     >;
-typedef $$ReportTableTableCreateCompanionBuilder =
-    ReportTableCompanion Function({
+typedef $$ReportsTableCreateCompanionBuilder =
+    ReportsCompanion Function({
       Value<int> id,
       required String reportType,
       Value<String?> reportedUser,
@@ -29457,8 +27463,8 @@ typedef $$ReportTableTableCreateCompanionBuilder =
       Value<DateTime?> updatedAt,
       Value<DateTime?> cachedAt,
     });
-typedef $$ReportTableTableUpdateCompanionBuilder =
-    ReportTableCompanion Function({
+typedef $$ReportsTableUpdateCompanionBuilder =
+    ReportsCompanion Function({
       Value<int> id,
       Value<String> reportType,
       Value<String?> reportedUser,
@@ -29472,9 +27478,9 @@ typedef $$ReportTableTableUpdateCompanionBuilder =
       Value<DateTime?> cachedAt,
     });
 
-class $$ReportTableTableFilterComposer
-    extends Composer<_$AppDataBase, $ReportTableTable> {
-  $$ReportTableTableFilterComposer({
+class $$ReportsTableFilterComposer
+    extends Composer<_$AppDataBase, $ReportsTable> {
+  $$ReportsTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -29537,9 +27543,9 @@ class $$ReportTableTableFilterComposer
   );
 }
 
-class $$ReportTableTableOrderingComposer
-    extends Composer<_$AppDataBase, $ReportTableTable> {
-  $$ReportTableTableOrderingComposer({
+class $$ReportsTableOrderingComposer
+    extends Composer<_$AppDataBase, $ReportsTable> {
+  $$ReportsTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -29602,9 +27608,9 @@ class $$ReportTableTableOrderingComposer
   );
 }
 
-class $$ReportTableTableAnnotationComposer
-    extends Composer<_$AppDataBase, $ReportTableTable> {
-  $$ReportTableTableAnnotationComposer({
+class $$ReportsTableAnnotationComposer
+    extends Composer<_$AppDataBase, $ReportsTable> {
+  $$ReportsTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -29655,35 +27661,32 @@ class $$ReportTableTableAnnotationComposer
       $composableBuilder(column: $table.cachedAt, builder: (column) => column);
 }
 
-class $$ReportTableTableTableManager
+class $$ReportsTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $ReportTableTable,
-          ReportData,
-          $$ReportTableTableFilterComposer,
-          $$ReportTableTableOrderingComposer,
-          $$ReportTableTableAnnotationComposer,
-          $$ReportTableTableCreateCompanionBuilder,
-          $$ReportTableTableUpdateCompanionBuilder,
-          (
-            ReportData,
-            BaseReferences<_$AppDataBase, $ReportTableTable, ReportData>,
-          ),
-          ReportData,
+          $ReportsTable,
+          Report,
+          $$ReportsTableFilterComposer,
+          $$ReportsTableOrderingComposer,
+          $$ReportsTableAnnotationComposer,
+          $$ReportsTableCreateCompanionBuilder,
+          $$ReportsTableUpdateCompanionBuilder,
+          (Report, BaseReferences<_$AppDataBase, $ReportsTable, Report>),
+          Report,
           PrefetchHooks Function()
         > {
-  $$ReportTableTableTableManager(_$AppDataBase db, $ReportTableTable table)
+  $$ReportsTableTableManager(_$AppDataBase db, $ReportsTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$ReportTableTableFilterComposer($db: db, $table: table),
+              $$ReportsTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$ReportTableTableOrderingComposer($db: db, $table: table),
+              $$ReportsTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$ReportTableTableAnnotationComposer($db: db, $table: table),
+              $$ReportsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
@@ -29697,7 +27700,7 @@ class $$ReportTableTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime?> updatedAt = const Value.absent(),
                 Value<DateTime?> cachedAt = const Value.absent(),
-              }) => ReportTableCompanion(
+              }) => ReportsCompanion(
                 id: id,
                 reportType: reportType,
                 reportedUser: reportedUser,
@@ -29723,7 +27726,7 @@ class $$ReportTableTableTableManager
                 required DateTime createdAt,
                 Value<DateTime?> updatedAt = const Value.absent(),
                 Value<DateTime?> cachedAt = const Value.absent(),
-              }) => ReportTableCompanion.insert(
+              }) => ReportsCompanion.insert(
                 id: id,
                 reportType: reportType,
                 reportedUser: reportedUser,
@@ -29744,21 +27747,18 @@ class $$ReportTableTableTableManager
       );
 }
 
-typedef $$ReportTableTableProcessedTableManager =
+typedef $$ReportsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $ReportTableTable,
-      ReportData,
-      $$ReportTableTableFilterComposer,
-      $$ReportTableTableOrderingComposer,
-      $$ReportTableTableAnnotationComposer,
-      $$ReportTableTableCreateCompanionBuilder,
-      $$ReportTableTableUpdateCompanionBuilder,
-      (
-        ReportData,
-        BaseReferences<_$AppDataBase, $ReportTableTable, ReportData>,
-      ),
-      ReportData,
+      $ReportsTable,
+      Report,
+      $$ReportsTableFilterComposer,
+      $$ReportsTableOrderingComposer,
+      $$ReportsTableAnnotationComposer,
+      $$ReportsTableCreateCompanionBuilder,
+      $$ReportsTableUpdateCompanionBuilder,
+      (Report, BaseReferences<_$AppDataBase, $ReportsTable, Report>),
+      Report,
       PrefetchHooks Function()
     >;
 typedef $$AgendaEventTableCreateCompanionBuilder =
@@ -35570,8 +33570,8 @@ typedef $$ExamTimetablesTableProcessedTableManager =
       ExamTimetable,
       PrefetchHooks Function({bool institutionId})
     >;
-typedef $$ChirpUserTableCreateCompanionBuilder =
-    ChirpUserCompanion Function({
+typedef $$ChirpUsersTableCreateCompanionBuilder =
+    ChirpUsersCompanion Function({
       required String userID,
       Value<String?> email,
       Value<String?> phone,
@@ -35583,8 +33583,8 @@ typedef $$ChirpUserTableCreateCompanionBuilder =
       Value<DateTime?> cachedAt,
       Value<int> rowid,
     });
-typedef $$ChirpUserTableUpdateCompanionBuilder =
-    ChirpUserCompanion Function({
+typedef $$ChirpUsersTableUpdateCompanionBuilder =
+    ChirpUsersCompanion Function({
       Value<String> userID,
       Value<String?> email,
       Value<String?> phone,
@@ -35597,35 +33597,35 @@ typedef $$ChirpUserTableUpdateCompanionBuilder =
       Value<int> rowid,
     });
 
-final class $$ChirpUserTableReferences
-    extends BaseReferences<_$AppDataBase, $ChirpUserTable, ChirpUserData> {
-  $$ChirpUserTableReferences(super.$_db, super.$_table, super.$_typedResult);
+final class $$ChirpUsersTableReferences
+    extends BaseReferences<_$AppDataBase, $ChirpUsersTable, ChirpUser> {
+  $$ChirpUsersTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
   static MultiTypedResultKey<
-    $ChirpCommunityMembershipTable,
-    List<ChirpCommunityMembershipData>
+    $ChirpCommunityMembershipsTable,
+    List<ChirpCommunityMembership>
   >
-  _chirpCommunityMembershipRefsTable(_$AppDataBase db) =>
+  _chirpCommunityMembershipsRefsTable(_$AppDataBase db) =>
       MultiTypedResultKey.fromTable(
-        db.chirpCommunityMembership,
+        db.chirpCommunityMemberships,
         aliasName: $_aliasNameGenerator(
-          db.chirpUser.userID,
-          db.chirpCommunityMembership.userID,
+          db.chirpUsers.userID,
+          db.chirpCommunityMemberships.userID,
         ),
       );
 
-  $$ChirpCommunityMembershipTableProcessedTableManager
-  get chirpCommunityMembershipRefs {
+  $$ChirpCommunityMembershipsTableProcessedTableManager
+  get chirpCommunityMembershipsRefs {
     final manager =
-        $$ChirpCommunityMembershipTableTableManager(
+        $$ChirpCommunityMembershipsTableTableManager(
           $_db,
-          $_db.chirpCommunityMembership,
+          $_db.chirpCommunityMemberships,
         ).filter(
           (f) => f.userID.userID.sqlEquals($_itemColumn<String>('user_i_d')!),
         );
 
     final cache = $_typedResult.readTableOrNull(
-      _chirpCommunityMembershipRefsTable($_db),
+      _chirpCommunityMembershipsRefsTable($_db),
     );
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
@@ -35633,9 +33633,9 @@ final class $$ChirpUserTableReferences
   }
 }
 
-class $$ChirpUserTableFilterComposer
-    extends Composer<_$AppDataBase, $ChirpUserTable> {
-  $$ChirpUserTableFilterComposer({
+class $$ChirpUsersTableFilterComposer
+    extends Composer<_$AppDataBase, $ChirpUsersTable> {
+  $$ChirpUsersTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -35687,24 +33687,24 @@ class $$ChirpUserTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  Expression<bool> chirpCommunityMembershipRefs(
-    Expression<bool> Function($$ChirpCommunityMembershipTableFilterComposer f)
+  Expression<bool> chirpCommunityMembershipsRefs(
+    Expression<bool> Function($$ChirpCommunityMembershipsTableFilterComposer f)
     f,
   ) {
-    final $$ChirpCommunityMembershipTableFilterComposer composer =
+    final $$ChirpCommunityMembershipsTableFilterComposer composer =
         $composerBuilder(
           composer: this,
           getCurrentColumn: (t) => t.userID,
-          referencedTable: $db.chirpCommunityMembership,
+          referencedTable: $db.chirpCommunityMemberships,
           getReferencedColumn: (t) => t.userID,
           builder:
               (
                 joinBuilder, {
                 $addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer,
-              }) => $$ChirpCommunityMembershipTableFilterComposer(
+              }) => $$ChirpCommunityMembershipsTableFilterComposer(
                 $db: $db,
-                $table: $db.chirpCommunityMembership,
+                $table: $db.chirpCommunityMemberships,
                 $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
                 joinBuilder: joinBuilder,
                 $removeJoinBuilderFromRootComposer:
@@ -35715,9 +33715,9 @@ class $$ChirpUserTableFilterComposer
   }
 }
 
-class $$ChirpUserTableOrderingComposer
-    extends Composer<_$AppDataBase, $ChirpUserTable> {
-  $$ChirpUserTableOrderingComposer({
+class $$ChirpUsersTableOrderingComposer
+    extends Composer<_$AppDataBase, $ChirpUsersTable> {
+  $$ChirpUsersTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -35770,9 +33770,9 @@ class $$ChirpUserTableOrderingComposer
   );
 }
 
-class $$ChirpUserTableAnnotationComposer
-    extends Composer<_$AppDataBase, $ChirpUserTable> {
-  $$ChirpUserTableAnnotationComposer({
+class $$ChirpUsersTableAnnotationComposer
+    extends Composer<_$AppDataBase, $ChirpUsersTable> {
+  $$ChirpUsersTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -35808,24 +33808,24 @@ class $$ChirpUserTableAnnotationComposer
   GeneratedColumn<DateTime> get cachedAt =>
       $composableBuilder(column: $table.cachedAt, builder: (column) => column);
 
-  Expression<T> chirpCommunityMembershipRefs<T extends Object>(
-    Expression<T> Function($$ChirpCommunityMembershipTableAnnotationComposer a)
+  Expression<T> chirpCommunityMembershipsRefs<T extends Object>(
+    Expression<T> Function($$ChirpCommunityMembershipsTableAnnotationComposer a)
     f,
   ) {
-    final $$ChirpCommunityMembershipTableAnnotationComposer composer =
+    final $$ChirpCommunityMembershipsTableAnnotationComposer composer =
         $composerBuilder(
           composer: this,
           getCurrentColumn: (t) => t.userID,
-          referencedTable: $db.chirpCommunityMembership,
+          referencedTable: $db.chirpCommunityMemberships,
           getReferencedColumn: (t) => t.userID,
           builder:
               (
                 joinBuilder, {
                 $addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer,
-              }) => $$ChirpCommunityMembershipTableAnnotationComposer(
+              }) => $$ChirpCommunityMembershipsTableAnnotationComposer(
                 $db: $db,
-                $table: $db.chirpCommunityMembership,
+                $table: $db.chirpCommunityMemberships,
                 $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
                 joinBuilder: joinBuilder,
                 $removeJoinBuilderFromRootComposer:
@@ -35836,32 +33836,32 @@ class $$ChirpUserTableAnnotationComposer
   }
 }
 
-class $$ChirpUserTableTableManager
+class $$ChirpUsersTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $ChirpUserTable,
-          ChirpUserData,
-          $$ChirpUserTableFilterComposer,
-          $$ChirpUserTableOrderingComposer,
-          $$ChirpUserTableAnnotationComposer,
-          $$ChirpUserTableCreateCompanionBuilder,
-          $$ChirpUserTableUpdateCompanionBuilder,
-          (ChirpUserData, $$ChirpUserTableReferences),
-          ChirpUserData,
-          PrefetchHooks Function({bool chirpCommunityMembershipRefs})
+          $ChirpUsersTable,
+          ChirpUser,
+          $$ChirpUsersTableFilterComposer,
+          $$ChirpUsersTableOrderingComposer,
+          $$ChirpUsersTableAnnotationComposer,
+          $$ChirpUsersTableCreateCompanionBuilder,
+          $$ChirpUsersTableUpdateCompanionBuilder,
+          (ChirpUser, $$ChirpUsersTableReferences),
+          ChirpUser,
+          PrefetchHooks Function({bool chirpCommunityMembershipsRefs})
         > {
-  $$ChirpUserTableTableManager(_$AppDataBase db, $ChirpUserTable table)
+  $$ChirpUsersTableTableManager(_$AppDataBase db, $ChirpUsersTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$ChirpUserTableFilterComposer($db: db, $table: table),
+              $$ChirpUsersTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$ChirpUserTableOrderingComposer($db: db, $table: table),
+              $$ChirpUsersTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$ChirpUserTableAnnotationComposer($db: db, $table: table),
+              $$ChirpUsersTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<String> userID = const Value.absent(),
@@ -35874,7 +33874,7 @@ class $$ChirpUserTableTableManager
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<DateTime?> cachedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => ChirpUserCompanion(
+              }) => ChirpUsersCompanion(
                 userID: userID,
                 email: email,
                 phone: phone,
@@ -35898,7 +33898,7 @@ class $$ChirpUserTableTableManager
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<DateTime?> cachedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => ChirpUserCompanion.insert(
+              }) => ChirpUsersCompanion.insert(
                 userID: userID,
                 email: email,
                 phone: phone,
@@ -35914,34 +33914,34 @@ class $$ChirpUserTableTableManager
               .map(
                 (e) => (
                   e.readTable(table),
-                  $$ChirpUserTableReferences(db, table, e),
+                  $$ChirpUsersTableReferences(db, table, e),
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({chirpCommunityMembershipRefs = false}) {
+          prefetchHooksCallback: ({chirpCommunityMembershipsRefs = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [
-                if (chirpCommunityMembershipRefs) db.chirpCommunityMembership,
+                if (chirpCommunityMembershipsRefs) db.chirpCommunityMemberships,
               ],
               addJoins: null,
               getPrefetchedDataCallback: (items) async {
                 return [
-                  if (chirpCommunityMembershipRefs)
+                  if (chirpCommunityMembershipsRefs)
                     await $_getPrefetchedData<
-                      ChirpUserData,
-                      $ChirpUserTable,
-                      ChirpCommunityMembershipData
+                      ChirpUser,
+                      $ChirpUsersTable,
+                      ChirpCommunityMembership
                     >(
                       currentTable: table,
-                      referencedTable: $$ChirpUserTableReferences
-                          ._chirpCommunityMembershipRefsTable(db),
+                      referencedTable: $$ChirpUsersTableReferences
+                          ._chirpCommunityMembershipsRefsTable(db),
                       managerFromTypedResult: (p0) =>
-                          $$ChirpUserTableReferences(
+                          $$ChirpUsersTableReferences(
                             db,
                             table,
                             p0,
-                          ).chirpCommunityMembershipRefs,
+                          ).chirpCommunityMembershipsRefs,
                       referencedItemsForCurrentItem: (item, referencedItems) =>
                           referencedItems.where((e) => e.userID == item.userID),
                       typedResults: items,
@@ -35954,22 +33954,22 @@ class $$ChirpUserTableTableManager
       );
 }
 
-typedef $$ChirpUserTableProcessedTableManager =
+typedef $$ChirpUsersTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $ChirpUserTable,
-      ChirpUserData,
-      $$ChirpUserTableFilterComposer,
-      $$ChirpUserTableOrderingComposer,
-      $$ChirpUserTableAnnotationComposer,
-      $$ChirpUserTableCreateCompanionBuilder,
-      $$ChirpUserTableUpdateCompanionBuilder,
-      (ChirpUserData, $$ChirpUserTableReferences),
-      ChirpUserData,
-      PrefetchHooks Function({bool chirpCommunityMembershipRefs})
+      $ChirpUsersTable,
+      ChirpUser,
+      $$ChirpUsersTableFilterComposer,
+      $$ChirpUsersTableOrderingComposer,
+      $$ChirpUsersTableAnnotationComposer,
+      $$ChirpUsersTableCreateCompanionBuilder,
+      $$ChirpUsersTableUpdateCompanionBuilder,
+      (ChirpUser, $$ChirpUsersTableReferences),
+      ChirpUser,
+      PrefetchHooks Function({bool chirpCommunityMembershipsRefs})
     >;
-typedef $$CommunityTableCreateCompanionBuilder =
-    CommunityCompanion Function({
+typedef $$CommunitiesTableCreateCompanionBuilder =
+    CommunitiesCompanion Function({
       Value<int> id,
       required String name,
       Value<String?> description,
@@ -35996,8 +33996,8 @@ typedef $$CommunityTableCreateCompanionBuilder =
       required DateTime updatedAt,
       Value<DateTime?> cachedAt,
     });
-typedef $$CommunityTableUpdateCompanionBuilder =
-    CommunityCompanion Function({
+typedef $$CommunitiesTableUpdateCompanionBuilder =
+    CommunitiesCompanion Function({
       Value<int> id,
       Value<String> name,
       Value<String?> description,
@@ -36025,9 +34025,9 @@ typedef $$CommunityTableUpdateCompanionBuilder =
       Value<DateTime?> cachedAt,
     });
 
-class $$CommunityTableFilterComposer
-    extends Composer<_$AppDataBase, $CommunityTable> {
-  $$CommunityTableFilterComposer({
+class $$CommunitiesTableFilterComposer
+    extends Composer<_$AppDataBase, $CommunitiesTable> {
+  $$CommunitiesTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -36161,9 +34161,9 @@ class $$CommunityTableFilterComposer
   );
 }
 
-class $$CommunityTableOrderingComposer
-    extends Composer<_$AppDataBase, $CommunityTable> {
-  $$CommunityTableOrderingComposer({
+class $$CommunitiesTableOrderingComposer
+    extends Composer<_$AppDataBase, $CommunitiesTable> {
+  $$CommunitiesTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -36296,9 +34296,9 @@ class $$CommunityTableOrderingComposer
   );
 }
 
-class $$CommunityTableAnnotationComposer
-    extends Composer<_$AppDataBase, $CommunityTable> {
-  $$CommunityTableAnnotationComposer({
+class $$CommunitiesTableAnnotationComposer
+    extends Composer<_$AppDataBase, $CommunitiesTable> {
+  $$CommunitiesTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -36410,35 +34410,35 @@ class $$CommunityTableAnnotationComposer
       $composableBuilder(column: $table.cachedAt, builder: (column) => column);
 }
 
-class $$CommunityTableTableManager
+class $$CommunitiesTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $CommunityTable,
-          CommunityData,
-          $$CommunityTableFilterComposer,
-          $$CommunityTableOrderingComposer,
-          $$CommunityTableAnnotationComposer,
-          $$CommunityTableCreateCompanionBuilder,
-          $$CommunityTableUpdateCompanionBuilder,
+          $CommunitiesTable,
+          Community,
+          $$CommunitiesTableFilterComposer,
+          $$CommunitiesTableOrderingComposer,
+          $$CommunitiesTableAnnotationComposer,
+          $$CommunitiesTableCreateCompanionBuilder,
+          $$CommunitiesTableUpdateCompanionBuilder,
           (
-            CommunityData,
-            BaseReferences<_$AppDataBase, $CommunityTable, CommunityData>,
+            Community,
+            BaseReferences<_$AppDataBase, $CommunitiesTable, Community>,
           ),
-          CommunityData,
+          Community,
           PrefetchHooks Function()
         > {
-  $$CommunityTableTableManager(_$AppDataBase db, $CommunityTable table)
+  $$CommunitiesTableTableManager(_$AppDataBase db, $CommunitiesTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$CommunityTableFilterComposer($db: db, $table: table),
+              $$CommunitiesTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$CommunityTableOrderingComposer($db: db, $table: table),
+              $$CommunitiesTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$CommunityTableAnnotationComposer($db: db, $table: table),
+              $$CommunitiesTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
@@ -36466,7 +34466,7 @@ class $$CommunityTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<DateTime?> cachedAt = const Value.absent(),
-              }) => CommunityCompanion(
+              }) => CommunitiesCompanion(
                 id: id,
                 name: name,
                 description: description,
@@ -36520,7 +34520,7 @@ class $$CommunityTableTableManager
                 required DateTime createdAt,
                 required DateTime updatedAt,
                 Value<DateTime?> cachedAt = const Value.absent(),
-              }) => CommunityCompanion.insert(
+              }) => CommunitiesCompanion.insert(
                 id: id,
                 name: name,
                 description: description,
@@ -36555,25 +34555,22 @@ class $$CommunityTableTableManager
       );
 }
 
-typedef $$CommunityTableProcessedTableManager =
+typedef $$CommunitiesTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $CommunityTable,
-      CommunityData,
-      $$CommunityTableFilterComposer,
-      $$CommunityTableOrderingComposer,
-      $$CommunityTableAnnotationComposer,
-      $$CommunityTableCreateCompanionBuilder,
-      $$CommunityTableUpdateCompanionBuilder,
-      (
-        CommunityData,
-        BaseReferences<_$AppDataBase, $CommunityTable, CommunityData>,
-      ),
-      CommunityData,
+      $CommunitiesTable,
+      Community,
+      $$CommunitiesTableFilterComposer,
+      $$CommunitiesTableOrderingComposer,
+      $$CommunitiesTableAnnotationComposer,
+      $$CommunitiesTableCreateCompanionBuilder,
+      $$CommunitiesTableUpdateCompanionBuilder,
+      (Community, BaseReferences<_$AppDataBase, $CommunitiesTable, Community>),
+      Community,
       PrefetchHooks Function()
     >;
-typedef $$ChirpCommunityMembershipTableCreateCompanionBuilder =
-    ChirpCommunityMembershipCompanion Function({
+typedef $$ChirpCommunityMembershipsTableCreateCompanionBuilder =
+    ChirpCommunityMembershipsCompanion Function({
       Value<int> id,
       required int communityID,
       required String userID,
@@ -36585,8 +34582,8 @@ typedef $$ChirpCommunityMembershipTableCreateCompanionBuilder =
       Value<DateTime> joinedAt,
       Value<DateTime?> cachedAt,
     });
-typedef $$ChirpCommunityMembershipTableUpdateCompanionBuilder =
-    ChirpCommunityMembershipCompanion Function({
+typedef $$ChirpCommunityMembershipsTableUpdateCompanionBuilder =
+    ChirpCommunityMembershipsCompanion Function({
       Value<int> id,
       Value<int> communityID,
       Value<String> userID,
@@ -36599,33 +34596,33 @@ typedef $$ChirpCommunityMembershipTableUpdateCompanionBuilder =
       Value<DateTime?> cachedAt,
     });
 
-final class $$ChirpCommunityMembershipTableReferences
+final class $$ChirpCommunityMembershipsTableReferences
     extends
         BaseReferences<
           _$AppDataBase,
-          $ChirpCommunityMembershipTable,
-          ChirpCommunityMembershipData
+          $ChirpCommunityMembershipsTable,
+          ChirpCommunityMembership
         > {
-  $$ChirpCommunityMembershipTableReferences(
+  $$ChirpCommunityMembershipsTableReferences(
     super.$_db,
     super.$_table,
     super.$_typedResult,
   );
 
-  static $ChirpUserTable _userIDTable(_$AppDataBase db) =>
-      db.chirpUser.createAlias(
+  static $ChirpUsersTable _userIDTable(_$AppDataBase db) =>
+      db.chirpUsers.createAlias(
         $_aliasNameGenerator(
-          db.chirpCommunityMembership.userID,
-          db.chirpUser.userID,
+          db.chirpCommunityMemberships.userID,
+          db.chirpUsers.userID,
         ),
       );
 
-  $$ChirpUserTableProcessedTableManager get userID {
+  $$ChirpUsersTableProcessedTableManager get userID {
     final $_column = $_itemColumn<String>('user_i_d')!;
 
-    final manager = $$ChirpUserTableTableManager(
+    final manager = $$ChirpUsersTableTableManager(
       $_db,
-      $_db.chirpUser,
+      $_db.chirpUsers,
     ).filter((f) => f.userID.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_userIDTable($_db));
     if (item == null) return manager;
@@ -36635,9 +34632,9 @@ final class $$ChirpCommunityMembershipTableReferences
   }
 }
 
-class $$ChirpCommunityMembershipTableFilterComposer
-    extends Composer<_$AppDataBase, $ChirpCommunityMembershipTable> {
-  $$ChirpCommunityMembershipTableFilterComposer({
+class $$ChirpCommunityMembershipsTableFilterComposer
+    extends Composer<_$AppDataBase, $ChirpCommunityMembershipsTable> {
+  $$ChirpCommunityMembershipsTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -36689,20 +34686,20 @@ class $$ChirpCommunityMembershipTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  $$ChirpUserTableFilterComposer get userID {
-    final $$ChirpUserTableFilterComposer composer = $composerBuilder(
+  $$ChirpUsersTableFilterComposer get userID {
+    final $$ChirpUsersTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.userID,
-      referencedTable: $db.chirpUser,
+      referencedTable: $db.chirpUsers,
       getReferencedColumn: (t) => t.userID,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ChirpUserTableFilterComposer(
+          }) => $$ChirpUsersTableFilterComposer(
             $db: $db,
-            $table: $db.chirpUser,
+            $table: $db.chirpUsers,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -36713,9 +34710,9 @@ class $$ChirpCommunityMembershipTableFilterComposer
   }
 }
 
-class $$ChirpCommunityMembershipTableOrderingComposer
-    extends Composer<_$AppDataBase, $ChirpCommunityMembershipTable> {
-  $$ChirpCommunityMembershipTableOrderingComposer({
+class $$ChirpCommunityMembershipsTableOrderingComposer
+    extends Composer<_$AppDataBase, $ChirpCommunityMembershipsTable> {
+  $$ChirpCommunityMembershipsTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -36767,20 +34764,20 @@ class $$ChirpCommunityMembershipTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$ChirpUserTableOrderingComposer get userID {
-    final $$ChirpUserTableOrderingComposer composer = $composerBuilder(
+  $$ChirpUsersTableOrderingComposer get userID {
+    final $$ChirpUsersTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.userID,
-      referencedTable: $db.chirpUser,
+      referencedTable: $db.chirpUsers,
       getReferencedColumn: (t) => t.userID,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ChirpUserTableOrderingComposer(
+          }) => $$ChirpUsersTableOrderingComposer(
             $db: $db,
-            $table: $db.chirpUser,
+            $table: $db.chirpUsers,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -36791,9 +34788,9 @@ class $$ChirpCommunityMembershipTableOrderingComposer
   }
 }
 
-class $$ChirpCommunityMembershipTableAnnotationComposer
-    extends Composer<_$AppDataBase, $ChirpCommunityMembershipTable> {
-  $$ChirpCommunityMembershipTableAnnotationComposer({
+class $$ChirpCommunityMembershipsTableAnnotationComposer
+    extends Composer<_$AppDataBase, $ChirpCommunityMembershipsTable> {
+  $$ChirpCommunityMembershipsTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -36833,20 +34830,20 @@ class $$ChirpCommunityMembershipTableAnnotationComposer
   GeneratedColumn<DateTime> get cachedAt =>
       $composableBuilder(column: $table.cachedAt, builder: (column) => column);
 
-  $$ChirpUserTableAnnotationComposer get userID {
-    final $$ChirpUserTableAnnotationComposer composer = $composerBuilder(
+  $$ChirpUsersTableAnnotationComposer get userID {
+    final $$ChirpUsersTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.userID,
-      referencedTable: $db.chirpUser,
+      referencedTable: $db.chirpUsers,
       getReferencedColumn: (t) => t.userID,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ChirpUserTableAnnotationComposer(
+          }) => $$ChirpUsersTableAnnotationComposer(
             $db: $db,
-            $table: $db.chirpUser,
+            $table: $db.chirpUsers,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -36857,43 +34854,43 @@ class $$ChirpCommunityMembershipTableAnnotationComposer
   }
 }
 
-class $$ChirpCommunityMembershipTableTableManager
+class $$ChirpCommunityMembershipsTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $ChirpCommunityMembershipTable,
-          ChirpCommunityMembershipData,
-          $$ChirpCommunityMembershipTableFilterComposer,
-          $$ChirpCommunityMembershipTableOrderingComposer,
-          $$ChirpCommunityMembershipTableAnnotationComposer,
-          $$ChirpCommunityMembershipTableCreateCompanionBuilder,
-          $$ChirpCommunityMembershipTableUpdateCompanionBuilder,
+          $ChirpCommunityMembershipsTable,
+          ChirpCommunityMembership,
+          $$ChirpCommunityMembershipsTableFilterComposer,
+          $$ChirpCommunityMembershipsTableOrderingComposer,
+          $$ChirpCommunityMembershipsTableAnnotationComposer,
+          $$ChirpCommunityMembershipsTableCreateCompanionBuilder,
+          $$ChirpCommunityMembershipsTableUpdateCompanionBuilder,
           (
-            ChirpCommunityMembershipData,
-            $$ChirpCommunityMembershipTableReferences,
+            ChirpCommunityMembership,
+            $$ChirpCommunityMembershipsTableReferences,
           ),
-          ChirpCommunityMembershipData,
+          ChirpCommunityMembership,
           PrefetchHooks Function({bool userID})
         > {
-  $$ChirpCommunityMembershipTableTableManager(
+  $$ChirpCommunityMembershipsTableTableManager(
     _$AppDataBase db,
-    $ChirpCommunityMembershipTable table,
+    $ChirpCommunityMembershipsTable table,
   ) : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$ChirpCommunityMembershipTableFilterComposer(
+              $$ChirpCommunityMembershipsTableFilterComposer(
                 $db: db,
                 $table: table,
               ),
           createOrderingComposer: () =>
-              $$ChirpCommunityMembershipTableOrderingComposer(
+              $$ChirpCommunityMembershipsTableOrderingComposer(
                 $db: db,
                 $table: table,
               ),
           createComputedFieldComposer: () =>
-              $$ChirpCommunityMembershipTableAnnotationComposer(
+              $$ChirpCommunityMembershipsTableAnnotationComposer(
                 $db: db,
                 $table: table,
               ),
@@ -36909,7 +34906,7 @@ class $$ChirpCommunityMembershipTableTableManager
                 Value<DateTime?> bannedAt = const Value.absent(),
                 Value<DateTime> joinedAt = const Value.absent(),
                 Value<DateTime?> cachedAt = const Value.absent(),
-              }) => ChirpCommunityMembershipCompanion(
+              }) => ChirpCommunityMembershipsCompanion(
                 id: id,
                 communityID: communityID,
                 userID: userID,
@@ -36933,7 +34930,7 @@ class $$ChirpCommunityMembershipTableTableManager
                 Value<DateTime?> bannedAt = const Value.absent(),
                 Value<DateTime> joinedAt = const Value.absent(),
                 Value<DateTime?> cachedAt = const Value.absent(),
-              }) => ChirpCommunityMembershipCompanion.insert(
+              }) => ChirpCommunityMembershipsCompanion.insert(
                 id: id,
                 communityID: communityID,
                 userID: userID,
@@ -36949,7 +34946,7 @@ class $$ChirpCommunityMembershipTableTableManager
               .map(
                 (e) => (
                   e.readTable(table),
-                  $$ChirpCommunityMembershipTableReferences(db, table, e),
+                  $$ChirpCommunityMembershipsTableReferences(db, table, e),
                 ),
               )
               .toList(),
@@ -36979,10 +34976,10 @@ class $$ChirpCommunityMembershipTableTableManager
                                 currentTable: table,
                                 currentColumn: table.userID,
                                 referencedTable:
-                                    $$ChirpCommunityMembershipTableReferences
+                                    $$ChirpCommunityMembershipsTableReferences
                                         ._userIDTable(db),
                                 referencedColumn:
-                                    $$ChirpCommunityMembershipTableReferences
+                                    $$ChirpCommunityMembershipsTableReferences
                                         ._userIDTable(db)
                                         .userID,
                               )
@@ -37000,18 +34997,18 @@ class $$ChirpCommunityMembershipTableTableManager
       );
 }
 
-typedef $$ChirpCommunityMembershipTableProcessedTableManager =
+typedef $$ChirpCommunityMembershipsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $ChirpCommunityMembershipTable,
-      ChirpCommunityMembershipData,
-      $$ChirpCommunityMembershipTableFilterComposer,
-      $$ChirpCommunityMembershipTableOrderingComposer,
-      $$ChirpCommunityMembershipTableAnnotationComposer,
-      $$ChirpCommunityMembershipTableCreateCompanionBuilder,
-      $$ChirpCommunityMembershipTableUpdateCompanionBuilder,
-      (ChirpCommunityMembershipData, $$ChirpCommunityMembershipTableReferences),
-      ChirpCommunityMembershipData,
+      $ChirpCommunityMembershipsTable,
+      ChirpCommunityMembership,
+      $$ChirpCommunityMembershipsTableFilterComposer,
+      $$ChirpCommunityMembershipsTableOrderingComposer,
+      $$ChirpCommunityMembershipsTableAnnotationComposer,
+      $$ChirpCommunityMembershipsTableCreateCompanionBuilder,
+      $$ChirpCommunityMembershipsTableUpdateCompanionBuilder,
+      (ChirpCommunityMembership, $$ChirpCommunityMembershipsTableReferences),
+      ChirpCommunityMembership,
       PrefetchHooks Function({bool userID})
     >;
 typedef $$LeaderboardRankTableCreateCompanionBuilder =
@@ -39995,12 +37992,12 @@ class $AppDataBaseManager {
   $AppDataBaseManager(this._db);
   $$UserProfileTableTableManager get userProfile =>
       $$UserProfileTableTableManager(_db, _db.userProfile);
-  $$AttachmentTableTableTableManager get attachmentTable =>
-      $$AttachmentTableTableTableManager(_db, _db.attachmentTable);
-  $$PostTableTableTableManager get postTable =>
-      $$PostTableTableTableManager(_db, _db.postTable);
-  $$CommentTableTableTableManager get commentTable =>
-      $$CommentTableTableTableManager(_db, _db.commentTable);
+  $$AttachmentsTableTableManager get attachments =>
+      $$AttachmentsTableTableManager(_db, _db.attachments);
+  $$PostsTableTableManager get posts =>
+      $$PostsTableTableManager(_db, _db.posts);
+  $$CommentsTableTableManager get comments =>
+      $$CommentsTableTableManager(_db, _db.comments);
   $$EventTableTableTableManager get eventTable =>
       $$EventTableTableTableManager(_db, _db.eventTable);
   $$AttendeeTableTableTableManager get attendeeTable =>
@@ -40017,14 +38014,12 @@ class $AppDataBaseManager {
       $$TicketStatsTableTableTableManager(_db, _db.ticketStatsTable);
   $$ScannerTableTableTableManager get scannerTable =>
       $$ScannerTableTableTableManager(_db, _db.scannerTable);
-  $$GroupTableTableTableManager get groupTable =>
-      $$GroupTableTableTableManager(_db, _db.groupTable);
   $$InviteTableTableTableManager get inviteTable =>
       $$InviteTableTableTableManager(_db, _db.inviteTable);
-  $$BlockTableTableTableManager get blockTable =>
-      $$BlockTableTableTableManager(_db, _db.blockTable);
-  $$ReportTableTableTableManager get reportTable =>
-      $$ReportTableTableTableManager(_db, _db.reportTable);
+  $$BlocksTableTableManager get blocks =>
+      $$BlocksTableTableManager(_db, _db.blocks);
+  $$ReportsTableTableManager get reports =>
+      $$ReportsTableTableManager(_db, _db.reports);
   $$AgendaEventTableTableManager get agendaEvent =>
       $$AgendaEventTableTableManager(_db, _db.agendaEvent);
   $$InstitutionsTableTableManager get institutions =>
@@ -40055,14 +38050,14 @@ class $AppDataBaseManager {
       $$TimetableEntryTableTableManager(_db, _db.timetableEntry);
   $$ExamTimetablesTableTableManager get examTimetables =>
       $$ExamTimetablesTableTableManager(_db, _db.examTimetables);
-  $$ChirpUserTableTableManager get chirpUser =>
-      $$ChirpUserTableTableManager(_db, _db.chirpUser);
-  $$CommunityTableTableManager get community =>
-      $$CommunityTableTableManager(_db, _db.community);
-  $$ChirpCommunityMembershipTableTableManager get chirpCommunityMembership =>
-      $$ChirpCommunityMembershipTableTableManager(
+  $$ChirpUsersTableTableManager get chirpUsers =>
+      $$ChirpUsersTableTableManager(_db, _db.chirpUsers);
+  $$CommunitiesTableTableManager get communities =>
+      $$CommunitiesTableTableManager(_db, _db.communities);
+  $$ChirpCommunityMembershipsTableTableManager get chirpCommunityMemberships =>
+      $$ChirpCommunityMembershipsTableTableManager(
         _db,
-        _db.chirpCommunityMembership,
+        _db.chirpCommunityMemberships,
       );
   $$LeaderboardRankTableTableManager get leaderboardRank =>
       $$LeaderboardRankTableTableManager(_db, _db.leaderboardRank);

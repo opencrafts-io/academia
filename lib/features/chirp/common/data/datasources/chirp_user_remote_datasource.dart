@@ -1,7 +1,7 @@
 import 'package:academia/config/flavor.dart';
 import 'package:academia/core/error/failures.dart';
 import 'package:academia/core/network/network.dart';
-import 'package:academia/database/database.dart';
+import 'package:academia/features/chirp/common/data/dtos/chirp_user_api_dto.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
@@ -23,9 +23,11 @@ class ChirpUserRemoteDataSource with DioErrorHandler, ConnectivityChecker {
   /// getChirpUserByID
   /// Attempts to fetch a user by their user_id from remote chirp repository
   /// specified by [userID]
-  /// If it was a success it returns [ChirpUserData] otherwise it returns a [Failure]
+  /// If it was a success it returns [ChirpUserApiDto] otherwise it returns a [Failure]
   /// with a message of exactly what went wrong
-  Future<Either<Failure, ChirpUserData>> getChirpUserByID(String userID) async {
+  Future<Either<Failure, ChirpUserApiDto>> getChirpUserByID(
+    String userID,
+  ) async {
     try {
       if (!await isConnectedToInternet()) {
         return handleNoConnection();
@@ -35,7 +37,7 @@ class ChirpUserRemoteDataSource with DioErrorHandler, ConnectivityChecker {
       );
 
       if (result.statusCode == 200) {
-        return right(ChirpUserData.fromJson(result.data));
+        return right(ChirpUserApiDto.fromJson(result.data));
       }
       throw ("Programming error");
     } on DioException catch (de) {
@@ -57,10 +59,10 @@ class ChirpUserRemoteDataSource with DioErrorHandler, ConnectivityChecker {
   /// specified by [username]
   /// Note that the function does not perform any case changes although trims  trailing
   /// and  leading whitespace characters and successively passing the data directly to chirp remote
-  /// If it was a success it returns [ChirpUserData] otherwise it returns a [Failure]
+  /// If it was a success it returns [ChirpUserApiDto] otherwise it returns a [Failure]
   /// with a message of exactly what went wrong
   ///
-  Future<Either<Failure, ChirpUserData>> getChirpUserByUsername(
+  Future<Either<Failure, ChirpUserApiDto>> getChirpUserByUsername(
     String username,
   ) async {
     try {
@@ -72,7 +74,7 @@ class ChirpUserRemoteDataSource with DioErrorHandler, ConnectivityChecker {
       );
 
       if (result.statusCode == 200) {
-        return right(ChirpUserData.fromJson(result.data));
+        return right(ChirpUserApiDto.fromJson(result.data));
       }
       throw ("Programming error");
     } on DioException catch (de) {

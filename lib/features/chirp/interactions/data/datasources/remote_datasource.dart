@@ -1,7 +1,8 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/core/network/network.dart';
-import 'package:academia/database/database.dart';
+import 'package:academia/features/chirp/interactions/data/dtos/block_api_dto.dart';
+import 'package:academia/features/chirp/interactions/data/dtos/report_api_dto.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
@@ -26,7 +27,7 @@ class InteractionsRemoteDataSource with DioErrorHandler, ConnectivityChecker {
   }
 
   // BLOCK USER
-  Future<Either<Failure, BlockData>> blockUser(String userId) async {
+  Future<Either<Failure, BlockApiDto>> blockUser(String userId) async {
     try {
       if (!await isConnectedToInternet()) {
         return handleNoConnection();
@@ -39,7 +40,7 @@ class InteractionsRemoteDataSource with DioErrorHandler, ConnectivityChecker {
 
 
       if (res.statusCode == 201 && res.data != null) {
-        return Right(BlockData.fromJson(res.data));
+        return Right(BlockApiDto.fromJson(res.data));
       }
 
       return Left(
@@ -62,7 +63,7 @@ class InteractionsRemoteDataSource with DioErrorHandler, ConnectivityChecker {
   }
 
   // BLOCK COMMUNITY
-  Future<Either<Failure, BlockData>> blockCommunity(int communityId) async {
+  Future<Either<Failure, BlockApiDto>> blockCommunity(int communityId) async {
     try {
       if (!await isConnectedToInternet()) {
         return handleNoConnection();
@@ -74,7 +75,7 @@ class InteractionsRemoteDataSource with DioErrorHandler, ConnectivityChecker {
       );
 
       if (res.statusCode == 201 && res.data != null) {
-        return Right(BlockData.fromJson(res.data));
+        return Right(BlockApiDto.fromJson(res.data));
       }
 
       return Left(
@@ -132,7 +133,7 @@ class InteractionsRemoteDataSource with DioErrorHandler, ConnectivityChecker {
   }
 
   // GET BLOCKS
-  Future<Either<Failure, List<BlockData>>> getBlocks({String? type}) async {
+  Future<Either<Failure, List<BlockApiDto>>> getBlocks({String? type}) async {
     try {
       if (!await isConnectedToInternet()) {
         return handleNoConnection();
@@ -146,7 +147,7 @@ class InteractionsRemoteDataSource with DioErrorHandler, ConnectivityChecker {
 
       if (res.statusCode == 200 && res.data['results'] is List) {
         final blocks = (res.data['results'] as List)
-            .map((json) => BlockData.fromJson(json))
+            .map((json) => BlockApiDto.fromJson(json))
             .toList();
         return Right(blocks);
       }
@@ -168,7 +169,7 @@ class InteractionsRemoteDataSource with DioErrorHandler, ConnectivityChecker {
   }
 
   // REPORT USER
-  Future<Either<Failure, ReportData>> reportUser({
+  Future<Either<Failure, ReportApiDto>> reportUser({
     required String userId,
     required String reason,
   }) async {
@@ -178,7 +179,7 @@ class InteractionsRemoteDataSource with DioErrorHandler, ConnectivityChecker {
   }
 
   // REPORT POST
-  Future<Either<Failure, ReportData>> reportPost({
+  Future<Either<Failure, ReportApiDto>> reportPost({
     required int postId,
     required String reason,
   }) async {
@@ -188,7 +189,7 @@ class InteractionsRemoteDataSource with DioErrorHandler, ConnectivityChecker {
   }
 
   // REPORT COMMENT
-  Future<Either<Failure, ReportData>> reportComment({
+  Future<Either<Failure, ReportApiDto>> reportComment({
     required int commentId,
     required String reason,
   }) async {
@@ -202,7 +203,7 @@ class InteractionsRemoteDataSource with DioErrorHandler, ConnectivityChecker {
   }
 
   // REPORT COMMUNITY
-  Future<Either<Failure, ReportData>> reportCommunity({
+  Future<Either<Failure, ReportApiDto>> reportCommunity({
     required int communityId,
     required String reason,
   }) async {
@@ -216,7 +217,7 @@ class InteractionsRemoteDataSource with DioErrorHandler, ConnectivityChecker {
   }
 
   // SUBMIT REPORT
-  Future<Either<Failure, ReportData>> _submitReport({
+  Future<Either<Failure, ReportApiDto>> _submitReport({
     required Map<String, dynamic> data,
   }) async {
     try {
@@ -230,7 +231,7 @@ class InteractionsRemoteDataSource with DioErrorHandler, ConnectivityChecker {
       );
 
       if (res.statusCode == 201 && res.data != null) {
-        return Right(ReportData.fromJson(res.data));
+        return Right(ReportApiDto.fromJson(res.data));
       }
 
       return Left(

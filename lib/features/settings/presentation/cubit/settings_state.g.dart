@@ -19,6 +19,7 @@ _SettingsState _$SettingsStateFromJson(Map<String, dynamic> json) =>
           json['automaticallyPickAccentColor'] as bool? ?? true,
       language: json['language'] as String? ?? 'en',
       showDailyScheduleOnFeed: json['showDailyScheduleOnFeed'] as bool? ?? true,
+      chirpMuteVideos: json['chirpMuteVideos'] as bool? ?? true,
     );
 
 Map<String, dynamic> _$SettingsStateToJson(_SettingsState instance) =>
@@ -31,4 +32,5 @@ Map<String, dynamic> _$SettingsStateToJson(_SettingsState instance) =>
       'automaticallyPickAccentColor': instance.automaticallyPickAccentColor,
       'language': instance.language,
       'showDailyScheduleOnFeed': instance.showDailyScheduleOnFeed,
+      'chirpMuteVideos': instance.chirpMuteVideos,
     };
