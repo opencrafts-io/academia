@@ -2,8 +2,9 @@ import 'package:academia/features/chirp/posts/posts.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+export 'comment_state.dart';
+
 part 'comment_event.dart';
-part 'comment_state.dart';
 
 class CommentBloc extends Bloc<CommentEvent, CommentState> {
   final AddCommentUsecase addComment;
