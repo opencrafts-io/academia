@@ -11,6 +11,7 @@ class AllScannersScreen extends StatefulWidget {
   final String eventStartDate;
   final String eventEndDate;
   final String? eventPosterImage;
+  final String eventScope;
 
   const AllScannersScreen({
     super.key,
@@ -20,6 +21,7 @@ class AllScannersScreen extends StatefulWidget {
     required this.eventStartDate,
     required this.eventEndDate,
     this.eventPosterImage,
+    required this.eventScope,
   });
 
   @override
@@ -284,6 +286,7 @@ class _AllScannersScreenState extends State<AllScannersScreen> {
           eventStartDate: widget.eventStartDate,
           eventEndDate: widget.eventEndDate,
           eventPosterImage: widget.eventPosterImage,
+          eventScope: widget.eventScope,
         ).push(context),
         label: const Text("Add Scanner"),
         icon: const Icon(Icons.add),

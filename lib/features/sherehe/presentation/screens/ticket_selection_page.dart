@@ -1,4 +1,5 @@
 import 'package:academia/config/config.dart';
+import 'package:academia/features/institution/domain/entities/institution.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,8 @@ class TicketSelectionPage extends StatefulWidget {
   final Function(List<TicketUI> tickets) onContinue;
   final Function() onSkip;
   final VoidCallback onPrevious;
+  final ScopeTypes? selectedEventScopeType;
+  final List<Institution>? eligibleInstitutions;
 
   const TicketSelectionPage({
     super.key,
@@ -26,6 +29,8 @@ class TicketSelectionPage extends StatefulWidget {
     required this.onContinue,
     required this.onSkip,
     required this.onPrevious,
+    required this.selectedEventScopeType,
+    this.eligibleInstitutions,
   });
 
   @override
@@ -44,7 +49,13 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
         isMultiDayEvent: isMultiDayEvent,
         eventStartDateTime: widget.eventStartDateTime,
         eventEndDateTime: widget.eventEndDateTime,
+        isTicketPage: true,
+        isEventScopeInstitution:
+            widget.selectedEventScopeType == ScopeTypes.institution,
       ).location,
+      extra: widget.selectedEventScopeType == ScopeTypes.institution
+          ? widget.eligibleInstitutions
+          : null,
     );
 
     if (!context.mounted) return;
@@ -227,8 +238,15 @@ class _TicketSelectionPageState extends State<TicketSelectionPage> {
                         isMultiDayEvent: isMultiDayEvent,
                         eventStartDateTime: widget.eventStartDateTime,
                         eventEndDateTime: widget.eventEndDateTime,
+                        isTicketPage: true,
+                        isEventScopeInstitution:
+                            widget.selectedEventScopeType ==
+                            ScopeTypes.institution,
                       ).location,
-                      extra: ticket,
+                      extra: EditAddedTicketArgs(
+                        ticket: ticket,
+                        eligibleInstitutions: widget.eligibleInstitutions,
+                      ),
                     );
 
                     if (!context.mounted) return;

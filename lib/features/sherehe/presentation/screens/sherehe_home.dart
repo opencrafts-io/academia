@@ -5,6 +5,7 @@ import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
@@ -348,14 +349,18 @@ class _ShereheHomeState extends State<ShereheHome>
                                 onPressed: () {
                                   Navigator.of(dialogContext).pop();
 
-                                  OrganizerDashboardRoute(
-                                    eventId: result.id,
-                                    eventName: result.eventName,
-                                    eventLocation: result.eventLocation,
-                                    eventStartDate: result.startDate,
-                                    eventEndDate: result.endDate,
-                                    eventPosterImage: result.eventPosterImage,
-                                  ).push(context);
+                                  context.push(
+                                    OrganizerDashboardRoute(
+                                      eventId: result.id,
+                                      eventName: result.eventName,
+                                      eventLocation: result.eventLocation,
+                                      eventStartDate: result.startDate,
+                                      eventEndDate: result.endDate,
+                                      eventPosterImage: result.eventPosterImage,
+                                      eventScope: result.scope,
+                                    ).location,
+                                    extra: result.institutions,
+                                  );
                                 },
                                 style: FilledButton.styleFrom(
                                   padding: const EdgeInsets.symmetric(
