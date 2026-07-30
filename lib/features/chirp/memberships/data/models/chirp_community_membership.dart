@@ -1,4 +1,4 @@
-import 'package:academia/features/chirp/common/data/models/chirp_user.dart';
+import 'package:academia/database/tables/tables.dart';
 import 'package:drift/drift.dart';
 
 class ChirpCommunityMembership extends Table {
@@ -9,7 +9,7 @@ class ChirpCommunityMembership extends Table {
   IntColumn get communityID => integer()();
 
   @JsonKey("user_id")
-  TextColumn get userID => text().references(ChirpUser, #userID)();
+  TextColumn get userID => text().references(ChirpUsers, #userID)();
 
   @JsonKey("role")
   TextColumn get role => text()();

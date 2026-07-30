@@ -4,3 +4,4 @@ export 'institution_profiles.dart';
 export 'institution_fee_transactions.dart';
 export 'institution_scrapping_commands.dart';
 export 'exam_timetables.dart';
+export 'chirp_users.dart';

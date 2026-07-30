@@ -16434,12 +16434,12 @@ class ExamTimetablesCompanion extends UpdateCompanion<ExamTimetable> {
   }
 }
 
-class $ChirpUserTable extends ChirpUser
-    with TableInfo<$ChirpUserTable, ChirpUserData> {
+class $ChirpUsersTable extends ChirpUsers
+    with TableInfo<$ChirpUsersTable, ChirpUser> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $ChirpUserTable(this.attachedDatabase, [this._alias]);
+  $ChirpUsersTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _userIDMeta = const VerificationMeta('userID');
   @override
   late final GeneratedColumn<String> userID = GeneratedColumn<String>(
@@ -16556,7 +16556,7 @@ class $ChirpUserTable extends ChirpUser
   static const String $name = 'chirp_user';
   @override
   VerificationContext validateIntegrity(
-    Insertable<ChirpUserData> instance, {
+    Insertable<ChirpUser> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -16623,9 +16623,9 @@ class $ChirpUserTable extends ChirpUser
   @override
   Set<GeneratedColumn> get $primaryKey => {userID};
   @override
-  ChirpUserData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  ChirpUser map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return ChirpUserData(
+    return ChirpUser(
       userID: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_i_d'],
@@ -16666,12 +16666,12 @@ class $ChirpUserTable extends ChirpUser
   }
 
   @override
-  $ChirpUserTable createAlias(String alias) {
-    return $ChirpUserTable(attachedDatabase, alias);
+  $ChirpUsersTable createAlias(String alias) {
+    return $ChirpUsersTable(attachedDatabase, alias);
   }
 }
 
-class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
+class ChirpUser extends DataClass implements Insertable<ChirpUser> {
   final String userID;
   final String? email;
   final String? phone;
@@ -16683,7 +16683,7 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
 
   /// For storing the caching time that will be used in TTL
   final DateTime? cachedAt;
-  const ChirpUserData({
+  const ChirpUser({
     required this.userID,
     this.email,
     this.phone,
@@ -16719,8 +16719,8 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
     return map;
   }
 
-  ChirpUserCompanion toCompanion(bool nullToAbsent) {
-    return ChirpUserCompanion(
+  ChirpUsersCompanion toCompanion(bool nullToAbsent) {
+    return ChirpUsersCompanion(
       userID: Value(userID),
       email: email == null && nullToAbsent
           ? const Value.absent()
@@ -16743,12 +16743,12 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
     );
   }
 
-  factory ChirpUserData.fromJson(
+  factory ChirpUser.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return ChirpUserData(
+    return ChirpUser(
       userID: serializer.fromJson<String>(json['user_id']),
       email: serializer.fromJson<String?>(json['email']),
       phone: serializer.fromJson<String?>(json['phone']),
@@ -16776,7 +16776,7 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
     };
   }
 
-  ChirpUserData copyWith({
+  ChirpUser copyWith({
     String? userID,
     Value<String?> email = const Value.absent(),
     Value<String?> phone = const Value.absent(),
@@ -16786,7 +16786,7 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
     DateTime? createdAt,
     DateTime? updatedAt,
     Value<DateTime?> cachedAt = const Value.absent(),
-  }) => ChirpUserData(
+  }) => ChirpUser(
     userID: userID ?? this.userID,
     email: email.present ? email.value : this.email,
     phone: phone.present ? phone.value : this.phone,
@@ -16797,8 +16797,8 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
     updatedAt: updatedAt ?? this.updatedAt,
     cachedAt: cachedAt.present ? cachedAt.value : this.cachedAt,
   );
-  ChirpUserData copyWithCompanion(ChirpUserCompanion data) {
-    return ChirpUserData(
+  ChirpUser copyWithCompanion(ChirpUsersCompanion data) {
+    return ChirpUser(
       userID: data.userID.present ? data.userID.value : this.userID,
       email: data.email.present ? data.email.value : this.email,
       phone: data.phone.present ? data.phone.value : this.phone,
@@ -16815,7 +16815,7 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
 
   @override
   String toString() {
-    return (StringBuffer('ChirpUserData(')
+    return (StringBuffer('ChirpUser(')
           ..write('userID: $userID, ')
           ..write('email: $email, ')
           ..write('phone: $phone, ')
@@ -16844,7 +16844,7 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is ChirpUserData &&
+      (other is ChirpUser &&
           other.userID == this.userID &&
           other.email == this.email &&
           other.phone == this.phone &&
@@ -16856,7 +16856,7 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
           other.cachedAt == this.cachedAt);
 }
 
-class ChirpUserCompanion extends UpdateCompanion<ChirpUserData> {
+class ChirpUsersCompanion extends UpdateCompanion<ChirpUser> {
   final Value<String> userID;
   final Value<String?> email;
   final Value<String?> phone;
@@ -16867,7 +16867,7 @@ class ChirpUserCompanion extends UpdateCompanion<ChirpUserData> {
   final Value<DateTime> updatedAt;
   final Value<DateTime?> cachedAt;
   final Value<int> rowid;
-  const ChirpUserCompanion({
+  const ChirpUsersCompanion({
     this.userID = const Value.absent(),
     this.email = const Value.absent(),
     this.phone = const Value.absent(),
@@ -16879,7 +16879,7 @@ class ChirpUserCompanion extends UpdateCompanion<ChirpUserData> {
     this.cachedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  ChirpUserCompanion.insert({
+  ChirpUsersCompanion.insert({
     required String userID,
     this.email = const Value.absent(),
     this.phone = const Value.absent(),
@@ -16891,7 +16891,7 @@ class ChirpUserCompanion extends UpdateCompanion<ChirpUserData> {
     this.cachedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : userID = Value(userID);
-  static Insertable<ChirpUserData> custom({
+  static Insertable<ChirpUser> custom({
     Expression<String>? userID,
     Expression<String>? email,
     Expression<String>? phone,
@@ -16917,7 +16917,7 @@ class ChirpUserCompanion extends UpdateCompanion<ChirpUserData> {
     });
   }
 
-  ChirpUserCompanion copyWith({
+  ChirpUsersCompanion copyWith({
     Value<String>? userID,
     Value<String?>? email,
     Value<String?>? phone,
@@ -16929,7 +16929,7 @@ class ChirpUserCompanion extends UpdateCompanion<ChirpUserData> {
     Value<DateTime?>? cachedAt,
     Value<int>? rowid,
   }) {
-    return ChirpUserCompanion(
+    return ChirpUsersCompanion(
       userID: userID ?? this.userID,
       email: email ?? this.email,
       phone: phone ?? this.phone,
@@ -16981,7 +16981,7 @@ class ChirpUserCompanion extends UpdateCompanion<ChirpUserData> {
 
   @override
   String toString() {
-    return (StringBuffer('ChirpUserCompanion(')
+    return (StringBuffer('ChirpUsersCompanion(')
           ..write('userID: $userID, ')
           ..write('email: $email, ')
           ..write('phone: $phone, ')
@@ -23354,7 +23354,7 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   late final $TimetableTable timetable = $TimetableTable(this);
   late final $TimetableEntryTable timetableEntry = $TimetableEntryTable(this);
   late final $ExamTimetablesTable examTimetables = $ExamTimetablesTable(this);
-  late final $ChirpUserTable chirpUser = $ChirpUserTable(this);
+  late final $ChirpUsersTable chirpUsers = $ChirpUsersTable(this);
   late final $CommunityTable community = $CommunityTable(this);
   late final $ChirpCommunityMembershipTable chirpCommunityMembership =
       $ChirpCommunityMembershipTable(this);
@@ -23400,7 +23400,7 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     timetable,
     timetableEntry,
     examTimetables,
-    chirpUser,
+    chirpUsers,
     community,
     chirpCommunityMembership,
     leaderboardRank,
@@ -33602,8 +33602,8 @@ typedef $$ExamTimetablesTableProcessedTableManager =
       ExamTimetable,
       PrefetchHooks Function({bool institutionId})
     >;
-typedef $$ChirpUserTableCreateCompanionBuilder =
-    ChirpUserCompanion Function({
+typedef $$ChirpUsersTableCreateCompanionBuilder =
+    ChirpUsersCompanion Function({
       required String userID,
       Value<String?> email,
       Value<String?> phone,
@@ -33615,8 +33615,8 @@ typedef $$ChirpUserTableCreateCompanionBuilder =
       Value<DateTime?> cachedAt,
       Value<int> rowid,
     });
-typedef $$ChirpUserTableUpdateCompanionBuilder =
-    ChirpUserCompanion Function({
+typedef $$ChirpUsersTableUpdateCompanionBuilder =
+    ChirpUsersCompanion Function({
       Value<String> userID,
       Value<String?> email,
       Value<String?> phone,
@@ -33629,9 +33629,9 @@ typedef $$ChirpUserTableUpdateCompanionBuilder =
       Value<int> rowid,
     });
 
-final class $$ChirpUserTableReferences
-    extends BaseReferences<_$AppDataBase, $ChirpUserTable, ChirpUserData> {
-  $$ChirpUserTableReferences(super.$_db, super.$_table, super.$_typedResult);
+final class $$ChirpUsersTableReferences
+    extends BaseReferences<_$AppDataBase, $ChirpUsersTable, ChirpUser> {
+  $$ChirpUsersTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
   static MultiTypedResultKey<
     $ChirpCommunityMembershipTable,
@@ -33641,7 +33641,7 @@ final class $$ChirpUserTableReferences
       MultiTypedResultKey.fromTable(
         db.chirpCommunityMembership,
         aliasName: $_aliasNameGenerator(
-          db.chirpUser.userID,
+          db.chirpUsers.userID,
           db.chirpCommunityMembership.userID,
         ),
       );
@@ -33665,9 +33665,9 @@ final class $$ChirpUserTableReferences
   }
 }
 
-class $$ChirpUserTableFilterComposer
-    extends Composer<_$AppDataBase, $ChirpUserTable> {
-  $$ChirpUserTableFilterComposer({
+class $$ChirpUsersTableFilterComposer
+    extends Composer<_$AppDataBase, $ChirpUsersTable> {
+  $$ChirpUsersTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -33747,9 +33747,9 @@ class $$ChirpUserTableFilterComposer
   }
 }
 
-class $$ChirpUserTableOrderingComposer
-    extends Composer<_$AppDataBase, $ChirpUserTable> {
-  $$ChirpUserTableOrderingComposer({
+class $$ChirpUsersTableOrderingComposer
+    extends Composer<_$AppDataBase, $ChirpUsersTable> {
+  $$ChirpUsersTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -33802,9 +33802,9 @@ class $$ChirpUserTableOrderingComposer
   );
 }
 
-class $$ChirpUserTableAnnotationComposer
-    extends Composer<_$AppDataBase, $ChirpUserTable> {
-  $$ChirpUserTableAnnotationComposer({
+class $$ChirpUsersTableAnnotationComposer
+    extends Composer<_$AppDataBase, $ChirpUsersTable> {
+  $$ChirpUsersTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -33868,32 +33868,32 @@ class $$ChirpUserTableAnnotationComposer
   }
 }
 
-class $$ChirpUserTableTableManager
+class $$ChirpUsersTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $ChirpUserTable,
-          ChirpUserData,
-          $$ChirpUserTableFilterComposer,
-          $$ChirpUserTableOrderingComposer,
-          $$ChirpUserTableAnnotationComposer,
-          $$ChirpUserTableCreateCompanionBuilder,
-          $$ChirpUserTableUpdateCompanionBuilder,
-          (ChirpUserData, $$ChirpUserTableReferences),
-          ChirpUserData,
+          $ChirpUsersTable,
+          ChirpUser,
+          $$ChirpUsersTableFilterComposer,
+          $$ChirpUsersTableOrderingComposer,
+          $$ChirpUsersTableAnnotationComposer,
+          $$ChirpUsersTableCreateCompanionBuilder,
+          $$ChirpUsersTableUpdateCompanionBuilder,
+          (ChirpUser, $$ChirpUsersTableReferences),
+          ChirpUser,
           PrefetchHooks Function({bool chirpCommunityMembershipRefs})
         > {
-  $$ChirpUserTableTableManager(_$AppDataBase db, $ChirpUserTable table)
+  $$ChirpUsersTableTableManager(_$AppDataBase db, $ChirpUsersTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$ChirpUserTableFilterComposer($db: db, $table: table),
+              $$ChirpUsersTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$ChirpUserTableOrderingComposer($db: db, $table: table),
+              $$ChirpUsersTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$ChirpUserTableAnnotationComposer($db: db, $table: table),
+              $$ChirpUsersTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<String> userID = const Value.absent(),
@@ -33906,7 +33906,7 @@ class $$ChirpUserTableTableManager
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<DateTime?> cachedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => ChirpUserCompanion(
+              }) => ChirpUsersCompanion(
                 userID: userID,
                 email: email,
                 phone: phone,
@@ -33930,7 +33930,7 @@ class $$ChirpUserTableTableManager
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<DateTime?> cachedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => ChirpUserCompanion.insert(
+              }) => ChirpUsersCompanion.insert(
                 userID: userID,
                 email: email,
                 phone: phone,
@@ -33946,7 +33946,7 @@ class $$ChirpUserTableTableManager
               .map(
                 (e) => (
                   e.readTable(table),
-                  $$ChirpUserTableReferences(db, table, e),
+                  $$ChirpUsersTableReferences(db, table, e),
                 ),
               )
               .toList(),
@@ -33961,15 +33961,15 @@ class $$ChirpUserTableTableManager
                 return [
                   if (chirpCommunityMembershipRefs)
                     await $_getPrefetchedData<
-                      ChirpUserData,
-                      $ChirpUserTable,
+                      ChirpUser,
+                      $ChirpUsersTable,
                       ChirpCommunityMembershipData
                     >(
                       currentTable: table,
-                      referencedTable: $$ChirpUserTableReferences
+                      referencedTable: $$ChirpUsersTableReferences
                           ._chirpCommunityMembershipRefsTable(db),
                       managerFromTypedResult: (p0) =>
-                          $$ChirpUserTableReferences(
+                          $$ChirpUsersTableReferences(
                             db,
                             table,
                             p0,
@@ -33986,18 +33986,18 @@ class $$ChirpUserTableTableManager
       );
 }
 
-typedef $$ChirpUserTableProcessedTableManager =
+typedef $$ChirpUsersTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $ChirpUserTable,
-      ChirpUserData,
-      $$ChirpUserTableFilterComposer,
-      $$ChirpUserTableOrderingComposer,
-      $$ChirpUserTableAnnotationComposer,
-      $$ChirpUserTableCreateCompanionBuilder,
-      $$ChirpUserTableUpdateCompanionBuilder,
-      (ChirpUserData, $$ChirpUserTableReferences),
-      ChirpUserData,
+      $ChirpUsersTable,
+      ChirpUser,
+      $$ChirpUsersTableFilterComposer,
+      $$ChirpUsersTableOrderingComposer,
+      $$ChirpUsersTableAnnotationComposer,
+      $$ChirpUsersTableCreateCompanionBuilder,
+      $$ChirpUsersTableUpdateCompanionBuilder,
+      (ChirpUser, $$ChirpUsersTableReferences),
+      ChirpUser,
       PrefetchHooks Function({bool chirpCommunityMembershipRefs})
     >;
 typedef $$CommunityTableCreateCompanionBuilder =
@@ -34644,20 +34644,20 @@ final class $$ChirpCommunityMembershipTableReferences
     super.$_typedResult,
   );
 
-  static $ChirpUserTable _userIDTable(_$AppDataBase db) =>
-      db.chirpUser.createAlias(
+  static $ChirpUsersTable _userIDTable(_$AppDataBase db) =>
+      db.chirpUsers.createAlias(
         $_aliasNameGenerator(
           db.chirpCommunityMembership.userID,
-          db.chirpUser.userID,
+          db.chirpUsers.userID,
         ),
       );
 
-  $$ChirpUserTableProcessedTableManager get userID {
+  $$ChirpUsersTableProcessedTableManager get userID {
     final $_column = $_itemColumn<String>('user_i_d')!;
 
-    final manager = $$ChirpUserTableTableManager(
+    final manager = $$ChirpUsersTableTableManager(
       $_db,
-      $_db.chirpUser,
+      $_db.chirpUsers,
     ).filter((f) => f.userID.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_userIDTable($_db));
     if (item == null) return manager;
@@ -34721,20 +34721,20 @@ class $$ChirpCommunityMembershipTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  $$ChirpUserTableFilterComposer get userID {
-    final $$ChirpUserTableFilterComposer composer = $composerBuilder(
+  $$ChirpUsersTableFilterComposer get userID {
+    final $$ChirpUsersTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.userID,
-      referencedTable: $db.chirpUser,
+      referencedTable: $db.chirpUsers,
       getReferencedColumn: (t) => t.userID,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ChirpUserTableFilterComposer(
+          }) => $$ChirpUsersTableFilterComposer(
             $db: $db,
-            $table: $db.chirpUser,
+            $table: $db.chirpUsers,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -34799,20 +34799,20 @@ class $$ChirpCommunityMembershipTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$ChirpUserTableOrderingComposer get userID {
-    final $$ChirpUserTableOrderingComposer composer = $composerBuilder(
+  $$ChirpUsersTableOrderingComposer get userID {
+    final $$ChirpUsersTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.userID,
-      referencedTable: $db.chirpUser,
+      referencedTable: $db.chirpUsers,
       getReferencedColumn: (t) => t.userID,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ChirpUserTableOrderingComposer(
+          }) => $$ChirpUsersTableOrderingComposer(
             $db: $db,
-            $table: $db.chirpUser,
+            $table: $db.chirpUsers,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -34865,20 +34865,20 @@ class $$ChirpCommunityMembershipTableAnnotationComposer
   GeneratedColumn<DateTime> get cachedAt =>
       $composableBuilder(column: $table.cachedAt, builder: (column) => column);
 
-  $$ChirpUserTableAnnotationComposer get userID {
-    final $$ChirpUserTableAnnotationComposer composer = $composerBuilder(
+  $$ChirpUsersTableAnnotationComposer get userID {
+    final $$ChirpUsersTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.userID,
-      referencedTable: $db.chirpUser,
+      referencedTable: $db.chirpUsers,
       getReferencedColumn: (t) => t.userID,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ChirpUserTableAnnotationComposer(
+          }) => $$ChirpUsersTableAnnotationComposer(
             $db: $db,
-            $table: $db.chirpUser,
+            $table: $db.chirpUsers,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -38085,8 +38085,8 @@ class $AppDataBaseManager {
       $$TimetableEntryTableTableManager(_db, _db.timetableEntry);
   $$ExamTimetablesTableTableManager get examTimetables =>
       $$ExamTimetablesTableTableManager(_db, _db.examTimetables);
-  $$ChirpUserTableTableManager get chirpUser =>
-      $$ChirpUserTableTableManager(_db, _db.chirpUser);
+  $$ChirpUsersTableTableManager get chirpUsers =>
+      $$ChirpUsersTableTableManager(_db, _db.chirpUsers);
   $$CommunityTableTableManager get community =>
       $$CommunityTableTableManager(_db, _db.community);
   $$ChirpCommunityMembershipTableTableManager get chirpCommunityMembership =>

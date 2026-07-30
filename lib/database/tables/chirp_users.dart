@@ -1,6 +1,9 @@
 import 'package:drift/drift.dart';
 
-class ChirpUser extends Table {
+class ChirpUsers extends Table {
+  @override
+  String get tableName => 'chirp_user';
+
   @JsonKey("user_id")
   TextColumn get userID => text()();
 
@@ -18,6 +21,7 @@ class ChirpUser extends Table {
 
   @JsonKey("avatar_url")
   TextColumn get avatarUrl => text().nullable()();
+
   @JsonKey('created_at')
   DateTimeColumn get createdAt =>
       dateTime().withDefault(Constant(DateTime.now()))();

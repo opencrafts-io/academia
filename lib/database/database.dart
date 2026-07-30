@@ -1,5 +1,4 @@
 import 'package:academia/features/agenda/data/models/agenda_event.dart';
-import 'package:academia/features/chirp/common/data/models/chirp_user.dart';
 import 'package:academia/features/chirp/communities/data/models/community_model.dart';
 import 'package:academia/features/chirp/interactions/data/models/block_model.dart';
 import 'package:academia/features/chirp/interactions/data/models/report_model.dart';
@@ -89,7 +88,7 @@ part 'database.g.dart';
     *              CHIRP FEATURE DATA MODELS
     **************************************************************/
     // Users
-    ChirpUser,
+    ChirpUsers,
     //Communities
     Community,
     // Memberships
