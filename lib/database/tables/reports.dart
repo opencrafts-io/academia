@@ -1,7 +1,9 @@
 import 'package:drift/drift.dart';
 
-@DataClassName('ReportData')
-class ReportTable extends Table {
+class Reports extends Table {
+  @override
+  String get tableName => 'report_table';
+
   IntColumn get id => integer()();
 
   @JsonKey('report_type')
@@ -30,7 +32,8 @@ class ReportTable extends Table {
   DateTimeColumn get updatedAt => dateTime().nullable()();
 
   @JsonKey('cached_at')
-  DateTimeColumn get cachedAt => dateTime().nullable().withDefault(currentDateAndTime)();
+  DateTimeColumn get cachedAt =>
+      dateTime().nullable().withDefault(currentDateAndTime)();
 
   @override
   Set<Column> get primaryKey => {id};

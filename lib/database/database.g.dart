@@ -7636,12 +7636,11 @@ class InviteTableCompanion extends UpdateCompanion<InviteData> {
   }
 }
 
-class $BlockTableTable extends BlockTable
-    with TableInfo<$BlockTableTable, BlockData> {
+class $BlocksTable extends Blocks with TableInfo<$BlocksTable, Block> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $BlockTableTable(this.attachedDatabase, [this._alias]);
+  $BlocksTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -7751,7 +7750,7 @@ class $BlockTableTable extends BlockTable
   static const String $name = 'block_table';
   @override
   VerificationContext validateIntegrity(
-    Insertable<BlockData> instance, {
+    Insertable<Block> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -7823,9 +7822,9 @@ class $BlockTableTable extends BlockTable
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  BlockData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Block map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return BlockData(
+    return Block(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -7862,12 +7861,12 @@ class $BlockTableTable extends BlockTable
   }
 
   @override
-  $BlockTableTable createAlias(String alias) {
-    return $BlockTableTable(attachedDatabase, alias);
+  $BlocksTable createAlias(String alias) {
+    return $BlocksTable(attachedDatabase, alias);
   }
 }
 
-class BlockData extends DataClass implements Insertable<BlockData> {
+class Block extends DataClass implements Insertable<Block> {
   final int id;
   final String blockType;
   final String? blockedUser;
@@ -7876,7 +7875,7 @@ class BlockData extends DataClass implements Insertable<BlockData> {
   final String? blockedImage;
   final DateTime createdAt;
   final DateTime? cachedAt;
-  const BlockData({
+  const Block({
     required this.id,
     required this.blockType,
     this.blockedUser,
@@ -7910,8 +7909,8 @@ class BlockData extends DataClass implements Insertable<BlockData> {
     return map;
   }
 
-  BlockTableCompanion toCompanion(bool nullToAbsent) {
-    return BlockTableCompanion(
+  BlocksCompanion toCompanion(bool nullToAbsent) {
+    return BlocksCompanion(
       id: Value(id),
       blockType: Value(blockType),
       blockedUser: blockedUser == null && nullToAbsent
@@ -7933,12 +7932,12 @@ class BlockData extends DataClass implements Insertable<BlockData> {
     );
   }
 
-  factory BlockData.fromJson(
+  factory Block.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return BlockData(
+    return Block(
       id: serializer.fromJson<int>(json['id']),
       blockType: serializer.fromJson<String>(json['block_type']),
       blockedUser: serializer.fromJson<String?>(json['blocked_user']),
@@ -7964,7 +7963,7 @@ class BlockData extends DataClass implements Insertable<BlockData> {
     };
   }
 
-  BlockData copyWith({
+  Block copyWith({
     int? id,
     String? blockType,
     Value<String?> blockedUser = const Value.absent(),
@@ -7973,7 +7972,7 @@ class BlockData extends DataClass implements Insertable<BlockData> {
     Value<String?> blockedImage = const Value.absent(),
     DateTime? createdAt,
     Value<DateTime?> cachedAt = const Value.absent(),
-  }) => BlockData(
+  }) => Block(
     id: id ?? this.id,
     blockType: blockType ?? this.blockType,
     blockedUser: blockedUser.present ? blockedUser.value : this.blockedUser,
@@ -7985,8 +7984,8 @@ class BlockData extends DataClass implements Insertable<BlockData> {
     createdAt: createdAt ?? this.createdAt,
     cachedAt: cachedAt.present ? cachedAt.value : this.cachedAt,
   );
-  BlockData copyWithCompanion(BlockTableCompanion data) {
-    return BlockData(
+  Block copyWithCompanion(BlocksCompanion data) {
+    return Block(
       id: data.id.present ? data.id.value : this.id,
       blockType: data.blockType.present ? data.blockType.value : this.blockType,
       blockedUser: data.blockedUser.present
@@ -8008,7 +8007,7 @@ class BlockData extends DataClass implements Insertable<BlockData> {
 
   @override
   String toString() {
-    return (StringBuffer('BlockData(')
+    return (StringBuffer('Block(')
           ..write('id: $id, ')
           ..write('blockType: $blockType, ')
           ..write('blockedUser: $blockedUser, ')
@@ -8035,7 +8034,7 @@ class BlockData extends DataClass implements Insertable<BlockData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is BlockData &&
+      (other is Block &&
           other.id == this.id &&
           other.blockType == this.blockType &&
           other.blockedUser == this.blockedUser &&
@@ -8046,7 +8045,7 @@ class BlockData extends DataClass implements Insertable<BlockData> {
           other.cachedAt == this.cachedAt);
 }
 
-class BlockTableCompanion extends UpdateCompanion<BlockData> {
+class BlocksCompanion extends UpdateCompanion<Block> {
   final Value<int> id;
   final Value<String> blockType;
   final Value<String?> blockedUser;
@@ -8055,7 +8054,7 @@ class BlockTableCompanion extends UpdateCompanion<BlockData> {
   final Value<String?> blockedImage;
   final Value<DateTime> createdAt;
   final Value<DateTime?> cachedAt;
-  const BlockTableCompanion({
+  const BlocksCompanion({
     this.id = const Value.absent(),
     this.blockType = const Value.absent(),
     this.blockedUser = const Value.absent(),
@@ -8065,7 +8064,7 @@ class BlockTableCompanion extends UpdateCompanion<BlockData> {
     this.createdAt = const Value.absent(),
     this.cachedAt = const Value.absent(),
   });
-  BlockTableCompanion.insert({
+  BlocksCompanion.insert({
     this.id = const Value.absent(),
     required String blockType,
     this.blockedUser = const Value.absent(),
@@ -8076,7 +8075,7 @@ class BlockTableCompanion extends UpdateCompanion<BlockData> {
     this.cachedAt = const Value.absent(),
   }) : blockType = Value(blockType),
        createdAt = Value(createdAt);
-  static Insertable<BlockData> custom({
+  static Insertable<Block> custom({
     Expression<int>? id,
     Expression<String>? blockType,
     Expression<String>? blockedUser,
@@ -8098,7 +8097,7 @@ class BlockTableCompanion extends UpdateCompanion<BlockData> {
     });
   }
 
-  BlockTableCompanion copyWith({
+  BlocksCompanion copyWith({
     Value<int>? id,
     Value<String>? blockType,
     Value<String?>? blockedUser,
@@ -8108,7 +8107,7 @@ class BlockTableCompanion extends UpdateCompanion<BlockData> {
     Value<DateTime>? createdAt,
     Value<DateTime?>? cachedAt,
   }) {
-    return BlockTableCompanion(
+    return BlocksCompanion(
       id: id ?? this.id,
       blockType: blockType ?? this.blockType,
       blockedUser: blockedUser ?? this.blockedUser,
@@ -8152,7 +8151,7 @@ class BlockTableCompanion extends UpdateCompanion<BlockData> {
 
   @override
   String toString() {
-    return (StringBuffer('BlockTableCompanion(')
+    return (StringBuffer('BlocksCompanion(')
           ..write('id: $id, ')
           ..write('blockType: $blockType, ')
           ..write('blockedUser: $blockedUser, ')
@@ -8166,12 +8165,11 @@ class BlockTableCompanion extends UpdateCompanion<BlockData> {
   }
 }
 
-class $ReportTableTable extends ReportTable
-    with TableInfo<$ReportTableTable, ReportData> {
+class $ReportsTable extends Reports with TableInfo<$ReportsTable, Report> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $ReportTableTable(this.attachedDatabase, [this._alias]);
+  $ReportsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -8314,7 +8312,7 @@ class $ReportTableTable extends ReportTable
   static const String $name = 'report_table';
   @override
   VerificationContext validateIntegrity(
-    Insertable<ReportData> instance, {
+    Insertable<Report> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -8406,9 +8404,9 @@ class $ReportTableTable extends ReportTable
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  ReportData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Report map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return ReportData(
+    return Report(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -8457,12 +8455,12 @@ class $ReportTableTable extends ReportTable
   }
 
   @override
-  $ReportTableTable createAlias(String alias) {
-    return $ReportTableTable(attachedDatabase, alias);
+  $ReportsTable createAlias(String alias) {
+    return $ReportsTable(attachedDatabase, alias);
   }
 }
 
-class ReportData extends DataClass implements Insertable<ReportData> {
+class Report extends DataClass implements Insertable<Report> {
   final int id;
   final String reportType;
   final String? reportedUser;
@@ -8474,7 +8472,7 @@ class ReportData extends DataClass implements Insertable<ReportData> {
   final DateTime createdAt;
   final DateTime? updatedAt;
   final DateTime? cachedAt;
-  const ReportData({
+  const Report({
     required this.id,
     required this.reportType,
     this.reportedUser,
@@ -8516,8 +8514,8 @@ class ReportData extends DataClass implements Insertable<ReportData> {
     return map;
   }
 
-  ReportTableCompanion toCompanion(bool nullToAbsent) {
-    return ReportTableCompanion(
+  ReportsCompanion toCompanion(bool nullToAbsent) {
+    return ReportsCompanion(
       id: Value(id),
       reportType: Value(reportType),
       reportedUser: reportedUser == null && nullToAbsent
@@ -8544,12 +8542,12 @@ class ReportData extends DataClass implements Insertable<ReportData> {
     );
   }
 
-  factory ReportData.fromJson(
+  factory Report.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return ReportData(
+    return Report(
       id: serializer.fromJson<int>(json['id']),
       reportType: serializer.fromJson<String>(json['report_type']),
       reportedUser: serializer.fromJson<String?>(json['reported_user']),
@@ -8581,7 +8579,7 @@ class ReportData extends DataClass implements Insertable<ReportData> {
     };
   }
 
-  ReportData copyWith({
+  Report copyWith({
     int? id,
     String? reportType,
     Value<String?> reportedUser = const Value.absent(),
@@ -8593,7 +8591,7 @@ class ReportData extends DataClass implements Insertable<ReportData> {
     DateTime? createdAt,
     Value<DateTime?> updatedAt = const Value.absent(),
     Value<DateTime?> cachedAt = const Value.absent(),
-  }) => ReportData(
+  }) => Report(
     id: id ?? this.id,
     reportType: reportType ?? this.reportType,
     reportedUser: reportedUser.present ? reportedUser.value : this.reportedUser,
@@ -8610,8 +8608,8 @@ class ReportData extends DataClass implements Insertable<ReportData> {
     updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
     cachedAt: cachedAt.present ? cachedAt.value : this.cachedAt,
   );
-  ReportData copyWithCompanion(ReportTableCompanion data) {
-    return ReportData(
+  Report copyWithCompanion(ReportsCompanion data) {
+    return Report(
       id: data.id.present ? data.id.value : this.id,
       reportType: data.reportType.present
           ? data.reportType.value
@@ -8638,7 +8636,7 @@ class ReportData extends DataClass implements Insertable<ReportData> {
 
   @override
   String toString() {
-    return (StringBuffer('ReportData(')
+    return (StringBuffer('Report(')
           ..write('id: $id, ')
           ..write('reportType: $reportType, ')
           ..write('reportedUser: $reportedUser, ')
@@ -8671,7 +8669,7 @@ class ReportData extends DataClass implements Insertable<ReportData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is ReportData &&
+      (other is Report &&
           other.id == this.id &&
           other.reportType == this.reportType &&
           other.reportedUser == this.reportedUser &&
@@ -8685,7 +8683,7 @@ class ReportData extends DataClass implements Insertable<ReportData> {
           other.cachedAt == this.cachedAt);
 }
 
-class ReportTableCompanion extends UpdateCompanion<ReportData> {
+class ReportsCompanion extends UpdateCompanion<Report> {
   final Value<int> id;
   final Value<String> reportType;
   final Value<String?> reportedUser;
@@ -8697,7 +8695,7 @@ class ReportTableCompanion extends UpdateCompanion<ReportData> {
   final Value<DateTime> createdAt;
   final Value<DateTime?> updatedAt;
   final Value<DateTime?> cachedAt;
-  const ReportTableCompanion({
+  const ReportsCompanion({
     this.id = const Value.absent(),
     this.reportType = const Value.absent(),
     this.reportedUser = const Value.absent(),
@@ -8710,7 +8708,7 @@ class ReportTableCompanion extends UpdateCompanion<ReportData> {
     this.updatedAt = const Value.absent(),
     this.cachedAt = const Value.absent(),
   });
-  ReportTableCompanion.insert({
+  ReportsCompanion.insert({
     this.id = const Value.absent(),
     required String reportType,
     this.reportedUser = const Value.absent(),
@@ -8725,7 +8723,7 @@ class ReportTableCompanion extends UpdateCompanion<ReportData> {
   }) : reportType = Value(reportType),
        reason = Value(reason),
        createdAt = Value(createdAt);
-  static Insertable<ReportData> custom({
+  static Insertable<Report> custom({
     Expression<int>? id,
     Expression<String>? reportType,
     Expression<String>? reportedUser,
@@ -8753,7 +8751,7 @@ class ReportTableCompanion extends UpdateCompanion<ReportData> {
     });
   }
 
-  ReportTableCompanion copyWith({
+  ReportsCompanion copyWith({
     Value<int>? id,
     Value<String>? reportType,
     Value<String?>? reportedUser,
@@ -8766,7 +8764,7 @@ class ReportTableCompanion extends UpdateCompanion<ReportData> {
     Value<DateTime?>? updatedAt,
     Value<DateTime?>? cachedAt,
   }) {
-    return ReportTableCompanion(
+    return ReportsCompanion(
       id: id ?? this.id,
       reportType: reportType ?? this.reportType,
       reportedUser: reportedUser ?? this.reportedUser,
@@ -8822,7 +8820,7 @@ class ReportTableCompanion extends UpdateCompanion<ReportData> {
 
   @override
   String toString() {
-    return (StringBuffer('ReportTableCompanion(')
+    return (StringBuffer('ReportsCompanion(')
           ..write('id: $id, ')
           ..write('reportType: $reportType, ')
           ..write('reportedUser: $reportedUser, ')
@@ -23336,8 +23334,8 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   );
   late final $ScannerTableTable scannerTable = $ScannerTableTable(this);
   late final $InviteTableTable inviteTable = $InviteTableTable(this);
-  late final $BlockTableTable blockTable = $BlockTableTable(this);
-  late final $ReportTableTable reportTable = $ReportTableTable(this);
+  late final $BlocksTable blocks = $BlocksTable(this);
+  late final $ReportsTable reports = $ReportsTable(this);
   late final $AgendaEventTable agendaEvent = $AgendaEventTable(this);
   late final $InstitutionsTable institutions = $InstitutionsTable(this);
   late final $InstitutionScrappingCommandsTable institutionScrappingCommands =
@@ -23387,8 +23385,8 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     ticketStatsTable,
     scannerTable,
     inviteTable,
-    blockTable,
-    reportTable,
+    blocks,
+    reports,
     agendaEvent,
     institutions,
     institutionScrappingCommands,
@@ -27219,8 +27217,8 @@ typedef $$InviteTableTableProcessedTableManager =
       InviteData,
       PrefetchHooks Function()
     >;
-typedef $$BlockTableTableCreateCompanionBuilder =
-    BlockTableCompanion Function({
+typedef $$BlocksTableCreateCompanionBuilder =
+    BlocksCompanion Function({
       Value<int> id,
       required String blockType,
       Value<String?> blockedUser,
@@ -27230,8 +27228,8 @@ typedef $$BlockTableTableCreateCompanionBuilder =
       required DateTime createdAt,
       Value<DateTime?> cachedAt,
     });
-typedef $$BlockTableTableUpdateCompanionBuilder =
-    BlockTableCompanion Function({
+typedef $$BlocksTableUpdateCompanionBuilder =
+    BlocksCompanion Function({
       Value<int> id,
       Value<String> blockType,
       Value<String?> blockedUser,
@@ -27242,9 +27240,9 @@ typedef $$BlockTableTableUpdateCompanionBuilder =
       Value<DateTime?> cachedAt,
     });
 
-class $$BlockTableTableFilterComposer
-    extends Composer<_$AppDataBase, $BlockTableTable> {
-  $$BlockTableTableFilterComposer({
+class $$BlocksTableFilterComposer
+    extends Composer<_$AppDataBase, $BlocksTable> {
+  $$BlocksTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -27292,9 +27290,9 @@ class $$BlockTableTableFilterComposer
   );
 }
 
-class $$BlockTableTableOrderingComposer
-    extends Composer<_$AppDataBase, $BlockTableTable> {
-  $$BlockTableTableOrderingComposer({
+class $$BlocksTableOrderingComposer
+    extends Composer<_$AppDataBase, $BlocksTable> {
+  $$BlocksTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -27342,9 +27340,9 @@ class $$BlockTableTableOrderingComposer
   );
 }
 
-class $$BlockTableTableAnnotationComposer
-    extends Composer<_$AppDataBase, $BlockTableTable> {
-  $$BlockTableTableAnnotationComposer({
+class $$BlocksTableAnnotationComposer
+    extends Composer<_$AppDataBase, $BlocksTable> {
+  $$BlocksTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -27384,35 +27382,32 @@ class $$BlockTableTableAnnotationComposer
       $composableBuilder(column: $table.cachedAt, builder: (column) => column);
 }
 
-class $$BlockTableTableTableManager
+class $$BlocksTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $BlockTableTable,
-          BlockData,
-          $$BlockTableTableFilterComposer,
-          $$BlockTableTableOrderingComposer,
-          $$BlockTableTableAnnotationComposer,
-          $$BlockTableTableCreateCompanionBuilder,
-          $$BlockTableTableUpdateCompanionBuilder,
-          (
-            BlockData,
-            BaseReferences<_$AppDataBase, $BlockTableTable, BlockData>,
-          ),
-          BlockData,
+          $BlocksTable,
+          Block,
+          $$BlocksTableFilterComposer,
+          $$BlocksTableOrderingComposer,
+          $$BlocksTableAnnotationComposer,
+          $$BlocksTableCreateCompanionBuilder,
+          $$BlocksTableUpdateCompanionBuilder,
+          (Block, BaseReferences<_$AppDataBase, $BlocksTable, Block>),
+          Block,
           PrefetchHooks Function()
         > {
-  $$BlockTableTableTableManager(_$AppDataBase db, $BlockTableTable table)
+  $$BlocksTableTableManager(_$AppDataBase db, $BlocksTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$BlockTableTableFilterComposer($db: db, $table: table),
+              $$BlocksTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$BlockTableTableOrderingComposer($db: db, $table: table),
+              $$BlocksTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$BlockTableTableAnnotationComposer($db: db, $table: table),
+              $$BlocksTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
@@ -27423,7 +27418,7 @@ class $$BlockTableTableTableManager
                 Value<String?> blockedImage = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime?> cachedAt = const Value.absent(),
-              }) => BlockTableCompanion(
+              }) => BlocksCompanion(
                 id: id,
                 blockType: blockType,
                 blockedUser: blockedUser,
@@ -27443,7 +27438,7 @@ class $$BlockTableTableTableManager
                 Value<String?> blockedImage = const Value.absent(),
                 required DateTime createdAt,
                 Value<DateTime?> cachedAt = const Value.absent(),
-              }) => BlockTableCompanion.insert(
+              }) => BlocksCompanion.insert(
                 id: id,
                 blockType: blockType,
                 blockedUser: blockedUser,
@@ -27461,22 +27456,22 @@ class $$BlockTableTableTableManager
       );
 }
 
-typedef $$BlockTableTableProcessedTableManager =
+typedef $$BlocksTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $BlockTableTable,
-      BlockData,
-      $$BlockTableTableFilterComposer,
-      $$BlockTableTableOrderingComposer,
-      $$BlockTableTableAnnotationComposer,
-      $$BlockTableTableCreateCompanionBuilder,
-      $$BlockTableTableUpdateCompanionBuilder,
-      (BlockData, BaseReferences<_$AppDataBase, $BlockTableTable, BlockData>),
-      BlockData,
+      $BlocksTable,
+      Block,
+      $$BlocksTableFilterComposer,
+      $$BlocksTableOrderingComposer,
+      $$BlocksTableAnnotationComposer,
+      $$BlocksTableCreateCompanionBuilder,
+      $$BlocksTableUpdateCompanionBuilder,
+      (Block, BaseReferences<_$AppDataBase, $BlocksTable, Block>),
+      Block,
       PrefetchHooks Function()
     >;
-typedef $$ReportTableTableCreateCompanionBuilder =
-    ReportTableCompanion Function({
+typedef $$ReportsTableCreateCompanionBuilder =
+    ReportsCompanion Function({
       Value<int> id,
       required String reportType,
       Value<String?> reportedUser,
@@ -27489,8 +27484,8 @@ typedef $$ReportTableTableCreateCompanionBuilder =
       Value<DateTime?> updatedAt,
       Value<DateTime?> cachedAt,
     });
-typedef $$ReportTableTableUpdateCompanionBuilder =
-    ReportTableCompanion Function({
+typedef $$ReportsTableUpdateCompanionBuilder =
+    ReportsCompanion Function({
       Value<int> id,
       Value<String> reportType,
       Value<String?> reportedUser,
@@ -27504,9 +27499,9 @@ typedef $$ReportTableTableUpdateCompanionBuilder =
       Value<DateTime?> cachedAt,
     });
 
-class $$ReportTableTableFilterComposer
-    extends Composer<_$AppDataBase, $ReportTableTable> {
-  $$ReportTableTableFilterComposer({
+class $$ReportsTableFilterComposer
+    extends Composer<_$AppDataBase, $ReportsTable> {
+  $$ReportsTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -27569,9 +27564,9 @@ class $$ReportTableTableFilterComposer
   );
 }
 
-class $$ReportTableTableOrderingComposer
-    extends Composer<_$AppDataBase, $ReportTableTable> {
-  $$ReportTableTableOrderingComposer({
+class $$ReportsTableOrderingComposer
+    extends Composer<_$AppDataBase, $ReportsTable> {
+  $$ReportsTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -27634,9 +27629,9 @@ class $$ReportTableTableOrderingComposer
   );
 }
 
-class $$ReportTableTableAnnotationComposer
-    extends Composer<_$AppDataBase, $ReportTableTable> {
-  $$ReportTableTableAnnotationComposer({
+class $$ReportsTableAnnotationComposer
+    extends Composer<_$AppDataBase, $ReportsTable> {
+  $$ReportsTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -27687,35 +27682,32 @@ class $$ReportTableTableAnnotationComposer
       $composableBuilder(column: $table.cachedAt, builder: (column) => column);
 }
 
-class $$ReportTableTableTableManager
+class $$ReportsTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $ReportTableTable,
-          ReportData,
-          $$ReportTableTableFilterComposer,
-          $$ReportTableTableOrderingComposer,
-          $$ReportTableTableAnnotationComposer,
-          $$ReportTableTableCreateCompanionBuilder,
-          $$ReportTableTableUpdateCompanionBuilder,
-          (
-            ReportData,
-            BaseReferences<_$AppDataBase, $ReportTableTable, ReportData>,
-          ),
-          ReportData,
+          $ReportsTable,
+          Report,
+          $$ReportsTableFilterComposer,
+          $$ReportsTableOrderingComposer,
+          $$ReportsTableAnnotationComposer,
+          $$ReportsTableCreateCompanionBuilder,
+          $$ReportsTableUpdateCompanionBuilder,
+          (Report, BaseReferences<_$AppDataBase, $ReportsTable, Report>),
+          Report,
           PrefetchHooks Function()
         > {
-  $$ReportTableTableTableManager(_$AppDataBase db, $ReportTableTable table)
+  $$ReportsTableTableManager(_$AppDataBase db, $ReportsTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$ReportTableTableFilterComposer($db: db, $table: table),
+              $$ReportsTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$ReportTableTableOrderingComposer($db: db, $table: table),
+              $$ReportsTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$ReportTableTableAnnotationComposer($db: db, $table: table),
+              $$ReportsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
@@ -27729,7 +27721,7 @@ class $$ReportTableTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime?> updatedAt = const Value.absent(),
                 Value<DateTime?> cachedAt = const Value.absent(),
-              }) => ReportTableCompanion(
+              }) => ReportsCompanion(
                 id: id,
                 reportType: reportType,
                 reportedUser: reportedUser,
@@ -27755,7 +27747,7 @@ class $$ReportTableTableTableManager
                 required DateTime createdAt,
                 Value<DateTime?> updatedAt = const Value.absent(),
                 Value<DateTime?> cachedAt = const Value.absent(),
-              }) => ReportTableCompanion.insert(
+              }) => ReportsCompanion.insert(
                 id: id,
                 reportType: reportType,
                 reportedUser: reportedUser,
@@ -27776,21 +27768,18 @@ class $$ReportTableTableTableManager
       );
 }
 
-typedef $$ReportTableTableProcessedTableManager =
+typedef $$ReportsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $ReportTableTable,
-      ReportData,
-      $$ReportTableTableFilterComposer,
-      $$ReportTableTableOrderingComposer,
-      $$ReportTableTableAnnotationComposer,
-      $$ReportTableTableCreateCompanionBuilder,
-      $$ReportTableTableUpdateCompanionBuilder,
-      (
-        ReportData,
-        BaseReferences<_$AppDataBase, $ReportTableTable, ReportData>,
-      ),
-      ReportData,
+      $ReportsTable,
+      Report,
+      $$ReportsTableFilterComposer,
+      $$ReportsTableOrderingComposer,
+      $$ReportsTableAnnotationComposer,
+      $$ReportsTableCreateCompanionBuilder,
+      $$ReportsTableUpdateCompanionBuilder,
+      (Report, BaseReferences<_$AppDataBase, $ReportsTable, Report>),
+      Report,
       PrefetchHooks Function()
     >;
 typedef $$AgendaEventTableCreateCompanionBuilder =
@@ -38051,10 +38040,10 @@ class $AppDataBaseManager {
       $$ScannerTableTableTableManager(_db, _db.scannerTable);
   $$InviteTableTableTableManager get inviteTable =>
       $$InviteTableTableTableManager(_db, _db.inviteTable);
-  $$BlockTableTableTableManager get blockTable =>
-      $$BlockTableTableTableManager(_db, _db.blockTable);
-  $$ReportTableTableTableManager get reportTable =>
-      $$ReportTableTableTableManager(_db, _db.reportTable);
+  $$BlocksTableTableManager get blocks =>
+      $$BlocksTableTableManager(_db, _db.blocks);
+  $$ReportsTableTableManager get reports =>
+      $$ReportsTableTableManager(_db, _db.reports);
   $$AgendaEventTableTableManager get agendaEvent =>
       $$AgendaEventTableTableManager(_db, _db.agendaEvent);
   $$InstitutionsTableTableManager get institutions =>

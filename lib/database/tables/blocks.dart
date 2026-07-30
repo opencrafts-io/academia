@@ -1,7 +1,9 @@
 import 'package:drift/drift.dart';
 
-@DataClassName('BlockData')
-class BlockTable extends Table {
+class Blocks extends Table {
+  @override
+  String get tableName => 'block_table';
+
   IntColumn get id => integer()();
 
   @JsonKey('block_type')
@@ -24,7 +26,8 @@ class BlockTable extends Table {
   DateTimeColumn get createdAt => dateTime()();
 
   @JsonKey('cached_at')
-  DateTimeColumn get cachedAt => dateTime().nullable().withDefault(currentDateAndTime)();
+  DateTimeColumn get cachedAt =>
+      dateTime().nullable().withDefault(currentDateAndTime)();
 
   @override
   Set<Column> get primaryKey => {id};
