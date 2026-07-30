@@ -66,9 +66,9 @@ class CommentContentWidget extends StatelessWidget {
                     'https://academia.opencrafts.io${PostDetailRoute(postId: comment.post).location}?commentId=${comment.id}';
                 final box = context.findRenderObject() as RenderBox?;
                 Share.share(
-                  'Check out this comment on Academia:\n\n'
-                  '"💬 $excerpt"\n\n'
-                  '🔗 $url',
+                  '"$excerpt"\n\n'
+                  'Join the conversation on Academia\n'
+                  '$url',
                   sharePositionOrigin: box != null
                       ? box.localToGlobal(Offset.zero) & box.size
                       : null,
@@ -252,9 +252,9 @@ class CommentContentWidget extends StatelessWidget {
                           final isSelected = selectedReason == reason;
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 8),
-                            child: RadioGroup(
+                            child: RadioGroup<String>(
                               onChanged: (val) {
-                                setState(() => val = reason);
+                                setState(() => selectedReason = val);
                               },
                               child: RadioListTile.adaptive(
                                 value: reason,
@@ -470,6 +470,18 @@ class CommentContentWidget extends StatelessWidget {
                 text: comment.content,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
+              // Comment voting isn't implemented on the backend yet - hide
+              // the control rather than ship a button that does nothing.
+              // if (onVote != null) ...[
+              //   const SizedBox(height: 4),
+              //   PostVoteButton(
+              //     upvotes: comment.upvotes,
+              //     downvotes: comment.downvotes,
+              //     myVote: comment.myVote,
+              //     onUpvote: () => onVote!(comment, true),
+              //     onDownvote: () => onVote!(comment, false),
+              //   ),
+              // ],
             ],
           ),
         ),

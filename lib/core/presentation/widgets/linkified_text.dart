@@ -22,29 +22,72 @@ class LinkifiedText extends StatelessWidget {
     this.overflow,
   });
 
+  /// Strips trailing characters that are almost never *meant* to be part of
+  /// a URL even though `[^\s]+` happily swallows them - sentence punctuation
+  /// glued right onto the end ("visit https://x.com.", "see (https://x.com)")
+  /// and unmatched closing brackets/parens/quotes. A closing bracket is only
+  /// stripped if the URL doesn't already contain its matching opener (so
+  /// `https://en.wikipedia.org/wiki/Foo_(bar)` is left intact).
+  static String _stripTrailingPunctuation(String url) {
+    const trailingChars = '.,;:!?\'"';
+    const pairs = {')': '(', ']': '[', '}': '{'};
+
+    var end = url.length;
+    while (end > 0) {
+      final char = url[end - 1];
+      if (trailingChars.contains(char)) {
+        end--;
+        continue;
+      }
+      final opening = pairs[char];
+      if (opening != null) {
+        final scanned = url.substring(0, end);
+        final closingCount = char.allMatches(scanned).length;
+        final openingCount = opening.allMatches(scanned).length;
+        if (closingCount > openingCount) {
+          end--;
+          continue;
+        }
+      }
+      break;
+    }
+    return url.substring(0, end);
+  }
+
   Future<void> _showExitWarning(BuildContext context, String url) async {
+    final colorScheme = Theme.of(context).colorScheme;
     final bool? proceed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('External Link'),
+        icon: Icon(Icons.open_in_new_rounded, color: colorScheme.primary),
+        title: const Text('Open external link?', textAlign: TextAlign.center),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'You are about to leave the app and visit an external site:',
+            const Text("You'll leave Academia to open this link:"),
+            const SizedBox(height: 12),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              decoration: BoxDecoration(
+                color: colorScheme.surfaceContainerHigh,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                url,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             ),
             const SizedBox(height: 12),
             Text(
-              url,
+              'Only open links you trust.',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.primary,
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 12),
-            const Text(
-              'Please be aware that this could be a potentially unsecure site. Do you wish to continue?',
+                color: colorScheme.onSurfaceVariant,
+              ),
             ),
           ],
         ),
@@ -53,9 +96,10 @@ class LinkifiedText extends StatelessWidget {
             onPressed: () => Navigator.pop(context, false),
             child: const Text('Cancel'),
           ),
-          FilledButton(
+          FilledButton.icon(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Continue'),
+            icon: const Icon(Icons.open_in_new_rounded, size: 18),
+            label: const Text('Open'),
           ),
         ],
       ),
@@ -80,7 +124,7 @@ class LinkifiedText extends StatelessWidget {
     if (text.isEmpty) return const Text('');
 
     final List<InlineSpan> spans = [];
-    
+
     // Robust regex for URLs, including http, https, www, and IP addresses
     final RegExp urlRegExp = RegExp(
       r'((https?:\/\/|www\.)[^\s]+|(?:\d{1,3}\.){3}\d{1,3}(?::\d+)?(?:\/[^\s]*)?)',
@@ -91,7 +135,8 @@ class LinkifiedText extends StatelessWidget {
     int lastMatchEnd = 0;
 
     final effectiveStyle = style ?? DefaultTextStyle.of(context).style;
-    final effectiveLinkStyle = linkStyle ??
+    final effectiveLinkStyle =
+        linkStyle ??
         effectiveStyle.copyWith(
           color: Theme.of(context).colorScheme.primary,
           decoration: TextDecoration.underline,
@@ -100,12 +145,12 @@ class LinkifiedText extends StatelessWidget {
 
     for (final match in matches) {
       if (match.start > lastMatchEnd) {
-        spans.add(TextSpan(
-          text: text.substring(lastMatchEnd, match.start),
-        ));
+        spans.add(TextSpan(text: text.substring(lastMatchEnd, match.start)));
       }
 
-      final url = match.group(0)!;
+      final rawUrl = match.group(0)!;
+      final url = _stripTrailingPunctuation(rawUrl);
+      final linkEnd = match.end - (rawUrl.length - url.length);
       var launchUrlStr = url;
 
       if (launchUrlStr.toLowerCase().startsWith('www.')) {
@@ -122,30 +167,22 @@ class LinkifiedText extends StatelessWidget {
             ..onTap = () => _showExitWarning(context, launchUrlStr),
         ),
       );
-      lastMatchEnd = match.end;
+      lastMatchEnd = linkEnd;
     }
 
     if (lastMatchEnd < text.length) {
-      spans.add(TextSpan(
-        text: text.substring(lastMatchEnd),
-      ));
+      spans.add(TextSpan(text: text.substring(lastMatchEnd)));
     }
 
     if (selectable && maxLines == null) {
       return SelectableText.rich(
-        TextSpan(
-          children: spans,
-          style: effectiveStyle,
-        ),
+        TextSpan(children: spans, style: effectiveStyle),
         textAlign: textAlign,
       );
     }
 
     return Text.rich(
-      TextSpan(
-        children: spans,
-        style: effectiveStyle,
-      ),
+      TextSpan(children: spans, style: effectiveStyle),
       textAlign: textAlign,
       maxLines: maxLines,
       overflow: overflow,

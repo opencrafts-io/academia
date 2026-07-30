@@ -1679,33 +1679,33 @@ mixin $CreateCommunitiesRoute on GoRouteData {
 }
 
 RouteBase get $trimVideoRoute => GoRouteData.$route(
-  path: '/video-trimer/:videoPath',
+  path: '/video-trimmer',
   factory: $TrimVideoRoute._fromState,
 );
 
 mixin $TrimVideoRoute on GoRouteData {
   static TrimVideoRoute _fromState(GoRouterState state) =>
-      TrimVideoRoute(videoPath: state.pathParameters['videoPath']!);
+      TrimVideoRoute(state.extra as String);
 
   TrimVideoRoute get _self => this as TrimVideoRoute;
 
   @override
-  String get location => GoRouteData.$location(
-    '/video-trimer/${Uri.encodeComponent(_self.videoPath)}',
-  );
+  String get location => GoRouteData.$location('/video-trimmer');
 
   @override
-  void go(BuildContext context) => context.go(location);
+  void go(BuildContext context) => context.go(location, extra: _self.$extra);
 
   @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+  Future<T?> push<T>(BuildContext context) =>
+      context.push<T>(location, extra: _self.$extra);
 
   @override
   void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
+      context.pushReplacement(location, extra: _self.$extra);
 
   @override
-  void replace(BuildContext context) => context.replace(location);
+  void replace(BuildContext context) =>
+      context.replace(location, extra: _self.$extra);
 }
 
 RouteBase get $communityMembershipsRoute => GoRouteData.$route(

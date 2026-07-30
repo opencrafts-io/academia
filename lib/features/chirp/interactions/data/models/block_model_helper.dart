@@ -1,7 +1,22 @@
-import 'package:academia/database/database.dart';
+import 'package:academia/database/database.dart' as db;
+import 'package:academia/features/chirp/interactions/data/dtos/block_api_dto.dart';
 import 'package:academia/features/chirp/interactions/domain/entities/block.dart';
 
-extension BlockModelHelper on BlockData {
+extension BlockApiDtoMapper on BlockApiDto {
+  db.Block toData() => db.Block(
+    id: id,
+    blockType: blockType,
+    blockedUser: blockedUser,
+    blockedCommunity: blockedCommunity,
+    blockedName: blockedName,
+    blockedImage: blockedImage,
+    createdAt: createdAt,
+  );
+
+  Block toEntity() => toData().toEntity();
+}
+
+extension BlockModelHelper on db.Block {
   Block toEntity() {
     // Determine the blocked ID based on type
     String? blockedId;
@@ -23,7 +38,7 @@ extension BlockModelHelper on BlockData {
 }
 
 extension BlockEntityHelper on Block {
-  BlockData toData() {
+  db.Block toData() {
     // Parse blocked ID based on type
     String? blockedUser;
     int? blockedCommunity;
@@ -34,7 +49,7 @@ extension BlockEntityHelper on Block {
       blockedCommunity = int.tryParse(blockedId!);
     }
 
-    return BlockData(
+    return db.Block(
       id: id,
       blockType: blockType,
       blockedUser: blockedUser,

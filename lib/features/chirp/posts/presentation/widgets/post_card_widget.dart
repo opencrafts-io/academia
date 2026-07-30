@@ -23,15 +23,6 @@ class PostCard extends StatefulWidget {
 enum Vote { up, down, none }
 
 class _PostCardState extends State<PostCard> {
-  final PageController _pageController = PageController(viewportFraction: 0.92);
-  int currentPage = 0;
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
   /// Downloads the file at [url] to a temp path and returns an [XFile].
   /// Returns null if the download fails.
   Future<XFile?> _downloadAttachment(String url) async {
@@ -39,8 +30,11 @@ class _PostCardState extends State<PostCard> {
       final tempDir = await getTemporaryDirectory();
       final fileName = url.split('/').last.split('?').first;
       final filePath = '${tempDir.path}/$fileName';
-      await Dio().download(url, filePath,
-          options: Options(responseType: ResponseType.bytes));
+      await Dio().download(
+        url,
+        filePath,
+        options: Options(responseType: ResponseType.bytes),
+      );
       return XFile(filePath);
     } catch (_) {
       return null;
@@ -57,113 +51,115 @@ class _PostCardState extends State<PostCard> {
 
     showModalBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => Container(
-        padding: const EdgeInsets.symmetric(vertical: 20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              margin: const EdgeInsets.only(bottom: 12),
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Theme.of(context).dividerColor,
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            // Share — available to everyone
-            ListTile(
-              leading: const Icon(Icons.share_outlined),
-              title: const Text('Share Post'),
-              onTap: () async {
-                Navigator.pop(context);
-                final url =
-                    'https://academia.opencrafts.io${PostDetailRoute(postId: widget.post.id).location}';
-                final box = context.findRenderObject() as RenderBox?;
-                final sharePositionOrigin = box != null
-                    ? box.localToGlobal(Offset.zero) & box.size
-                    : null;
-                final text =
-                    'Check out this post on Academia:\n\n'
-                    '📝 ${widget.post.title}\n\n'
-                    '🔗 $url';
+      showDragHandle: true,
+      builder: (context) {
+        final colorScheme = Theme.of(context).colorScheme;
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Share — available to everyone
+              SheetActionTile(
+                icon: Icons.share_rounded,
+                label: 'Share post',
+                containerColor: colorScheme.secondaryContainer,
+                onContainerColor: colorScheme.onSecondaryContainer,
+                onTap: () async {
+                  Navigator.pop(context);
+                  final url =
+                      'https://academia.opencrafts.io${PostDetailRoute(postId: widget.post.id).location}';
+                  final box = context.findRenderObject() as RenderBox?;
+                  final sharePositionOrigin = box != null
+                      ? box.localToGlobal(Offset.zero) & box.size
+                      : null;
+                  final text =
+                      '${widget.post.title}\n\n'
+                      'Join the discussion on Academia\n'
+                      '$url';
 
-                // Attach the first image if available
-                final imageAttachment = widget.post.attachments
-                    .where((a) => a.attachmentType.toLowerCase() == 'image')
-                    .firstOrNull;
+                  // Attach the first image if available
+                  final imageAttachment = widget.post.attachments
+                      .where((a) => a.attachmentType.toLowerCase() == 'image')
+                      .firstOrNull;
 
-                if (imageAttachment != null) {
-                  final xfile = await _downloadAttachment(imageAttachment.file);
-                  if (xfile != null) {
-                    await Share.shareXFiles(
-                      [xfile],
-                      text: text,
-                      sharePositionOrigin: sharePositionOrigin,
+                  if (imageAttachment != null) {
+                    final xfile = await _downloadAttachment(
+                      imageAttachment.file,
                     );
-                    return;
+                    if (xfile != null) {
+                      await Share.shareXFiles(
+                        [xfile],
+                        text: text,
+                        sharePositionOrigin: sharePositionOrigin,
+                      );
+                      return;
+                    }
                   }
-                }
 
-                Share.share(text, sharePositionOrigin: sharePositionOrigin);
-              },
-            ),
-            if (!isOwnPost) ...[
-              ListTile(
-                leading: Icon(
-                  Icons.block_outlined,
-                  color: Theme.of(context).colorScheme.error,
+                  Share.share(text, sharePositionOrigin: sharePositionOrigin);
+                },
+              ),
+              if (!isOwnPost) ...[
+                SheetActionTile(
+                  icon: Icons.block_rounded,
+                  label: 'Block user',
+                  containerColor: colorScheme.errorContainer,
+                  onContainerColor: colorScheme.onErrorContainer,
+                  textColor: colorScheme.error,
+                  onTap: () {
+                    Navigator.pop(context);
+                    _showBlockUserDialog(username);
+                  },
                 ),
-                title: const Text('Block User'),
-                onTap: () {
-                  Navigator.pop(context);
-                  _showBlockUserDialog(username);
-                },
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.flag_outlined,
-                  color: Theme.of(context).colorScheme.error,
+                SheetActionTile(
+                  icon: Icons.flag_rounded,
+                  label: 'Report post',
+                  containerColor: colorScheme.errorContainer,
+                  onContainerColor: colorScheme.onErrorContainer,
+                  textColor: colorScheme.error,
+                  onTap: () {
+                    Navigator.pop(context);
+                    _showReportPostDialog();
+                  },
                 ),
-                title: const Text('Report Post'),
-                onTap: () {
-                  Navigator.pop(context);
-                  _showReportPostDialog();
-                },
-              ),
-            ] else ...[
-              ListTile(
-                leading: const Icon(Icons.edit_outlined),
-                title: const Text('Edit Post'),
-                onTap: () {
-                  Navigator.pop(context);
-                  // TODO: edit post
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Feature coming soon'),
-                      behavior: SnackBarBehavior.floating,
-                    ),
-                  );
-                },
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.delete_outline,
-                  color: Theme.of(context).colorScheme.error,
+              ] else ...[
+                SheetActionTile(
+                  icon: Icons.edit_rounded,
+                  label: 'Edit post',
+                  containerColor: colorScheme.secondaryContainer,
+                  onContainerColor: colorScheme.onSecondaryContainer,
+                  onTap: () {
+                    Navigator.pop(context);
+                    // TODO: edit post
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Feature coming soon'),
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
+                  },
                 ),
-                title: const Text('Delete Post'),
-                onTap: () {
-                  Navigator.pop(context);
-                  _showDeletePostDialog();
-                },
-              ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+                  child: Divider(height: 1),
+                ),
+                SheetActionTile(
+                  icon: Icons.delete_rounded,
+                  label: 'Delete post',
+                  containerColor: colorScheme.errorContainer,
+                  onContainerColor: colorScheme.onErrorContainer,
+                  textColor: colorScheme.error,
+                  onTap: () {
+                    Navigator.pop(context);
+                    _showDeletePostDialog();
+                  },
+                ),
+              ],
             ],
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
@@ -447,243 +443,87 @@ class _PostCardState extends State<PostCard> {
             ),
           ),
         ),
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.symmetric(vertical: 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            BlocBuilder<ChirpUserCubit, ChirpUserState>(
-              builder: (context, state) {
-                String avatarUrl =
-                    'https://i.pinimg.com/736x/18/b5/b5/18b5b599bb873285bd4def283c0d3c09.jpg';
-                String username = 'Unknown User';
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: BlocBuilder<ChirpUserCubit, ChirpUserState>(
+                builder: (context, state) {
+                  String avatarUrl =
+                      'https://i.pinimg.com/736x/18/b5/b5/18b5b599bb873285bd4def283c0d3c09.jpg';
+                  String username = 'Unknown User';
 
-                if (state is ChirpUserLoadedState) {
-                  avatarUrl = state.user.avatarUrl ?? avatarUrl;
-                  username = state.user.username ?? 'Unknown User';
-                }
+                  if (state is ChirpUserLoadedState) {
+                    avatarUrl = state.user.avatarUrl ?? avatarUrl;
+                    username = state.user.username ?? 'Unknown User';
+                  }
 
-                return Row(
-                  children: [
-                    ChirpUserAvatar(avatarUrl: avatarUrl, numberOfScallops: 6),
-                    const SizedBox(width: 8),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'a/${widget.post.community.name}',
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          "$username • ${timeSince(widget.post.createdAt)}",
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(overflow: TextOverflow.ellipsis),
-                        ),
-                      ],
-                    ),
-                    const Spacer(),
-                    IconButton(
-                      icon: const Icon(Icons.more_vert),
-                      onPressed: () => _showPostOptions(username),
-                    ),
-                  ],
-                );
-              },
-            ),
-            const SizedBox(height: 8),
-            LinkifiedText(
-              text: widget.post.title,
-              style: Theme.of(
-                context,
-              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-            const SizedBox(height: 8),
-            LinkifiedText(
-              text: widget.post.content,
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-            ),
-            if (widget.post.attachments.isNotEmpty) ...[
-              const SizedBox(height: 8),
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  final double attachmentWidth = constraints.maxWidth;
-                  final double attachmentHeight = attachmentWidth / (4 / 5);
-
-                  return SizedBox(
-                    height: attachmentHeight,
-                    child: PageView.builder(
-                      controller: _pageController,
-                      itemCount: widget.post.attachments.length,
-                      onPageChanged: (index) =>
-                          setState(() => currentPage = index),
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: AttachmentWidget(
-                              attachment: widget.post.attachments[index],
-                            ),
+                  return Row(
+                    children: [
+                      ChirpUserAvatar(
+                        avatarUrl: avatarUrl,
+                        numberOfScallops: 6,
+                      ),
+                      const SizedBox(width: 8),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'a/${widget.post.community.name}',
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(fontWeight: FontWeight.bold),
                           ),
-                        );
-                      },
-                    ),
+                          Text(
+                            "$username • ${timeSince(widget.post.createdAt)}",
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(overflow: TextOverflow.ellipsis),
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      IconButton(
+                        icon: const Icon(Icons.more_vert),
+                        onPressed: () => _showPostOptions(username),
+                      ),
+                    ],
                   );
                 },
               ),
-              if (widget.post.attachments.length > 1)
-                Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(widget.post.attachments.length, (
-                      index,
-                    ) {
-                      return AnimatedContainer(
-                        duration: const Duration(milliseconds: 300),
-                        margin: const EdgeInsets.symmetric(horizontal: 4),
-                        width: currentPage == index ? 24 : 8,
-                        height: 8,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
-                          color: currentPage == index
-                              ? Theme.of(context).colorScheme.primary
-                              : Theme.of(context).colorScheme.outline,
-                        ),
-                      );
-                    }),
-                  ),
-                ),
+            ),
+            const SizedBox(height: 8),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: LinkifiedText(
+                text: widget.post.title,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: LinkifiedText(
+                text: widget.post.content,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            if (widget.post.attachments.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              FeedAttachmentCarousel(attachments: widget.post.attachments),
             ],
             const SizedBox(height: 8),
-            BlocProvider(
-              // Scope PostCubit for optimistic like state
-              create: (_) => PostCubit(widget.post),
-              child: BlocConsumer<FeedBloc, FeedState>(
-                listenWhen: (_, current) =>
-                    current is PostLikeError ||
-                    current is FeedLoaded ||
-                    current is FeedPaginationLoading ||
-                    current is FeedPaginationError,
-                listener: (context, state) {
-                  if (state is PostLikeError &&
-                      state.post.id == widget.post.id) {
-                    // Roll back to original pre-toggle state
-                    context.read<PostCubit>().rollbackLike(state.post);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          'Failed to update like',
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.onError,
-                          ),
-                        ),
-                        behavior: SnackBarBehavior.floating,
-                        backgroundColor: Theme.of(context).colorScheme.error,
-                      ),
-                    );
-                  }
-
-                  // Sync cubit when FeedBloc's post list has a fresher version
-                  // of this post (e.g. liked/unliked from the detail page).
-                  List<Post>? posts;
-                  if (state is FeedLoaded) {
-                    posts = state.posts;
-                  } else if (state is FeedPaginationLoading) {
-                    posts = state.existingPosts;
-                  } else if (state is FeedPaginationError) {
-                    posts = state.existingPosts;
-                  }
-                  if (posts != null) {
-                    final updated = posts.where((p) => p.id == widget.post.id);
-                    if (updated.isNotEmpty) {
-                      context.read<PostCubit>().updatePost(updated.first);
-                    }
-                  }
-                },
-                builder: (context, feedState) {
-                  return BlocBuilder<PostCubit, Post>(
-                    builder: (context, post) {
-                      return Row(
-                        children: [
-                          PostVoteButton(
-                            upvotes: post.upvotes,
-                            downvotes: post.downvotes,
-                            myVote: post.myVote,
-                            onUpvote: () {
-                              final profileState = context
-                                  .read<ProfileBloc>()
-                                  .state;
-                              if (profileState is! ProfileLoadedState) return;
-                              final cubit = context.read<PostCubit>();
-                              final previousFeedState = context
-                                  .read<FeedBloc>()
-                                  .state;
-                              // Toggle: upvote again retracts
-                              final newVote = post.myVote == 1 ? 0 : 1;
-                              cubit.applyVoteOptimistic(newVote);
-                              context.read<FeedBloc>().add(
-                                ToggleLikePost(
-                                  post: post,
-                                  voteValue: newVote,
-                                  voterId: profileState.profile.id,
-                                  previousState: previousFeedState,
-                                ),
-                              );
-                            },
-                            onDownvote: () {
-                              final profileState = context
-                                  .read<ProfileBloc>()
-                                  .state;
-                              if (profileState is! ProfileLoadedState) return;
-                              final cubit = context.read<PostCubit>();
-                              final previousFeedState = context
-                                  .read<FeedBloc>()
-                                  .state;
-                              // Toggle: downvote again retracts
-                              final newVote = post.myVote == -1 ? 0 : -1;
-                              cubit.applyVoteOptimistic(newVote);
-                              context.read<FeedBloc>().add(
-                                ToggleLikePost(
-                                  post: post,
-                                  voteValue: newVote,
-                                  voterId: profileState.profile.id,
-                                  previousState: previousFeedState,
-                                ),
-                              );
-                            },
-                          ),
-                          const SizedBox(width: 8),
-
-                          FilledButton.icon(
-                            style: FilledButton.styleFrom(
-                              padding: const EdgeInsets.all(2),
-                              backgroundColor: Theme.of(
-                                context,
-                              ).colorScheme.tertiaryContainer,
-                              foregroundColor: Theme.of(
-                                context,
-                              ).colorScheme.onTertiaryContainer,
-                            ),
-                            icon: const Icon(Icons.chat),
-                            onPressed: widget.onTap,
-                            label: Text('${post.commentCount}'),
-                          ),
-                          const SizedBox(width: 8),
-                          OutlinedButton.icon(
-                            iconAlignment: IconAlignment.start,
-                            onPressed: null,
-                            label: Text(post.viewsCount.toString()),
-                            icon: const Icon(Icons.visibility),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: BlocProvider(
+                // Scope PostCubit for optimistic like state
+                create: (_) => PostCubit(widget.post),
+                child: PostActionRow(onCommentTap: widget.onTap),
               ),
             ),
           ],

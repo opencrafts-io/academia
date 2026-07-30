@@ -1,7 +1,7 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/core/error/failures.dart';
 import 'package:academia/core/network/network.dart';
-import 'package:academia/database/database.dart';
+import 'package:academia/features/chirp/memberships/data/dtos/chirp_community_membership_api_dto.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
@@ -23,7 +23,7 @@ class ChirpCommunityMembershipRemoteDatasource with DioErrorHandler {
     }
   }
 
-  Future<Either<Failure, List<ChirpCommunityMembershipData>>>
+  Future<Either<Failure, List<ChirpCommunityMembershipApiDto>>>
   getPersonalMemberships({int pageSize = 0, int page = 1}) async {
     try {
       final response = await dioClient.dio.get(
@@ -35,7 +35,7 @@ class ChirpCommunityMembershipRemoteDatasource with DioErrorHandler {
         return right(
           rawData
               .map(
-                (e) => ChirpCommunityMembershipData.fromJson(
+                (e) => ChirpCommunityMembershipApiDto.fromJson(
                   e as Map<String, dynamic>,
                 ),
               )
@@ -57,7 +57,7 @@ class ChirpCommunityMembershipRemoteDatasource with DioErrorHandler {
     }
   }
 
-  Future<Either<Failure, ChirpCommunityMembershipData>>
+  Future<Either<Failure, ChirpCommunityMembershipApiDto>>
   getPersonalMembershipByCommunityID({required int communityID}) async {
     try {
       final response = await dioClient.dio.get(
@@ -65,7 +65,7 @@ class ChirpCommunityMembershipRemoteDatasource with DioErrorHandler {
       );
 
       if (response.statusCode == 200) {
-        return right(ChirpCommunityMembershipData.fromJson(response.data));
+        return right(ChirpCommunityMembershipApiDto.fromJson(response.data));
       }
       throw (
         "Programming error expected response code 200 instead got ${response.statusCode}",
@@ -83,7 +83,7 @@ class ChirpCommunityMembershipRemoteDatasource with DioErrorHandler {
   }
 
   /// Sends a request to the server to join a community.
-  Future<Either<Failure, ChirpCommunityMembershipData>> joinCommunity({
+  Future<Either<Failure, ChirpCommunityMembershipApiDto>> joinCommunity({
     required int communityID,
   }) async {
     try {
@@ -94,7 +94,7 @@ class ChirpCommunityMembershipRemoteDatasource with DioErrorHandler {
       if (response.statusCode == 201 || response.statusCode == 200) {
         final Map<String, dynamic> rawData =
             response.data as Map<String, dynamic>;
-        return right(ChirpCommunityMembershipData.fromJson(rawData));
+        return right(ChirpCommunityMembershipApiDto.fromJson(rawData));
       }
       throw (
         "Programming error expected response code 200 or 201 instead got ${response.statusCode}",
@@ -140,7 +140,7 @@ class ChirpCommunityMembershipRemoteDatasource with DioErrorHandler {
     }
   }
 
-  Future<Either<Failure, List<ChirpCommunityMembershipData>>>
+  Future<Either<Failure, List<ChirpCommunityMembershipApiDto>>>
   getCommunityMemberships(
     int communityID, {
     int page = 1,
@@ -156,7 +156,7 @@ class ChirpCommunityMembershipRemoteDatasource with DioErrorHandler {
         return right(
           rawData
               .map(
-                (e) => ChirpCommunityMembershipData.fromJson(
+                (e) => ChirpCommunityMembershipApiDto.fromJson(
                   e as Map<String, dynamic>,
                 ),
               )

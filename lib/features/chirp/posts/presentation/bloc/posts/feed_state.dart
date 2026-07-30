@@ -1,128 +1,43 @@
-part of 'feed_bloc.dart';
+import 'package:academia/features/chirp/posts/domain/domain.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-abstract class FeedState extends Equatable {
-  @override
-  List<Object?> get props => [];
-}
+part 'feed_state.freezed.dart';
 
-class FeedInitial extends FeedState {}
-
-class FeedLoading extends FeedState {}
-
-class FeedPaginationLoading extends FeedState {
-  final List<Post> existingPosts;
-  final bool hasMore;
-
-  FeedPaginationLoading({required this.existingPosts, required this.hasMore});
-
-  @override
-  List<Object?> get props => [existingPosts, hasMore];
-}
-
-class FeedLoaded extends FeedState {
-  final List<Post> posts;
-  final String? next;
-  final String? previous;
-  final int count;
-  final bool hasMore;
-
-  FeedLoaded({
-    required this.posts,
-    this.next,
-    this.previous,
-    required this.count,
-    this.hasMore = false,
-  });
-
-  FeedLoaded copyWith({
-    List<Post>? posts,
+@freezed
+sealed class FeedState with _$FeedState {
+  const factory FeedState.initial() = FeedInitial;
+  const factory FeedState.loading() = FeedLoading;
+  const factory FeedState.paginationLoading({
+    required List<Post> existingPosts,
+    required bool hasMore,
+  }) = FeedPaginationLoading;
+  const factory FeedState.loaded({
+    required List<Post> posts,
     String? next,
     String? previous,
-    int? count,
-    bool? hasMore,
-  }) {
-    return FeedLoaded(
-      posts: posts ?? this.posts,
-      next: next ?? this.next,
-      previous: previous ?? this.previous,
-      count: count ?? this.count,
-      hasMore: hasMore ?? this.hasMore,
-    );
-  }
+    required int count,
+    @Default(false) bool hasMore,
+  }) = FeedLoaded;
+  const factory FeedState.paginationError({
+    required List<Post> existingPosts,
+    required String message,
+    required bool hasMore,
+  }) = FeedPaginationError;
+  const factory FeedState.error({required String message}) = FeedError;
+  const factory FeedState.postDetailLoading() = PostDetailLoading;
+  const factory FeedState.postDetailLoaded({required Post post}) =
+      PostDetailLoaded;
+  const factory FeedState.postDetailError({required String message}) =
+      PostDetailError;
+  const factory FeedState.postCreating() = PostCreating;
+  const factory FeedState.postCreated({required List<Post> posts}) =
+      PostCreated;
+  const factory FeedState.postCreateError(String message) = PostCreateError;
 
-  @override
-  List<Object?> get props => [posts, next, previous, count, hasMore];
-}
-
-class FeedPaginationError extends FeedState {
-  final List<Post> existingPosts;
-  final String message;
-  final bool hasMore;
-
-  FeedPaginationError({
-    required this.existingPosts,
-    required this.message,
-    required this.hasMore,
-  });
-
-  @override
-  List<Object?> get props => [existingPosts, message, hasMore];
-}
-
-class FeedError extends FeedState {
-  final String message;
-  FeedError({required this.message});
-
-  @override
-  List<Object?> get props => [message];
-}
-
-class PostDetailLoading extends FeedState {}
-
-class PostDetailLoaded extends FeedState {
-  final Post post;
-
-  PostDetailLoaded({required this.post});
-
-  @override
-  List<Object?> get props => [post];
-}
-
-class PostDetailError extends FeedState {
-  final String message;
-
-  PostDetailError({required this.message});
-
-  @override
-  List<Object?> get props => [message];
-}
-
-class PostCreating extends FeedState {}
-
-class PostCreated extends FeedState {
-  final List<Post> posts;
-  PostCreated({required this.posts});
-
-  @override
-  List<Object?> get props => [posts];
-}
-
-class PostCreateError extends FeedState {
-  final String message;
-  PostCreateError(this.message);
-
-  @override
-  List<Object?> get props => [message];
-}
-
-/// Emitted when a like/unlike API call fails.
-/// The [post] is the original pre-toggle version for UI rollback.
-class PostLikeError extends FeedState {
-  final Post post;
-  final String message;
-
-  PostLikeError({required this.post, required this.message});
-
-  @override
-  List<Object?> get props => [post, message];
+  /// Emitted when a like/unlike API call fails.
+  /// The [post] is the original pre-toggle version for UI rollback.
+  const factory FeedState.postLikeError({
+    required Post post,
+    required String message,
+  }) = PostLikeError;
 }

@@ -1,11 +1,12 @@
-class CommunityUser {
-  final String userId;
-  final String userName;
-  final String role;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  const CommunityUser({
-    required this.userId,
-    required this.userName,
-    required this.role,
-  });
+part 'community_user.freezed.dart';
+
+@freezed
+abstract class CommunityUser with _$CommunityUser {
+  const factory CommunityUser({
+    required String userId,
+    required String userName,
+    required String role,
+  }) = _CommunityUser;
 }
