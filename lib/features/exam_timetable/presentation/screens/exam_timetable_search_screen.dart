@@ -21,6 +21,20 @@ class _ExamTimetableSearchScreenState extends State<ExamTimetableSearchScreen> {
   bool _isSearching = false;
 
   @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(() {
+      if (_searchController.text.trim().isEmpty && _isSearching) {
+        setState(() {
+          _isSearching = false;
+          _searchResults = [];
+          _selectedExams.clear();
+        });
+      }
+    });
+  }
+
+  @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
@@ -122,9 +136,7 @@ class _ExamTimetableSearchScreenState extends State<ExamTimetableSearchScreen> {
                   autofocus: true,
                   style: TextStyle(color: colorScheme.onSurface),
                   decoration: InputDecoration(
-                    hintText: _isSearching
-                        ? _searchController.text
-                        : 'BIL111K, ENG111R, MAT121K',
+                    hintText: 'BIL111K, ENG111R, MAT121K',
                     border: InputBorder.none,
                     isCollapsed: true,
                     hintStyle: TextStyle(color: colorScheme.onSurfaceVariant),
@@ -137,7 +149,7 @@ class _ExamTimetableSearchScreenState extends State<ExamTimetableSearchScreen> {
           ),
         ),
         actions: [
-          if (_searchController.text.isNotEmpty && _isSearching)
+          if (_searchController.text.isNotEmpty)
             IconButton(
               icon: Icon(Icons.close_rounded, color: colorScheme.onSurface),
               onPressed: () {
@@ -168,25 +180,28 @@ class _ExamTimetableSearchScreenState extends State<ExamTimetableSearchScreen> {
           }
         },
         builder: (context, state) {
+          if (!_isSearching || _searchController.text.trim().isEmpty) {
+            return const _SearchInfoState(
+              icon: Icons.search_rounded,
+              title: 'Provide courses to search for.',
+              subtitle: 'Separate multiple course codes with commas',
+              hint: 'Example: BIL111K, ENG111R, MAT121K',
+            );
+          }
+
           if (state is ExamTimetableLoading) {
             return Center(
               child: CircularProgressIndicator(color: colorScheme.primary),
             );
           }
 
-          if (state is ExamTimetableEmpty) {
+          if (state is ExamTimetableEmpty || _searchResults.isEmpty) {
+            final message = state is ExamTimetableEmpty
+                ? state.message
+                : 'No exams found for the specified course codes';
             return _SearchInfoState(
               icon: Icons.search_off_rounded,
-              title: state.message,
-            );
-          }
-
-          if (!_isSearching) {
-            return const _SearchInfoState(
-              icon: Icons.search_rounded,
-              title: 'Provide courses to search for.',
-              subtitle: 'Separate multiple course codes with commas',
-              hint: 'Example: BIL111K, ENG111R, MAT121K',
+              title: message,
             );
           }
 
