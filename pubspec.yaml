@@ -60,6 +60,8 @@ dependencies:
   intl: ^0.20.2
   file_picker: ^11.0.2
   image: ^4.1.7
+  extended_image: ^10.0.1
+  gal: ^2.3.0
   path: ^1.9.0
   image_picker: ^1.1.2
   flutter_slidable: ^4.0.0
@@ -104,6 +106,8 @@ dependencies:
   package_info_plus: ^9.0.0
   pub_semver: ^2.2.0
   video_player: ^2.11.0
+  cached_video_player_plus: ^4.1.0
+  visibility_detector: ^0.4.0+2
   flex_color_picker: ^3.8.0
   app_tracking_transparency: ^2.0.6+1
   device_info_plus: ^12.3.0
