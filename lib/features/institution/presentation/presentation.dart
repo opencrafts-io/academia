@@ -26,3 +26,4 @@ export 'views/institution_keys_view.dart';
 export 'views/institution_not_supported_view.dart';
 export 'views/edit_student_profile_page.dart';
 export 'views/institution_fees_transaction_page.dart';
+export 'views/link_institution_required_page.dart';
