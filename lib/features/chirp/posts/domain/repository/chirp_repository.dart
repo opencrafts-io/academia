@@ -2,7 +2,6 @@ import 'package:academia/core/core.dart';
 import 'package:academia/features/chirp/posts/posts.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-// import 'package:dio/dio.dart';
 
 abstract class ChirpRepository {
   Future<Either<Failure, PaginatedData<Post>>> getFeedPosts({

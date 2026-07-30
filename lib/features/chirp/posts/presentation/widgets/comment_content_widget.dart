@@ -252,9 +252,9 @@ class CommentContentWidget extends StatelessWidget {
                           final isSelected = selectedReason == reason;
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 8),
-                            child: RadioGroup(
+                            child: RadioGroup<String>(
                               onChanged: (val) {
-                                setState(() => val = reason);
+                                setState(() => selectedReason = val);
                               },
                               child: RadioListTile.adaptive(
                                 value: reason,

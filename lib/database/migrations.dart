@@ -140,4 +140,11 @@ extension AppDatabaseExtension on AppDataBase {
     await m.database.customStatement("DROP TABLE IF EXISTS 'exam_timetable';");
     await m.createTable(examTimetables);
   }
+
+  Future<void> migrate36To37(Migrator m) async {
+    // GroupTable ('group_table') backed an orphaned Groups subsystem with
+    // zero repository/usecase/DI/UI wiring anywhere in the app - dead schema,
+    // safe to drop outright.
+    await m.deleteTable('group_table');
+  }
 }

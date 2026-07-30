@@ -11,7 +11,6 @@ import 'package:academia/features/course/data/models/course.dart';
 import 'package:academia/database/tables/tables.dart';
 export 'package:academia/database/tables/tables.dart';
 import 'package:academia/features/leaderboard/data/models/leaderboard_rank.dart';
-import 'package:academia/features/chirp/posts/data/models/groups/group_model.dart';
 import 'package:academia/features/profile/data/models/user_profile.dart';
 import 'package:academia/features/semester/data/models/semester.dart';
 import 'package:academia/features/streaks/data/streak_activity.dart';
@@ -54,7 +53,6 @@ part 'database.g.dart';
     DashboardStatsTable,
     TicketStatsTable,
     ScannerTable,
-    GroupTable,
     InviteTable,
 
     BlockTable,
@@ -121,7 +119,7 @@ class AppDataBase extends _$AppDataBase {
   AppDataBase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 36;
+  int get schemaVersion => 37;
 
   @override
   MigrationStrategy get migration {
@@ -198,6 +196,9 @@ class AppDataBase extends _$AppDataBase {
               break;
             case 35:
               await migrate35To36(m);
+              break;
+            case 36:
+              await migrate36To37(m);
               break;
           }
         }
