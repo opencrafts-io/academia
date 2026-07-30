@@ -1032,13 +1032,20 @@ class CreateCommunitiesRoute extends GoRouteData with $CreateCommunitiesRoute {
   }
 }
 
-@TypedGoRoute<TrimVideoRoute>(path: "/video-trimer/:videoPath")
+@TypedGoRoute<TrimVideoRoute>(path: "/video-trimmer")
 class TrimVideoRoute extends GoRouteData with $TrimVideoRoute {
-  TrimVideoRoute({required this.videoPath});
-  final String videoPath;
+  /// [$extra] is the source video's file path, passed via `extra` (not a
+  /// URL path segment - a filesystem path has no business being
+  /// percent-encoded into a navigable route) and fully typed by
+  /// go_router_builder's `$extra` convention, so both this constructor and
+  /// `state.extra` on the receiving side are `String`, not `Object?`.
+  const TrimVideoRoute(this.$extra);
+
+  final String $extra;
+
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return VideoTrimmerPage(videoPath: videoPath);
+    return VideoTrimmerPage(videoPath: $extra);
   }
 }
 
