@@ -807,12 +807,12 @@ class UserProfileCompanion extends UpdateCompanion<UserProfileData> {
   }
 }
 
-class $AttachmentTableTable extends AttachmentTable
-    with TableInfo<$AttachmentTableTable, AttachmentData> {
+class $AttachmentsTable extends Attachments
+    with TableInfo<$AttachmentsTable, Attachment> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $AttachmentTableTable(this.attachedDatabase, [this._alias]);
+  $AttachmentsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -902,7 +902,7 @@ class $AttachmentTableTable extends AttachmentTable
   static const String $name = 'attachment_table';
   @override
   VerificationContext validateIntegrity(
-    Insertable<AttachmentData> instance, {
+    Insertable<Attachment> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -967,9 +967,9 @@ class $AttachmentTableTable extends AttachmentTable
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  AttachmentData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Attachment map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return AttachmentData(
+    return Attachment(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -1002,12 +1002,12 @@ class $AttachmentTableTable extends AttachmentTable
   }
 
   @override
-  $AttachmentTableTable createAlias(String alias) {
-    return $AttachmentTableTable(attachedDatabase, alias);
+  $AttachmentsTable createAlias(String alias) {
+    return $AttachmentsTable(attachedDatabase, alias);
   }
 }
 
-class AttachmentData extends DataClass implements Insertable<AttachmentData> {
+class Attachment extends DataClass implements Insertable<Attachment> {
   final int id;
   final String attachmentType;
   final String file;
@@ -1015,7 +1015,7 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
   final String name;
   final DateTime createdAt;
   final int postId;
-  const AttachmentData({
+  const Attachment({
     required this.id,
     required this.attachmentType,
     required this.file,
@@ -1037,8 +1037,8 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
     return map;
   }
 
-  AttachmentTableCompanion toCompanion(bool nullToAbsent) {
-    return AttachmentTableCompanion(
+  AttachmentsCompanion toCompanion(bool nullToAbsent) {
+    return AttachmentsCompanion(
       id: Value(id),
       attachmentType: Value(attachmentType),
       file: Value(file),
@@ -1049,12 +1049,12 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
     );
   }
 
-  factory AttachmentData.fromJson(
+  factory Attachment.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return AttachmentData(
+    return Attachment(
       id: serializer.fromJson<int>(json['id']),
       attachmentType: serializer.fromJson<String>(json['attachment_type']),
       file: serializer.fromJson<String>(json['file']),
@@ -1078,7 +1078,7 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
     };
   }
 
-  AttachmentData copyWith({
+  Attachment copyWith({
     int? id,
     String? attachmentType,
     String? file,
@@ -1086,7 +1086,7 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
     String? name,
     DateTime? createdAt,
     int? postId,
-  }) => AttachmentData(
+  }) => Attachment(
     id: id ?? this.id,
     attachmentType: attachmentType ?? this.attachmentType,
     file: file ?? this.file,
@@ -1095,8 +1095,8 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
     createdAt: createdAt ?? this.createdAt,
     postId: postId ?? this.postId,
   );
-  AttachmentData copyWithCompanion(AttachmentTableCompanion data) {
-    return AttachmentData(
+  Attachment copyWithCompanion(AttachmentsCompanion data) {
+    return Attachment(
       id: data.id.present ? data.id.value : this.id,
       attachmentType: data.attachmentType.present
           ? data.attachmentType.value
@@ -1111,7 +1111,7 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
 
   @override
   String toString() {
-    return (StringBuffer('AttachmentData(')
+    return (StringBuffer('Attachment(')
           ..write('id: $id, ')
           ..write('attachmentType: $attachmentType, ')
           ..write('file: $file, ')
@@ -1129,7 +1129,7 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is AttachmentData &&
+      (other is Attachment &&
           other.id == this.id &&
           other.attachmentType == this.attachmentType &&
           other.file == this.file &&
@@ -1139,7 +1139,7 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
           other.postId == this.postId);
 }
 
-class AttachmentTableCompanion extends UpdateCompanion<AttachmentData> {
+class AttachmentsCompanion extends UpdateCompanion<Attachment> {
   final Value<int> id;
   final Value<String> attachmentType;
   final Value<String> file;
@@ -1147,7 +1147,7 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentData> {
   final Value<String> name;
   final Value<DateTime> createdAt;
   final Value<int> postId;
-  const AttachmentTableCompanion({
+  const AttachmentsCompanion({
     this.id = const Value.absent(),
     this.attachmentType = const Value.absent(),
     this.file = const Value.absent(),
@@ -1156,7 +1156,7 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentData> {
     this.createdAt = const Value.absent(),
     this.postId = const Value.absent(),
   });
-  AttachmentTableCompanion.insert({
+  AttachmentsCompanion.insert({
     this.id = const Value.absent(),
     required String attachmentType,
     required String file,
@@ -1170,7 +1170,7 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentData> {
        name = Value(name),
        createdAt = Value(createdAt),
        postId = Value(postId);
-  static Insertable<AttachmentData> custom({
+  static Insertable<Attachment> custom({
     Expression<int>? id,
     Expression<String>? attachmentType,
     Expression<String>? file,
@@ -1190,7 +1190,7 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentData> {
     });
   }
 
-  AttachmentTableCompanion copyWith({
+  AttachmentsCompanion copyWith({
     Value<int>? id,
     Value<String>? attachmentType,
     Value<String>? file,
@@ -1199,7 +1199,7 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentData> {
     Value<DateTime>? createdAt,
     Value<int>? postId,
   }) {
-    return AttachmentTableCompanion(
+    return AttachmentsCompanion(
       id: id ?? this.id,
       attachmentType: attachmentType ?? this.attachmentType,
       file: file ?? this.file,
@@ -1239,7 +1239,7 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentData> {
 
   @override
   String toString() {
-    return (StringBuffer('AttachmentTableCompanion(')
+    return (StringBuffer('AttachmentsCompanion(')
           ..write('id: $id, ')
           ..write('attachmentType: $attachmentType, ')
           ..write('file: $file, ')
@@ -1252,12 +1252,11 @@ class AttachmentTableCompanion extends UpdateCompanion<AttachmentData> {
   }
 }
 
-class $PostTableTable extends PostTable
-    with TableInfo<$PostTableTable, PostData> {
+class $PostsTable extends Posts with TableInfo<$PostsTable, Post> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $PostTableTable(this.attachedDatabase, [this._alias]);
+  $PostsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -1279,7 +1278,7 @@ class $PostTableTable extends PostTable
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
-  ).withConverter<Map<String, dynamic>>($PostTableTable.$convertercommunity);
+  ).withConverter<Map<String, dynamic>>($PostsTable.$convertercommunity);
   static const VerificationMeta _authorIdMeta = const VerificationMeta(
     'authorId',
   );
@@ -1343,7 +1342,7 @@ class $PostTableTable extends PostTable
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
-  ).withConverter<List<dynamic>>($PostTableTable.$converterattachments);
+  ).withConverter<List<dynamic>>($PostsTable.$converterattachments);
   static const VerificationMeta _viewsCountMeta = const VerificationMeta(
     'viewsCount',
   );
@@ -1376,7 +1375,7 @@ class $PostTableTable extends PostTable
         false,
         type: DriftSqlType.string,
         requiredDuringInsert: true,
-      ).withConverter<List<dynamic>>($PostTableTable.$convertercomments);
+      ).withConverter<List<dynamic>>($PostsTable.$convertercomments);
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -1435,7 +1434,7 @@ class $PostTableTable extends PostTable
   static const String $name = 'post_table';
   @override
   VerificationContext validateIntegrity(
-    Insertable<PostData> instance, {
+    Insertable<Post> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -1522,14 +1521,14 @@ class $PostTableTable extends PostTable
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  PostData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Post map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return PostData(
+    return Post(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
       )!,
-      community: $PostTableTable.$convertercommunity.fromSql(
+      community: $PostsTable.$convertercommunity.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}community'],
@@ -1555,7 +1554,7 @@ class $PostTableTable extends PostTable
         DriftSqlType.int,
         data['${effectivePrefix}downvotes'],
       )!,
-      attachments: $PostTableTable.$converterattachments.fromSql(
+      attachments: $PostsTable.$converterattachments.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}attachments'],
@@ -1569,7 +1568,7 @@ class $PostTableTable extends PostTable
         DriftSqlType.int,
         data['${effectivePrefix}comment_count'],
       )!,
-      comments: $PostTableTable.$convertercomments.fromSql(
+      comments: $PostsTable.$convertercomments.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}comments'],
@@ -1591,8 +1590,8 @@ class $PostTableTable extends PostTable
   }
 
   @override
-  $PostTableTable createAlias(String alias) {
-    return $PostTableTable(attachedDatabase, alias);
+  $PostsTable createAlias(String alias) {
+    return $PostsTable(attachedDatabase, alias);
   }
 
   static TypeConverter<Map<String, dynamic>, String> $convertercommunity =
@@ -1603,7 +1602,7 @@ class $PostTableTable extends PostTable
       JsonListConverter();
 }
 
-class PostData extends DataClass implements Insertable<PostData> {
+class Post extends DataClass implements Insertable<Post> {
   final int id;
   final Map<String, dynamic> community;
   final String authorId;
@@ -1620,7 +1619,7 @@ class PostData extends DataClass implements Insertable<PostData> {
 
   /// For internal trackog of when the post was lastly cached on the
   final DateTime? cachedAt;
-  const PostData({
+  const Post({
     required this.id,
     required this.community,
     required this.authorId,
@@ -1642,7 +1641,7 @@ class PostData extends DataClass implements Insertable<PostData> {
     map['id'] = Variable<int>(id);
     {
       map['community'] = Variable<String>(
-        $PostTableTable.$convertercommunity.toSql(community),
+        $PostsTable.$convertercommunity.toSql(community),
       );
     }
     map['author_id'] = Variable<String>(authorId);
@@ -1652,14 +1651,14 @@ class PostData extends DataClass implements Insertable<PostData> {
     map['downvotes'] = Variable<int>(downvotes);
     {
       map['attachments'] = Variable<String>(
-        $PostTableTable.$converterattachments.toSql(attachments),
+        $PostsTable.$converterattachments.toSql(attachments),
       );
     }
     map['views_count'] = Variable<int>(viewsCount);
     map['comment_count'] = Variable<int>(commentCount);
     {
       map['comments'] = Variable<String>(
-        $PostTableTable.$convertercomments.toSql(comments),
+        $PostsTable.$convertercomments.toSql(comments),
       );
     }
     map['created_at'] = Variable<DateTime>(createdAt);
@@ -1670,8 +1669,8 @@ class PostData extends DataClass implements Insertable<PostData> {
     return map;
   }
 
-  PostTableCompanion toCompanion(bool nullToAbsent) {
-    return PostTableCompanion(
+  PostsCompanion toCompanion(bool nullToAbsent) {
+    return PostsCompanion(
       id: Value(id),
       community: Value(community),
       authorId: Value(authorId),
@@ -1691,12 +1690,12 @@ class PostData extends DataClass implements Insertable<PostData> {
     );
   }
 
-  factory PostData.fromJson(
+  factory Post.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return PostData(
+    return Post(
       id: serializer.fromJson<int>(json['id']),
       community: serializer.fromJson<Map<String, dynamic>>(json['community']),
       authorId: serializer.fromJson<String>(json['author_id']),
@@ -1734,7 +1733,7 @@ class PostData extends DataClass implements Insertable<PostData> {
     };
   }
 
-  PostData copyWith({
+  Post copyWith({
     int? id,
     Map<String, dynamic>? community,
     String? authorId,
@@ -1749,7 +1748,7 @@ class PostData extends DataClass implements Insertable<PostData> {
     DateTime? createdAt,
     DateTime? updatedAt,
     Value<DateTime?> cachedAt = const Value.absent(),
-  }) => PostData(
+  }) => Post(
     id: id ?? this.id,
     community: community ?? this.community,
     authorId: authorId ?? this.authorId,
@@ -1765,8 +1764,8 @@ class PostData extends DataClass implements Insertable<PostData> {
     updatedAt: updatedAt ?? this.updatedAt,
     cachedAt: cachedAt.present ? cachedAt.value : this.cachedAt,
   );
-  PostData copyWithCompanion(PostTableCompanion data) {
-    return PostData(
+  Post copyWithCompanion(PostsCompanion data) {
+    return Post(
       id: data.id.present ? data.id.value : this.id,
       community: data.community.present ? data.community.value : this.community,
       authorId: data.authorId.present ? data.authorId.value : this.authorId,
@@ -1792,7 +1791,7 @@ class PostData extends DataClass implements Insertable<PostData> {
 
   @override
   String toString() {
-    return (StringBuffer('PostData(')
+    return (StringBuffer('Post(')
           ..write('id: $id, ')
           ..write('community: $community, ')
           ..write('authorId: $authorId, ')
@@ -1831,7 +1830,7 @@ class PostData extends DataClass implements Insertable<PostData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is PostData &&
+      (other is Post &&
           other.id == this.id &&
           other.community == this.community &&
           other.authorId == this.authorId &&
@@ -1848,7 +1847,7 @@ class PostData extends DataClass implements Insertable<PostData> {
           other.cachedAt == this.cachedAt);
 }
 
-class PostTableCompanion extends UpdateCompanion<PostData> {
+class PostsCompanion extends UpdateCompanion<Post> {
   final Value<int> id;
   final Value<Map<String, dynamic>> community;
   final Value<String> authorId;
@@ -1863,7 +1862,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime?> cachedAt;
-  const PostTableCompanion({
+  const PostsCompanion({
     this.id = const Value.absent(),
     this.community = const Value.absent(),
     this.authorId = const Value.absent(),
@@ -1879,7 +1878,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
     this.updatedAt = const Value.absent(),
     this.cachedAt = const Value.absent(),
   });
-  PostTableCompanion.insert({
+  PostsCompanion.insert({
     this.id = const Value.absent(),
     required Map<String, dynamic> community,
     required String authorId,
@@ -1902,7 +1901,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
        comments = Value(comments),
        createdAt = Value(createdAt),
        updatedAt = Value(updatedAt);
-  static Insertable<PostData> custom({
+  static Insertable<Post> custom({
     Expression<int>? id,
     Expression<String>? community,
     Expression<String>? authorId,
@@ -1936,7 +1935,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
     });
   }
 
-  PostTableCompanion copyWith({
+  PostsCompanion copyWith({
     Value<int>? id,
     Value<Map<String, dynamic>>? community,
     Value<String>? authorId,
@@ -1952,7 +1951,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
     Value<DateTime>? updatedAt,
     Value<DateTime?>? cachedAt,
   }) {
-    return PostTableCompanion(
+    return PostsCompanion(
       id: id ?? this.id,
       community: community ?? this.community,
       authorId: authorId ?? this.authorId,
@@ -1978,7 +1977,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
     }
     if (community.present) {
       map['community'] = Variable<String>(
-        $PostTableTable.$convertercommunity.toSql(community.value),
+        $PostsTable.$convertercommunity.toSql(community.value),
       );
     }
     if (authorId.present) {
@@ -1998,7 +1997,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
     }
     if (attachments.present) {
       map['attachments'] = Variable<String>(
-        $PostTableTable.$converterattachments.toSql(attachments.value),
+        $PostsTable.$converterattachments.toSql(attachments.value),
       );
     }
     if (viewsCount.present) {
@@ -2009,7 +2008,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
     }
     if (comments.present) {
       map['comments'] = Variable<String>(
-        $PostTableTable.$convertercomments.toSql(comments.value),
+        $PostsTable.$convertercomments.toSql(comments.value),
       );
     }
     if (createdAt.present) {
@@ -2026,7 +2025,7 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
 
   @override
   String toString() {
-    return (StringBuffer('PostTableCompanion(')
+    return (StringBuffer('PostsCompanion(')
           ..write('id: $id, ')
           ..write('community: $community, ')
           ..write('authorId: $authorId, ')
@@ -2046,12 +2045,11 @@ class PostTableCompanion extends UpdateCompanion<PostData> {
   }
 }
 
-class $CommentTableTable extends CommentTable
-    with TableInfo<$CommentTableTable, CommentData> {
+class $CommentsTable extends Comments with TableInfo<$CommentsTable, Comment> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $CommentTableTable(this.attachedDatabase, [this._alias]);
+  $CommentsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -2146,7 +2144,7 @@ class $CommentTableTable extends CommentTable
         false,
         type: DriftSqlType.string,
         requiredDuringInsert: true,
-      ).withConverter<List<dynamic>>($CommentTableTable.$converterreplies);
+      ).withConverter<List<dynamic>>($CommentsTable.$converterreplies);
   static const VerificationMeta _parentMeta = const VerificationMeta('parent');
   @override
   late final GeneratedColumn<int> parent = GeneratedColumn<int>(
@@ -2176,7 +2174,7 @@ class $CommentTableTable extends CommentTable
   static const String $name = 'comment_table';
   @override
   VerificationContext validateIntegrity(
-    Insertable<CommentData> instance, {
+    Insertable<Comment> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -2250,9 +2248,9 @@ class $CommentTableTable extends CommentTable
   @override
   Set<GeneratedColumn> get $primaryKey => const {};
   @override
-  CommentData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Comment map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return CommentData(
+    return Comment(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -2285,7 +2283,7 @@ class $CommentTableTable extends CommentTable
         DriftSqlType.int,
         data['${effectivePrefix}downvotes'],
       )!,
-      replies: $CommentTableTable.$converterreplies.fromSql(
+      replies: $CommentsTable.$converterreplies.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}replies'],
@@ -2299,15 +2297,15 @@ class $CommentTableTable extends CommentTable
   }
 
   @override
-  $CommentTableTable createAlias(String alias) {
-    return $CommentTableTable(attachedDatabase, alias);
+  $CommentsTable createAlias(String alias) {
+    return $CommentsTable(attachedDatabase, alias);
   }
 
   static TypeConverter<List<dynamic>, String> $converterreplies =
       JsonListConverter();
 }
 
-class CommentData extends DataClass implements Insertable<CommentData> {
+class Comment extends DataClass implements Insertable<Comment> {
   final int id;
   final int post;
   final String authorId;
@@ -2318,7 +2316,7 @@ class CommentData extends DataClass implements Insertable<CommentData> {
   final int downvotes;
   final List<dynamic> replies;
   final int? parent;
-  const CommentData({
+  const Comment({
     required this.id,
     required this.post,
     required this.authorId,
@@ -2343,7 +2341,7 @@ class CommentData extends DataClass implements Insertable<CommentData> {
     map['downvotes'] = Variable<int>(downvotes);
     {
       map['replies'] = Variable<String>(
-        $CommentTableTable.$converterreplies.toSql(replies),
+        $CommentsTable.$converterreplies.toSql(replies),
       );
     }
     if (!nullToAbsent || parent != null) {
@@ -2352,8 +2350,8 @@ class CommentData extends DataClass implements Insertable<CommentData> {
     return map;
   }
 
-  CommentTableCompanion toCompanion(bool nullToAbsent) {
-    return CommentTableCompanion(
+  CommentsCompanion toCompanion(bool nullToAbsent) {
+    return CommentsCompanion(
       id: Value(id),
       post: Value(post),
       authorId: Value(authorId),
@@ -2369,12 +2367,12 @@ class CommentData extends DataClass implements Insertable<CommentData> {
     );
   }
 
-  factory CommentData.fromJson(
+  factory Comment.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return CommentData(
+    return Comment(
       id: serializer.fromJson<int>(json['id']),
       post: serializer.fromJson<int>(json['post']),
       authorId: serializer.fromJson<String>(json['author_id']),
@@ -2404,7 +2402,7 @@ class CommentData extends DataClass implements Insertable<CommentData> {
     };
   }
 
-  CommentData copyWith({
+  Comment copyWith({
     int? id,
     int? post,
     String? authorId,
@@ -2415,7 +2413,7 @@ class CommentData extends DataClass implements Insertable<CommentData> {
     int? downvotes,
     List<dynamic>? replies,
     Value<int?> parent = const Value.absent(),
-  }) => CommentData(
+  }) => Comment(
     id: id ?? this.id,
     post: post ?? this.post,
     authorId: authorId ?? this.authorId,
@@ -2427,8 +2425,8 @@ class CommentData extends DataClass implements Insertable<CommentData> {
     replies: replies ?? this.replies,
     parent: parent.present ? parent.value : this.parent,
   );
-  CommentData copyWithCompanion(CommentTableCompanion data) {
-    return CommentData(
+  Comment copyWithCompanion(CommentsCompanion data) {
+    return Comment(
       id: data.id.present ? data.id.value : this.id,
       post: data.post.present ? data.post.value : this.post,
       authorId: data.authorId.present ? data.authorId.value : this.authorId,
@@ -2444,7 +2442,7 @@ class CommentData extends DataClass implements Insertable<CommentData> {
 
   @override
   String toString() {
-    return (StringBuffer('CommentData(')
+    return (StringBuffer('Comment(')
           ..write('id: $id, ')
           ..write('post: $post, ')
           ..write('authorId: $authorId, ')
@@ -2475,7 +2473,7 @@ class CommentData extends DataClass implements Insertable<CommentData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is CommentData &&
+      (other is Comment &&
           other.id == this.id &&
           other.post == this.post &&
           other.authorId == this.authorId &&
@@ -2488,7 +2486,7 @@ class CommentData extends DataClass implements Insertable<CommentData> {
           other.parent == this.parent);
 }
 
-class CommentTableCompanion extends UpdateCompanion<CommentData> {
+class CommentsCompanion extends UpdateCompanion<Comment> {
   final Value<int> id;
   final Value<int> post;
   final Value<String> authorId;
@@ -2500,7 +2498,7 @@ class CommentTableCompanion extends UpdateCompanion<CommentData> {
   final Value<List<dynamic>> replies;
   final Value<int?> parent;
   final Value<int> rowid;
-  const CommentTableCompanion({
+  const CommentsCompanion({
     this.id = const Value.absent(),
     this.post = const Value.absent(),
     this.authorId = const Value.absent(),
@@ -2513,7 +2511,7 @@ class CommentTableCompanion extends UpdateCompanion<CommentData> {
     this.parent = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  CommentTableCompanion.insert({
+  CommentsCompanion.insert({
     required int id,
     required int post,
     required String authorId,
@@ -2532,7 +2530,7 @@ class CommentTableCompanion extends UpdateCompanion<CommentData> {
        createdAt = Value(createdAt),
        updatedAt = Value(updatedAt),
        replies = Value(replies);
-  static Insertable<CommentData> custom({
+  static Insertable<Comment> custom({
     Expression<int>? id,
     Expression<int>? post,
     Expression<String>? authorId,
@@ -2560,7 +2558,7 @@ class CommentTableCompanion extends UpdateCompanion<CommentData> {
     });
   }
 
-  CommentTableCompanion copyWith({
+  CommentsCompanion copyWith({
     Value<int>? id,
     Value<int>? post,
     Value<String>? authorId,
@@ -2573,7 +2571,7 @@ class CommentTableCompanion extends UpdateCompanion<CommentData> {
     Value<int?>? parent,
     Value<int>? rowid,
   }) {
-    return CommentTableCompanion(
+    return CommentsCompanion(
       id: id ?? this.id,
       post: post ?? this.post,
       authorId: authorId ?? this.authorId,
@@ -2617,7 +2615,7 @@ class CommentTableCompanion extends UpdateCompanion<CommentData> {
     }
     if (replies.present) {
       map['replies'] = Variable<String>(
-        $CommentTableTable.$converterreplies.toSql(replies.value),
+        $CommentsTable.$converterreplies.toSql(replies.value),
       );
     }
     if (parent.present) {
@@ -2631,7 +2629,7 @@ class CommentTableCompanion extends UpdateCompanion<CommentData> {
 
   @override
   String toString() {
-    return (StringBuffer('CommentTableCompanion(')
+    return (StringBuffer('CommentsCompanion(')
           ..write('id: $id, ')
           ..write('post: $post, ')
           ..write('authorId: $authorId, ')
@@ -2642,948 +2640,6 @@ class CommentTableCompanion extends UpdateCompanion<CommentData> {
           ..write('downvotes: $downvotes, ')
           ..write('replies: $replies, ')
           ..write('parent: $parent, ')
-          ..write('rowid: $rowid')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $TodoTable extends Todo with TableInfo<$TodoTable, TodoData> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $TodoTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-    'id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _externalIDMeta = const VerificationMeta(
-    'externalID',
-  );
-  @override
-  late final GeneratedColumn<String> externalID = GeneratedColumn<String>(
-    'external_i_d',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
-  );
-  static const VerificationMeta _completedMeta = const VerificationMeta(
-    'completed',
-  );
-  @override
-  late final GeneratedColumn<DateTime> completed = GeneratedColumn<DateTime>(
-    'completed',
-    aliasedName,
-    true,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _deletedMeta = const VerificationMeta(
-    'deleted',
-  );
-  @override
-  late final GeneratedColumn<bool> deleted = GeneratedColumn<bool>(
-    'deleted',
-    aliasedName,
-    false,
-    type: DriftSqlType.bool,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("deleted" IN (0, 1))',
-    ),
-    defaultValue: Constant(false),
-  );
-  static const VerificationMeta _dueMeta = const VerificationMeta('due');
-  @override
-  late final GeneratedColumn<DateTime> due = GeneratedColumn<DateTime>(
-    'due',
-    aliasedName,
-    true,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _etagMeta = const VerificationMeta('etag');
-  @override
-  late final GeneratedColumn<String> etag = GeneratedColumn<String>(
-    'etag',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _hiddenMeta = const VerificationMeta('hidden');
-  @override
-  late final GeneratedColumn<bool> hidden = GeneratedColumn<bool>(
-    'hidden',
-    aliasedName,
-    false,
-    type: DriftSqlType.bool,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("hidden" IN (0, 1))',
-    ),
-    defaultValue: Constant(false),
-  );
-  static const VerificationMeta _kindMeta = const VerificationMeta('kind');
-  @override
-  late final GeneratedColumn<String> kind = GeneratedColumn<String>(
-    'kind',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _notesMeta = const VerificationMeta('notes');
-  @override
-  late final GeneratedColumn<String> notes = GeneratedColumn<String>(
-    'notes',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _ownerMeta = const VerificationMeta('owner');
-  @override
-  late final GeneratedColumn<String> owner = GeneratedColumn<String>(
-    'owner',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _parentMeta = const VerificationMeta('parent');
-  @override
-  late final GeneratedColumn<String> parent = GeneratedColumn<String>(
-    'parent',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _positionMeta = const VerificationMeta(
-    'position',
-  );
-  @override
-  late final GeneratedColumn<String> position = GeneratedColumn<String>(
-    'position',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _selfLinkMeta = const VerificationMeta(
-    'selfLink',
-  );
-  @override
-  late final GeneratedColumn<String> selfLink = GeneratedColumn<String>(
-    'self_link',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _statusMeta = const VerificationMeta('status');
-  @override
-  late final GeneratedColumn<String> status = GeneratedColumn<String>(
-    'status',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _titleMeta = const VerificationMeta('title');
-  @override
-  late final GeneratedColumn<String> title = GeneratedColumn<String>(
-    'title',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _updatedMeta = const VerificationMeta(
-    'updated',
-  );
-  @override
-  late final GeneratedColumn<DateTime> updated = GeneratedColumn<DateTime>(
-    'updated',
-    aliasedName,
-    true,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _webViewLinkMeta = const VerificationMeta(
-    'webViewLink',
-  );
-  @override
-  late final GeneratedColumn<String> webViewLink = GeneratedColumn<String>(
-    'web_view_link',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  @override
-  List<GeneratedColumn> get $columns => [
-    id,
-    externalID,
-    completed,
-    deleted,
-    due,
-    etag,
-    hidden,
-    kind,
-    notes,
-    owner,
-    parent,
-    position,
-    selfLink,
-    status,
-    title,
-    updated,
-    webViewLink,
-  ];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'todo';
-  @override
-  VerificationContext validateIntegrity(
-    Insertable<TodoData> instance, {
-    bool isInserting = false,
-  }) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
-    }
-    if (data.containsKey('external_i_d')) {
-      context.handle(
-        _externalIDMeta,
-        externalID.isAcceptableOrUnknown(
-          data['external_i_d']!,
-          _externalIDMeta,
-        ),
-      );
-    }
-    if (data.containsKey('completed')) {
-      context.handle(
-        _completedMeta,
-        completed.isAcceptableOrUnknown(data['completed']!, _completedMeta),
-      );
-    }
-    if (data.containsKey('deleted')) {
-      context.handle(
-        _deletedMeta,
-        deleted.isAcceptableOrUnknown(data['deleted']!, _deletedMeta),
-      );
-    }
-    if (data.containsKey('due')) {
-      context.handle(
-        _dueMeta,
-        due.isAcceptableOrUnknown(data['due']!, _dueMeta),
-      );
-    }
-    if (data.containsKey('etag')) {
-      context.handle(
-        _etagMeta,
-        etag.isAcceptableOrUnknown(data['etag']!, _etagMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_etagMeta);
-    }
-    if (data.containsKey('hidden')) {
-      context.handle(
-        _hiddenMeta,
-        hidden.isAcceptableOrUnknown(data['hidden']!, _hiddenMeta),
-      );
-    }
-    if (data.containsKey('kind')) {
-      context.handle(
-        _kindMeta,
-        kind.isAcceptableOrUnknown(data['kind']!, _kindMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_kindMeta);
-    }
-    if (data.containsKey('notes')) {
-      context.handle(
-        _notesMeta,
-        notes.isAcceptableOrUnknown(data['notes']!, _notesMeta),
-      );
-    }
-    if (data.containsKey('owner')) {
-      context.handle(
-        _ownerMeta,
-        owner.isAcceptableOrUnknown(data['owner']!, _ownerMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_ownerMeta);
-    }
-    if (data.containsKey('parent')) {
-      context.handle(
-        _parentMeta,
-        parent.isAcceptableOrUnknown(data['parent']!, _parentMeta),
-      );
-    }
-    if (data.containsKey('position')) {
-      context.handle(
-        _positionMeta,
-        position.isAcceptableOrUnknown(data['position']!, _positionMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_positionMeta);
-    }
-    if (data.containsKey('self_link')) {
-      context.handle(
-        _selfLinkMeta,
-        selfLink.isAcceptableOrUnknown(data['self_link']!, _selfLinkMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_selfLinkMeta);
-    }
-    if (data.containsKey('status')) {
-      context.handle(
-        _statusMeta,
-        status.isAcceptableOrUnknown(data['status']!, _statusMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_statusMeta);
-    }
-    if (data.containsKey('title')) {
-      context.handle(
-        _titleMeta,
-        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_titleMeta);
-    }
-    if (data.containsKey('updated')) {
-      context.handle(
-        _updatedMeta,
-        updated.isAcceptableOrUnknown(data['updated']!, _updatedMeta),
-      );
-    }
-    if (data.containsKey('web_view_link')) {
-      context.handle(
-        _webViewLinkMeta,
-        webViewLink.isAcceptableOrUnknown(
-          data['web_view_link']!,
-          _webViewLinkMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_webViewLinkMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  TodoData map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return TodoData(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}id'],
-      )!,
-      externalID: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}external_i_d'],
-      ),
-      completed: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}completed'],
-      ),
-      deleted: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}deleted'],
-      )!,
-      due: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}due'],
-      ),
-      etag: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}etag'],
-      )!,
-      hidden: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}hidden'],
-      )!,
-      kind: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}kind'],
-      )!,
-      notes: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}notes'],
-      ),
-      owner: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}owner'],
-      )!,
-      parent: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}parent'],
-      ),
-      position: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}position'],
-      )!,
-      selfLink: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}self_link'],
-      )!,
-      status: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}status'],
-      )!,
-      title: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}title'],
-      )!,
-      updated: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}updated'],
-      ),
-      webViewLink: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}web_view_link'],
-      )!,
-    );
-  }
-
-  @override
-  $TodoTable createAlias(String alias) {
-    return $TodoTable(attachedDatabase, alias);
-  }
-}
-
-class TodoData extends DataClass implements Insertable<TodoData> {
-  final String id;
-  final String? externalID;
-  final DateTime? completed;
-  final bool deleted;
-  final DateTime? due;
-  final String etag;
-  final bool hidden;
-  final String kind;
-  final String? notes;
-  final String owner;
-  final String? parent;
-  final String position;
-  final String selfLink;
-  final String status;
-  final String title;
-  final DateTime? updated;
-  final String webViewLink;
-  const TodoData({
-    required this.id,
-    this.externalID,
-    this.completed,
-    required this.deleted,
-    this.due,
-    required this.etag,
-    required this.hidden,
-    required this.kind,
-    this.notes,
-    required this.owner,
-    this.parent,
-    required this.position,
-    required this.selfLink,
-    required this.status,
-    required this.title,
-    this.updated,
-    required this.webViewLink,
-  });
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<String>(id);
-    if (!nullToAbsent || externalID != null) {
-      map['external_i_d'] = Variable<String>(externalID);
-    }
-    if (!nullToAbsent || completed != null) {
-      map['completed'] = Variable<DateTime>(completed);
-    }
-    map['deleted'] = Variable<bool>(deleted);
-    if (!nullToAbsent || due != null) {
-      map['due'] = Variable<DateTime>(due);
-    }
-    map['etag'] = Variable<String>(etag);
-    map['hidden'] = Variable<bool>(hidden);
-    map['kind'] = Variable<String>(kind);
-    if (!nullToAbsent || notes != null) {
-      map['notes'] = Variable<String>(notes);
-    }
-    map['owner'] = Variable<String>(owner);
-    if (!nullToAbsent || parent != null) {
-      map['parent'] = Variable<String>(parent);
-    }
-    map['position'] = Variable<String>(position);
-    map['self_link'] = Variable<String>(selfLink);
-    map['status'] = Variable<String>(status);
-    map['title'] = Variable<String>(title);
-    if (!nullToAbsent || updated != null) {
-      map['updated'] = Variable<DateTime>(updated);
-    }
-    map['web_view_link'] = Variable<String>(webViewLink);
-    return map;
-  }
-
-  TodoCompanion toCompanion(bool nullToAbsent) {
-    return TodoCompanion(
-      id: Value(id),
-      externalID: externalID == null && nullToAbsent
-          ? const Value.absent()
-          : Value(externalID),
-      completed: completed == null && nullToAbsent
-          ? const Value.absent()
-          : Value(completed),
-      deleted: Value(deleted),
-      due: due == null && nullToAbsent ? const Value.absent() : Value(due),
-      etag: Value(etag),
-      hidden: Value(hidden),
-      kind: Value(kind),
-      notes: notes == null && nullToAbsent
-          ? const Value.absent()
-          : Value(notes),
-      owner: Value(owner),
-      parent: parent == null && nullToAbsent
-          ? const Value.absent()
-          : Value(parent),
-      position: Value(position),
-      selfLink: Value(selfLink),
-      status: Value(status),
-      title: Value(title),
-      updated: updated == null && nullToAbsent
-          ? const Value.absent()
-          : Value(updated),
-      webViewLink: Value(webViewLink),
-    );
-  }
-
-  factory TodoData.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return TodoData(
-      id: serializer.fromJson<String>(json['id']),
-      externalID: serializer.fromJson<String?>(json['external_id']),
-      completed: serializer.fromJson<DateTime?>(json['completed']),
-      deleted: serializer.fromJson<bool>(json['deleted']),
-      due: serializer.fromJson<DateTime?>(json['due']),
-      etag: serializer.fromJson<String>(json['etag']),
-      hidden: serializer.fromJson<bool>(json['hidden']),
-      kind: serializer.fromJson<String>(json['kind']),
-      notes: serializer.fromJson<String?>(json['notes']),
-      owner: serializer.fromJson<String>(json['owner_id']),
-      parent: serializer.fromJson<String?>(json['parent']),
-      position: serializer.fromJson<String>(json['position']),
-      selfLink: serializer.fromJson<String>(json['self_link']),
-      status: serializer.fromJson<String>(json['status']),
-      title: serializer.fromJson<String>(json['title']),
-      updated: serializer.fromJson<DateTime?>(json['updated']),
-      webViewLink: serializer.fromJson<String>(json['web_view_link']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<String>(id),
-      'external_id': serializer.toJson<String?>(externalID),
-      'completed': serializer.toJson<DateTime?>(completed),
-      'deleted': serializer.toJson<bool>(deleted),
-      'due': serializer.toJson<DateTime?>(due),
-      'etag': serializer.toJson<String>(etag),
-      'hidden': serializer.toJson<bool>(hidden),
-      'kind': serializer.toJson<String>(kind),
-      'notes': serializer.toJson<String?>(notes),
-      'owner_id': serializer.toJson<String>(owner),
-      'parent': serializer.toJson<String?>(parent),
-      'position': serializer.toJson<String>(position),
-      'self_link': serializer.toJson<String>(selfLink),
-      'status': serializer.toJson<String>(status),
-      'title': serializer.toJson<String>(title),
-      'updated': serializer.toJson<DateTime?>(updated),
-      'web_view_link': serializer.toJson<String>(webViewLink),
-    };
-  }
-
-  TodoData copyWith({
-    String? id,
-    Value<String?> externalID = const Value.absent(),
-    Value<DateTime?> completed = const Value.absent(),
-    bool? deleted,
-    Value<DateTime?> due = const Value.absent(),
-    String? etag,
-    bool? hidden,
-    String? kind,
-    Value<String?> notes = const Value.absent(),
-    String? owner,
-    Value<String?> parent = const Value.absent(),
-    String? position,
-    String? selfLink,
-    String? status,
-    String? title,
-    Value<DateTime?> updated = const Value.absent(),
-    String? webViewLink,
-  }) => TodoData(
-    id: id ?? this.id,
-    externalID: externalID.present ? externalID.value : this.externalID,
-    completed: completed.present ? completed.value : this.completed,
-    deleted: deleted ?? this.deleted,
-    due: due.present ? due.value : this.due,
-    etag: etag ?? this.etag,
-    hidden: hidden ?? this.hidden,
-    kind: kind ?? this.kind,
-    notes: notes.present ? notes.value : this.notes,
-    owner: owner ?? this.owner,
-    parent: parent.present ? parent.value : this.parent,
-    position: position ?? this.position,
-    selfLink: selfLink ?? this.selfLink,
-    status: status ?? this.status,
-    title: title ?? this.title,
-    updated: updated.present ? updated.value : this.updated,
-    webViewLink: webViewLink ?? this.webViewLink,
-  );
-  TodoData copyWithCompanion(TodoCompanion data) {
-    return TodoData(
-      id: data.id.present ? data.id.value : this.id,
-      externalID: data.externalID.present
-          ? data.externalID.value
-          : this.externalID,
-      completed: data.completed.present ? data.completed.value : this.completed,
-      deleted: data.deleted.present ? data.deleted.value : this.deleted,
-      due: data.due.present ? data.due.value : this.due,
-      etag: data.etag.present ? data.etag.value : this.etag,
-      hidden: data.hidden.present ? data.hidden.value : this.hidden,
-      kind: data.kind.present ? data.kind.value : this.kind,
-      notes: data.notes.present ? data.notes.value : this.notes,
-      owner: data.owner.present ? data.owner.value : this.owner,
-      parent: data.parent.present ? data.parent.value : this.parent,
-      position: data.position.present ? data.position.value : this.position,
-      selfLink: data.selfLink.present ? data.selfLink.value : this.selfLink,
-      status: data.status.present ? data.status.value : this.status,
-      title: data.title.present ? data.title.value : this.title,
-      updated: data.updated.present ? data.updated.value : this.updated,
-      webViewLink: data.webViewLink.present
-          ? data.webViewLink.value
-          : this.webViewLink,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('TodoData(')
-          ..write('id: $id, ')
-          ..write('externalID: $externalID, ')
-          ..write('completed: $completed, ')
-          ..write('deleted: $deleted, ')
-          ..write('due: $due, ')
-          ..write('etag: $etag, ')
-          ..write('hidden: $hidden, ')
-          ..write('kind: $kind, ')
-          ..write('notes: $notes, ')
-          ..write('owner: $owner, ')
-          ..write('parent: $parent, ')
-          ..write('position: $position, ')
-          ..write('selfLink: $selfLink, ')
-          ..write('status: $status, ')
-          ..write('title: $title, ')
-          ..write('updated: $updated, ')
-          ..write('webViewLink: $webViewLink')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(
-    id,
-    externalID,
-    completed,
-    deleted,
-    due,
-    etag,
-    hidden,
-    kind,
-    notes,
-    owner,
-    parent,
-    position,
-    selfLink,
-    status,
-    title,
-    updated,
-    webViewLink,
-  );
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is TodoData &&
-          other.id == this.id &&
-          other.externalID == this.externalID &&
-          other.completed == this.completed &&
-          other.deleted == this.deleted &&
-          other.due == this.due &&
-          other.etag == this.etag &&
-          other.hidden == this.hidden &&
-          other.kind == this.kind &&
-          other.notes == this.notes &&
-          other.owner == this.owner &&
-          other.parent == this.parent &&
-          other.position == this.position &&
-          other.selfLink == this.selfLink &&
-          other.status == this.status &&
-          other.title == this.title &&
-          other.updated == this.updated &&
-          other.webViewLink == this.webViewLink);
-}
-
-class TodoCompanion extends UpdateCompanion<TodoData> {
-  final Value<String> id;
-  final Value<String?> externalID;
-  final Value<DateTime?> completed;
-  final Value<bool> deleted;
-  final Value<DateTime?> due;
-  final Value<String> etag;
-  final Value<bool> hidden;
-  final Value<String> kind;
-  final Value<String?> notes;
-  final Value<String> owner;
-  final Value<String?> parent;
-  final Value<String> position;
-  final Value<String> selfLink;
-  final Value<String> status;
-  final Value<String> title;
-  final Value<DateTime?> updated;
-  final Value<String> webViewLink;
-  final Value<int> rowid;
-  const TodoCompanion({
-    this.id = const Value.absent(),
-    this.externalID = const Value.absent(),
-    this.completed = const Value.absent(),
-    this.deleted = const Value.absent(),
-    this.due = const Value.absent(),
-    this.etag = const Value.absent(),
-    this.hidden = const Value.absent(),
-    this.kind = const Value.absent(),
-    this.notes = const Value.absent(),
-    this.owner = const Value.absent(),
-    this.parent = const Value.absent(),
-    this.position = const Value.absent(),
-    this.selfLink = const Value.absent(),
-    this.status = const Value.absent(),
-    this.title = const Value.absent(),
-    this.updated = const Value.absent(),
-    this.webViewLink = const Value.absent(),
-    this.rowid = const Value.absent(),
-  });
-  TodoCompanion.insert({
-    required String id,
-    this.externalID = const Value.absent(),
-    this.completed = const Value.absent(),
-    this.deleted = const Value.absent(),
-    this.due = const Value.absent(),
-    required String etag,
-    this.hidden = const Value.absent(),
-    required String kind,
-    this.notes = const Value.absent(),
-    required String owner,
-    this.parent = const Value.absent(),
-    required String position,
-    required String selfLink,
-    required String status,
-    required String title,
-    this.updated = const Value.absent(),
-    required String webViewLink,
-    this.rowid = const Value.absent(),
-  }) : id = Value(id),
-       etag = Value(etag),
-       kind = Value(kind),
-       owner = Value(owner),
-       position = Value(position),
-       selfLink = Value(selfLink),
-       status = Value(status),
-       title = Value(title),
-       webViewLink = Value(webViewLink);
-  static Insertable<TodoData> custom({
-    Expression<String>? id,
-    Expression<String>? externalID,
-    Expression<DateTime>? completed,
-    Expression<bool>? deleted,
-    Expression<DateTime>? due,
-    Expression<String>? etag,
-    Expression<bool>? hidden,
-    Expression<String>? kind,
-    Expression<String>? notes,
-    Expression<String>? owner,
-    Expression<String>? parent,
-    Expression<String>? position,
-    Expression<String>? selfLink,
-    Expression<String>? status,
-    Expression<String>? title,
-    Expression<DateTime>? updated,
-    Expression<String>? webViewLink,
-    Expression<int>? rowid,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (externalID != null) 'external_i_d': externalID,
-      if (completed != null) 'completed': completed,
-      if (deleted != null) 'deleted': deleted,
-      if (due != null) 'due': due,
-      if (etag != null) 'etag': etag,
-      if (hidden != null) 'hidden': hidden,
-      if (kind != null) 'kind': kind,
-      if (notes != null) 'notes': notes,
-      if (owner != null) 'owner': owner,
-      if (parent != null) 'parent': parent,
-      if (position != null) 'position': position,
-      if (selfLink != null) 'self_link': selfLink,
-      if (status != null) 'status': status,
-      if (title != null) 'title': title,
-      if (updated != null) 'updated': updated,
-      if (webViewLink != null) 'web_view_link': webViewLink,
-      if (rowid != null) 'rowid': rowid,
-    });
-  }
-
-  TodoCompanion copyWith({
-    Value<String>? id,
-    Value<String?>? externalID,
-    Value<DateTime?>? completed,
-    Value<bool>? deleted,
-    Value<DateTime?>? due,
-    Value<String>? etag,
-    Value<bool>? hidden,
-    Value<String>? kind,
-    Value<String?>? notes,
-    Value<String>? owner,
-    Value<String?>? parent,
-    Value<String>? position,
-    Value<String>? selfLink,
-    Value<String>? status,
-    Value<String>? title,
-    Value<DateTime?>? updated,
-    Value<String>? webViewLink,
-    Value<int>? rowid,
-  }) {
-    return TodoCompanion(
-      id: id ?? this.id,
-      externalID: externalID ?? this.externalID,
-      completed: completed ?? this.completed,
-      deleted: deleted ?? this.deleted,
-      due: due ?? this.due,
-      etag: etag ?? this.etag,
-      hidden: hidden ?? this.hidden,
-      kind: kind ?? this.kind,
-      notes: notes ?? this.notes,
-      owner: owner ?? this.owner,
-      parent: parent ?? this.parent,
-      position: position ?? this.position,
-      selfLink: selfLink ?? this.selfLink,
-      status: status ?? this.status,
-      title: title ?? this.title,
-      updated: updated ?? this.updated,
-      webViewLink: webViewLink ?? this.webViewLink,
-      rowid: rowid ?? this.rowid,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<String>(id.value);
-    }
-    if (externalID.present) {
-      map['external_i_d'] = Variable<String>(externalID.value);
-    }
-    if (completed.present) {
-      map['completed'] = Variable<DateTime>(completed.value);
-    }
-    if (deleted.present) {
-      map['deleted'] = Variable<bool>(deleted.value);
-    }
-    if (due.present) {
-      map['due'] = Variable<DateTime>(due.value);
-    }
-    if (etag.present) {
-      map['etag'] = Variable<String>(etag.value);
-    }
-    if (hidden.present) {
-      map['hidden'] = Variable<bool>(hidden.value);
-    }
-    if (kind.present) {
-      map['kind'] = Variable<String>(kind.value);
-    }
-    if (notes.present) {
-      map['notes'] = Variable<String>(notes.value);
-    }
-    if (owner.present) {
-      map['owner'] = Variable<String>(owner.value);
-    }
-    if (parent.present) {
-      map['parent'] = Variable<String>(parent.value);
-    }
-    if (position.present) {
-      map['position'] = Variable<String>(position.value);
-    }
-    if (selfLink.present) {
-      map['self_link'] = Variable<String>(selfLink.value);
-    }
-    if (status.present) {
-      map['status'] = Variable<String>(status.value);
-    }
-    if (title.present) {
-      map['title'] = Variable<String>(title.value);
-    }
-    if (updated.present) {
-      map['updated'] = Variable<DateTime>(updated.value);
-    }
-    if (webViewLink.present) {
-      map['web_view_link'] = Variable<String>(webViewLink.value);
-    }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('TodoCompanion(')
-          ..write('id: $id, ')
-          ..write('externalID: $externalID, ')
-          ..write('completed: $completed, ')
-          ..write('deleted: $deleted, ')
-          ..write('due: $due, ')
-          ..write('etag: $etag, ')
-          ..write('hidden: $hidden, ')
-          ..write('kind: $kind, ')
-          ..write('notes: $notes, ')
-          ..write('owner: $owner, ')
-          ..write('parent: $parent, ')
-          ..write('position: $position, ')
-          ..write('selfLink: $selfLink, ')
-          ..write('status: $status, ')
-          ..write('title: $title, ')
-          ..write('updated: $updated, ')
-          ..write('webViewLink: $webViewLink, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -5310,6 +4366,28 @@ class $TicketTableTable extends TicketTable
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _startDateMeta = const VerificationMeta(
+    'startDate',
+  );
+  @override
+  late final GeneratedColumn<String> startDate = GeneratedColumn<String>(
+    'start_date',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _endDateMeta = const VerificationMeta(
+    'endDate',
+  );
+  @override
+  late final GeneratedColumn<String> endDate = GeneratedColumn<String>(
+    'end_date',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -5320,6 +4398,8 @@ class $TicketTableTable extends TicketTable
     ticketFor,
     institutions,
     scope,
+    startDate,
+    endDate,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -5382,6 +4462,18 @@ class $TicketTableTable extends TicketTable
         scope.isAcceptableOrUnknown(data['scope']!, _scopeMeta),
       );
     }
+    if (data.containsKey('start_date')) {
+      context.handle(
+        _startDateMeta,
+        startDate.isAcceptableOrUnknown(data['start_date']!, _startDateMeta),
+      );
+    }
+    if (data.containsKey('end_date')) {
+      context.handle(
+        _endDateMeta,
+        endDate.isAcceptableOrUnknown(data['end_date']!, _endDateMeta),
+      );
+    }
     return context;
   }
 
@@ -5425,6 +4517,14 @@ class $TicketTableTable extends TicketTable
         DriftSqlType.string,
         data['${effectivePrefix}scope'],
       ),
+      startDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}start_date'],
+      ),
+      endDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}end_date'],
+      ),
     );
   }
 
@@ -5448,6 +4548,8 @@ class TicketData extends DataClass implements Insertable<TicketData> {
   final int? ticketFor;
   final List<dynamic>? institutions;
   final String? scope;
+  final String? startDate;
+  final String? endDate;
   const TicketData({
     this.id,
     this.eventId,
@@ -5457,6 +4559,8 @@ class TicketData extends DataClass implements Insertable<TicketData> {
     this.ticketFor,
     this.institutions,
     this.scope,
+    this.startDate,
+    this.endDate,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -5483,6 +4587,12 @@ class TicketData extends DataClass implements Insertable<TicketData> {
     if (!nullToAbsent || scope != null) {
       map['scope'] = Variable<String>(scope);
     }
+    if (!nullToAbsent || startDate != null) {
+      map['start_date'] = Variable<String>(startDate);
+    }
+    if (!nullToAbsent || endDate != null) {
+      map['end_date'] = Variable<String>(endDate);
+    }
     return map;
   }
 
@@ -5506,6 +4616,12 @@ class TicketData extends DataClass implements Insertable<TicketData> {
       scope: scope == null && nullToAbsent
           ? const Value.absent()
           : Value(scope),
+      startDate: startDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(startDate),
+      endDate: endDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(endDate),
     );
   }
 
@@ -5523,6 +4639,8 @@ class TicketData extends DataClass implements Insertable<TicketData> {
       ticketFor: serializer.fromJson<int?>(json['ticket_for']),
       institutions: serializer.fromJson<List<dynamic>?>(json['institutions']),
       scope: serializer.fromJson<String?>(json['scope']),
+      startDate: serializer.fromJson<String?>(json['start_date']),
+      endDate: serializer.fromJson<String?>(json['end_date']),
     );
   }
   @override
@@ -5537,6 +4655,8 @@ class TicketData extends DataClass implements Insertable<TicketData> {
       'ticket_for': serializer.toJson<int?>(ticketFor),
       'institutions': serializer.toJson<List<dynamic>?>(institutions),
       'scope': serializer.toJson<String?>(scope),
+      'start_date': serializer.toJson<String?>(startDate),
+      'end_date': serializer.toJson<String?>(endDate),
     };
   }
 
@@ -5549,6 +4669,8 @@ class TicketData extends DataClass implements Insertable<TicketData> {
     Value<int?> ticketFor = const Value.absent(),
     Value<List<dynamic>?> institutions = const Value.absent(),
     Value<String?> scope = const Value.absent(),
+    Value<String?> startDate = const Value.absent(),
+    Value<String?> endDate = const Value.absent(),
   }) => TicketData(
     id: id.present ? id.value : this.id,
     eventId: eventId.present ? eventId.value : this.eventId,
@@ -5560,6 +4682,8 @@ class TicketData extends DataClass implements Insertable<TicketData> {
     ticketFor: ticketFor.present ? ticketFor.value : this.ticketFor,
     institutions: institutions.present ? institutions.value : this.institutions,
     scope: scope.present ? scope.value : this.scope,
+    startDate: startDate.present ? startDate.value : this.startDate,
+    endDate: endDate.present ? endDate.value : this.endDate,
   );
   TicketData copyWithCompanion(TicketTableCompanion data) {
     return TicketData(
@@ -5579,6 +4703,8 @@ class TicketData extends DataClass implements Insertable<TicketData> {
           ? data.institutions.value
           : this.institutions,
       scope: data.scope.present ? data.scope.value : this.scope,
+      startDate: data.startDate.present ? data.startDate.value : this.startDate,
+      endDate: data.endDate.present ? data.endDate.value : this.endDate,
     );
   }
 
@@ -5592,7 +4718,9 @@ class TicketData extends DataClass implements Insertable<TicketData> {
           ..write('ticketQuantity: $ticketQuantity, ')
           ..write('ticketFor: $ticketFor, ')
           ..write('institutions: $institutions, ')
-          ..write('scope: $scope')
+          ..write('scope: $scope, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate')
           ..write(')'))
         .toString();
   }
@@ -5607,6 +4735,8 @@ class TicketData extends DataClass implements Insertable<TicketData> {
     ticketFor,
     institutions,
     scope,
+    startDate,
+    endDate,
   );
   @override
   bool operator ==(Object other) =>
@@ -5619,7 +4749,9 @@ class TicketData extends DataClass implements Insertable<TicketData> {
           other.ticketQuantity == this.ticketQuantity &&
           other.ticketFor == this.ticketFor &&
           other.institutions == this.institutions &&
-          other.scope == this.scope);
+          other.scope == this.scope &&
+          other.startDate == this.startDate &&
+          other.endDate == this.endDate);
 }
 
 class TicketTableCompanion extends UpdateCompanion<TicketData> {
@@ -5631,6 +4763,8 @@ class TicketTableCompanion extends UpdateCompanion<TicketData> {
   final Value<int?> ticketFor;
   final Value<List<dynamic>?> institutions;
   final Value<String?> scope;
+  final Value<String?> startDate;
+  final Value<String?> endDate;
   final Value<int> rowid;
   const TicketTableCompanion({
     this.id = const Value.absent(),
@@ -5641,6 +4775,8 @@ class TicketTableCompanion extends UpdateCompanion<TicketData> {
     this.ticketFor = const Value.absent(),
     this.institutions = const Value.absent(),
     this.scope = const Value.absent(),
+    this.startDate = const Value.absent(),
+    this.endDate = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   TicketTableCompanion.insert({
@@ -5652,6 +4788,8 @@ class TicketTableCompanion extends UpdateCompanion<TicketData> {
     this.ticketFor = const Value.absent(),
     this.institutions = const Value.absent(),
     this.scope = const Value.absent(),
+    this.startDate = const Value.absent(),
+    this.endDate = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : ticketName = Value(ticketName),
        ticketPrice = Value(ticketPrice);
@@ -5664,6 +4802,8 @@ class TicketTableCompanion extends UpdateCompanion<TicketData> {
     Expression<int>? ticketFor,
     Expression<String>? institutions,
     Expression<String>? scope,
+    Expression<String>? startDate,
+    Expression<String>? endDate,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -5675,6 +4815,8 @@ class TicketTableCompanion extends UpdateCompanion<TicketData> {
       if (ticketFor != null) 'ticket_for': ticketFor,
       if (institutions != null) 'institutions': institutions,
       if (scope != null) 'scope': scope,
+      if (startDate != null) 'start_date': startDate,
+      if (endDate != null) 'end_date': endDate,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -5688,6 +4830,8 @@ class TicketTableCompanion extends UpdateCompanion<TicketData> {
     Value<int?>? ticketFor,
     Value<List<dynamic>?>? institutions,
     Value<String?>? scope,
+    Value<String?>? startDate,
+    Value<String?>? endDate,
     Value<int>? rowid,
   }) {
     return TicketTableCompanion(
@@ -5699,6 +4843,8 @@ class TicketTableCompanion extends UpdateCompanion<TicketData> {
       ticketFor: ticketFor ?? this.ticketFor,
       institutions: institutions ?? this.institutions,
       scope: scope ?? this.scope,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -5732,6 +4878,12 @@ class TicketTableCompanion extends UpdateCompanion<TicketData> {
     if (scope.present) {
       map['scope'] = Variable<String>(scope.value);
     }
+    if (startDate.present) {
+      map['start_date'] = Variable<String>(startDate.value);
+    }
+    if (endDate.present) {
+      map['end_date'] = Variable<String>(endDate.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -5749,6 +4901,8 @@ class TicketTableCompanion extends UpdateCompanion<TicketData> {
           ..write('ticketFor: $ticketFor, ')
           ..write('institutions: $institutions, ')
           ..write('scope: $scope, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -6985,6 +6139,15 @@ class $TicketStatsTableTable extends TicketStatsTable
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _scopeMeta = const VerificationMeta('scope');
+  @override
+  late final GeneratedColumn<String> scope = GeneratedColumn<String>(
+    'scope',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     ticketId,
@@ -6992,6 +6155,7 @@ class $TicketStatsTableTable extends TicketStatsTable
     ticketPrice,
     ticketsSold,
     ticketsRemaining,
+    scope,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -7054,6 +6218,14 @@ class $TicketStatsTableTable extends TicketStatsTable
     } else if (isInserting) {
       context.missing(_ticketsRemainingMeta);
     }
+    if (data.containsKey('scope')) {
+      context.handle(
+        _scopeMeta,
+        scope.isAcceptableOrUnknown(data['scope']!, _scopeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_scopeMeta);
+    }
     return context;
   }
 
@@ -7083,6 +6255,10 @@ class $TicketStatsTableTable extends TicketStatsTable
         DriftSqlType.int,
         data['${effectivePrefix}tickets_remaining'],
       )!,
+      scope: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}scope'],
+      )!,
     );
   }
 
@@ -7098,12 +6274,14 @@ class TicketStatsData extends DataClass implements Insertable<TicketStatsData> {
   final int ticketPrice;
   final int ticketsSold;
   final int ticketsRemaining;
+  final String scope;
   const TicketStatsData({
     required this.ticketId,
     required this.ticketName,
     required this.ticketPrice,
     required this.ticketsSold,
     required this.ticketsRemaining,
+    required this.scope,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -7113,6 +6291,7 @@ class TicketStatsData extends DataClass implements Insertable<TicketStatsData> {
     map['ticket_price'] = Variable<int>(ticketPrice);
     map['tickets_sold'] = Variable<int>(ticketsSold);
     map['tickets_remaining'] = Variable<int>(ticketsRemaining);
+    map['scope'] = Variable<String>(scope);
     return map;
   }
 
@@ -7123,6 +6302,7 @@ class TicketStatsData extends DataClass implements Insertable<TicketStatsData> {
       ticketPrice: Value(ticketPrice),
       ticketsSold: Value(ticketsSold),
       ticketsRemaining: Value(ticketsRemaining),
+      scope: Value(scope),
     );
   }
 
@@ -7137,6 +6317,7 @@ class TicketStatsData extends DataClass implements Insertable<TicketStatsData> {
       ticketPrice: serializer.fromJson<int>(json['ticket_price']),
       ticketsSold: serializer.fromJson<int>(json['tickets_sold']),
       ticketsRemaining: serializer.fromJson<int>(json['tickets_remaining']),
+      scope: serializer.fromJson<String>(json['scope']),
     );
   }
   @override
@@ -7148,6 +6329,7 @@ class TicketStatsData extends DataClass implements Insertable<TicketStatsData> {
       'ticket_price': serializer.toJson<int>(ticketPrice),
       'tickets_sold': serializer.toJson<int>(ticketsSold),
       'tickets_remaining': serializer.toJson<int>(ticketsRemaining),
+      'scope': serializer.toJson<String>(scope),
     };
   }
 
@@ -7157,12 +6339,14 @@ class TicketStatsData extends DataClass implements Insertable<TicketStatsData> {
     int? ticketPrice,
     int? ticketsSold,
     int? ticketsRemaining,
+    String? scope,
   }) => TicketStatsData(
     ticketId: ticketId ?? this.ticketId,
     ticketName: ticketName ?? this.ticketName,
     ticketPrice: ticketPrice ?? this.ticketPrice,
     ticketsSold: ticketsSold ?? this.ticketsSold,
     ticketsRemaining: ticketsRemaining ?? this.ticketsRemaining,
+    scope: scope ?? this.scope,
   );
   TicketStatsData copyWithCompanion(TicketStatsTableCompanion data) {
     return TicketStatsData(
@@ -7179,6 +6363,7 @@ class TicketStatsData extends DataClass implements Insertable<TicketStatsData> {
       ticketsRemaining: data.ticketsRemaining.present
           ? data.ticketsRemaining.value
           : this.ticketsRemaining,
+      scope: data.scope.present ? data.scope.value : this.scope,
     );
   }
 
@@ -7189,7 +6374,8 @@ class TicketStatsData extends DataClass implements Insertable<TicketStatsData> {
           ..write('ticketName: $ticketName, ')
           ..write('ticketPrice: $ticketPrice, ')
           ..write('ticketsSold: $ticketsSold, ')
-          ..write('ticketsRemaining: $ticketsRemaining')
+          ..write('ticketsRemaining: $ticketsRemaining, ')
+          ..write('scope: $scope')
           ..write(')'))
         .toString();
   }
@@ -7201,6 +6387,7 @@ class TicketStatsData extends DataClass implements Insertable<TicketStatsData> {
     ticketPrice,
     ticketsSold,
     ticketsRemaining,
+    scope,
   );
   @override
   bool operator ==(Object other) =>
@@ -7210,7 +6397,8 @@ class TicketStatsData extends DataClass implements Insertable<TicketStatsData> {
           other.ticketName == this.ticketName &&
           other.ticketPrice == this.ticketPrice &&
           other.ticketsSold == this.ticketsSold &&
-          other.ticketsRemaining == this.ticketsRemaining);
+          other.ticketsRemaining == this.ticketsRemaining &&
+          other.scope == this.scope);
 }
 
 class TicketStatsTableCompanion extends UpdateCompanion<TicketStatsData> {
@@ -7219,6 +6407,7 @@ class TicketStatsTableCompanion extends UpdateCompanion<TicketStatsData> {
   final Value<int> ticketPrice;
   final Value<int> ticketsSold;
   final Value<int> ticketsRemaining;
+  final Value<String> scope;
   final Value<int> rowid;
   const TicketStatsTableCompanion({
     this.ticketId = const Value.absent(),
@@ -7226,6 +6415,7 @@ class TicketStatsTableCompanion extends UpdateCompanion<TicketStatsData> {
     this.ticketPrice = const Value.absent(),
     this.ticketsSold = const Value.absent(),
     this.ticketsRemaining = const Value.absent(),
+    this.scope = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   TicketStatsTableCompanion.insert({
@@ -7234,18 +6424,21 @@ class TicketStatsTableCompanion extends UpdateCompanion<TicketStatsData> {
     required int ticketPrice,
     required int ticketsSold,
     required int ticketsRemaining,
+    required String scope,
     this.rowid = const Value.absent(),
   }) : ticketId = Value(ticketId),
        ticketName = Value(ticketName),
        ticketPrice = Value(ticketPrice),
        ticketsSold = Value(ticketsSold),
-       ticketsRemaining = Value(ticketsRemaining);
+       ticketsRemaining = Value(ticketsRemaining),
+       scope = Value(scope);
   static Insertable<TicketStatsData> custom({
     Expression<String>? ticketId,
     Expression<String>? ticketName,
     Expression<int>? ticketPrice,
     Expression<int>? ticketsSold,
     Expression<int>? ticketsRemaining,
+    Expression<String>? scope,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -7254,6 +6447,7 @@ class TicketStatsTableCompanion extends UpdateCompanion<TicketStatsData> {
       if (ticketPrice != null) 'ticket_price': ticketPrice,
       if (ticketsSold != null) 'tickets_sold': ticketsSold,
       if (ticketsRemaining != null) 'tickets_remaining': ticketsRemaining,
+      if (scope != null) 'scope': scope,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -7264,6 +6458,7 @@ class TicketStatsTableCompanion extends UpdateCompanion<TicketStatsData> {
     Value<int>? ticketPrice,
     Value<int>? ticketsSold,
     Value<int>? ticketsRemaining,
+    Value<String>? scope,
     Value<int>? rowid,
   }) {
     return TicketStatsTableCompanion(
@@ -7272,6 +6467,7 @@ class TicketStatsTableCompanion extends UpdateCompanion<TicketStatsData> {
       ticketPrice: ticketPrice ?? this.ticketPrice,
       ticketsSold: ticketsSold ?? this.ticketsSold,
       ticketsRemaining: ticketsRemaining ?? this.ticketsRemaining,
+      scope: scope ?? this.scope,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -7294,6 +6490,9 @@ class TicketStatsTableCompanion extends UpdateCompanion<TicketStatsData> {
     if (ticketsRemaining.present) {
       map['tickets_remaining'] = Variable<int>(ticketsRemaining.value);
     }
+    if (scope.present) {
+      map['scope'] = Variable<String>(scope.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -7308,6 +6507,7 @@ class TicketStatsTableCompanion extends UpdateCompanion<TicketStatsData> {
           ..write('ticketPrice: $ticketPrice, ')
           ..write('ticketsSold: $ticketsSold, ')
           ..write('ticketsRemaining: $ticketsRemaining, ')
+          ..write('scope: $scope, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -7874,12 +7074,12 @@ class ScannerTableCompanion extends UpdateCompanion<ScannerData> {
   }
 }
 
-class $GroupTableTable extends GroupTable
-    with TableInfo<$GroupTableTable, GroupEntity> {
+class $InviteTableTable extends InviteTable
+    with TableInfo<$InviteTableTable, InviteData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $GroupTableTable(this.attachedDatabase, [this._alias]);
+  $InviteTableTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
@@ -7889,310 +7089,112 @@ class $GroupTableTable extends GroupTable
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _eventIdMeta = const VerificationMeta(
+    'eventId',
+  );
+  @override
+  late final GeneratedColumn<String> eventId = GeneratedColumn<String>(
+    'event_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _ticketIdMeta = const VerificationMeta(
+    'ticketId',
+  );
+  @override
+  late final GeneratedColumn<String> ticketId = GeneratedColumn<String>(
+    'ticket_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _tokenMeta = const VerificationMeta('token');
+  @override
+  late final GeneratedColumn<String> token = GeneratedColumn<String>(
+    'token',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _expiresAtMeta = const VerificationMeta(
+    'expiresAt',
+  );
+  @override
+  late final GeneratedColumn<String> expiresAt = GeneratedColumn<String>(
+    'expires_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _maxUsesMeta = const VerificationMeta(
+    'maxUses',
+  );
+  @override
+  late final GeneratedColumn<int> maxUses = GeneratedColumn<int>(
+    'max_uses',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _usedCountMeta = const VerificationMeta(
+    'usedCount',
+  );
+  @override
+  late final GeneratedColumn<int> usedCount = GeneratedColumn<int>(
+    'used_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
   @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<String> createdAt = GeneratedColumn<String>(
     'created_at',
     aliasedName,
     false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    defaultValue: Constant(DateTime.now()),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
   );
   static const VerificationMeta _updatedAtMeta = const VerificationMeta(
     'updatedAt',
   );
   @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<String> updatedAt = GeneratedColumn<String>(
     'updated_at',
     aliasedName,
     false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    defaultValue: Constant(DateTime.now()),
-  );
-  static const VerificationMeta _nameMeta = const VerificationMeta('name');
-  @override
-  late final GeneratedColumn<String> name = GeneratedColumn<String>(
-    'name',
-    aliasedName,
-    false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
-  );
-  static const VerificationMeta _descriptionMeta = const VerificationMeta(
-    'description',
-  );
-  @override
-  late final GeneratedColumn<String> description = GeneratedColumn<String>(
-    'description',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _creatorIdMeta = const VerificationMeta(
-    'creatorId',
-  );
-  @override
-  late final GeneratedColumn<String> creatorId = GeneratedColumn<String>(
-    'creator_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _creatorNameMeta = const VerificationMeta(
-    'creatorName',
-  );
-  @override
-  late final GeneratedColumn<String> creatorName = GeneratedColumn<String>(
-    'creator_name',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _adminsMeta = const VerificationMeta('admins');
-  @override
-  late final GeneratedColumn<String> admins = GeneratedColumn<String>(
-    'admins',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _adminNamesMeta = const VerificationMeta(
-    'adminNames',
-  );
-  @override
-  late final GeneratedColumn<String> adminNames = GeneratedColumn<String>(
-    'admin_names',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _moderatorsMeta = const VerificationMeta(
-    'moderators',
-  );
-  @override
-  late final GeneratedColumn<String> moderators = GeneratedColumn<String>(
-    'moderators',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _moderatorNamesMeta = const VerificationMeta(
-    'moderatorNames',
-  );
-  @override
-  late final GeneratedColumn<String> moderatorNames = GeneratedColumn<String>(
-    'moderator_names',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _membersMeta = const VerificationMeta(
-    'members',
-  );
-  @override
-  late final GeneratedColumn<String> members = GeneratedColumn<String>(
-    'members',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _memberNamesMeta = const VerificationMeta(
-    'memberNames',
-  );
-  @override
-  late final GeneratedColumn<String> memberNames = GeneratedColumn<String>(
-    'member_names',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _bannedUsersMeta = const VerificationMeta(
-    'bannedUsers',
-  );
-  @override
-  late final GeneratedColumn<String> bannedUsers = GeneratedColumn<String>(
-    'banned_users',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _bannedUserNamesMeta = const VerificationMeta(
-    'bannedUserNames',
-  );
-  @override
-  late final GeneratedColumn<String> bannedUserNames = GeneratedColumn<String>(
-    'banned_user_names',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _isPrivateMeta = const VerificationMeta(
-    'isPrivate',
-  );
-  @override
-  late final GeneratedColumn<bool> isPrivate = GeneratedColumn<bool>(
-    'is_private',
-    aliasedName,
-    false,
-    type: DriftSqlType.bool,
-    requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("is_private" IN (0, 1))',
-    ),
-  );
-  static const VerificationMeta _rulesMeta = const VerificationMeta('rules');
-  @override
-  late final GeneratedColumn<String> rules = GeneratedColumn<String>(
-    'rules',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _logoMeta = const VerificationMeta('logo');
-  @override
-  late final GeneratedColumn<String> logo = GeneratedColumn<String>(
-    'logo',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _bannerMeta = const VerificationMeta('banner');
-  @override
-  late final GeneratedColumn<String> banner = GeneratedColumn<String>(
-    'banner',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _logoUrlMeta = const VerificationMeta(
-    'logoUrl',
-  );
-  @override
-  late final GeneratedColumn<String> logoUrl = GeneratedColumn<String>(
-    'logo_url',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _bannerUrlMeta = const VerificationMeta(
-    'bannerUrl',
-  );
-  @override
-  late final GeneratedColumn<String> bannerUrl = GeneratedColumn<String>(
-    'banner_url',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _userRoleMeta = const VerificationMeta(
-    'userRole',
-  );
-  @override
-  late final GeneratedColumn<String> userRole = GeneratedColumn<String>(
-    'user_role',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _canPostMeta = const VerificationMeta(
-    'canPost',
-  );
-  @override
-  late final GeneratedColumn<bool> canPost = GeneratedColumn<bool>(
-    'can_post',
-    aliasedName,
-    false,
-    type: DriftSqlType.bool,
-    requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("can_post" IN (0, 1))',
-    ),
-  );
-  static const VerificationMeta _canModerateMeta = const VerificationMeta(
-    'canModerate',
-  );
-  @override
-  late final GeneratedColumn<bool> canModerate = GeneratedColumn<bool>(
-    'can_moderate',
-    aliasedName,
-    false,
-    type: DriftSqlType.bool,
-    requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("can_moderate" IN (0, 1))',
-    ),
-  );
-  static const VerificationMeta _canAdminMeta = const VerificationMeta(
-    'canAdmin',
-  );
-  @override
-  late final GeneratedColumn<bool> canAdmin = GeneratedColumn<bool>(
-    'can_admin',
-    aliasedName,
-    false,
-    type: DriftSqlType.bool,
-    requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("can_admin" IN (0, 1))',
-    ),
   );
   @override
   List<GeneratedColumn> get $columns => [
     id,
+    eventId,
+    ticketId,
+    token,
+    expiresAt,
+    maxUses,
+    usedCount,
     createdAt,
     updatedAt,
-    name,
-    description,
-    creatorId,
-    creatorName,
-    admins,
-    adminNames,
-    moderators,
-    moderatorNames,
-    members,
-    memberNames,
-    bannedUsers,
-    bannedUserNames,
-    isPrivate,
-    rules,
-    logo,
-    banner,
-    logoUrl,
-    bannerUrl,
-    userRole,
-    canPost,
-    canModerate,
-    canAdmin,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'group_table';
+  static const String $name = 'invite_table';
   @override
   VerificationContext validateIntegrity(
-    Insertable<GroupEntity> instance, {
+    Insertable<InviteData> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -8202,486 +7204,193 @@ class $GroupTableTable extends GroupTable
     } else if (isInserting) {
       context.missing(_idMeta);
     }
+    if (data.containsKey('event_id')) {
+      context.handle(
+        _eventIdMeta,
+        eventId.isAcceptableOrUnknown(data['event_id']!, _eventIdMeta),
+      );
+    }
+    if (data.containsKey('ticket_id')) {
+      context.handle(
+        _ticketIdMeta,
+        ticketId.isAcceptableOrUnknown(data['ticket_id']!, _ticketIdMeta),
+      );
+    }
+    if (data.containsKey('token')) {
+      context.handle(
+        _tokenMeta,
+        token.isAcceptableOrUnknown(data['token']!, _tokenMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_tokenMeta);
+    }
+    if (data.containsKey('expires_at')) {
+      context.handle(
+        _expiresAtMeta,
+        expiresAt.isAcceptableOrUnknown(data['expires_at']!, _expiresAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_expiresAtMeta);
+    }
+    if (data.containsKey('max_uses')) {
+      context.handle(
+        _maxUsesMeta,
+        maxUses.isAcceptableOrUnknown(data['max_uses']!, _maxUsesMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_maxUsesMeta);
+    }
+    if (data.containsKey('used_count')) {
+      context.handle(
+        _usedCountMeta,
+        usedCount.isAcceptableOrUnknown(data['used_count']!, _usedCountMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_usedCountMeta);
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
         createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
       );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
     }
     if (data.containsKey('updated_at')) {
       context.handle(
         _updatedAtMeta,
         updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
       );
-    }
-    if (data.containsKey('name')) {
-      context.handle(
-        _nameMeta,
-        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
-      );
     } else if (isInserting) {
-      context.missing(_nameMeta);
-    }
-    if (data.containsKey('description')) {
-      context.handle(
-        _descriptionMeta,
-        description.isAcceptableOrUnknown(
-          data['description']!,
-          _descriptionMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_descriptionMeta);
-    }
-    if (data.containsKey('creator_id')) {
-      context.handle(
-        _creatorIdMeta,
-        creatorId.isAcceptableOrUnknown(data['creator_id']!, _creatorIdMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_creatorIdMeta);
-    }
-    if (data.containsKey('creator_name')) {
-      context.handle(
-        _creatorNameMeta,
-        creatorName.isAcceptableOrUnknown(
-          data['creator_name']!,
-          _creatorNameMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_creatorNameMeta);
-    }
-    if (data.containsKey('admins')) {
-      context.handle(
-        _adminsMeta,
-        admins.isAcceptableOrUnknown(data['admins']!, _adminsMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_adminsMeta);
-    }
-    if (data.containsKey('admin_names')) {
-      context.handle(
-        _adminNamesMeta,
-        adminNames.isAcceptableOrUnknown(data['admin_names']!, _adminNamesMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_adminNamesMeta);
-    }
-    if (data.containsKey('moderators')) {
-      context.handle(
-        _moderatorsMeta,
-        moderators.isAcceptableOrUnknown(data['moderators']!, _moderatorsMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_moderatorsMeta);
-    }
-    if (data.containsKey('moderator_names')) {
-      context.handle(
-        _moderatorNamesMeta,
-        moderatorNames.isAcceptableOrUnknown(
-          data['moderator_names']!,
-          _moderatorNamesMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_moderatorNamesMeta);
-    }
-    if (data.containsKey('members')) {
-      context.handle(
-        _membersMeta,
-        members.isAcceptableOrUnknown(data['members']!, _membersMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_membersMeta);
-    }
-    if (data.containsKey('member_names')) {
-      context.handle(
-        _memberNamesMeta,
-        memberNames.isAcceptableOrUnknown(
-          data['member_names']!,
-          _memberNamesMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_memberNamesMeta);
-    }
-    if (data.containsKey('banned_users')) {
-      context.handle(
-        _bannedUsersMeta,
-        bannedUsers.isAcceptableOrUnknown(
-          data['banned_users']!,
-          _bannedUsersMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_bannedUsersMeta);
-    }
-    if (data.containsKey('banned_user_names')) {
-      context.handle(
-        _bannedUserNamesMeta,
-        bannedUserNames.isAcceptableOrUnknown(
-          data['banned_user_names']!,
-          _bannedUserNamesMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_bannedUserNamesMeta);
-    }
-    if (data.containsKey('is_private')) {
-      context.handle(
-        _isPrivateMeta,
-        isPrivate.isAcceptableOrUnknown(data['is_private']!, _isPrivateMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_isPrivateMeta);
-    }
-    if (data.containsKey('rules')) {
-      context.handle(
-        _rulesMeta,
-        rules.isAcceptableOrUnknown(data['rules']!, _rulesMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_rulesMeta);
-    }
-    if (data.containsKey('logo')) {
-      context.handle(
-        _logoMeta,
-        logo.isAcceptableOrUnknown(data['logo']!, _logoMeta),
-      );
-    }
-    if (data.containsKey('banner')) {
-      context.handle(
-        _bannerMeta,
-        banner.isAcceptableOrUnknown(data['banner']!, _bannerMeta),
-      );
-    }
-    if (data.containsKey('logo_url')) {
-      context.handle(
-        _logoUrlMeta,
-        logoUrl.isAcceptableOrUnknown(data['logo_url']!, _logoUrlMeta),
-      );
-    }
-    if (data.containsKey('banner_url')) {
-      context.handle(
-        _bannerUrlMeta,
-        bannerUrl.isAcceptableOrUnknown(data['banner_url']!, _bannerUrlMeta),
-      );
-    }
-    if (data.containsKey('user_role')) {
-      context.handle(
-        _userRoleMeta,
-        userRole.isAcceptableOrUnknown(data['user_role']!, _userRoleMeta),
-      );
-    }
-    if (data.containsKey('can_post')) {
-      context.handle(
-        _canPostMeta,
-        canPost.isAcceptableOrUnknown(data['can_post']!, _canPostMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_canPostMeta);
-    }
-    if (data.containsKey('can_moderate')) {
-      context.handle(
-        _canModerateMeta,
-        canModerate.isAcceptableOrUnknown(
-          data['can_moderate']!,
-          _canModerateMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_canModerateMeta);
-    }
-    if (data.containsKey('can_admin')) {
-      context.handle(
-        _canAdminMeta,
-        canAdmin.isAcceptableOrUnknown(data['can_admin']!, _canAdminMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_canAdminMeta);
+      context.missing(_updatedAtMeta);
     }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
+  Set<GeneratedColumn> get $primaryKey => const {};
   @override
-  GroupEntity map(Map<String, dynamic> data, {String? tablePrefix}) {
+  InviteData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return GroupEntity(
+    return InviteData(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
+      eventId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}event_id'],
+      ),
+      ticketId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}ticket_id'],
+      ),
+      token: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}token'],
+      )!,
+      expiresAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}expires_at'],
+      )!,
+      maxUses: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}max_uses'],
+      )!,
+      usedCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}used_count'],
+      )!,
       createdAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
+        DriftSqlType.string,
         data['${effectivePrefix}created_at'],
       )!,
       updatedAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
+        DriftSqlType.string,
         data['${effectivePrefix}updated_at'],
-      )!,
-      name: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}name'],
-      )!,
-      description: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}description'],
-      )!,
-      creatorId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}creator_id'],
-      )!,
-      creatorName: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}creator_name'],
-      )!,
-      admins: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}admins'],
-      )!,
-      adminNames: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}admin_names'],
-      )!,
-      moderators: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}moderators'],
-      )!,
-      moderatorNames: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}moderator_names'],
-      )!,
-      members: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}members'],
-      )!,
-      memberNames: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}member_names'],
-      )!,
-      bannedUsers: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}banned_users'],
-      )!,
-      bannedUserNames: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}banned_user_names'],
-      )!,
-      isPrivate: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}is_private'],
-      )!,
-      rules: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}rules'],
-      )!,
-      logo: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}logo'],
-      ),
-      banner: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}banner'],
-      ),
-      logoUrl: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}logo_url'],
-      ),
-      bannerUrl: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}banner_url'],
-      ),
-      userRole: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}user_role'],
-      ),
-      canPost: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}can_post'],
-      )!,
-      canModerate: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}can_moderate'],
-      )!,
-      canAdmin: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}can_admin'],
       )!,
     );
   }
 
   @override
-  $GroupTableTable createAlias(String alias) {
-    return $GroupTableTable(attachedDatabase, alias);
+  $InviteTableTable createAlias(String alias) {
+    return $InviteTableTable(attachedDatabase, alias);
   }
 }
 
-class GroupEntity extends DataClass implements Insertable<GroupEntity> {
+class InviteData extends DataClass implements Insertable<InviteData> {
   final String id;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String name;
-  final String description;
-  final String creatorId;
-  final String creatorName;
-  final String admins;
-  final String adminNames;
-  final String moderators;
-  final String moderatorNames;
-  final String members;
-  final String memberNames;
-  final String bannedUsers;
-  final String bannedUserNames;
-  final bool isPrivate;
-  final String rules;
-  final String? logo;
-  final String? banner;
-  final String? logoUrl;
-  final String? bannerUrl;
-  final String? userRole;
-  final bool canPost;
-  final bool canModerate;
-  final bool canAdmin;
-  const GroupEntity({
+  final String? eventId;
+  final String? ticketId;
+  final String token;
+  final String expiresAt;
+  final int maxUses;
+  final int usedCount;
+  final String createdAt;
+  final String updatedAt;
+  const InviteData({
     required this.id,
+    this.eventId,
+    this.ticketId,
+    required this.token,
+    required this.expiresAt,
+    required this.maxUses,
+    required this.usedCount,
     required this.createdAt,
     required this.updatedAt,
-    required this.name,
-    required this.description,
-    required this.creatorId,
-    required this.creatorName,
-    required this.admins,
-    required this.adminNames,
-    required this.moderators,
-    required this.moderatorNames,
-    required this.members,
-    required this.memberNames,
-    required this.bannedUsers,
-    required this.bannedUserNames,
-    required this.isPrivate,
-    required this.rules,
-    this.logo,
-    this.banner,
-    this.logoUrl,
-    this.bannerUrl,
-    this.userRole,
-    required this.canPost,
-    required this.canModerate,
-    required this.canAdmin,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
-    map['created_at'] = Variable<DateTime>(createdAt);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
-    map['name'] = Variable<String>(name);
-    map['description'] = Variable<String>(description);
-    map['creator_id'] = Variable<String>(creatorId);
-    map['creator_name'] = Variable<String>(creatorName);
-    map['admins'] = Variable<String>(admins);
-    map['admin_names'] = Variable<String>(adminNames);
-    map['moderators'] = Variable<String>(moderators);
-    map['moderator_names'] = Variable<String>(moderatorNames);
-    map['members'] = Variable<String>(members);
-    map['member_names'] = Variable<String>(memberNames);
-    map['banned_users'] = Variable<String>(bannedUsers);
-    map['banned_user_names'] = Variable<String>(bannedUserNames);
-    map['is_private'] = Variable<bool>(isPrivate);
-    map['rules'] = Variable<String>(rules);
-    if (!nullToAbsent || logo != null) {
-      map['logo'] = Variable<String>(logo);
+    if (!nullToAbsent || eventId != null) {
+      map['event_id'] = Variable<String>(eventId);
     }
-    if (!nullToAbsent || banner != null) {
-      map['banner'] = Variable<String>(banner);
+    if (!nullToAbsent || ticketId != null) {
+      map['ticket_id'] = Variable<String>(ticketId);
     }
-    if (!nullToAbsent || logoUrl != null) {
-      map['logo_url'] = Variable<String>(logoUrl);
-    }
-    if (!nullToAbsent || bannerUrl != null) {
-      map['banner_url'] = Variable<String>(bannerUrl);
-    }
-    if (!nullToAbsent || userRole != null) {
-      map['user_role'] = Variable<String>(userRole);
-    }
-    map['can_post'] = Variable<bool>(canPost);
-    map['can_moderate'] = Variable<bool>(canModerate);
-    map['can_admin'] = Variable<bool>(canAdmin);
+    map['token'] = Variable<String>(token);
+    map['expires_at'] = Variable<String>(expiresAt);
+    map['max_uses'] = Variable<int>(maxUses);
+    map['used_count'] = Variable<int>(usedCount);
+    map['created_at'] = Variable<String>(createdAt);
+    map['updated_at'] = Variable<String>(updatedAt);
     return map;
   }
 
-  GroupTableCompanion toCompanion(bool nullToAbsent) {
-    return GroupTableCompanion(
+  InviteTableCompanion toCompanion(bool nullToAbsent) {
+    return InviteTableCompanion(
       id: Value(id),
+      eventId: eventId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(eventId),
+      ticketId: ticketId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(ticketId),
+      token: Value(token),
+      expiresAt: Value(expiresAt),
+      maxUses: Value(maxUses),
+      usedCount: Value(usedCount),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
-      name: Value(name),
-      description: Value(description),
-      creatorId: Value(creatorId),
-      creatorName: Value(creatorName),
-      admins: Value(admins),
-      adminNames: Value(adminNames),
-      moderators: Value(moderators),
-      moderatorNames: Value(moderatorNames),
-      members: Value(members),
-      memberNames: Value(memberNames),
-      bannedUsers: Value(bannedUsers),
-      bannedUserNames: Value(bannedUserNames),
-      isPrivate: Value(isPrivate),
-      rules: Value(rules),
-      logo: logo == null && nullToAbsent ? const Value.absent() : Value(logo),
-      banner: banner == null && nullToAbsent
-          ? const Value.absent()
-          : Value(banner),
-      logoUrl: logoUrl == null && nullToAbsent
-          ? const Value.absent()
-          : Value(logoUrl),
-      bannerUrl: bannerUrl == null && nullToAbsent
-          ? const Value.absent()
-          : Value(bannerUrl),
-      userRole: userRole == null && nullToAbsent
-          ? const Value.absent()
-          : Value(userRole),
-      canPost: Value(canPost),
-      canModerate: Value(canModerate),
-      canAdmin: Value(canAdmin),
     );
   }
 
-  factory GroupEntity.fromJson(
+  factory InviteData.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return GroupEntity(
+    return InviteData(
       id: serializer.fromJson<String>(json['id']),
-      createdAt: serializer.fromJson<DateTime>(json['created_at']),
-      updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
-      name: serializer.fromJson<String>(json['name']),
-      description: serializer.fromJson<String>(json['description']),
-      creatorId: serializer.fromJson<String>(json['creator_id']),
-      creatorName: serializer.fromJson<String>(json['creator_name']),
-      admins: serializer.fromJson<String>(json['admins']),
-      adminNames: serializer.fromJson<String>(json['admin_names']),
-      moderators: serializer.fromJson<String>(json['moderators']),
-      moderatorNames: serializer.fromJson<String>(json['moderator_names']),
-      members: serializer.fromJson<String>(json['members']),
-      memberNames: serializer.fromJson<String>(json['member_names']),
-      bannedUsers: serializer.fromJson<String>(json['banned_users']),
-      bannedUserNames: serializer.fromJson<String>(json['banned_user_names']),
-      isPrivate: serializer.fromJson<bool>(json['is_private']),
-      rules: serializer.fromJson<String>(json['rules']),
-      logo: serializer.fromJson<String?>(json['logo']),
-      banner: serializer.fromJson<String?>(json['banner']),
-      logoUrl: serializer.fromJson<String?>(json['logo_url']),
-      bannerUrl: serializer.fromJson<String?>(json['banner_url']),
-      userRole: serializer.fromJson<String?>(json['user_role']),
-      canPost: serializer.fromJson<bool>(json['can_post']),
-      canModerate: serializer.fromJson<bool>(json['can_moderate']),
-      canAdmin: serializer.fromJson<bool>(json['can_admin']),
+      eventId: serializer.fromJson<String?>(json['event_id']),
+      ticketId: serializer.fromJson<String?>(json['ticket_id']),
+      token: serializer.fromJson<String>(json['token']),
+      expiresAt: serializer.fromJson<String>(json['expires_at']),
+      maxUses: serializer.fromJson<int>(json['max_uses']),
+      usedCount: serializer.fromJson<int>(json['used_count']),
+      createdAt: serializer.fromJson<String>(json['created_at']),
+      updatedAt: serializer.fromJson<String>(json['updated_at']),
     );
   }
   @override
@@ -8689,437 +7398,184 @@ class GroupEntity extends DataClass implements Insertable<GroupEntity> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
-      'created_at': serializer.toJson<DateTime>(createdAt),
-      'updated_at': serializer.toJson<DateTime>(updatedAt),
-      'name': serializer.toJson<String>(name),
-      'description': serializer.toJson<String>(description),
-      'creator_id': serializer.toJson<String>(creatorId),
-      'creator_name': serializer.toJson<String>(creatorName),
-      'admins': serializer.toJson<String>(admins),
-      'admin_names': serializer.toJson<String>(adminNames),
-      'moderators': serializer.toJson<String>(moderators),
-      'moderator_names': serializer.toJson<String>(moderatorNames),
-      'members': serializer.toJson<String>(members),
-      'member_names': serializer.toJson<String>(memberNames),
-      'banned_users': serializer.toJson<String>(bannedUsers),
-      'banned_user_names': serializer.toJson<String>(bannedUserNames),
-      'is_private': serializer.toJson<bool>(isPrivate),
-      'rules': serializer.toJson<String>(rules),
-      'logo': serializer.toJson<String?>(logo),
-      'banner': serializer.toJson<String?>(banner),
-      'logo_url': serializer.toJson<String?>(logoUrl),
-      'banner_url': serializer.toJson<String?>(bannerUrl),
-      'user_role': serializer.toJson<String?>(userRole),
-      'can_post': serializer.toJson<bool>(canPost),
-      'can_moderate': serializer.toJson<bool>(canModerate),
-      'can_admin': serializer.toJson<bool>(canAdmin),
+      'event_id': serializer.toJson<String?>(eventId),
+      'ticket_id': serializer.toJson<String?>(ticketId),
+      'token': serializer.toJson<String>(token),
+      'expires_at': serializer.toJson<String>(expiresAt),
+      'max_uses': serializer.toJson<int>(maxUses),
+      'used_count': serializer.toJson<int>(usedCount),
+      'created_at': serializer.toJson<String>(createdAt),
+      'updated_at': serializer.toJson<String>(updatedAt),
     };
   }
 
-  GroupEntity copyWith({
+  InviteData copyWith({
     String? id,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-    String? name,
-    String? description,
-    String? creatorId,
-    String? creatorName,
-    String? admins,
-    String? adminNames,
-    String? moderators,
-    String? moderatorNames,
-    String? members,
-    String? memberNames,
-    String? bannedUsers,
-    String? bannedUserNames,
-    bool? isPrivate,
-    String? rules,
-    Value<String?> logo = const Value.absent(),
-    Value<String?> banner = const Value.absent(),
-    Value<String?> logoUrl = const Value.absent(),
-    Value<String?> bannerUrl = const Value.absent(),
-    Value<String?> userRole = const Value.absent(),
-    bool? canPost,
-    bool? canModerate,
-    bool? canAdmin,
-  }) => GroupEntity(
+    Value<String?> eventId = const Value.absent(),
+    Value<String?> ticketId = const Value.absent(),
+    String? token,
+    String? expiresAt,
+    int? maxUses,
+    int? usedCount,
+    String? createdAt,
+    String? updatedAt,
+  }) => InviteData(
     id: id ?? this.id,
+    eventId: eventId.present ? eventId.value : this.eventId,
+    ticketId: ticketId.present ? ticketId.value : this.ticketId,
+    token: token ?? this.token,
+    expiresAt: expiresAt ?? this.expiresAt,
+    maxUses: maxUses ?? this.maxUses,
+    usedCount: usedCount ?? this.usedCount,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
-    name: name ?? this.name,
-    description: description ?? this.description,
-    creatorId: creatorId ?? this.creatorId,
-    creatorName: creatorName ?? this.creatorName,
-    admins: admins ?? this.admins,
-    adminNames: adminNames ?? this.adminNames,
-    moderators: moderators ?? this.moderators,
-    moderatorNames: moderatorNames ?? this.moderatorNames,
-    members: members ?? this.members,
-    memberNames: memberNames ?? this.memberNames,
-    bannedUsers: bannedUsers ?? this.bannedUsers,
-    bannedUserNames: bannedUserNames ?? this.bannedUserNames,
-    isPrivate: isPrivate ?? this.isPrivate,
-    rules: rules ?? this.rules,
-    logo: logo.present ? logo.value : this.logo,
-    banner: banner.present ? banner.value : this.banner,
-    logoUrl: logoUrl.present ? logoUrl.value : this.logoUrl,
-    bannerUrl: bannerUrl.present ? bannerUrl.value : this.bannerUrl,
-    userRole: userRole.present ? userRole.value : this.userRole,
-    canPost: canPost ?? this.canPost,
-    canModerate: canModerate ?? this.canModerate,
-    canAdmin: canAdmin ?? this.canAdmin,
   );
-  GroupEntity copyWithCompanion(GroupTableCompanion data) {
-    return GroupEntity(
+  InviteData copyWithCompanion(InviteTableCompanion data) {
+    return InviteData(
       id: data.id.present ? data.id.value : this.id,
+      eventId: data.eventId.present ? data.eventId.value : this.eventId,
+      ticketId: data.ticketId.present ? data.ticketId.value : this.ticketId,
+      token: data.token.present ? data.token.value : this.token,
+      expiresAt: data.expiresAt.present ? data.expiresAt.value : this.expiresAt,
+      maxUses: data.maxUses.present ? data.maxUses.value : this.maxUses,
+      usedCount: data.usedCount.present ? data.usedCount.value : this.usedCount,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
-      name: data.name.present ? data.name.value : this.name,
-      description: data.description.present
-          ? data.description.value
-          : this.description,
-      creatorId: data.creatorId.present ? data.creatorId.value : this.creatorId,
-      creatorName: data.creatorName.present
-          ? data.creatorName.value
-          : this.creatorName,
-      admins: data.admins.present ? data.admins.value : this.admins,
-      adminNames: data.adminNames.present
-          ? data.adminNames.value
-          : this.adminNames,
-      moderators: data.moderators.present
-          ? data.moderators.value
-          : this.moderators,
-      moderatorNames: data.moderatorNames.present
-          ? data.moderatorNames.value
-          : this.moderatorNames,
-      members: data.members.present ? data.members.value : this.members,
-      memberNames: data.memberNames.present
-          ? data.memberNames.value
-          : this.memberNames,
-      bannedUsers: data.bannedUsers.present
-          ? data.bannedUsers.value
-          : this.bannedUsers,
-      bannedUserNames: data.bannedUserNames.present
-          ? data.bannedUserNames.value
-          : this.bannedUserNames,
-      isPrivate: data.isPrivate.present ? data.isPrivate.value : this.isPrivate,
-      rules: data.rules.present ? data.rules.value : this.rules,
-      logo: data.logo.present ? data.logo.value : this.logo,
-      banner: data.banner.present ? data.banner.value : this.banner,
-      logoUrl: data.logoUrl.present ? data.logoUrl.value : this.logoUrl,
-      bannerUrl: data.bannerUrl.present ? data.bannerUrl.value : this.bannerUrl,
-      userRole: data.userRole.present ? data.userRole.value : this.userRole,
-      canPost: data.canPost.present ? data.canPost.value : this.canPost,
-      canModerate: data.canModerate.present
-          ? data.canModerate.value
-          : this.canModerate,
-      canAdmin: data.canAdmin.present ? data.canAdmin.value : this.canAdmin,
     );
   }
 
   @override
   String toString() {
-    return (StringBuffer('GroupEntity(')
+    return (StringBuffer('InviteData(')
           ..write('id: $id, ')
+          ..write('eventId: $eventId, ')
+          ..write('ticketId: $ticketId, ')
+          ..write('token: $token, ')
+          ..write('expiresAt: $expiresAt, ')
+          ..write('maxUses: $maxUses, ')
+          ..write('usedCount: $usedCount, ')
           ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt, ')
-          ..write('name: $name, ')
-          ..write('description: $description, ')
-          ..write('creatorId: $creatorId, ')
-          ..write('creatorName: $creatorName, ')
-          ..write('admins: $admins, ')
-          ..write('adminNames: $adminNames, ')
-          ..write('moderators: $moderators, ')
-          ..write('moderatorNames: $moderatorNames, ')
-          ..write('members: $members, ')
-          ..write('memberNames: $memberNames, ')
-          ..write('bannedUsers: $bannedUsers, ')
-          ..write('bannedUserNames: $bannedUserNames, ')
-          ..write('isPrivate: $isPrivate, ')
-          ..write('rules: $rules, ')
-          ..write('logo: $logo, ')
-          ..write('banner: $banner, ')
-          ..write('logoUrl: $logoUrl, ')
-          ..write('bannerUrl: $bannerUrl, ')
-          ..write('userRole: $userRole, ')
-          ..write('canPost: $canPost, ')
-          ..write('canModerate: $canModerate, ')
-          ..write('canAdmin: $canAdmin')
+          ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hashAll([
+  int get hashCode => Object.hash(
     id,
+    eventId,
+    ticketId,
+    token,
+    expiresAt,
+    maxUses,
+    usedCount,
     createdAt,
     updatedAt,
-    name,
-    description,
-    creatorId,
-    creatorName,
-    admins,
-    adminNames,
-    moderators,
-    moderatorNames,
-    members,
-    memberNames,
-    bannedUsers,
-    bannedUserNames,
-    isPrivate,
-    rules,
-    logo,
-    banner,
-    logoUrl,
-    bannerUrl,
-    userRole,
-    canPost,
-    canModerate,
-    canAdmin,
-  ]);
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is GroupEntity &&
+      (other is InviteData &&
           other.id == this.id &&
+          other.eventId == this.eventId &&
+          other.ticketId == this.ticketId &&
+          other.token == this.token &&
+          other.expiresAt == this.expiresAt &&
+          other.maxUses == this.maxUses &&
+          other.usedCount == this.usedCount &&
           other.createdAt == this.createdAt &&
-          other.updatedAt == this.updatedAt &&
-          other.name == this.name &&
-          other.description == this.description &&
-          other.creatorId == this.creatorId &&
-          other.creatorName == this.creatorName &&
-          other.admins == this.admins &&
-          other.adminNames == this.adminNames &&
-          other.moderators == this.moderators &&
-          other.moderatorNames == this.moderatorNames &&
-          other.members == this.members &&
-          other.memberNames == this.memberNames &&
-          other.bannedUsers == this.bannedUsers &&
-          other.bannedUserNames == this.bannedUserNames &&
-          other.isPrivate == this.isPrivate &&
-          other.rules == this.rules &&
-          other.logo == this.logo &&
-          other.banner == this.banner &&
-          other.logoUrl == this.logoUrl &&
-          other.bannerUrl == this.bannerUrl &&
-          other.userRole == this.userRole &&
-          other.canPost == this.canPost &&
-          other.canModerate == this.canModerate &&
-          other.canAdmin == this.canAdmin);
+          other.updatedAt == this.updatedAt);
 }
 
-class GroupTableCompanion extends UpdateCompanion<GroupEntity> {
+class InviteTableCompanion extends UpdateCompanion<InviteData> {
   final Value<String> id;
-  final Value<DateTime> createdAt;
-  final Value<DateTime> updatedAt;
-  final Value<String> name;
-  final Value<String> description;
-  final Value<String> creatorId;
-  final Value<String> creatorName;
-  final Value<String> admins;
-  final Value<String> adminNames;
-  final Value<String> moderators;
-  final Value<String> moderatorNames;
-  final Value<String> members;
-  final Value<String> memberNames;
-  final Value<String> bannedUsers;
-  final Value<String> bannedUserNames;
-  final Value<bool> isPrivate;
-  final Value<String> rules;
-  final Value<String?> logo;
-  final Value<String?> banner;
-  final Value<String?> logoUrl;
-  final Value<String?> bannerUrl;
-  final Value<String?> userRole;
-  final Value<bool> canPost;
-  final Value<bool> canModerate;
-  final Value<bool> canAdmin;
+  final Value<String?> eventId;
+  final Value<String?> ticketId;
+  final Value<String> token;
+  final Value<String> expiresAt;
+  final Value<int> maxUses;
+  final Value<int> usedCount;
+  final Value<String> createdAt;
+  final Value<String> updatedAt;
   final Value<int> rowid;
-  const GroupTableCompanion({
+  const InviteTableCompanion({
     this.id = const Value.absent(),
+    this.eventId = const Value.absent(),
+    this.ticketId = const Value.absent(),
+    this.token = const Value.absent(),
+    this.expiresAt = const Value.absent(),
+    this.maxUses = const Value.absent(),
+    this.usedCount = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
-    this.name = const Value.absent(),
-    this.description = const Value.absent(),
-    this.creatorId = const Value.absent(),
-    this.creatorName = const Value.absent(),
-    this.admins = const Value.absent(),
-    this.adminNames = const Value.absent(),
-    this.moderators = const Value.absent(),
-    this.moderatorNames = const Value.absent(),
-    this.members = const Value.absent(),
-    this.memberNames = const Value.absent(),
-    this.bannedUsers = const Value.absent(),
-    this.bannedUserNames = const Value.absent(),
-    this.isPrivate = const Value.absent(),
-    this.rules = const Value.absent(),
-    this.logo = const Value.absent(),
-    this.banner = const Value.absent(),
-    this.logoUrl = const Value.absent(),
-    this.bannerUrl = const Value.absent(),
-    this.userRole = const Value.absent(),
-    this.canPost = const Value.absent(),
-    this.canModerate = const Value.absent(),
-    this.canAdmin = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  GroupTableCompanion.insert({
+  InviteTableCompanion.insert({
     required String id,
-    this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
-    required String name,
-    required String description,
-    required String creatorId,
-    required String creatorName,
-    required String admins,
-    required String adminNames,
-    required String moderators,
-    required String moderatorNames,
-    required String members,
-    required String memberNames,
-    required String bannedUsers,
-    required String bannedUserNames,
-    required bool isPrivate,
-    required String rules,
-    this.logo = const Value.absent(),
-    this.banner = const Value.absent(),
-    this.logoUrl = const Value.absent(),
-    this.bannerUrl = const Value.absent(),
-    this.userRole = const Value.absent(),
-    required bool canPost,
-    required bool canModerate,
-    required bool canAdmin,
+    this.eventId = const Value.absent(),
+    this.ticketId = const Value.absent(),
+    required String token,
+    required String expiresAt,
+    required int maxUses,
+    required int usedCount,
+    required String createdAt,
+    required String updatedAt,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
-       name = Value(name),
-       description = Value(description),
-       creatorId = Value(creatorId),
-       creatorName = Value(creatorName),
-       admins = Value(admins),
-       adminNames = Value(adminNames),
-       moderators = Value(moderators),
-       moderatorNames = Value(moderatorNames),
-       members = Value(members),
-       memberNames = Value(memberNames),
-       bannedUsers = Value(bannedUsers),
-       bannedUserNames = Value(bannedUserNames),
-       isPrivate = Value(isPrivate),
-       rules = Value(rules),
-       canPost = Value(canPost),
-       canModerate = Value(canModerate),
-       canAdmin = Value(canAdmin);
-  static Insertable<GroupEntity> custom({
+       token = Value(token),
+       expiresAt = Value(expiresAt),
+       maxUses = Value(maxUses),
+       usedCount = Value(usedCount),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<InviteData> custom({
     Expression<String>? id,
-    Expression<DateTime>? createdAt,
-    Expression<DateTime>? updatedAt,
-    Expression<String>? name,
-    Expression<String>? description,
-    Expression<String>? creatorId,
-    Expression<String>? creatorName,
-    Expression<String>? admins,
-    Expression<String>? adminNames,
-    Expression<String>? moderators,
-    Expression<String>? moderatorNames,
-    Expression<String>? members,
-    Expression<String>? memberNames,
-    Expression<String>? bannedUsers,
-    Expression<String>? bannedUserNames,
-    Expression<bool>? isPrivate,
-    Expression<String>? rules,
-    Expression<String>? logo,
-    Expression<String>? banner,
-    Expression<String>? logoUrl,
-    Expression<String>? bannerUrl,
-    Expression<String>? userRole,
-    Expression<bool>? canPost,
-    Expression<bool>? canModerate,
-    Expression<bool>? canAdmin,
+    Expression<String>? eventId,
+    Expression<String>? ticketId,
+    Expression<String>? token,
+    Expression<String>? expiresAt,
+    Expression<int>? maxUses,
+    Expression<int>? usedCount,
+    Expression<String>? createdAt,
+    Expression<String>? updatedAt,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (eventId != null) 'event_id': eventId,
+      if (ticketId != null) 'ticket_id': ticketId,
+      if (token != null) 'token': token,
+      if (expiresAt != null) 'expires_at': expiresAt,
+      if (maxUses != null) 'max_uses': maxUses,
+      if (usedCount != null) 'used_count': usedCount,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
-      if (name != null) 'name': name,
-      if (description != null) 'description': description,
-      if (creatorId != null) 'creator_id': creatorId,
-      if (creatorName != null) 'creator_name': creatorName,
-      if (admins != null) 'admins': admins,
-      if (adminNames != null) 'admin_names': adminNames,
-      if (moderators != null) 'moderators': moderators,
-      if (moderatorNames != null) 'moderator_names': moderatorNames,
-      if (members != null) 'members': members,
-      if (memberNames != null) 'member_names': memberNames,
-      if (bannedUsers != null) 'banned_users': bannedUsers,
-      if (bannedUserNames != null) 'banned_user_names': bannedUserNames,
-      if (isPrivate != null) 'is_private': isPrivate,
-      if (rules != null) 'rules': rules,
-      if (logo != null) 'logo': logo,
-      if (banner != null) 'banner': banner,
-      if (logoUrl != null) 'logo_url': logoUrl,
-      if (bannerUrl != null) 'banner_url': bannerUrl,
-      if (userRole != null) 'user_role': userRole,
-      if (canPost != null) 'can_post': canPost,
-      if (canModerate != null) 'can_moderate': canModerate,
-      if (canAdmin != null) 'can_admin': canAdmin,
       if (rowid != null) 'rowid': rowid,
     });
   }
 
-  GroupTableCompanion copyWith({
+  InviteTableCompanion copyWith({
     Value<String>? id,
-    Value<DateTime>? createdAt,
-    Value<DateTime>? updatedAt,
-    Value<String>? name,
-    Value<String>? description,
-    Value<String>? creatorId,
-    Value<String>? creatorName,
-    Value<String>? admins,
-    Value<String>? adminNames,
-    Value<String>? moderators,
-    Value<String>? moderatorNames,
-    Value<String>? members,
-    Value<String>? memberNames,
-    Value<String>? bannedUsers,
-    Value<String>? bannedUserNames,
-    Value<bool>? isPrivate,
-    Value<String>? rules,
-    Value<String?>? logo,
-    Value<String?>? banner,
-    Value<String?>? logoUrl,
-    Value<String?>? bannerUrl,
-    Value<String?>? userRole,
-    Value<bool>? canPost,
-    Value<bool>? canModerate,
-    Value<bool>? canAdmin,
+    Value<String?>? eventId,
+    Value<String?>? ticketId,
+    Value<String>? token,
+    Value<String>? expiresAt,
+    Value<int>? maxUses,
+    Value<int>? usedCount,
+    Value<String>? createdAt,
+    Value<String>? updatedAt,
     Value<int>? rowid,
   }) {
-    return GroupTableCompanion(
+    return InviteTableCompanion(
       id: id ?? this.id,
+      eventId: eventId ?? this.eventId,
+      ticketId: ticketId ?? this.ticketId,
+      token: token ?? this.token,
+      expiresAt: expiresAt ?? this.expiresAt,
+      maxUses: maxUses ?? this.maxUses,
+      usedCount: usedCount ?? this.usedCount,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
-      name: name ?? this.name,
-      description: description ?? this.description,
-      creatorId: creatorId ?? this.creatorId,
-      creatorName: creatorName ?? this.creatorName,
-      admins: admins ?? this.admins,
-      adminNames: adminNames ?? this.adminNames,
-      moderators: moderators ?? this.moderators,
-      moderatorNames: moderatorNames ?? this.moderatorNames,
-      members: members ?? this.members,
-      memberNames: memberNames ?? this.memberNames,
-      bannedUsers: bannedUsers ?? this.bannedUsers,
-      bannedUserNames: bannedUserNames ?? this.bannedUserNames,
-      isPrivate: isPrivate ?? this.isPrivate,
-      rules: rules ?? this.rules,
-      logo: logo ?? this.logo,
-      banner: banner ?? this.banner,
-      logoUrl: logoUrl ?? this.logoUrl,
-      bannerUrl: bannerUrl ?? this.bannerUrl,
-      userRole: userRole ?? this.userRole,
-      canPost: canPost ?? this.canPost,
-      canModerate: canModerate ?? this.canModerate,
-      canAdmin: canAdmin ?? this.canAdmin,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -9130,77 +7586,29 @@ class GroupTableCompanion extends UpdateCompanion<GroupEntity> {
     if (id.present) {
       map['id'] = Variable<String>(id.value);
     }
+    if (eventId.present) {
+      map['event_id'] = Variable<String>(eventId.value);
+    }
+    if (ticketId.present) {
+      map['ticket_id'] = Variable<String>(ticketId.value);
+    }
+    if (token.present) {
+      map['token'] = Variable<String>(token.value);
+    }
+    if (expiresAt.present) {
+      map['expires_at'] = Variable<String>(expiresAt.value);
+    }
+    if (maxUses.present) {
+      map['max_uses'] = Variable<int>(maxUses.value);
+    }
+    if (usedCount.present) {
+      map['used_count'] = Variable<int>(usedCount.value);
+    }
     if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
+      map['created_at'] = Variable<String>(createdAt.value);
     }
     if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
-    }
-    if (name.present) {
-      map['name'] = Variable<String>(name.value);
-    }
-    if (description.present) {
-      map['description'] = Variable<String>(description.value);
-    }
-    if (creatorId.present) {
-      map['creator_id'] = Variable<String>(creatorId.value);
-    }
-    if (creatorName.present) {
-      map['creator_name'] = Variable<String>(creatorName.value);
-    }
-    if (admins.present) {
-      map['admins'] = Variable<String>(admins.value);
-    }
-    if (adminNames.present) {
-      map['admin_names'] = Variable<String>(adminNames.value);
-    }
-    if (moderators.present) {
-      map['moderators'] = Variable<String>(moderators.value);
-    }
-    if (moderatorNames.present) {
-      map['moderator_names'] = Variable<String>(moderatorNames.value);
-    }
-    if (members.present) {
-      map['members'] = Variable<String>(members.value);
-    }
-    if (memberNames.present) {
-      map['member_names'] = Variable<String>(memberNames.value);
-    }
-    if (bannedUsers.present) {
-      map['banned_users'] = Variable<String>(bannedUsers.value);
-    }
-    if (bannedUserNames.present) {
-      map['banned_user_names'] = Variable<String>(bannedUserNames.value);
-    }
-    if (isPrivate.present) {
-      map['is_private'] = Variable<bool>(isPrivate.value);
-    }
-    if (rules.present) {
-      map['rules'] = Variable<String>(rules.value);
-    }
-    if (logo.present) {
-      map['logo'] = Variable<String>(logo.value);
-    }
-    if (banner.present) {
-      map['banner'] = Variable<String>(banner.value);
-    }
-    if (logoUrl.present) {
-      map['logo_url'] = Variable<String>(logoUrl.value);
-    }
-    if (bannerUrl.present) {
-      map['banner_url'] = Variable<String>(bannerUrl.value);
-    }
-    if (userRole.present) {
-      map['user_role'] = Variable<String>(userRole.value);
-    }
-    if (canPost.present) {
-      map['can_post'] = Variable<bool>(canPost.value);
-    }
-    if (canModerate.present) {
-      map['can_moderate'] = Variable<bool>(canModerate.value);
-    }
-    if (canAdmin.present) {
-      map['can_admin'] = Variable<bool>(canAdmin.value);
+      map['updated_at'] = Variable<String>(updatedAt.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -9210,44 +7618,27 @@ class GroupTableCompanion extends UpdateCompanion<GroupEntity> {
 
   @override
   String toString() {
-    return (StringBuffer('GroupTableCompanion(')
+    return (StringBuffer('InviteTableCompanion(')
           ..write('id: $id, ')
+          ..write('eventId: $eventId, ')
+          ..write('ticketId: $ticketId, ')
+          ..write('token: $token, ')
+          ..write('expiresAt: $expiresAt, ')
+          ..write('maxUses: $maxUses, ')
+          ..write('usedCount: $usedCount, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
-          ..write('name: $name, ')
-          ..write('description: $description, ')
-          ..write('creatorId: $creatorId, ')
-          ..write('creatorName: $creatorName, ')
-          ..write('admins: $admins, ')
-          ..write('adminNames: $adminNames, ')
-          ..write('moderators: $moderators, ')
-          ..write('moderatorNames: $moderatorNames, ')
-          ..write('members: $members, ')
-          ..write('memberNames: $memberNames, ')
-          ..write('bannedUsers: $bannedUsers, ')
-          ..write('bannedUserNames: $bannedUserNames, ')
-          ..write('isPrivate: $isPrivate, ')
-          ..write('rules: $rules, ')
-          ..write('logo: $logo, ')
-          ..write('banner: $banner, ')
-          ..write('logoUrl: $logoUrl, ')
-          ..write('bannerUrl: $bannerUrl, ')
-          ..write('userRole: $userRole, ')
-          ..write('canPost: $canPost, ')
-          ..write('canModerate: $canModerate, ')
-          ..write('canAdmin: $canAdmin, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
 }
 
-class $BlockTableTable extends BlockTable
-    with TableInfo<$BlockTableTable, BlockData> {
+class $BlocksTable extends Blocks with TableInfo<$BlocksTable, Block> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $BlockTableTable(this.attachedDatabase, [this._alias]);
+  $BlocksTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -9357,7 +7748,7 @@ class $BlockTableTable extends BlockTable
   static const String $name = 'block_table';
   @override
   VerificationContext validateIntegrity(
-    Insertable<BlockData> instance, {
+    Insertable<Block> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -9429,9 +7820,9 @@ class $BlockTableTable extends BlockTable
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  BlockData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Block map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return BlockData(
+    return Block(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -9468,12 +7859,12 @@ class $BlockTableTable extends BlockTable
   }
 
   @override
-  $BlockTableTable createAlias(String alias) {
-    return $BlockTableTable(attachedDatabase, alias);
+  $BlocksTable createAlias(String alias) {
+    return $BlocksTable(attachedDatabase, alias);
   }
 }
 
-class BlockData extends DataClass implements Insertable<BlockData> {
+class Block extends DataClass implements Insertable<Block> {
   final int id;
   final String blockType;
   final String? blockedUser;
@@ -9482,7 +7873,7 @@ class BlockData extends DataClass implements Insertable<BlockData> {
   final String? blockedImage;
   final DateTime createdAt;
   final DateTime? cachedAt;
-  const BlockData({
+  const Block({
     required this.id,
     required this.blockType,
     this.blockedUser,
@@ -9516,8 +7907,8 @@ class BlockData extends DataClass implements Insertable<BlockData> {
     return map;
   }
 
-  BlockTableCompanion toCompanion(bool nullToAbsent) {
-    return BlockTableCompanion(
+  BlocksCompanion toCompanion(bool nullToAbsent) {
+    return BlocksCompanion(
       id: Value(id),
       blockType: Value(blockType),
       blockedUser: blockedUser == null && nullToAbsent
@@ -9539,12 +7930,12 @@ class BlockData extends DataClass implements Insertable<BlockData> {
     );
   }
 
-  factory BlockData.fromJson(
+  factory Block.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return BlockData(
+    return Block(
       id: serializer.fromJson<int>(json['id']),
       blockType: serializer.fromJson<String>(json['block_type']),
       blockedUser: serializer.fromJson<String?>(json['blocked_user']),
@@ -9570,7 +7961,7 @@ class BlockData extends DataClass implements Insertable<BlockData> {
     };
   }
 
-  BlockData copyWith({
+  Block copyWith({
     int? id,
     String? blockType,
     Value<String?> blockedUser = const Value.absent(),
@@ -9579,7 +7970,7 @@ class BlockData extends DataClass implements Insertable<BlockData> {
     Value<String?> blockedImage = const Value.absent(),
     DateTime? createdAt,
     Value<DateTime?> cachedAt = const Value.absent(),
-  }) => BlockData(
+  }) => Block(
     id: id ?? this.id,
     blockType: blockType ?? this.blockType,
     blockedUser: blockedUser.present ? blockedUser.value : this.blockedUser,
@@ -9591,8 +7982,8 @@ class BlockData extends DataClass implements Insertable<BlockData> {
     createdAt: createdAt ?? this.createdAt,
     cachedAt: cachedAt.present ? cachedAt.value : this.cachedAt,
   );
-  BlockData copyWithCompanion(BlockTableCompanion data) {
-    return BlockData(
+  Block copyWithCompanion(BlocksCompanion data) {
+    return Block(
       id: data.id.present ? data.id.value : this.id,
       blockType: data.blockType.present ? data.blockType.value : this.blockType,
       blockedUser: data.blockedUser.present
@@ -9614,7 +8005,7 @@ class BlockData extends DataClass implements Insertable<BlockData> {
 
   @override
   String toString() {
-    return (StringBuffer('BlockData(')
+    return (StringBuffer('Block(')
           ..write('id: $id, ')
           ..write('blockType: $blockType, ')
           ..write('blockedUser: $blockedUser, ')
@@ -9641,7 +8032,7 @@ class BlockData extends DataClass implements Insertable<BlockData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is BlockData &&
+      (other is Block &&
           other.id == this.id &&
           other.blockType == this.blockType &&
           other.blockedUser == this.blockedUser &&
@@ -9652,7 +8043,7 @@ class BlockData extends DataClass implements Insertable<BlockData> {
           other.cachedAt == this.cachedAt);
 }
 
-class BlockTableCompanion extends UpdateCompanion<BlockData> {
+class BlocksCompanion extends UpdateCompanion<Block> {
   final Value<int> id;
   final Value<String> blockType;
   final Value<String?> blockedUser;
@@ -9661,7 +8052,7 @@ class BlockTableCompanion extends UpdateCompanion<BlockData> {
   final Value<String?> blockedImage;
   final Value<DateTime> createdAt;
   final Value<DateTime?> cachedAt;
-  const BlockTableCompanion({
+  const BlocksCompanion({
     this.id = const Value.absent(),
     this.blockType = const Value.absent(),
     this.blockedUser = const Value.absent(),
@@ -9671,7 +8062,7 @@ class BlockTableCompanion extends UpdateCompanion<BlockData> {
     this.createdAt = const Value.absent(),
     this.cachedAt = const Value.absent(),
   });
-  BlockTableCompanion.insert({
+  BlocksCompanion.insert({
     this.id = const Value.absent(),
     required String blockType,
     this.blockedUser = const Value.absent(),
@@ -9682,7 +8073,7 @@ class BlockTableCompanion extends UpdateCompanion<BlockData> {
     this.cachedAt = const Value.absent(),
   }) : blockType = Value(blockType),
        createdAt = Value(createdAt);
-  static Insertable<BlockData> custom({
+  static Insertable<Block> custom({
     Expression<int>? id,
     Expression<String>? blockType,
     Expression<String>? blockedUser,
@@ -9704,7 +8095,7 @@ class BlockTableCompanion extends UpdateCompanion<BlockData> {
     });
   }
 
-  BlockTableCompanion copyWith({
+  BlocksCompanion copyWith({
     Value<int>? id,
     Value<String>? blockType,
     Value<String?>? blockedUser,
@@ -9714,7 +8105,7 @@ class BlockTableCompanion extends UpdateCompanion<BlockData> {
     Value<DateTime>? createdAt,
     Value<DateTime?>? cachedAt,
   }) {
-    return BlockTableCompanion(
+    return BlocksCompanion(
       id: id ?? this.id,
       blockType: blockType ?? this.blockType,
       blockedUser: blockedUser ?? this.blockedUser,
@@ -9758,7 +8149,7 @@ class BlockTableCompanion extends UpdateCompanion<BlockData> {
 
   @override
   String toString() {
-    return (StringBuffer('BlockTableCompanion(')
+    return (StringBuffer('BlocksCompanion(')
           ..write('id: $id, ')
           ..write('blockType: $blockType, ')
           ..write('blockedUser: $blockedUser, ')
@@ -9772,12 +8163,11 @@ class BlockTableCompanion extends UpdateCompanion<BlockData> {
   }
 }
 
-class $ReportTableTable extends ReportTable
-    with TableInfo<$ReportTableTable, ReportData> {
+class $ReportsTable extends Reports with TableInfo<$ReportsTable, Report> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $ReportTableTable(this.attachedDatabase, [this._alias]);
+  $ReportsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -9920,7 +8310,7 @@ class $ReportTableTable extends ReportTable
   static const String $name = 'report_table';
   @override
   VerificationContext validateIntegrity(
-    Insertable<ReportData> instance, {
+    Insertable<Report> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -10012,9 +8402,9 @@ class $ReportTableTable extends ReportTable
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  ReportData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Report map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return ReportData(
+    return Report(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -10063,12 +8453,12 @@ class $ReportTableTable extends ReportTable
   }
 
   @override
-  $ReportTableTable createAlias(String alias) {
-    return $ReportTableTable(attachedDatabase, alias);
+  $ReportsTable createAlias(String alias) {
+    return $ReportsTable(attachedDatabase, alias);
   }
 }
 
-class ReportData extends DataClass implements Insertable<ReportData> {
+class Report extends DataClass implements Insertable<Report> {
   final int id;
   final String reportType;
   final String? reportedUser;
@@ -10080,7 +8470,7 @@ class ReportData extends DataClass implements Insertable<ReportData> {
   final DateTime createdAt;
   final DateTime? updatedAt;
   final DateTime? cachedAt;
-  const ReportData({
+  const Report({
     required this.id,
     required this.reportType,
     this.reportedUser,
@@ -10122,8 +8512,8 @@ class ReportData extends DataClass implements Insertable<ReportData> {
     return map;
   }
 
-  ReportTableCompanion toCompanion(bool nullToAbsent) {
-    return ReportTableCompanion(
+  ReportsCompanion toCompanion(bool nullToAbsent) {
+    return ReportsCompanion(
       id: Value(id),
       reportType: Value(reportType),
       reportedUser: reportedUser == null && nullToAbsent
@@ -10150,12 +8540,12 @@ class ReportData extends DataClass implements Insertable<ReportData> {
     );
   }
 
-  factory ReportData.fromJson(
+  factory Report.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return ReportData(
+    return Report(
       id: serializer.fromJson<int>(json['id']),
       reportType: serializer.fromJson<String>(json['report_type']),
       reportedUser: serializer.fromJson<String?>(json['reported_user']),
@@ -10187,7 +8577,7 @@ class ReportData extends DataClass implements Insertable<ReportData> {
     };
   }
 
-  ReportData copyWith({
+  Report copyWith({
     int? id,
     String? reportType,
     Value<String?> reportedUser = const Value.absent(),
@@ -10199,7 +8589,7 @@ class ReportData extends DataClass implements Insertable<ReportData> {
     DateTime? createdAt,
     Value<DateTime?> updatedAt = const Value.absent(),
     Value<DateTime?> cachedAt = const Value.absent(),
-  }) => ReportData(
+  }) => Report(
     id: id ?? this.id,
     reportType: reportType ?? this.reportType,
     reportedUser: reportedUser.present ? reportedUser.value : this.reportedUser,
@@ -10216,8 +8606,8 @@ class ReportData extends DataClass implements Insertable<ReportData> {
     updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
     cachedAt: cachedAt.present ? cachedAt.value : this.cachedAt,
   );
-  ReportData copyWithCompanion(ReportTableCompanion data) {
-    return ReportData(
+  Report copyWithCompanion(ReportsCompanion data) {
+    return Report(
       id: data.id.present ? data.id.value : this.id,
       reportType: data.reportType.present
           ? data.reportType.value
@@ -10244,7 +8634,7 @@ class ReportData extends DataClass implements Insertable<ReportData> {
 
   @override
   String toString() {
-    return (StringBuffer('ReportData(')
+    return (StringBuffer('Report(')
           ..write('id: $id, ')
           ..write('reportType: $reportType, ')
           ..write('reportedUser: $reportedUser, ')
@@ -10277,7 +8667,7 @@ class ReportData extends DataClass implements Insertable<ReportData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is ReportData &&
+      (other is Report &&
           other.id == this.id &&
           other.reportType == this.reportType &&
           other.reportedUser == this.reportedUser &&
@@ -10291,7 +8681,7 @@ class ReportData extends DataClass implements Insertable<ReportData> {
           other.cachedAt == this.cachedAt);
 }
 
-class ReportTableCompanion extends UpdateCompanion<ReportData> {
+class ReportsCompanion extends UpdateCompanion<Report> {
   final Value<int> id;
   final Value<String> reportType;
   final Value<String?> reportedUser;
@@ -10303,7 +8693,7 @@ class ReportTableCompanion extends UpdateCompanion<ReportData> {
   final Value<DateTime> createdAt;
   final Value<DateTime?> updatedAt;
   final Value<DateTime?> cachedAt;
-  const ReportTableCompanion({
+  const ReportsCompanion({
     this.id = const Value.absent(),
     this.reportType = const Value.absent(),
     this.reportedUser = const Value.absent(),
@@ -10316,7 +8706,7 @@ class ReportTableCompanion extends UpdateCompanion<ReportData> {
     this.updatedAt = const Value.absent(),
     this.cachedAt = const Value.absent(),
   });
-  ReportTableCompanion.insert({
+  ReportsCompanion.insert({
     this.id = const Value.absent(),
     required String reportType,
     this.reportedUser = const Value.absent(),
@@ -10331,7 +8721,7 @@ class ReportTableCompanion extends UpdateCompanion<ReportData> {
   }) : reportType = Value(reportType),
        reason = Value(reason),
        createdAt = Value(createdAt);
-  static Insertable<ReportData> custom({
+  static Insertable<Report> custom({
     Expression<int>? id,
     Expression<String>? reportType,
     Expression<String>? reportedUser,
@@ -10359,7 +8749,7 @@ class ReportTableCompanion extends UpdateCompanion<ReportData> {
     });
   }
 
-  ReportTableCompanion copyWith({
+  ReportsCompanion copyWith({
     Value<int>? id,
     Value<String>? reportType,
     Value<String?>? reportedUser,
@@ -10372,7 +8762,7 @@ class ReportTableCompanion extends UpdateCompanion<ReportData> {
     Value<DateTime?>? updatedAt,
     Value<DateTime?>? cachedAt,
   }) {
-    return ReportTableCompanion(
+    return ReportsCompanion(
       id: id ?? this.id,
       reportType: reportType ?? this.reportType,
       reportedUser: reportedUser ?? this.reportedUser,
@@ -10428,7 +8818,7 @@ class ReportTableCompanion extends UpdateCompanion<ReportData> {
 
   @override
   String toString() {
-    return (StringBuffer('ReportTableCompanion(')
+    return (StringBuffer('ReportsCompanion(')
           ..write('id: $id, ')
           ..write('reportType: $reportType, ')
           ..write('reportedUser: $reportedUser, ')
@@ -11519,577 +9909,12 @@ class AgendaEventCompanion extends UpdateCompanion<AgendaEventData> {
   }
 }
 
-class $NotificationTableTable extends NotificationTable
-    with TableInfo<$NotificationTableTable, NotificationTableData> {
+class $InstitutionsTable extends Institutions
+    with TableInfo<$InstitutionsTable, Institution> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $NotificationTableTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-    'id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _titleMeta = const VerificationMeta('title');
-  @override
-  late final GeneratedColumn<String> title = GeneratedColumn<String>(
-    'title',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _bodyMeta = const VerificationMeta('body');
-  @override
-  late final GeneratedColumn<String> body = GeneratedColumn<String>(
-    'body',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _imageUrlMeta = const VerificationMeta(
-    'imageUrl',
-  );
-  @override
-  late final GeneratedColumn<String> imageUrl = GeneratedColumn<String>(
-    'image_url',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  @override
-  late final GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String>
-  data =
-      GeneratedColumn<String>(
-        'data',
-        aliasedName,
-        true,
-        type: DriftSqlType.string,
-        requiredDuringInsert: false,
-      ).withConverter<Map<String, dynamic>?>(
-        $NotificationTableTable.$converterdatan,
-      );
-  static const VerificationMeta _createdAtMeta = const VerificationMeta(
-    'createdAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-    'created_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _isReadMeta = const VerificationMeta('isRead');
-  @override
-  late final GeneratedColumn<bool> isRead = GeneratedColumn<bool>(
-    'is_read',
-    aliasedName,
-    false,
-    type: DriftSqlType.bool,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("is_read" IN (0, 1))',
-    ),
-    defaultValue: const Constant(false),
-  );
-  static const VerificationMeta _categoryMeta = const VerificationMeta(
-    'category',
-  );
-  @override
-  late final GeneratedColumn<String> category = GeneratedColumn<String>(
-    'category',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _actionUrlMeta = const VerificationMeta(
-    'actionUrl',
-  );
-  @override
-  late final GeneratedColumn<String> actionUrl = GeneratedColumn<String>(
-    'action_url',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  @override
-  List<GeneratedColumn> get $columns => [
-    id,
-    title,
-    body,
-    imageUrl,
-    data,
-    createdAt,
-    isRead,
-    category,
-    actionUrl,
-  ];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'notification_table';
-  @override
-  VerificationContext validateIntegrity(
-    Insertable<NotificationTableData> instance, {
-    bool isInserting = false,
-  }) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
-    }
-    if (data.containsKey('title')) {
-      context.handle(
-        _titleMeta,
-        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_titleMeta);
-    }
-    if (data.containsKey('body')) {
-      context.handle(
-        _bodyMeta,
-        body.isAcceptableOrUnknown(data['body']!, _bodyMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_bodyMeta);
-    }
-    if (data.containsKey('image_url')) {
-      context.handle(
-        _imageUrlMeta,
-        imageUrl.isAcceptableOrUnknown(data['image_url']!, _imageUrlMeta),
-      );
-    }
-    if (data.containsKey('created_at')) {
-      context.handle(
-        _createdAtMeta,
-        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_createdAtMeta);
-    }
-    if (data.containsKey('is_read')) {
-      context.handle(
-        _isReadMeta,
-        isRead.isAcceptableOrUnknown(data['is_read']!, _isReadMeta),
-      );
-    }
-    if (data.containsKey('category')) {
-      context.handle(
-        _categoryMeta,
-        category.isAcceptableOrUnknown(data['category']!, _categoryMeta),
-      );
-    }
-    if (data.containsKey('action_url')) {
-      context.handle(
-        _actionUrlMeta,
-        actionUrl.isAcceptableOrUnknown(data['action_url']!, _actionUrlMeta),
-      );
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  NotificationTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return NotificationTableData(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}id'],
-      )!,
-      title: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}title'],
-      )!,
-      body: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}body'],
-      )!,
-      imageUrl: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}image_url'],
-      ),
-      data: $NotificationTableTable.$converterdatan.fromSql(
-        attachedDatabase.typeMapping.read(
-          DriftSqlType.string,
-          data['${effectivePrefix}data'],
-        ),
-      ),
-      createdAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}created_at'],
-      )!,
-      isRead: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}is_read'],
-      )!,
-      category: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}category'],
-      ),
-      actionUrl: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}action_url'],
-      ),
-    );
-  }
-
-  @override
-  $NotificationTableTable createAlias(String alias) {
-    return $NotificationTableTable(attachedDatabase, alias);
-  }
-
-  static TypeConverter<Map<String, dynamic>, String> $converterdata =
-      const JsonConverter();
-  static TypeConverter<Map<String, dynamic>?, String?> $converterdatan =
-      NullAwareTypeConverter.wrap($converterdata);
-}
-
-class NotificationTableData extends DataClass
-    implements Insertable<NotificationTableData> {
-  final String id;
-  final String title;
-  final String body;
-  final String? imageUrl;
-  final Map<String, dynamic>? data;
-  final DateTime createdAt;
-  final bool isRead;
-  final String? category;
-  final String? actionUrl;
-  const NotificationTableData({
-    required this.id,
-    required this.title,
-    required this.body,
-    this.imageUrl,
-    this.data,
-    required this.createdAt,
-    required this.isRead,
-    this.category,
-    this.actionUrl,
-  });
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<String>(id);
-    map['title'] = Variable<String>(title);
-    map['body'] = Variable<String>(body);
-    if (!nullToAbsent || imageUrl != null) {
-      map['image_url'] = Variable<String>(imageUrl);
-    }
-    if (!nullToAbsent || data != null) {
-      map['data'] = Variable<String>(
-        $NotificationTableTable.$converterdatan.toSql(data),
-      );
-    }
-    map['created_at'] = Variable<DateTime>(createdAt);
-    map['is_read'] = Variable<bool>(isRead);
-    if (!nullToAbsent || category != null) {
-      map['category'] = Variable<String>(category);
-    }
-    if (!nullToAbsent || actionUrl != null) {
-      map['action_url'] = Variable<String>(actionUrl);
-    }
-    return map;
-  }
-
-  NotificationTableCompanion toCompanion(bool nullToAbsent) {
-    return NotificationTableCompanion(
-      id: Value(id),
-      title: Value(title),
-      body: Value(body),
-      imageUrl: imageUrl == null && nullToAbsent
-          ? const Value.absent()
-          : Value(imageUrl),
-      data: data == null && nullToAbsent ? const Value.absent() : Value(data),
-      createdAt: Value(createdAt),
-      isRead: Value(isRead),
-      category: category == null && nullToAbsent
-          ? const Value.absent()
-          : Value(category),
-      actionUrl: actionUrl == null && nullToAbsent
-          ? const Value.absent()
-          : Value(actionUrl),
-    );
-  }
-
-  factory NotificationTableData.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return NotificationTableData(
-      id: serializer.fromJson<String>(json['id']),
-      title: serializer.fromJson<String>(json['title']),
-      body: serializer.fromJson<String>(json['body']),
-      imageUrl: serializer.fromJson<String?>(json['imageUrl']),
-      data: serializer.fromJson<Map<String, dynamic>?>(json['data']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
-      isRead: serializer.fromJson<bool>(json['isRead']),
-      category: serializer.fromJson<String?>(json['category']),
-      actionUrl: serializer.fromJson<String?>(json['actionUrl']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<String>(id),
-      'title': serializer.toJson<String>(title),
-      'body': serializer.toJson<String>(body),
-      'imageUrl': serializer.toJson<String?>(imageUrl),
-      'data': serializer.toJson<Map<String, dynamic>?>(data),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
-      'isRead': serializer.toJson<bool>(isRead),
-      'category': serializer.toJson<String?>(category),
-      'actionUrl': serializer.toJson<String?>(actionUrl),
-    };
-  }
-
-  NotificationTableData copyWith({
-    String? id,
-    String? title,
-    String? body,
-    Value<String?> imageUrl = const Value.absent(),
-    Value<Map<String, dynamic>?> data = const Value.absent(),
-    DateTime? createdAt,
-    bool? isRead,
-    Value<String?> category = const Value.absent(),
-    Value<String?> actionUrl = const Value.absent(),
-  }) => NotificationTableData(
-    id: id ?? this.id,
-    title: title ?? this.title,
-    body: body ?? this.body,
-    imageUrl: imageUrl.present ? imageUrl.value : this.imageUrl,
-    data: data.present ? data.value : this.data,
-    createdAt: createdAt ?? this.createdAt,
-    isRead: isRead ?? this.isRead,
-    category: category.present ? category.value : this.category,
-    actionUrl: actionUrl.present ? actionUrl.value : this.actionUrl,
-  );
-  NotificationTableData copyWithCompanion(NotificationTableCompanion data) {
-    return NotificationTableData(
-      id: data.id.present ? data.id.value : this.id,
-      title: data.title.present ? data.title.value : this.title,
-      body: data.body.present ? data.body.value : this.body,
-      imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
-      data: data.data.present ? data.data.value : this.data,
-      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
-      isRead: data.isRead.present ? data.isRead.value : this.isRead,
-      category: data.category.present ? data.category.value : this.category,
-      actionUrl: data.actionUrl.present ? data.actionUrl.value : this.actionUrl,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('NotificationTableData(')
-          ..write('id: $id, ')
-          ..write('title: $title, ')
-          ..write('body: $body, ')
-          ..write('imageUrl: $imageUrl, ')
-          ..write('data: $data, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('isRead: $isRead, ')
-          ..write('category: $category, ')
-          ..write('actionUrl: $actionUrl')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(
-    id,
-    title,
-    body,
-    imageUrl,
-    data,
-    createdAt,
-    isRead,
-    category,
-    actionUrl,
-  );
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is NotificationTableData &&
-          other.id == this.id &&
-          other.title == this.title &&
-          other.body == this.body &&
-          other.imageUrl == this.imageUrl &&
-          other.data == this.data &&
-          other.createdAt == this.createdAt &&
-          other.isRead == this.isRead &&
-          other.category == this.category &&
-          other.actionUrl == this.actionUrl);
-}
-
-class NotificationTableCompanion
-    extends UpdateCompanion<NotificationTableData> {
-  final Value<String> id;
-  final Value<String> title;
-  final Value<String> body;
-  final Value<String?> imageUrl;
-  final Value<Map<String, dynamic>?> data;
-  final Value<DateTime> createdAt;
-  final Value<bool> isRead;
-  final Value<String?> category;
-  final Value<String?> actionUrl;
-  final Value<int> rowid;
-  const NotificationTableCompanion({
-    this.id = const Value.absent(),
-    this.title = const Value.absent(),
-    this.body = const Value.absent(),
-    this.imageUrl = const Value.absent(),
-    this.data = const Value.absent(),
-    this.createdAt = const Value.absent(),
-    this.isRead = const Value.absent(),
-    this.category = const Value.absent(),
-    this.actionUrl = const Value.absent(),
-    this.rowid = const Value.absent(),
-  });
-  NotificationTableCompanion.insert({
-    required String id,
-    required String title,
-    required String body,
-    this.imageUrl = const Value.absent(),
-    this.data = const Value.absent(),
-    required DateTime createdAt,
-    this.isRead = const Value.absent(),
-    this.category = const Value.absent(),
-    this.actionUrl = const Value.absent(),
-    this.rowid = const Value.absent(),
-  }) : id = Value(id),
-       title = Value(title),
-       body = Value(body),
-       createdAt = Value(createdAt);
-  static Insertable<NotificationTableData> custom({
-    Expression<String>? id,
-    Expression<String>? title,
-    Expression<String>? body,
-    Expression<String>? imageUrl,
-    Expression<String>? data,
-    Expression<DateTime>? createdAt,
-    Expression<bool>? isRead,
-    Expression<String>? category,
-    Expression<String>? actionUrl,
-    Expression<int>? rowid,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (title != null) 'title': title,
-      if (body != null) 'body': body,
-      if (imageUrl != null) 'image_url': imageUrl,
-      if (data != null) 'data': data,
-      if (createdAt != null) 'created_at': createdAt,
-      if (isRead != null) 'is_read': isRead,
-      if (category != null) 'category': category,
-      if (actionUrl != null) 'action_url': actionUrl,
-      if (rowid != null) 'rowid': rowid,
-    });
-  }
-
-  NotificationTableCompanion copyWith({
-    Value<String>? id,
-    Value<String>? title,
-    Value<String>? body,
-    Value<String?>? imageUrl,
-    Value<Map<String, dynamic>?>? data,
-    Value<DateTime>? createdAt,
-    Value<bool>? isRead,
-    Value<String?>? category,
-    Value<String?>? actionUrl,
-    Value<int>? rowid,
-  }) {
-    return NotificationTableCompanion(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      body: body ?? this.body,
-      imageUrl: imageUrl ?? this.imageUrl,
-      data: data ?? this.data,
-      createdAt: createdAt ?? this.createdAt,
-      isRead: isRead ?? this.isRead,
-      category: category ?? this.category,
-      actionUrl: actionUrl ?? this.actionUrl,
-      rowid: rowid ?? this.rowid,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<String>(id.value);
-    }
-    if (title.present) {
-      map['title'] = Variable<String>(title.value);
-    }
-    if (body.present) {
-      map['body'] = Variable<String>(body.value);
-    }
-    if (imageUrl.present) {
-      map['image_url'] = Variable<String>(imageUrl.value);
-    }
-    if (data.present) {
-      map['data'] = Variable<String>(
-        $NotificationTableTable.$converterdatan.toSql(data.value),
-      );
-    }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
-    }
-    if (isRead.present) {
-      map['is_read'] = Variable<bool>(isRead.value);
-    }
-    if (category.present) {
-      map['category'] = Variable<String>(category.value);
-    }
-    if (actionUrl.present) {
-      map['action_url'] = Variable<String>(actionUrl.value);
-    }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('NotificationTableCompanion(')
-          ..write('id: $id, ')
-          ..write('title: $title, ')
-          ..write('body: $body, ')
-          ..write('imageUrl: $imageUrl, ')
-          ..write('data: $data, ')
-          ..write('createdAt: $createdAt, ')
-          ..write('isRead: $isRead, ')
-          ..write('category: $category, ')
-          ..write('actionUrl: $actionUrl, ')
-          ..write('rowid: $rowid')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $InstitutionTable extends Institution
-    with TableInfo<$InstitutionTable, InstitutionData> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $InstitutionTable(this.attachedDatabase, [this._alias]);
+  $InstitutionsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _institutionIdMeta = const VerificationMeta(
     'institutionId',
   );
@@ -12118,7 +9943,7 @@ class $InstitutionTable extends Institution
         true,
         type: DriftSqlType.string,
         requiredDuringInsert: false,
-      ).withConverter<List<dynamic>?>($InstitutionTable.$converterwebPagesn);
+      ).withConverter<List<dynamic>?>($InstitutionsTable.$converterwebPagesn);
   @override
   late final GeneratedColumnWithTypeConverter<List<dynamic>?, String> domains =
       GeneratedColumn<String>(
@@ -12127,7 +9952,7 @@ class $InstitutionTable extends Institution
         true,
         type: DriftSqlType.string,
         requiredDuringInsert: false,
-      ).withConverter<List<dynamic>?>($InstitutionTable.$converterdomainsn);
+      ).withConverter<List<dynamic>?>($InstitutionsTable.$converterdomainsn);
   static const VerificationMeta _alphaTwoCodeMeta = const VerificationMeta(
     'alphaTwoCode',
   );
@@ -12178,7 +10003,7 @@ class $InstitutionTable extends Institution
   static const String $name = 'institution';
   @override
   VerificationContext validateIntegrity(
-    Insertable<InstitutionData> instance, {
+    Insertable<Institution> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -12230,9 +10055,9 @@ class $InstitutionTable extends Institution
   @override
   Set<GeneratedColumn> get $primaryKey => {institutionId};
   @override
-  InstitutionData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Institution map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return InstitutionData(
+    return Institution(
       institutionId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}institution_id'],
@@ -12241,13 +10066,13 @@ class $InstitutionTable extends Institution
         DriftSqlType.string,
         data['${effectivePrefix}name'],
       )!,
-      webPages: $InstitutionTable.$converterwebPagesn.fromSql(
+      webPages: $InstitutionsTable.$converterwebPagesn.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}web_pages'],
         ),
       ),
-      domains: $InstitutionTable.$converterdomainsn.fromSql(
+      domains: $InstitutionsTable.$converterdomainsn.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}domains'],
@@ -12269,8 +10094,8 @@ class $InstitutionTable extends Institution
   }
 
   @override
-  $InstitutionTable createAlias(String alias) {
-    return $InstitutionTable(attachedDatabase, alias);
+  $InstitutionsTable createAlias(String alias) {
+    return $InstitutionsTable(attachedDatabase, alias);
   }
 
   static TypeConverter<List<dynamic>, String> $converterwebPages =
@@ -12283,7 +10108,7 @@ class $InstitutionTable extends Institution
       NullAwareTypeConverter.wrap($converterdomains);
 }
 
-class InstitutionData extends DataClass implements Insertable<InstitutionData> {
+class Institution extends DataClass implements Insertable<Institution> {
   final int institutionId;
   final String name;
   final List<dynamic>? webPages;
@@ -12291,7 +10116,7 @@ class InstitutionData extends DataClass implements Insertable<InstitutionData> {
   final String? alphaTwoCode;
   final String? country;
   final String? stateProvince;
-  const InstitutionData({
+  const Institution({
     required this.institutionId,
     required this.name,
     this.webPages,
@@ -12307,12 +10132,12 @@ class InstitutionData extends DataClass implements Insertable<InstitutionData> {
     map['name'] = Variable<String>(name);
     if (!nullToAbsent || webPages != null) {
       map['web_pages'] = Variable<String>(
-        $InstitutionTable.$converterwebPagesn.toSql(webPages),
+        $InstitutionsTable.$converterwebPagesn.toSql(webPages),
       );
     }
     if (!nullToAbsent || domains != null) {
       map['domains'] = Variable<String>(
-        $InstitutionTable.$converterdomainsn.toSql(domains),
+        $InstitutionsTable.$converterdomainsn.toSql(domains),
       );
     }
     if (!nullToAbsent || alphaTwoCode != null) {
@@ -12327,8 +10152,8 @@ class InstitutionData extends DataClass implements Insertable<InstitutionData> {
     return map;
   }
 
-  InstitutionCompanion toCompanion(bool nullToAbsent) {
-    return InstitutionCompanion(
+  InstitutionsCompanion toCompanion(bool nullToAbsent) {
+    return InstitutionsCompanion(
       institutionId: Value(institutionId),
       name: Value(name),
       webPages: webPages == null && nullToAbsent
@@ -12349,12 +10174,12 @@ class InstitutionData extends DataClass implements Insertable<InstitutionData> {
     );
   }
 
-  factory InstitutionData.fromJson(
+  factory Institution.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return InstitutionData(
+    return Institution(
       institutionId: serializer.fromJson<int>(json['institution_id']),
       name: serializer.fromJson<String>(json['name']),
       webPages: serializer.fromJson<List<dynamic>?>(json['web_pages']),
@@ -12378,7 +10203,7 @@ class InstitutionData extends DataClass implements Insertable<InstitutionData> {
     };
   }
 
-  InstitutionData copyWith({
+  Institution copyWith({
     int? institutionId,
     String? name,
     Value<List<dynamic>?> webPages = const Value.absent(),
@@ -12386,7 +10211,7 @@ class InstitutionData extends DataClass implements Insertable<InstitutionData> {
     Value<String?> alphaTwoCode = const Value.absent(),
     Value<String?> country = const Value.absent(),
     Value<String?> stateProvince = const Value.absent(),
-  }) => InstitutionData(
+  }) => Institution(
     institutionId: institutionId ?? this.institutionId,
     name: name ?? this.name,
     webPages: webPages.present ? webPages.value : this.webPages,
@@ -12397,8 +10222,8 @@ class InstitutionData extends DataClass implements Insertable<InstitutionData> {
         ? stateProvince.value
         : this.stateProvince,
   );
-  InstitutionData copyWithCompanion(InstitutionCompanion data) {
-    return InstitutionData(
+  Institution copyWithCompanion(InstitutionsCompanion data) {
+    return Institution(
       institutionId: data.institutionId.present
           ? data.institutionId.value
           : this.institutionId,
@@ -12417,7 +10242,7 @@ class InstitutionData extends DataClass implements Insertable<InstitutionData> {
 
   @override
   String toString() {
-    return (StringBuffer('InstitutionData(')
+    return (StringBuffer('Institution(')
           ..write('institutionId: $institutionId, ')
           ..write('name: $name, ')
           ..write('webPages: $webPages, ')
@@ -12442,7 +10267,7 @@ class InstitutionData extends DataClass implements Insertable<InstitutionData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is InstitutionData &&
+      (other is Institution &&
           other.institutionId == this.institutionId &&
           other.name == this.name &&
           other.webPages == this.webPages &&
@@ -12452,7 +10277,7 @@ class InstitutionData extends DataClass implements Insertable<InstitutionData> {
           other.stateProvince == this.stateProvince);
 }
 
-class InstitutionCompanion extends UpdateCompanion<InstitutionData> {
+class InstitutionsCompanion extends UpdateCompanion<Institution> {
   final Value<int> institutionId;
   final Value<String> name;
   final Value<List<dynamic>?> webPages;
@@ -12460,7 +10285,7 @@ class InstitutionCompanion extends UpdateCompanion<InstitutionData> {
   final Value<String?> alphaTwoCode;
   final Value<String?> country;
   final Value<String?> stateProvince;
-  const InstitutionCompanion({
+  const InstitutionsCompanion({
     this.institutionId = const Value.absent(),
     this.name = const Value.absent(),
     this.webPages = const Value.absent(),
@@ -12469,7 +10294,7 @@ class InstitutionCompanion extends UpdateCompanion<InstitutionData> {
     this.country = const Value.absent(),
     this.stateProvince = const Value.absent(),
   });
-  InstitutionCompanion.insert({
+  InstitutionsCompanion.insert({
     this.institutionId = const Value.absent(),
     required String name,
     this.webPages = const Value.absent(),
@@ -12478,7 +10303,7 @@ class InstitutionCompanion extends UpdateCompanion<InstitutionData> {
     this.country = const Value.absent(),
     this.stateProvince = const Value.absent(),
   }) : name = Value(name);
-  static Insertable<InstitutionData> custom({
+  static Insertable<Institution> custom({
     Expression<int>? institutionId,
     Expression<String>? name,
     Expression<String>? webPages,
@@ -12498,7 +10323,7 @@ class InstitutionCompanion extends UpdateCompanion<InstitutionData> {
     });
   }
 
-  InstitutionCompanion copyWith({
+  InstitutionsCompanion copyWith({
     Value<int>? institutionId,
     Value<String>? name,
     Value<List<dynamic>?>? webPages,
@@ -12507,7 +10332,7 @@ class InstitutionCompanion extends UpdateCompanion<InstitutionData> {
     Value<String?>? country,
     Value<String?>? stateProvince,
   }) {
-    return InstitutionCompanion(
+    return InstitutionsCompanion(
       institutionId: institutionId ?? this.institutionId,
       name: name ?? this.name,
       webPages: webPages ?? this.webPages,
@@ -12529,12 +10354,12 @@ class InstitutionCompanion extends UpdateCompanion<InstitutionData> {
     }
     if (webPages.present) {
       map['web_pages'] = Variable<String>(
-        $InstitutionTable.$converterwebPagesn.toSql(webPages.value),
+        $InstitutionsTable.$converterwebPagesn.toSql(webPages.value),
       );
     }
     if (domains.present) {
       map['domains'] = Variable<String>(
-        $InstitutionTable.$converterdomainsn.toSql(domains.value),
+        $InstitutionsTable.$converterdomainsn.toSql(domains.value),
       );
     }
     if (alphaTwoCode.present) {
@@ -12551,7 +10376,7 @@ class InstitutionCompanion extends UpdateCompanion<InstitutionData> {
 
   @override
   String toString() {
-    return (StringBuffer('InstitutionCompanion(')
+    return (StringBuffer('InstitutionsCompanion(')
           ..write('institutionId: $institutionId, ')
           ..write('name: $name, ')
           ..write('webPages: $webPages, ')
@@ -12564,16 +10389,16 @@ class InstitutionCompanion extends UpdateCompanion<InstitutionData> {
   }
 }
 
-class $InstitutionScrappingCommandTable extends InstitutionScrappingCommand
+class $InstitutionScrappingCommandsTable extends InstitutionScrappingCommands
     with
         TableInfo<
-          $InstitutionScrappingCommandTable,
-          InstitutionScrappingCommandData
+          $InstitutionScrappingCommandsTable,
+          InstitutionScrappingCommand
         > {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $InstitutionScrappingCommandTable(this.attachedDatabase, [this._alias]);
+  $InstitutionScrappingCommandsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _institutionMeta = const VerificationMeta(
     'institution',
   );
@@ -12661,7 +10486,7 @@ class $InstitutionScrappingCommandTable extends InstitutionScrappingCommand
         type: DriftSqlType.string,
         requiredDuringInsert: true,
       ).withConverter<List<dynamic>>(
-        $InstitutionScrappingCommandTable.$converterinstructions,
+        $InstitutionScrappingCommandsTable.$converterinstructions,
       );
   @override
   List<GeneratedColumn> get $columns => [
@@ -12681,7 +10506,7 @@ class $InstitutionScrappingCommandTable extends InstitutionScrappingCommand
   static const String $name = 'institution_scrapping_command';
   @override
   VerificationContext validateIntegrity(
-    Insertable<InstitutionScrappingCommandData> instance, {
+    Insertable<InstitutionScrappingCommand> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -12749,12 +10574,12 @@ class $InstitutionScrappingCommandTable extends InstitutionScrappingCommand
   @override
   Set<GeneratedColumn> get $primaryKey => {commandID};
   @override
-  InstitutionScrappingCommandData map(
+  InstitutionScrappingCommand map(
     Map<String, dynamic> data, {
     String? tablePrefix,
   }) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return InstitutionScrappingCommandData(
+    return InstitutionScrappingCommand(
       institution: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}institution'],
@@ -12783,7 +10608,7 @@ class $InstitutionScrappingCommandTable extends InstitutionScrappingCommand
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
       ),
-      instructions: $InstitutionScrappingCommandTable.$converterinstructions
+      instructions: $InstitutionScrappingCommandsTable.$converterinstructions
           .fromSql(
             attachedDatabase.typeMapping.read(
               DriftSqlType.string,
@@ -12794,16 +10619,16 @@ class $InstitutionScrappingCommandTable extends InstitutionScrappingCommand
   }
 
   @override
-  $InstitutionScrappingCommandTable createAlias(String alias) {
-    return $InstitutionScrappingCommandTable(attachedDatabase, alias);
+  $InstitutionScrappingCommandsTable createAlias(String alias) {
+    return $InstitutionScrappingCommandsTable(attachedDatabase, alias);
   }
 
   static TypeConverter<List<dynamic>, String> $converterinstructions =
       JsonListConverter();
 }
 
-class InstitutionScrappingCommandData extends DataClass
-    implements Insertable<InstitutionScrappingCommandData> {
+class InstitutionScrappingCommand extends DataClass
+    implements Insertable<InstitutionScrappingCommand> {
   final int institution;
   final String commandID;
   final String name;
@@ -12812,7 +10637,7 @@ class InstitutionScrappingCommandData extends DataClass
   final bool requiresInteraction;
   final DateTime? createdAt;
   final List<dynamic> instructions;
-  const InstitutionScrappingCommandData({
+  const InstitutionScrappingCommand({
     required this.institution,
     required this.commandID,
     required this.name,
@@ -12840,7 +10665,7 @@ class InstitutionScrappingCommandData extends DataClass
     }
     {
       map['instructions'] = Variable<String>(
-        $InstitutionScrappingCommandTable.$converterinstructions.toSql(
+        $InstitutionScrappingCommandsTable.$converterinstructions.toSql(
           instructions,
         ),
       );
@@ -12848,8 +10673,8 @@ class InstitutionScrappingCommandData extends DataClass
     return map;
   }
 
-  InstitutionScrappingCommandCompanion toCompanion(bool nullToAbsent) {
-    return InstitutionScrappingCommandCompanion(
+  InstitutionScrappingCommandsCompanion toCompanion(bool nullToAbsent) {
+    return InstitutionScrappingCommandsCompanion(
       institution: Value(institution),
       commandID: Value(commandID),
       name: Value(name),
@@ -12865,12 +10690,12 @@ class InstitutionScrappingCommandData extends DataClass
     );
   }
 
-  factory InstitutionScrappingCommandData.fromJson(
+  factory InstitutionScrappingCommand.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return InstitutionScrappingCommandData(
+    return InstitutionScrappingCommand(
       institution: serializer.fromJson<int>(json['institution']),
       commandID: serializer.fromJson<String>(json['command_id']),
       name: serializer.fromJson<String>(json['name']),
@@ -12898,7 +10723,7 @@ class InstitutionScrappingCommandData extends DataClass
     };
   }
 
-  InstitutionScrappingCommandData copyWith({
+  InstitutionScrappingCommand copyWith({
     int? institution,
     String? commandID,
     String? name,
@@ -12907,7 +10732,7 @@ class InstitutionScrappingCommandData extends DataClass
     bool? requiresInteraction,
     Value<DateTime?> createdAt = const Value.absent(),
     List<dynamic>? instructions,
-  }) => InstitutionScrappingCommandData(
+  }) => InstitutionScrappingCommand(
     institution: institution ?? this.institution,
     commandID: commandID ?? this.commandID,
     name: name ?? this.name,
@@ -12917,10 +10742,10 @@ class InstitutionScrappingCommandData extends DataClass
     createdAt: createdAt.present ? createdAt.value : this.createdAt,
     instructions: instructions ?? this.instructions,
   );
-  InstitutionScrappingCommandData copyWithCompanion(
-    InstitutionScrappingCommandCompanion data,
+  InstitutionScrappingCommand copyWithCompanion(
+    InstitutionScrappingCommandsCompanion data,
   ) {
-    return InstitutionScrappingCommandData(
+    return InstitutionScrappingCommand(
       institution: data.institution.present
           ? data.institution.value
           : this.institution,
@@ -12942,7 +10767,7 @@ class InstitutionScrappingCommandData extends DataClass
 
   @override
   String toString() {
-    return (StringBuffer('InstitutionScrappingCommandData(')
+    return (StringBuffer('InstitutionScrappingCommand(')
           ..write('institution: $institution, ')
           ..write('commandID: $commandID, ')
           ..write('name: $name, ')
@@ -12969,7 +10794,7 @@ class InstitutionScrappingCommandData extends DataClass
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is InstitutionScrappingCommandData &&
+      (other is InstitutionScrappingCommand &&
           other.institution == this.institution &&
           other.commandID == this.commandID &&
           other.name == this.name &&
@@ -12980,8 +10805,8 @@ class InstitutionScrappingCommandData extends DataClass
           other.instructions == this.instructions);
 }
 
-class InstitutionScrappingCommandCompanion
-    extends UpdateCompanion<InstitutionScrappingCommandData> {
+class InstitutionScrappingCommandsCompanion
+    extends UpdateCompanion<InstitutionScrappingCommand> {
   final Value<int> institution;
   final Value<String> commandID;
   final Value<String> name;
@@ -12991,7 +10816,7 @@ class InstitutionScrappingCommandCompanion
   final Value<DateTime?> createdAt;
   final Value<List<dynamic>> instructions;
   final Value<int> rowid;
-  const InstitutionScrappingCommandCompanion({
+  const InstitutionScrappingCommandsCompanion({
     this.institution = const Value.absent(),
     this.commandID = const Value.absent(),
     this.name = const Value.absent(),
@@ -13002,7 +10827,7 @@ class InstitutionScrappingCommandCompanion
     this.instructions = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  InstitutionScrappingCommandCompanion.insert({
+  InstitutionScrappingCommandsCompanion.insert({
     required int institution,
     required String commandID,
     required String name,
@@ -13016,7 +10841,7 @@ class InstitutionScrappingCommandCompanion
        commandID = Value(commandID),
        name = Value(name),
        instructions = Value(instructions);
-  static Insertable<InstitutionScrappingCommandData> custom({
+  static Insertable<InstitutionScrappingCommand> custom({
     Expression<int>? institution,
     Expression<String>? commandID,
     Expression<String>? name,
@@ -13041,7 +10866,7 @@ class InstitutionScrappingCommandCompanion
     });
   }
 
-  InstitutionScrappingCommandCompanion copyWith({
+  InstitutionScrappingCommandsCompanion copyWith({
     Value<int>? institution,
     Value<String>? commandID,
     Value<String>? name,
@@ -13052,7 +10877,7 @@ class InstitutionScrappingCommandCompanion
     Value<List<dynamic>>? instructions,
     Value<int>? rowid,
   }) {
-    return InstitutionScrappingCommandCompanion(
+    return InstitutionScrappingCommandsCompanion(
       institution: institution ?? this.institution,
       commandID: commandID ?? this.commandID,
       name: name ?? this.name,
@@ -13091,7 +10916,7 @@ class InstitutionScrappingCommandCompanion
     }
     if (instructions.present) {
       map['instructions'] = Variable<String>(
-        $InstitutionScrappingCommandTable.$converterinstructions.toSql(
+        $InstitutionScrappingCommandsTable.$converterinstructions.toSql(
           instructions.value,
         ),
       );
@@ -13104,7 +10929,7 @@ class InstitutionScrappingCommandCompanion
 
   @override
   String toString() {
-    return (StringBuffer('InstitutionScrappingCommandCompanion(')
+    return (StringBuffer('InstitutionScrappingCommandsCompanion(')
           ..write('institution: $institution, ')
           ..write('commandID: $commandID, ')
           ..write('name: $name, ')
@@ -13119,12 +10944,12 @@ class InstitutionScrappingCommandCompanion
   }
 }
 
-class $InstitutionKeyTable extends InstitutionKey
-    with TableInfo<$InstitutionKeyTable, InstitutionKeyData> {
+class $InstitutionKeysTable extends InstitutionKeys
+    with TableInfo<$InstitutionKeysTable, InstitutionKey> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $InstitutionKeyTable(this.attachedDatabase, [this._alias]);
+  $InstitutionKeysTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _institutionIDMeta = const VerificationMeta(
     'institutionID',
   );
@@ -13155,13 +10980,16 @@ class $InstitutionKeyTable extends InstitutionKey
   );
   @override
   late final GeneratedColumnWithTypeConverter<Map<String, dynamic>, String>
-  keySets = GeneratedColumn<String>(
-    'key_sets',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  ).withConverter<Map<String, dynamic>>($InstitutionKeyTable.$converterkeySets);
+  keySets =
+      GeneratedColumn<String>(
+        'key_sets',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<Map<String, dynamic>>(
+        $InstitutionKeysTable.$converterkeySets,
+      );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -13188,7 +11016,7 @@ class $InstitutionKeyTable extends InstitutionKey
   static const String $name = 'institution_key';
   @override
   VerificationContext validateIntegrity(
-    Insertable<InstitutionKeyData> instance, {
+    Insertable<InstitutionKey> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -13224,9 +11052,9 @@ class $InstitutionKeyTable extends InstitutionKey
   @override
   Set<GeneratedColumn> get $primaryKey => {institutionID, commandID};
   @override
-  InstitutionKeyData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  InstitutionKey map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return InstitutionKeyData(
+    return InstitutionKey(
       institutionID: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}institution_id'],
@@ -13235,7 +11063,7 @@ class $InstitutionKeyTable extends InstitutionKey
         DriftSqlType.string,
         data['${effectivePrefix}command_i_d'],
       )!,
-      keySets: $InstitutionKeyTable.$converterkeySets.fromSql(
+      keySets: $InstitutionKeysTable.$converterkeySets.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}key_sets'],
@@ -13249,21 +11077,20 @@ class $InstitutionKeyTable extends InstitutionKey
   }
 
   @override
-  $InstitutionKeyTable createAlias(String alias) {
-    return $InstitutionKeyTable(attachedDatabase, alias);
+  $InstitutionKeysTable createAlias(String alias) {
+    return $InstitutionKeysTable(attachedDatabase, alias);
   }
 
   static TypeConverter<Map<String, dynamic>, String> $converterkeySets =
       JsonConverter();
 }
 
-class InstitutionKeyData extends DataClass
-    implements Insertable<InstitutionKeyData> {
+class InstitutionKey extends DataClass implements Insertable<InstitutionKey> {
   final int institutionID;
   final String commandID;
   final Map<String, dynamic> keySets;
   final DateTime? createdAt;
-  const InstitutionKeyData({
+  const InstitutionKey({
     required this.institutionID,
     required this.commandID,
     required this.keySets,
@@ -13276,7 +11103,7 @@ class InstitutionKeyData extends DataClass
     map['command_i_d'] = Variable<String>(commandID);
     {
       map['key_sets'] = Variable<String>(
-        $InstitutionKeyTable.$converterkeySets.toSql(keySets),
+        $InstitutionKeysTable.$converterkeySets.toSql(keySets),
       );
     }
     if (!nullToAbsent || createdAt != null) {
@@ -13285,8 +11112,8 @@ class InstitutionKeyData extends DataClass
     return map;
   }
 
-  InstitutionKeyCompanion toCompanion(bool nullToAbsent) {
-    return InstitutionKeyCompanion(
+  InstitutionKeysCompanion toCompanion(bool nullToAbsent) {
+    return InstitutionKeysCompanion(
       institutionID: Value(institutionID),
       commandID: Value(commandID),
       keySets: Value(keySets),
@@ -13296,12 +11123,12 @@ class InstitutionKeyData extends DataClass
     );
   }
 
-  factory InstitutionKeyData.fromJson(
+  factory InstitutionKey.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return InstitutionKeyData(
+    return InstitutionKey(
       institutionID: serializer.fromJson<int>(json['institution_id']),
       commandID: serializer.fromJson<String>(json['command_id']),
       keySets: serializer.fromJson<Map<String, dynamic>>(json['key_sets']),
@@ -13319,19 +11146,19 @@ class InstitutionKeyData extends DataClass
     };
   }
 
-  InstitutionKeyData copyWith({
+  InstitutionKey copyWith({
     int? institutionID,
     String? commandID,
     Map<String, dynamic>? keySets,
     Value<DateTime?> createdAt = const Value.absent(),
-  }) => InstitutionKeyData(
+  }) => InstitutionKey(
     institutionID: institutionID ?? this.institutionID,
     commandID: commandID ?? this.commandID,
     keySets: keySets ?? this.keySets,
     createdAt: createdAt.present ? createdAt.value : this.createdAt,
   );
-  InstitutionKeyData copyWithCompanion(InstitutionKeyCompanion data) {
-    return InstitutionKeyData(
+  InstitutionKey copyWithCompanion(InstitutionKeysCompanion data) {
+    return InstitutionKey(
       institutionID: data.institutionID.present
           ? data.institutionID.value
           : this.institutionID,
@@ -13343,7 +11170,7 @@ class InstitutionKeyData extends DataClass
 
   @override
   String toString() {
-    return (StringBuffer('InstitutionKeyData(')
+    return (StringBuffer('InstitutionKey(')
           ..write('institutionID: $institutionID, ')
           ..write('commandID: $commandID, ')
           ..write('keySets: $keySets, ')
@@ -13357,27 +11184,27 @@ class InstitutionKeyData extends DataClass
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is InstitutionKeyData &&
+      (other is InstitutionKey &&
           other.institutionID == this.institutionID &&
           other.commandID == this.commandID &&
           other.keySets == this.keySets &&
           other.createdAt == this.createdAt);
 }
 
-class InstitutionKeyCompanion extends UpdateCompanion<InstitutionKeyData> {
+class InstitutionKeysCompanion extends UpdateCompanion<InstitutionKey> {
   final Value<int> institutionID;
   final Value<String> commandID;
   final Value<Map<String, dynamic>> keySets;
   final Value<DateTime?> createdAt;
   final Value<int> rowid;
-  const InstitutionKeyCompanion({
+  const InstitutionKeysCompanion({
     this.institutionID = const Value.absent(),
     this.commandID = const Value.absent(),
     this.keySets = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  InstitutionKeyCompanion.insert({
+  InstitutionKeysCompanion.insert({
     required int institutionID,
     required String commandID,
     required Map<String, dynamic> keySets,
@@ -13386,7 +11213,7 @@ class InstitutionKeyCompanion extends UpdateCompanion<InstitutionKeyData> {
   }) : institutionID = Value(institutionID),
        commandID = Value(commandID),
        keySets = Value(keySets);
-  static Insertable<InstitutionKeyData> custom({
+  static Insertable<InstitutionKey> custom({
     Expression<int>? institutionID,
     Expression<String>? commandID,
     Expression<String>? keySets,
@@ -13402,14 +11229,14 @@ class InstitutionKeyCompanion extends UpdateCompanion<InstitutionKeyData> {
     });
   }
 
-  InstitutionKeyCompanion copyWith({
+  InstitutionKeysCompanion copyWith({
     Value<int>? institutionID,
     Value<String>? commandID,
     Value<Map<String, dynamic>>? keySets,
     Value<DateTime?>? createdAt,
     Value<int>? rowid,
   }) {
-    return InstitutionKeyCompanion(
+    return InstitutionKeysCompanion(
       institutionID: institutionID ?? this.institutionID,
       commandID: commandID ?? this.commandID,
       keySets: keySets ?? this.keySets,
@@ -13429,7 +11256,7 @@ class InstitutionKeyCompanion extends UpdateCompanion<InstitutionKeyData> {
     }
     if (keySets.present) {
       map['key_sets'] = Variable<String>(
-        $InstitutionKeyTable.$converterkeySets.toSql(keySets.value),
+        $InstitutionKeysTable.$converterkeySets.toSql(keySets.value),
       );
     }
     if (createdAt.present) {
@@ -13443,7 +11270,7 @@ class InstitutionKeyCompanion extends UpdateCompanion<InstitutionKeyData> {
 
   @override
   String toString() {
-    return (StringBuffer('InstitutionKeyCompanion(')
+    return (StringBuffer('InstitutionKeysCompanion(')
           ..write('institutionID: $institutionID, ')
           ..write('commandID: $commandID, ')
           ..write('keySets: $keySets, ')
@@ -13454,12 +11281,12 @@ class InstitutionKeyCompanion extends UpdateCompanion<InstitutionKeyData> {
   }
 }
 
-class $InstitutionProfileTable extends InstitutionProfile
-    with TableInfo<$InstitutionProfileTable, InstitutionProfileData> {
+class $InstitutionProfilesTable extends InstitutionProfiles
+    with TableInfo<$InstitutionProfilesTable, InstitutionProfile> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $InstitutionProfileTable(this.attachedDatabase, [this._alias]);
+  $InstitutionProfilesTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -13522,7 +11349,7 @@ class $InstitutionProfileTable extends InstitutionProfile
         type: DriftSqlType.string,
         requiredDuringInsert: false,
         defaultValue: Constant(Gender.unknown.name),
-      ).withConverter<Gender>($InstitutionProfileTable.$convertergender);
+      ).withConverter<Gender>($InstitutionProfilesTable.$convertergender);
   @override
   late final GeneratedColumnWithTypeConverter<AcademicStatus, String> status =
       GeneratedColumn<String>(
@@ -13533,7 +11360,7 @@ class $InstitutionProfileTable extends InstitutionProfile
         requiredDuringInsert: false,
         defaultValue: Constant(AcademicStatus.unknown.name),
       ).withConverter<AcademicStatus>(
-        $InstitutionProfileTable.$converterstatus,
+        $InstitutionProfilesTable.$converterstatus,
       );
   static const VerificationMeta _emailMeta = const VerificationMeta('email');
   @override
@@ -13689,7 +11516,7 @@ class $InstitutionProfileTable extends InstitutionProfile
         type: DriftSqlType.string,
         requiredDuringInsert: false,
       ).withConverter<Map<String, dynamic>?>(
-        $InstitutionProfileTable.$converterrawDatan,
+        $InstitutionProfilesTable.$converterrawDatan,
       );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
@@ -13749,7 +11576,7 @@ class $InstitutionProfileTable extends InstitutionProfile
   static const String $name = 'institution_profile';
   @override
   VerificationContext validateIntegrity(
-    Insertable<InstitutionProfileData> instance, {
+    Insertable<InstitutionProfile> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -13910,9 +11737,9 @@ class $InstitutionProfileTable extends InstitutionProfile
   @override
   Set<GeneratedColumn> get $primaryKey => {institutionID, userID};
   @override
-  InstitutionProfileData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  InstitutionProfile map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return InstitutionProfileData(
+    return InstitutionProfile(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -13933,13 +11760,13 @@ class $InstitutionProfileTable extends InstitutionProfile
         DriftSqlType.string,
         data['${effectivePrefix}student_name'],
       )!,
-      gender: $InstitutionProfileTable.$convertergender.fromSql(
+      gender: $InstitutionProfilesTable.$convertergender.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}gender'],
         )!,
       ),
-      status: $InstitutionProfileTable.$converterstatus.fromSql(
+      status: $InstitutionProfilesTable.$converterstatus.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}status'],
@@ -14001,7 +11828,7 @@ class $InstitutionProfileTable extends InstitutionProfile
         DriftSqlType.dateTime,
         data['${effectivePrefix}expected_graduation'],
       ),
-      rawData: $InstitutionProfileTable.$converterrawDatan.fromSql(
+      rawData: $InstitutionProfilesTable.$converterrawDatan.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}raw_data'],
@@ -14019,8 +11846,8 @@ class $InstitutionProfileTable extends InstitutionProfile
   }
 
   @override
-  $InstitutionProfileTable createAlias(String alias) {
-    return $InstitutionProfileTable(attachedDatabase, alias);
+  $InstitutionProfilesTable createAlias(String alias) {
+    return $InstitutionProfilesTable(attachedDatabase, alias);
   }
 
   static JsonTypeConverter2<Gender, String, String> $convertergender =
@@ -14033,8 +11860,8 @@ class $InstitutionProfileTable extends InstitutionProfile
       NullAwareTypeConverter.wrap($converterrawData);
 }
 
-class InstitutionProfileData extends DataClass
-    implements Insertable<InstitutionProfileData> {
+class InstitutionProfile extends DataClass
+    implements Insertable<InstitutionProfile> {
   final int? id;
   final String userID;
   final int institutionID;
@@ -14059,7 +11886,7 @@ class InstitutionProfileData extends DataClass
   final Map<String, dynamic>? rawData;
   final DateTime createdAt;
   final DateTime updatedAt;
-  const InstitutionProfileData({
+  const InstitutionProfile({
     this.id,
     required this.userID,
     required this.institutionID,
@@ -14097,12 +11924,12 @@ class InstitutionProfileData extends DataClass
     map['student_name'] = Variable<String>(studentName);
     {
       map['gender'] = Variable<String>(
-        $InstitutionProfileTable.$convertergender.toSql(gender),
+        $InstitutionProfilesTable.$convertergender.toSql(gender),
       );
     }
     {
       map['status'] = Variable<String>(
-        $InstitutionProfileTable.$converterstatus.toSql(status),
+        $InstitutionProfilesTable.$converterstatus.toSql(status),
       );
     }
     if (!nullToAbsent || email != null) {
@@ -14149,7 +11976,7 @@ class InstitutionProfileData extends DataClass
     }
     if (!nullToAbsent || rawData != null) {
       map['raw_data'] = Variable<String>(
-        $InstitutionProfileTable.$converterrawDatan.toSql(rawData),
+        $InstitutionProfilesTable.$converterrawDatan.toSql(rawData),
       );
     }
     map['created_at'] = Variable<DateTime>(createdAt);
@@ -14157,8 +11984,8 @@ class InstitutionProfileData extends DataClass
     return map;
   }
 
-  InstitutionProfileCompanion toCompanion(bool nullToAbsent) {
-    return InstitutionProfileCompanion(
+  InstitutionProfilesCompanion toCompanion(bool nullToAbsent) {
+    return InstitutionProfilesCompanion(
       id: id == null && nullToAbsent ? const Value.absent() : Value(id),
       userID: Value(userID),
       institutionID: Value(institutionID),
@@ -14212,21 +12039,21 @@ class InstitutionProfileData extends DataClass
     );
   }
 
-  factory InstitutionProfileData.fromJson(
+  factory InstitutionProfile.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return InstitutionProfileData(
+    return InstitutionProfile(
       id: serializer.fromJson<int?>(json['id']),
       userID: serializer.fromJson<String>(json['user_id']),
       institutionID: serializer.fromJson<int>(json['institution']),
       studentID: serializer.fromJson<String>(json['student_id']),
       studentName: serializer.fromJson<String>(json['student_name']),
-      gender: $InstitutionProfileTable.$convertergender.fromJson(
+      gender: $InstitutionProfilesTable.$convertergender.fromJson(
         serializer.fromJson<String>(json['gender']),
       ),
-      status: $InstitutionProfileTable.$converterstatus.fromJson(
+      status: $InstitutionProfilesTable.$converterstatus.fromJson(
         serializer.fromJson<String>(json['status']),
       ),
       email: serializer.fromJson<String?>(json['email']),
@@ -14260,10 +12087,10 @@ class InstitutionProfileData extends DataClass
       'student_id': serializer.toJson<String>(studentID),
       'student_name': serializer.toJson<String>(studentName),
       'gender': serializer.toJson<String>(
-        $InstitutionProfileTable.$convertergender.toJson(gender),
+        $InstitutionProfilesTable.$convertergender.toJson(gender),
       ),
       'status': serializer.toJson<String>(
-        $InstitutionProfileTable.$converterstatus.toJson(status),
+        $InstitutionProfilesTable.$converterstatus.toJson(status),
       ),
       'email': serializer.toJson<String?>(email),
       'profile_picture': serializer.toJson<String?>(profilePicture),
@@ -14285,7 +12112,7 @@ class InstitutionProfileData extends DataClass
     };
   }
 
-  InstitutionProfileData copyWith({
+  InstitutionProfile copyWith({
     Value<int?> id = const Value.absent(),
     String? userID,
     int? institutionID,
@@ -14310,7 +12137,7 @@ class InstitutionProfileData extends DataClass
     Value<Map<String, dynamic>?> rawData = const Value.absent(),
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) => InstitutionProfileData(
+  }) => InstitutionProfile(
     id: id.present ? id.value : this.id,
     userID: userID ?? this.userID,
     institutionID: institutionID ?? this.institutionID,
@@ -14344,8 +12171,8 @@ class InstitutionProfileData extends DataClass
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );
-  InstitutionProfileData copyWithCompanion(InstitutionProfileCompanion data) {
-    return InstitutionProfileData(
+  InstitutionProfile copyWithCompanion(InstitutionProfilesCompanion data) {
+    return InstitutionProfile(
       id: data.id.present ? data.id.value : this.id,
       userID: data.userID.present ? data.userID.value : this.userID,
       institutionID: data.institutionID.present
@@ -14391,7 +12218,7 @@ class InstitutionProfileData extends DataClass
 
   @override
   String toString() {
-    return (StringBuffer('InstitutionProfileData(')
+    return (StringBuffer('InstitutionProfile(')
           ..write('id: $id, ')
           ..write('userID: $userID, ')
           ..write('institutionID: $institutionID, ')
@@ -14450,7 +12277,7 @@ class InstitutionProfileData extends DataClass
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is InstitutionProfileData &&
+      (other is InstitutionProfile &&
           other.id == this.id &&
           other.userID == this.userID &&
           other.institutionID == this.institutionID &&
@@ -14477,8 +12304,7 @@ class InstitutionProfileData extends DataClass
           other.updatedAt == this.updatedAt);
 }
 
-class InstitutionProfileCompanion
-    extends UpdateCompanion<InstitutionProfileData> {
+class InstitutionProfilesCompanion extends UpdateCompanion<InstitutionProfile> {
   final Value<int?> id;
   final Value<String> userID;
   final Value<int> institutionID;
@@ -14504,7 +12330,7 @@ class InstitutionProfileCompanion
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<int> rowid;
-  const InstitutionProfileCompanion({
+  const InstitutionProfilesCompanion({
     this.id = const Value.absent(),
     this.userID = const Value.absent(),
     this.institutionID = const Value.absent(),
@@ -14531,7 +12357,7 @@ class InstitutionProfileCompanion
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  InstitutionProfileCompanion.insert({
+  InstitutionProfilesCompanion.insert({
     this.id = const Value.absent(),
     required String userID,
     required int institutionID,
@@ -14560,7 +12386,7 @@ class InstitutionProfileCompanion
   }) : userID = Value(userID),
        institutionID = Value(institutionID),
        studentID = Value(studentID);
-  static Insertable<InstitutionProfileData> custom({
+  static Insertable<InstitutionProfile> custom({
     Expression<int>? id,
     Expression<String>? userID,
     Expression<int>? institutionID,
@@ -14616,7 +12442,7 @@ class InstitutionProfileCompanion
     });
   }
 
-  InstitutionProfileCompanion copyWith({
+  InstitutionProfilesCompanion copyWith({
     Value<int?>? id,
     Value<String>? userID,
     Value<int>? institutionID,
@@ -14643,7 +12469,7 @@ class InstitutionProfileCompanion
     Value<DateTime>? updatedAt,
     Value<int>? rowid,
   }) {
-    return InstitutionProfileCompanion(
+    return InstitutionProfilesCompanion(
       id: id ?? this.id,
       userID: userID ?? this.userID,
       institutionID: institutionID ?? this.institutionID,
@@ -14692,12 +12518,12 @@ class InstitutionProfileCompanion
     }
     if (gender.present) {
       map['gender'] = Variable<String>(
-        $InstitutionProfileTable.$convertergender.toSql(gender.value),
+        $InstitutionProfilesTable.$convertergender.toSql(gender.value),
       );
     }
     if (status.present) {
       map['status'] = Variable<String>(
-        $InstitutionProfileTable.$converterstatus.toSql(status.value),
+        $InstitutionProfilesTable.$converterstatus.toSql(status.value),
       );
     }
     if (email.present) {
@@ -14744,7 +12570,7 @@ class InstitutionProfileCompanion
     }
     if (rawData.present) {
       map['raw_data'] = Variable<String>(
-        $InstitutionProfileTable.$converterrawDatan.toSql(rawData.value),
+        $InstitutionProfilesTable.$converterrawDatan.toSql(rawData.value),
       );
     }
     if (createdAt.present) {
@@ -14761,7 +12587,7 @@ class InstitutionProfileCompanion
 
   @override
   String toString() {
-    return (StringBuffer('InstitutionProfileCompanion(')
+    return (StringBuffer('InstitutionProfilesCompanion(')
           ..write('id: $id, ')
           ..write('userID: $userID, ')
           ..write('institutionID: $institutionID, ')
@@ -14792,16 +12618,13 @@ class InstitutionProfileCompanion
   }
 }
 
-class $InstitutionFeeTransactionTable extends InstitutionFeeTransaction
+class $InstitutionFeeTransactionsTable extends InstitutionFeeTransactions
     with
-        TableInfo<
-          $InstitutionFeeTransactionTable,
-          InstitutionFeeTransactionData
-        > {
+        TableInfo<$InstitutionFeeTransactionsTable, InstitutionFeeTransaction> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $InstitutionFeeTransactionTable(this.attachedDatabase, [this._alias]);
+  $InstitutionFeeTransactionsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -14935,7 +12758,7 @@ class $InstitutionFeeTransactionTable extends InstitutionFeeTransaction
   static const String $name = 'institution_fee_transaction';
   @override
   VerificationContext validateIntegrity(
-    Insertable<InstitutionFeeTransactionData> instance, {
+    Insertable<InstitutionFeeTransaction> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -15020,12 +12843,12 @@ class $InstitutionFeeTransactionTable extends InstitutionFeeTransaction
   @override
   Set<GeneratedColumn> get $primaryKey => {institution, referenceNumber};
   @override
-  InstitutionFeeTransactionData map(
+  InstitutionFeeTransaction map(
     Map<String, dynamic> data, {
     String? tablePrefix,
   }) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return InstitutionFeeTransactionData(
+    return InstitutionFeeTransaction(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -15070,13 +12893,13 @@ class $InstitutionFeeTransactionTable extends InstitutionFeeTransaction
   }
 
   @override
-  $InstitutionFeeTransactionTable createAlias(String alias) {
-    return $InstitutionFeeTransactionTable(attachedDatabase, alias);
+  $InstitutionFeeTransactionsTable createAlias(String alias) {
+    return $InstitutionFeeTransactionsTable(attachedDatabase, alias);
   }
 }
 
-class InstitutionFeeTransactionData extends DataClass
-    implements Insertable<InstitutionFeeTransactionData> {
+class InstitutionFeeTransaction extends DataClass
+    implements Insertable<InstitutionFeeTransaction> {
   final int? id;
   final int institution;
   final String? referenceNumber;
@@ -15087,7 +12910,7 @@ class InstitutionFeeTransactionData extends DataClass
   final String? description;
   final String? title;
   final String? currency;
-  const InstitutionFeeTransactionData({
+  const InstitutionFeeTransaction({
     this.id,
     required this.institution,
     this.referenceNumber,
@@ -15133,8 +12956,8 @@ class InstitutionFeeTransactionData extends DataClass
     return map;
   }
 
-  InstitutionFeeTransactionCompanion toCompanion(bool nullToAbsent) {
-    return InstitutionFeeTransactionCompanion(
+  InstitutionFeeTransactionsCompanion toCompanion(bool nullToAbsent) {
+    return InstitutionFeeTransactionsCompanion(
       id: id == null && nullToAbsent ? const Value.absent() : Value(id),
       institution: Value(institution),
       referenceNumber: referenceNumber == null && nullToAbsent
@@ -15164,12 +12987,12 @@ class InstitutionFeeTransactionData extends DataClass
     );
   }
 
-  factory InstitutionFeeTransactionData.fromJson(
+  factory InstitutionFeeTransaction.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return InstitutionFeeTransactionData(
+    return InstitutionFeeTransaction(
       id: serializer.fromJson<int?>(json['id']),
       institution: serializer.fromJson<int>(json['institution']),
       referenceNumber: serializer.fromJson<String?>(json['reference_number']),
@@ -15199,7 +13022,7 @@ class InstitutionFeeTransactionData extends DataClass
     };
   }
 
-  InstitutionFeeTransactionData copyWith({
+  InstitutionFeeTransaction copyWith({
     Value<int?> id = const Value.absent(),
     int? institution,
     Value<String?> referenceNumber = const Value.absent(),
@@ -15210,7 +13033,7 @@ class InstitutionFeeTransactionData extends DataClass
     Value<String?> description = const Value.absent(),
     Value<String?> title = const Value.absent(),
     Value<String?> currency = const Value.absent(),
-  }) => InstitutionFeeTransactionData(
+  }) => InstitutionFeeTransaction(
     id: id.present ? id.value : this.id,
     institution: institution ?? this.institution,
     referenceNumber: referenceNumber.present
@@ -15226,10 +13049,10 @@ class InstitutionFeeTransactionData extends DataClass
     title: title.present ? title.value : this.title,
     currency: currency.present ? currency.value : this.currency,
   );
-  InstitutionFeeTransactionData copyWithCompanion(
-    InstitutionFeeTransactionCompanion data,
+  InstitutionFeeTransaction copyWithCompanion(
+    InstitutionFeeTransactionsCompanion data,
   ) {
-    return InstitutionFeeTransactionData(
+    return InstitutionFeeTransaction(
       id: data.id.present ? data.id.value : this.id,
       institution: data.institution.present
           ? data.institution.value
@@ -15255,7 +13078,7 @@ class InstitutionFeeTransactionData extends DataClass
 
   @override
   String toString() {
-    return (StringBuffer('InstitutionFeeTransactionData(')
+    return (StringBuffer('InstitutionFeeTransaction(')
           ..write('id: $id, ')
           ..write('institution: $institution, ')
           ..write('referenceNumber: $referenceNumber, ')
@@ -15286,7 +13109,7 @@ class InstitutionFeeTransactionData extends DataClass
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is InstitutionFeeTransactionData &&
+      (other is InstitutionFeeTransaction &&
           other.id == this.id &&
           other.institution == this.institution &&
           other.referenceNumber == this.referenceNumber &&
@@ -15299,8 +13122,8 @@ class InstitutionFeeTransactionData extends DataClass
           other.currency == this.currency);
 }
 
-class InstitutionFeeTransactionCompanion
-    extends UpdateCompanion<InstitutionFeeTransactionData> {
+class InstitutionFeeTransactionsCompanion
+    extends UpdateCompanion<InstitutionFeeTransaction> {
   final Value<int?> id;
   final Value<int> institution;
   final Value<String?> referenceNumber;
@@ -15312,7 +13135,7 @@ class InstitutionFeeTransactionCompanion
   final Value<String?> title;
   final Value<String?> currency;
   final Value<int> rowid;
-  const InstitutionFeeTransactionCompanion({
+  const InstitutionFeeTransactionsCompanion({
     this.id = const Value.absent(),
     this.institution = const Value.absent(),
     this.referenceNumber = const Value.absent(),
@@ -15325,7 +13148,7 @@ class InstitutionFeeTransactionCompanion
     this.currency = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  InstitutionFeeTransactionCompanion.insert({
+  InstitutionFeeTransactionsCompanion.insert({
     this.id = const Value.absent(),
     required int institution,
     this.referenceNumber = const Value.absent(),
@@ -15338,7 +13161,7 @@ class InstitutionFeeTransactionCompanion
     this.currency = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : institution = Value(institution);
-  static Insertable<InstitutionFeeTransactionData> custom({
+  static Insertable<InstitutionFeeTransaction> custom({
     Expression<int>? id,
     Expression<int>? institution,
     Expression<String>? referenceNumber,
@@ -15366,7 +13189,7 @@ class InstitutionFeeTransactionCompanion
     });
   }
 
-  InstitutionFeeTransactionCompanion copyWith({
+  InstitutionFeeTransactionsCompanion copyWith({
     Value<int?>? id,
     Value<int>? institution,
     Value<String?>? referenceNumber,
@@ -15379,7 +13202,7 @@ class InstitutionFeeTransactionCompanion
     Value<String?>? currency,
     Value<int>? rowid,
   }) {
-    return InstitutionFeeTransactionCompanion(
+    return InstitutionFeeTransactionsCompanion(
       id: id ?? this.id,
       institution: institution ?? this.institution,
       referenceNumber: referenceNumber ?? this.referenceNumber,
@@ -15435,7 +13258,7 @@ class InstitutionFeeTransactionCompanion
 
   @override
   String toString() {
-    return (StringBuffer('InstitutionFeeTransactionCompanion(')
+    return (StringBuffer('InstitutionFeeTransactionsCompanion(')
           ..write('id: $id, ')
           ..write('institution: $institution, ')
           ..write('referenceNumber: $referenceNumber, ')
@@ -18025,27 +15848,32 @@ class TimetableEntryCompanion extends UpdateCompanion<TimetableEntryData> {
   }
 }
 
-class $ExamTimetableTable extends ExamTimetable
-    with TableInfo<$ExamTimetableTable, ExamTimetableData> {
+class $ExamTimetablesTable extends ExamTimetables
+    with TableInfo<$ExamTimetablesTable, ExamTimetable> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $ExamTimetableTable(this.attachedDatabase, [this._alias]);
+  $ExamTimetablesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _institutionIdMeta = const VerificationMeta(
+    'institutionId',
+  );
+  @override
+  late final GeneratedColumn<int> institutionId = GeneratedColumn<int>(
+    'institution_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES institution (institution_id)',
+    ),
+  );
   static const VerificationMeta _courseCodeMeta = const VerificationMeta(
     'courseCode',
   );
   @override
   late final GeneratedColumn<String> courseCode = GeneratedColumn<String>(
     'course_code',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _dayMeta = const VerificationMeta('day');
-  @override
-  late final GeneratedColumn<String> day = GeneratedColumn<String>(
-    'day',
     aliasedName,
     false,
     type: DriftSqlType.string,
@@ -18082,24 +15910,6 @@ class $ExamTimetableTable extends ExamTimetable
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _hrsMeta = const VerificationMeta('hrs');
-  @override
-  late final GeneratedColumn<String> hrs = GeneratedColumn<String>(
-    'hrs',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _campusMeta = const VerificationMeta('campus');
-  @override
-  late final GeneratedColumn<String> campus = GeneratedColumn<String>(
-    'campus',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
   static const VerificationMeta _coordinatorMeta = const VerificationMeta(
     'coordinator',
   );
@@ -18109,18 +15919,29 @@ class $ExamTimetableTable extends ExamTimetable
     aliasedName,
     false,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
   );
-  static const VerificationMeta _invigilatorMeta = const VerificationMeta(
-    'invigilator',
-  );
+  static const VerificationMeta _hrsMeta = const VerificationMeta('hrs');
   @override
-  late final GeneratedColumn<String> invigilator = GeneratedColumn<String>(
-    'invigilator',
+  late final GeneratedColumn<String> hrs = GeneratedColumn<String>(
+    'hrs',
     aliasedName,
     false,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
+  );
+  static const VerificationMeta _rawDataMeta = const VerificationMeta(
+    'rawData',
+  );
+  @override
+  late final GeneratedColumn<String> rawData = GeneratedColumn<String>(
+    'raw_data',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _datetimeStrMeta = const VerificationMeta(
     'datetimeStr',
@@ -18135,15 +15956,14 @@ class $ExamTimetableTable extends ExamTimetable
   );
   @override
   List<GeneratedColumn> get $columns => [
+    institutionId,
     courseCode,
-    day,
     startTime,
     endTime,
     venue,
-    hrs,
-    campus,
     coordinator,
-    invigilator,
+    hrs,
+    rawData,
     datetimeStr,
   ];
   @override
@@ -18153,11 +15973,22 @@ class $ExamTimetableTable extends ExamTimetable
   static const String $name = 'exam_timetable';
   @override
   VerificationContext validateIntegrity(
-    Insertable<ExamTimetableData> instance, {
+    Insertable<ExamTimetable> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('institution_id')) {
+      context.handle(
+        _institutionIdMeta,
+        institutionId.isAcceptableOrUnknown(
+          data['institution_id']!,
+          _institutionIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_institutionIdMeta);
+    }
     if (data.containsKey('course_code')) {
       context.handle(
         _courseCodeMeta,
@@ -18165,14 +15996,6 @@ class $ExamTimetableTable extends ExamTimetable
       );
     } else if (isInserting) {
       context.missing(_courseCodeMeta);
-    }
-    if (data.containsKey('day')) {
-      context.handle(
-        _dayMeta,
-        day.isAcceptableOrUnknown(data['day']!, _dayMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_dayMeta);
     }
     if (data.containsKey('start_time')) {
       context.handle(
@@ -18198,22 +16021,6 @@ class $ExamTimetableTable extends ExamTimetable
     } else if (isInserting) {
       context.missing(_venueMeta);
     }
-    if (data.containsKey('hrs')) {
-      context.handle(
-        _hrsMeta,
-        hrs.isAcceptableOrUnknown(data['hrs']!, _hrsMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_hrsMeta);
-    }
-    if (data.containsKey('campus')) {
-      context.handle(
-        _campusMeta,
-        campus.isAcceptableOrUnknown(data['campus']!, _campusMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_campusMeta);
-    }
     if (data.containsKey('coordinator')) {
       context.handle(
         _coordinatorMeta,
@@ -18222,19 +16029,18 @@ class $ExamTimetableTable extends ExamTimetable
           _coordinatorMeta,
         ),
       );
-    } else if (isInserting) {
-      context.missing(_coordinatorMeta);
     }
-    if (data.containsKey('invigilator')) {
+    if (data.containsKey('hrs')) {
       context.handle(
-        _invigilatorMeta,
-        invigilator.isAcceptableOrUnknown(
-          data['invigilator']!,
-          _invigilatorMeta,
-        ),
+        _hrsMeta,
+        hrs.isAcceptableOrUnknown(data['hrs']!, _hrsMeta),
       );
-    } else if (isInserting) {
-      context.missing(_invigilatorMeta);
+    }
+    if (data.containsKey('raw_data')) {
+      context.handle(
+        _rawDataMeta,
+        rawData.isAcceptableOrUnknown(data['raw_data']!, _rawDataMeta),
+      );
     }
     if (data.containsKey('datetime_str')) {
       context.handle(
@@ -18251,18 +16057,18 @@ class $ExamTimetableTable extends ExamTimetable
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {courseCode};
+  Set<GeneratedColumn> get $primaryKey => {institutionId, courseCode};
   @override
-  ExamTimetableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  ExamTimetable map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return ExamTimetableData(
+    return ExamTimetable(
+      institutionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}institution_id'],
+      )!,
       courseCode: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}course_code'],
-      )!,
-      day: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}day'],
       )!,
       startTime: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
@@ -18276,22 +16082,18 @@ class $ExamTimetableTable extends ExamTimetable
         DriftSqlType.string,
         data['${effectivePrefix}venue'],
       )!,
-      hrs: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}hrs'],
-      )!,
-      campus: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}campus'],
-      )!,
       coordinator: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}coordinator'],
       )!,
-      invigilator: attachedDatabase.typeMapping.read(
+      hrs: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}invigilator'],
+        data['${effectivePrefix}hrs'],
       )!,
+      rawData: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}raw_data'],
+      ),
       datetimeStr: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}datetime_str'],
@@ -18300,81 +16102,83 @@ class $ExamTimetableTable extends ExamTimetable
   }
 
   @override
-  $ExamTimetableTable createAlias(String alias) {
-    return $ExamTimetableTable(attachedDatabase, alias);
+  $ExamTimetablesTable createAlias(String alias) {
+    return $ExamTimetablesTable(attachedDatabase, alias);
   }
 }
 
-class ExamTimetableData extends DataClass
-    implements Insertable<ExamTimetableData> {
+class ExamTimetable extends DataClass implements Insertable<ExamTimetable> {
+  final int institutionId;
   final String courseCode;
-  final String day;
   final String startTime;
   final String endTime;
   final String venue;
-  final String hrs;
-  final String campus;
   final String coordinator;
-  final String invigilator;
+  final String hrs;
+
+  /// Stores the raw_data JSON blob as a string (nullable).
+  final String? rawData;
+
+  /// Parsed from start_time ISO string; used for sorting / countdown.
   final DateTime datetimeStr;
-  const ExamTimetableData({
+  const ExamTimetable({
+    required this.institutionId,
     required this.courseCode,
-    required this.day,
     required this.startTime,
     required this.endTime,
     required this.venue,
-    required this.hrs,
-    required this.campus,
     required this.coordinator,
-    required this.invigilator,
+    required this.hrs,
+    this.rawData,
     required this.datetimeStr,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    map['institution_id'] = Variable<int>(institutionId);
     map['course_code'] = Variable<String>(courseCode);
-    map['day'] = Variable<String>(day);
     map['start_time'] = Variable<String>(startTime);
     map['end_time'] = Variable<String>(endTime);
     map['venue'] = Variable<String>(venue);
-    map['hrs'] = Variable<String>(hrs);
-    map['campus'] = Variable<String>(campus);
     map['coordinator'] = Variable<String>(coordinator);
-    map['invigilator'] = Variable<String>(invigilator);
+    map['hrs'] = Variable<String>(hrs);
+    if (!nullToAbsent || rawData != null) {
+      map['raw_data'] = Variable<String>(rawData);
+    }
     map['datetime_str'] = Variable<DateTime>(datetimeStr);
     return map;
   }
 
-  ExamTimetableCompanion toCompanion(bool nullToAbsent) {
-    return ExamTimetableCompanion(
+  ExamTimetablesCompanion toCompanion(bool nullToAbsent) {
+    return ExamTimetablesCompanion(
+      institutionId: Value(institutionId),
       courseCode: Value(courseCode),
-      day: Value(day),
       startTime: Value(startTime),
       endTime: Value(endTime),
       venue: Value(venue),
-      hrs: Value(hrs),
-      campus: Value(campus),
       coordinator: Value(coordinator),
-      invigilator: Value(invigilator),
+      hrs: Value(hrs),
+      rawData: rawData == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rawData),
       datetimeStr: Value(datetimeStr),
     );
   }
 
-  factory ExamTimetableData.fromJson(
+  factory ExamTimetable.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return ExamTimetableData(
+    return ExamTimetable(
+      institutionId: serializer.fromJson<int>(json['institution_id']),
       courseCode: serializer.fromJson<String>(json['course_code']),
-      day: serializer.fromJson<String>(json['day']),
       startTime: serializer.fromJson<String>(json['start_time']),
       endTime: serializer.fromJson<String>(json['end_time']),
       venue: serializer.fromJson<String>(json['venue']),
-      hrs: serializer.fromJson<String>(json['hrs']),
-      campus: serializer.fromJson<String>(json['campus']),
       coordinator: serializer.fromJson<String>(json['coordinator']),
-      invigilator: serializer.fromJson<String>(json['invigilator']),
+      hrs: serializer.fromJson<String>(json['hrs']),
+      rawData: serializer.fromJson<String?>(json['raw_data']),
       datetimeStr: serializer.fromJson<DateTime>(json['datetime_str']),
     );
   }
@@ -18382,59 +16186,55 @@ class ExamTimetableData extends DataClass
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'institution_id': serializer.toJson<int>(institutionId),
       'course_code': serializer.toJson<String>(courseCode),
-      'day': serializer.toJson<String>(day),
       'start_time': serializer.toJson<String>(startTime),
       'end_time': serializer.toJson<String>(endTime),
       'venue': serializer.toJson<String>(venue),
-      'hrs': serializer.toJson<String>(hrs),
-      'campus': serializer.toJson<String>(campus),
       'coordinator': serializer.toJson<String>(coordinator),
-      'invigilator': serializer.toJson<String>(invigilator),
+      'hrs': serializer.toJson<String>(hrs),
+      'raw_data': serializer.toJson<String?>(rawData),
       'datetime_str': serializer.toJson<DateTime>(datetimeStr),
     };
   }
 
-  ExamTimetableData copyWith({
+  ExamTimetable copyWith({
+    int? institutionId,
     String? courseCode,
-    String? day,
     String? startTime,
     String? endTime,
     String? venue,
-    String? hrs,
-    String? campus,
     String? coordinator,
-    String? invigilator,
+    String? hrs,
+    Value<String?> rawData = const Value.absent(),
     DateTime? datetimeStr,
-  }) => ExamTimetableData(
+  }) => ExamTimetable(
+    institutionId: institutionId ?? this.institutionId,
     courseCode: courseCode ?? this.courseCode,
-    day: day ?? this.day,
     startTime: startTime ?? this.startTime,
     endTime: endTime ?? this.endTime,
     venue: venue ?? this.venue,
-    hrs: hrs ?? this.hrs,
-    campus: campus ?? this.campus,
     coordinator: coordinator ?? this.coordinator,
-    invigilator: invigilator ?? this.invigilator,
+    hrs: hrs ?? this.hrs,
+    rawData: rawData.present ? rawData.value : this.rawData,
     datetimeStr: datetimeStr ?? this.datetimeStr,
   );
-  ExamTimetableData copyWithCompanion(ExamTimetableCompanion data) {
-    return ExamTimetableData(
+  ExamTimetable copyWithCompanion(ExamTimetablesCompanion data) {
+    return ExamTimetable(
+      institutionId: data.institutionId.present
+          ? data.institutionId.value
+          : this.institutionId,
       courseCode: data.courseCode.present
           ? data.courseCode.value
           : this.courseCode,
-      day: data.day.present ? data.day.value : this.day,
       startTime: data.startTime.present ? data.startTime.value : this.startTime,
       endTime: data.endTime.present ? data.endTime.value : this.endTime,
       venue: data.venue.present ? data.venue.value : this.venue,
-      hrs: data.hrs.present ? data.hrs.value : this.hrs,
-      campus: data.campus.present ? data.campus.value : this.campus,
       coordinator: data.coordinator.present
           ? data.coordinator.value
           : this.coordinator,
-      invigilator: data.invigilator.present
-          ? data.invigilator.value
-          : this.invigilator,
+      hrs: data.hrs.present ? data.hrs.value : this.hrs,
+      rawData: data.rawData.present ? data.rawData.value : this.rawData,
       datetimeStr: data.datetimeStr.present
           ? data.datetimeStr.value
           : this.datetimeStr,
@@ -18443,16 +16243,15 @@ class ExamTimetableData extends DataClass
 
   @override
   String toString() {
-    return (StringBuffer('ExamTimetableData(')
+    return (StringBuffer('ExamTimetable(')
+          ..write('institutionId: $institutionId, ')
           ..write('courseCode: $courseCode, ')
-          ..write('day: $day, ')
           ..write('startTime: $startTime, ')
           ..write('endTime: $endTime, ')
           ..write('venue: $venue, ')
-          ..write('hrs: $hrs, ')
-          ..write('campus: $campus, ')
           ..write('coordinator: $coordinator, ')
-          ..write('invigilator: $invigilator, ')
+          ..write('hrs: $hrs, ')
+          ..write('rawData: $rawData, ')
           ..write('datetimeStr: $datetimeStr')
           ..write(')'))
         .toString();
@@ -18460,131 +16259,118 @@ class ExamTimetableData extends DataClass
 
   @override
   int get hashCode => Object.hash(
+    institutionId,
     courseCode,
-    day,
     startTime,
     endTime,
     venue,
-    hrs,
-    campus,
     coordinator,
-    invigilator,
+    hrs,
+    rawData,
     datetimeStr,
   );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is ExamTimetableData &&
+      (other is ExamTimetable &&
+          other.institutionId == this.institutionId &&
           other.courseCode == this.courseCode &&
-          other.day == this.day &&
           other.startTime == this.startTime &&
           other.endTime == this.endTime &&
           other.venue == this.venue &&
-          other.hrs == this.hrs &&
-          other.campus == this.campus &&
           other.coordinator == this.coordinator &&
-          other.invigilator == this.invigilator &&
+          other.hrs == this.hrs &&
+          other.rawData == this.rawData &&
           other.datetimeStr == this.datetimeStr);
 }
 
-class ExamTimetableCompanion extends UpdateCompanion<ExamTimetableData> {
+class ExamTimetablesCompanion extends UpdateCompanion<ExamTimetable> {
+  final Value<int> institutionId;
   final Value<String> courseCode;
-  final Value<String> day;
   final Value<String> startTime;
   final Value<String> endTime;
   final Value<String> venue;
-  final Value<String> hrs;
-  final Value<String> campus;
   final Value<String> coordinator;
-  final Value<String> invigilator;
+  final Value<String> hrs;
+  final Value<String?> rawData;
   final Value<DateTime> datetimeStr;
   final Value<int> rowid;
-  const ExamTimetableCompanion({
+  const ExamTimetablesCompanion({
+    this.institutionId = const Value.absent(),
     this.courseCode = const Value.absent(),
-    this.day = const Value.absent(),
     this.startTime = const Value.absent(),
     this.endTime = const Value.absent(),
     this.venue = const Value.absent(),
-    this.hrs = const Value.absent(),
-    this.campus = const Value.absent(),
     this.coordinator = const Value.absent(),
-    this.invigilator = const Value.absent(),
+    this.hrs = const Value.absent(),
+    this.rawData = const Value.absent(),
     this.datetimeStr = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  ExamTimetableCompanion.insert({
+  ExamTimetablesCompanion.insert({
+    required int institutionId,
     required String courseCode,
-    required String day,
     required String startTime,
     required String endTime,
     required String venue,
-    required String hrs,
-    required String campus,
-    required String coordinator,
-    required String invigilator,
+    this.coordinator = const Value.absent(),
+    this.hrs = const Value.absent(),
+    this.rawData = const Value.absent(),
     required DateTime datetimeStr,
     this.rowid = const Value.absent(),
-  }) : courseCode = Value(courseCode),
-       day = Value(day),
+  }) : institutionId = Value(institutionId),
+       courseCode = Value(courseCode),
        startTime = Value(startTime),
        endTime = Value(endTime),
        venue = Value(venue),
-       hrs = Value(hrs),
-       campus = Value(campus),
-       coordinator = Value(coordinator),
-       invigilator = Value(invigilator),
        datetimeStr = Value(datetimeStr);
-  static Insertable<ExamTimetableData> custom({
+  static Insertable<ExamTimetable> custom({
+    Expression<int>? institutionId,
     Expression<String>? courseCode,
-    Expression<String>? day,
     Expression<String>? startTime,
     Expression<String>? endTime,
     Expression<String>? venue,
-    Expression<String>? hrs,
-    Expression<String>? campus,
     Expression<String>? coordinator,
-    Expression<String>? invigilator,
+    Expression<String>? hrs,
+    Expression<String>? rawData,
     Expression<DateTime>? datetimeStr,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
+      if (institutionId != null) 'institution_id': institutionId,
       if (courseCode != null) 'course_code': courseCode,
-      if (day != null) 'day': day,
       if (startTime != null) 'start_time': startTime,
       if (endTime != null) 'end_time': endTime,
       if (venue != null) 'venue': venue,
-      if (hrs != null) 'hrs': hrs,
-      if (campus != null) 'campus': campus,
       if (coordinator != null) 'coordinator': coordinator,
-      if (invigilator != null) 'invigilator': invigilator,
+      if (hrs != null) 'hrs': hrs,
+      if (rawData != null) 'raw_data': rawData,
       if (datetimeStr != null) 'datetime_str': datetimeStr,
       if (rowid != null) 'rowid': rowid,
     });
   }
 
-  ExamTimetableCompanion copyWith({
+  ExamTimetablesCompanion copyWith({
+    Value<int>? institutionId,
     Value<String>? courseCode,
-    Value<String>? day,
     Value<String>? startTime,
     Value<String>? endTime,
     Value<String>? venue,
-    Value<String>? hrs,
-    Value<String>? campus,
     Value<String>? coordinator,
-    Value<String>? invigilator,
+    Value<String>? hrs,
+    Value<String?>? rawData,
     Value<DateTime>? datetimeStr,
     Value<int>? rowid,
   }) {
-    return ExamTimetableCompanion(
+    return ExamTimetablesCompanion(
+      institutionId: institutionId ?? this.institutionId,
       courseCode: courseCode ?? this.courseCode,
-      day: day ?? this.day,
       startTime: startTime ?? this.startTime,
       endTime: endTime ?? this.endTime,
       venue: venue ?? this.venue,
-      hrs: hrs ?? this.hrs,
-      campus: campus ?? this.campus,
       coordinator: coordinator ?? this.coordinator,
-      invigilator: invigilator ?? this.invigilator,
+      hrs: hrs ?? this.hrs,
+      rawData: rawData ?? this.rawData,
       datetimeStr: datetimeStr ?? this.datetimeStr,
       rowid: rowid ?? this.rowid,
     );
@@ -18593,11 +16379,11 @@ class ExamTimetableCompanion extends UpdateCompanion<ExamTimetableData> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (institutionId.present) {
+      map['institution_id'] = Variable<int>(institutionId.value);
+    }
     if (courseCode.present) {
       map['course_code'] = Variable<String>(courseCode.value);
-    }
-    if (day.present) {
-      map['day'] = Variable<String>(day.value);
     }
     if (startTime.present) {
       map['start_time'] = Variable<String>(startTime.value);
@@ -18608,17 +16394,14 @@ class ExamTimetableCompanion extends UpdateCompanion<ExamTimetableData> {
     if (venue.present) {
       map['venue'] = Variable<String>(venue.value);
     }
-    if (hrs.present) {
-      map['hrs'] = Variable<String>(hrs.value);
-    }
-    if (campus.present) {
-      map['campus'] = Variable<String>(campus.value);
-    }
     if (coordinator.present) {
       map['coordinator'] = Variable<String>(coordinator.value);
     }
-    if (invigilator.present) {
-      map['invigilator'] = Variable<String>(invigilator.value);
+    if (hrs.present) {
+      map['hrs'] = Variable<String>(hrs.value);
+    }
+    if (rawData.present) {
+      map['raw_data'] = Variable<String>(rawData.value);
     }
     if (datetimeStr.present) {
       map['datetime_str'] = Variable<DateTime>(datetimeStr.value);
@@ -18631,16 +16414,15 @@ class ExamTimetableCompanion extends UpdateCompanion<ExamTimetableData> {
 
   @override
   String toString() {
-    return (StringBuffer('ExamTimetableCompanion(')
+    return (StringBuffer('ExamTimetablesCompanion(')
+          ..write('institutionId: $institutionId, ')
           ..write('courseCode: $courseCode, ')
-          ..write('day: $day, ')
           ..write('startTime: $startTime, ')
           ..write('endTime: $endTime, ')
           ..write('venue: $venue, ')
-          ..write('hrs: $hrs, ')
-          ..write('campus: $campus, ')
           ..write('coordinator: $coordinator, ')
-          ..write('invigilator: $invigilator, ')
+          ..write('hrs: $hrs, ')
+          ..write('rawData: $rawData, ')
           ..write('datetimeStr: $datetimeStr, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -18648,12 +16430,12 @@ class ExamTimetableCompanion extends UpdateCompanion<ExamTimetableData> {
   }
 }
 
-class $ChirpUserTable extends ChirpUser
-    with TableInfo<$ChirpUserTable, ChirpUserData> {
+class $ChirpUsersTable extends ChirpUsers
+    with TableInfo<$ChirpUsersTable, ChirpUser> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $ChirpUserTable(this.attachedDatabase, [this._alias]);
+  $ChirpUsersTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _userIDMeta = const VerificationMeta('userID');
   @override
   late final GeneratedColumn<String> userID = GeneratedColumn<String>(
@@ -18770,7 +16552,7 @@ class $ChirpUserTable extends ChirpUser
   static const String $name = 'chirp_user';
   @override
   VerificationContext validateIntegrity(
-    Insertable<ChirpUserData> instance, {
+    Insertable<ChirpUser> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -18837,9 +16619,9 @@ class $ChirpUserTable extends ChirpUser
   @override
   Set<GeneratedColumn> get $primaryKey => {userID};
   @override
-  ChirpUserData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  ChirpUser map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return ChirpUserData(
+    return ChirpUser(
       userID: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_i_d'],
@@ -18880,12 +16662,12 @@ class $ChirpUserTable extends ChirpUser
   }
 
   @override
-  $ChirpUserTable createAlias(String alias) {
-    return $ChirpUserTable(attachedDatabase, alias);
+  $ChirpUsersTable createAlias(String alias) {
+    return $ChirpUsersTable(attachedDatabase, alias);
   }
 }
 
-class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
+class ChirpUser extends DataClass implements Insertable<ChirpUser> {
   final String userID;
   final String? email;
   final String? phone;
@@ -18897,7 +16679,7 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
 
   /// For storing the caching time that will be used in TTL
   final DateTime? cachedAt;
-  const ChirpUserData({
+  const ChirpUser({
     required this.userID,
     this.email,
     this.phone,
@@ -18933,8 +16715,8 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
     return map;
   }
 
-  ChirpUserCompanion toCompanion(bool nullToAbsent) {
-    return ChirpUserCompanion(
+  ChirpUsersCompanion toCompanion(bool nullToAbsent) {
+    return ChirpUsersCompanion(
       userID: Value(userID),
       email: email == null && nullToAbsent
           ? const Value.absent()
@@ -18957,12 +16739,12 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
     );
   }
 
-  factory ChirpUserData.fromJson(
+  factory ChirpUser.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return ChirpUserData(
+    return ChirpUser(
       userID: serializer.fromJson<String>(json['user_id']),
       email: serializer.fromJson<String?>(json['email']),
       phone: serializer.fromJson<String?>(json['phone']),
@@ -18990,7 +16772,7 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
     };
   }
 
-  ChirpUserData copyWith({
+  ChirpUser copyWith({
     String? userID,
     Value<String?> email = const Value.absent(),
     Value<String?> phone = const Value.absent(),
@@ -19000,7 +16782,7 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
     DateTime? createdAt,
     DateTime? updatedAt,
     Value<DateTime?> cachedAt = const Value.absent(),
-  }) => ChirpUserData(
+  }) => ChirpUser(
     userID: userID ?? this.userID,
     email: email.present ? email.value : this.email,
     phone: phone.present ? phone.value : this.phone,
@@ -19011,8 +16793,8 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
     updatedAt: updatedAt ?? this.updatedAt,
     cachedAt: cachedAt.present ? cachedAt.value : this.cachedAt,
   );
-  ChirpUserData copyWithCompanion(ChirpUserCompanion data) {
-    return ChirpUserData(
+  ChirpUser copyWithCompanion(ChirpUsersCompanion data) {
+    return ChirpUser(
       userID: data.userID.present ? data.userID.value : this.userID,
       email: data.email.present ? data.email.value : this.email,
       phone: data.phone.present ? data.phone.value : this.phone,
@@ -19029,7 +16811,7 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
 
   @override
   String toString() {
-    return (StringBuffer('ChirpUserData(')
+    return (StringBuffer('ChirpUser(')
           ..write('userID: $userID, ')
           ..write('email: $email, ')
           ..write('phone: $phone, ')
@@ -19058,7 +16840,7 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is ChirpUserData &&
+      (other is ChirpUser &&
           other.userID == this.userID &&
           other.email == this.email &&
           other.phone == this.phone &&
@@ -19070,7 +16852,7 @@ class ChirpUserData extends DataClass implements Insertable<ChirpUserData> {
           other.cachedAt == this.cachedAt);
 }
 
-class ChirpUserCompanion extends UpdateCompanion<ChirpUserData> {
+class ChirpUsersCompanion extends UpdateCompanion<ChirpUser> {
   final Value<String> userID;
   final Value<String?> email;
   final Value<String?> phone;
@@ -19081,7 +16863,7 @@ class ChirpUserCompanion extends UpdateCompanion<ChirpUserData> {
   final Value<DateTime> updatedAt;
   final Value<DateTime?> cachedAt;
   final Value<int> rowid;
-  const ChirpUserCompanion({
+  const ChirpUsersCompanion({
     this.userID = const Value.absent(),
     this.email = const Value.absent(),
     this.phone = const Value.absent(),
@@ -19093,7 +16875,7 @@ class ChirpUserCompanion extends UpdateCompanion<ChirpUserData> {
     this.cachedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  ChirpUserCompanion.insert({
+  ChirpUsersCompanion.insert({
     required String userID,
     this.email = const Value.absent(),
     this.phone = const Value.absent(),
@@ -19105,7 +16887,7 @@ class ChirpUserCompanion extends UpdateCompanion<ChirpUserData> {
     this.cachedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : userID = Value(userID);
-  static Insertable<ChirpUserData> custom({
+  static Insertable<ChirpUser> custom({
     Expression<String>? userID,
     Expression<String>? email,
     Expression<String>? phone,
@@ -19131,7 +16913,7 @@ class ChirpUserCompanion extends UpdateCompanion<ChirpUserData> {
     });
   }
 
-  ChirpUserCompanion copyWith({
+  ChirpUsersCompanion copyWith({
     Value<String>? userID,
     Value<String?>? email,
     Value<String?>? phone,
@@ -19143,7 +16925,7 @@ class ChirpUserCompanion extends UpdateCompanion<ChirpUserData> {
     Value<DateTime?>? cachedAt,
     Value<int>? rowid,
   }) {
-    return ChirpUserCompanion(
+    return ChirpUsersCompanion(
       userID: userID ?? this.userID,
       email: email ?? this.email,
       phone: phone ?? this.phone,
@@ -19195,7 +16977,7 @@ class ChirpUserCompanion extends UpdateCompanion<ChirpUserData> {
 
   @override
   String toString() {
-    return (StringBuffer('ChirpUserCompanion(')
+    return (StringBuffer('ChirpUsersCompanion(')
           ..write('userID: $userID, ')
           ..write('email: $email, ')
           ..write('phone: $phone, ')
@@ -19211,12 +16993,12 @@ class ChirpUserCompanion extends UpdateCompanion<ChirpUserData> {
   }
 }
 
-class $CommunityTable extends Community
-    with TableInfo<$CommunityTable, CommunityData> {
+class $CommunitiesTable extends Communities
+    with TableInfo<$CommunitiesTable, Community> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $CommunityTable(this.attachedDatabase, [this._alias]);
+  $CommunitiesTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -19470,7 +17252,7 @@ class $CommunityTable extends Community
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
-  ).withConverter<List<dynamic>>($CommunityTable.$converterguidelines);
+  ).withConverter<List<dynamic>>($CommunitiesTable.$converterguidelines);
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -19540,7 +17322,7 @@ class $CommunityTable extends Community
   static const String $name = 'community';
   @override
   VerificationContext validateIntegrity(
-    Insertable<CommunityData> instance, {
+    Insertable<Community> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -19738,9 +17520,9 @@ class $CommunityTable extends Community
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  CommunityData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Community map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return CommunityData(
+    return Community(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -19825,7 +17607,7 @@ class $CommunityTable extends Community
         DriftSqlType.string,
         data['${effectivePrefix}creator_id'],
       )!,
-      guidelines: $CommunityTable.$converterguidelines.fromSql(
+      guidelines: $CommunitiesTable.$converterguidelines.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}guidelines'],
@@ -19847,15 +17629,15 @@ class $CommunityTable extends Community
   }
 
   @override
-  $CommunityTable createAlias(String alias) {
-    return $CommunityTable(attachedDatabase, alias);
+  $CommunitiesTable createAlias(String alias) {
+    return $CommunitiesTable(attachedDatabase, alias);
   }
 
   static TypeConverter<List<dynamic>, String> $converterguidelines =
       JsonListConverter();
 }
 
-class CommunityData extends DataClass implements Insertable<CommunityData> {
+class Community extends DataClass implements Insertable<Community> {
   final int id;
   final String name;
   final String? description;
@@ -19883,7 +17665,7 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
 
   /// For storing the caching time that will be used in TTL
   final DateTime? cachedAt;
-  const CommunityData({
+  const Community({
     required this.id,
     required this.name,
     this.description,
@@ -19946,7 +17728,7 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
     map['creator_id'] = Variable<String>(creatorId);
     {
       map['guidelines'] = Variable<String>(
-        $CommunityTable.$converterguidelines.toSql(guidelines),
+        $CommunitiesTable.$converterguidelines.toSql(guidelines),
       );
     }
     map['created_at'] = Variable<DateTime>(createdAt);
@@ -19957,8 +17739,8 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
     return map;
   }
 
-  CommunityCompanion toCompanion(bool nullToAbsent) {
-    return CommunityCompanion(
+  CommunitiesCompanion toCompanion(bool nullToAbsent) {
+    return CommunitiesCompanion(
       id: Value(id),
       name: Value(name),
       description: description == null && nullToAbsent
@@ -19999,12 +17781,12 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
     );
   }
 
-  factory CommunityData.fromJson(
+  factory Community.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return CommunityData(
+    return Community(
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
       description: serializer.fromJson<String?>(json['description']),
@@ -20074,7 +17856,7 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
     };
   }
 
-  CommunityData copyWith({
+  Community copyWith({
     int? id,
     String? name,
     Value<String?> description = const Value.absent(),
@@ -20100,7 +17882,7 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
     DateTime? createdAt,
     DateTime? updatedAt,
     Value<DateTime?> cachedAt = const Value.absent(),
-  }) => CommunityData(
+  }) => Community(
     id: id ?? this.id,
     name: name ?? this.name,
     description: description.present ? description.value : this.description,
@@ -20131,8 +17913,8 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
     updatedAt: updatedAt ?? this.updatedAt,
     cachedAt: cachedAt.present ? cachedAt.value : this.cachedAt,
   );
-  CommunityData copyWithCompanion(CommunityCompanion data) {
-    return CommunityData(
+  Community copyWithCompanion(CommunitiesCompanion data) {
+    return Community(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
       description: data.description.present
@@ -20191,7 +17973,7 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
 
   @override
   String toString() {
-    return (StringBuffer('CommunityData(')
+    return (StringBuffer('Community(')
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('description: $description, ')
@@ -20252,7 +18034,7 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is CommunityData &&
+      (other is Community &&
           other.id == this.id &&
           other.name == this.name &&
           other.description == this.description &&
@@ -20280,7 +18062,7 @@ class CommunityData extends DataClass implements Insertable<CommunityData> {
           other.cachedAt == this.cachedAt);
 }
 
-class CommunityCompanion extends UpdateCompanion<CommunityData> {
+class CommunitiesCompanion extends UpdateCompanion<Community> {
   final Value<int> id;
   final Value<String> name;
   final Value<String?> description;
@@ -20306,7 +18088,7 @@ class CommunityCompanion extends UpdateCompanion<CommunityData> {
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime?> cachedAt;
-  const CommunityCompanion({
+  const CommunitiesCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
     this.description = const Value.absent(),
@@ -20333,7 +18115,7 @@ class CommunityCompanion extends UpdateCompanion<CommunityData> {
     this.updatedAt = const Value.absent(),
     this.cachedAt = const Value.absent(),
   });
-  CommunityCompanion.insert({
+  CommunitiesCompanion.insert({
     this.id = const Value.absent(),
     required String name,
     this.description = const Value.absent(),
@@ -20365,7 +18147,7 @@ class CommunityCompanion extends UpdateCompanion<CommunityData> {
        guidelines = Value(guidelines),
        createdAt = Value(createdAt),
        updatedAt = Value(updatedAt);
-  static Insertable<CommunityData> custom({
+  static Insertable<Community> custom({
     Expression<int>? id,
     Expression<String>? name,
     Expression<String>? description,
@@ -20425,7 +18207,7 @@ class CommunityCompanion extends UpdateCompanion<CommunityData> {
     });
   }
 
-  CommunityCompanion copyWith({
+  CommunitiesCompanion copyWith({
     Value<int>? id,
     Value<String>? name,
     Value<String?>? description,
@@ -20452,7 +18234,7 @@ class CommunityCompanion extends UpdateCompanion<CommunityData> {
     Value<DateTime>? updatedAt,
     Value<DateTime?>? cachedAt,
   }) {
-    return CommunityCompanion(
+    return CommunitiesCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
       description: description ?? this.description,
@@ -20549,7 +18331,7 @@ class CommunityCompanion extends UpdateCompanion<CommunityData> {
     }
     if (guidelines.present) {
       map['guidelines'] = Variable<String>(
-        $CommunityTable.$converterguidelines.toSql(guidelines.value),
+        $CommunitiesTable.$converterguidelines.toSql(guidelines.value),
       );
     }
     if (createdAt.present) {
@@ -20566,7 +18348,7 @@ class CommunityCompanion extends UpdateCompanion<CommunityData> {
 
   @override
   String toString() {
-    return (StringBuffer('CommunityCompanion(')
+    return (StringBuffer('CommunitiesCompanion(')
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('description: $description, ')
@@ -20597,16 +18379,12 @@ class CommunityCompanion extends UpdateCompanion<CommunityData> {
   }
 }
 
-class $ChirpCommunityMembershipTable extends ChirpCommunityMembership
-    with
-        TableInfo<
-          $ChirpCommunityMembershipTable,
-          ChirpCommunityMembershipData
-        > {
+class $ChirpCommunityMembershipsTable extends ChirpCommunityMemberships
+    with TableInfo<$ChirpCommunityMembershipsTable, ChirpCommunityMembership> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $ChirpCommunityMembershipTable(this.attachedDatabase, [this._alias]);
+  $ChirpCommunityMembershipsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -20738,7 +18516,7 @@ class $ChirpCommunityMembershipTable extends ChirpCommunityMembership
   static const String $name = 'chirp_community_membership';
   @override
   VerificationContext validateIntegrity(
-    Insertable<ChirpCommunityMembershipData> instance, {
+    Insertable<ChirpCommunityMembership> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -20821,12 +18599,12 @@ class $ChirpCommunityMembershipTable extends ChirpCommunityMembership
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  ChirpCommunityMembershipData map(
+  ChirpCommunityMembership map(
     Map<String, dynamic> data, {
     String? tablePrefix,
   }) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return ChirpCommunityMembershipData(
+    return ChirpCommunityMembership(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -20871,13 +18649,13 @@ class $ChirpCommunityMembershipTable extends ChirpCommunityMembership
   }
 
   @override
-  $ChirpCommunityMembershipTable createAlias(String alias) {
-    return $ChirpCommunityMembershipTable(attachedDatabase, alias);
+  $ChirpCommunityMembershipsTable createAlias(String alias) {
+    return $ChirpCommunityMembershipsTable(attachedDatabase, alias);
   }
 }
 
-class ChirpCommunityMembershipData extends DataClass
-    implements Insertable<ChirpCommunityMembershipData> {
+class ChirpCommunityMembership extends DataClass
+    implements Insertable<ChirpCommunityMembership> {
   final int id;
   final int communityID;
   final String userID;
@@ -20888,7 +18666,7 @@ class ChirpCommunityMembershipData extends DataClass
   final DateTime? bannedAt;
   final DateTime joinedAt;
   final DateTime? cachedAt;
-  const ChirpCommunityMembershipData({
+  const ChirpCommunityMembership({
     required this.id,
     required this.communityID,
     required this.userID,
@@ -20924,8 +18702,8 @@ class ChirpCommunityMembershipData extends DataClass
     return map;
   }
 
-  ChirpCommunityMembershipCompanion toCompanion(bool nullToAbsent) {
-    return ChirpCommunityMembershipCompanion(
+  ChirpCommunityMembershipsCompanion toCompanion(bool nullToAbsent) {
+    return ChirpCommunityMembershipsCompanion(
       id: Value(id),
       communityID: Value(communityID),
       userID: Value(userID),
@@ -20947,12 +18725,12 @@ class ChirpCommunityMembershipData extends DataClass
     );
   }
 
-  factory ChirpCommunityMembershipData.fromJson(
+  factory ChirpCommunityMembership.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return ChirpCommunityMembershipData(
+    return ChirpCommunityMembership(
       id: serializer.fromJson<int>(json['id']),
       communityID: serializer.fromJson<int>(json['community_id']),
       userID: serializer.fromJson<String>(json['user_id']),
@@ -20982,7 +18760,7 @@ class ChirpCommunityMembershipData extends DataClass
     };
   }
 
-  ChirpCommunityMembershipData copyWith({
+  ChirpCommunityMembership copyWith({
     int? id,
     int? communityID,
     String? userID,
@@ -20993,7 +18771,7 @@ class ChirpCommunityMembershipData extends DataClass
     Value<DateTime?> bannedAt = const Value.absent(),
     DateTime? joinedAt,
     Value<DateTime?> cachedAt = const Value.absent(),
-  }) => ChirpCommunityMembershipData(
+  }) => ChirpCommunityMembership(
     id: id ?? this.id,
     communityID: communityID ?? this.communityID,
     userID: userID ?? this.userID,
@@ -21005,10 +18783,10 @@ class ChirpCommunityMembershipData extends DataClass
     joinedAt: joinedAt ?? this.joinedAt,
     cachedAt: cachedAt.present ? cachedAt.value : this.cachedAt,
   );
-  ChirpCommunityMembershipData copyWithCompanion(
-    ChirpCommunityMembershipCompanion data,
+  ChirpCommunityMembership copyWithCompanion(
+    ChirpCommunityMembershipsCompanion data,
   ) {
-    return ChirpCommunityMembershipData(
+    return ChirpCommunityMembership(
       id: data.id.present ? data.id.value : this.id,
       communityID: data.communityID.present
           ? data.communityID.value
@@ -21030,7 +18808,7 @@ class ChirpCommunityMembershipData extends DataClass
 
   @override
   String toString() {
-    return (StringBuffer('ChirpCommunityMembershipData(')
+    return (StringBuffer('ChirpCommunityMembership(')
           ..write('id: $id, ')
           ..write('communityID: $communityID, ')
           ..write('userID: $userID, ')
@@ -21061,7 +18839,7 @@ class ChirpCommunityMembershipData extends DataClass
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is ChirpCommunityMembershipData &&
+      (other is ChirpCommunityMembership &&
           other.id == this.id &&
           other.communityID == this.communityID &&
           other.userID == this.userID &&
@@ -21074,8 +18852,8 @@ class ChirpCommunityMembershipData extends DataClass
           other.cachedAt == this.cachedAt);
 }
 
-class ChirpCommunityMembershipCompanion
-    extends UpdateCompanion<ChirpCommunityMembershipData> {
+class ChirpCommunityMembershipsCompanion
+    extends UpdateCompanion<ChirpCommunityMembership> {
   final Value<int> id;
   final Value<int> communityID;
   final Value<String> userID;
@@ -21086,7 +18864,7 @@ class ChirpCommunityMembershipCompanion
   final Value<DateTime?> bannedAt;
   final Value<DateTime> joinedAt;
   final Value<DateTime?> cachedAt;
-  const ChirpCommunityMembershipCompanion({
+  const ChirpCommunityMembershipsCompanion({
     this.id = const Value.absent(),
     this.communityID = const Value.absent(),
     this.userID = const Value.absent(),
@@ -21098,7 +18876,7 @@ class ChirpCommunityMembershipCompanion
     this.joinedAt = const Value.absent(),
     this.cachedAt = const Value.absent(),
   });
-  ChirpCommunityMembershipCompanion.insert({
+  ChirpCommunityMembershipsCompanion.insert({
     this.id = const Value.absent(),
     required int communityID,
     required String userID,
@@ -21112,7 +18890,7 @@ class ChirpCommunityMembershipCompanion
   }) : communityID = Value(communityID),
        userID = Value(userID),
        role = Value(role);
-  static Insertable<ChirpCommunityMembershipData> custom({
+  static Insertable<ChirpCommunityMembership> custom({
     Expression<int>? id,
     Expression<int>? communityID,
     Expression<String>? userID,
@@ -21138,7 +18916,7 @@ class ChirpCommunityMembershipCompanion
     });
   }
 
-  ChirpCommunityMembershipCompanion copyWith({
+  ChirpCommunityMembershipsCompanion copyWith({
     Value<int>? id,
     Value<int>? communityID,
     Value<String>? userID,
@@ -21150,7 +18928,7 @@ class ChirpCommunityMembershipCompanion
     Value<DateTime>? joinedAt,
     Value<DateTime?>? cachedAt,
   }) {
-    return ChirpCommunityMembershipCompanion(
+    return ChirpCommunityMembershipsCompanion(
       id: id ?? this.id,
       communityID: communityID ?? this.communityID,
       userID: userID ?? this.userID,
@@ -21202,7 +18980,7 @@ class ChirpCommunityMembershipCompanion
 
   @override
   String toString() {
-    return (StringBuffer('ChirpCommunityMembershipCompanion(')
+    return (StringBuffer('ChirpCommunityMembershipsCompanion(')
           ..write('id: $id, ')
           ..write('communityID: $communityID, ')
           ..write('userID: $userID, ')
@@ -23036,16 +20814,2502 @@ class StreakMilestoneCompanion extends UpdateCompanion<StreakMilestoneData> {
   }
 }
 
+class $TodoListsTable extends TodoLists
+    with TableInfo<$TodoListsTable, TodoList> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TodoListsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _localIdMeta = const VerificationMeta(
+    'localId',
+  );
+  @override
+  late final GeneratedColumn<int> localId = GeneratedColumn<int>(
+    'local_id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
+  );
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(
+      minTextLength: 1,
+      maxTextLength: 255,
+    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _colorMeta = const VerificationMeta('color');
+  @override
+  late final GeneratedColumn<int> color = GeneratedColumn<int>(
+    'color',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _isDefaultMeta = const VerificationMeta(
+    'isDefault',
+  );
+  @override
+  late final GeneratedColumn<bool> isDefault = GeneratedColumn<bool>(
+    'is_default',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_default" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<SyncStatus, String> syncStatus =
+      GeneratedColumn<String>(
+        'sync_status',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+        defaultValue: Constant(SyncStatus.pending.name),
+      ).withConverter<SyncStatus>($TodoListsTable.$convertersyncStatus);
+  static const VerificationMeta _taskCountMeta = const VerificationMeta(
+    'taskCount',
+  );
+  @override
+  late final GeneratedColumn<int> taskCount = GeneratedColumn<int>(
+    'task_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _lastSyncedAtMeta = const VerificationMeta(
+    'lastSyncedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> lastSyncedAt = GeneratedColumn<DateTime>(
+    'last_synced_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _isPendingDeletionMeta = const VerificationMeta(
+    'isPendingDeletion',
+  );
+  @override
+  late final GeneratedColumn<bool> isPendingDeletion = GeneratedColumn<bool>(
+    'is_pending_deletion',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_pending_deletion" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _isDirtyMeta = const VerificationMeta(
+    'isDirty',
+  );
+  @override
+  late final GeneratedColumn<bool> isDirty = GeneratedColumn<bool>(
+    'is_dirty',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_dirty" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    localId,
+    id,
+    title,
+    color,
+    isDefault,
+    syncStatus,
+    taskCount,
+    lastSyncedAt,
+    createdAt,
+    updatedAt,
+    isPendingDeletion,
+    isDirty,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'todo_lists';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<TodoList> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('local_id')) {
+      context.handle(
+        _localIdMeta,
+        localId.isAcceptableOrUnknown(data['local_id']!, _localIdMeta),
+      );
+    }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('color')) {
+      context.handle(
+        _colorMeta,
+        color.isAcceptableOrUnknown(data['color']!, _colorMeta),
+      );
+    }
+    if (data.containsKey('is_default')) {
+      context.handle(
+        _isDefaultMeta,
+        isDefault.isAcceptableOrUnknown(data['is_default']!, _isDefaultMeta),
+      );
+    }
+    if (data.containsKey('task_count')) {
+      context.handle(
+        _taskCountMeta,
+        taskCount.isAcceptableOrUnknown(data['task_count']!, _taskCountMeta),
+      );
+    }
+    if (data.containsKey('last_synced_at')) {
+      context.handle(
+        _lastSyncedAtMeta,
+        lastSyncedAt.isAcceptableOrUnknown(
+          data['last_synced_at']!,
+          _lastSyncedAtMeta,
+        ),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('is_pending_deletion')) {
+      context.handle(
+        _isPendingDeletionMeta,
+        isPendingDeletion.isAcceptableOrUnknown(
+          data['is_pending_deletion']!,
+          _isPendingDeletionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('is_dirty')) {
+      context.handle(
+        _isDirtyMeta,
+        isDirty.isAcceptableOrUnknown(data['is_dirty']!, _isDirtyMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {localId};
+  @override
+  TodoList map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TodoList(
+      localId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}local_id'],
+      )!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      ),
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      )!,
+      color: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}color'],
+      ),
+      isDefault: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_default'],
+      )!,
+      syncStatus: $TodoListsTable.$convertersyncStatus.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}sync_status'],
+        )!,
+      ),
+      taskCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}task_count'],
+      )!,
+      lastSyncedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_synced_at'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      ),
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      ),
+      isPendingDeletion: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_pending_deletion'],
+      )!,
+      isDirty: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_dirty'],
+      )!,
+    );
+  }
+
+  @override
+  $TodoListsTable createAlias(String alias) {
+    return $TodoListsTable(attachedDatabase, alias);
+  }
+
+  static JsonTypeConverter2<SyncStatus, String, String> $convertersyncStatus =
+      const EnumNameConverter<SyncStatus>(SyncStatus.values);
+}
+
+class TodoList extends DataClass implements Insertable<TodoList> {
+  final int localId;
+  final String? id;
+  final String title;
+  final int? color;
+  final bool isDefault;
+  final SyncStatus syncStatus;
+  final int taskCount;
+  final DateTime? lastSyncedAt;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  final bool isPendingDeletion;
+  final bool isDirty;
+  const TodoList({
+    required this.localId,
+    this.id,
+    required this.title,
+    this.color,
+    required this.isDefault,
+    required this.syncStatus,
+    required this.taskCount,
+    this.lastSyncedAt,
+    this.createdAt,
+    this.updatedAt,
+    required this.isPendingDeletion,
+    required this.isDirty,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['local_id'] = Variable<int>(localId);
+    if (!nullToAbsent || id != null) {
+      map['id'] = Variable<String>(id);
+    }
+    map['title'] = Variable<String>(title);
+    if (!nullToAbsent || color != null) {
+      map['color'] = Variable<int>(color);
+    }
+    map['is_default'] = Variable<bool>(isDefault);
+    {
+      map['sync_status'] = Variable<String>(
+        $TodoListsTable.$convertersyncStatus.toSql(syncStatus),
+      );
+    }
+    map['task_count'] = Variable<int>(taskCount);
+    if (!nullToAbsent || lastSyncedAt != null) {
+      map['last_synced_at'] = Variable<DateTime>(lastSyncedAt);
+    }
+    if (!nullToAbsent || createdAt != null) {
+      map['created_at'] = Variable<DateTime>(createdAt);
+    }
+    if (!nullToAbsent || updatedAt != null) {
+      map['updated_at'] = Variable<DateTime>(updatedAt);
+    }
+    map['is_pending_deletion'] = Variable<bool>(isPendingDeletion);
+    map['is_dirty'] = Variable<bool>(isDirty);
+    return map;
+  }
+
+  TodoListsCompanion toCompanion(bool nullToAbsent) {
+    return TodoListsCompanion(
+      localId: Value(localId),
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      title: Value(title),
+      color: color == null && nullToAbsent
+          ? const Value.absent()
+          : Value(color),
+      isDefault: Value(isDefault),
+      syncStatus: Value(syncStatus),
+      taskCount: Value(taskCount),
+      lastSyncedAt: lastSyncedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastSyncedAt),
+      createdAt: createdAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(createdAt),
+      updatedAt: updatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(updatedAt),
+      isPendingDeletion: Value(isPendingDeletion),
+      isDirty: Value(isDirty),
+    );
+  }
+
+  factory TodoList.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TodoList(
+      localId: serializer.fromJson<int>(json['localId']),
+      id: serializer.fromJson<String?>(json['id']),
+      title: serializer.fromJson<String>(json['title']),
+      color: serializer.fromJson<int?>(json['color']),
+      isDefault: serializer.fromJson<bool>(json['isDefault']),
+      syncStatus: $TodoListsTable.$convertersyncStatus.fromJson(
+        serializer.fromJson<String>(json['syncStatus']),
+      ),
+      taskCount: serializer.fromJson<int>(json['taskCount']),
+      lastSyncedAt: serializer.fromJson<DateTime?>(json['lastSyncedAt']),
+      createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
+      isPendingDeletion: serializer.fromJson<bool>(json['isPendingDeletion']),
+      isDirty: serializer.fromJson<bool>(json['isDirty']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'localId': serializer.toJson<int>(localId),
+      'id': serializer.toJson<String?>(id),
+      'title': serializer.toJson<String>(title),
+      'color': serializer.toJson<int?>(color),
+      'isDefault': serializer.toJson<bool>(isDefault),
+      'syncStatus': serializer.toJson<String>(
+        $TodoListsTable.$convertersyncStatus.toJson(syncStatus),
+      ),
+      'taskCount': serializer.toJson<int>(taskCount),
+      'lastSyncedAt': serializer.toJson<DateTime?>(lastSyncedAt),
+      'createdAt': serializer.toJson<DateTime?>(createdAt),
+      'updatedAt': serializer.toJson<DateTime?>(updatedAt),
+      'isPendingDeletion': serializer.toJson<bool>(isPendingDeletion),
+      'isDirty': serializer.toJson<bool>(isDirty),
+    };
+  }
+
+  TodoList copyWith({
+    int? localId,
+    Value<String?> id = const Value.absent(),
+    String? title,
+    Value<int?> color = const Value.absent(),
+    bool? isDefault,
+    SyncStatus? syncStatus,
+    int? taskCount,
+    Value<DateTime?> lastSyncedAt = const Value.absent(),
+    Value<DateTime?> createdAt = const Value.absent(),
+    Value<DateTime?> updatedAt = const Value.absent(),
+    bool? isPendingDeletion,
+    bool? isDirty,
+  }) => TodoList(
+    localId: localId ?? this.localId,
+    id: id.present ? id.value : this.id,
+    title: title ?? this.title,
+    color: color.present ? color.value : this.color,
+    isDefault: isDefault ?? this.isDefault,
+    syncStatus: syncStatus ?? this.syncStatus,
+    taskCount: taskCount ?? this.taskCount,
+    lastSyncedAt: lastSyncedAt.present ? lastSyncedAt.value : this.lastSyncedAt,
+    createdAt: createdAt.present ? createdAt.value : this.createdAt,
+    updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
+    isPendingDeletion: isPendingDeletion ?? this.isPendingDeletion,
+    isDirty: isDirty ?? this.isDirty,
+  );
+  TodoList copyWithCompanion(TodoListsCompanion data) {
+    return TodoList(
+      localId: data.localId.present ? data.localId.value : this.localId,
+      id: data.id.present ? data.id.value : this.id,
+      title: data.title.present ? data.title.value : this.title,
+      color: data.color.present ? data.color.value : this.color,
+      isDefault: data.isDefault.present ? data.isDefault.value : this.isDefault,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+      taskCount: data.taskCount.present ? data.taskCount.value : this.taskCount,
+      lastSyncedAt: data.lastSyncedAt.present
+          ? data.lastSyncedAt.value
+          : this.lastSyncedAt,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      isPendingDeletion: data.isPendingDeletion.present
+          ? data.isPendingDeletion.value
+          : this.isPendingDeletion,
+      isDirty: data.isDirty.present ? data.isDirty.value : this.isDirty,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TodoList(')
+          ..write('localId: $localId, ')
+          ..write('id: $id, ')
+          ..write('title: $title, ')
+          ..write('color: $color, ')
+          ..write('isDefault: $isDefault, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('taskCount: $taskCount, ')
+          ..write('lastSyncedAt: $lastSyncedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('isPendingDeletion: $isPendingDeletion, ')
+          ..write('isDirty: $isDirty')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    localId,
+    id,
+    title,
+    color,
+    isDefault,
+    syncStatus,
+    taskCount,
+    lastSyncedAt,
+    createdAt,
+    updatedAt,
+    isPendingDeletion,
+    isDirty,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TodoList &&
+          other.localId == this.localId &&
+          other.id == this.id &&
+          other.title == this.title &&
+          other.color == this.color &&
+          other.isDefault == this.isDefault &&
+          other.syncStatus == this.syncStatus &&
+          other.taskCount == this.taskCount &&
+          other.lastSyncedAt == this.lastSyncedAt &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.isPendingDeletion == this.isPendingDeletion &&
+          other.isDirty == this.isDirty);
+}
+
+class TodoListsCompanion extends UpdateCompanion<TodoList> {
+  final Value<int> localId;
+  final Value<String?> id;
+  final Value<String> title;
+  final Value<int?> color;
+  final Value<bool> isDefault;
+  final Value<SyncStatus> syncStatus;
+  final Value<int> taskCount;
+  final Value<DateTime?> lastSyncedAt;
+  final Value<DateTime?> createdAt;
+  final Value<DateTime?> updatedAt;
+  final Value<bool> isPendingDeletion;
+  final Value<bool> isDirty;
+  const TodoListsCompanion({
+    this.localId = const Value.absent(),
+    this.id = const Value.absent(),
+    this.title = const Value.absent(),
+    this.color = const Value.absent(),
+    this.isDefault = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.taskCount = const Value.absent(),
+    this.lastSyncedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.isPendingDeletion = const Value.absent(),
+    this.isDirty = const Value.absent(),
+  });
+  TodoListsCompanion.insert({
+    this.localId = const Value.absent(),
+    this.id = const Value.absent(),
+    required String title,
+    this.color = const Value.absent(),
+    this.isDefault = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.taskCount = const Value.absent(),
+    this.lastSyncedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.isPendingDeletion = const Value.absent(),
+    this.isDirty = const Value.absent(),
+  }) : title = Value(title);
+  static Insertable<TodoList> custom({
+    Expression<int>? localId,
+    Expression<String>? id,
+    Expression<String>? title,
+    Expression<int>? color,
+    Expression<bool>? isDefault,
+    Expression<String>? syncStatus,
+    Expression<int>? taskCount,
+    Expression<DateTime>? lastSyncedAt,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<bool>? isPendingDeletion,
+    Expression<bool>? isDirty,
+  }) {
+    return RawValuesInsertable({
+      if (localId != null) 'local_id': localId,
+      if (id != null) 'id': id,
+      if (title != null) 'title': title,
+      if (color != null) 'color': color,
+      if (isDefault != null) 'is_default': isDefault,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (taskCount != null) 'task_count': taskCount,
+      if (lastSyncedAt != null) 'last_synced_at': lastSyncedAt,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (isPendingDeletion != null) 'is_pending_deletion': isPendingDeletion,
+      if (isDirty != null) 'is_dirty': isDirty,
+    });
+  }
+
+  TodoListsCompanion copyWith({
+    Value<int>? localId,
+    Value<String?>? id,
+    Value<String>? title,
+    Value<int?>? color,
+    Value<bool>? isDefault,
+    Value<SyncStatus>? syncStatus,
+    Value<int>? taskCount,
+    Value<DateTime?>? lastSyncedAt,
+    Value<DateTime?>? createdAt,
+    Value<DateTime?>? updatedAt,
+    Value<bool>? isPendingDeletion,
+    Value<bool>? isDirty,
+  }) {
+    return TodoListsCompanion(
+      localId: localId ?? this.localId,
+      id: id ?? this.id,
+      title: title ?? this.title,
+      color: color ?? this.color,
+      isDefault: isDefault ?? this.isDefault,
+      syncStatus: syncStatus ?? this.syncStatus,
+      taskCount: taskCount ?? this.taskCount,
+      lastSyncedAt: lastSyncedAt ?? this.lastSyncedAt,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      isPendingDeletion: isPendingDeletion ?? this.isPendingDeletion,
+      isDirty: isDirty ?? this.isDirty,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (localId.present) {
+      map['local_id'] = Variable<int>(localId.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (color.present) {
+      map['color'] = Variable<int>(color.value);
+    }
+    if (isDefault.present) {
+      map['is_default'] = Variable<bool>(isDefault.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(
+        $TodoListsTable.$convertersyncStatus.toSql(syncStatus.value),
+      );
+    }
+    if (taskCount.present) {
+      map['task_count'] = Variable<int>(taskCount.value);
+    }
+    if (lastSyncedAt.present) {
+      map['last_synced_at'] = Variable<DateTime>(lastSyncedAt.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (isPendingDeletion.present) {
+      map['is_pending_deletion'] = Variable<bool>(isPendingDeletion.value);
+    }
+    if (isDirty.present) {
+      map['is_dirty'] = Variable<bool>(isDirty.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TodoListsCompanion(')
+          ..write('localId: $localId, ')
+          ..write('id: $id, ')
+          ..write('title: $title, ')
+          ..write('color: $color, ')
+          ..write('isDefault: $isDefault, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('taskCount: $taskCount, ')
+          ..write('lastSyncedAt: $lastSyncedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('isPendingDeletion: $isPendingDeletion, ')
+          ..write('isDirty: $isDirty')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $TodoTagItemsTable extends TodoTagItems
+    with TableInfo<$TodoTagItemsTable, TodoTagItem> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TodoTagItemsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _localIdMeta = const VerificationMeta(
+    'localId',
+  );
+  @override
+  late final GeneratedColumn<int> localId = GeneratedColumn<int>(
+    'local_id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(
+      minTextLength: 1,
+      maxTextLength: 255,
+    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _colorMeta = const VerificationMeta('color');
+  @override
+  late final GeneratedColumn<String> color = GeneratedColumn<String>(
+    'color',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<SyncStatus, String> syncStatus =
+      GeneratedColumn<String>(
+        'sync_status',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+        defaultValue: Constant(SyncStatus.pending.name),
+      ).withConverter<SyncStatus>($TodoTagItemsTable.$convertersyncStatus);
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _isPendingDeletionMeta = const VerificationMeta(
+    'isPendingDeletion',
+  );
+  @override
+  late final GeneratedColumn<bool> isPendingDeletion = GeneratedColumn<bool>(
+    'is_pending_deletion',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_pending_deletion" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _isDirtyMeta = const VerificationMeta(
+    'isDirty',
+  );
+  @override
+  late final GeneratedColumn<bool> isDirty = GeneratedColumn<bool>(
+    'is_dirty',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_dirty" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    localId,
+    id,
+    name,
+    color,
+    syncStatus,
+    createdAt,
+    isPendingDeletion,
+    isDirty,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'todo_tag_items';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<TodoTagItem> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('local_id')) {
+      context.handle(
+        _localIdMeta,
+        localId.isAcceptableOrUnknown(data['local_id']!, _localIdMeta),
+      );
+    }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('color')) {
+      context.handle(
+        _colorMeta,
+        color.isAcceptableOrUnknown(data['color']!, _colorMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('is_pending_deletion')) {
+      context.handle(
+        _isPendingDeletionMeta,
+        isPendingDeletion.isAcceptableOrUnknown(
+          data['is_pending_deletion']!,
+          _isPendingDeletionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('is_dirty')) {
+      context.handle(
+        _isDirtyMeta,
+        isDirty.isAcceptableOrUnknown(data['is_dirty']!, _isDirtyMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {localId};
+  @override
+  TodoTagItem map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TodoTagItem(
+      localId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}local_id'],
+      )!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      ),
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      color: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}color'],
+      ),
+      syncStatus: $TodoTagItemsTable.$convertersyncStatus.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}sync_status'],
+        )!,
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      ),
+      isPendingDeletion: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_pending_deletion'],
+      )!,
+      isDirty: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_dirty'],
+      )!,
+    );
+  }
+
+  @override
+  $TodoTagItemsTable createAlias(String alias) {
+    return $TodoTagItemsTable(attachedDatabase, alias);
+  }
+
+  static JsonTypeConverter2<SyncStatus, String, String> $convertersyncStatus =
+      const EnumNameConverter<SyncStatus>(SyncStatus.values);
+}
+
+class TodoTagItem extends DataClass implements Insertable<TodoTagItem> {
+  final int localId;
+  final String? id;
+  final String name;
+  final String? color;
+  final SyncStatus syncStatus;
+  final DateTime? createdAt;
+  final bool isPendingDeletion;
+  final bool isDirty;
+  const TodoTagItem({
+    required this.localId,
+    this.id,
+    required this.name,
+    this.color,
+    required this.syncStatus,
+    this.createdAt,
+    required this.isPendingDeletion,
+    required this.isDirty,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['local_id'] = Variable<int>(localId);
+    if (!nullToAbsent || id != null) {
+      map['id'] = Variable<String>(id);
+    }
+    map['name'] = Variable<String>(name);
+    if (!nullToAbsent || color != null) {
+      map['color'] = Variable<String>(color);
+    }
+    {
+      map['sync_status'] = Variable<String>(
+        $TodoTagItemsTable.$convertersyncStatus.toSql(syncStatus),
+      );
+    }
+    if (!nullToAbsent || createdAt != null) {
+      map['created_at'] = Variable<DateTime>(createdAt);
+    }
+    map['is_pending_deletion'] = Variable<bool>(isPendingDeletion);
+    map['is_dirty'] = Variable<bool>(isDirty);
+    return map;
+  }
+
+  TodoTagItemsCompanion toCompanion(bool nullToAbsent) {
+    return TodoTagItemsCompanion(
+      localId: Value(localId),
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      name: Value(name),
+      color: color == null && nullToAbsent
+          ? const Value.absent()
+          : Value(color),
+      syncStatus: Value(syncStatus),
+      createdAt: createdAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(createdAt),
+      isPendingDeletion: Value(isPendingDeletion),
+      isDirty: Value(isDirty),
+    );
+  }
+
+  factory TodoTagItem.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TodoTagItem(
+      localId: serializer.fromJson<int>(json['localId']),
+      id: serializer.fromJson<String?>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      color: serializer.fromJson<String?>(json['color']),
+      syncStatus: $TodoTagItemsTable.$convertersyncStatus.fromJson(
+        serializer.fromJson<String>(json['syncStatus']),
+      ),
+      createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
+      isPendingDeletion: serializer.fromJson<bool>(json['isPendingDeletion']),
+      isDirty: serializer.fromJson<bool>(json['isDirty']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'localId': serializer.toJson<int>(localId),
+      'id': serializer.toJson<String?>(id),
+      'name': serializer.toJson<String>(name),
+      'color': serializer.toJson<String?>(color),
+      'syncStatus': serializer.toJson<String>(
+        $TodoTagItemsTable.$convertersyncStatus.toJson(syncStatus),
+      ),
+      'createdAt': serializer.toJson<DateTime?>(createdAt),
+      'isPendingDeletion': serializer.toJson<bool>(isPendingDeletion),
+      'isDirty': serializer.toJson<bool>(isDirty),
+    };
+  }
+
+  TodoTagItem copyWith({
+    int? localId,
+    Value<String?> id = const Value.absent(),
+    String? name,
+    Value<String?> color = const Value.absent(),
+    SyncStatus? syncStatus,
+    Value<DateTime?> createdAt = const Value.absent(),
+    bool? isPendingDeletion,
+    bool? isDirty,
+  }) => TodoTagItem(
+    localId: localId ?? this.localId,
+    id: id.present ? id.value : this.id,
+    name: name ?? this.name,
+    color: color.present ? color.value : this.color,
+    syncStatus: syncStatus ?? this.syncStatus,
+    createdAt: createdAt.present ? createdAt.value : this.createdAt,
+    isPendingDeletion: isPendingDeletion ?? this.isPendingDeletion,
+    isDirty: isDirty ?? this.isDirty,
+  );
+  TodoTagItem copyWithCompanion(TodoTagItemsCompanion data) {
+    return TodoTagItem(
+      localId: data.localId.present ? data.localId.value : this.localId,
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      color: data.color.present ? data.color.value : this.color,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      isPendingDeletion: data.isPendingDeletion.present
+          ? data.isPendingDeletion.value
+          : this.isPendingDeletion,
+      isDirty: data.isDirty.present ? data.isDirty.value : this.isDirty,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TodoTagItem(')
+          ..write('localId: $localId, ')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('color: $color, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('isPendingDeletion: $isPendingDeletion, ')
+          ..write('isDirty: $isDirty')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    localId,
+    id,
+    name,
+    color,
+    syncStatus,
+    createdAt,
+    isPendingDeletion,
+    isDirty,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TodoTagItem &&
+          other.localId == this.localId &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.color == this.color &&
+          other.syncStatus == this.syncStatus &&
+          other.createdAt == this.createdAt &&
+          other.isPendingDeletion == this.isPendingDeletion &&
+          other.isDirty == this.isDirty);
+}
+
+class TodoTagItemsCompanion extends UpdateCompanion<TodoTagItem> {
+  final Value<int> localId;
+  final Value<String?> id;
+  final Value<String> name;
+  final Value<String?> color;
+  final Value<SyncStatus> syncStatus;
+  final Value<DateTime?> createdAt;
+  final Value<bool> isPendingDeletion;
+  final Value<bool> isDirty;
+  const TodoTagItemsCompanion({
+    this.localId = const Value.absent(),
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.color = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.isPendingDeletion = const Value.absent(),
+    this.isDirty = const Value.absent(),
+  });
+  TodoTagItemsCompanion.insert({
+    this.localId = const Value.absent(),
+    this.id = const Value.absent(),
+    required String name,
+    this.color = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.isPendingDeletion = const Value.absent(),
+    this.isDirty = const Value.absent(),
+  }) : name = Value(name);
+  static Insertable<TodoTagItem> custom({
+    Expression<int>? localId,
+    Expression<String>? id,
+    Expression<String>? name,
+    Expression<String>? color,
+    Expression<String>? syncStatus,
+    Expression<DateTime>? createdAt,
+    Expression<bool>? isPendingDeletion,
+    Expression<bool>? isDirty,
+  }) {
+    return RawValuesInsertable({
+      if (localId != null) 'local_id': localId,
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (color != null) 'color': color,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (createdAt != null) 'created_at': createdAt,
+      if (isPendingDeletion != null) 'is_pending_deletion': isPendingDeletion,
+      if (isDirty != null) 'is_dirty': isDirty,
+    });
+  }
+
+  TodoTagItemsCompanion copyWith({
+    Value<int>? localId,
+    Value<String?>? id,
+    Value<String>? name,
+    Value<String?>? color,
+    Value<SyncStatus>? syncStatus,
+    Value<DateTime?>? createdAt,
+    Value<bool>? isPendingDeletion,
+    Value<bool>? isDirty,
+  }) {
+    return TodoTagItemsCompanion(
+      localId: localId ?? this.localId,
+      id: id ?? this.id,
+      name: name ?? this.name,
+      color: color ?? this.color,
+      syncStatus: syncStatus ?? this.syncStatus,
+      createdAt: createdAt ?? this.createdAt,
+      isPendingDeletion: isPendingDeletion ?? this.isPendingDeletion,
+      isDirty: isDirty ?? this.isDirty,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (localId.present) {
+      map['local_id'] = Variable<int>(localId.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (color.present) {
+      map['color'] = Variable<String>(color.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(
+        $TodoTagItemsTable.$convertersyncStatus.toSql(syncStatus.value),
+      );
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (isPendingDeletion.present) {
+      map['is_pending_deletion'] = Variable<bool>(isPendingDeletion.value);
+    }
+    if (isDirty.present) {
+      map['is_dirty'] = Variable<bool>(isDirty.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TodoTagItemsCompanion(')
+          ..write('localId: $localId, ')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('color: $color, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('isPendingDeletion: $isPendingDeletion, ')
+          ..write('isDirty: $isDirty')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $TodoItemsTable extends TodoItems
+    with TableInfo<$TodoItemsTable, TodoItem> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TodoItemsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _localIdMeta = const VerificationMeta(
+    'localId',
+  );
+  @override
+  late final GeneratedColumn<int> localId = GeneratedColumn<int>(
+    'local_id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
+  );
+  static const VerificationMeta _taskListLocalIdMeta = const VerificationMeta(
+    'taskListLocalId',
+  );
+  @override
+  late final GeneratedColumn<int> taskListLocalId = GeneratedColumn<int>(
+    'task_list_local_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES todo_lists (local_id)',
+    ),
+  );
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(
+      minTextLength: 1,
+      maxTextLength: 255,
+    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _notesMeta = const VerificationMeta('notes');
+  @override
+  late final GeneratedColumn<String> notes = GeneratedColumn<String>(
+    'notes',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<TodoStatus, String> status =
+      GeneratedColumn<String>(
+        'status',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+        defaultValue: Constant(TodoStatus.needsAction.name),
+      ).withConverter<TodoStatus>($TodoItemsTable.$converterstatus);
+  @override
+  late final GeneratedColumnWithTypeConverter<TodoPriority, String> priority =
+      GeneratedColumn<String>(
+        'priority',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+        defaultValue: Constant(TodoPriority.none.name),
+      ).withConverter<TodoPriority>($TodoItemsTable.$converterpriority);
+  static const VerificationMeta _dueMeta = const VerificationMeta('due');
+  @override
+  late final GeneratedColumn<DateTime> due = GeneratedColumn<DateTime>(
+    'due',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _completedMeta = const VerificationMeta(
+    'completed',
+  );
+  @override
+  late final GeneratedColumn<DateTime> completed = GeneratedColumn<DateTime>(
+    'completed',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _subtaskCountMeta = const VerificationMeta(
+    'subtaskCount',
+  );
+  @override
+  late final GeneratedColumn<int> subtaskCount = GeneratedColumn<int>(
+    'subtask_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _positionMeta = const VerificationMeta(
+    'position',
+  );
+  @override
+  late final GeneratedColumn<String> position = GeneratedColumn<String>(
+    'position',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _hiddenMeta = const VerificationMeta('hidden');
+  @override
+  late final GeneratedColumn<bool> hidden = GeneratedColumn<bool>(
+    'hidden',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("hidden" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<SyncStatus, String> syncStatus =
+      GeneratedColumn<String>(
+        'sync_status',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+        defaultValue: Constant(SyncStatus.pending.name),
+      ).withConverter<SyncStatus>($TodoItemsTable.$convertersyncStatus);
+  static const VerificationMeta _lastSyncedAtMeta = const VerificationMeta(
+    'lastSyncedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> lastSyncedAt = GeneratedColumn<DateTime>(
+    'last_synced_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _isPendingDeletionMeta = const VerificationMeta(
+    'isPendingDeletion',
+  );
+  @override
+  late final GeneratedColumn<bool> isPendingDeletion = GeneratedColumn<bool>(
+    'is_pending_deletion',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_pending_deletion" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _isDirtyMeta = const VerificationMeta(
+    'isDirty',
+  );
+  @override
+  late final GeneratedColumn<bool> isDirty = GeneratedColumn<bool>(
+    'is_dirty',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_dirty" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    localId,
+    id,
+    taskListLocalId,
+    title,
+    notes,
+    status,
+    priority,
+    due,
+    completed,
+    subtaskCount,
+    position,
+    hidden,
+    syncStatus,
+    lastSyncedAt,
+    createdAt,
+    updatedAt,
+    isPendingDeletion,
+    isDirty,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'todo_items';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<TodoItem> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('local_id')) {
+      context.handle(
+        _localIdMeta,
+        localId.isAcceptableOrUnknown(data['local_id']!, _localIdMeta),
+      );
+    }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('task_list_local_id')) {
+      context.handle(
+        _taskListLocalIdMeta,
+        taskListLocalId.isAcceptableOrUnknown(
+          data['task_list_local_id']!,
+          _taskListLocalIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_taskListLocalIdMeta);
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('notes')) {
+      context.handle(
+        _notesMeta,
+        notes.isAcceptableOrUnknown(data['notes']!, _notesMeta),
+      );
+    }
+    if (data.containsKey('due')) {
+      context.handle(
+        _dueMeta,
+        due.isAcceptableOrUnknown(data['due']!, _dueMeta),
+      );
+    }
+    if (data.containsKey('completed')) {
+      context.handle(
+        _completedMeta,
+        completed.isAcceptableOrUnknown(data['completed']!, _completedMeta),
+      );
+    }
+    if (data.containsKey('subtask_count')) {
+      context.handle(
+        _subtaskCountMeta,
+        subtaskCount.isAcceptableOrUnknown(
+          data['subtask_count']!,
+          _subtaskCountMeta,
+        ),
+      );
+    }
+    if (data.containsKey('position')) {
+      context.handle(
+        _positionMeta,
+        position.isAcceptableOrUnknown(data['position']!, _positionMeta),
+      );
+    }
+    if (data.containsKey('hidden')) {
+      context.handle(
+        _hiddenMeta,
+        hidden.isAcceptableOrUnknown(data['hidden']!, _hiddenMeta),
+      );
+    }
+    if (data.containsKey('last_synced_at')) {
+      context.handle(
+        _lastSyncedAtMeta,
+        lastSyncedAt.isAcceptableOrUnknown(
+          data['last_synced_at']!,
+          _lastSyncedAtMeta,
+        ),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('is_pending_deletion')) {
+      context.handle(
+        _isPendingDeletionMeta,
+        isPendingDeletion.isAcceptableOrUnknown(
+          data['is_pending_deletion']!,
+          _isPendingDeletionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('is_dirty')) {
+      context.handle(
+        _isDirtyMeta,
+        isDirty.isAcceptableOrUnknown(data['is_dirty']!, _isDirtyMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {localId};
+  @override
+  TodoItem map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TodoItem(
+      localId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}local_id'],
+      )!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      ),
+      taskListLocalId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}task_list_local_id'],
+      )!,
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      )!,
+      notes: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}notes'],
+      ),
+      status: $TodoItemsTable.$converterstatus.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}status'],
+        )!,
+      ),
+      priority: $TodoItemsTable.$converterpriority.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}priority'],
+        )!,
+      ),
+      due: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}due'],
+      ),
+      completed: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}completed'],
+      ),
+      subtaskCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}subtask_count'],
+      )!,
+      position: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}position'],
+      ),
+      hidden: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}hidden'],
+      )!,
+      syncStatus: $TodoItemsTable.$convertersyncStatus.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}sync_status'],
+        )!,
+      ),
+      lastSyncedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_synced_at'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      ),
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      ),
+      isPendingDeletion: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_pending_deletion'],
+      )!,
+      isDirty: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_dirty'],
+      )!,
+    );
+  }
+
+  @override
+  $TodoItemsTable createAlias(String alias) {
+    return $TodoItemsTable(attachedDatabase, alias);
+  }
+
+  static JsonTypeConverter2<TodoStatus, String, String> $converterstatus =
+      const EnumNameConverter<TodoStatus>(TodoStatus.values);
+  static JsonTypeConverter2<TodoPriority, String, String> $converterpriority =
+      const EnumNameConverter<TodoPriority>(TodoPriority.values);
+  static JsonTypeConverter2<SyncStatus, String, String> $convertersyncStatus =
+      const EnumNameConverter<SyncStatus>(SyncStatus.values);
+}
+
+class TodoItem extends DataClass implements Insertable<TodoItem> {
+  final int localId;
+  final String? id;
+  final int taskListLocalId;
+  final String title;
+  final String? notes;
+  final TodoStatus status;
+  final TodoPriority priority;
+  final DateTime? due;
+  final DateTime? completed;
+  final int subtaskCount;
+  final String? position;
+  final bool hidden;
+  final SyncStatus syncStatus;
+  final DateTime? lastSyncedAt;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  final bool isPendingDeletion;
+  final bool isDirty;
+  const TodoItem({
+    required this.localId,
+    this.id,
+    required this.taskListLocalId,
+    required this.title,
+    this.notes,
+    required this.status,
+    required this.priority,
+    this.due,
+    this.completed,
+    required this.subtaskCount,
+    this.position,
+    required this.hidden,
+    required this.syncStatus,
+    this.lastSyncedAt,
+    this.createdAt,
+    this.updatedAt,
+    required this.isPendingDeletion,
+    required this.isDirty,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['local_id'] = Variable<int>(localId);
+    if (!nullToAbsent || id != null) {
+      map['id'] = Variable<String>(id);
+    }
+    map['task_list_local_id'] = Variable<int>(taskListLocalId);
+    map['title'] = Variable<String>(title);
+    if (!nullToAbsent || notes != null) {
+      map['notes'] = Variable<String>(notes);
+    }
+    {
+      map['status'] = Variable<String>(
+        $TodoItemsTable.$converterstatus.toSql(status),
+      );
+    }
+    {
+      map['priority'] = Variable<String>(
+        $TodoItemsTable.$converterpriority.toSql(priority),
+      );
+    }
+    if (!nullToAbsent || due != null) {
+      map['due'] = Variable<DateTime>(due);
+    }
+    if (!nullToAbsent || completed != null) {
+      map['completed'] = Variable<DateTime>(completed);
+    }
+    map['subtask_count'] = Variable<int>(subtaskCount);
+    if (!nullToAbsent || position != null) {
+      map['position'] = Variable<String>(position);
+    }
+    map['hidden'] = Variable<bool>(hidden);
+    {
+      map['sync_status'] = Variable<String>(
+        $TodoItemsTable.$convertersyncStatus.toSql(syncStatus),
+      );
+    }
+    if (!nullToAbsent || lastSyncedAt != null) {
+      map['last_synced_at'] = Variable<DateTime>(lastSyncedAt);
+    }
+    if (!nullToAbsent || createdAt != null) {
+      map['created_at'] = Variable<DateTime>(createdAt);
+    }
+    if (!nullToAbsent || updatedAt != null) {
+      map['updated_at'] = Variable<DateTime>(updatedAt);
+    }
+    map['is_pending_deletion'] = Variable<bool>(isPendingDeletion);
+    map['is_dirty'] = Variable<bool>(isDirty);
+    return map;
+  }
+
+  TodoItemsCompanion toCompanion(bool nullToAbsent) {
+    return TodoItemsCompanion(
+      localId: Value(localId),
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      taskListLocalId: Value(taskListLocalId),
+      title: Value(title),
+      notes: notes == null && nullToAbsent
+          ? const Value.absent()
+          : Value(notes),
+      status: Value(status),
+      priority: Value(priority),
+      due: due == null && nullToAbsent ? const Value.absent() : Value(due),
+      completed: completed == null && nullToAbsent
+          ? const Value.absent()
+          : Value(completed),
+      subtaskCount: Value(subtaskCount),
+      position: position == null && nullToAbsent
+          ? const Value.absent()
+          : Value(position),
+      hidden: Value(hidden),
+      syncStatus: Value(syncStatus),
+      lastSyncedAt: lastSyncedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastSyncedAt),
+      createdAt: createdAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(createdAt),
+      updatedAt: updatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(updatedAt),
+      isPendingDeletion: Value(isPendingDeletion),
+      isDirty: Value(isDirty),
+    );
+  }
+
+  factory TodoItem.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TodoItem(
+      localId: serializer.fromJson<int>(json['localId']),
+      id: serializer.fromJson<String?>(json['id']),
+      taskListLocalId: serializer.fromJson<int>(json['taskListLocalId']),
+      title: serializer.fromJson<String>(json['title']),
+      notes: serializer.fromJson<String?>(json['notes']),
+      status: $TodoItemsTable.$converterstatus.fromJson(
+        serializer.fromJson<String>(json['status']),
+      ),
+      priority: $TodoItemsTable.$converterpriority.fromJson(
+        serializer.fromJson<String>(json['priority']),
+      ),
+      due: serializer.fromJson<DateTime?>(json['due']),
+      completed: serializer.fromJson<DateTime?>(json['completed']),
+      subtaskCount: serializer.fromJson<int>(json['subtaskCount']),
+      position: serializer.fromJson<String?>(json['position']),
+      hidden: serializer.fromJson<bool>(json['hidden']),
+      syncStatus: $TodoItemsTable.$convertersyncStatus.fromJson(
+        serializer.fromJson<String>(json['syncStatus']),
+      ),
+      lastSyncedAt: serializer.fromJson<DateTime?>(json['lastSyncedAt']),
+      createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
+      isPendingDeletion: serializer.fromJson<bool>(json['isPendingDeletion']),
+      isDirty: serializer.fromJson<bool>(json['isDirty']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'localId': serializer.toJson<int>(localId),
+      'id': serializer.toJson<String?>(id),
+      'taskListLocalId': serializer.toJson<int>(taskListLocalId),
+      'title': serializer.toJson<String>(title),
+      'notes': serializer.toJson<String?>(notes),
+      'status': serializer.toJson<String>(
+        $TodoItemsTable.$converterstatus.toJson(status),
+      ),
+      'priority': serializer.toJson<String>(
+        $TodoItemsTable.$converterpriority.toJson(priority),
+      ),
+      'due': serializer.toJson<DateTime?>(due),
+      'completed': serializer.toJson<DateTime?>(completed),
+      'subtaskCount': serializer.toJson<int>(subtaskCount),
+      'position': serializer.toJson<String?>(position),
+      'hidden': serializer.toJson<bool>(hidden),
+      'syncStatus': serializer.toJson<String>(
+        $TodoItemsTable.$convertersyncStatus.toJson(syncStatus),
+      ),
+      'lastSyncedAt': serializer.toJson<DateTime?>(lastSyncedAt),
+      'createdAt': serializer.toJson<DateTime?>(createdAt),
+      'updatedAt': serializer.toJson<DateTime?>(updatedAt),
+      'isPendingDeletion': serializer.toJson<bool>(isPendingDeletion),
+      'isDirty': serializer.toJson<bool>(isDirty),
+    };
+  }
+
+  TodoItem copyWith({
+    int? localId,
+    Value<String?> id = const Value.absent(),
+    int? taskListLocalId,
+    String? title,
+    Value<String?> notes = const Value.absent(),
+    TodoStatus? status,
+    TodoPriority? priority,
+    Value<DateTime?> due = const Value.absent(),
+    Value<DateTime?> completed = const Value.absent(),
+    int? subtaskCount,
+    Value<String?> position = const Value.absent(),
+    bool? hidden,
+    SyncStatus? syncStatus,
+    Value<DateTime?> lastSyncedAt = const Value.absent(),
+    Value<DateTime?> createdAt = const Value.absent(),
+    Value<DateTime?> updatedAt = const Value.absent(),
+    bool? isPendingDeletion,
+    bool? isDirty,
+  }) => TodoItem(
+    localId: localId ?? this.localId,
+    id: id.present ? id.value : this.id,
+    taskListLocalId: taskListLocalId ?? this.taskListLocalId,
+    title: title ?? this.title,
+    notes: notes.present ? notes.value : this.notes,
+    status: status ?? this.status,
+    priority: priority ?? this.priority,
+    due: due.present ? due.value : this.due,
+    completed: completed.present ? completed.value : this.completed,
+    subtaskCount: subtaskCount ?? this.subtaskCount,
+    position: position.present ? position.value : this.position,
+    hidden: hidden ?? this.hidden,
+    syncStatus: syncStatus ?? this.syncStatus,
+    lastSyncedAt: lastSyncedAt.present ? lastSyncedAt.value : this.lastSyncedAt,
+    createdAt: createdAt.present ? createdAt.value : this.createdAt,
+    updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
+    isPendingDeletion: isPendingDeletion ?? this.isPendingDeletion,
+    isDirty: isDirty ?? this.isDirty,
+  );
+  TodoItem copyWithCompanion(TodoItemsCompanion data) {
+    return TodoItem(
+      localId: data.localId.present ? data.localId.value : this.localId,
+      id: data.id.present ? data.id.value : this.id,
+      taskListLocalId: data.taskListLocalId.present
+          ? data.taskListLocalId.value
+          : this.taskListLocalId,
+      title: data.title.present ? data.title.value : this.title,
+      notes: data.notes.present ? data.notes.value : this.notes,
+      status: data.status.present ? data.status.value : this.status,
+      priority: data.priority.present ? data.priority.value : this.priority,
+      due: data.due.present ? data.due.value : this.due,
+      completed: data.completed.present ? data.completed.value : this.completed,
+      subtaskCount: data.subtaskCount.present
+          ? data.subtaskCount.value
+          : this.subtaskCount,
+      position: data.position.present ? data.position.value : this.position,
+      hidden: data.hidden.present ? data.hidden.value : this.hidden,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+      lastSyncedAt: data.lastSyncedAt.present
+          ? data.lastSyncedAt.value
+          : this.lastSyncedAt,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      isPendingDeletion: data.isPendingDeletion.present
+          ? data.isPendingDeletion.value
+          : this.isPendingDeletion,
+      isDirty: data.isDirty.present ? data.isDirty.value : this.isDirty,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TodoItem(')
+          ..write('localId: $localId, ')
+          ..write('id: $id, ')
+          ..write('taskListLocalId: $taskListLocalId, ')
+          ..write('title: $title, ')
+          ..write('notes: $notes, ')
+          ..write('status: $status, ')
+          ..write('priority: $priority, ')
+          ..write('due: $due, ')
+          ..write('completed: $completed, ')
+          ..write('subtaskCount: $subtaskCount, ')
+          ..write('position: $position, ')
+          ..write('hidden: $hidden, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('lastSyncedAt: $lastSyncedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('isPendingDeletion: $isPendingDeletion, ')
+          ..write('isDirty: $isDirty')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    localId,
+    id,
+    taskListLocalId,
+    title,
+    notes,
+    status,
+    priority,
+    due,
+    completed,
+    subtaskCount,
+    position,
+    hidden,
+    syncStatus,
+    lastSyncedAt,
+    createdAt,
+    updatedAt,
+    isPendingDeletion,
+    isDirty,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TodoItem &&
+          other.localId == this.localId &&
+          other.id == this.id &&
+          other.taskListLocalId == this.taskListLocalId &&
+          other.title == this.title &&
+          other.notes == this.notes &&
+          other.status == this.status &&
+          other.priority == this.priority &&
+          other.due == this.due &&
+          other.completed == this.completed &&
+          other.subtaskCount == this.subtaskCount &&
+          other.position == this.position &&
+          other.hidden == this.hidden &&
+          other.syncStatus == this.syncStatus &&
+          other.lastSyncedAt == this.lastSyncedAt &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.isPendingDeletion == this.isPendingDeletion &&
+          other.isDirty == this.isDirty);
+}
+
+class TodoItemsCompanion extends UpdateCompanion<TodoItem> {
+  final Value<int> localId;
+  final Value<String?> id;
+  final Value<int> taskListLocalId;
+  final Value<String> title;
+  final Value<String?> notes;
+  final Value<TodoStatus> status;
+  final Value<TodoPriority> priority;
+  final Value<DateTime?> due;
+  final Value<DateTime?> completed;
+  final Value<int> subtaskCount;
+  final Value<String?> position;
+  final Value<bool> hidden;
+  final Value<SyncStatus> syncStatus;
+  final Value<DateTime?> lastSyncedAt;
+  final Value<DateTime?> createdAt;
+  final Value<DateTime?> updatedAt;
+  final Value<bool> isPendingDeletion;
+  final Value<bool> isDirty;
+  const TodoItemsCompanion({
+    this.localId = const Value.absent(),
+    this.id = const Value.absent(),
+    this.taskListLocalId = const Value.absent(),
+    this.title = const Value.absent(),
+    this.notes = const Value.absent(),
+    this.status = const Value.absent(),
+    this.priority = const Value.absent(),
+    this.due = const Value.absent(),
+    this.completed = const Value.absent(),
+    this.subtaskCount = const Value.absent(),
+    this.position = const Value.absent(),
+    this.hidden = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.lastSyncedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.isPendingDeletion = const Value.absent(),
+    this.isDirty = const Value.absent(),
+  });
+  TodoItemsCompanion.insert({
+    this.localId = const Value.absent(),
+    this.id = const Value.absent(),
+    required int taskListLocalId,
+    required String title,
+    this.notes = const Value.absent(),
+    this.status = const Value.absent(),
+    this.priority = const Value.absent(),
+    this.due = const Value.absent(),
+    this.completed = const Value.absent(),
+    this.subtaskCount = const Value.absent(),
+    this.position = const Value.absent(),
+    this.hidden = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.lastSyncedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.isPendingDeletion = const Value.absent(),
+    this.isDirty = const Value.absent(),
+  }) : taskListLocalId = Value(taskListLocalId),
+       title = Value(title);
+  static Insertable<TodoItem> custom({
+    Expression<int>? localId,
+    Expression<String>? id,
+    Expression<int>? taskListLocalId,
+    Expression<String>? title,
+    Expression<String>? notes,
+    Expression<String>? status,
+    Expression<String>? priority,
+    Expression<DateTime>? due,
+    Expression<DateTime>? completed,
+    Expression<int>? subtaskCount,
+    Expression<String>? position,
+    Expression<bool>? hidden,
+    Expression<String>? syncStatus,
+    Expression<DateTime>? lastSyncedAt,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<bool>? isPendingDeletion,
+    Expression<bool>? isDirty,
+  }) {
+    return RawValuesInsertable({
+      if (localId != null) 'local_id': localId,
+      if (id != null) 'id': id,
+      if (taskListLocalId != null) 'task_list_local_id': taskListLocalId,
+      if (title != null) 'title': title,
+      if (notes != null) 'notes': notes,
+      if (status != null) 'status': status,
+      if (priority != null) 'priority': priority,
+      if (due != null) 'due': due,
+      if (completed != null) 'completed': completed,
+      if (subtaskCount != null) 'subtask_count': subtaskCount,
+      if (position != null) 'position': position,
+      if (hidden != null) 'hidden': hidden,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (lastSyncedAt != null) 'last_synced_at': lastSyncedAt,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (isPendingDeletion != null) 'is_pending_deletion': isPendingDeletion,
+      if (isDirty != null) 'is_dirty': isDirty,
+    });
+  }
+
+  TodoItemsCompanion copyWith({
+    Value<int>? localId,
+    Value<String?>? id,
+    Value<int>? taskListLocalId,
+    Value<String>? title,
+    Value<String?>? notes,
+    Value<TodoStatus>? status,
+    Value<TodoPriority>? priority,
+    Value<DateTime?>? due,
+    Value<DateTime?>? completed,
+    Value<int>? subtaskCount,
+    Value<String?>? position,
+    Value<bool>? hidden,
+    Value<SyncStatus>? syncStatus,
+    Value<DateTime?>? lastSyncedAt,
+    Value<DateTime?>? createdAt,
+    Value<DateTime?>? updatedAt,
+    Value<bool>? isPendingDeletion,
+    Value<bool>? isDirty,
+  }) {
+    return TodoItemsCompanion(
+      localId: localId ?? this.localId,
+      id: id ?? this.id,
+      taskListLocalId: taskListLocalId ?? this.taskListLocalId,
+      title: title ?? this.title,
+      notes: notes ?? this.notes,
+      status: status ?? this.status,
+      priority: priority ?? this.priority,
+      due: due ?? this.due,
+      completed: completed ?? this.completed,
+      subtaskCount: subtaskCount ?? this.subtaskCount,
+      position: position ?? this.position,
+      hidden: hidden ?? this.hidden,
+      syncStatus: syncStatus ?? this.syncStatus,
+      lastSyncedAt: lastSyncedAt ?? this.lastSyncedAt,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      isPendingDeletion: isPendingDeletion ?? this.isPendingDeletion,
+      isDirty: isDirty ?? this.isDirty,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (localId.present) {
+      map['local_id'] = Variable<int>(localId.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (taskListLocalId.present) {
+      map['task_list_local_id'] = Variable<int>(taskListLocalId.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (notes.present) {
+      map['notes'] = Variable<String>(notes.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(
+        $TodoItemsTable.$converterstatus.toSql(status.value),
+      );
+    }
+    if (priority.present) {
+      map['priority'] = Variable<String>(
+        $TodoItemsTable.$converterpriority.toSql(priority.value),
+      );
+    }
+    if (due.present) {
+      map['due'] = Variable<DateTime>(due.value);
+    }
+    if (completed.present) {
+      map['completed'] = Variable<DateTime>(completed.value);
+    }
+    if (subtaskCount.present) {
+      map['subtask_count'] = Variable<int>(subtaskCount.value);
+    }
+    if (position.present) {
+      map['position'] = Variable<String>(position.value);
+    }
+    if (hidden.present) {
+      map['hidden'] = Variable<bool>(hidden.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(
+        $TodoItemsTable.$convertersyncStatus.toSql(syncStatus.value),
+      );
+    }
+    if (lastSyncedAt.present) {
+      map['last_synced_at'] = Variable<DateTime>(lastSyncedAt.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (isPendingDeletion.present) {
+      map['is_pending_deletion'] = Variable<bool>(isPendingDeletion.value);
+    }
+    if (isDirty.present) {
+      map['is_dirty'] = Variable<bool>(isDirty.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TodoItemsCompanion(')
+          ..write('localId: $localId, ')
+          ..write('id: $id, ')
+          ..write('taskListLocalId: $taskListLocalId, ')
+          ..write('title: $title, ')
+          ..write('notes: $notes, ')
+          ..write('status: $status, ')
+          ..write('priority: $priority, ')
+          ..write('due: $due, ')
+          ..write('completed: $completed, ')
+          ..write('subtaskCount: $subtaskCount, ')
+          ..write('position: $position, ')
+          ..write('hidden: $hidden, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('lastSyncedAt: $lastSyncedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('isPendingDeletion: $isPendingDeletion, ')
+          ..write('isDirty: $isDirty')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $TodoItemTagsTable extends TodoItemTags
+    with TableInfo<$TodoItemTagsTable, TodoItemTag> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TodoItemTagsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _todoLocalIdMeta = const VerificationMeta(
+    'todoLocalId',
+  );
+  @override
+  late final GeneratedColumn<int> todoLocalId = GeneratedColumn<int>(
+    'todo_local_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES todo_items (local_id)',
+    ),
+  );
+  static const VerificationMeta _tagLocalIdMeta = const VerificationMeta(
+    'tagLocalId',
+  );
+  @override
+  late final GeneratedColumn<int> tagLocalId = GeneratedColumn<int>(
+    'tag_local_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES todo_tag_items (local_id)',
+    ),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [todoLocalId, tagLocalId];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'todo_item_tags';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<TodoItemTag> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('todo_local_id')) {
+      context.handle(
+        _todoLocalIdMeta,
+        todoLocalId.isAcceptableOrUnknown(
+          data['todo_local_id']!,
+          _todoLocalIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_todoLocalIdMeta);
+    }
+    if (data.containsKey('tag_local_id')) {
+      context.handle(
+        _tagLocalIdMeta,
+        tagLocalId.isAcceptableOrUnknown(
+          data['tag_local_id']!,
+          _tagLocalIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_tagLocalIdMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {todoLocalId, tagLocalId};
+  @override
+  TodoItemTag map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TodoItemTag(
+      todoLocalId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}todo_local_id'],
+      )!,
+      tagLocalId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}tag_local_id'],
+      )!,
+    );
+  }
+
+  @override
+  $TodoItemTagsTable createAlias(String alias) {
+    return $TodoItemTagsTable(attachedDatabase, alias);
+  }
+}
+
+class TodoItemTag extends DataClass implements Insertable<TodoItemTag> {
+  final int todoLocalId;
+  final int tagLocalId;
+  const TodoItemTag({required this.todoLocalId, required this.tagLocalId});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['todo_local_id'] = Variable<int>(todoLocalId);
+    map['tag_local_id'] = Variable<int>(tagLocalId);
+    return map;
+  }
+
+  TodoItemTagsCompanion toCompanion(bool nullToAbsent) {
+    return TodoItemTagsCompanion(
+      todoLocalId: Value(todoLocalId),
+      tagLocalId: Value(tagLocalId),
+    );
+  }
+
+  factory TodoItemTag.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TodoItemTag(
+      todoLocalId: serializer.fromJson<int>(json['todoLocalId']),
+      tagLocalId: serializer.fromJson<int>(json['tagLocalId']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'todoLocalId': serializer.toJson<int>(todoLocalId),
+      'tagLocalId': serializer.toJson<int>(tagLocalId),
+    };
+  }
+
+  TodoItemTag copyWith({int? todoLocalId, int? tagLocalId}) => TodoItemTag(
+    todoLocalId: todoLocalId ?? this.todoLocalId,
+    tagLocalId: tagLocalId ?? this.tagLocalId,
+  );
+  TodoItemTag copyWithCompanion(TodoItemTagsCompanion data) {
+    return TodoItemTag(
+      todoLocalId: data.todoLocalId.present
+          ? data.todoLocalId.value
+          : this.todoLocalId,
+      tagLocalId: data.tagLocalId.present
+          ? data.tagLocalId.value
+          : this.tagLocalId,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TodoItemTag(')
+          ..write('todoLocalId: $todoLocalId, ')
+          ..write('tagLocalId: $tagLocalId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(todoLocalId, tagLocalId);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TodoItemTag &&
+          other.todoLocalId == this.todoLocalId &&
+          other.tagLocalId == this.tagLocalId);
+}
+
+class TodoItemTagsCompanion extends UpdateCompanion<TodoItemTag> {
+  final Value<int> todoLocalId;
+  final Value<int> tagLocalId;
+  final Value<int> rowid;
+  const TodoItemTagsCompanion({
+    this.todoLocalId = const Value.absent(),
+    this.tagLocalId = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  TodoItemTagsCompanion.insert({
+    required int todoLocalId,
+    required int tagLocalId,
+    this.rowid = const Value.absent(),
+  }) : todoLocalId = Value(todoLocalId),
+       tagLocalId = Value(tagLocalId);
+  static Insertable<TodoItemTag> custom({
+    Expression<int>? todoLocalId,
+    Expression<int>? tagLocalId,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (todoLocalId != null) 'todo_local_id': todoLocalId,
+      if (tagLocalId != null) 'tag_local_id': tagLocalId,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  TodoItemTagsCompanion copyWith({
+    Value<int>? todoLocalId,
+    Value<int>? tagLocalId,
+    Value<int>? rowid,
+  }) {
+    return TodoItemTagsCompanion(
+      todoLocalId: todoLocalId ?? this.todoLocalId,
+      tagLocalId: tagLocalId ?? this.tagLocalId,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (todoLocalId.present) {
+      map['todo_local_id'] = Variable<int>(todoLocalId.value);
+    }
+    if (tagLocalId.present) {
+      map['tag_local_id'] = Variable<int>(tagLocalId.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TodoItemTagsCompanion(')
+          ..write('todoLocalId: $todoLocalId, ')
+          ..write('tagLocalId: $tagLocalId, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDataBase extends GeneratedDatabase {
   _$AppDataBase(QueryExecutor e) : super(e);
   $AppDataBaseManager get managers => $AppDataBaseManager(this);
   late final $UserProfileTable userProfile = $UserProfileTable(this);
-  late final $AttachmentTableTable attachmentTable = $AttachmentTableTable(
-    this,
-  );
-  late final $PostTableTable postTable = $PostTableTable(this);
-  late final $CommentTableTable commentTable = $CommentTableTable(this);
-  late final $TodoTable todo = $TodoTable(this);
+  late final $AttachmentsTable attachments = $AttachmentsTable(this);
+  late final $PostsTable posts = $PostsTable(this);
+  late final $CommentsTable comments = $CommentsTable(this);
   late final $EventTableTable eventTable = $EventTableTable(this);
   late final $AttendeeTableTable attendeeTable = $AttendeeTableTable(this);
   late final $TicketTableTable ticketTable = $TicketTableTable(this);
@@ -23061,29 +23325,29 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     this,
   );
   late final $ScannerTableTable scannerTable = $ScannerTableTable(this);
-  late final $GroupTableTable groupTable = $GroupTableTable(this);
-  late final $BlockTableTable blockTable = $BlockTableTable(this);
-  late final $ReportTableTable reportTable = $ReportTableTable(this);
+  late final $InviteTableTable inviteTable = $InviteTableTable(this);
+  late final $BlocksTable blocks = $BlocksTable(this);
+  late final $ReportsTable reports = $ReportsTable(this);
   late final $AgendaEventTable agendaEvent = $AgendaEventTable(this);
-  late final $NotificationTableTable notificationTable =
-      $NotificationTableTable(this);
-  late final $InstitutionTable institution = $InstitutionTable(this);
-  late final $InstitutionScrappingCommandTable institutionScrappingCommand =
-      $InstitutionScrappingCommandTable(this);
-  late final $InstitutionKeyTable institutionKey = $InstitutionKeyTable(this);
-  late final $InstitutionProfileTable institutionProfile =
-      $InstitutionProfileTable(this);
-  late final $InstitutionFeeTransactionTable institutionFeeTransaction =
-      $InstitutionFeeTransactionTable(this);
+  late final $InstitutionsTable institutions = $InstitutionsTable(this);
+  late final $InstitutionScrappingCommandsTable institutionScrappingCommands =
+      $InstitutionScrappingCommandsTable(this);
+  late final $InstitutionKeysTable institutionKeys = $InstitutionKeysTable(
+    this,
+  );
+  late final $InstitutionProfilesTable institutionProfiles =
+      $InstitutionProfilesTable(this);
+  late final $InstitutionFeeTransactionsTable institutionFeeTransactions =
+      $InstitutionFeeTransactionsTable(this);
   late final $SemesterTable semester = $SemesterTable(this);
   late final $CourseTable course = $CourseTable(this);
   late final $TimetableTable timetable = $TimetableTable(this);
   late final $TimetableEntryTable timetableEntry = $TimetableEntryTable(this);
-  late final $ExamTimetableTable examTimetable = $ExamTimetableTable(this);
-  late final $ChirpUserTable chirpUser = $ChirpUserTable(this);
-  late final $CommunityTable community = $CommunityTable(this);
-  late final $ChirpCommunityMembershipTable chirpCommunityMembership =
-      $ChirpCommunityMembershipTable(this);
+  late final $ExamTimetablesTable examTimetables = $ExamTimetablesTable(this);
+  late final $ChirpUsersTable chirpUsers = $ChirpUsersTable(this);
+  late final $CommunitiesTable communities = $CommunitiesTable(this);
+  late final $ChirpCommunityMembershipsTable chirpCommunityMemberships =
+      $ChirpCommunityMembershipsTable(this);
   late final $LeaderboardRankTable leaderboardRank = $LeaderboardRankTable(
     this,
   );
@@ -23091,16 +23355,19 @@ abstract class _$AppDataBase extends GeneratedDatabase {
   late final $StreakMilestoneTable streakMilestone = $StreakMilestoneTable(
     this,
   );
+  late final $TodoListsTable todoLists = $TodoListsTable(this);
+  late final $TodoTagItemsTable todoTagItems = $TodoTagItemsTable(this);
+  late final $TodoItemsTable todoItems = $TodoItemsTable(this);
+  late final $TodoItemTagsTable todoItemTags = $TodoItemTagsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
     userProfile,
-    attachmentTable,
-    postTable,
-    commentTable,
-    todo,
+    attachments,
+    posts,
+    comments,
     eventTable,
     attendeeTable,
     ticketTable,
@@ -23109,27 +23376,30 @@ abstract class _$AppDataBase extends GeneratedDatabase {
     dashboardStatsTable,
     ticketStatsTable,
     scannerTable,
-    groupTable,
-    blockTable,
-    reportTable,
+    inviteTable,
+    blocks,
+    reports,
     agendaEvent,
-    notificationTable,
-    institution,
-    institutionScrappingCommand,
-    institutionKey,
-    institutionProfile,
-    institutionFeeTransaction,
+    institutions,
+    institutionScrappingCommands,
+    institutionKeys,
+    institutionProfiles,
+    institutionFeeTransactions,
     semester,
     course,
     timetable,
     timetableEntry,
-    examTimetable,
-    chirpUser,
-    community,
-    chirpCommunityMembership,
+    examTimetables,
+    chirpUsers,
+    communities,
+    chirpCommunityMemberships,
     leaderboardRank,
     streakActivity,
     streakMilestone,
+    todoLists,
+    todoTagItems,
+    todoItems,
+    todoItemTags,
   ];
 }
 
@@ -23510,8 +23780,8 @@ typedef $$UserProfileTableProcessedTableManager =
       UserProfileData,
       PrefetchHooks Function()
     >;
-typedef $$AttachmentTableTableCreateCompanionBuilder =
-    AttachmentTableCompanion Function({
+typedef $$AttachmentsTableCreateCompanionBuilder =
+    AttachmentsCompanion Function({
       Value<int> id,
       required String attachmentType,
       required String file,
@@ -23520,8 +23790,8 @@ typedef $$AttachmentTableTableCreateCompanionBuilder =
       required DateTime createdAt,
       required int postId,
     });
-typedef $$AttachmentTableTableUpdateCompanionBuilder =
-    AttachmentTableCompanion Function({
+typedef $$AttachmentsTableUpdateCompanionBuilder =
+    AttachmentsCompanion Function({
       Value<int> id,
       Value<String> attachmentType,
       Value<String> file,
@@ -23531,9 +23801,9 @@ typedef $$AttachmentTableTableUpdateCompanionBuilder =
       Value<int> postId,
     });
 
-class $$AttachmentTableTableFilterComposer
-    extends Composer<_$AppDataBase, $AttachmentTableTable> {
-  $$AttachmentTableTableFilterComposer({
+class $$AttachmentsTableFilterComposer
+    extends Composer<_$AppDataBase, $AttachmentsTable> {
+  $$AttachmentsTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -23576,9 +23846,9 @@ class $$AttachmentTableTableFilterComposer
   );
 }
 
-class $$AttachmentTableTableOrderingComposer
-    extends Composer<_$AppDataBase, $AttachmentTableTable> {
-  $$AttachmentTableTableOrderingComposer({
+class $$AttachmentsTableOrderingComposer
+    extends Composer<_$AppDataBase, $AttachmentsTable> {
+  $$AttachmentsTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -23621,9 +23891,9 @@ class $$AttachmentTableTableOrderingComposer
   );
 }
 
-class $$AttachmentTableTableAnnotationComposer
-    extends Composer<_$AppDataBase, $AttachmentTableTable> {
-  $$AttachmentTableTableAnnotationComposer({
+class $$AttachmentsTableAnnotationComposer
+    extends Composer<_$AppDataBase, $AttachmentsTable> {
+  $$AttachmentsTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -23654,41 +23924,35 @@ class $$AttachmentTableTableAnnotationComposer
       $composableBuilder(column: $table.postId, builder: (column) => column);
 }
 
-class $$AttachmentTableTableTableManager
+class $$AttachmentsTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $AttachmentTableTable,
-          AttachmentData,
-          $$AttachmentTableTableFilterComposer,
-          $$AttachmentTableTableOrderingComposer,
-          $$AttachmentTableTableAnnotationComposer,
-          $$AttachmentTableTableCreateCompanionBuilder,
-          $$AttachmentTableTableUpdateCompanionBuilder,
+          $AttachmentsTable,
+          Attachment,
+          $$AttachmentsTableFilterComposer,
+          $$AttachmentsTableOrderingComposer,
+          $$AttachmentsTableAnnotationComposer,
+          $$AttachmentsTableCreateCompanionBuilder,
+          $$AttachmentsTableUpdateCompanionBuilder,
           (
-            AttachmentData,
-            BaseReferences<
-              _$AppDataBase,
-              $AttachmentTableTable,
-              AttachmentData
-            >,
+            Attachment,
+            BaseReferences<_$AppDataBase, $AttachmentsTable, Attachment>,
           ),
-          AttachmentData,
+          Attachment,
           PrefetchHooks Function()
         > {
-  $$AttachmentTableTableTableManager(
-    _$AppDataBase db,
-    $AttachmentTableTable table,
-  ) : super(
+  $$AttachmentsTableTableManager(_$AppDataBase db, $AttachmentsTable table)
+    : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$AttachmentTableTableFilterComposer($db: db, $table: table),
+              $$AttachmentsTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$AttachmentTableTableOrderingComposer($db: db, $table: table),
+              $$AttachmentsTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$AttachmentTableTableAnnotationComposer($db: db, $table: table),
+              $$AttachmentsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
@@ -23698,7 +23962,7 @@ class $$AttachmentTableTableTableManager
                 Value<String> name = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<int> postId = const Value.absent(),
-              }) => AttachmentTableCompanion(
+              }) => AttachmentsCompanion(
                 id: id,
                 attachmentType: attachmentType,
                 file: file,
@@ -23716,7 +23980,7 @@ class $$AttachmentTableTableTableManager
                 required String name,
                 required DateTime createdAt,
                 required int postId,
-              }) => AttachmentTableCompanion.insert(
+              }) => AttachmentsCompanion.insert(
                 id: id,
                 attachmentType: attachmentType,
                 file: file,
@@ -23733,25 +23997,25 @@ class $$AttachmentTableTableTableManager
       );
 }
 
-typedef $$AttachmentTableTableProcessedTableManager =
+typedef $$AttachmentsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $AttachmentTableTable,
-      AttachmentData,
-      $$AttachmentTableTableFilterComposer,
-      $$AttachmentTableTableOrderingComposer,
-      $$AttachmentTableTableAnnotationComposer,
-      $$AttachmentTableTableCreateCompanionBuilder,
-      $$AttachmentTableTableUpdateCompanionBuilder,
+      $AttachmentsTable,
+      Attachment,
+      $$AttachmentsTableFilterComposer,
+      $$AttachmentsTableOrderingComposer,
+      $$AttachmentsTableAnnotationComposer,
+      $$AttachmentsTableCreateCompanionBuilder,
+      $$AttachmentsTableUpdateCompanionBuilder,
       (
-        AttachmentData,
-        BaseReferences<_$AppDataBase, $AttachmentTableTable, AttachmentData>,
+        Attachment,
+        BaseReferences<_$AppDataBase, $AttachmentsTable, Attachment>,
       ),
-      AttachmentData,
+      Attachment,
       PrefetchHooks Function()
     >;
-typedef $$PostTableTableCreateCompanionBuilder =
-    PostTableCompanion Function({
+typedef $$PostsTableCreateCompanionBuilder =
+    PostsCompanion Function({
       Value<int> id,
       required Map<String, dynamic> community,
       required String authorId,
@@ -23767,8 +24031,8 @@ typedef $$PostTableTableCreateCompanionBuilder =
       required DateTime updatedAt,
       Value<DateTime?> cachedAt,
     });
-typedef $$PostTableTableUpdateCompanionBuilder =
-    PostTableCompanion Function({
+typedef $$PostsTableUpdateCompanionBuilder =
+    PostsCompanion Function({
       Value<int> id,
       Value<Map<String, dynamic>> community,
       Value<String> authorId,
@@ -23785,9 +24049,8 @@ typedef $$PostTableTableUpdateCompanionBuilder =
       Value<DateTime?> cachedAt,
     });
 
-class $$PostTableTableFilterComposer
-    extends Composer<_$AppDataBase, $PostTableTable> {
-  $$PostTableTableFilterComposer({
+class $$PostsTableFilterComposer extends Composer<_$AppDataBase, $PostsTable> {
+  $$PostsTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -23872,9 +24135,9 @@ class $$PostTableTableFilterComposer
   );
 }
 
-class $$PostTableTableOrderingComposer
-    extends Composer<_$AppDataBase, $PostTableTable> {
-  $$PostTableTableOrderingComposer({
+class $$PostsTableOrderingComposer
+    extends Composer<_$AppDataBase, $PostsTable> {
+  $$PostsTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -23952,9 +24215,9 @@ class $$PostTableTableOrderingComposer
   );
 }
 
-class $$PostTableTableAnnotationComposer
-    extends Composer<_$AppDataBase, $PostTableTable> {
-  $$PostTableTableAnnotationComposer({
+class $$PostsTableAnnotationComposer
+    extends Composer<_$AppDataBase, $PostsTable> {
+  $$PostsTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -24012,32 +24275,32 @@ class $$PostTableTableAnnotationComposer
       $composableBuilder(column: $table.cachedAt, builder: (column) => column);
 }
 
-class $$PostTableTableTableManager
+class $$PostsTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $PostTableTable,
-          PostData,
-          $$PostTableTableFilterComposer,
-          $$PostTableTableOrderingComposer,
-          $$PostTableTableAnnotationComposer,
-          $$PostTableTableCreateCompanionBuilder,
-          $$PostTableTableUpdateCompanionBuilder,
-          (PostData, BaseReferences<_$AppDataBase, $PostTableTable, PostData>),
-          PostData,
+          $PostsTable,
+          Post,
+          $$PostsTableFilterComposer,
+          $$PostsTableOrderingComposer,
+          $$PostsTableAnnotationComposer,
+          $$PostsTableCreateCompanionBuilder,
+          $$PostsTableUpdateCompanionBuilder,
+          (Post, BaseReferences<_$AppDataBase, $PostsTable, Post>),
+          Post,
           PrefetchHooks Function()
         > {
-  $$PostTableTableTableManager(_$AppDataBase db, $PostTableTable table)
+  $$PostsTableTableManager(_$AppDataBase db, $PostsTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$PostTableTableFilterComposer($db: db, $table: table),
+              $$PostsTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$PostTableTableOrderingComposer($db: db, $table: table),
+              $$PostsTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$PostTableTableAnnotationComposer($db: db, $table: table),
+              $$PostsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
@@ -24054,7 +24317,7 @@ class $$PostTableTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<DateTime?> cachedAt = const Value.absent(),
-              }) => PostTableCompanion(
+              }) => PostsCompanion(
                 id: id,
                 community: community,
                 authorId: authorId,
@@ -24086,7 +24349,7 @@ class $$PostTableTableTableManager
                 required DateTime createdAt,
                 required DateTime updatedAt,
                 Value<DateTime?> cachedAt = const Value.absent(),
-              }) => PostTableCompanion.insert(
+              }) => PostsCompanion.insert(
                 id: id,
                 community: community,
                 authorId: authorId,
@@ -24110,22 +24373,22 @@ class $$PostTableTableTableManager
       );
 }
 
-typedef $$PostTableTableProcessedTableManager =
+typedef $$PostsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $PostTableTable,
-      PostData,
-      $$PostTableTableFilterComposer,
-      $$PostTableTableOrderingComposer,
-      $$PostTableTableAnnotationComposer,
-      $$PostTableTableCreateCompanionBuilder,
-      $$PostTableTableUpdateCompanionBuilder,
-      (PostData, BaseReferences<_$AppDataBase, $PostTableTable, PostData>),
-      PostData,
+      $PostsTable,
+      Post,
+      $$PostsTableFilterComposer,
+      $$PostsTableOrderingComposer,
+      $$PostsTableAnnotationComposer,
+      $$PostsTableCreateCompanionBuilder,
+      $$PostsTableUpdateCompanionBuilder,
+      (Post, BaseReferences<_$AppDataBase, $PostsTable, Post>),
+      Post,
       PrefetchHooks Function()
     >;
-typedef $$CommentTableTableCreateCompanionBuilder =
-    CommentTableCompanion Function({
+typedef $$CommentsTableCreateCompanionBuilder =
+    CommentsCompanion Function({
       required int id,
       required int post,
       required String authorId,
@@ -24138,8 +24401,8 @@ typedef $$CommentTableTableCreateCompanionBuilder =
       Value<int?> parent,
       Value<int> rowid,
     });
-typedef $$CommentTableTableUpdateCompanionBuilder =
-    CommentTableCompanion Function({
+typedef $$CommentsTableUpdateCompanionBuilder =
+    CommentsCompanion Function({
       Value<int> id,
       Value<int> post,
       Value<String> authorId,
@@ -24153,9 +24416,9 @@ typedef $$CommentTableTableUpdateCompanionBuilder =
       Value<int> rowid,
     });
 
-class $$CommentTableTableFilterComposer
-    extends Composer<_$AppDataBase, $CommentTableTable> {
-  $$CommentTableTableFilterComposer({
+class $$CommentsTableFilterComposer
+    extends Composer<_$AppDataBase, $CommentsTable> {
+  $$CommentsTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -24214,9 +24477,9 @@ class $$CommentTableTableFilterComposer
   );
 }
 
-class $$CommentTableTableOrderingComposer
-    extends Composer<_$AppDataBase, $CommentTableTable> {
-  $$CommentTableTableOrderingComposer({
+class $$CommentsTableOrderingComposer
+    extends Composer<_$AppDataBase, $CommentsTable> {
+  $$CommentsTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -24274,9 +24537,9 @@ class $$CommentTableTableOrderingComposer
   );
 }
 
-class $$CommentTableTableAnnotationComposer
-    extends Composer<_$AppDataBase, $CommentTableTable> {
-  $$CommentTableTableAnnotationComposer({
+class $$CommentsTableAnnotationComposer
+    extends Composer<_$AppDataBase, $CommentsTable> {
+  $$CommentsTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -24314,35 +24577,32 @@ class $$CommentTableTableAnnotationComposer
       $composableBuilder(column: $table.parent, builder: (column) => column);
 }
 
-class $$CommentTableTableTableManager
+class $$CommentsTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $CommentTableTable,
-          CommentData,
-          $$CommentTableTableFilterComposer,
-          $$CommentTableTableOrderingComposer,
-          $$CommentTableTableAnnotationComposer,
-          $$CommentTableTableCreateCompanionBuilder,
-          $$CommentTableTableUpdateCompanionBuilder,
-          (
-            CommentData,
-            BaseReferences<_$AppDataBase, $CommentTableTable, CommentData>,
-          ),
-          CommentData,
+          $CommentsTable,
+          Comment,
+          $$CommentsTableFilterComposer,
+          $$CommentsTableOrderingComposer,
+          $$CommentsTableAnnotationComposer,
+          $$CommentsTableCreateCompanionBuilder,
+          $$CommentsTableUpdateCompanionBuilder,
+          (Comment, BaseReferences<_$AppDataBase, $CommentsTable, Comment>),
+          Comment,
           PrefetchHooks Function()
         > {
-  $$CommentTableTableTableManager(_$AppDataBase db, $CommentTableTable table)
+  $$CommentsTableTableManager(_$AppDataBase db, $CommentsTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$CommentTableTableFilterComposer($db: db, $table: table),
+              $$CommentsTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$CommentTableTableOrderingComposer($db: db, $table: table),
+              $$CommentsTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$CommentTableTableAnnotationComposer($db: db, $table: table),
+              $$CommentsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
@@ -24356,7 +24616,7 @@ class $$CommentTableTableTableManager
                 Value<List<dynamic>> replies = const Value.absent(),
                 Value<int?> parent = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => CommentTableCompanion(
+              }) => CommentsCompanion(
                 id: id,
                 post: post,
                 authorId: authorId,
@@ -24382,7 +24642,7 @@ class $$CommentTableTableTableManager
                 required List<dynamic> replies,
                 Value<int?> parent = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => CommentTableCompanion.insert(
+              }) => CommentsCompanion.insert(
                 id: id,
                 post: post,
                 authorId: authorId,
@@ -24403,445 +24663,18 @@ class $$CommentTableTableTableManager
       );
 }
 
-typedef $$CommentTableTableProcessedTableManager =
+typedef $$CommentsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $CommentTableTable,
-      CommentData,
-      $$CommentTableTableFilterComposer,
-      $$CommentTableTableOrderingComposer,
-      $$CommentTableTableAnnotationComposer,
-      $$CommentTableTableCreateCompanionBuilder,
-      $$CommentTableTableUpdateCompanionBuilder,
-      (
-        CommentData,
-        BaseReferences<_$AppDataBase, $CommentTableTable, CommentData>,
-      ),
-      CommentData,
-      PrefetchHooks Function()
-    >;
-typedef $$TodoTableCreateCompanionBuilder =
-    TodoCompanion Function({
-      required String id,
-      Value<String?> externalID,
-      Value<DateTime?> completed,
-      Value<bool> deleted,
-      Value<DateTime?> due,
-      required String etag,
-      Value<bool> hidden,
-      required String kind,
-      Value<String?> notes,
-      required String owner,
-      Value<String?> parent,
-      required String position,
-      required String selfLink,
-      required String status,
-      required String title,
-      Value<DateTime?> updated,
-      required String webViewLink,
-      Value<int> rowid,
-    });
-typedef $$TodoTableUpdateCompanionBuilder =
-    TodoCompanion Function({
-      Value<String> id,
-      Value<String?> externalID,
-      Value<DateTime?> completed,
-      Value<bool> deleted,
-      Value<DateTime?> due,
-      Value<String> etag,
-      Value<bool> hidden,
-      Value<String> kind,
-      Value<String?> notes,
-      Value<String> owner,
-      Value<String?> parent,
-      Value<String> position,
-      Value<String> selfLink,
-      Value<String> status,
-      Value<String> title,
-      Value<DateTime?> updated,
-      Value<String> webViewLink,
-      Value<int> rowid,
-    });
-
-class $$TodoTableFilterComposer extends Composer<_$AppDataBase, $TodoTable> {
-  $$TodoTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<String> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get externalID => $composableBuilder(
-    column: $table.externalID,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get completed => $composableBuilder(
-    column: $table.completed,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<bool> get deleted => $composableBuilder(
-    column: $table.deleted,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get due => $composableBuilder(
-    column: $table.due,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get etag => $composableBuilder(
-    column: $table.etag,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<bool> get hidden => $composableBuilder(
-    column: $table.hidden,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get kind => $composableBuilder(
-    column: $table.kind,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get notes => $composableBuilder(
-    column: $table.notes,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get owner => $composableBuilder(
-    column: $table.owner,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get parent => $composableBuilder(
-    column: $table.parent,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get position => $composableBuilder(
-    column: $table.position,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get selfLink => $composableBuilder(
-    column: $table.selfLink,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get status => $composableBuilder(
-    column: $table.status,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get title => $composableBuilder(
-    column: $table.title,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get updated => $composableBuilder(
-    column: $table.updated,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get webViewLink => $composableBuilder(
-    column: $table.webViewLink,
-    builder: (column) => ColumnFilters(column),
-  );
-}
-
-class $$TodoTableOrderingComposer extends Composer<_$AppDataBase, $TodoTable> {
-  $$TodoTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<String> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get externalID => $composableBuilder(
-    column: $table.externalID,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get completed => $composableBuilder(
-    column: $table.completed,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<bool> get deleted => $composableBuilder(
-    column: $table.deleted,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get due => $composableBuilder(
-    column: $table.due,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get etag => $composableBuilder(
-    column: $table.etag,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<bool> get hidden => $composableBuilder(
-    column: $table.hidden,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get kind => $composableBuilder(
-    column: $table.kind,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get notes => $composableBuilder(
-    column: $table.notes,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get owner => $composableBuilder(
-    column: $table.owner,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get parent => $composableBuilder(
-    column: $table.parent,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get position => $composableBuilder(
-    column: $table.position,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get selfLink => $composableBuilder(
-    column: $table.selfLink,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get status => $composableBuilder(
-    column: $table.status,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get title => $composableBuilder(
-    column: $table.title,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get updated => $composableBuilder(
-    column: $table.updated,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get webViewLink => $composableBuilder(
-    column: $table.webViewLink,
-    builder: (column) => ColumnOrderings(column),
-  );
-}
-
-class $$TodoTableAnnotationComposer
-    extends Composer<_$AppDataBase, $TodoTable> {
-  $$TodoTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<String> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<String> get externalID => $composableBuilder(
-    column: $table.externalID,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<DateTime> get completed =>
-      $composableBuilder(column: $table.completed, builder: (column) => column);
-
-  GeneratedColumn<bool> get deleted =>
-      $composableBuilder(column: $table.deleted, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get due =>
-      $composableBuilder(column: $table.due, builder: (column) => column);
-
-  GeneratedColumn<String> get etag =>
-      $composableBuilder(column: $table.etag, builder: (column) => column);
-
-  GeneratedColumn<bool> get hidden =>
-      $composableBuilder(column: $table.hidden, builder: (column) => column);
-
-  GeneratedColumn<String> get kind =>
-      $composableBuilder(column: $table.kind, builder: (column) => column);
-
-  GeneratedColumn<String> get notes =>
-      $composableBuilder(column: $table.notes, builder: (column) => column);
-
-  GeneratedColumn<String> get owner =>
-      $composableBuilder(column: $table.owner, builder: (column) => column);
-
-  GeneratedColumn<String> get parent =>
-      $composableBuilder(column: $table.parent, builder: (column) => column);
-
-  GeneratedColumn<String> get position =>
-      $composableBuilder(column: $table.position, builder: (column) => column);
-
-  GeneratedColumn<String> get selfLink =>
-      $composableBuilder(column: $table.selfLink, builder: (column) => column);
-
-  GeneratedColumn<String> get status =>
-      $composableBuilder(column: $table.status, builder: (column) => column);
-
-  GeneratedColumn<String> get title =>
-      $composableBuilder(column: $table.title, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get updated =>
-      $composableBuilder(column: $table.updated, builder: (column) => column);
-
-  GeneratedColumn<String> get webViewLink => $composableBuilder(
-    column: $table.webViewLink,
-    builder: (column) => column,
-  );
-}
-
-class $$TodoTableTableManager
-    extends
-        RootTableManager<
-          _$AppDataBase,
-          $TodoTable,
-          TodoData,
-          $$TodoTableFilterComposer,
-          $$TodoTableOrderingComposer,
-          $$TodoTableAnnotationComposer,
-          $$TodoTableCreateCompanionBuilder,
-          $$TodoTableUpdateCompanionBuilder,
-          (TodoData, BaseReferences<_$AppDataBase, $TodoTable, TodoData>),
-          TodoData,
-          PrefetchHooks Function()
-        > {
-  $$TodoTableTableManager(_$AppDataBase db, $TodoTable table)
-    : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$TodoTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$TodoTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$TodoTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback:
-              ({
-                Value<String> id = const Value.absent(),
-                Value<String?> externalID = const Value.absent(),
-                Value<DateTime?> completed = const Value.absent(),
-                Value<bool> deleted = const Value.absent(),
-                Value<DateTime?> due = const Value.absent(),
-                Value<String> etag = const Value.absent(),
-                Value<bool> hidden = const Value.absent(),
-                Value<String> kind = const Value.absent(),
-                Value<String?> notes = const Value.absent(),
-                Value<String> owner = const Value.absent(),
-                Value<String?> parent = const Value.absent(),
-                Value<String> position = const Value.absent(),
-                Value<String> selfLink = const Value.absent(),
-                Value<String> status = const Value.absent(),
-                Value<String> title = const Value.absent(),
-                Value<DateTime?> updated = const Value.absent(),
-                Value<String> webViewLink = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => TodoCompanion(
-                id: id,
-                externalID: externalID,
-                completed: completed,
-                deleted: deleted,
-                due: due,
-                etag: etag,
-                hidden: hidden,
-                kind: kind,
-                notes: notes,
-                owner: owner,
-                parent: parent,
-                position: position,
-                selfLink: selfLink,
-                status: status,
-                title: title,
-                updated: updated,
-                webViewLink: webViewLink,
-                rowid: rowid,
-              ),
-          createCompanionCallback:
-              ({
-                required String id,
-                Value<String?> externalID = const Value.absent(),
-                Value<DateTime?> completed = const Value.absent(),
-                Value<bool> deleted = const Value.absent(),
-                Value<DateTime?> due = const Value.absent(),
-                required String etag,
-                Value<bool> hidden = const Value.absent(),
-                required String kind,
-                Value<String?> notes = const Value.absent(),
-                required String owner,
-                Value<String?> parent = const Value.absent(),
-                required String position,
-                required String selfLink,
-                required String status,
-                required String title,
-                Value<DateTime?> updated = const Value.absent(),
-                required String webViewLink,
-                Value<int> rowid = const Value.absent(),
-              }) => TodoCompanion.insert(
-                id: id,
-                externalID: externalID,
-                completed: completed,
-                deleted: deleted,
-                due: due,
-                etag: etag,
-                hidden: hidden,
-                kind: kind,
-                notes: notes,
-                owner: owner,
-                parent: parent,
-                position: position,
-                selfLink: selfLink,
-                status: status,
-                title: title,
-                updated: updated,
-                webViewLink: webViewLink,
-                rowid: rowid,
-              ),
-          withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
-              .toList(),
-          prefetchHooksCallback: null,
-        ),
-      );
-}
-
-typedef $$TodoTableProcessedTableManager =
-    ProcessedTableManager<
-      _$AppDataBase,
-      $TodoTable,
-      TodoData,
-      $$TodoTableFilterComposer,
-      $$TodoTableOrderingComposer,
-      $$TodoTableAnnotationComposer,
-      $$TodoTableCreateCompanionBuilder,
-      $$TodoTableUpdateCompanionBuilder,
-      (TodoData, BaseReferences<_$AppDataBase, $TodoTable, TodoData>),
-      TodoData,
+      $CommentsTable,
+      Comment,
+      $$CommentsTableFilterComposer,
+      $$CommentsTableOrderingComposer,
+      $$CommentsTableAnnotationComposer,
+      $$CommentsTableCreateCompanionBuilder,
+      $$CommentsTableUpdateCompanionBuilder,
+      (Comment, BaseReferences<_$AppDataBase, $CommentsTable, Comment>),
+      Comment,
       PrefetchHooks Function()
     >;
 typedef $$EventTableTableCreateCompanionBuilder =
@@ -25621,6 +25454,8 @@ typedef $$TicketTableTableCreateCompanionBuilder =
       Value<int?> ticketFor,
       Value<List<dynamic>?> institutions,
       Value<String?> scope,
+      Value<String?> startDate,
+      Value<String?> endDate,
       Value<int> rowid,
     });
 typedef $$TicketTableTableUpdateCompanionBuilder =
@@ -25633,6 +25468,8 @@ typedef $$TicketTableTableUpdateCompanionBuilder =
       Value<int?> ticketFor,
       Value<List<dynamic>?> institutions,
       Value<String?> scope,
+      Value<String?> startDate,
+      Value<String?> endDate,
       Value<int> rowid,
     });
 
@@ -25685,6 +25522,16 @@ class $$TicketTableTableFilterComposer
     column: $table.scope,
     builder: (column) => ColumnFilters(column),
   );
+
+  ColumnFilters<String> get startDate => $composableBuilder(
+    column: $table.startDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get endDate => $composableBuilder(
+    column: $table.endDate,
+    builder: (column) => ColumnFilters(column),
+  );
 }
 
 class $$TicketTableTableOrderingComposer
@@ -25735,6 +25582,16 @@ class $$TicketTableTableOrderingComposer
     column: $table.scope,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get startDate => $composableBuilder(
+    column: $table.startDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get endDate => $composableBuilder(
+    column: $table.endDate,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$TicketTableTableAnnotationComposer
@@ -25778,6 +25635,12 @@ class $$TicketTableTableAnnotationComposer
 
   GeneratedColumn<String> get scope =>
       $composableBuilder(column: $table.scope, builder: (column) => column);
+
+  GeneratedColumn<String> get startDate =>
+      $composableBuilder(column: $table.startDate, builder: (column) => column);
+
+  GeneratedColumn<String> get endDate =>
+      $composableBuilder(column: $table.endDate, builder: (column) => column);
 }
 
 class $$TicketTableTableTableManager
@@ -25819,6 +25682,8 @@ class $$TicketTableTableTableManager
                 Value<int?> ticketFor = const Value.absent(),
                 Value<List<dynamic>?> institutions = const Value.absent(),
                 Value<String?> scope = const Value.absent(),
+                Value<String?> startDate = const Value.absent(),
+                Value<String?> endDate = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => TicketTableCompanion(
                 id: id,
@@ -25829,6 +25694,8 @@ class $$TicketTableTableTableManager
                 ticketFor: ticketFor,
                 institutions: institutions,
                 scope: scope,
+                startDate: startDate,
+                endDate: endDate,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -25841,6 +25708,8 @@ class $$TicketTableTableTableManager
                 Value<int?> ticketFor = const Value.absent(),
                 Value<List<dynamic>?> institutions = const Value.absent(),
                 Value<String?> scope = const Value.absent(),
+                Value<String?> startDate = const Value.absent(),
+                Value<String?> endDate = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => TicketTableCompanion.insert(
                 id: id,
@@ -25851,6 +25720,8 @@ class $$TicketTableTableTableManager
                 ticketFor: ticketFor,
                 institutions: institutions,
                 scope: scope,
+                startDate: startDate,
+                endDate: endDate,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -26542,6 +26413,7 @@ typedef $$TicketStatsTableTableCreateCompanionBuilder =
       required int ticketPrice,
       required int ticketsSold,
       required int ticketsRemaining,
+      required String scope,
       Value<int> rowid,
     });
 typedef $$TicketStatsTableTableUpdateCompanionBuilder =
@@ -26551,6 +26423,7 @@ typedef $$TicketStatsTableTableUpdateCompanionBuilder =
       Value<int> ticketPrice,
       Value<int> ticketsSold,
       Value<int> ticketsRemaining,
+      Value<String> scope,
       Value<int> rowid,
     });
 
@@ -26585,6 +26458,11 @@ class $$TicketStatsTableTableFilterComposer
 
   ColumnFilters<int> get ticketsRemaining => $composableBuilder(
     column: $table.ticketsRemaining,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get scope => $composableBuilder(
+    column: $table.scope,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -26622,6 +26500,11 @@ class $$TicketStatsTableTableOrderingComposer
     column: $table.ticketsRemaining,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get scope => $composableBuilder(
+    column: $table.scope,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$TicketStatsTableTableAnnotationComposer
@@ -26655,6 +26538,9 @@ class $$TicketStatsTableTableAnnotationComposer
     column: $table.ticketsRemaining,
     builder: (column) => column,
   );
+
+  GeneratedColumn<String> get scope =>
+      $composableBuilder(column: $table.scope, builder: (column) => column);
 }
 
 class $$TicketStatsTableTableTableManager
@@ -26699,6 +26585,7 @@ class $$TicketStatsTableTableTableManager
                 Value<int> ticketPrice = const Value.absent(),
                 Value<int> ticketsSold = const Value.absent(),
                 Value<int> ticketsRemaining = const Value.absent(),
+                Value<String> scope = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => TicketStatsTableCompanion(
                 ticketId: ticketId,
@@ -26706,6 +26593,7 @@ class $$TicketStatsTableTableTableManager
                 ticketPrice: ticketPrice,
                 ticketsSold: ticketsSold,
                 ticketsRemaining: ticketsRemaining,
+                scope: scope,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -26715,6 +26603,7 @@ class $$TicketStatsTableTableTableManager
                 required int ticketPrice,
                 required int ticketsSold,
                 required int ticketsRemaining,
+                required String scope,
                 Value<int> rowid = const Value.absent(),
               }) => TicketStatsTableCompanion.insert(
                 ticketId: ticketId,
@@ -26722,6 +26611,7 @@ class $$TicketStatsTableTableTableManager
                 ticketPrice: ticketPrice,
                 ticketsSold: ticketsSold,
                 ticketsRemaining: ticketsRemaining,
+                scope: scope,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -27030,68 +26920,36 @@ typedef $$ScannerTableTableProcessedTableManager =
       ScannerData,
       PrefetchHooks Function()
     >;
-typedef $$GroupTableTableCreateCompanionBuilder =
-    GroupTableCompanion Function({
+typedef $$InviteTableTableCreateCompanionBuilder =
+    InviteTableCompanion Function({
       required String id,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
-      required String name,
-      required String description,
-      required String creatorId,
-      required String creatorName,
-      required String admins,
-      required String adminNames,
-      required String moderators,
-      required String moderatorNames,
-      required String members,
-      required String memberNames,
-      required String bannedUsers,
-      required String bannedUserNames,
-      required bool isPrivate,
-      required String rules,
-      Value<String?> logo,
-      Value<String?> banner,
-      Value<String?> logoUrl,
-      Value<String?> bannerUrl,
-      Value<String?> userRole,
-      required bool canPost,
-      required bool canModerate,
-      required bool canAdmin,
+      Value<String?> eventId,
+      Value<String?> ticketId,
+      required String token,
+      required String expiresAt,
+      required int maxUses,
+      required int usedCount,
+      required String createdAt,
+      required String updatedAt,
       Value<int> rowid,
     });
-typedef $$GroupTableTableUpdateCompanionBuilder =
-    GroupTableCompanion Function({
+typedef $$InviteTableTableUpdateCompanionBuilder =
+    InviteTableCompanion Function({
       Value<String> id,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
-      Value<String> name,
-      Value<String> description,
-      Value<String> creatorId,
-      Value<String> creatorName,
-      Value<String> admins,
-      Value<String> adminNames,
-      Value<String> moderators,
-      Value<String> moderatorNames,
-      Value<String> members,
-      Value<String> memberNames,
-      Value<String> bannedUsers,
-      Value<String> bannedUserNames,
-      Value<bool> isPrivate,
-      Value<String> rules,
-      Value<String?> logo,
-      Value<String?> banner,
-      Value<String?> logoUrl,
-      Value<String?> bannerUrl,
-      Value<String?> userRole,
-      Value<bool> canPost,
-      Value<bool> canModerate,
-      Value<bool> canAdmin,
+      Value<String?> eventId,
+      Value<String?> ticketId,
+      Value<String> token,
+      Value<String> expiresAt,
+      Value<int> maxUses,
+      Value<int> usedCount,
+      Value<String> createdAt,
+      Value<String> updatedAt,
       Value<int> rowid,
     });
 
-class $$GroupTableTableFilterComposer
-    extends Composer<_$AppDataBase, $GroupTableTable> {
-  $$GroupTableTableFilterComposer({
+class $$InviteTableTableFilterComposer
+    extends Composer<_$AppDataBase, $InviteTableTable> {
+  $$InviteTableTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -27103,130 +26961,50 @@ class $$GroupTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+  ColumnFilters<String> get eventId => $composableBuilder(
+    column: $table.eventId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get ticketId => $composableBuilder(
+    column: $table.ticketId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get token => $composableBuilder(
+    column: $table.token,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get expiresAt => $composableBuilder(
+    column: $table.expiresAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get maxUses => $composableBuilder(
+    column: $table.maxUses,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get usedCount => $composableBuilder(
+    column: $table.usedCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+  ColumnFilters<String> get updatedAt => $composableBuilder(
     column: $table.updatedAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get name => $composableBuilder(
-    column: $table.name,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get description => $composableBuilder(
-    column: $table.description,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get creatorId => $composableBuilder(
-    column: $table.creatorId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get creatorName => $composableBuilder(
-    column: $table.creatorName,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get admins => $composableBuilder(
-    column: $table.admins,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get adminNames => $composableBuilder(
-    column: $table.adminNames,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get moderators => $composableBuilder(
-    column: $table.moderators,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get moderatorNames => $composableBuilder(
-    column: $table.moderatorNames,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get members => $composableBuilder(
-    column: $table.members,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get memberNames => $composableBuilder(
-    column: $table.memberNames,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get bannedUsers => $composableBuilder(
-    column: $table.bannedUsers,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get bannedUserNames => $composableBuilder(
-    column: $table.bannedUserNames,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<bool> get isPrivate => $composableBuilder(
-    column: $table.isPrivate,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get rules => $composableBuilder(
-    column: $table.rules,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get logo => $composableBuilder(
-    column: $table.logo,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get banner => $composableBuilder(
-    column: $table.banner,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get logoUrl => $composableBuilder(
-    column: $table.logoUrl,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get bannerUrl => $composableBuilder(
-    column: $table.bannerUrl,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get userRole => $composableBuilder(
-    column: $table.userRole,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<bool> get canPost => $composableBuilder(
-    column: $table.canPost,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<bool> get canModerate => $composableBuilder(
-    column: $table.canModerate,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<bool> get canAdmin => $composableBuilder(
-    column: $table.canAdmin,
     builder: (column) => ColumnFilters(column),
   );
 }
 
-class $$GroupTableTableOrderingComposer
-    extends Composer<_$AppDataBase, $GroupTableTable> {
-  $$GroupTableTableOrderingComposer({
+class $$InviteTableTableOrderingComposer
+    extends Composer<_$AppDataBase, $InviteTableTable> {
+  $$InviteTableTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -27238,130 +27016,50 @@ class $$GroupTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+  ColumnOrderings<String> get eventId => $composableBuilder(
+    column: $table.eventId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get ticketId => $composableBuilder(
+    column: $table.ticketId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get token => $composableBuilder(
+    column: $table.token,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get expiresAt => $composableBuilder(
+    column: $table.expiresAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get maxUses => $composableBuilder(
+    column: $table.maxUses,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get usedCount => $composableBuilder(
+    column: $table.usedCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+  ColumnOrderings<String> get updatedAt => $composableBuilder(
     column: $table.updatedAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get name => $composableBuilder(
-    column: $table.name,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get description => $composableBuilder(
-    column: $table.description,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get creatorId => $composableBuilder(
-    column: $table.creatorId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get creatorName => $composableBuilder(
-    column: $table.creatorName,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get admins => $composableBuilder(
-    column: $table.admins,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get adminNames => $composableBuilder(
-    column: $table.adminNames,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get moderators => $composableBuilder(
-    column: $table.moderators,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get moderatorNames => $composableBuilder(
-    column: $table.moderatorNames,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get members => $composableBuilder(
-    column: $table.members,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get memberNames => $composableBuilder(
-    column: $table.memberNames,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get bannedUsers => $composableBuilder(
-    column: $table.bannedUsers,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get bannedUserNames => $composableBuilder(
-    column: $table.bannedUserNames,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<bool> get isPrivate => $composableBuilder(
-    column: $table.isPrivate,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get rules => $composableBuilder(
-    column: $table.rules,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get logo => $composableBuilder(
-    column: $table.logo,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get banner => $composableBuilder(
-    column: $table.banner,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get logoUrl => $composableBuilder(
-    column: $table.logoUrl,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get bannerUrl => $composableBuilder(
-    column: $table.bannerUrl,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get userRole => $composableBuilder(
-    column: $table.userRole,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<bool> get canPost => $composableBuilder(
-    column: $table.canPost,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<bool> get canModerate => $composableBuilder(
-    column: $table.canModerate,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<bool> get canAdmin => $composableBuilder(
-    column: $table.canAdmin,
     builder: (column) => ColumnOrderings(column),
   );
 }
 
-class $$GroupTableTableAnnotationComposer
-    extends Composer<_$AppDataBase, $GroupTableTable> {
-  $$GroupTableTableAnnotationComposer({
+class $$InviteTableTableAnnotationComposer
+    extends Composer<_$AppDataBase, $InviteTableTable> {
+  $$InviteTableTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -27371,236 +27069,106 @@ class $$GroupTableTableAnnotationComposer
   GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<DateTime> get createdAt =>
+  GeneratedColumn<String> get eventId =>
+      $composableBuilder(column: $table.eventId, builder: (column) => column);
+
+  GeneratedColumn<String> get ticketId =>
+      $composableBuilder(column: $table.ticketId, builder: (column) => column);
+
+  GeneratedColumn<String> get token =>
+      $composableBuilder(column: $table.token, builder: (column) => column);
+
+  GeneratedColumn<String> get expiresAt =>
+      $composableBuilder(column: $table.expiresAt, builder: (column) => column);
+
+  GeneratedColumn<int> get maxUses =>
+      $composableBuilder(column: $table.maxUses, builder: (column) => column);
+
+  GeneratedColumn<int> get usedCount =>
+      $composableBuilder(column: $table.usedCount, builder: (column) => column);
+
+  GeneratedColumn<String> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
-  GeneratedColumn<DateTime> get updatedAt =>
+  GeneratedColumn<String> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
-
-  GeneratedColumn<String> get name =>
-      $composableBuilder(column: $table.name, builder: (column) => column);
-
-  GeneratedColumn<String> get description => $composableBuilder(
-    column: $table.description,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get creatorId =>
-      $composableBuilder(column: $table.creatorId, builder: (column) => column);
-
-  GeneratedColumn<String> get creatorName => $composableBuilder(
-    column: $table.creatorName,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get admins =>
-      $composableBuilder(column: $table.admins, builder: (column) => column);
-
-  GeneratedColumn<String> get adminNames => $composableBuilder(
-    column: $table.adminNames,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get moderators => $composableBuilder(
-    column: $table.moderators,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get moderatorNames => $composableBuilder(
-    column: $table.moderatorNames,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get members =>
-      $composableBuilder(column: $table.members, builder: (column) => column);
-
-  GeneratedColumn<String> get memberNames => $composableBuilder(
-    column: $table.memberNames,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get bannedUsers => $composableBuilder(
-    column: $table.bannedUsers,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get bannedUserNames => $composableBuilder(
-    column: $table.bannedUserNames,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<bool> get isPrivate =>
-      $composableBuilder(column: $table.isPrivate, builder: (column) => column);
-
-  GeneratedColumn<String> get rules =>
-      $composableBuilder(column: $table.rules, builder: (column) => column);
-
-  GeneratedColumn<String> get logo =>
-      $composableBuilder(column: $table.logo, builder: (column) => column);
-
-  GeneratedColumn<String> get banner =>
-      $composableBuilder(column: $table.banner, builder: (column) => column);
-
-  GeneratedColumn<String> get logoUrl =>
-      $composableBuilder(column: $table.logoUrl, builder: (column) => column);
-
-  GeneratedColumn<String> get bannerUrl =>
-      $composableBuilder(column: $table.bannerUrl, builder: (column) => column);
-
-  GeneratedColumn<String> get userRole =>
-      $composableBuilder(column: $table.userRole, builder: (column) => column);
-
-  GeneratedColumn<bool> get canPost =>
-      $composableBuilder(column: $table.canPost, builder: (column) => column);
-
-  GeneratedColumn<bool> get canModerate => $composableBuilder(
-    column: $table.canModerate,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<bool> get canAdmin =>
-      $composableBuilder(column: $table.canAdmin, builder: (column) => column);
 }
 
-class $$GroupTableTableTableManager
+class $$InviteTableTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $GroupTableTable,
-          GroupEntity,
-          $$GroupTableTableFilterComposer,
-          $$GroupTableTableOrderingComposer,
-          $$GroupTableTableAnnotationComposer,
-          $$GroupTableTableCreateCompanionBuilder,
-          $$GroupTableTableUpdateCompanionBuilder,
+          $InviteTableTable,
+          InviteData,
+          $$InviteTableTableFilterComposer,
+          $$InviteTableTableOrderingComposer,
+          $$InviteTableTableAnnotationComposer,
+          $$InviteTableTableCreateCompanionBuilder,
+          $$InviteTableTableUpdateCompanionBuilder,
           (
-            GroupEntity,
-            BaseReferences<_$AppDataBase, $GroupTableTable, GroupEntity>,
+            InviteData,
+            BaseReferences<_$AppDataBase, $InviteTableTable, InviteData>,
           ),
-          GroupEntity,
+          InviteData,
           PrefetchHooks Function()
         > {
-  $$GroupTableTableTableManager(_$AppDataBase db, $GroupTableTable table)
+  $$InviteTableTableTableManager(_$AppDataBase db, $InviteTableTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$GroupTableTableFilterComposer($db: db, $table: table),
+              $$InviteTableTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$GroupTableTableOrderingComposer($db: db, $table: table),
+              $$InviteTableTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$GroupTableTableAnnotationComposer($db: db, $table: table),
+              $$InviteTableTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<String> id = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
-                Value<String> name = const Value.absent(),
-                Value<String> description = const Value.absent(),
-                Value<String> creatorId = const Value.absent(),
-                Value<String> creatorName = const Value.absent(),
-                Value<String> admins = const Value.absent(),
-                Value<String> adminNames = const Value.absent(),
-                Value<String> moderators = const Value.absent(),
-                Value<String> moderatorNames = const Value.absent(),
-                Value<String> members = const Value.absent(),
-                Value<String> memberNames = const Value.absent(),
-                Value<String> bannedUsers = const Value.absent(),
-                Value<String> bannedUserNames = const Value.absent(),
-                Value<bool> isPrivate = const Value.absent(),
-                Value<String> rules = const Value.absent(),
-                Value<String?> logo = const Value.absent(),
-                Value<String?> banner = const Value.absent(),
-                Value<String?> logoUrl = const Value.absent(),
-                Value<String?> bannerUrl = const Value.absent(),
-                Value<String?> userRole = const Value.absent(),
-                Value<bool> canPost = const Value.absent(),
-                Value<bool> canModerate = const Value.absent(),
-                Value<bool> canAdmin = const Value.absent(),
+                Value<String?> eventId = const Value.absent(),
+                Value<String?> ticketId = const Value.absent(),
+                Value<String> token = const Value.absent(),
+                Value<String> expiresAt = const Value.absent(),
+                Value<int> maxUses = const Value.absent(),
+                Value<int> usedCount = const Value.absent(),
+                Value<String> createdAt = const Value.absent(),
+                Value<String> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => GroupTableCompanion(
+              }) => InviteTableCompanion(
                 id: id,
+                eventId: eventId,
+                ticketId: ticketId,
+                token: token,
+                expiresAt: expiresAt,
+                maxUses: maxUses,
+                usedCount: usedCount,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
-                name: name,
-                description: description,
-                creatorId: creatorId,
-                creatorName: creatorName,
-                admins: admins,
-                adminNames: adminNames,
-                moderators: moderators,
-                moderatorNames: moderatorNames,
-                members: members,
-                memberNames: memberNames,
-                bannedUsers: bannedUsers,
-                bannedUserNames: bannedUserNames,
-                isPrivate: isPrivate,
-                rules: rules,
-                logo: logo,
-                banner: banner,
-                logoUrl: logoUrl,
-                bannerUrl: bannerUrl,
-                userRole: userRole,
-                canPost: canPost,
-                canModerate: canModerate,
-                canAdmin: canAdmin,
                 rowid: rowid,
               ),
           createCompanionCallback:
               ({
                 required String id,
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
-                required String name,
-                required String description,
-                required String creatorId,
-                required String creatorName,
-                required String admins,
-                required String adminNames,
-                required String moderators,
-                required String moderatorNames,
-                required String members,
-                required String memberNames,
-                required String bannedUsers,
-                required String bannedUserNames,
-                required bool isPrivate,
-                required String rules,
-                Value<String?> logo = const Value.absent(),
-                Value<String?> banner = const Value.absent(),
-                Value<String?> logoUrl = const Value.absent(),
-                Value<String?> bannerUrl = const Value.absent(),
-                Value<String?> userRole = const Value.absent(),
-                required bool canPost,
-                required bool canModerate,
-                required bool canAdmin,
+                Value<String?> eventId = const Value.absent(),
+                Value<String?> ticketId = const Value.absent(),
+                required String token,
+                required String expiresAt,
+                required int maxUses,
+                required int usedCount,
+                required String createdAt,
+                required String updatedAt,
                 Value<int> rowid = const Value.absent(),
-              }) => GroupTableCompanion.insert(
+              }) => InviteTableCompanion.insert(
                 id: id,
+                eventId: eventId,
+                ticketId: ticketId,
+                token: token,
+                expiresAt: expiresAt,
+                maxUses: maxUses,
+                usedCount: usedCount,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
-                name: name,
-                description: description,
-                creatorId: creatorId,
-                creatorName: creatorName,
-                admins: admins,
-                adminNames: adminNames,
-                moderators: moderators,
-                moderatorNames: moderatorNames,
-                members: members,
-                memberNames: memberNames,
-                bannedUsers: bannedUsers,
-                bannedUserNames: bannedUserNames,
-                isPrivate: isPrivate,
-                rules: rules,
-                logo: logo,
-                banner: banner,
-                logoUrl: logoUrl,
-                bannerUrl: bannerUrl,
-                userRole: userRole,
-                canPost: canPost,
-                canModerate: canModerate,
-                canAdmin: canAdmin,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -27611,25 +27179,25 @@ class $$GroupTableTableTableManager
       );
 }
 
-typedef $$GroupTableTableProcessedTableManager =
+typedef $$InviteTableTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $GroupTableTable,
-      GroupEntity,
-      $$GroupTableTableFilterComposer,
-      $$GroupTableTableOrderingComposer,
-      $$GroupTableTableAnnotationComposer,
-      $$GroupTableTableCreateCompanionBuilder,
-      $$GroupTableTableUpdateCompanionBuilder,
+      $InviteTableTable,
+      InviteData,
+      $$InviteTableTableFilterComposer,
+      $$InviteTableTableOrderingComposer,
+      $$InviteTableTableAnnotationComposer,
+      $$InviteTableTableCreateCompanionBuilder,
+      $$InviteTableTableUpdateCompanionBuilder,
       (
-        GroupEntity,
-        BaseReferences<_$AppDataBase, $GroupTableTable, GroupEntity>,
+        InviteData,
+        BaseReferences<_$AppDataBase, $InviteTableTable, InviteData>,
       ),
-      GroupEntity,
+      InviteData,
       PrefetchHooks Function()
     >;
-typedef $$BlockTableTableCreateCompanionBuilder =
-    BlockTableCompanion Function({
+typedef $$BlocksTableCreateCompanionBuilder =
+    BlocksCompanion Function({
       Value<int> id,
       required String blockType,
       Value<String?> blockedUser,
@@ -27639,8 +27207,8 @@ typedef $$BlockTableTableCreateCompanionBuilder =
       required DateTime createdAt,
       Value<DateTime?> cachedAt,
     });
-typedef $$BlockTableTableUpdateCompanionBuilder =
-    BlockTableCompanion Function({
+typedef $$BlocksTableUpdateCompanionBuilder =
+    BlocksCompanion Function({
       Value<int> id,
       Value<String> blockType,
       Value<String?> blockedUser,
@@ -27651,9 +27219,9 @@ typedef $$BlockTableTableUpdateCompanionBuilder =
       Value<DateTime?> cachedAt,
     });
 
-class $$BlockTableTableFilterComposer
-    extends Composer<_$AppDataBase, $BlockTableTable> {
-  $$BlockTableTableFilterComposer({
+class $$BlocksTableFilterComposer
+    extends Composer<_$AppDataBase, $BlocksTable> {
+  $$BlocksTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -27701,9 +27269,9 @@ class $$BlockTableTableFilterComposer
   );
 }
 
-class $$BlockTableTableOrderingComposer
-    extends Composer<_$AppDataBase, $BlockTableTable> {
-  $$BlockTableTableOrderingComposer({
+class $$BlocksTableOrderingComposer
+    extends Composer<_$AppDataBase, $BlocksTable> {
+  $$BlocksTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -27751,9 +27319,9 @@ class $$BlockTableTableOrderingComposer
   );
 }
 
-class $$BlockTableTableAnnotationComposer
-    extends Composer<_$AppDataBase, $BlockTableTable> {
-  $$BlockTableTableAnnotationComposer({
+class $$BlocksTableAnnotationComposer
+    extends Composer<_$AppDataBase, $BlocksTable> {
+  $$BlocksTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -27793,35 +27361,32 @@ class $$BlockTableTableAnnotationComposer
       $composableBuilder(column: $table.cachedAt, builder: (column) => column);
 }
 
-class $$BlockTableTableTableManager
+class $$BlocksTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $BlockTableTable,
-          BlockData,
-          $$BlockTableTableFilterComposer,
-          $$BlockTableTableOrderingComposer,
-          $$BlockTableTableAnnotationComposer,
-          $$BlockTableTableCreateCompanionBuilder,
-          $$BlockTableTableUpdateCompanionBuilder,
-          (
-            BlockData,
-            BaseReferences<_$AppDataBase, $BlockTableTable, BlockData>,
-          ),
-          BlockData,
+          $BlocksTable,
+          Block,
+          $$BlocksTableFilterComposer,
+          $$BlocksTableOrderingComposer,
+          $$BlocksTableAnnotationComposer,
+          $$BlocksTableCreateCompanionBuilder,
+          $$BlocksTableUpdateCompanionBuilder,
+          (Block, BaseReferences<_$AppDataBase, $BlocksTable, Block>),
+          Block,
           PrefetchHooks Function()
         > {
-  $$BlockTableTableTableManager(_$AppDataBase db, $BlockTableTable table)
+  $$BlocksTableTableManager(_$AppDataBase db, $BlocksTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$BlockTableTableFilterComposer($db: db, $table: table),
+              $$BlocksTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$BlockTableTableOrderingComposer($db: db, $table: table),
+              $$BlocksTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$BlockTableTableAnnotationComposer($db: db, $table: table),
+              $$BlocksTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
@@ -27832,7 +27397,7 @@ class $$BlockTableTableTableManager
                 Value<String?> blockedImage = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime?> cachedAt = const Value.absent(),
-              }) => BlockTableCompanion(
+              }) => BlocksCompanion(
                 id: id,
                 blockType: blockType,
                 blockedUser: blockedUser,
@@ -27852,7 +27417,7 @@ class $$BlockTableTableTableManager
                 Value<String?> blockedImage = const Value.absent(),
                 required DateTime createdAt,
                 Value<DateTime?> cachedAt = const Value.absent(),
-              }) => BlockTableCompanion.insert(
+              }) => BlocksCompanion.insert(
                 id: id,
                 blockType: blockType,
                 blockedUser: blockedUser,
@@ -27870,22 +27435,22 @@ class $$BlockTableTableTableManager
       );
 }
 
-typedef $$BlockTableTableProcessedTableManager =
+typedef $$BlocksTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $BlockTableTable,
-      BlockData,
-      $$BlockTableTableFilterComposer,
-      $$BlockTableTableOrderingComposer,
-      $$BlockTableTableAnnotationComposer,
-      $$BlockTableTableCreateCompanionBuilder,
-      $$BlockTableTableUpdateCompanionBuilder,
-      (BlockData, BaseReferences<_$AppDataBase, $BlockTableTable, BlockData>),
-      BlockData,
+      $BlocksTable,
+      Block,
+      $$BlocksTableFilterComposer,
+      $$BlocksTableOrderingComposer,
+      $$BlocksTableAnnotationComposer,
+      $$BlocksTableCreateCompanionBuilder,
+      $$BlocksTableUpdateCompanionBuilder,
+      (Block, BaseReferences<_$AppDataBase, $BlocksTable, Block>),
+      Block,
       PrefetchHooks Function()
     >;
-typedef $$ReportTableTableCreateCompanionBuilder =
-    ReportTableCompanion Function({
+typedef $$ReportsTableCreateCompanionBuilder =
+    ReportsCompanion Function({
       Value<int> id,
       required String reportType,
       Value<String?> reportedUser,
@@ -27898,8 +27463,8 @@ typedef $$ReportTableTableCreateCompanionBuilder =
       Value<DateTime?> updatedAt,
       Value<DateTime?> cachedAt,
     });
-typedef $$ReportTableTableUpdateCompanionBuilder =
-    ReportTableCompanion Function({
+typedef $$ReportsTableUpdateCompanionBuilder =
+    ReportsCompanion Function({
       Value<int> id,
       Value<String> reportType,
       Value<String?> reportedUser,
@@ -27913,9 +27478,9 @@ typedef $$ReportTableTableUpdateCompanionBuilder =
       Value<DateTime?> cachedAt,
     });
 
-class $$ReportTableTableFilterComposer
-    extends Composer<_$AppDataBase, $ReportTableTable> {
-  $$ReportTableTableFilterComposer({
+class $$ReportsTableFilterComposer
+    extends Composer<_$AppDataBase, $ReportsTable> {
+  $$ReportsTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -27978,9 +27543,9 @@ class $$ReportTableTableFilterComposer
   );
 }
 
-class $$ReportTableTableOrderingComposer
-    extends Composer<_$AppDataBase, $ReportTableTable> {
-  $$ReportTableTableOrderingComposer({
+class $$ReportsTableOrderingComposer
+    extends Composer<_$AppDataBase, $ReportsTable> {
+  $$ReportsTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -28043,9 +27608,9 @@ class $$ReportTableTableOrderingComposer
   );
 }
 
-class $$ReportTableTableAnnotationComposer
-    extends Composer<_$AppDataBase, $ReportTableTable> {
-  $$ReportTableTableAnnotationComposer({
+class $$ReportsTableAnnotationComposer
+    extends Composer<_$AppDataBase, $ReportsTable> {
+  $$ReportsTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -28096,35 +27661,32 @@ class $$ReportTableTableAnnotationComposer
       $composableBuilder(column: $table.cachedAt, builder: (column) => column);
 }
 
-class $$ReportTableTableTableManager
+class $$ReportsTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $ReportTableTable,
-          ReportData,
-          $$ReportTableTableFilterComposer,
-          $$ReportTableTableOrderingComposer,
-          $$ReportTableTableAnnotationComposer,
-          $$ReportTableTableCreateCompanionBuilder,
-          $$ReportTableTableUpdateCompanionBuilder,
-          (
-            ReportData,
-            BaseReferences<_$AppDataBase, $ReportTableTable, ReportData>,
-          ),
-          ReportData,
+          $ReportsTable,
+          Report,
+          $$ReportsTableFilterComposer,
+          $$ReportsTableOrderingComposer,
+          $$ReportsTableAnnotationComposer,
+          $$ReportsTableCreateCompanionBuilder,
+          $$ReportsTableUpdateCompanionBuilder,
+          (Report, BaseReferences<_$AppDataBase, $ReportsTable, Report>),
+          Report,
           PrefetchHooks Function()
         > {
-  $$ReportTableTableTableManager(_$AppDataBase db, $ReportTableTable table)
+  $$ReportsTableTableManager(_$AppDataBase db, $ReportsTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$ReportTableTableFilterComposer($db: db, $table: table),
+              $$ReportsTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$ReportTableTableOrderingComposer($db: db, $table: table),
+              $$ReportsTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$ReportTableTableAnnotationComposer($db: db, $table: table),
+              $$ReportsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
@@ -28138,7 +27700,7 @@ class $$ReportTableTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime?> updatedAt = const Value.absent(),
                 Value<DateTime?> cachedAt = const Value.absent(),
-              }) => ReportTableCompanion(
+              }) => ReportsCompanion(
                 id: id,
                 reportType: reportType,
                 reportedUser: reportedUser,
@@ -28164,7 +27726,7 @@ class $$ReportTableTableTableManager
                 required DateTime createdAt,
                 Value<DateTime?> updatedAt = const Value.absent(),
                 Value<DateTime?> cachedAt = const Value.absent(),
-              }) => ReportTableCompanion.insert(
+              }) => ReportsCompanion.insert(
                 id: id,
                 reportType: reportType,
                 reportedUser: reportedUser,
@@ -28185,21 +27747,18 @@ class $$ReportTableTableTableManager
       );
 }
 
-typedef $$ReportTableTableProcessedTableManager =
+typedef $$ReportsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $ReportTableTable,
-      ReportData,
-      $$ReportTableTableFilterComposer,
-      $$ReportTableTableOrderingComposer,
-      $$ReportTableTableAnnotationComposer,
-      $$ReportTableTableCreateCompanionBuilder,
-      $$ReportTableTableUpdateCompanionBuilder,
-      (
-        ReportData,
-        BaseReferences<_$AppDataBase, $ReportTableTable, ReportData>,
-      ),
-      ReportData,
+      $ReportsTable,
+      Report,
+      $$ReportsTableFilterComposer,
+      $$ReportsTableOrderingComposer,
+      $$ReportsTableAnnotationComposer,
+      $$ReportsTableCreateCompanionBuilder,
+      $$ReportsTableUpdateCompanionBuilder,
+      (Report, BaseReferences<_$AppDataBase, $ReportsTable, Report>),
+      Report,
       PrefetchHooks Function()
     >;
 typedef $$AgendaEventTableCreateCompanionBuilder =
@@ -28685,302 +28244,8 @@ typedef $$AgendaEventTableProcessedTableManager =
       AgendaEventData,
       PrefetchHooks Function()
     >;
-typedef $$NotificationTableTableCreateCompanionBuilder =
-    NotificationTableCompanion Function({
-      required String id,
-      required String title,
-      required String body,
-      Value<String?> imageUrl,
-      Value<Map<String, dynamic>?> data,
-      required DateTime createdAt,
-      Value<bool> isRead,
-      Value<String?> category,
-      Value<String?> actionUrl,
-      Value<int> rowid,
-    });
-typedef $$NotificationTableTableUpdateCompanionBuilder =
-    NotificationTableCompanion Function({
-      Value<String> id,
-      Value<String> title,
-      Value<String> body,
-      Value<String?> imageUrl,
-      Value<Map<String, dynamic>?> data,
-      Value<DateTime> createdAt,
-      Value<bool> isRead,
-      Value<String?> category,
-      Value<String?> actionUrl,
-      Value<int> rowid,
-    });
-
-class $$NotificationTableTableFilterComposer
-    extends Composer<_$AppDataBase, $NotificationTableTable> {
-  $$NotificationTableTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<String> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get title => $composableBuilder(
-    column: $table.title,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get body => $composableBuilder(
-    column: $table.body,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get imageUrl => $composableBuilder(
-    column: $table.imageUrl,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnWithTypeConverterFilters<
-    Map<String, dynamic>?,
-    Map<String, dynamic>,
-    String
-  >
-  get data => $composableBuilder(
-    column: $table.data,
-    builder: (column) => ColumnWithTypeConverterFilters(column),
-  );
-
-  ColumnFilters<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<bool> get isRead => $composableBuilder(
-    column: $table.isRead,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get category => $composableBuilder(
-    column: $table.category,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get actionUrl => $composableBuilder(
-    column: $table.actionUrl,
-    builder: (column) => ColumnFilters(column),
-  );
-}
-
-class $$NotificationTableTableOrderingComposer
-    extends Composer<_$AppDataBase, $NotificationTableTable> {
-  $$NotificationTableTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<String> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get title => $composableBuilder(
-    column: $table.title,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get body => $composableBuilder(
-    column: $table.body,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get imageUrl => $composableBuilder(
-    column: $table.imageUrl,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get data => $composableBuilder(
-    column: $table.data,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<bool> get isRead => $composableBuilder(
-    column: $table.isRead,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get category => $composableBuilder(
-    column: $table.category,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get actionUrl => $composableBuilder(
-    column: $table.actionUrl,
-    builder: (column) => ColumnOrderings(column),
-  );
-}
-
-class $$NotificationTableTableAnnotationComposer
-    extends Composer<_$AppDataBase, $NotificationTableTable> {
-  $$NotificationTableTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<String> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<String> get title =>
-      $composableBuilder(column: $table.title, builder: (column) => column);
-
-  GeneratedColumn<String> get body =>
-      $composableBuilder(column: $table.body, builder: (column) => column);
-
-  GeneratedColumn<String> get imageUrl =>
-      $composableBuilder(column: $table.imageUrl, builder: (column) => column);
-
-  GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String> get data =>
-      $composableBuilder(column: $table.data, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get createdAt =>
-      $composableBuilder(column: $table.createdAt, builder: (column) => column);
-
-  GeneratedColumn<bool> get isRead =>
-      $composableBuilder(column: $table.isRead, builder: (column) => column);
-
-  GeneratedColumn<String> get category =>
-      $composableBuilder(column: $table.category, builder: (column) => column);
-
-  GeneratedColumn<String> get actionUrl =>
-      $composableBuilder(column: $table.actionUrl, builder: (column) => column);
-}
-
-class $$NotificationTableTableTableManager
-    extends
-        RootTableManager<
-          _$AppDataBase,
-          $NotificationTableTable,
-          NotificationTableData,
-          $$NotificationTableTableFilterComposer,
-          $$NotificationTableTableOrderingComposer,
-          $$NotificationTableTableAnnotationComposer,
-          $$NotificationTableTableCreateCompanionBuilder,
-          $$NotificationTableTableUpdateCompanionBuilder,
-          (
-            NotificationTableData,
-            BaseReferences<
-              _$AppDataBase,
-              $NotificationTableTable,
-              NotificationTableData
-            >,
-          ),
-          NotificationTableData,
-          PrefetchHooks Function()
-        > {
-  $$NotificationTableTableTableManager(
-    _$AppDataBase db,
-    $NotificationTableTable table,
-  ) : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$NotificationTableTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$NotificationTableTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$NotificationTableTableAnnotationComposer(
-                $db: db,
-                $table: table,
-              ),
-          updateCompanionCallback:
-              ({
-                Value<String> id = const Value.absent(),
-                Value<String> title = const Value.absent(),
-                Value<String> body = const Value.absent(),
-                Value<String?> imageUrl = const Value.absent(),
-                Value<Map<String, dynamic>?> data = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
-                Value<bool> isRead = const Value.absent(),
-                Value<String?> category = const Value.absent(),
-                Value<String?> actionUrl = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => NotificationTableCompanion(
-                id: id,
-                title: title,
-                body: body,
-                imageUrl: imageUrl,
-                data: data,
-                createdAt: createdAt,
-                isRead: isRead,
-                category: category,
-                actionUrl: actionUrl,
-                rowid: rowid,
-              ),
-          createCompanionCallback:
-              ({
-                required String id,
-                required String title,
-                required String body,
-                Value<String?> imageUrl = const Value.absent(),
-                Value<Map<String, dynamic>?> data = const Value.absent(),
-                required DateTime createdAt,
-                Value<bool> isRead = const Value.absent(),
-                Value<String?> category = const Value.absent(),
-                Value<String?> actionUrl = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => NotificationTableCompanion.insert(
-                id: id,
-                title: title,
-                body: body,
-                imageUrl: imageUrl,
-                data: data,
-                createdAt: createdAt,
-                isRead: isRead,
-                category: category,
-                actionUrl: actionUrl,
-                rowid: rowid,
-              ),
-          withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
-              .toList(),
-          prefetchHooksCallback: null,
-        ),
-      );
-}
-
-typedef $$NotificationTableTableProcessedTableManager =
-    ProcessedTableManager<
-      _$AppDataBase,
-      $NotificationTableTable,
-      NotificationTableData,
-      $$NotificationTableTableFilterComposer,
-      $$NotificationTableTableOrderingComposer,
-      $$NotificationTableTableAnnotationComposer,
-      $$NotificationTableTableCreateCompanionBuilder,
-      $$NotificationTableTableUpdateCompanionBuilder,
-      (
-        NotificationTableData,
-        BaseReferences<
-          _$AppDataBase,
-          $NotificationTableTable,
-          NotificationTableData
-        >,
-      ),
-      NotificationTableData,
-      PrefetchHooks Function()
-    >;
-typedef $$InstitutionTableCreateCompanionBuilder =
-    InstitutionCompanion Function({
+typedef $$InstitutionsTableCreateCompanionBuilder =
+    InstitutionsCompanion Function({
       Value<int> institutionId,
       required String name,
       Value<List<dynamic>?> webPages,
@@ -28989,8 +28254,8 @@ typedef $$InstitutionTableCreateCompanionBuilder =
       Value<String?> country,
       Value<String?> stateProvince,
     });
-typedef $$InstitutionTableUpdateCompanionBuilder =
-    InstitutionCompanion Function({
+typedef $$InstitutionsTableUpdateCompanionBuilder =
+    InstitutionsCompanion Function({
       Value<int> institutionId,
       Value<String> name,
       Value<List<dynamic>?> webPages,
@@ -29000,52 +28265,54 @@ typedef $$InstitutionTableUpdateCompanionBuilder =
       Value<String?> stateProvince,
     });
 
-final class $$InstitutionTableReferences
-    extends BaseReferences<_$AppDataBase, $InstitutionTable, InstitutionData> {
-  $$InstitutionTableReferences(super.$_db, super.$_table, super.$_typedResult);
+final class $$InstitutionsTableReferences
+    extends BaseReferences<_$AppDataBase, $InstitutionsTable, Institution> {
+  $$InstitutionsTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static MultiTypedResultKey<$InstitutionKeyTable, List<InstitutionKeyData>>
-  _institutionKeyRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
-    db.institutionKey,
+  static MultiTypedResultKey<$InstitutionKeysTable, List<InstitutionKey>>
+  _institutionKeysRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
+    db.institutionKeys,
     aliasName: $_aliasNameGenerator(
-      db.institution.institutionId,
-      db.institutionKey.institutionID,
+      db.institutions.institutionId,
+      db.institutionKeys.institutionID,
     ),
   );
 
-  $$InstitutionKeyTableProcessedTableManager get institutionKeyRefs {
-    final manager = $$InstitutionKeyTableTableManager($_db, $_db.institutionKey)
-        .filter(
+  $$InstitutionKeysTableProcessedTableManager get institutionKeysRefs {
+    final manager =
+        $$InstitutionKeysTableTableManager($_db, $_db.institutionKeys).filter(
           (f) => f.institutionID.institutionId.sqlEquals(
             $_itemColumn<int>('institution_id')!,
           ),
         );
 
-    final cache = $_typedResult.readTableOrNull(_institutionKeyRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(
+      _institutionKeysRefsTable($_db),
+    );
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
 
   static MultiTypedResultKey<
-    $InstitutionFeeTransactionTable,
-    List<InstitutionFeeTransactionData>
+    $InstitutionFeeTransactionsTable,
+    List<InstitutionFeeTransaction>
   >
-  _institutionFeeTransactionRefsTable(_$AppDataBase db) =>
+  _institutionFeeTransactionsRefsTable(_$AppDataBase db) =>
       MultiTypedResultKey.fromTable(
-        db.institutionFeeTransaction,
+        db.institutionFeeTransactions,
         aliasName: $_aliasNameGenerator(
-          db.institution.institutionId,
-          db.institutionFeeTransaction.institution,
+          db.institutions.institutionId,
+          db.institutionFeeTransactions.institution,
         ),
       );
 
-  $$InstitutionFeeTransactionTableProcessedTableManager
-  get institutionFeeTransactionRefs {
+  $$InstitutionFeeTransactionsTableProcessedTableManager
+  get institutionFeeTransactionsRefs {
     final manager =
-        $$InstitutionFeeTransactionTableTableManager(
+        $$InstitutionFeeTransactionsTableTableManager(
           $_db,
-          $_db.institutionFeeTransaction,
+          $_db.institutionFeeTransactions,
         ).filter(
           (f) => f.institution.institutionId.sqlEquals(
             $_itemColumn<int>('institution_id')!,
@@ -29053,7 +28320,7 @@ final class $$InstitutionTableReferences
         );
 
     final cache = $_typedResult.readTableOrNull(
-      _institutionFeeTransactionRefsTable($_db),
+      _institutionFeeTransactionsRefsTable($_db),
     );
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
@@ -29064,7 +28331,7 @@ final class $$InstitutionTableReferences
   _semesterRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
     db.semester,
     aliasName: $_aliasNameGenerator(
-      db.institution.institutionId,
+      db.institutions.institutionId,
       db.semester.institutionId,
     ),
   );
@@ -29087,7 +28354,7 @@ final class $$InstitutionTableReferences
   ) => MultiTypedResultKey.fromTable(
     db.course,
     aliasName: $_aliasNameGenerator(
-      db.institution.institutionId,
+      db.institutions.institutionId,
       db.course.institution,
     ),
   );
@@ -29109,7 +28376,7 @@ final class $$InstitutionTableReferences
   _timetableRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
     db.timetable,
     aliasName: $_aliasNameGenerator(
-      db.institution.institutionId,
+      db.institutions.institutionId,
       db.timetable.institution,
     ),
   );
@@ -29126,11 +28393,34 @@ final class $$InstitutionTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<$ExamTimetablesTable, List<ExamTimetable>>
+  _examTimetablesRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
+    db.examTimetables,
+    aliasName: $_aliasNameGenerator(
+      db.institutions.institutionId,
+      db.examTimetables.institutionId,
+    ),
+  );
+
+  $$ExamTimetablesTableProcessedTableManager get examTimetablesRefs {
+    final manager = $$ExamTimetablesTableTableManager($_db, $_db.examTimetables)
+        .filter(
+          (f) => f.institutionId.institutionId.sqlEquals(
+            $_itemColumn<int>('institution_id')!,
+          ),
+        );
+
+    final cache = $_typedResult.readTableOrNull(_examTimetablesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
-class $$InstitutionTableFilterComposer
-    extends Composer<_$AppDataBase, $InstitutionTable> {
-  $$InstitutionTableFilterComposer({
+class $$InstitutionsTableFilterComposer
+    extends Composer<_$AppDataBase, $InstitutionsTable> {
+  $$InstitutionsTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -29174,22 +28464,22 @@ class $$InstitutionTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  Expression<bool> institutionKeyRefs(
-    Expression<bool> Function($$InstitutionKeyTableFilterComposer f) f,
+  Expression<bool> institutionKeysRefs(
+    Expression<bool> Function($$InstitutionKeysTableFilterComposer f) f,
   ) {
-    final $$InstitutionKeyTableFilterComposer composer = $composerBuilder(
+    final $$InstitutionKeysTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.institutionId,
-      referencedTable: $db.institutionKey,
+      referencedTable: $db.institutionKeys,
       getReferencedColumn: (t) => t.institutionID,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionKeyTableFilterComposer(
+          }) => $$InstitutionKeysTableFilterComposer(
             $db: $db,
-            $table: $db.institutionKey,
+            $table: $db.institutionKeys,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -29199,24 +28489,24 @@ class $$InstitutionTableFilterComposer
     return f(composer);
   }
 
-  Expression<bool> institutionFeeTransactionRefs(
-    Expression<bool> Function($$InstitutionFeeTransactionTableFilterComposer f)
+  Expression<bool> institutionFeeTransactionsRefs(
+    Expression<bool> Function($$InstitutionFeeTransactionsTableFilterComposer f)
     f,
   ) {
-    final $$InstitutionFeeTransactionTableFilterComposer composer =
+    final $$InstitutionFeeTransactionsTableFilterComposer composer =
         $composerBuilder(
           composer: this,
           getCurrentColumn: (t) => t.institutionId,
-          referencedTable: $db.institutionFeeTransaction,
+          referencedTable: $db.institutionFeeTransactions,
           getReferencedColumn: (t) => t.institution,
           builder:
               (
                 joinBuilder, {
                 $addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer,
-              }) => $$InstitutionFeeTransactionTableFilterComposer(
+              }) => $$InstitutionFeeTransactionsTableFilterComposer(
                 $db: $db,
-                $table: $db.institutionFeeTransaction,
+                $table: $db.institutionFeeTransactions,
                 $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
                 joinBuilder: joinBuilder,
                 $removeJoinBuilderFromRootComposer:
@@ -29300,11 +28590,36 @@ class $$InstitutionTableFilterComposer
     );
     return f(composer);
   }
+
+  Expression<bool> examTimetablesRefs(
+    Expression<bool> Function($$ExamTimetablesTableFilterComposer f) f,
+  ) {
+    final $$ExamTimetablesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institutionId,
+      referencedTable: $db.examTimetables,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ExamTimetablesTableFilterComposer(
+            $db: $db,
+            $table: $db.examTimetables,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
-class $$InstitutionTableOrderingComposer
-    extends Composer<_$AppDataBase, $InstitutionTable> {
-  $$InstitutionTableOrderingComposer({
+class $$InstitutionsTableOrderingComposer
+    extends Composer<_$AppDataBase, $InstitutionsTable> {
+  $$InstitutionsTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -29347,9 +28662,9 @@ class $$InstitutionTableOrderingComposer
   );
 }
 
-class $$InstitutionTableAnnotationComposer
-    extends Composer<_$AppDataBase, $InstitutionTable> {
-  $$InstitutionTableAnnotationComposer({
+class $$InstitutionsTableAnnotationComposer
+    extends Composer<_$AppDataBase, $InstitutionsTable> {
+  $$InstitutionsTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -29383,22 +28698,22 @@ class $$InstitutionTableAnnotationComposer
     builder: (column) => column,
   );
 
-  Expression<T> institutionKeyRefs<T extends Object>(
-    Expression<T> Function($$InstitutionKeyTableAnnotationComposer a) f,
+  Expression<T> institutionKeysRefs<T extends Object>(
+    Expression<T> Function($$InstitutionKeysTableAnnotationComposer a) f,
   ) {
-    final $$InstitutionKeyTableAnnotationComposer composer = $composerBuilder(
+    final $$InstitutionKeysTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.institutionId,
-      referencedTable: $db.institutionKey,
+      referencedTable: $db.institutionKeys,
       getReferencedColumn: (t) => t.institutionID,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionKeyTableAnnotationComposer(
+          }) => $$InstitutionKeysTableAnnotationComposer(
             $db: $db,
-            $table: $db.institutionKey,
+            $table: $db.institutionKeys,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -29408,24 +28723,26 @@ class $$InstitutionTableAnnotationComposer
     return f(composer);
   }
 
-  Expression<T> institutionFeeTransactionRefs<T extends Object>(
-    Expression<T> Function($$InstitutionFeeTransactionTableAnnotationComposer a)
+  Expression<T> institutionFeeTransactionsRefs<T extends Object>(
+    Expression<T> Function(
+      $$InstitutionFeeTransactionsTableAnnotationComposer a,
+    )
     f,
   ) {
-    final $$InstitutionFeeTransactionTableAnnotationComposer composer =
+    final $$InstitutionFeeTransactionsTableAnnotationComposer composer =
         $composerBuilder(
           composer: this,
           getCurrentColumn: (t) => t.institutionId,
-          referencedTable: $db.institutionFeeTransaction,
+          referencedTable: $db.institutionFeeTransactions,
           getReferencedColumn: (t) => t.institution,
           builder:
               (
                 joinBuilder, {
                 $addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer,
-              }) => $$InstitutionFeeTransactionTableAnnotationComposer(
+              }) => $$InstitutionFeeTransactionsTableAnnotationComposer(
                 $db: $db,
-                $table: $db.institutionFeeTransaction,
+                $table: $db.institutionFeeTransactions,
                 $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
                 joinBuilder: joinBuilder,
                 $removeJoinBuilderFromRootComposer:
@@ -29509,40 +28826,66 @@ class $$InstitutionTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> examTimetablesRefs<T extends Object>(
+    Expression<T> Function($$ExamTimetablesTableAnnotationComposer a) f,
+  ) {
+    final $$ExamTimetablesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institutionId,
+      referencedTable: $db.examTimetables,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ExamTimetablesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.examTimetables,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
-class $$InstitutionTableTableManager
+class $$InstitutionsTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $InstitutionTable,
-          InstitutionData,
-          $$InstitutionTableFilterComposer,
-          $$InstitutionTableOrderingComposer,
-          $$InstitutionTableAnnotationComposer,
-          $$InstitutionTableCreateCompanionBuilder,
-          $$InstitutionTableUpdateCompanionBuilder,
-          (InstitutionData, $$InstitutionTableReferences),
-          InstitutionData,
+          $InstitutionsTable,
+          Institution,
+          $$InstitutionsTableFilterComposer,
+          $$InstitutionsTableOrderingComposer,
+          $$InstitutionsTableAnnotationComposer,
+          $$InstitutionsTableCreateCompanionBuilder,
+          $$InstitutionsTableUpdateCompanionBuilder,
+          (Institution, $$InstitutionsTableReferences),
+          Institution,
           PrefetchHooks Function({
-            bool institutionKeyRefs,
-            bool institutionFeeTransactionRefs,
+            bool institutionKeysRefs,
+            bool institutionFeeTransactionsRefs,
             bool semesterRefs,
             bool courseRefs,
             bool timetableRefs,
+            bool examTimetablesRefs,
           })
         > {
-  $$InstitutionTableTableManager(_$AppDataBase db, $InstitutionTable table)
+  $$InstitutionsTableTableManager(_$AppDataBase db, $InstitutionsTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$InstitutionTableFilterComposer($db: db, $table: table),
+              $$InstitutionsTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$InstitutionTableOrderingComposer($db: db, $table: table),
+              $$InstitutionsTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$InstitutionTableAnnotationComposer($db: db, $table: table),
+              $$InstitutionsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> institutionId = const Value.absent(),
@@ -29552,7 +28895,7 @@ class $$InstitutionTableTableManager
                 Value<String?> alphaTwoCode = const Value.absent(),
                 Value<String?> country = const Value.absent(),
                 Value<String?> stateProvince = const Value.absent(),
-              }) => InstitutionCompanion(
+              }) => InstitutionsCompanion(
                 institutionId: institutionId,
                 name: name,
                 webPages: webPages,
@@ -29570,7 +28913,7 @@ class $$InstitutionTableTableManager
                 Value<String?> alphaTwoCode = const Value.absent(),
                 Value<String?> country = const Value.absent(),
                 Value<String?> stateProvince = const Value.absent(),
-              }) => InstitutionCompanion.insert(
+              }) => InstitutionsCompanion.insert(
                 institutionId: institutionId,
                 name: name,
                 webPages: webPages,
@@ -29583,67 +28926,69 @@ class $$InstitutionTableTableManager
               .map(
                 (e) => (
                   e.readTable(table),
-                  $$InstitutionTableReferences(db, table, e),
+                  $$InstitutionsTableReferences(db, table, e),
                 ),
               )
               .toList(),
           prefetchHooksCallback:
               ({
-                institutionKeyRefs = false,
-                institutionFeeTransactionRefs = false,
+                institutionKeysRefs = false,
+                institutionFeeTransactionsRefs = false,
                 semesterRefs = false,
                 courseRefs = false,
                 timetableRefs = false,
+                examTimetablesRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
-                    if (institutionKeyRefs) db.institutionKey,
-                    if (institutionFeeTransactionRefs)
-                      db.institutionFeeTransaction,
+                    if (institutionKeysRefs) db.institutionKeys,
+                    if (institutionFeeTransactionsRefs)
+                      db.institutionFeeTransactions,
                     if (semesterRefs) db.semester,
                     if (courseRefs) db.course,
                     if (timetableRefs) db.timetable,
+                    if (examTimetablesRefs) db.examTimetables,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
                     return [
-                      if (institutionKeyRefs)
+                      if (institutionKeysRefs)
                         await $_getPrefetchedData<
-                          InstitutionData,
-                          $InstitutionTable,
-                          InstitutionKeyData
+                          Institution,
+                          $InstitutionsTable,
+                          InstitutionKey
                         >(
                           currentTable: table,
-                          referencedTable: $$InstitutionTableReferences
-                              ._institutionKeyRefsTable(db),
+                          referencedTable: $$InstitutionsTableReferences
+                              ._institutionKeysRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$InstitutionTableReferences(
+                              $$InstitutionsTableReferences(
                                 db,
                                 table,
                                 p0,
-                              ).institutionKeyRefs,
+                              ).institutionKeysRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.institutionID == item.institutionId,
                               ),
                           typedResults: items,
                         ),
-                      if (institutionFeeTransactionRefs)
+                      if (institutionFeeTransactionsRefs)
                         await $_getPrefetchedData<
-                          InstitutionData,
-                          $InstitutionTable,
-                          InstitutionFeeTransactionData
+                          Institution,
+                          $InstitutionsTable,
+                          InstitutionFeeTransaction
                         >(
                           currentTable: table,
-                          referencedTable: $$InstitutionTableReferences
-                              ._institutionFeeTransactionRefsTable(db),
+                          referencedTable: $$InstitutionsTableReferences
+                              ._institutionFeeTransactionsRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$InstitutionTableReferences(
+                              $$InstitutionsTableReferences(
                                 db,
                                 table,
                                 p0,
-                              ).institutionFeeTransactionRefs,
+                              ).institutionFeeTransactionsRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.institution == item.institutionId,
@@ -29652,15 +28997,15 @@ class $$InstitutionTableTableManager
                         ),
                       if (semesterRefs)
                         await $_getPrefetchedData<
-                          InstitutionData,
-                          $InstitutionTable,
+                          Institution,
+                          $InstitutionsTable,
                           SemesterData
                         >(
                           currentTable: table,
-                          referencedTable: $$InstitutionTableReferences
+                          referencedTable: $$InstitutionsTableReferences
                               ._semesterRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$InstitutionTableReferences(
+                              $$InstitutionsTableReferences(
                                 db,
                                 table,
                                 p0,
@@ -29673,15 +29018,15 @@ class $$InstitutionTableTableManager
                         ),
                       if (courseRefs)
                         await $_getPrefetchedData<
-                          InstitutionData,
-                          $InstitutionTable,
+                          Institution,
+                          $InstitutionsTable,
                           CourseData
                         >(
                           currentTable: table,
-                          referencedTable: $$InstitutionTableReferences
+                          referencedTable: $$InstitutionsTableReferences
                               ._courseRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$InstitutionTableReferences(
+                              $$InstitutionsTableReferences(
                                 db,
                                 table,
                                 p0,
@@ -29694,15 +29039,15 @@ class $$InstitutionTableTableManager
                         ),
                       if (timetableRefs)
                         await $_getPrefetchedData<
-                          InstitutionData,
-                          $InstitutionTable,
+                          Institution,
+                          $InstitutionsTable,
                           TimetableData
                         >(
                           currentTable: table,
-                          referencedTable: $$InstitutionTableReferences
+                          referencedTable: $$InstitutionsTableReferences
                               ._timetableRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$InstitutionTableReferences(
+                              $$InstitutionsTableReferences(
                                 db,
                                 table,
                                 p0,
@@ -29710,6 +29055,27 @@ class $$InstitutionTableTableManager
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.institution == item.institutionId,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (examTimetablesRefs)
+                        await $_getPrefetchedData<
+                          Institution,
+                          $InstitutionsTable,
+                          ExamTimetable
+                        >(
+                          currentTable: table,
+                          referencedTable: $$InstitutionsTableReferences
+                              ._examTimetablesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$InstitutionsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).examTimetablesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.institutionId == item.institutionId,
                               ),
                           typedResults: items,
                         ),
@@ -29721,28 +29087,29 @@ class $$InstitutionTableTableManager
       );
 }
 
-typedef $$InstitutionTableProcessedTableManager =
+typedef $$InstitutionsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $InstitutionTable,
-      InstitutionData,
-      $$InstitutionTableFilterComposer,
-      $$InstitutionTableOrderingComposer,
-      $$InstitutionTableAnnotationComposer,
-      $$InstitutionTableCreateCompanionBuilder,
-      $$InstitutionTableUpdateCompanionBuilder,
-      (InstitutionData, $$InstitutionTableReferences),
-      InstitutionData,
+      $InstitutionsTable,
+      Institution,
+      $$InstitutionsTableFilterComposer,
+      $$InstitutionsTableOrderingComposer,
+      $$InstitutionsTableAnnotationComposer,
+      $$InstitutionsTableCreateCompanionBuilder,
+      $$InstitutionsTableUpdateCompanionBuilder,
+      (Institution, $$InstitutionsTableReferences),
+      Institution,
       PrefetchHooks Function({
-        bool institutionKeyRefs,
-        bool institutionFeeTransactionRefs,
+        bool institutionKeysRefs,
+        bool institutionFeeTransactionsRefs,
         bool semesterRefs,
         bool courseRefs,
         bool timetableRefs,
+        bool examTimetablesRefs,
       })
     >;
-typedef $$InstitutionScrappingCommandTableCreateCompanionBuilder =
-    InstitutionScrappingCommandCompanion Function({
+typedef $$InstitutionScrappingCommandsTableCreateCompanionBuilder =
+    InstitutionScrappingCommandsCompanion Function({
       required int institution,
       required String commandID,
       required String name,
@@ -29753,8 +29120,8 @@ typedef $$InstitutionScrappingCommandTableCreateCompanionBuilder =
       required List<dynamic> instructions,
       Value<int> rowid,
     });
-typedef $$InstitutionScrappingCommandTableUpdateCompanionBuilder =
-    InstitutionScrappingCommandCompanion Function({
+typedef $$InstitutionScrappingCommandsTableUpdateCompanionBuilder =
+    InstitutionScrappingCommandsCompanion Function({
       Value<int> institution,
       Value<String> commandID,
       Value<String> name,
@@ -29766,46 +29133,48 @@ typedef $$InstitutionScrappingCommandTableUpdateCompanionBuilder =
       Value<int> rowid,
     });
 
-final class $$InstitutionScrappingCommandTableReferences
+final class $$InstitutionScrappingCommandsTableReferences
     extends
         BaseReferences<
           _$AppDataBase,
-          $InstitutionScrappingCommandTable,
-          InstitutionScrappingCommandData
+          $InstitutionScrappingCommandsTable,
+          InstitutionScrappingCommand
         > {
-  $$InstitutionScrappingCommandTableReferences(
+  $$InstitutionScrappingCommandsTableReferences(
     super.$_db,
     super.$_table,
     super.$_typedResult,
   );
 
-  static MultiTypedResultKey<$InstitutionKeyTable, List<InstitutionKeyData>>
-  _institutionKeyRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
-    db.institutionKey,
+  static MultiTypedResultKey<$InstitutionKeysTable, List<InstitutionKey>>
+  _institutionKeysRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
+    db.institutionKeys,
     aliasName: $_aliasNameGenerator(
-      db.institutionScrappingCommand.commandID,
-      db.institutionKey.commandID,
+      db.institutionScrappingCommands.commandID,
+      db.institutionKeys.commandID,
     ),
   );
 
-  $$InstitutionKeyTableProcessedTableManager get institutionKeyRefs {
-    final manager = $$InstitutionKeyTableTableManager($_db, $_db.institutionKey)
-        .filter(
+  $$InstitutionKeysTableProcessedTableManager get institutionKeysRefs {
+    final manager =
+        $$InstitutionKeysTableTableManager($_db, $_db.institutionKeys).filter(
           (f) => f.commandID.commandID.sqlEquals(
             $_itemColumn<String>('command_i_d')!,
           ),
         );
 
-    final cache = $_typedResult.readTableOrNull(_institutionKeyRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(
+      _institutionKeysRefsTable($_db),
+    );
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
 }
 
-class $$InstitutionScrappingCommandTableFilterComposer
-    extends Composer<_$AppDataBase, $InstitutionScrappingCommandTable> {
-  $$InstitutionScrappingCommandTableFilterComposer({
+class $$InstitutionScrappingCommandsTableFilterComposer
+    extends Composer<_$AppDataBase, $InstitutionScrappingCommandsTable> {
+  $$InstitutionScrappingCommandsTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -29853,22 +29222,22 @@ class $$InstitutionScrappingCommandTableFilterComposer
     builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
-  Expression<bool> institutionKeyRefs(
-    Expression<bool> Function($$InstitutionKeyTableFilterComposer f) f,
+  Expression<bool> institutionKeysRefs(
+    Expression<bool> Function($$InstitutionKeysTableFilterComposer f) f,
   ) {
-    final $$InstitutionKeyTableFilterComposer composer = $composerBuilder(
+    final $$InstitutionKeysTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.commandID,
-      referencedTable: $db.institutionKey,
+      referencedTable: $db.institutionKeys,
       getReferencedColumn: (t) => t.commandID,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionKeyTableFilterComposer(
+          }) => $$InstitutionKeysTableFilterComposer(
             $db: $db,
-            $table: $db.institutionKey,
+            $table: $db.institutionKeys,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -29879,9 +29248,9 @@ class $$InstitutionScrappingCommandTableFilterComposer
   }
 }
 
-class $$InstitutionScrappingCommandTableOrderingComposer
-    extends Composer<_$AppDataBase, $InstitutionScrappingCommandTable> {
-  $$InstitutionScrappingCommandTableOrderingComposer({
+class $$InstitutionScrappingCommandsTableOrderingComposer
+    extends Composer<_$AppDataBase, $InstitutionScrappingCommandsTable> {
+  $$InstitutionScrappingCommandsTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -29929,9 +29298,9 @@ class $$InstitutionScrappingCommandTableOrderingComposer
   );
 }
 
-class $$InstitutionScrappingCommandTableAnnotationComposer
-    extends Composer<_$AppDataBase, $InstitutionScrappingCommandTable> {
-  $$InstitutionScrappingCommandTableAnnotationComposer({
+class $$InstitutionScrappingCommandsTableAnnotationComposer
+    extends Composer<_$AppDataBase, $InstitutionScrappingCommandsTable> {
+  $$InstitutionScrappingCommandsTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -29971,22 +29340,22 @@ class $$InstitutionScrappingCommandTableAnnotationComposer
         builder: (column) => column,
       );
 
-  Expression<T> institutionKeyRefs<T extends Object>(
-    Expression<T> Function($$InstitutionKeyTableAnnotationComposer a) f,
+  Expression<T> institutionKeysRefs<T extends Object>(
+    Expression<T> Function($$InstitutionKeysTableAnnotationComposer a) f,
   ) {
-    final $$InstitutionKeyTableAnnotationComposer composer = $composerBuilder(
+    final $$InstitutionKeysTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.commandID,
-      referencedTable: $db.institutionKey,
+      referencedTable: $db.institutionKeys,
       getReferencedColumn: (t) => t.commandID,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionKeyTableAnnotationComposer(
+          }) => $$InstitutionKeysTableAnnotationComposer(
             $db: $db,
-            $table: $db.institutionKey,
+            $table: $db.institutionKeys,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -29997,43 +29366,43 @@ class $$InstitutionScrappingCommandTableAnnotationComposer
   }
 }
 
-class $$InstitutionScrappingCommandTableTableManager
+class $$InstitutionScrappingCommandsTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $InstitutionScrappingCommandTable,
-          InstitutionScrappingCommandData,
-          $$InstitutionScrappingCommandTableFilterComposer,
-          $$InstitutionScrappingCommandTableOrderingComposer,
-          $$InstitutionScrappingCommandTableAnnotationComposer,
-          $$InstitutionScrappingCommandTableCreateCompanionBuilder,
-          $$InstitutionScrappingCommandTableUpdateCompanionBuilder,
+          $InstitutionScrappingCommandsTable,
+          InstitutionScrappingCommand,
+          $$InstitutionScrappingCommandsTableFilterComposer,
+          $$InstitutionScrappingCommandsTableOrderingComposer,
+          $$InstitutionScrappingCommandsTableAnnotationComposer,
+          $$InstitutionScrappingCommandsTableCreateCompanionBuilder,
+          $$InstitutionScrappingCommandsTableUpdateCompanionBuilder,
           (
-            InstitutionScrappingCommandData,
-            $$InstitutionScrappingCommandTableReferences,
+            InstitutionScrappingCommand,
+            $$InstitutionScrappingCommandsTableReferences,
           ),
-          InstitutionScrappingCommandData,
-          PrefetchHooks Function({bool institutionKeyRefs})
+          InstitutionScrappingCommand,
+          PrefetchHooks Function({bool institutionKeysRefs})
         > {
-  $$InstitutionScrappingCommandTableTableManager(
+  $$InstitutionScrappingCommandsTableTableManager(
     _$AppDataBase db,
-    $InstitutionScrappingCommandTable table,
+    $InstitutionScrappingCommandsTable table,
   ) : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$InstitutionScrappingCommandTableFilterComposer(
+              $$InstitutionScrappingCommandsTableFilterComposer(
                 $db: db,
                 $table: table,
               ),
           createOrderingComposer: () =>
-              $$InstitutionScrappingCommandTableOrderingComposer(
+              $$InstitutionScrappingCommandsTableOrderingComposer(
                 $db: db,
                 $table: table,
               ),
           createComputedFieldComposer: () =>
-              $$InstitutionScrappingCommandTableAnnotationComposer(
+              $$InstitutionScrappingCommandsTableAnnotationComposer(
                 $db: db,
                 $table: table,
               ),
@@ -30048,7 +29417,7 @@ class $$InstitutionScrappingCommandTableTableManager
                 Value<DateTime?> createdAt = const Value.absent(),
                 Value<List<dynamic>> instructions = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => InstitutionScrappingCommandCompanion(
+              }) => InstitutionScrappingCommandsCompanion(
                 institution: institution,
                 commandID: commandID,
                 name: name,
@@ -30070,7 +29439,7 @@ class $$InstitutionScrappingCommandTableTableManager
                 Value<DateTime?> createdAt = const Value.absent(),
                 required List<dynamic> instructions,
                 Value<int> rowid = const Value.absent(),
-              }) => InstitutionScrappingCommandCompanion.insert(
+              }) => InstitutionScrappingCommandsCompanion.insert(
                 institution: institution,
                 commandID: commandID,
                 name: name,
@@ -30085,35 +29454,35 @@ class $$InstitutionScrappingCommandTableTableManager
               .map(
                 (e) => (
                   e.readTable(table),
-                  $$InstitutionScrappingCommandTableReferences(db, table, e),
+                  $$InstitutionScrappingCommandsTableReferences(db, table, e),
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({institutionKeyRefs = false}) {
+          prefetchHooksCallback: ({institutionKeysRefs = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [
-                if (institutionKeyRefs) db.institutionKey,
+                if (institutionKeysRefs) db.institutionKeys,
               ],
               addJoins: null,
               getPrefetchedDataCallback: (items) async {
                 return [
-                  if (institutionKeyRefs)
+                  if (institutionKeysRefs)
                     await $_getPrefetchedData<
-                      InstitutionScrappingCommandData,
-                      $InstitutionScrappingCommandTable,
-                      InstitutionKeyData
+                      InstitutionScrappingCommand,
+                      $InstitutionScrappingCommandsTable,
+                      InstitutionKey
                     >(
                       currentTable: table,
                       referencedTable:
-                          $$InstitutionScrappingCommandTableReferences
-                              ._institutionKeyRefsTable(db),
+                          $$InstitutionScrappingCommandsTableReferences
+                              ._institutionKeysRefsTable(db),
                       managerFromTypedResult: (p0) =>
-                          $$InstitutionScrappingCommandTableReferences(
+                          $$InstitutionScrappingCommandsTableReferences(
                             db,
                             table,
                             p0,
-                          ).institutionKeyRefs,
+                          ).institutionKeysRefs,
                       referencedItemsForCurrentItem: (item, referencedItems) =>
                           referencedItems.where(
                             (e) => e.commandID == item.commandID,
@@ -30128,33 +29497,33 @@ class $$InstitutionScrappingCommandTableTableManager
       );
 }
 
-typedef $$InstitutionScrappingCommandTableProcessedTableManager =
+typedef $$InstitutionScrappingCommandsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $InstitutionScrappingCommandTable,
-      InstitutionScrappingCommandData,
-      $$InstitutionScrappingCommandTableFilterComposer,
-      $$InstitutionScrappingCommandTableOrderingComposer,
-      $$InstitutionScrappingCommandTableAnnotationComposer,
-      $$InstitutionScrappingCommandTableCreateCompanionBuilder,
-      $$InstitutionScrappingCommandTableUpdateCompanionBuilder,
+      $InstitutionScrappingCommandsTable,
+      InstitutionScrappingCommand,
+      $$InstitutionScrappingCommandsTableFilterComposer,
+      $$InstitutionScrappingCommandsTableOrderingComposer,
+      $$InstitutionScrappingCommandsTableAnnotationComposer,
+      $$InstitutionScrappingCommandsTableCreateCompanionBuilder,
+      $$InstitutionScrappingCommandsTableUpdateCompanionBuilder,
       (
-        InstitutionScrappingCommandData,
-        $$InstitutionScrappingCommandTableReferences,
+        InstitutionScrappingCommand,
+        $$InstitutionScrappingCommandsTableReferences,
       ),
-      InstitutionScrappingCommandData,
-      PrefetchHooks Function({bool institutionKeyRefs})
+      InstitutionScrappingCommand,
+      PrefetchHooks Function({bool institutionKeysRefs})
     >;
-typedef $$InstitutionKeyTableCreateCompanionBuilder =
-    InstitutionKeyCompanion Function({
+typedef $$InstitutionKeysTableCreateCompanionBuilder =
+    InstitutionKeysCompanion Function({
       required int institutionID,
       required String commandID,
       required Map<String, dynamic> keySets,
       Value<DateTime?> createdAt,
       Value<int> rowid,
     });
-typedef $$InstitutionKeyTableUpdateCompanionBuilder =
-    InstitutionKeyCompanion Function({
+typedef $$InstitutionKeysTableUpdateCompanionBuilder =
+    InstitutionKeysCompanion Function({
       Value<int> institutionID,
       Value<String> commandID,
       Value<Map<String, dynamic>> keySets,
@@ -30162,33 +29531,29 @@ typedef $$InstitutionKeyTableUpdateCompanionBuilder =
       Value<int> rowid,
     });
 
-final class $$InstitutionKeyTableReferences
+final class $$InstitutionKeysTableReferences
     extends
-        BaseReferences<
-          _$AppDataBase,
-          $InstitutionKeyTable,
-          InstitutionKeyData
-        > {
-  $$InstitutionKeyTableReferences(
+        BaseReferences<_$AppDataBase, $InstitutionKeysTable, InstitutionKey> {
+  $$InstitutionKeysTableReferences(
     super.$_db,
     super.$_table,
     super.$_typedResult,
   );
 
-  static $InstitutionTable _institutionIDTable(_$AppDataBase db) =>
-      db.institution.createAlias(
+  static $InstitutionsTable _institutionIDTable(_$AppDataBase db) =>
+      db.institutions.createAlias(
         $_aliasNameGenerator(
-          db.institutionKey.institutionID,
-          db.institution.institutionId,
+          db.institutionKeys.institutionID,
+          db.institutions.institutionId,
         ),
       );
 
-  $$InstitutionTableProcessedTableManager get institutionID {
+  $$InstitutionsTableProcessedTableManager get institutionID {
     final $_column = $_itemColumn<int>('institution_id')!;
 
-    final manager = $$InstitutionTableTableManager(
+    final manager = $$InstitutionsTableTableManager(
       $_db,
-      $_db.institution,
+      $_db.institutions,
     ).filter((f) => f.institutionId.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_institutionIDTable($_db));
     if (item == null) return manager;
@@ -30197,20 +29562,20 @@ final class $$InstitutionKeyTableReferences
     );
   }
 
-  static $InstitutionScrappingCommandTable _commandIDTable(_$AppDataBase db) =>
-      db.institutionScrappingCommand.createAlias(
+  static $InstitutionScrappingCommandsTable _commandIDTable(_$AppDataBase db) =>
+      db.institutionScrappingCommands.createAlias(
         $_aliasNameGenerator(
-          db.institutionKey.commandID,
-          db.institutionScrappingCommand.commandID,
+          db.institutionKeys.commandID,
+          db.institutionScrappingCommands.commandID,
         ),
       );
 
-  $$InstitutionScrappingCommandTableProcessedTableManager get commandID {
+  $$InstitutionScrappingCommandsTableProcessedTableManager get commandID {
     final $_column = $_itemColumn<String>('command_i_d')!;
 
-    final manager = $$InstitutionScrappingCommandTableTableManager(
+    final manager = $$InstitutionScrappingCommandsTableTableManager(
       $_db,
-      $_db.institutionScrappingCommand,
+      $_db.institutionScrappingCommands,
     ).filter((f) => f.commandID.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_commandIDTable($_db));
     if (item == null) return manager;
@@ -30220,9 +29585,9 @@ final class $$InstitutionKeyTableReferences
   }
 }
 
-class $$InstitutionKeyTableFilterComposer
-    extends Composer<_$AppDataBase, $InstitutionKeyTable> {
-  $$InstitutionKeyTableFilterComposer({
+class $$InstitutionKeysTableFilterComposer
+    extends Composer<_$AppDataBase, $InstitutionKeysTable> {
+  $$InstitutionKeysTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -30244,20 +29609,20 @@ class $$InstitutionKeyTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  $$InstitutionTableFilterComposer get institutionID {
-    final $$InstitutionTableFilterComposer composer = $composerBuilder(
+  $$InstitutionsTableFilterComposer get institutionID {
+    final $$InstitutionsTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.institutionID,
-      referencedTable: $db.institution,
+      referencedTable: $db.institutions,
       getReferencedColumn: (t) => t.institutionId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableFilterComposer(
+          }) => $$InstitutionsTableFilterComposer(
             $db: $db,
-            $table: $db.institution,
+            $table: $db.institutions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -30267,21 +29632,21 @@ class $$InstitutionKeyTableFilterComposer
     return composer;
   }
 
-  $$InstitutionScrappingCommandTableFilterComposer get commandID {
-    final $$InstitutionScrappingCommandTableFilterComposer composer =
+  $$InstitutionScrappingCommandsTableFilterComposer get commandID {
+    final $$InstitutionScrappingCommandsTableFilterComposer composer =
         $composerBuilder(
           composer: this,
           getCurrentColumn: (t) => t.commandID,
-          referencedTable: $db.institutionScrappingCommand,
+          referencedTable: $db.institutionScrappingCommands,
           getReferencedColumn: (t) => t.commandID,
           builder:
               (
                 joinBuilder, {
                 $addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer,
-              }) => $$InstitutionScrappingCommandTableFilterComposer(
+              }) => $$InstitutionScrappingCommandsTableFilterComposer(
                 $db: $db,
-                $table: $db.institutionScrappingCommand,
+                $table: $db.institutionScrappingCommands,
                 $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
                 joinBuilder: joinBuilder,
                 $removeJoinBuilderFromRootComposer:
@@ -30292,9 +29657,9 @@ class $$InstitutionKeyTableFilterComposer
   }
 }
 
-class $$InstitutionKeyTableOrderingComposer
-    extends Composer<_$AppDataBase, $InstitutionKeyTable> {
-  $$InstitutionKeyTableOrderingComposer({
+class $$InstitutionKeysTableOrderingComposer
+    extends Composer<_$AppDataBase, $InstitutionKeysTable> {
+  $$InstitutionKeysTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -30311,20 +29676,20 @@ class $$InstitutionKeyTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$InstitutionTableOrderingComposer get institutionID {
-    final $$InstitutionTableOrderingComposer composer = $composerBuilder(
+  $$InstitutionsTableOrderingComposer get institutionID {
+    final $$InstitutionsTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.institutionID,
-      referencedTable: $db.institution,
+      referencedTable: $db.institutions,
       getReferencedColumn: (t) => t.institutionId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableOrderingComposer(
+          }) => $$InstitutionsTableOrderingComposer(
             $db: $db,
-            $table: $db.institution,
+            $table: $db.institutions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -30334,21 +29699,21 @@ class $$InstitutionKeyTableOrderingComposer
     return composer;
   }
 
-  $$InstitutionScrappingCommandTableOrderingComposer get commandID {
-    final $$InstitutionScrappingCommandTableOrderingComposer composer =
+  $$InstitutionScrappingCommandsTableOrderingComposer get commandID {
+    final $$InstitutionScrappingCommandsTableOrderingComposer composer =
         $composerBuilder(
           composer: this,
           getCurrentColumn: (t) => t.commandID,
-          referencedTable: $db.institutionScrappingCommand,
+          referencedTable: $db.institutionScrappingCommands,
           getReferencedColumn: (t) => t.commandID,
           builder:
               (
                 joinBuilder, {
                 $addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer,
-              }) => $$InstitutionScrappingCommandTableOrderingComposer(
+              }) => $$InstitutionScrappingCommandsTableOrderingComposer(
                 $db: $db,
-                $table: $db.institutionScrappingCommand,
+                $table: $db.institutionScrappingCommands,
                 $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
                 joinBuilder: joinBuilder,
                 $removeJoinBuilderFromRootComposer:
@@ -30359,9 +29724,9 @@ class $$InstitutionKeyTableOrderingComposer
   }
 }
 
-class $$InstitutionKeyTableAnnotationComposer
-    extends Composer<_$AppDataBase, $InstitutionKeyTable> {
-  $$InstitutionKeyTableAnnotationComposer({
+class $$InstitutionKeysTableAnnotationComposer
+    extends Composer<_$AppDataBase, $InstitutionKeysTable> {
+  $$InstitutionKeysTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -30374,20 +29739,20 @@ class $$InstitutionKeyTableAnnotationComposer
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
-  $$InstitutionTableAnnotationComposer get institutionID {
-    final $$InstitutionTableAnnotationComposer composer = $composerBuilder(
+  $$InstitutionsTableAnnotationComposer get institutionID {
+    final $$InstitutionsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.institutionID,
-      referencedTable: $db.institution,
+      referencedTable: $db.institutions,
       getReferencedColumn: (t) => t.institutionId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableAnnotationComposer(
+          }) => $$InstitutionsTableAnnotationComposer(
             $db: $db,
-            $table: $db.institution,
+            $table: $db.institutions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -30397,21 +29762,21 @@ class $$InstitutionKeyTableAnnotationComposer
     return composer;
   }
 
-  $$InstitutionScrappingCommandTableAnnotationComposer get commandID {
-    final $$InstitutionScrappingCommandTableAnnotationComposer composer =
+  $$InstitutionScrappingCommandsTableAnnotationComposer get commandID {
+    final $$InstitutionScrappingCommandsTableAnnotationComposer composer =
         $composerBuilder(
           composer: this,
           getCurrentColumn: (t) => t.commandID,
-          referencedTable: $db.institutionScrappingCommand,
+          referencedTable: $db.institutionScrappingCommands,
           getReferencedColumn: (t) => t.commandID,
           builder:
               (
                 joinBuilder, {
                 $addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer,
-              }) => $$InstitutionScrappingCommandTableAnnotationComposer(
+              }) => $$InstitutionScrappingCommandsTableAnnotationComposer(
                 $db: $db,
-                $table: $db.institutionScrappingCommand,
+                $table: $db.institutionScrappingCommands,
                 $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
                 joinBuilder: joinBuilder,
                 $removeJoinBuilderFromRootComposer:
@@ -30422,34 +29787,34 @@ class $$InstitutionKeyTableAnnotationComposer
   }
 }
 
-class $$InstitutionKeyTableTableManager
+class $$InstitutionKeysTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $InstitutionKeyTable,
-          InstitutionKeyData,
-          $$InstitutionKeyTableFilterComposer,
-          $$InstitutionKeyTableOrderingComposer,
-          $$InstitutionKeyTableAnnotationComposer,
-          $$InstitutionKeyTableCreateCompanionBuilder,
-          $$InstitutionKeyTableUpdateCompanionBuilder,
-          (InstitutionKeyData, $$InstitutionKeyTableReferences),
-          InstitutionKeyData,
+          $InstitutionKeysTable,
+          InstitutionKey,
+          $$InstitutionKeysTableFilterComposer,
+          $$InstitutionKeysTableOrderingComposer,
+          $$InstitutionKeysTableAnnotationComposer,
+          $$InstitutionKeysTableCreateCompanionBuilder,
+          $$InstitutionKeysTableUpdateCompanionBuilder,
+          (InstitutionKey, $$InstitutionKeysTableReferences),
+          InstitutionKey,
           PrefetchHooks Function({bool institutionID, bool commandID})
         > {
-  $$InstitutionKeyTableTableManager(
+  $$InstitutionKeysTableTableManager(
     _$AppDataBase db,
-    $InstitutionKeyTable table,
+    $InstitutionKeysTable table,
   ) : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$InstitutionKeyTableFilterComposer($db: db, $table: table),
+              $$InstitutionKeysTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$InstitutionKeyTableOrderingComposer($db: db, $table: table),
+              $$InstitutionKeysTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$InstitutionKeyTableAnnotationComposer($db: db, $table: table),
+              $$InstitutionKeysTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> institutionID = const Value.absent(),
@@ -30457,7 +29822,7 @@ class $$InstitutionKeyTableTableManager
                 Value<Map<String, dynamic>> keySets = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => InstitutionKeyCompanion(
+              }) => InstitutionKeysCompanion(
                 institutionID: institutionID,
                 commandID: commandID,
                 keySets: keySets,
@@ -30471,7 +29836,7 @@ class $$InstitutionKeyTableTableManager
                 required Map<String, dynamic> keySets,
                 Value<DateTime?> createdAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => InstitutionKeyCompanion.insert(
+              }) => InstitutionKeysCompanion.insert(
                 institutionID: institutionID,
                 commandID: commandID,
                 keySets: keySets,
@@ -30482,7 +29847,7 @@ class $$InstitutionKeyTableTableManager
               .map(
                 (e) => (
                   e.readTable(table),
-                  $$InstitutionKeyTableReferences(db, table, e),
+                  $$InstitutionKeysTableReferences(db, table, e),
                 ),
               )
               .toList(),
@@ -30511,10 +29876,11 @@ class $$InstitutionKeyTableTableManager
                           state.withJoin(
                                 currentTable: table,
                                 currentColumn: table.institutionID,
-                                referencedTable: $$InstitutionKeyTableReferences
-                                    ._institutionIDTable(db),
+                                referencedTable:
+                                    $$InstitutionKeysTableReferences
+                                        ._institutionIDTable(db),
                                 referencedColumn:
-                                    $$InstitutionKeyTableReferences
+                                    $$InstitutionKeysTableReferences
                                         ._institutionIDTable(db)
                                         .institutionId,
                               )
@@ -30525,10 +29891,11 @@ class $$InstitutionKeyTableTableManager
                           state.withJoin(
                                 currentTable: table,
                                 currentColumn: table.commandID,
-                                referencedTable: $$InstitutionKeyTableReferences
-                                    ._commandIDTable(db),
+                                referencedTable:
+                                    $$InstitutionKeysTableReferences
+                                        ._commandIDTable(db),
                                 referencedColumn:
-                                    $$InstitutionKeyTableReferences
+                                    $$InstitutionKeysTableReferences
                                         ._commandIDTable(db)
                                         .commandID,
                               )
@@ -30546,22 +29913,22 @@ class $$InstitutionKeyTableTableManager
       );
 }
 
-typedef $$InstitutionKeyTableProcessedTableManager =
+typedef $$InstitutionKeysTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $InstitutionKeyTable,
-      InstitutionKeyData,
-      $$InstitutionKeyTableFilterComposer,
-      $$InstitutionKeyTableOrderingComposer,
-      $$InstitutionKeyTableAnnotationComposer,
-      $$InstitutionKeyTableCreateCompanionBuilder,
-      $$InstitutionKeyTableUpdateCompanionBuilder,
-      (InstitutionKeyData, $$InstitutionKeyTableReferences),
-      InstitutionKeyData,
+      $InstitutionKeysTable,
+      InstitutionKey,
+      $$InstitutionKeysTableFilterComposer,
+      $$InstitutionKeysTableOrderingComposer,
+      $$InstitutionKeysTableAnnotationComposer,
+      $$InstitutionKeysTableCreateCompanionBuilder,
+      $$InstitutionKeysTableUpdateCompanionBuilder,
+      (InstitutionKey, $$InstitutionKeysTableReferences),
+      InstitutionKey,
       PrefetchHooks Function({bool institutionID, bool commandID})
     >;
-typedef $$InstitutionProfileTableCreateCompanionBuilder =
-    InstitutionProfileCompanion Function({
+typedef $$InstitutionProfilesTableCreateCompanionBuilder =
+    InstitutionProfilesCompanion Function({
       Value<int?> id,
       required String userID,
       required int institutionID,
@@ -30588,8 +29955,8 @@ typedef $$InstitutionProfileTableCreateCompanionBuilder =
       Value<DateTime> updatedAt,
       Value<int> rowid,
     });
-typedef $$InstitutionProfileTableUpdateCompanionBuilder =
-    InstitutionProfileCompanion Function({
+typedef $$InstitutionProfilesTableUpdateCompanionBuilder =
+    InstitutionProfilesCompanion Function({
       Value<int?> id,
       Value<String> userID,
       Value<int> institutionID,
@@ -30617,9 +29984,9 @@ typedef $$InstitutionProfileTableUpdateCompanionBuilder =
       Value<int> rowid,
     });
 
-class $$InstitutionProfileTableFilterComposer
-    extends Composer<_$AppDataBase, $InstitutionProfileTable> {
-  $$InstitutionProfileTableFilterComposer({
+class $$InstitutionProfilesTableFilterComposer
+    extends Composer<_$AppDataBase, $InstitutionProfilesTable> {
+  $$InstitutionProfilesTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -30754,9 +30121,9 @@ class $$InstitutionProfileTableFilterComposer
   );
 }
 
-class $$InstitutionProfileTableOrderingComposer
-    extends Composer<_$AppDataBase, $InstitutionProfileTable> {
-  $$InstitutionProfileTableOrderingComposer({
+class $$InstitutionProfilesTableOrderingComposer
+    extends Composer<_$AppDataBase, $InstitutionProfilesTable> {
+  $$InstitutionProfilesTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -30884,9 +30251,9 @@ class $$InstitutionProfileTableOrderingComposer
   );
 }
 
-class $$InstitutionProfileTableAnnotationComposer
-    extends Composer<_$AppDataBase, $InstitutionProfileTable> {
-  $$InstitutionProfileTableAnnotationComposer({
+class $$InstitutionProfilesTableAnnotationComposer
+    extends Composer<_$AppDataBase, $InstitutionProfilesTable> {
+  $$InstitutionProfilesTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -30982,41 +30349,44 @@ class $$InstitutionProfileTableAnnotationComposer
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
 }
 
-class $$InstitutionProfileTableTableManager
+class $$InstitutionProfilesTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $InstitutionProfileTable,
-          InstitutionProfileData,
-          $$InstitutionProfileTableFilterComposer,
-          $$InstitutionProfileTableOrderingComposer,
-          $$InstitutionProfileTableAnnotationComposer,
-          $$InstitutionProfileTableCreateCompanionBuilder,
-          $$InstitutionProfileTableUpdateCompanionBuilder,
+          $InstitutionProfilesTable,
+          InstitutionProfile,
+          $$InstitutionProfilesTableFilterComposer,
+          $$InstitutionProfilesTableOrderingComposer,
+          $$InstitutionProfilesTableAnnotationComposer,
+          $$InstitutionProfilesTableCreateCompanionBuilder,
+          $$InstitutionProfilesTableUpdateCompanionBuilder,
           (
-            InstitutionProfileData,
+            InstitutionProfile,
             BaseReferences<
               _$AppDataBase,
-              $InstitutionProfileTable,
-              InstitutionProfileData
+              $InstitutionProfilesTable,
+              InstitutionProfile
             >,
           ),
-          InstitutionProfileData,
+          InstitutionProfile,
           PrefetchHooks Function()
         > {
-  $$InstitutionProfileTableTableManager(
+  $$InstitutionProfilesTableTableManager(
     _$AppDataBase db,
-    $InstitutionProfileTable table,
+    $InstitutionProfilesTable table,
   ) : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$InstitutionProfileTableFilterComposer($db: db, $table: table),
+              $$InstitutionProfilesTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$InstitutionProfileTableOrderingComposer($db: db, $table: table),
+              $$InstitutionProfilesTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
           createComputedFieldComposer: () =>
-              $$InstitutionProfileTableAnnotationComposer(
+              $$InstitutionProfilesTableAnnotationComposer(
                 $db: db,
                 $table: table,
               ),
@@ -31047,7 +30417,7 @@ class $$InstitutionProfileTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => InstitutionProfileCompanion(
+              }) => InstitutionProfilesCompanion(
                 id: id,
                 userID: userID,
                 institutionID: institutionID,
@@ -31101,7 +30471,7 @@ class $$InstitutionProfileTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => InstitutionProfileCompanion.insert(
+              }) => InstitutionProfilesCompanion.insert(
                 id: id,
                 userID: userID,
                 institutionID: institutionID,
@@ -31136,29 +30506,29 @@ class $$InstitutionProfileTableTableManager
       );
 }
 
-typedef $$InstitutionProfileTableProcessedTableManager =
+typedef $$InstitutionProfilesTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $InstitutionProfileTable,
-      InstitutionProfileData,
-      $$InstitutionProfileTableFilterComposer,
-      $$InstitutionProfileTableOrderingComposer,
-      $$InstitutionProfileTableAnnotationComposer,
-      $$InstitutionProfileTableCreateCompanionBuilder,
-      $$InstitutionProfileTableUpdateCompanionBuilder,
+      $InstitutionProfilesTable,
+      InstitutionProfile,
+      $$InstitutionProfilesTableFilterComposer,
+      $$InstitutionProfilesTableOrderingComposer,
+      $$InstitutionProfilesTableAnnotationComposer,
+      $$InstitutionProfilesTableCreateCompanionBuilder,
+      $$InstitutionProfilesTableUpdateCompanionBuilder,
       (
-        InstitutionProfileData,
+        InstitutionProfile,
         BaseReferences<
           _$AppDataBase,
-          $InstitutionProfileTable,
-          InstitutionProfileData
+          $InstitutionProfilesTable,
+          InstitutionProfile
         >,
       ),
-      InstitutionProfileData,
+      InstitutionProfile,
       PrefetchHooks Function()
     >;
-typedef $$InstitutionFeeTransactionTableCreateCompanionBuilder =
-    InstitutionFeeTransactionCompanion Function({
+typedef $$InstitutionFeeTransactionsTableCreateCompanionBuilder =
+    InstitutionFeeTransactionsCompanion Function({
       Value<int?> id,
       required int institution,
       Value<String?> referenceNumber,
@@ -31171,8 +30541,8 @@ typedef $$InstitutionFeeTransactionTableCreateCompanionBuilder =
       Value<String?> currency,
       Value<int> rowid,
     });
-typedef $$InstitutionFeeTransactionTableUpdateCompanionBuilder =
-    InstitutionFeeTransactionCompanion Function({
+typedef $$InstitutionFeeTransactionsTableUpdateCompanionBuilder =
+    InstitutionFeeTransactionsCompanion Function({
       Value<int?> id,
       Value<int> institution,
       Value<String?> referenceNumber,
@@ -31186,33 +30556,33 @@ typedef $$InstitutionFeeTransactionTableUpdateCompanionBuilder =
       Value<int> rowid,
     });
 
-final class $$InstitutionFeeTransactionTableReferences
+final class $$InstitutionFeeTransactionsTableReferences
     extends
         BaseReferences<
           _$AppDataBase,
-          $InstitutionFeeTransactionTable,
-          InstitutionFeeTransactionData
+          $InstitutionFeeTransactionsTable,
+          InstitutionFeeTransaction
         > {
-  $$InstitutionFeeTransactionTableReferences(
+  $$InstitutionFeeTransactionsTableReferences(
     super.$_db,
     super.$_table,
     super.$_typedResult,
   );
 
-  static $InstitutionTable _institutionTable(_$AppDataBase db) =>
-      db.institution.createAlias(
+  static $InstitutionsTable _institutionTable(_$AppDataBase db) =>
+      db.institutions.createAlias(
         $_aliasNameGenerator(
-          db.institutionFeeTransaction.institution,
-          db.institution.institutionId,
+          db.institutionFeeTransactions.institution,
+          db.institutions.institutionId,
         ),
       );
 
-  $$InstitutionTableProcessedTableManager get institution {
+  $$InstitutionsTableProcessedTableManager get institution {
     final $_column = $_itemColumn<int>('institution')!;
 
-    final manager = $$InstitutionTableTableManager(
+    final manager = $$InstitutionsTableTableManager(
       $_db,
-      $_db.institution,
+      $_db.institutions,
     ).filter((f) => f.institutionId.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_institutionTable($_db));
     if (item == null) return manager;
@@ -31222,9 +30592,9 @@ final class $$InstitutionFeeTransactionTableReferences
   }
 }
 
-class $$InstitutionFeeTransactionTableFilterComposer
-    extends Composer<_$AppDataBase, $InstitutionFeeTransactionTable> {
-  $$InstitutionFeeTransactionTableFilterComposer({
+class $$InstitutionFeeTransactionsTableFilterComposer
+    extends Composer<_$AppDataBase, $InstitutionFeeTransactionsTable> {
+  $$InstitutionFeeTransactionsTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -31276,20 +30646,20 @@ class $$InstitutionFeeTransactionTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  $$InstitutionTableFilterComposer get institution {
-    final $$InstitutionTableFilterComposer composer = $composerBuilder(
+  $$InstitutionsTableFilterComposer get institution {
+    final $$InstitutionsTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.institution,
-      referencedTable: $db.institution,
+      referencedTable: $db.institutions,
       getReferencedColumn: (t) => t.institutionId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableFilterComposer(
+          }) => $$InstitutionsTableFilterComposer(
             $db: $db,
-            $table: $db.institution,
+            $table: $db.institutions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -31300,9 +30670,9 @@ class $$InstitutionFeeTransactionTableFilterComposer
   }
 }
 
-class $$InstitutionFeeTransactionTableOrderingComposer
-    extends Composer<_$AppDataBase, $InstitutionFeeTransactionTable> {
-  $$InstitutionFeeTransactionTableOrderingComposer({
+class $$InstitutionFeeTransactionsTableOrderingComposer
+    extends Composer<_$AppDataBase, $InstitutionFeeTransactionsTable> {
+  $$InstitutionFeeTransactionsTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -31354,20 +30724,20 @@ class $$InstitutionFeeTransactionTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$InstitutionTableOrderingComposer get institution {
-    final $$InstitutionTableOrderingComposer composer = $composerBuilder(
+  $$InstitutionsTableOrderingComposer get institution {
+    final $$InstitutionsTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.institution,
-      referencedTable: $db.institution,
+      referencedTable: $db.institutions,
       getReferencedColumn: (t) => t.institutionId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableOrderingComposer(
+          }) => $$InstitutionsTableOrderingComposer(
             $db: $db,
-            $table: $db.institution,
+            $table: $db.institutions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -31378,9 +30748,9 @@ class $$InstitutionFeeTransactionTableOrderingComposer
   }
 }
 
-class $$InstitutionFeeTransactionTableAnnotationComposer
-    extends Composer<_$AppDataBase, $InstitutionFeeTransactionTable> {
-  $$InstitutionFeeTransactionTableAnnotationComposer({
+class $$InstitutionFeeTransactionsTableAnnotationComposer
+    extends Composer<_$AppDataBase, $InstitutionFeeTransactionsTable> {
+  $$InstitutionFeeTransactionsTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -31422,20 +30792,20 @@ class $$InstitutionFeeTransactionTableAnnotationComposer
   GeneratedColumn<String> get currency =>
       $composableBuilder(column: $table.currency, builder: (column) => column);
 
-  $$InstitutionTableAnnotationComposer get institution {
-    final $$InstitutionTableAnnotationComposer composer = $composerBuilder(
+  $$InstitutionsTableAnnotationComposer get institution {
+    final $$InstitutionsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.institution,
-      referencedTable: $db.institution,
+      referencedTable: $db.institutions,
       getReferencedColumn: (t) => t.institutionId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableAnnotationComposer(
+          }) => $$InstitutionsTableAnnotationComposer(
             $db: $db,
-            $table: $db.institution,
+            $table: $db.institutions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -31446,43 +30816,43 @@ class $$InstitutionFeeTransactionTableAnnotationComposer
   }
 }
 
-class $$InstitutionFeeTransactionTableTableManager
+class $$InstitutionFeeTransactionsTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $InstitutionFeeTransactionTable,
-          InstitutionFeeTransactionData,
-          $$InstitutionFeeTransactionTableFilterComposer,
-          $$InstitutionFeeTransactionTableOrderingComposer,
-          $$InstitutionFeeTransactionTableAnnotationComposer,
-          $$InstitutionFeeTransactionTableCreateCompanionBuilder,
-          $$InstitutionFeeTransactionTableUpdateCompanionBuilder,
+          $InstitutionFeeTransactionsTable,
+          InstitutionFeeTransaction,
+          $$InstitutionFeeTransactionsTableFilterComposer,
+          $$InstitutionFeeTransactionsTableOrderingComposer,
+          $$InstitutionFeeTransactionsTableAnnotationComposer,
+          $$InstitutionFeeTransactionsTableCreateCompanionBuilder,
+          $$InstitutionFeeTransactionsTableUpdateCompanionBuilder,
           (
-            InstitutionFeeTransactionData,
-            $$InstitutionFeeTransactionTableReferences,
+            InstitutionFeeTransaction,
+            $$InstitutionFeeTransactionsTableReferences,
           ),
-          InstitutionFeeTransactionData,
+          InstitutionFeeTransaction,
           PrefetchHooks Function({bool institution})
         > {
-  $$InstitutionFeeTransactionTableTableManager(
+  $$InstitutionFeeTransactionsTableTableManager(
     _$AppDataBase db,
-    $InstitutionFeeTransactionTable table,
+    $InstitutionFeeTransactionsTable table,
   ) : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$InstitutionFeeTransactionTableFilterComposer(
+              $$InstitutionFeeTransactionsTableFilterComposer(
                 $db: db,
                 $table: table,
               ),
           createOrderingComposer: () =>
-              $$InstitutionFeeTransactionTableOrderingComposer(
+              $$InstitutionFeeTransactionsTableOrderingComposer(
                 $db: db,
                 $table: table,
               ),
           createComputedFieldComposer: () =>
-              $$InstitutionFeeTransactionTableAnnotationComposer(
+              $$InstitutionFeeTransactionsTableAnnotationComposer(
                 $db: db,
                 $table: table,
               ),
@@ -31499,7 +30869,7 @@ class $$InstitutionFeeTransactionTableTableManager
                 Value<String?> title = const Value.absent(),
                 Value<String?> currency = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => InstitutionFeeTransactionCompanion(
+              }) => InstitutionFeeTransactionsCompanion(
                 id: id,
                 institution: institution,
                 referenceNumber: referenceNumber,
@@ -31525,7 +30895,7 @@ class $$InstitutionFeeTransactionTableTableManager
                 Value<String?> title = const Value.absent(),
                 Value<String?> currency = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => InstitutionFeeTransactionCompanion.insert(
+              }) => InstitutionFeeTransactionsCompanion.insert(
                 id: id,
                 institution: institution,
                 referenceNumber: referenceNumber,
@@ -31542,7 +30912,7 @@ class $$InstitutionFeeTransactionTableTableManager
               .map(
                 (e) => (
                   e.readTable(table),
-                  $$InstitutionFeeTransactionTableReferences(db, table, e),
+                  $$InstitutionFeeTransactionsTableReferences(db, table, e),
                 ),
               )
               .toList(),
@@ -31572,10 +30942,10 @@ class $$InstitutionFeeTransactionTableTableManager
                                 currentTable: table,
                                 currentColumn: table.institution,
                                 referencedTable:
-                                    $$InstitutionFeeTransactionTableReferences
+                                    $$InstitutionFeeTransactionsTableReferences
                                         ._institutionTable(db),
                                 referencedColumn:
-                                    $$InstitutionFeeTransactionTableReferences
+                                    $$InstitutionFeeTransactionsTableReferences
                                         ._institutionTable(db)
                                         .institutionId,
                               )
@@ -31593,21 +30963,18 @@ class $$InstitutionFeeTransactionTableTableManager
       );
 }
 
-typedef $$InstitutionFeeTransactionTableProcessedTableManager =
+typedef $$InstitutionFeeTransactionsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $InstitutionFeeTransactionTable,
-      InstitutionFeeTransactionData,
-      $$InstitutionFeeTransactionTableFilterComposer,
-      $$InstitutionFeeTransactionTableOrderingComposer,
-      $$InstitutionFeeTransactionTableAnnotationComposer,
-      $$InstitutionFeeTransactionTableCreateCompanionBuilder,
-      $$InstitutionFeeTransactionTableUpdateCompanionBuilder,
-      (
-        InstitutionFeeTransactionData,
-        $$InstitutionFeeTransactionTableReferences,
-      ),
-      InstitutionFeeTransactionData,
+      $InstitutionFeeTransactionsTable,
+      InstitutionFeeTransaction,
+      $$InstitutionFeeTransactionsTableFilterComposer,
+      $$InstitutionFeeTransactionsTableOrderingComposer,
+      $$InstitutionFeeTransactionsTableAnnotationComposer,
+      $$InstitutionFeeTransactionsTableCreateCompanionBuilder,
+      $$InstitutionFeeTransactionsTableUpdateCompanionBuilder,
+      (InstitutionFeeTransaction, $$InstitutionFeeTransactionsTableReferences),
+      InstitutionFeeTransaction,
       PrefetchHooks Function({bool institution})
     >;
 typedef $$SemesterTableCreateCompanionBuilder =
@@ -31633,20 +31000,20 @@ final class $$SemesterTableReferences
     extends BaseReferences<_$AppDataBase, $SemesterTable, SemesterData> {
   $$SemesterTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $InstitutionTable _institutionIdTable(_$AppDataBase db) =>
-      db.institution.createAlias(
+  static $InstitutionsTable _institutionIdTable(_$AppDataBase db) =>
+      db.institutions.createAlias(
         $_aliasNameGenerator(
           db.semester.institutionId,
-          db.institution.institutionId,
+          db.institutions.institutionId,
         ),
       );
 
-  $$InstitutionTableProcessedTableManager? get institutionId {
+  $$InstitutionsTableProcessedTableManager? get institutionId {
     final $_column = $_itemColumn<int>('institution_id');
     if ($_column == null) return null;
-    final manager = $$InstitutionTableTableManager(
+    final manager = $$InstitutionsTableTableManager(
       $_db,
-      $_db.institution,
+      $_db.institutions,
     ).filter((f) => f.institutionId.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_institutionIdTable($_db));
     if (item == null) return manager;
@@ -31709,20 +31076,20 @@ class $$SemesterTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  $$InstitutionTableFilterComposer get institutionId {
-    final $$InstitutionTableFilterComposer composer = $composerBuilder(
+  $$InstitutionsTableFilterComposer get institutionId {
+    final $$InstitutionsTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.institutionId,
-      referencedTable: $db.institution,
+      referencedTable: $db.institutions,
       getReferencedColumn: (t) => t.institutionId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableFilterComposer(
+          }) => $$InstitutionsTableFilterComposer(
             $db: $db,
-            $table: $db.institution,
+            $table: $db.institutions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -31792,20 +31159,20 @@ class $$SemesterTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$InstitutionTableOrderingComposer get institutionId {
-    final $$InstitutionTableOrderingComposer composer = $composerBuilder(
+  $$InstitutionsTableOrderingComposer get institutionId {
+    final $$InstitutionsTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.institutionId,
-      referencedTable: $db.institution,
+      referencedTable: $db.institutions,
       getReferencedColumn: (t) => t.institutionId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableOrderingComposer(
+          }) => $$InstitutionsTableOrderingComposer(
             $db: $db,
-            $table: $db.institution,
+            $table: $db.institutions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -31842,20 +31209,20 @@ class $$SemesterTableAnnotationComposer
   GeneratedColumn<DateTime> get endDate =>
       $composableBuilder(column: $table.endDate, builder: (column) => column);
 
-  $$InstitutionTableAnnotationComposer get institutionId {
-    final $$InstitutionTableAnnotationComposer composer = $composerBuilder(
+  $$InstitutionsTableAnnotationComposer get institutionId {
+    final $$InstitutionsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.institutionId,
-      referencedTable: $db.institution,
+      referencedTable: $db.institutions,
       getReferencedColumn: (t) => t.institutionId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableAnnotationComposer(
+          }) => $$InstitutionsTableAnnotationComposer(
             $db: $db,
-            $table: $db.institution,
+            $table: $db.institutions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -32069,20 +31436,20 @@ final class $$CourseTableReferences
     extends BaseReferences<_$AppDataBase, $CourseTable, CourseData> {
   $$CourseTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $InstitutionTable _institutionTable(_$AppDataBase db) =>
-      db.institution.createAlias(
+  static $InstitutionsTable _institutionTable(_$AppDataBase db) =>
+      db.institutions.createAlias(
         $_aliasNameGenerator(
           db.course.institution,
-          db.institution.institutionId,
+          db.institutions.institutionId,
         ),
       );
 
-  $$InstitutionTableProcessedTableManager? get institution {
+  $$InstitutionsTableProcessedTableManager? get institution {
     final $_column = $_itemColumn<int>('institution');
     if ($_column == null) return null;
-    final manager = $$InstitutionTableTableManager(
+    final manager = $$InstitutionsTableTableManager(
       $_db,
-      $_db.institution,
+      $_db.institutions,
     ).filter((f) => f.institutionId.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_institutionTable($_db));
     if (item == null) return manager;
@@ -32187,20 +31554,20 @@ class $$CourseTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  $$InstitutionTableFilterComposer get institution {
-    final $$InstitutionTableFilterComposer composer = $composerBuilder(
+  $$InstitutionsTableFilterComposer get institution {
+    final $$InstitutionsTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.institution,
-      referencedTable: $db.institution,
+      referencedTable: $db.institutions,
       getReferencedColumn: (t) => t.institutionId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableFilterComposer(
+          }) => $$InstitutionsTableFilterComposer(
             $db: $db,
-            $table: $db.institution,
+            $table: $db.institutions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -32318,20 +31685,20 @@ class $$CourseTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$InstitutionTableOrderingComposer get institution {
-    final $$InstitutionTableOrderingComposer composer = $composerBuilder(
+  $$InstitutionsTableOrderingComposer get institution {
+    final $$InstitutionsTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.institution,
-      referencedTable: $db.institution,
+      referencedTable: $db.institutions,
       getReferencedColumn: (t) => t.institutionId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableOrderingComposer(
+          }) => $$InstitutionsTableOrderingComposer(
             $db: $db,
-            $table: $db.institution,
+            $table: $db.institutions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -32410,20 +31777,20 @@ class $$CourseTableAnnotationComposer
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
 
-  $$InstitutionTableAnnotationComposer get institution {
-    final $$InstitutionTableAnnotationComposer composer = $composerBuilder(
+  $$InstitutionsTableAnnotationComposer get institution {
+    final $$InstitutionsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.institution,
-      referencedTable: $db.institution,
+      referencedTable: $db.institutions,
       getReferencedColumn: (t) => t.institutionId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableAnnotationComposer(
+          }) => $$InstitutionsTableAnnotationComposer(
             $db: $db,
-            $table: $db.institution,
+            $table: $db.institutions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -32714,20 +32081,20 @@ final class $$TimetableTableReferences
     extends BaseReferences<_$AppDataBase, $TimetableTable, TimetableData> {
   $$TimetableTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $InstitutionTable _institutionTable(_$AppDataBase db) =>
-      db.institution.createAlias(
+  static $InstitutionsTable _institutionTable(_$AppDataBase db) =>
+      db.institutions.createAlias(
         $_aliasNameGenerator(
           db.timetable.institution,
-          db.institution.institutionId,
+          db.institutions.institutionId,
         ),
       );
 
-  $$InstitutionTableProcessedTableManager? get institution {
+  $$InstitutionsTableProcessedTableManager? get institution {
     final $_column = $_itemColumn<int>('institution');
     if ($_column == null) return null;
-    final manager = $$InstitutionTableTableManager(
+    final manager = $$InstitutionsTableTableManager(
       $_db,
-      $_db.institution,
+      $_db.institutions,
     ).filter((f) => f.institutionId.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_institutionTable($_db));
     if (item == null) return manager;
@@ -32807,20 +32174,20 @@ class $$TimetableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  $$InstitutionTableFilterComposer get institution {
-    final $$InstitutionTableFilterComposer composer = $composerBuilder(
+  $$InstitutionsTableFilterComposer get institution {
+    final $$InstitutionsTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.institution,
-      referencedTable: $db.institution,
+      referencedTable: $db.institutions,
       getReferencedColumn: (t) => t.institutionId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableFilterComposer(
+          }) => $$InstitutionsTableFilterComposer(
             $db: $db,
-            $table: $db.institution,
+            $table: $db.institutions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -32905,20 +32272,20 @@ class $$TimetableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$InstitutionTableOrderingComposer get institution {
-    final $$InstitutionTableOrderingComposer composer = $composerBuilder(
+  $$InstitutionsTableOrderingComposer get institution {
+    final $$InstitutionsTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.institution,
-      referencedTable: $db.institution,
+      referencedTable: $db.institutions,
       getReferencedColumn: (t) => t.institutionId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableOrderingComposer(
+          }) => $$InstitutionsTableOrderingComposer(
             $db: $db,
-            $table: $db.institution,
+            $table: $db.institutions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -32962,20 +32329,20 @@ class $$TimetableTableAnnotationComposer
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
 
-  $$InstitutionTableAnnotationComposer get institution {
-    final $$InstitutionTableAnnotationComposer composer = $composerBuilder(
+  $$InstitutionsTableAnnotationComposer get institution {
+    final $$InstitutionsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.institution,
-      referencedTable: $db.institution,
+      referencedTable: $db.institutions,
       getReferencedColumn: (t) => t.institutionId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$InstitutionTableAnnotationComposer(
+          }) => $$InstitutionsTableAnnotationComposer(
             $db: $db,
-            $table: $db.institution,
+            $table: $db.institutions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -33792,38 +33159,67 @@ typedef $$TimetableEntryTableProcessedTableManager =
       TimetableEntryData,
       PrefetchHooks Function({bool courseId, bool timetableId})
     >;
-typedef $$ExamTimetableTableCreateCompanionBuilder =
-    ExamTimetableCompanion Function({
+typedef $$ExamTimetablesTableCreateCompanionBuilder =
+    ExamTimetablesCompanion Function({
+      required int institutionId,
       required String courseCode,
-      required String day,
       required String startTime,
       required String endTime,
       required String venue,
-      required String hrs,
-      required String campus,
-      required String coordinator,
-      required String invigilator,
+      Value<String> coordinator,
+      Value<String> hrs,
+      Value<String?> rawData,
       required DateTime datetimeStr,
       Value<int> rowid,
     });
-typedef $$ExamTimetableTableUpdateCompanionBuilder =
-    ExamTimetableCompanion Function({
+typedef $$ExamTimetablesTableUpdateCompanionBuilder =
+    ExamTimetablesCompanion Function({
+      Value<int> institutionId,
       Value<String> courseCode,
-      Value<String> day,
       Value<String> startTime,
       Value<String> endTime,
       Value<String> venue,
-      Value<String> hrs,
-      Value<String> campus,
       Value<String> coordinator,
-      Value<String> invigilator,
+      Value<String> hrs,
+      Value<String?> rawData,
       Value<DateTime> datetimeStr,
       Value<int> rowid,
     });
 
-class $$ExamTimetableTableFilterComposer
-    extends Composer<_$AppDataBase, $ExamTimetableTable> {
-  $$ExamTimetableTableFilterComposer({
+final class $$ExamTimetablesTableReferences
+    extends BaseReferences<_$AppDataBase, $ExamTimetablesTable, ExamTimetable> {
+  $$ExamTimetablesTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $InstitutionsTable _institutionIdTable(_$AppDataBase db) =>
+      db.institutions.createAlias(
+        $_aliasNameGenerator(
+          db.examTimetables.institutionId,
+          db.institutions.institutionId,
+        ),
+      );
+
+  $$InstitutionsTableProcessedTableManager get institutionId {
+    final $_column = $_itemColumn<int>('institution_id')!;
+
+    final manager = $$InstitutionsTableTableManager(
+      $_db,
+      $_db.institutions,
+    ).filter((f) => f.institutionId.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_institutionIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$ExamTimetablesTableFilterComposer
+    extends Composer<_$AppDataBase, $ExamTimetablesTable> {
+  $$ExamTimetablesTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -33832,11 +33228,6 @@ class $$ExamTimetableTableFilterComposer
   });
   ColumnFilters<String> get courseCode => $composableBuilder(
     column: $table.courseCode,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get day => $composableBuilder(
-    column: $table.day,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -33855,23 +33246,18 @@ class $$ExamTimetableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get hrs => $composableBuilder(
-    column: $table.hrs,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get campus => $composableBuilder(
-    column: $table.campus,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<String> get coordinator => $composableBuilder(
     column: $table.coordinator,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get invigilator => $composableBuilder(
-    column: $table.invigilator,
+  ColumnFilters<String> get hrs => $composableBuilder(
+    column: $table.hrs,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get rawData => $composableBuilder(
+    column: $table.rawData,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -33879,11 +33265,34 @@ class $$ExamTimetableTableFilterComposer
     column: $table.datetimeStr,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$InstitutionsTableFilterComposer get institutionId {
+    final $$InstitutionsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institutionId,
+      referencedTable: $db.institutions,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InstitutionsTableFilterComposer(
+            $db: $db,
+            $table: $db.institutions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
-class $$ExamTimetableTableOrderingComposer
-    extends Composer<_$AppDataBase, $ExamTimetableTable> {
-  $$ExamTimetableTableOrderingComposer({
+class $$ExamTimetablesTableOrderingComposer
+    extends Composer<_$AppDataBase, $ExamTimetablesTable> {
+  $$ExamTimetablesTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -33892,11 +33301,6 @@ class $$ExamTimetableTableOrderingComposer
   });
   ColumnOrderings<String> get courseCode => $composableBuilder(
     column: $table.courseCode,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get day => $composableBuilder(
-    column: $table.day,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -33915,23 +33319,18 @@ class $$ExamTimetableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get hrs => $composableBuilder(
-    column: $table.hrs,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get campus => $composableBuilder(
-    column: $table.campus,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get coordinator => $composableBuilder(
     column: $table.coordinator,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get invigilator => $composableBuilder(
-    column: $table.invigilator,
+  ColumnOrderings<String> get hrs => $composableBuilder(
+    column: $table.hrs,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get rawData => $composableBuilder(
+    column: $table.rawData,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -33939,11 +33338,34 @@ class $$ExamTimetableTableOrderingComposer
     column: $table.datetimeStr,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$InstitutionsTableOrderingComposer get institutionId {
+    final $$InstitutionsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institutionId,
+      referencedTable: $db.institutions,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InstitutionsTableOrderingComposer(
+            $db: $db,
+            $table: $db.institutions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
-class $$ExamTimetableTableAnnotationComposer
-    extends Composer<_$AppDataBase, $ExamTimetableTable> {
-  $$ExamTimetableTableAnnotationComposer({
+class $$ExamTimetablesTableAnnotationComposer
+    extends Composer<_$AppDataBase, $ExamTimetablesTable> {
+  $$ExamTimetablesTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -33955,9 +33377,6 @@ class $$ExamTimetableTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get day =>
-      $composableBuilder(column: $table.day, builder: (column) => column);
-
   GeneratedColumn<String> get startTime =>
       $composableBuilder(column: $table.startTime, builder: (column) => column);
 
@@ -33967,140 +33386,192 @@ class $$ExamTimetableTableAnnotationComposer
   GeneratedColumn<String> get venue =>
       $composableBuilder(column: $table.venue, builder: (column) => column);
 
-  GeneratedColumn<String> get hrs =>
-      $composableBuilder(column: $table.hrs, builder: (column) => column);
-
-  GeneratedColumn<String> get campus =>
-      $composableBuilder(column: $table.campus, builder: (column) => column);
-
   GeneratedColumn<String> get coordinator => $composableBuilder(
     column: $table.coordinator,
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get invigilator => $composableBuilder(
-    column: $table.invigilator,
-    builder: (column) => column,
-  );
+  GeneratedColumn<String> get hrs =>
+      $composableBuilder(column: $table.hrs, builder: (column) => column);
+
+  GeneratedColumn<String> get rawData =>
+      $composableBuilder(column: $table.rawData, builder: (column) => column);
 
   GeneratedColumn<DateTime> get datetimeStr => $composableBuilder(
     column: $table.datetimeStr,
     builder: (column) => column,
   );
+
+  $$InstitutionsTableAnnotationComposer get institutionId {
+    final $$InstitutionsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.institutionId,
+      referencedTable: $db.institutions,
+      getReferencedColumn: (t) => t.institutionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$InstitutionsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.institutions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
-class $$ExamTimetableTableTableManager
+class $$ExamTimetablesTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $ExamTimetableTable,
-          ExamTimetableData,
-          $$ExamTimetableTableFilterComposer,
-          $$ExamTimetableTableOrderingComposer,
-          $$ExamTimetableTableAnnotationComposer,
-          $$ExamTimetableTableCreateCompanionBuilder,
-          $$ExamTimetableTableUpdateCompanionBuilder,
-          (
-            ExamTimetableData,
-            BaseReferences<
-              _$AppDataBase,
-              $ExamTimetableTable,
-              ExamTimetableData
-            >,
-          ),
-          ExamTimetableData,
-          PrefetchHooks Function()
+          $ExamTimetablesTable,
+          ExamTimetable,
+          $$ExamTimetablesTableFilterComposer,
+          $$ExamTimetablesTableOrderingComposer,
+          $$ExamTimetablesTableAnnotationComposer,
+          $$ExamTimetablesTableCreateCompanionBuilder,
+          $$ExamTimetablesTableUpdateCompanionBuilder,
+          (ExamTimetable, $$ExamTimetablesTableReferences),
+          ExamTimetable,
+          PrefetchHooks Function({bool institutionId})
         > {
-  $$ExamTimetableTableTableManager(_$AppDataBase db, $ExamTimetableTable table)
-    : super(
+  $$ExamTimetablesTableTableManager(
+    _$AppDataBase db,
+    $ExamTimetablesTable table,
+  ) : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$ExamTimetableTableFilterComposer($db: db, $table: table),
+              $$ExamTimetablesTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$ExamTimetableTableOrderingComposer($db: db, $table: table),
+              $$ExamTimetablesTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$ExamTimetableTableAnnotationComposer($db: db, $table: table),
+              $$ExamTimetablesTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
+                Value<int> institutionId = const Value.absent(),
                 Value<String> courseCode = const Value.absent(),
-                Value<String> day = const Value.absent(),
                 Value<String> startTime = const Value.absent(),
                 Value<String> endTime = const Value.absent(),
                 Value<String> venue = const Value.absent(),
-                Value<String> hrs = const Value.absent(),
-                Value<String> campus = const Value.absent(),
                 Value<String> coordinator = const Value.absent(),
-                Value<String> invigilator = const Value.absent(),
+                Value<String> hrs = const Value.absent(),
+                Value<String?> rawData = const Value.absent(),
                 Value<DateTime> datetimeStr = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => ExamTimetableCompanion(
+              }) => ExamTimetablesCompanion(
+                institutionId: institutionId,
                 courseCode: courseCode,
-                day: day,
                 startTime: startTime,
                 endTime: endTime,
                 venue: venue,
-                hrs: hrs,
-                campus: campus,
                 coordinator: coordinator,
-                invigilator: invigilator,
+                hrs: hrs,
+                rawData: rawData,
                 datetimeStr: datetimeStr,
                 rowid: rowid,
               ),
           createCompanionCallback:
               ({
+                required int institutionId,
                 required String courseCode,
-                required String day,
                 required String startTime,
                 required String endTime,
                 required String venue,
-                required String hrs,
-                required String campus,
-                required String coordinator,
-                required String invigilator,
+                Value<String> coordinator = const Value.absent(),
+                Value<String> hrs = const Value.absent(),
+                Value<String?> rawData = const Value.absent(),
                 required DateTime datetimeStr,
                 Value<int> rowid = const Value.absent(),
-              }) => ExamTimetableCompanion.insert(
+              }) => ExamTimetablesCompanion.insert(
+                institutionId: institutionId,
                 courseCode: courseCode,
-                day: day,
                 startTime: startTime,
                 endTime: endTime,
                 venue: venue,
-                hrs: hrs,
-                campus: campus,
                 coordinator: coordinator,
-                invigilator: invigilator,
+                hrs: hrs,
+                rawData: rawData,
                 datetimeStr: datetimeStr,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$ExamTimetablesTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({institutionId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (institutionId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.institutionId,
+                                referencedTable: $$ExamTimetablesTableReferences
+                                    ._institutionIdTable(db),
+                                referencedColumn:
+                                    $$ExamTimetablesTableReferences
+                                        ._institutionIdTable(db)
+                                        .institutionId,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ),
       );
 }
 
-typedef $$ExamTimetableTableProcessedTableManager =
+typedef $$ExamTimetablesTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $ExamTimetableTable,
-      ExamTimetableData,
-      $$ExamTimetableTableFilterComposer,
-      $$ExamTimetableTableOrderingComposer,
-      $$ExamTimetableTableAnnotationComposer,
-      $$ExamTimetableTableCreateCompanionBuilder,
-      $$ExamTimetableTableUpdateCompanionBuilder,
-      (
-        ExamTimetableData,
-        BaseReferences<_$AppDataBase, $ExamTimetableTable, ExamTimetableData>,
-      ),
-      ExamTimetableData,
-      PrefetchHooks Function()
+      $ExamTimetablesTable,
+      ExamTimetable,
+      $$ExamTimetablesTableFilterComposer,
+      $$ExamTimetablesTableOrderingComposer,
+      $$ExamTimetablesTableAnnotationComposer,
+      $$ExamTimetablesTableCreateCompanionBuilder,
+      $$ExamTimetablesTableUpdateCompanionBuilder,
+      (ExamTimetable, $$ExamTimetablesTableReferences),
+      ExamTimetable,
+      PrefetchHooks Function({bool institutionId})
     >;
-typedef $$ChirpUserTableCreateCompanionBuilder =
-    ChirpUserCompanion Function({
+typedef $$ChirpUsersTableCreateCompanionBuilder =
+    ChirpUsersCompanion Function({
       required String userID,
       Value<String?> email,
       Value<String?> phone,
@@ -34112,8 +33583,8 @@ typedef $$ChirpUserTableCreateCompanionBuilder =
       Value<DateTime?> cachedAt,
       Value<int> rowid,
     });
-typedef $$ChirpUserTableUpdateCompanionBuilder =
-    ChirpUserCompanion Function({
+typedef $$ChirpUsersTableUpdateCompanionBuilder =
+    ChirpUsersCompanion Function({
       Value<String> userID,
       Value<String?> email,
       Value<String?> phone,
@@ -34126,35 +33597,35 @@ typedef $$ChirpUserTableUpdateCompanionBuilder =
       Value<int> rowid,
     });
 
-final class $$ChirpUserTableReferences
-    extends BaseReferences<_$AppDataBase, $ChirpUserTable, ChirpUserData> {
-  $$ChirpUserTableReferences(super.$_db, super.$_table, super.$_typedResult);
+final class $$ChirpUsersTableReferences
+    extends BaseReferences<_$AppDataBase, $ChirpUsersTable, ChirpUser> {
+  $$ChirpUsersTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
   static MultiTypedResultKey<
-    $ChirpCommunityMembershipTable,
-    List<ChirpCommunityMembershipData>
+    $ChirpCommunityMembershipsTable,
+    List<ChirpCommunityMembership>
   >
-  _chirpCommunityMembershipRefsTable(_$AppDataBase db) =>
+  _chirpCommunityMembershipsRefsTable(_$AppDataBase db) =>
       MultiTypedResultKey.fromTable(
-        db.chirpCommunityMembership,
+        db.chirpCommunityMemberships,
         aliasName: $_aliasNameGenerator(
-          db.chirpUser.userID,
-          db.chirpCommunityMembership.userID,
+          db.chirpUsers.userID,
+          db.chirpCommunityMemberships.userID,
         ),
       );
 
-  $$ChirpCommunityMembershipTableProcessedTableManager
-  get chirpCommunityMembershipRefs {
+  $$ChirpCommunityMembershipsTableProcessedTableManager
+  get chirpCommunityMembershipsRefs {
     final manager =
-        $$ChirpCommunityMembershipTableTableManager(
+        $$ChirpCommunityMembershipsTableTableManager(
           $_db,
-          $_db.chirpCommunityMembership,
+          $_db.chirpCommunityMemberships,
         ).filter(
           (f) => f.userID.userID.sqlEquals($_itemColumn<String>('user_i_d')!),
         );
 
     final cache = $_typedResult.readTableOrNull(
-      _chirpCommunityMembershipRefsTable($_db),
+      _chirpCommunityMembershipsRefsTable($_db),
     );
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
@@ -34162,9 +33633,9 @@ final class $$ChirpUserTableReferences
   }
 }
 
-class $$ChirpUserTableFilterComposer
-    extends Composer<_$AppDataBase, $ChirpUserTable> {
-  $$ChirpUserTableFilterComposer({
+class $$ChirpUsersTableFilterComposer
+    extends Composer<_$AppDataBase, $ChirpUsersTable> {
+  $$ChirpUsersTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -34216,24 +33687,24 @@ class $$ChirpUserTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  Expression<bool> chirpCommunityMembershipRefs(
-    Expression<bool> Function($$ChirpCommunityMembershipTableFilterComposer f)
+  Expression<bool> chirpCommunityMembershipsRefs(
+    Expression<bool> Function($$ChirpCommunityMembershipsTableFilterComposer f)
     f,
   ) {
-    final $$ChirpCommunityMembershipTableFilterComposer composer =
+    final $$ChirpCommunityMembershipsTableFilterComposer composer =
         $composerBuilder(
           composer: this,
           getCurrentColumn: (t) => t.userID,
-          referencedTable: $db.chirpCommunityMembership,
+          referencedTable: $db.chirpCommunityMemberships,
           getReferencedColumn: (t) => t.userID,
           builder:
               (
                 joinBuilder, {
                 $addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer,
-              }) => $$ChirpCommunityMembershipTableFilterComposer(
+              }) => $$ChirpCommunityMembershipsTableFilterComposer(
                 $db: $db,
-                $table: $db.chirpCommunityMembership,
+                $table: $db.chirpCommunityMemberships,
                 $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
                 joinBuilder: joinBuilder,
                 $removeJoinBuilderFromRootComposer:
@@ -34244,9 +33715,9 @@ class $$ChirpUserTableFilterComposer
   }
 }
 
-class $$ChirpUserTableOrderingComposer
-    extends Composer<_$AppDataBase, $ChirpUserTable> {
-  $$ChirpUserTableOrderingComposer({
+class $$ChirpUsersTableOrderingComposer
+    extends Composer<_$AppDataBase, $ChirpUsersTable> {
+  $$ChirpUsersTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -34299,9 +33770,9 @@ class $$ChirpUserTableOrderingComposer
   );
 }
 
-class $$ChirpUserTableAnnotationComposer
-    extends Composer<_$AppDataBase, $ChirpUserTable> {
-  $$ChirpUserTableAnnotationComposer({
+class $$ChirpUsersTableAnnotationComposer
+    extends Composer<_$AppDataBase, $ChirpUsersTable> {
+  $$ChirpUsersTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -34337,24 +33808,24 @@ class $$ChirpUserTableAnnotationComposer
   GeneratedColumn<DateTime> get cachedAt =>
       $composableBuilder(column: $table.cachedAt, builder: (column) => column);
 
-  Expression<T> chirpCommunityMembershipRefs<T extends Object>(
-    Expression<T> Function($$ChirpCommunityMembershipTableAnnotationComposer a)
+  Expression<T> chirpCommunityMembershipsRefs<T extends Object>(
+    Expression<T> Function($$ChirpCommunityMembershipsTableAnnotationComposer a)
     f,
   ) {
-    final $$ChirpCommunityMembershipTableAnnotationComposer composer =
+    final $$ChirpCommunityMembershipsTableAnnotationComposer composer =
         $composerBuilder(
           composer: this,
           getCurrentColumn: (t) => t.userID,
-          referencedTable: $db.chirpCommunityMembership,
+          referencedTable: $db.chirpCommunityMemberships,
           getReferencedColumn: (t) => t.userID,
           builder:
               (
                 joinBuilder, {
                 $addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer,
-              }) => $$ChirpCommunityMembershipTableAnnotationComposer(
+              }) => $$ChirpCommunityMembershipsTableAnnotationComposer(
                 $db: $db,
-                $table: $db.chirpCommunityMembership,
+                $table: $db.chirpCommunityMemberships,
                 $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
                 joinBuilder: joinBuilder,
                 $removeJoinBuilderFromRootComposer:
@@ -34365,32 +33836,32 @@ class $$ChirpUserTableAnnotationComposer
   }
 }
 
-class $$ChirpUserTableTableManager
+class $$ChirpUsersTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $ChirpUserTable,
-          ChirpUserData,
-          $$ChirpUserTableFilterComposer,
-          $$ChirpUserTableOrderingComposer,
-          $$ChirpUserTableAnnotationComposer,
-          $$ChirpUserTableCreateCompanionBuilder,
-          $$ChirpUserTableUpdateCompanionBuilder,
-          (ChirpUserData, $$ChirpUserTableReferences),
-          ChirpUserData,
-          PrefetchHooks Function({bool chirpCommunityMembershipRefs})
+          $ChirpUsersTable,
+          ChirpUser,
+          $$ChirpUsersTableFilterComposer,
+          $$ChirpUsersTableOrderingComposer,
+          $$ChirpUsersTableAnnotationComposer,
+          $$ChirpUsersTableCreateCompanionBuilder,
+          $$ChirpUsersTableUpdateCompanionBuilder,
+          (ChirpUser, $$ChirpUsersTableReferences),
+          ChirpUser,
+          PrefetchHooks Function({bool chirpCommunityMembershipsRefs})
         > {
-  $$ChirpUserTableTableManager(_$AppDataBase db, $ChirpUserTable table)
+  $$ChirpUsersTableTableManager(_$AppDataBase db, $ChirpUsersTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$ChirpUserTableFilterComposer($db: db, $table: table),
+              $$ChirpUsersTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$ChirpUserTableOrderingComposer($db: db, $table: table),
+              $$ChirpUsersTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$ChirpUserTableAnnotationComposer($db: db, $table: table),
+              $$ChirpUsersTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<String> userID = const Value.absent(),
@@ -34403,7 +33874,7 @@ class $$ChirpUserTableTableManager
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<DateTime?> cachedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => ChirpUserCompanion(
+              }) => ChirpUsersCompanion(
                 userID: userID,
                 email: email,
                 phone: phone,
@@ -34427,7 +33898,7 @@ class $$ChirpUserTableTableManager
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<DateTime?> cachedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => ChirpUserCompanion.insert(
+              }) => ChirpUsersCompanion.insert(
                 userID: userID,
                 email: email,
                 phone: phone,
@@ -34443,34 +33914,34 @@ class $$ChirpUserTableTableManager
               .map(
                 (e) => (
                   e.readTable(table),
-                  $$ChirpUserTableReferences(db, table, e),
+                  $$ChirpUsersTableReferences(db, table, e),
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({chirpCommunityMembershipRefs = false}) {
+          prefetchHooksCallback: ({chirpCommunityMembershipsRefs = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [
-                if (chirpCommunityMembershipRefs) db.chirpCommunityMembership,
+                if (chirpCommunityMembershipsRefs) db.chirpCommunityMemberships,
               ],
               addJoins: null,
               getPrefetchedDataCallback: (items) async {
                 return [
-                  if (chirpCommunityMembershipRefs)
+                  if (chirpCommunityMembershipsRefs)
                     await $_getPrefetchedData<
-                      ChirpUserData,
-                      $ChirpUserTable,
-                      ChirpCommunityMembershipData
+                      ChirpUser,
+                      $ChirpUsersTable,
+                      ChirpCommunityMembership
                     >(
                       currentTable: table,
-                      referencedTable: $$ChirpUserTableReferences
-                          ._chirpCommunityMembershipRefsTable(db),
+                      referencedTable: $$ChirpUsersTableReferences
+                          ._chirpCommunityMembershipsRefsTable(db),
                       managerFromTypedResult: (p0) =>
-                          $$ChirpUserTableReferences(
+                          $$ChirpUsersTableReferences(
                             db,
                             table,
                             p0,
-                          ).chirpCommunityMembershipRefs,
+                          ).chirpCommunityMembershipsRefs,
                       referencedItemsForCurrentItem: (item, referencedItems) =>
                           referencedItems.where((e) => e.userID == item.userID),
                       typedResults: items,
@@ -34483,22 +33954,22 @@ class $$ChirpUserTableTableManager
       );
 }
 
-typedef $$ChirpUserTableProcessedTableManager =
+typedef $$ChirpUsersTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $ChirpUserTable,
-      ChirpUserData,
-      $$ChirpUserTableFilterComposer,
-      $$ChirpUserTableOrderingComposer,
-      $$ChirpUserTableAnnotationComposer,
-      $$ChirpUserTableCreateCompanionBuilder,
-      $$ChirpUserTableUpdateCompanionBuilder,
-      (ChirpUserData, $$ChirpUserTableReferences),
-      ChirpUserData,
-      PrefetchHooks Function({bool chirpCommunityMembershipRefs})
+      $ChirpUsersTable,
+      ChirpUser,
+      $$ChirpUsersTableFilterComposer,
+      $$ChirpUsersTableOrderingComposer,
+      $$ChirpUsersTableAnnotationComposer,
+      $$ChirpUsersTableCreateCompanionBuilder,
+      $$ChirpUsersTableUpdateCompanionBuilder,
+      (ChirpUser, $$ChirpUsersTableReferences),
+      ChirpUser,
+      PrefetchHooks Function({bool chirpCommunityMembershipsRefs})
     >;
-typedef $$CommunityTableCreateCompanionBuilder =
-    CommunityCompanion Function({
+typedef $$CommunitiesTableCreateCompanionBuilder =
+    CommunitiesCompanion Function({
       Value<int> id,
       required String name,
       Value<String?> description,
@@ -34525,8 +33996,8 @@ typedef $$CommunityTableCreateCompanionBuilder =
       required DateTime updatedAt,
       Value<DateTime?> cachedAt,
     });
-typedef $$CommunityTableUpdateCompanionBuilder =
-    CommunityCompanion Function({
+typedef $$CommunitiesTableUpdateCompanionBuilder =
+    CommunitiesCompanion Function({
       Value<int> id,
       Value<String> name,
       Value<String?> description,
@@ -34554,9 +34025,9 @@ typedef $$CommunityTableUpdateCompanionBuilder =
       Value<DateTime?> cachedAt,
     });
 
-class $$CommunityTableFilterComposer
-    extends Composer<_$AppDataBase, $CommunityTable> {
-  $$CommunityTableFilterComposer({
+class $$CommunitiesTableFilterComposer
+    extends Composer<_$AppDataBase, $CommunitiesTable> {
+  $$CommunitiesTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -34690,9 +34161,9 @@ class $$CommunityTableFilterComposer
   );
 }
 
-class $$CommunityTableOrderingComposer
-    extends Composer<_$AppDataBase, $CommunityTable> {
-  $$CommunityTableOrderingComposer({
+class $$CommunitiesTableOrderingComposer
+    extends Composer<_$AppDataBase, $CommunitiesTable> {
+  $$CommunitiesTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -34825,9 +34296,9 @@ class $$CommunityTableOrderingComposer
   );
 }
 
-class $$CommunityTableAnnotationComposer
-    extends Composer<_$AppDataBase, $CommunityTable> {
-  $$CommunityTableAnnotationComposer({
+class $$CommunitiesTableAnnotationComposer
+    extends Composer<_$AppDataBase, $CommunitiesTable> {
+  $$CommunitiesTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -34939,35 +34410,35 @@ class $$CommunityTableAnnotationComposer
       $composableBuilder(column: $table.cachedAt, builder: (column) => column);
 }
 
-class $$CommunityTableTableManager
+class $$CommunitiesTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $CommunityTable,
-          CommunityData,
-          $$CommunityTableFilterComposer,
-          $$CommunityTableOrderingComposer,
-          $$CommunityTableAnnotationComposer,
-          $$CommunityTableCreateCompanionBuilder,
-          $$CommunityTableUpdateCompanionBuilder,
+          $CommunitiesTable,
+          Community,
+          $$CommunitiesTableFilterComposer,
+          $$CommunitiesTableOrderingComposer,
+          $$CommunitiesTableAnnotationComposer,
+          $$CommunitiesTableCreateCompanionBuilder,
+          $$CommunitiesTableUpdateCompanionBuilder,
           (
-            CommunityData,
-            BaseReferences<_$AppDataBase, $CommunityTable, CommunityData>,
+            Community,
+            BaseReferences<_$AppDataBase, $CommunitiesTable, Community>,
           ),
-          CommunityData,
+          Community,
           PrefetchHooks Function()
         > {
-  $$CommunityTableTableManager(_$AppDataBase db, $CommunityTable table)
+  $$CommunitiesTableTableManager(_$AppDataBase db, $CommunitiesTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$CommunityTableFilterComposer($db: db, $table: table),
+              $$CommunitiesTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$CommunityTableOrderingComposer($db: db, $table: table),
+              $$CommunitiesTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$CommunityTableAnnotationComposer($db: db, $table: table),
+              $$CommunitiesTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
@@ -34995,7 +34466,7 @@ class $$CommunityTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<DateTime?> cachedAt = const Value.absent(),
-              }) => CommunityCompanion(
+              }) => CommunitiesCompanion(
                 id: id,
                 name: name,
                 description: description,
@@ -35049,7 +34520,7 @@ class $$CommunityTableTableManager
                 required DateTime createdAt,
                 required DateTime updatedAt,
                 Value<DateTime?> cachedAt = const Value.absent(),
-              }) => CommunityCompanion.insert(
+              }) => CommunitiesCompanion.insert(
                 id: id,
                 name: name,
                 description: description,
@@ -35084,25 +34555,22 @@ class $$CommunityTableTableManager
       );
 }
 
-typedef $$CommunityTableProcessedTableManager =
+typedef $$CommunitiesTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $CommunityTable,
-      CommunityData,
-      $$CommunityTableFilterComposer,
-      $$CommunityTableOrderingComposer,
-      $$CommunityTableAnnotationComposer,
-      $$CommunityTableCreateCompanionBuilder,
-      $$CommunityTableUpdateCompanionBuilder,
-      (
-        CommunityData,
-        BaseReferences<_$AppDataBase, $CommunityTable, CommunityData>,
-      ),
-      CommunityData,
+      $CommunitiesTable,
+      Community,
+      $$CommunitiesTableFilterComposer,
+      $$CommunitiesTableOrderingComposer,
+      $$CommunitiesTableAnnotationComposer,
+      $$CommunitiesTableCreateCompanionBuilder,
+      $$CommunitiesTableUpdateCompanionBuilder,
+      (Community, BaseReferences<_$AppDataBase, $CommunitiesTable, Community>),
+      Community,
       PrefetchHooks Function()
     >;
-typedef $$ChirpCommunityMembershipTableCreateCompanionBuilder =
-    ChirpCommunityMembershipCompanion Function({
+typedef $$ChirpCommunityMembershipsTableCreateCompanionBuilder =
+    ChirpCommunityMembershipsCompanion Function({
       Value<int> id,
       required int communityID,
       required String userID,
@@ -35114,8 +34582,8 @@ typedef $$ChirpCommunityMembershipTableCreateCompanionBuilder =
       Value<DateTime> joinedAt,
       Value<DateTime?> cachedAt,
     });
-typedef $$ChirpCommunityMembershipTableUpdateCompanionBuilder =
-    ChirpCommunityMembershipCompanion Function({
+typedef $$ChirpCommunityMembershipsTableUpdateCompanionBuilder =
+    ChirpCommunityMembershipsCompanion Function({
       Value<int> id,
       Value<int> communityID,
       Value<String> userID,
@@ -35128,33 +34596,33 @@ typedef $$ChirpCommunityMembershipTableUpdateCompanionBuilder =
       Value<DateTime?> cachedAt,
     });
 
-final class $$ChirpCommunityMembershipTableReferences
+final class $$ChirpCommunityMembershipsTableReferences
     extends
         BaseReferences<
           _$AppDataBase,
-          $ChirpCommunityMembershipTable,
-          ChirpCommunityMembershipData
+          $ChirpCommunityMembershipsTable,
+          ChirpCommunityMembership
         > {
-  $$ChirpCommunityMembershipTableReferences(
+  $$ChirpCommunityMembershipsTableReferences(
     super.$_db,
     super.$_table,
     super.$_typedResult,
   );
 
-  static $ChirpUserTable _userIDTable(_$AppDataBase db) =>
-      db.chirpUser.createAlias(
+  static $ChirpUsersTable _userIDTable(_$AppDataBase db) =>
+      db.chirpUsers.createAlias(
         $_aliasNameGenerator(
-          db.chirpCommunityMembership.userID,
-          db.chirpUser.userID,
+          db.chirpCommunityMemberships.userID,
+          db.chirpUsers.userID,
         ),
       );
 
-  $$ChirpUserTableProcessedTableManager get userID {
+  $$ChirpUsersTableProcessedTableManager get userID {
     final $_column = $_itemColumn<String>('user_i_d')!;
 
-    final manager = $$ChirpUserTableTableManager(
+    final manager = $$ChirpUsersTableTableManager(
       $_db,
-      $_db.chirpUser,
+      $_db.chirpUsers,
     ).filter((f) => f.userID.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_userIDTable($_db));
     if (item == null) return manager;
@@ -35164,9 +34632,9 @@ final class $$ChirpCommunityMembershipTableReferences
   }
 }
 
-class $$ChirpCommunityMembershipTableFilterComposer
-    extends Composer<_$AppDataBase, $ChirpCommunityMembershipTable> {
-  $$ChirpCommunityMembershipTableFilterComposer({
+class $$ChirpCommunityMembershipsTableFilterComposer
+    extends Composer<_$AppDataBase, $ChirpCommunityMembershipsTable> {
+  $$ChirpCommunityMembershipsTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -35218,20 +34686,20 @@ class $$ChirpCommunityMembershipTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  $$ChirpUserTableFilterComposer get userID {
-    final $$ChirpUserTableFilterComposer composer = $composerBuilder(
+  $$ChirpUsersTableFilterComposer get userID {
+    final $$ChirpUsersTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.userID,
-      referencedTable: $db.chirpUser,
+      referencedTable: $db.chirpUsers,
       getReferencedColumn: (t) => t.userID,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ChirpUserTableFilterComposer(
+          }) => $$ChirpUsersTableFilterComposer(
             $db: $db,
-            $table: $db.chirpUser,
+            $table: $db.chirpUsers,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -35242,9 +34710,9 @@ class $$ChirpCommunityMembershipTableFilterComposer
   }
 }
 
-class $$ChirpCommunityMembershipTableOrderingComposer
-    extends Composer<_$AppDataBase, $ChirpCommunityMembershipTable> {
-  $$ChirpCommunityMembershipTableOrderingComposer({
+class $$ChirpCommunityMembershipsTableOrderingComposer
+    extends Composer<_$AppDataBase, $ChirpCommunityMembershipsTable> {
+  $$ChirpCommunityMembershipsTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -35296,20 +34764,20 @@ class $$ChirpCommunityMembershipTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$ChirpUserTableOrderingComposer get userID {
-    final $$ChirpUserTableOrderingComposer composer = $composerBuilder(
+  $$ChirpUsersTableOrderingComposer get userID {
+    final $$ChirpUsersTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.userID,
-      referencedTable: $db.chirpUser,
+      referencedTable: $db.chirpUsers,
       getReferencedColumn: (t) => t.userID,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ChirpUserTableOrderingComposer(
+          }) => $$ChirpUsersTableOrderingComposer(
             $db: $db,
-            $table: $db.chirpUser,
+            $table: $db.chirpUsers,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -35320,9 +34788,9 @@ class $$ChirpCommunityMembershipTableOrderingComposer
   }
 }
 
-class $$ChirpCommunityMembershipTableAnnotationComposer
-    extends Composer<_$AppDataBase, $ChirpCommunityMembershipTable> {
-  $$ChirpCommunityMembershipTableAnnotationComposer({
+class $$ChirpCommunityMembershipsTableAnnotationComposer
+    extends Composer<_$AppDataBase, $ChirpCommunityMembershipsTable> {
+  $$ChirpCommunityMembershipsTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -35362,20 +34830,20 @@ class $$ChirpCommunityMembershipTableAnnotationComposer
   GeneratedColumn<DateTime> get cachedAt =>
       $composableBuilder(column: $table.cachedAt, builder: (column) => column);
 
-  $$ChirpUserTableAnnotationComposer get userID {
-    final $$ChirpUserTableAnnotationComposer composer = $composerBuilder(
+  $$ChirpUsersTableAnnotationComposer get userID {
+    final $$ChirpUsersTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.userID,
-      referencedTable: $db.chirpUser,
+      referencedTable: $db.chirpUsers,
       getReferencedColumn: (t) => t.userID,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ChirpUserTableAnnotationComposer(
+          }) => $$ChirpUsersTableAnnotationComposer(
             $db: $db,
-            $table: $db.chirpUser,
+            $table: $db.chirpUsers,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -35386,43 +34854,43 @@ class $$ChirpCommunityMembershipTableAnnotationComposer
   }
 }
 
-class $$ChirpCommunityMembershipTableTableManager
+class $$ChirpCommunityMembershipsTableTableManager
     extends
         RootTableManager<
           _$AppDataBase,
-          $ChirpCommunityMembershipTable,
-          ChirpCommunityMembershipData,
-          $$ChirpCommunityMembershipTableFilterComposer,
-          $$ChirpCommunityMembershipTableOrderingComposer,
-          $$ChirpCommunityMembershipTableAnnotationComposer,
-          $$ChirpCommunityMembershipTableCreateCompanionBuilder,
-          $$ChirpCommunityMembershipTableUpdateCompanionBuilder,
+          $ChirpCommunityMembershipsTable,
+          ChirpCommunityMembership,
+          $$ChirpCommunityMembershipsTableFilterComposer,
+          $$ChirpCommunityMembershipsTableOrderingComposer,
+          $$ChirpCommunityMembershipsTableAnnotationComposer,
+          $$ChirpCommunityMembershipsTableCreateCompanionBuilder,
+          $$ChirpCommunityMembershipsTableUpdateCompanionBuilder,
           (
-            ChirpCommunityMembershipData,
-            $$ChirpCommunityMembershipTableReferences,
+            ChirpCommunityMembership,
+            $$ChirpCommunityMembershipsTableReferences,
           ),
-          ChirpCommunityMembershipData,
+          ChirpCommunityMembership,
           PrefetchHooks Function({bool userID})
         > {
-  $$ChirpCommunityMembershipTableTableManager(
+  $$ChirpCommunityMembershipsTableTableManager(
     _$AppDataBase db,
-    $ChirpCommunityMembershipTable table,
+    $ChirpCommunityMembershipsTable table,
   ) : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$ChirpCommunityMembershipTableFilterComposer(
+              $$ChirpCommunityMembershipsTableFilterComposer(
                 $db: db,
                 $table: table,
               ),
           createOrderingComposer: () =>
-              $$ChirpCommunityMembershipTableOrderingComposer(
+              $$ChirpCommunityMembershipsTableOrderingComposer(
                 $db: db,
                 $table: table,
               ),
           createComputedFieldComposer: () =>
-              $$ChirpCommunityMembershipTableAnnotationComposer(
+              $$ChirpCommunityMembershipsTableAnnotationComposer(
                 $db: db,
                 $table: table,
               ),
@@ -35438,7 +34906,7 @@ class $$ChirpCommunityMembershipTableTableManager
                 Value<DateTime?> bannedAt = const Value.absent(),
                 Value<DateTime> joinedAt = const Value.absent(),
                 Value<DateTime?> cachedAt = const Value.absent(),
-              }) => ChirpCommunityMembershipCompanion(
+              }) => ChirpCommunityMembershipsCompanion(
                 id: id,
                 communityID: communityID,
                 userID: userID,
@@ -35462,7 +34930,7 @@ class $$ChirpCommunityMembershipTableTableManager
                 Value<DateTime?> bannedAt = const Value.absent(),
                 Value<DateTime> joinedAt = const Value.absent(),
                 Value<DateTime?> cachedAt = const Value.absent(),
-              }) => ChirpCommunityMembershipCompanion.insert(
+              }) => ChirpCommunityMembershipsCompanion.insert(
                 id: id,
                 communityID: communityID,
                 userID: userID,
@@ -35478,7 +34946,7 @@ class $$ChirpCommunityMembershipTableTableManager
               .map(
                 (e) => (
                   e.readTable(table),
-                  $$ChirpCommunityMembershipTableReferences(db, table, e),
+                  $$ChirpCommunityMembershipsTableReferences(db, table, e),
                 ),
               )
               .toList(),
@@ -35508,10 +34976,10 @@ class $$ChirpCommunityMembershipTableTableManager
                                 currentTable: table,
                                 currentColumn: table.userID,
                                 referencedTable:
-                                    $$ChirpCommunityMembershipTableReferences
+                                    $$ChirpCommunityMembershipsTableReferences
                                         ._userIDTable(db),
                                 referencedColumn:
-                                    $$ChirpCommunityMembershipTableReferences
+                                    $$ChirpCommunityMembershipsTableReferences
                                         ._userIDTable(db)
                                         .userID,
                               )
@@ -35529,18 +34997,18 @@ class $$ChirpCommunityMembershipTableTableManager
       );
 }
 
-typedef $$ChirpCommunityMembershipTableProcessedTableManager =
+typedef $$ChirpCommunityMembershipsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDataBase,
-      $ChirpCommunityMembershipTable,
-      ChirpCommunityMembershipData,
-      $$ChirpCommunityMembershipTableFilterComposer,
-      $$ChirpCommunityMembershipTableOrderingComposer,
-      $$ChirpCommunityMembershipTableAnnotationComposer,
-      $$ChirpCommunityMembershipTableCreateCompanionBuilder,
-      $$ChirpCommunityMembershipTableUpdateCompanionBuilder,
-      (ChirpCommunityMembershipData, $$ChirpCommunityMembershipTableReferences),
-      ChirpCommunityMembershipData,
+      $ChirpCommunityMembershipsTable,
+      ChirpCommunityMembership,
+      $$ChirpCommunityMembershipsTableFilterComposer,
+      $$ChirpCommunityMembershipsTableOrderingComposer,
+      $$ChirpCommunityMembershipsTableAnnotationComposer,
+      $$ChirpCommunityMembershipsTableCreateCompanionBuilder,
+      $$ChirpCommunityMembershipsTableUpdateCompanionBuilder,
+      (ChirpCommunityMembership, $$ChirpCommunityMembershipsTableReferences),
+      ChirpCommunityMembership,
       PrefetchHooks Function({bool userID})
     >;
 typedef $$LeaderboardRankTableCreateCompanionBuilder =
@@ -36689,19 +36157,1847 @@ typedef $$StreakMilestoneTableProcessedTableManager =
       StreakMilestoneData,
       PrefetchHooks Function({bool activityID})
     >;
+typedef $$TodoListsTableCreateCompanionBuilder =
+    TodoListsCompanion Function({
+      Value<int> localId,
+      Value<String?> id,
+      required String title,
+      Value<int?> color,
+      Value<bool> isDefault,
+      Value<SyncStatus> syncStatus,
+      Value<int> taskCount,
+      Value<DateTime?> lastSyncedAt,
+      Value<DateTime?> createdAt,
+      Value<DateTime?> updatedAt,
+      Value<bool> isPendingDeletion,
+      Value<bool> isDirty,
+    });
+typedef $$TodoListsTableUpdateCompanionBuilder =
+    TodoListsCompanion Function({
+      Value<int> localId,
+      Value<String?> id,
+      Value<String> title,
+      Value<int?> color,
+      Value<bool> isDefault,
+      Value<SyncStatus> syncStatus,
+      Value<int> taskCount,
+      Value<DateTime?> lastSyncedAt,
+      Value<DateTime?> createdAt,
+      Value<DateTime?> updatedAt,
+      Value<bool> isPendingDeletion,
+      Value<bool> isDirty,
+    });
+
+final class $$TodoListsTableReferences
+    extends BaseReferences<_$AppDataBase, $TodoListsTable, TodoList> {
+  $$TodoListsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$TodoItemsTable, List<TodoItem>>
+  _todoItemsRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
+    db.todoItems,
+    aliasName: $_aliasNameGenerator(
+      db.todoLists.localId,
+      db.todoItems.taskListLocalId,
+    ),
+  );
+
+  $$TodoItemsTableProcessedTableManager get todoItemsRefs {
+    final manager = $$TodoItemsTableTableManager($_db, $_db.todoItems).filter(
+      (f) =>
+          f.taskListLocalId.localId.sqlEquals($_itemColumn<int>('local_id')!),
+    );
+
+    final cache = $_typedResult.readTableOrNull(_todoItemsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$TodoListsTableFilterComposer
+    extends Composer<_$AppDataBase, $TodoListsTable> {
+  $$TodoListsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get localId => $composableBuilder(
+    column: $table.localId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get color => $composableBuilder(
+    column: $table.color,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isDefault => $composableBuilder(
+    column: $table.isDefault,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<SyncStatus, SyncStatus, String>
+  get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnFilters<int> get taskCount => $composableBuilder(
+    column: $table.taskCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastSyncedAt => $composableBuilder(
+    column: $table.lastSyncedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isPendingDeletion => $composableBuilder(
+    column: $table.isPendingDeletion,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isDirty => $composableBuilder(
+    column: $table.isDirty,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  Expression<bool> todoItemsRefs(
+    Expression<bool> Function($$TodoItemsTableFilterComposer f) f,
+  ) {
+    final $$TodoItemsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.localId,
+      referencedTable: $db.todoItems,
+      getReferencedColumn: (t) => t.taskListLocalId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TodoItemsTableFilterComposer(
+            $db: $db,
+            $table: $db.todoItems,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$TodoListsTableOrderingComposer
+    extends Composer<_$AppDataBase, $TodoListsTable> {
+  $$TodoListsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get localId => $composableBuilder(
+    column: $table.localId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get color => $composableBuilder(
+    column: $table.color,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isDefault => $composableBuilder(
+    column: $table.isDefault,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get taskCount => $composableBuilder(
+    column: $table.taskCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get lastSyncedAt => $composableBuilder(
+    column: $table.lastSyncedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isPendingDeletion => $composableBuilder(
+    column: $table.isPendingDeletion,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isDirty => $composableBuilder(
+    column: $table.isDirty,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$TodoListsTableAnnotationComposer
+    extends Composer<_$AppDataBase, $TodoListsTable> {
+  $$TodoListsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get localId =>
+      $composableBuilder(column: $table.localId, builder: (column) => column);
+
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<int> get color =>
+      $composableBuilder(column: $table.color, builder: (column) => column);
+
+  GeneratedColumn<bool> get isDefault =>
+      $composableBuilder(column: $table.isDefault, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<SyncStatus, String> get syncStatus =>
+      $composableBuilder(
+        column: $table.syncStatus,
+        builder: (column) => column,
+      );
+
+  GeneratedColumn<int> get taskCount =>
+      $composableBuilder(column: $table.taskCount, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get lastSyncedAt => $composableBuilder(
+    column: $table.lastSyncedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<bool> get isPendingDeletion => $composableBuilder(
+    column: $table.isPendingDeletion,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isDirty =>
+      $composableBuilder(column: $table.isDirty, builder: (column) => column);
+
+  Expression<T> todoItemsRefs<T extends Object>(
+    Expression<T> Function($$TodoItemsTableAnnotationComposer a) f,
+  ) {
+    final $$TodoItemsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.localId,
+      referencedTable: $db.todoItems,
+      getReferencedColumn: (t) => t.taskListLocalId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TodoItemsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.todoItems,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$TodoListsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $TodoListsTable,
+          TodoList,
+          $$TodoListsTableFilterComposer,
+          $$TodoListsTableOrderingComposer,
+          $$TodoListsTableAnnotationComposer,
+          $$TodoListsTableCreateCompanionBuilder,
+          $$TodoListsTableUpdateCompanionBuilder,
+          (TodoList, $$TodoListsTableReferences),
+          TodoList,
+          PrefetchHooks Function({bool todoItemsRefs})
+        > {
+  $$TodoListsTableTableManager(_$AppDataBase db, $TodoListsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TodoListsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TodoListsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TodoListsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> localId = const Value.absent(),
+                Value<String?> id = const Value.absent(),
+                Value<String> title = const Value.absent(),
+                Value<int?> color = const Value.absent(),
+                Value<bool> isDefault = const Value.absent(),
+                Value<SyncStatus> syncStatus = const Value.absent(),
+                Value<int> taskCount = const Value.absent(),
+                Value<DateTime?> lastSyncedAt = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
+                Value<bool> isPendingDeletion = const Value.absent(),
+                Value<bool> isDirty = const Value.absent(),
+              }) => TodoListsCompanion(
+                localId: localId,
+                id: id,
+                title: title,
+                color: color,
+                isDefault: isDefault,
+                syncStatus: syncStatus,
+                taskCount: taskCount,
+                lastSyncedAt: lastSyncedAt,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                isPendingDeletion: isPendingDeletion,
+                isDirty: isDirty,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> localId = const Value.absent(),
+                Value<String?> id = const Value.absent(),
+                required String title,
+                Value<int?> color = const Value.absent(),
+                Value<bool> isDefault = const Value.absent(),
+                Value<SyncStatus> syncStatus = const Value.absent(),
+                Value<int> taskCount = const Value.absent(),
+                Value<DateTime?> lastSyncedAt = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
+                Value<bool> isPendingDeletion = const Value.absent(),
+                Value<bool> isDirty = const Value.absent(),
+              }) => TodoListsCompanion.insert(
+                localId: localId,
+                id: id,
+                title: title,
+                color: color,
+                isDefault: isDefault,
+                syncStatus: syncStatus,
+                taskCount: taskCount,
+                lastSyncedAt: lastSyncedAt,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                isPendingDeletion: isPendingDeletion,
+                isDirty: isDirty,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$TodoListsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({todoItemsRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [if (todoItemsRefs) db.todoItems],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (todoItemsRefs)
+                    await $_getPrefetchedData<
+                      TodoList,
+                      $TodoListsTable,
+                      TodoItem
+                    >(
+                      currentTable: table,
+                      referencedTable: $$TodoListsTableReferences
+                          ._todoItemsRefsTable(db),
+                      managerFromTypedResult: (p0) =>
+                          $$TodoListsTableReferences(
+                            db,
+                            table,
+                            p0,
+                          ).todoItemsRefs,
+                      referencedItemsForCurrentItem: (item, referencedItems) =>
+                          referencedItems.where(
+                            (e) => e.taskListLocalId == item.localId,
+                          ),
+                      typedResults: items,
+                    ),
+                ];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$TodoListsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $TodoListsTable,
+      TodoList,
+      $$TodoListsTableFilterComposer,
+      $$TodoListsTableOrderingComposer,
+      $$TodoListsTableAnnotationComposer,
+      $$TodoListsTableCreateCompanionBuilder,
+      $$TodoListsTableUpdateCompanionBuilder,
+      (TodoList, $$TodoListsTableReferences),
+      TodoList,
+      PrefetchHooks Function({bool todoItemsRefs})
+    >;
+typedef $$TodoTagItemsTableCreateCompanionBuilder =
+    TodoTagItemsCompanion Function({
+      Value<int> localId,
+      Value<String?> id,
+      required String name,
+      Value<String?> color,
+      Value<SyncStatus> syncStatus,
+      Value<DateTime?> createdAt,
+      Value<bool> isPendingDeletion,
+      Value<bool> isDirty,
+    });
+typedef $$TodoTagItemsTableUpdateCompanionBuilder =
+    TodoTagItemsCompanion Function({
+      Value<int> localId,
+      Value<String?> id,
+      Value<String> name,
+      Value<String?> color,
+      Value<SyncStatus> syncStatus,
+      Value<DateTime?> createdAt,
+      Value<bool> isPendingDeletion,
+      Value<bool> isDirty,
+    });
+
+final class $$TodoTagItemsTableReferences
+    extends BaseReferences<_$AppDataBase, $TodoTagItemsTable, TodoTagItem> {
+  $$TodoTagItemsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$TodoItemTagsTable, List<TodoItemTag>>
+  _todoItemTagsRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
+    db.todoItemTags,
+    aliasName: $_aliasNameGenerator(
+      db.todoTagItems.localId,
+      db.todoItemTags.tagLocalId,
+    ),
+  );
+
+  $$TodoItemTagsTableProcessedTableManager get todoItemTagsRefs {
+    final manager = $$TodoItemTagsTableTableManager($_db, $_db.todoItemTags)
+        .filter(
+          (f) => f.tagLocalId.localId.sqlEquals($_itemColumn<int>('local_id')!),
+        );
+
+    final cache = $_typedResult.readTableOrNull(_todoItemTagsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$TodoTagItemsTableFilterComposer
+    extends Composer<_$AppDataBase, $TodoTagItemsTable> {
+  $$TodoTagItemsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get localId => $composableBuilder(
+    column: $table.localId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get color => $composableBuilder(
+    column: $table.color,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<SyncStatus, SyncStatus, String>
+  get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isPendingDeletion => $composableBuilder(
+    column: $table.isPendingDeletion,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isDirty => $composableBuilder(
+    column: $table.isDirty,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  Expression<bool> todoItemTagsRefs(
+    Expression<bool> Function($$TodoItemTagsTableFilterComposer f) f,
+  ) {
+    final $$TodoItemTagsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.localId,
+      referencedTable: $db.todoItemTags,
+      getReferencedColumn: (t) => t.tagLocalId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TodoItemTagsTableFilterComposer(
+            $db: $db,
+            $table: $db.todoItemTags,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$TodoTagItemsTableOrderingComposer
+    extends Composer<_$AppDataBase, $TodoTagItemsTable> {
+  $$TodoTagItemsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get localId => $composableBuilder(
+    column: $table.localId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get color => $composableBuilder(
+    column: $table.color,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isPendingDeletion => $composableBuilder(
+    column: $table.isPendingDeletion,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isDirty => $composableBuilder(
+    column: $table.isDirty,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$TodoTagItemsTableAnnotationComposer
+    extends Composer<_$AppDataBase, $TodoTagItemsTable> {
+  $$TodoTagItemsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get localId =>
+      $composableBuilder(column: $table.localId, builder: (column) => column);
+
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get color =>
+      $composableBuilder(column: $table.color, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<SyncStatus, String> get syncStatus =>
+      $composableBuilder(
+        column: $table.syncStatus,
+        builder: (column) => column,
+      );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<bool> get isPendingDeletion => $composableBuilder(
+    column: $table.isPendingDeletion,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isDirty =>
+      $composableBuilder(column: $table.isDirty, builder: (column) => column);
+
+  Expression<T> todoItemTagsRefs<T extends Object>(
+    Expression<T> Function($$TodoItemTagsTableAnnotationComposer a) f,
+  ) {
+    final $$TodoItemTagsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.localId,
+      referencedTable: $db.todoItemTags,
+      getReferencedColumn: (t) => t.tagLocalId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TodoItemTagsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.todoItemTags,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$TodoTagItemsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $TodoTagItemsTable,
+          TodoTagItem,
+          $$TodoTagItemsTableFilterComposer,
+          $$TodoTagItemsTableOrderingComposer,
+          $$TodoTagItemsTableAnnotationComposer,
+          $$TodoTagItemsTableCreateCompanionBuilder,
+          $$TodoTagItemsTableUpdateCompanionBuilder,
+          (TodoTagItem, $$TodoTagItemsTableReferences),
+          TodoTagItem,
+          PrefetchHooks Function({bool todoItemTagsRefs})
+        > {
+  $$TodoTagItemsTableTableManager(_$AppDataBase db, $TodoTagItemsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TodoTagItemsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TodoTagItemsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TodoTagItemsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> localId = const Value.absent(),
+                Value<String?> id = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String?> color = const Value.absent(),
+                Value<SyncStatus> syncStatus = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<bool> isPendingDeletion = const Value.absent(),
+                Value<bool> isDirty = const Value.absent(),
+              }) => TodoTagItemsCompanion(
+                localId: localId,
+                id: id,
+                name: name,
+                color: color,
+                syncStatus: syncStatus,
+                createdAt: createdAt,
+                isPendingDeletion: isPendingDeletion,
+                isDirty: isDirty,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> localId = const Value.absent(),
+                Value<String?> id = const Value.absent(),
+                required String name,
+                Value<String?> color = const Value.absent(),
+                Value<SyncStatus> syncStatus = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<bool> isPendingDeletion = const Value.absent(),
+                Value<bool> isDirty = const Value.absent(),
+              }) => TodoTagItemsCompanion.insert(
+                localId: localId,
+                id: id,
+                name: name,
+                color: color,
+                syncStatus: syncStatus,
+                createdAt: createdAt,
+                isPendingDeletion: isPendingDeletion,
+                isDirty: isDirty,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$TodoTagItemsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({todoItemTagsRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [if (todoItemTagsRefs) db.todoItemTags],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (todoItemTagsRefs)
+                    await $_getPrefetchedData<
+                      TodoTagItem,
+                      $TodoTagItemsTable,
+                      TodoItemTag
+                    >(
+                      currentTable: table,
+                      referencedTable: $$TodoTagItemsTableReferences
+                          ._todoItemTagsRefsTable(db),
+                      managerFromTypedResult: (p0) =>
+                          $$TodoTagItemsTableReferences(
+                            db,
+                            table,
+                            p0,
+                          ).todoItemTagsRefs,
+                      referencedItemsForCurrentItem: (item, referencedItems) =>
+                          referencedItems.where(
+                            (e) => e.tagLocalId == item.localId,
+                          ),
+                      typedResults: items,
+                    ),
+                ];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$TodoTagItemsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $TodoTagItemsTable,
+      TodoTagItem,
+      $$TodoTagItemsTableFilterComposer,
+      $$TodoTagItemsTableOrderingComposer,
+      $$TodoTagItemsTableAnnotationComposer,
+      $$TodoTagItemsTableCreateCompanionBuilder,
+      $$TodoTagItemsTableUpdateCompanionBuilder,
+      (TodoTagItem, $$TodoTagItemsTableReferences),
+      TodoTagItem,
+      PrefetchHooks Function({bool todoItemTagsRefs})
+    >;
+typedef $$TodoItemsTableCreateCompanionBuilder =
+    TodoItemsCompanion Function({
+      Value<int> localId,
+      Value<String?> id,
+      required int taskListLocalId,
+      required String title,
+      Value<String?> notes,
+      Value<TodoStatus> status,
+      Value<TodoPriority> priority,
+      Value<DateTime?> due,
+      Value<DateTime?> completed,
+      Value<int> subtaskCount,
+      Value<String?> position,
+      Value<bool> hidden,
+      Value<SyncStatus> syncStatus,
+      Value<DateTime?> lastSyncedAt,
+      Value<DateTime?> createdAt,
+      Value<DateTime?> updatedAt,
+      Value<bool> isPendingDeletion,
+      Value<bool> isDirty,
+    });
+typedef $$TodoItemsTableUpdateCompanionBuilder =
+    TodoItemsCompanion Function({
+      Value<int> localId,
+      Value<String?> id,
+      Value<int> taskListLocalId,
+      Value<String> title,
+      Value<String?> notes,
+      Value<TodoStatus> status,
+      Value<TodoPriority> priority,
+      Value<DateTime?> due,
+      Value<DateTime?> completed,
+      Value<int> subtaskCount,
+      Value<String?> position,
+      Value<bool> hidden,
+      Value<SyncStatus> syncStatus,
+      Value<DateTime?> lastSyncedAt,
+      Value<DateTime?> createdAt,
+      Value<DateTime?> updatedAt,
+      Value<bool> isPendingDeletion,
+      Value<bool> isDirty,
+    });
+
+final class $$TodoItemsTableReferences
+    extends BaseReferences<_$AppDataBase, $TodoItemsTable, TodoItem> {
+  $$TodoItemsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $TodoListsTable _taskListLocalIdTable(_$AppDataBase db) =>
+      db.todoLists.createAlias(
+        $_aliasNameGenerator(
+          db.todoItems.taskListLocalId,
+          db.todoLists.localId,
+        ),
+      );
+
+  $$TodoListsTableProcessedTableManager get taskListLocalId {
+    final $_column = $_itemColumn<int>('task_list_local_id')!;
+
+    final manager = $$TodoListsTableTableManager(
+      $_db,
+      $_db.todoLists,
+    ).filter((f) => f.localId.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_taskListLocalIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<$TodoItemTagsTable, List<TodoItemTag>>
+  _todoItemTagsRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
+    db.todoItemTags,
+    aliasName: $_aliasNameGenerator(
+      db.todoItems.localId,
+      db.todoItemTags.todoLocalId,
+    ),
+  );
+
+  $$TodoItemTagsTableProcessedTableManager get todoItemTagsRefs {
+    final manager = $$TodoItemTagsTableTableManager($_db, $_db.todoItemTags)
+        .filter(
+          (f) =>
+              f.todoLocalId.localId.sqlEquals($_itemColumn<int>('local_id')!),
+        );
+
+    final cache = $_typedResult.readTableOrNull(_todoItemTagsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$TodoItemsTableFilterComposer
+    extends Composer<_$AppDataBase, $TodoItemsTable> {
+  $$TodoItemsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get localId => $composableBuilder(
+    column: $table.localId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<TodoStatus, TodoStatus, String> get status =>
+      $composableBuilder(
+        column: $table.status,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
+  ColumnWithTypeConverterFilters<TodoPriority, TodoPriority, String>
+  get priority => $composableBuilder(
+    column: $table.priority,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnFilters<DateTime> get due => $composableBuilder(
+    column: $table.due,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get completed => $composableBuilder(
+    column: $table.completed,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get subtaskCount => $composableBuilder(
+    column: $table.subtaskCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get position => $composableBuilder(
+    column: $table.position,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get hidden => $composableBuilder(
+    column: $table.hidden,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<SyncStatus, SyncStatus, String>
+  get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastSyncedAt => $composableBuilder(
+    column: $table.lastSyncedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isPendingDeletion => $composableBuilder(
+    column: $table.isPendingDeletion,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isDirty => $composableBuilder(
+    column: $table.isDirty,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$TodoListsTableFilterComposer get taskListLocalId {
+    final $$TodoListsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.taskListLocalId,
+      referencedTable: $db.todoLists,
+      getReferencedColumn: (t) => t.localId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TodoListsTableFilterComposer(
+            $db: $db,
+            $table: $db.todoLists,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<bool> todoItemTagsRefs(
+    Expression<bool> Function($$TodoItemTagsTableFilterComposer f) f,
+  ) {
+    final $$TodoItemTagsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.localId,
+      referencedTable: $db.todoItemTags,
+      getReferencedColumn: (t) => t.todoLocalId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TodoItemTagsTableFilterComposer(
+            $db: $db,
+            $table: $db.todoItemTags,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$TodoItemsTableOrderingComposer
+    extends Composer<_$AppDataBase, $TodoItemsTable> {
+  $$TodoItemsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get localId => $composableBuilder(
+    column: $table.localId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get priority => $composableBuilder(
+    column: $table.priority,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get due => $composableBuilder(
+    column: $table.due,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get completed => $composableBuilder(
+    column: $table.completed,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get subtaskCount => $composableBuilder(
+    column: $table.subtaskCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get position => $composableBuilder(
+    column: $table.position,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get hidden => $composableBuilder(
+    column: $table.hidden,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get lastSyncedAt => $composableBuilder(
+    column: $table.lastSyncedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isPendingDeletion => $composableBuilder(
+    column: $table.isPendingDeletion,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isDirty => $composableBuilder(
+    column: $table.isDirty,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$TodoListsTableOrderingComposer get taskListLocalId {
+    final $$TodoListsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.taskListLocalId,
+      referencedTable: $db.todoLists,
+      getReferencedColumn: (t) => t.localId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TodoListsTableOrderingComposer(
+            $db: $db,
+            $table: $db.todoLists,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$TodoItemsTableAnnotationComposer
+    extends Composer<_$AppDataBase, $TodoItemsTable> {
+  $$TodoItemsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get localId =>
+      $composableBuilder(column: $table.localId, builder: (column) => column);
+
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get notes =>
+      $composableBuilder(column: $table.notes, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<TodoStatus, String> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<TodoPriority, String> get priority =>
+      $composableBuilder(column: $table.priority, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get due =>
+      $composableBuilder(column: $table.due, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get completed =>
+      $composableBuilder(column: $table.completed, builder: (column) => column);
+
+  GeneratedColumn<int> get subtaskCount => $composableBuilder(
+    column: $table.subtaskCount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get position =>
+      $composableBuilder(column: $table.position, builder: (column) => column);
+
+  GeneratedColumn<bool> get hidden =>
+      $composableBuilder(column: $table.hidden, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<SyncStatus, String> get syncStatus =>
+      $composableBuilder(
+        column: $table.syncStatus,
+        builder: (column) => column,
+      );
+
+  GeneratedColumn<DateTime> get lastSyncedAt => $composableBuilder(
+    column: $table.lastSyncedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<bool> get isPendingDeletion => $composableBuilder(
+    column: $table.isPendingDeletion,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isDirty =>
+      $composableBuilder(column: $table.isDirty, builder: (column) => column);
+
+  $$TodoListsTableAnnotationComposer get taskListLocalId {
+    final $$TodoListsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.taskListLocalId,
+      referencedTable: $db.todoLists,
+      getReferencedColumn: (t) => t.localId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TodoListsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.todoLists,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<T> todoItemTagsRefs<T extends Object>(
+    Expression<T> Function($$TodoItemTagsTableAnnotationComposer a) f,
+  ) {
+    final $$TodoItemTagsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.localId,
+      referencedTable: $db.todoItemTags,
+      getReferencedColumn: (t) => t.todoLocalId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TodoItemTagsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.todoItemTags,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$TodoItemsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $TodoItemsTable,
+          TodoItem,
+          $$TodoItemsTableFilterComposer,
+          $$TodoItemsTableOrderingComposer,
+          $$TodoItemsTableAnnotationComposer,
+          $$TodoItemsTableCreateCompanionBuilder,
+          $$TodoItemsTableUpdateCompanionBuilder,
+          (TodoItem, $$TodoItemsTableReferences),
+          TodoItem,
+          PrefetchHooks Function({bool taskListLocalId, bool todoItemTagsRefs})
+        > {
+  $$TodoItemsTableTableManager(_$AppDataBase db, $TodoItemsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TodoItemsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TodoItemsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TodoItemsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> localId = const Value.absent(),
+                Value<String?> id = const Value.absent(),
+                Value<int> taskListLocalId = const Value.absent(),
+                Value<String> title = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
+                Value<TodoStatus> status = const Value.absent(),
+                Value<TodoPriority> priority = const Value.absent(),
+                Value<DateTime?> due = const Value.absent(),
+                Value<DateTime?> completed = const Value.absent(),
+                Value<int> subtaskCount = const Value.absent(),
+                Value<String?> position = const Value.absent(),
+                Value<bool> hidden = const Value.absent(),
+                Value<SyncStatus> syncStatus = const Value.absent(),
+                Value<DateTime?> lastSyncedAt = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
+                Value<bool> isPendingDeletion = const Value.absent(),
+                Value<bool> isDirty = const Value.absent(),
+              }) => TodoItemsCompanion(
+                localId: localId,
+                id: id,
+                taskListLocalId: taskListLocalId,
+                title: title,
+                notes: notes,
+                status: status,
+                priority: priority,
+                due: due,
+                completed: completed,
+                subtaskCount: subtaskCount,
+                position: position,
+                hidden: hidden,
+                syncStatus: syncStatus,
+                lastSyncedAt: lastSyncedAt,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                isPendingDeletion: isPendingDeletion,
+                isDirty: isDirty,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> localId = const Value.absent(),
+                Value<String?> id = const Value.absent(),
+                required int taskListLocalId,
+                required String title,
+                Value<String?> notes = const Value.absent(),
+                Value<TodoStatus> status = const Value.absent(),
+                Value<TodoPriority> priority = const Value.absent(),
+                Value<DateTime?> due = const Value.absent(),
+                Value<DateTime?> completed = const Value.absent(),
+                Value<int> subtaskCount = const Value.absent(),
+                Value<String?> position = const Value.absent(),
+                Value<bool> hidden = const Value.absent(),
+                Value<SyncStatus> syncStatus = const Value.absent(),
+                Value<DateTime?> lastSyncedAt = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
+                Value<bool> isPendingDeletion = const Value.absent(),
+                Value<bool> isDirty = const Value.absent(),
+              }) => TodoItemsCompanion.insert(
+                localId: localId,
+                id: id,
+                taskListLocalId: taskListLocalId,
+                title: title,
+                notes: notes,
+                status: status,
+                priority: priority,
+                due: due,
+                completed: completed,
+                subtaskCount: subtaskCount,
+                position: position,
+                hidden: hidden,
+                syncStatus: syncStatus,
+                lastSyncedAt: lastSyncedAt,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                isPendingDeletion: isPendingDeletion,
+                isDirty: isDirty,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$TodoItemsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({taskListLocalId = false, todoItemTagsRefs = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (todoItemTagsRefs) db.todoItemTags,
+                  ],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (taskListLocalId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.taskListLocalId,
+                                    referencedTable: $$TodoItemsTableReferences
+                                        ._taskListLocalIdTable(db),
+                                    referencedColumn: $$TodoItemsTableReferences
+                                        ._taskListLocalIdTable(db)
+                                        .localId,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (todoItemTagsRefs)
+                        await $_getPrefetchedData<
+                          TodoItem,
+                          $TodoItemsTable,
+                          TodoItemTag
+                        >(
+                          currentTable: table,
+                          referencedTable: $$TodoItemsTableReferences
+                              ._todoItemTagsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$TodoItemsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).todoItemTagsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.todoLocalId == item.localId,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$TodoItemsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $TodoItemsTable,
+      TodoItem,
+      $$TodoItemsTableFilterComposer,
+      $$TodoItemsTableOrderingComposer,
+      $$TodoItemsTableAnnotationComposer,
+      $$TodoItemsTableCreateCompanionBuilder,
+      $$TodoItemsTableUpdateCompanionBuilder,
+      (TodoItem, $$TodoItemsTableReferences),
+      TodoItem,
+      PrefetchHooks Function({bool taskListLocalId, bool todoItemTagsRefs})
+    >;
+typedef $$TodoItemTagsTableCreateCompanionBuilder =
+    TodoItemTagsCompanion Function({
+      required int todoLocalId,
+      required int tagLocalId,
+      Value<int> rowid,
+    });
+typedef $$TodoItemTagsTableUpdateCompanionBuilder =
+    TodoItemTagsCompanion Function({
+      Value<int> todoLocalId,
+      Value<int> tagLocalId,
+      Value<int> rowid,
+    });
+
+final class $$TodoItemTagsTableReferences
+    extends BaseReferences<_$AppDataBase, $TodoItemTagsTable, TodoItemTag> {
+  $$TodoItemTagsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $TodoItemsTable _todoLocalIdTable(_$AppDataBase db) =>
+      db.todoItems.createAlias(
+        $_aliasNameGenerator(db.todoItemTags.todoLocalId, db.todoItems.localId),
+      );
+
+  $$TodoItemsTableProcessedTableManager get todoLocalId {
+    final $_column = $_itemColumn<int>('todo_local_id')!;
+
+    final manager = $$TodoItemsTableTableManager(
+      $_db,
+      $_db.todoItems,
+    ).filter((f) => f.localId.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_todoLocalIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $TodoTagItemsTable _tagLocalIdTable(_$AppDataBase db) =>
+      db.todoTagItems.createAlias(
+        $_aliasNameGenerator(
+          db.todoItemTags.tagLocalId,
+          db.todoTagItems.localId,
+        ),
+      );
+
+  $$TodoTagItemsTableProcessedTableManager get tagLocalId {
+    final $_column = $_itemColumn<int>('tag_local_id')!;
+
+    final manager = $$TodoTagItemsTableTableManager(
+      $_db,
+      $_db.todoTagItems,
+    ).filter((f) => f.localId.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_tagLocalIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$TodoItemTagsTableFilterComposer
+    extends Composer<_$AppDataBase, $TodoItemTagsTable> {
+  $$TodoItemTagsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  $$TodoItemsTableFilterComposer get todoLocalId {
+    final $$TodoItemsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.todoLocalId,
+      referencedTable: $db.todoItems,
+      getReferencedColumn: (t) => t.localId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TodoItemsTableFilterComposer(
+            $db: $db,
+            $table: $db.todoItems,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$TodoTagItemsTableFilterComposer get tagLocalId {
+    final $$TodoTagItemsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.tagLocalId,
+      referencedTable: $db.todoTagItems,
+      getReferencedColumn: (t) => t.localId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TodoTagItemsTableFilterComposer(
+            $db: $db,
+            $table: $db.todoTagItems,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$TodoItemTagsTableOrderingComposer
+    extends Composer<_$AppDataBase, $TodoItemTagsTable> {
+  $$TodoItemTagsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  $$TodoItemsTableOrderingComposer get todoLocalId {
+    final $$TodoItemsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.todoLocalId,
+      referencedTable: $db.todoItems,
+      getReferencedColumn: (t) => t.localId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TodoItemsTableOrderingComposer(
+            $db: $db,
+            $table: $db.todoItems,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$TodoTagItemsTableOrderingComposer get tagLocalId {
+    final $$TodoTagItemsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.tagLocalId,
+      referencedTable: $db.todoTagItems,
+      getReferencedColumn: (t) => t.localId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TodoTagItemsTableOrderingComposer(
+            $db: $db,
+            $table: $db.todoTagItems,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$TodoItemTagsTableAnnotationComposer
+    extends Composer<_$AppDataBase, $TodoItemTagsTable> {
+  $$TodoItemTagsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  $$TodoItemsTableAnnotationComposer get todoLocalId {
+    final $$TodoItemsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.todoLocalId,
+      referencedTable: $db.todoItems,
+      getReferencedColumn: (t) => t.localId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TodoItemsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.todoItems,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$TodoTagItemsTableAnnotationComposer get tagLocalId {
+    final $$TodoTagItemsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.tagLocalId,
+      referencedTable: $db.todoTagItems,
+      getReferencedColumn: (t) => t.localId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TodoTagItemsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.todoTagItems,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$TodoItemTagsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDataBase,
+          $TodoItemTagsTable,
+          TodoItemTag,
+          $$TodoItemTagsTableFilterComposer,
+          $$TodoItemTagsTableOrderingComposer,
+          $$TodoItemTagsTableAnnotationComposer,
+          $$TodoItemTagsTableCreateCompanionBuilder,
+          $$TodoItemTagsTableUpdateCompanionBuilder,
+          (TodoItemTag, $$TodoItemTagsTableReferences),
+          TodoItemTag,
+          PrefetchHooks Function({bool todoLocalId, bool tagLocalId})
+        > {
+  $$TodoItemTagsTableTableManager(_$AppDataBase db, $TodoItemTagsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TodoItemTagsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TodoItemTagsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TodoItemTagsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> todoLocalId = const Value.absent(),
+                Value<int> tagLocalId = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => TodoItemTagsCompanion(
+                todoLocalId: todoLocalId,
+                tagLocalId: tagLocalId,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required int todoLocalId,
+                required int tagLocalId,
+                Value<int> rowid = const Value.absent(),
+              }) => TodoItemTagsCompanion.insert(
+                todoLocalId: todoLocalId,
+                tagLocalId: tagLocalId,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$TodoItemTagsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({todoLocalId = false, tagLocalId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (todoLocalId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.todoLocalId,
+                                referencedTable: $$TodoItemTagsTableReferences
+                                    ._todoLocalIdTable(db),
+                                referencedColumn: $$TodoItemTagsTableReferences
+                                    ._todoLocalIdTable(db)
+                                    .localId,
+                              )
+                              as T;
+                    }
+                    if (tagLocalId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.tagLocalId,
+                                referencedTable: $$TodoItemTagsTableReferences
+                                    ._tagLocalIdTable(db),
+                                referencedColumn: $$TodoItemTagsTableReferences
+                                    ._tagLocalIdTable(db)
+                                    .localId,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$TodoItemTagsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDataBase,
+      $TodoItemTagsTable,
+      TodoItemTag,
+      $$TodoItemTagsTableFilterComposer,
+      $$TodoItemTagsTableOrderingComposer,
+      $$TodoItemTagsTableAnnotationComposer,
+      $$TodoItemTagsTableCreateCompanionBuilder,
+      $$TodoItemTagsTableUpdateCompanionBuilder,
+      (TodoItemTag, $$TodoItemTagsTableReferences),
+      TodoItemTag,
+      PrefetchHooks Function({bool todoLocalId, bool tagLocalId})
+    >;
 
 class $AppDataBaseManager {
   final _$AppDataBase _db;
   $AppDataBaseManager(this._db);
   $$UserProfileTableTableManager get userProfile =>
       $$UserProfileTableTableManager(_db, _db.userProfile);
-  $$AttachmentTableTableTableManager get attachmentTable =>
-      $$AttachmentTableTableTableManager(_db, _db.attachmentTable);
-  $$PostTableTableTableManager get postTable =>
-      $$PostTableTableTableManager(_db, _db.postTable);
-  $$CommentTableTableTableManager get commentTable =>
-      $$CommentTableTableTableManager(_db, _db.commentTable);
-  $$TodoTableTableManager get todo => $$TodoTableTableManager(_db, _db.todo);
+  $$AttachmentsTableTableManager get attachments =>
+      $$AttachmentsTableTableManager(_db, _db.attachments);
+  $$PostsTableTableManager get posts =>
+      $$PostsTableTableManager(_db, _db.posts);
+  $$CommentsTableTableManager get comments =>
+      $$CommentsTableTableManager(_db, _db.comments);
   $$EventTableTableTableManager get eventTable =>
       $$EventTableTableTableManager(_db, _db.eventTable);
   $$AttendeeTableTableTableManager get attendeeTable =>
@@ -36718,32 +38014,31 @@ class $AppDataBaseManager {
       $$TicketStatsTableTableTableManager(_db, _db.ticketStatsTable);
   $$ScannerTableTableTableManager get scannerTable =>
       $$ScannerTableTableTableManager(_db, _db.scannerTable);
-  $$GroupTableTableTableManager get groupTable =>
-      $$GroupTableTableTableManager(_db, _db.groupTable);
-  $$BlockTableTableTableManager get blockTable =>
-      $$BlockTableTableTableManager(_db, _db.blockTable);
-  $$ReportTableTableTableManager get reportTable =>
-      $$ReportTableTableTableManager(_db, _db.reportTable);
+  $$InviteTableTableTableManager get inviteTable =>
+      $$InviteTableTableTableManager(_db, _db.inviteTable);
+  $$BlocksTableTableManager get blocks =>
+      $$BlocksTableTableManager(_db, _db.blocks);
+  $$ReportsTableTableManager get reports =>
+      $$ReportsTableTableManager(_db, _db.reports);
   $$AgendaEventTableTableManager get agendaEvent =>
       $$AgendaEventTableTableManager(_db, _db.agendaEvent);
-  $$NotificationTableTableTableManager get notificationTable =>
-      $$NotificationTableTableTableManager(_db, _db.notificationTable);
-  $$InstitutionTableTableManager get institution =>
-      $$InstitutionTableTableManager(_db, _db.institution);
-  $$InstitutionScrappingCommandTableTableManager
-  get institutionScrappingCommand =>
-      $$InstitutionScrappingCommandTableTableManager(
+  $$InstitutionsTableTableManager get institutions =>
+      $$InstitutionsTableTableManager(_db, _db.institutions);
+  $$InstitutionScrappingCommandsTableTableManager
+  get institutionScrappingCommands =>
+      $$InstitutionScrappingCommandsTableTableManager(
         _db,
-        _db.institutionScrappingCommand,
+        _db.institutionScrappingCommands,
       );
-  $$InstitutionKeyTableTableManager get institutionKey =>
-      $$InstitutionKeyTableTableManager(_db, _db.institutionKey);
-  $$InstitutionProfileTableTableManager get institutionProfile =>
-      $$InstitutionProfileTableTableManager(_db, _db.institutionProfile);
-  $$InstitutionFeeTransactionTableTableManager get institutionFeeTransaction =>
-      $$InstitutionFeeTransactionTableTableManager(
+  $$InstitutionKeysTableTableManager get institutionKeys =>
+      $$InstitutionKeysTableTableManager(_db, _db.institutionKeys);
+  $$InstitutionProfilesTableTableManager get institutionProfiles =>
+      $$InstitutionProfilesTableTableManager(_db, _db.institutionProfiles);
+  $$InstitutionFeeTransactionsTableTableManager
+  get institutionFeeTransactions =>
+      $$InstitutionFeeTransactionsTableTableManager(
         _db,
-        _db.institutionFeeTransaction,
+        _db.institutionFeeTransactions,
       );
   $$SemesterTableTableManager get semester =>
       $$SemesterTableTableManager(_db, _db.semester);
@@ -36753,16 +38048,16 @@ class $AppDataBaseManager {
       $$TimetableTableTableManager(_db, _db.timetable);
   $$TimetableEntryTableTableManager get timetableEntry =>
       $$TimetableEntryTableTableManager(_db, _db.timetableEntry);
-  $$ExamTimetableTableTableManager get examTimetable =>
-      $$ExamTimetableTableTableManager(_db, _db.examTimetable);
-  $$ChirpUserTableTableManager get chirpUser =>
-      $$ChirpUserTableTableManager(_db, _db.chirpUser);
-  $$CommunityTableTableManager get community =>
-      $$CommunityTableTableManager(_db, _db.community);
-  $$ChirpCommunityMembershipTableTableManager get chirpCommunityMembership =>
-      $$ChirpCommunityMembershipTableTableManager(
+  $$ExamTimetablesTableTableManager get examTimetables =>
+      $$ExamTimetablesTableTableManager(_db, _db.examTimetables);
+  $$ChirpUsersTableTableManager get chirpUsers =>
+      $$ChirpUsersTableTableManager(_db, _db.chirpUsers);
+  $$CommunitiesTableTableManager get communities =>
+      $$CommunitiesTableTableManager(_db, _db.communities);
+  $$ChirpCommunityMembershipsTableTableManager get chirpCommunityMemberships =>
+      $$ChirpCommunityMembershipsTableTableManager(
         _db,
-        _db.chirpCommunityMembership,
+        _db.chirpCommunityMemberships,
       );
   $$LeaderboardRankTableTableManager get leaderboardRank =>
       $$LeaderboardRankTableTableManager(_db, _db.leaderboardRank);
@@ -36770,4 +38065,12 @@ class $AppDataBaseManager {
       $$StreakActivityTableTableManager(_db, _db.streakActivity);
   $$StreakMilestoneTableTableManager get streakMilestone =>
       $$StreakMilestoneTableTableManager(_db, _db.streakMilestone);
+  $$TodoListsTableTableManager get todoLists =>
+      $$TodoListsTableTableManager(_db, _db.todoLists);
+  $$TodoTagItemsTableTableManager get todoTagItems =>
+      $$TodoTagItemsTableTableManager(_db, _db.todoTagItems);
+  $$TodoItemsTableTableManager get todoItems =>
+      $$TodoItemsTableTableManager(_db, _db.todoItems);
+  $$TodoItemTagsTableTableManager get todoItemTags =>
+      $$TodoItemTagsTableTableManager(_db, _db.todoItemTags);
 }

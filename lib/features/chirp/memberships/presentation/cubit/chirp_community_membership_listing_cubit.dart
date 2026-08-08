@@ -1,14 +1,13 @@
 import 'package:academia/features/chirp/memberships/memberships.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-part 'chirp_community_membership_listing_state.dart';
+export 'chirp_community_membership_listing_state.dart';
 
 class ChirpCommunityMembershipListingCubit
     extends Cubit<ChirpCommunityMembershipListingState> {
   ChirpCommunityMembershipListingCubit({
     required this.getCommunityMembershipsUsecase,
-  }) : super(ChirpCommunityMembershipListingInitialState());
+  }) : super(const ChirpCommunityMembershipListingState.initial());
 
   final GetCommunityMembershipsUsecase getCommunityMembershipsUsecase;
 
@@ -20,7 +19,7 @@ class ChirpCommunityMembershipListingCubit
     if (isLoading) return;
 
     isLoading = true;
-    emit(ChirpCommunityMembershipListingLoadingState());
+    emit(const ChirpCommunityMembershipListingState.loading());
 
     final result = await getCommunityMembershipsUsecase(
       GetCommunityMembershipsUsecaseParams(
@@ -32,30 +31,33 @@ class ChirpCommunityMembershipListingCubit
 
     result.fold(
       (failure) {
-        emit(ChirpCommunityMembershipListingErrorState(error: failure.message));
+        emit(
+          ChirpCommunityMembershipListingState.error(error: failure.message),
+        );
         isLoading = false;
       },
       (memberships) {
-        if (state is ChirpCommunityMembershipListingLoadedState) {
-          final currentState =
-              state as ChirpCommunityMembershipListingLoadedState;
-          bool hasReachedMax = false;
+        final currentState = state;
+        final hasReachedMax = memberships.length < pageSize;
 
-          if (memberships.length < pageSize) {
-            hasReachedMax = true;
-          }
+        if (currentState is ChirpCommunityMembershipListingLoadedState) {
+          final updatedList = {
+            ...currentState.memberships,
+            ...memberships,
+          }.toList();
+
           emit(
-            currentState.copyWith(
-              memberships: memberships,
+            ChirpCommunityMembershipListingState.loaded(
+              memberships: updatedList,
               hasReachedMax: hasReachedMax,
               isLoading: false,
             ),
           );
         } else {
           emit(
-            ChirpCommunityMembershipListingLoadedState(
+            ChirpCommunityMembershipListingState.loaded(
               memberships: memberships,
-              hasReachedMax: memberships.length < pageSize,
+              hasReachedMax: hasReachedMax,
               isLoading: false,
             ),
           );

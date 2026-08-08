@@ -14,3 +14,5 @@ export 'exam_timetable/exam_timetable.dart';
 export 'settings/settings.dart';
 export 'timetable/timetable.dart';
 export 'in_app_update/in_app_update.dart';
+export 'splash/splash.dart';
+export 'permissions/permissions.dart';

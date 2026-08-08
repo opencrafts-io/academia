@@ -1,9 +1,9 @@
-import 'package:academia/features/chirp/communities/data/models/community_user_model.dart';
-import 'package:academia/features/chirp/communities/data/models/paginated_user_response.dart';
+import 'package:academia/features/chirp/communities/data/dtos/community_user_api_dto.dart';
+import 'package:academia/features/chirp/communities/data/dtos/paginated_user_response.dart';
 import 'package:academia/features/chirp/communities/domain/entities/community_user.dart';
 import 'package:academia/features/chirp/communities/domain/entities/paginated_response.dart';
 
-extension CommunityUserModelHelper on CommunityUserModel {
+extension CommunityUserApiDtoMapper on CommunityUserApiDto {
   CommunityUser toEntity() {
     return CommunityUser(userId: userId, userName: userName, role: role);
   }

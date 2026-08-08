@@ -14,13 +14,13 @@ class InteractionsLocalDataSource {
 
   
   // BLOCKS
-  Future<Either<Failure, List<BlockData>>> getCachedBlocks({
+  Future<Either<Failure, List<Block>>> getCachedBlocks({
     String? type,
   }) async {
     try {
       await _deleteAllExpiredCachedBlocks();
 
-      final query = db.select(db.blockTable);
+      final query = db.select(db.blocks);
 
       if (type != null) {
         query.where((tbl) => tbl.blockType.equals(type));
@@ -43,19 +43,19 @@ class InteractionsLocalDataSource {
     }
   }
 
-  Future<Either<Failure, BlockData>> createOrUpdateBlock(
-    BlockData block,
+  Future<Either<Failure, Block>> createOrUpdateBlock(
+    Block block,
   ) async {
     try {
       await _deleteAllExpiredCachedBlocks();
 
       final manipulated = await db
-          .into(db.blockTable)
+          .into(db.blocks)
           .insertReturning(
             block.copyWith(cachedAt: Value(DateTime.now())),
             onConflict: DoUpdate(
               (old) => block.copyWith(cachedAt: Value(DateTime.now())),
-              target: [db.blockTable.id],
+              target: [db.blocks.id],
             ),
           );
 
@@ -75,7 +75,7 @@ class InteractionsLocalDataSource {
   Future<Either<Failure, void>> deleteBlockById(int blockId) async {
     try {
       await (db.delete(
-        db.blockTable,
+        db.blocks,
       )..where((tbl) => tbl.id.equals(blockId))).go();
 
       await _deleteAllExpiredCachedBlocks();
@@ -99,10 +99,10 @@ class InteractionsLocalDataSource {
     try {
       await _deleteAllExpiredCachedBlocks();
 
-      SimpleSelectStatement<$BlockTableTable, BlockData> query;
+      SimpleSelectStatement<$BlocksTable, Block> query;
 
       if (blockType == 'user') {
-        query = db.select(db.blockTable)
+        query = db.select(db.blocks)
           ..where(
             (tbl) =>
                 tbl.blockType.equals(blockType) &
@@ -112,7 +112,7 @@ class InteractionsLocalDataSource {
         final communityId = int.tryParse(entityId);
         if (communityId == null) return right(false);
 
-        query = db.select(db.blockTable)
+        query = db.select(db.blocks)
           ..where(
             (tbl) =>
                 tbl.blockType.equals(blockType) &
@@ -136,7 +136,7 @@ class InteractionsLocalDataSource {
 
   Future<Either<Failure, void>> deleteAllCachedBlocks() async {
     try {
-      await db.delete(db.blockTable).go();
+      await db.delete(db.blocks).go();
       return right(null);
     } catch (e) {
       return left(
@@ -152,14 +152,14 @@ class InteractionsLocalDataSource {
 
   
   // REPORTS
-  Future<Either<Failure, List<ReportData>>> getCachedReports({
+  Future<Either<Failure, List<Report>>> getCachedReports({
     String? type,
     String? status,
   }) async {
     try {
       await _deleteAllExpiredCachedReports();
 
-      final query = db.select(db.reportTable);
+      final query = db.select(db.reports);
 
       if (type != null && status != null) {
         query.where(
@@ -188,19 +188,19 @@ class InteractionsLocalDataSource {
     }
   }
 
-  Future<Either<Failure, ReportData>> createOrUpdateReport(
-    ReportData report,
+  Future<Either<Failure, Report>> createOrUpdateReport(
+    Report report,
   ) async {
     try {
       await _deleteAllExpiredCachedReports();
 
       final manipulated = await db
-          .into(db.reportTable)
+          .into(db.reports)
           .insertReturning(
             report.copyWith(cachedAt: Value(DateTime.now())),
             onConflict: DoUpdate(
               (old) => report.copyWith(cachedAt: Value(DateTime.now())),
-              target: [db.reportTable.id],
+              target: [db.reports.id],
             ),
           );
 
@@ -219,7 +219,7 @@ class InteractionsLocalDataSource {
 
   Future<Either<Failure, void>> deleteAllCachedReports() async {
     try {
-      await db.delete(db.reportTable).go();
+      await db.delete(db.reports).go();
       return right(null);
     } catch (e) {
       return left(
@@ -239,7 +239,7 @@ class InteractionsLocalDataSource {
   Future<Either<Failure, void>> _deleteAllExpiredCachedBlocks() async {
     try {
       final expirationThreshold = DateTime.now().subtract(ttl);
-      await (db.delete(db.blockTable)..where(
+      await (db.delete(db.blocks)..where(
             (tbl) => tbl.cachedAt.isSmallerThanValue(expirationThreshold),
           ))
           .go();
@@ -261,7 +261,7 @@ class InteractionsLocalDataSource {
   Future<Either<Failure, void>> _deleteAllExpiredCachedReports() async {
     try {
       final expirationThreshold = DateTime.now().subtract(ttl);
-      await (db.delete(db.reportTable)..where(
+      await (db.delete(db.reports)..where(
             (tbl) => tbl.cachedAt.isSmallerThanValue(expirationThreshold),
           ))
           .go();

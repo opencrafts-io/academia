@@ -13,6 +13,14 @@ part 'routes.g.dart';
 
 final GlobalKey<NavigatorState> shellNavigatorKey = GlobalKey<NavigatorState>();
 
+@TypedGoRoute<SplashScreenRoute>(path: "/splash")
+class SplashScreenRoute extends GoRouteData with $SplashScreenRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return SplashScreen();
+  }
+}
+
 @TypedStatefulShellRoute<LayoutShellRoute>(
   branches: [
     TypedStatefulShellBranch(routes: [TypedGoRoute<HomeRoute>(path: '/')]),
@@ -52,13 +60,19 @@ class HomeRoute extends GoRouteData with $HomeRoute {
   }
 }
 
+@TypedGoRoute<NotificationPermissionRoute>(path: '/notification-allow')
+class NotificationPermissionRoute extends GoRouteData
+    with $NotificationPermissionRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return NotificationPermissionScreen();
+  }
+}
+
 class EssentialsRoute extends GoRouteData with $EssentialsRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return BlocProvider(
-      create: (_) => sl<ScrappingCommandBloc>(),
-      child: EssentialsPage(),
-    );
+    return EssentialsPage();
   }
 }
 
@@ -141,18 +155,9 @@ class PostDetailRoute extends GoRouteData with $PostDetailRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    final post = state.extra as Post;
+    final post = state.extra is Post ? state.extra as Post : null;
 
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (_) => PostCubit(post)),
-        BlocProvider(
-          create: (context) =>
-              sl.get<ChirpUserCubit>()..getChirpUserByID(post.authorId),
-        ),
-      ],
-      child: PostDetailPage(post: post),
-    );
+    return PostDetailPage(postId: postId, initialPost: post);
   }
 }
 
@@ -244,22 +249,6 @@ class CompleteProfileRoute extends GoRouteData with $CompleteProfileRoute {
 @TypedGoRoute<ShereheRoute>(
   path: "/sherehe",
   routes: [
-    TypedGoRoute<ShereheDetailsRoute>(
-      path: "get-event/:eventId",
-      routes: [
-        TypedGoRoute<TicketFlowRoute>(path: "ticket-flow"),
-        TypedGoRoute<QrCodeScannerRoute>(path: "qr-code-scanner"),
-        TypedGoRoute<EventTicketsRoute>(path: "event-tickets"),
-        TypedGoRoute<OrganizerDashboardRoute>(
-          path: "organizer-dashboard",
-          routes: [
-            TypedGoRoute<AllAttendeesRoute>(path: "all-attendees"),
-            TypedGoRoute<AllScannersRoute>(path: "all-scanners"),
-            TypedGoRoute<AddEventScannerRoute>(path: "add-event-scanner"),
-          ],
-        ),
-      ],
-    ),
     TypedGoRoute<CreateEventRoute>(
       path: "create",
       routes: [
@@ -267,6 +256,7 @@ class CompleteProfileRoute extends GoRouteData with $CompleteProfileRoute {
           path: "sherehe-select-institutions",
         ),
         TypedGoRoute<EditAddedTicketRoute>(path: "edit-added-ticket"),
+        TypedGoRoute<AddTicketRoute>(path: "add-ticket"),
       ],
     ),
   ],
@@ -300,10 +290,60 @@ class CreateEventRoute extends GoRouteData with $CreateEventRoute {
 }
 
 class EditAddedTicketRoute extends GoRouteData with $EditAddedTicketRoute {
+  final bool isMultiDayEvent;
+  final DateTime eventStartDateTime;
+  final DateTime eventEndDateTime;
+  final bool isTicketPage;
+  final bool isEventScopeInstitution;
+
+  const EditAddedTicketRoute({
+    this.isMultiDayEvent = false,
+    required this.eventStartDateTime,
+    required this.eventEndDateTime,
+    required this.isTicketPage,
+    required this.isEventScopeInstitution,
+  });
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    final addedTicket = state.extra as TicketUI;
-    return EditAddedTicketScreen(addedTicket: addedTicket);
+    final editTicketArgs = state.extra as EditAddedTicketArgs;
+    return EditAddedTicketScreen(
+      addedTicket: editTicketArgs.ticket,
+      isMultiDayEvent: isMultiDayEvent,
+      eventStartDateTime: eventStartDateTime,
+      eventEndDateTime: eventEndDateTime,
+      isTicketPage: isTicketPage,
+      isEventScopeInstitution: isEventScopeInstitution,
+      eligibleInstitutions: editTicketArgs.eligibleInstitutions,
+    );
+  }
+}
+
+class AddTicketRoute extends GoRouteData with $AddTicketRoute {
+  final DateTime eventStartDateTime;
+  final DateTime eventEndDateTime;
+  final bool isMultiDayEvent;
+  final bool isTicketPage;
+  final bool isEventScopeInstitution;
+
+  const AddTicketRoute({
+    this.isMultiDayEvent = false,
+    required this.eventStartDateTime,
+    required this.eventEndDateTime,
+    required this.isTicketPage,
+    required this.isEventScopeInstitution,
+  });
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    final eligibleInstitutions = state.extra as List<Institution>?;
+
+    return AddTicketScreen(
+      isMultiDayEvent: isMultiDayEvent,
+      eventStartDateTime: eventStartDateTime,
+      eventEndDateTime: eventEndDateTime,
+      isTicketPage: isTicketPage,
+      isEventScopeInstitution: isEventScopeInstitution,
+      eligibleInstitutions: eligibleInstitutions,
+    );
   }
 }
 
@@ -319,18 +359,49 @@ class ShereheSelectInstitutionsRoute extends GoRouteData
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    final selectedInstitutions = state.extra is List<Institution>
-        ? state.extra as List<Institution>
-        : <Institution>[];
+    final shereheInstitutionsArgs = state.extra is ShereheInstitutionRouteArgs
+        ? state.extra as ShereheInstitutionRouteArgs
+        : ShereheInstitutionRouteArgs(
+            selectedInstitutions: [],
+            eligibleInstitutions: [],
+          );
 
     return ShereheSelectInstitutionsScreen(
       title: title,
       subtitle: subtitle,
-      selectedInstitutions: selectedInstitutions,
+      selectedInstitutions: shereheInstitutionsArgs.selectedInstitutions,
+      eligibleInstitutions: shereheInstitutionsArgs.eligibleInstitutions,
+      onlyShowEligibleInstitutions:
+          shereheInstitutionsArgs.onlyShowEligibleInstitutions,
     );
   }
 }
 
+@TypedGoRoute<ShereheDetailsRoute>(
+  path: "/sherehe/get-event/:eventId",
+  routes: [
+    TypedGoRoute<TicketFlowRoute>(path: "ticket-flow"),
+    TypedGoRoute<QrCodeScannerRoute>(path: "qr-code-scanner"),
+    TypedGoRoute<EventTicketsRoute>(path: "event-tickets"),
+    TypedGoRoute<OrganizerDashboardRoute>(
+      path: "organizer-dashboard",
+      routes: [
+        TypedGoRoute<AllAttendeesRoute>(path: "all-attendees"),
+        TypedGoRoute<AllScannersRoute>(
+          path: "all-scanners",
+          routes: [
+            TypedGoRoute<AddEventScannerRoute>(path: "add-event-scanner"),
+          ],
+        ),
+        TypedGoRoute<AllEventTicketsRoute>(
+          path: "all-event-tickets",
+          routes: [TypedGoRoute<TicketLinksRoute>(path: "ticket-links")],
+        ),
+        TypedGoRoute<EventLinksRoute>(path: "event-links"),
+      ],
+    ),
+  ],
+)
 class ShereheDetailsRoute extends GoRouteData with $ShereheDetailsRoute {
   final String eventId;
 
@@ -399,50 +470,282 @@ class EventTicketsRoute extends GoRouteData with $EventTicketsRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    final event = state.extra as Event;
+    final args = state.extra as ConfirmPaymentArgs?;
 
-    return EventTicketsPage(eventId: eventId, event: event);
+    return BlocProvider(
+      create: (context) => sl<UserEventTicketsBloc>(),
+      child: EventTicketsPage(
+        eventId: eventId,
+        event: args?.event,
+        attendees: args?.attendees,
+      ),
+    );
   }
 }
 
 class OrganizerDashboardRoute extends GoRouteData
     with $OrganizerDashboardRoute {
   final String eventId;
+  final String eventName;
+  final String eventLocation;
+  final String eventStartDate;
+  final String eventEndDate;
+  final String? eventPosterImage;
+  final String eventScope;
 
-  const OrganizerDashboardRoute({required this.eventId});
+  const OrganizerDashboardRoute({
+    required this.eventId,
+    required this.eventName,
+    required this.eventLocation,
+    required this.eventStartDate,
+    required this.eventEndDate,
+    this.eventPosterImage,
+    required this.eventScope,
+  });
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return OrganizerDashboardPage(eventId: eventId);
+    final eventInstitutions = state.extra as List<Institution>?;
+
+    return OrganizerDashboardPage(
+      eventId: eventId,
+      eventName: eventName,
+      eventLocation: eventLocation,
+      eventStartDate: eventStartDate,
+      eventEndDate: eventEndDate,
+      eventPosterImage: eventPosterImage,
+      eventScope: eventScope,
+      eventInstitutions: eventInstitutions,
+    );
   }
 }
 
 class AllAttendeesRoute extends GoRouteData with $AllAttendeesRoute {
   final String eventId;
+  final String eventName;
+  final String eventLocation;
+  final String eventStartDate;
+  final String eventEndDate;
+  final String? eventPosterImage;
+  final String eventScope;
 
-  const AllAttendeesRoute({required this.eventId});
+  const AllAttendeesRoute({
+    required this.eventId,
+    required this.eventName,
+    required this.eventLocation,
+    required this.eventStartDate,
+    required this.eventEndDate,
+    this.eventPosterImage,
+    required this.eventScope,
+  });
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return AllAttendeesScreen(eventId: eventId);
+    return BlocProvider(
+      create: (context) => sl<AllAttendeesBloc>(),
+      child: AllAttendeesScreen(eventId: eventId),
+    );
   }
 }
 
 class AllScannersRoute extends GoRouteData with $AllScannersRoute {
   final String eventId;
+  final String eventName;
+  final String eventLocation;
+  final String eventStartDate;
+  final String eventEndDate;
+  final String? eventPosterImage;
+  final String eventScope;
 
-  const AllScannersRoute({required this.eventId});
+  const AllScannersRoute({
+    required this.eventId,
+    required this.eventName,
+    required this.eventLocation,
+    required this.eventStartDate,
+    required this.eventEndDate,
+    this.eventPosterImage,
+    required this.eventScope,
+  });
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return AllScannersScreen(eventId: eventId);
+    return BlocProvider(
+      create: (context) => sl<AllScannersBloc>(),
+      child: AllScannersScreen(
+        eventId: eventId,
+        eventName: eventName,
+        eventLocation: eventLocation,
+        eventStartDate: eventStartDate,
+        eventEndDate: eventEndDate,
+        eventPosterImage: eventPosterImage,
+        eventScope: eventScope,
+      ),
+    );
+  }
+}
+
+class AllEventTicketsRoute extends GoRouteData with $AllEventTicketsRoute {
+  final String eventId;
+  final String eventName;
+  final String eventLocation;
+  final String eventStartDate;
+  final String eventEndDate;
+  final String? eventPosterImage;
+  final bool isEventScopeInstitution;
+  final String eventScope;
+
+  const AllEventTicketsRoute({
+    required this.eventId,
+    required this.eventName,
+    required this.eventLocation,
+    required this.eventStartDate,
+    required this.eventEndDate,
+    this.eventPosterImage,
+    required this.isEventScopeInstitution,
+    required this.eventScope,
+  });
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    final eligibleInstitutions = state.extra as List<Institution>?;
+
+    return BlocProvider(
+      create: (context) =>
+          sl<TicketStatsBloc>()..add(GetTicketStats(eventId: eventId)),
+      child: AllEventTicketsScreen(
+        eventId: eventId,
+        eventName: eventName,
+        eventLocation: eventLocation,
+        eventStartDate: eventStartDate,
+        eventEndDate: eventEndDate,
+        eventPosterImage: eventPosterImage,
+        eligibleInstitutions: eligibleInstitutions,
+        isEventScopeInstitution: isEventScopeInstitution,
+        eventScope: eventScope,
+      ),
+    );
+  }
+}
+
+class TicketLinksRoute extends GoRouteData with $TicketLinksRoute {
+  final String eventId;
+  final String ticketId;
+  final String eventName;
+  final String eventLocation;
+  final String eventStartDate;
+  final String eventEndDate;
+  final String? eventPosterImage;
+  final bool isEventScopeInstitution;
+  final String eventScope;
+
+  const TicketLinksRoute({
+    required this.eventId,
+    required this.ticketId,
+    required this.eventName,
+    required this.eventLocation,
+    required this.eventStartDate,
+    required this.eventEndDate,
+    this.eventPosterImage,
+    required this.isEventScopeInstitution,
+    required this.eventScope,
+  });
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return BlocProvider(
+      create: (context) =>
+          sl<TicketLinkBloc>()..add(GetTicketInvites(ticketId: ticketId)),
+      child: TicketLinksScreen(
+        ticketId: ticketId,
+        eventName: eventName,
+        eventLocation: eventLocation,
+        eventStartDate: eventStartDate,
+        eventEndDate: eventEndDate,
+        eventPosterImage: eventPosterImage,
+      ),
+    );
+  }
+}
+
+class EventLinksRoute extends GoRouteData with $EventLinksRoute {
+  final String eventId;
+  final String eventName;
+  final String eventLocation;
+  final String eventStartDate;
+  final String eventEndDate;
+  final String? eventPosterImage;
+  final String eventScope;
+
+  const EventLinksRoute({
+    required this.eventId,
+    required this.eventName,
+    required this.eventLocation,
+    required this.eventStartDate,
+    required this.eventEndDate,
+    this.eventPosterImage,
+    required this.eventScope,
+  });
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return BlocProvider(
+      create: (context) =>
+          sl<EventLinkBloc>()..add(GetEventInvites(eventId: eventId)),
+      child: EventLinksScreen(
+        eventId: eventId,
+        eventName: eventName,
+        eventLocation: eventLocation,
+        eventStartDate: eventStartDate,
+        eventEndDate: eventEndDate,
+        eventPosterImage: eventPosterImage,
+      ),
+    );
   }
 }
 
 class AddEventScannerRoute extends GoRouteData with $AddEventScannerRoute {
   final String eventId;
+  final String eventName;
+  final String eventLocation;
+  final String eventStartDate;
+  final String eventEndDate;
+  final String? eventPosterImage;
+  final String eventScope;
 
-  const AddEventScannerRoute({required this.eventId});
+  const AddEventScannerRoute({
+    required this.eventId,
+    required this.eventName,
+    required this.eventLocation,
+    required this.eventStartDate,
+    required this.eventEndDate,
+    this.eventPosterImage,
+    required this.eventScope,
+  });
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return AddEventScannerScreen(eventId: eventId);
+  }
+}
+
+@TypedGoRoute<CreateTicketRoute>(path: "/organizer-dashboard/create-ticket")
+class CreateTicketRoute extends GoRouteData with $CreateTicketRoute {
+  final String eventId;
+  final DateTime eventStartDateTime;
+  final DateTime eventEndDateTime;
+  final bool isEventScopeInstitution;
+
+  const CreateTicketRoute({
+    required this.eventId,
+    required this.eventStartDateTime,
+    required this.eventEndDateTime,
+    required this.isEventScopeInstitution,
+  });
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    final eligibleInstitutions = state.extra as List<Institution>?;
+
+    return CreateTicketScreen(
+      eventId: eventId,
+      eventStartDateTime: eventStartDateTime,
+      eventEndDateTime: eventEndDateTime,
+      isEventScopeInstitution: isEventScopeInstitution,
+      eligibleInstitutions: eligibleInstitutions,
+    );
   }
 }
 
@@ -450,7 +753,10 @@ class AddEventScannerRoute extends GoRouteData with $AddEventScannerRoute {
 class PurchasedTicketsRoute extends GoRouteData with $PurchasedTicketsRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return PurchasedTicketsPage();
+    return BlocProvider(
+      create: (context) => sl<AllUserEventTicketsBloc>(),
+      child: PurchasedTicketsPage(),
+    );
   }
 }
 
@@ -458,7 +764,10 @@ class PurchasedTicketsRoute extends GoRouteData with $PurchasedTicketsRoute {
 class OrganizedEventsRoute extends GoRouteData with $OrganizedEventsRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return OrganizedEventsScreen();
+    return BlocProvider(
+      create: (context) => sl<OrganizedEventsBloc>(),
+      child: OrganizedEventsScreen(),
+    );
   }
 }
 
@@ -481,12 +790,16 @@ class QrCodeRoute extends GoRouteData with $QrCodeRoute {
   final String attendeeId;
   final String ticketName;
   final int quantity;
+  final String? ticketStartDate;
+  final String? ticketEndDate;
 
   const QrCodeRoute({
     required this.eventId,
     required this.attendeeId,
     required this.ticketName,
     required this.quantity,
+    this.ticketStartDate,
+    this.ticketEndDate,
   });
 
   @override
@@ -499,6 +812,8 @@ class QrCodeRoute extends GoRouteData with $QrCodeRoute {
       ticketName: ticketName,
       quantity: quantity,
       event: event,
+      ticketStartDate: ticketStartDate,
+      ticketEndDate: ticketEndDate,
     );
   }
 }
@@ -510,18 +825,208 @@ class QrCodeScannerRoute extends GoRouteData with $QrCodeScannerRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return QrCodeScannerScreen(eventId: eventId);
+    return BlocProvider(
+      create: (context) => sl<ValidateAttendeeBloc>(),
+      child: QrCodeScannerScreen(eventId: eventId),
+    );
   }
 }
 
 @TypedGoRoute<TodosRoute>(
   path: "/todos",
-  // routes: [TypedGoRoute<TodoRoute>(path: "get-event")],
+  routes: [
+    TypedGoRoute<CreateTodoListRoute>(path: "create-tasklist"),
+    TypedGoRoute<ViewTaskListsRoute>(
+      path: "tasklist",
+      routes: [TypedGoRoute<ViewTaskListRoute>(path: ":taskListId")],
+    ),
+
+    TypedGoRoute<CreateTodoItemRoute>(path: "create-todo-item"),
+    TypedGoRoute<UpdateTodoItemRoute>(path: "todo-item/:todoLocalID"),
+  ],
 )
 class TodosRoute extends GoRouteData with $TodosRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return TodoHomeScreen();
+  }
+}
+
+class CreateTodoListRoute extends GoRouteData with $CreateTodoListRoute {
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return ModalSheetPage(
+      fullscreenDialog: true,
+      swipeDismissible: true,
+      transitionCurve: Curves.bounceIn,
+      viewportBuilder: (context, child) =>
+          SheetViewport(padding: EdgeInsets.zero, child: child),
+      child: SheetKeyboardDismissible(
+        dismissBehavior: SheetKeyboardDismissBehavior.onDragDown(
+          isContentScrollAware: true,
+        ),
+        child: Sheet(
+          scrollConfiguration: const SheetScrollConfiguration(),
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.viewInsetsOf(context).bottom,
+          ),
+          decoration: MaterialSheetDecoration(
+            size: SheetSize.stretch,
+            clipBehavior: Clip.antiAlias,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            ),
+          ),
+          physics: BouncingSheetPhysics(),
+          child: CreateTodoListScreen(),
+        ),
+      ),
+    );
+  }
+}
+
+class ViewTaskListRoute extends GoRouteData with $ViewTaskListRoute {
+  final int taskListId;
+  ViewTaskListRoute({required this.taskListId});
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return ModalSheetPage(
+      fullscreenDialog: true,
+      swipeDismissible: true,
+      viewportBuilder: (context, child) =>
+          SheetViewport(padding: EdgeInsets.zero, child: child),
+      child: SheetKeyboardDismissible(
+        dismissBehavior: SheetKeyboardDismissBehavior.onDragDown(
+          isContentScrollAware: true,
+        ),
+        child: Sheet(
+          scrollConfiguration: const SheetScrollConfiguration(),
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.viewInsetsOf(context).bottom,
+          ),
+          decoration: MaterialSheetDecoration(
+            size: SheetSize.fit,
+            clipBehavior: Clip.antiAlias,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            ),
+          ),
+          physics: BouncingSheetPhysics(),
+
+          child: ViewTodoListScreen(todoListId: taskListId),
+        ),
+      ),
+    );
+  }
+}
+
+class ViewTaskListsRoute extends GoRouteData with $ViewTaskListsRoute {
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return ModalSheetPage(
+      fullscreenDialog: true,
+      swipeDismissible: true,
+      viewportBuilder: (context, child) => SheetViewport(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.viewInsetsOf(context).bottom,
+        ),
+        child: child,
+      ),
+      child: SheetKeyboardDismissible(
+        dismissBehavior: SheetKeyboardDismissBehavior.onDragDown(
+          isContentScrollAware: true,
+        ),
+        child: Sheet(
+          scrollConfiguration: const SheetScrollConfiguration(),
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.viewInsetsOf(context).bottom,
+          ),
+          decoration: MaterialSheetDecoration(
+            size: SheetSize.fit,
+            clipBehavior: Clip.antiAlias,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            ),
+          ),
+          physics: BouncingSheetPhysics(),
+
+          child: CreateTodoListScreen(),
+        ),
+      ),
+    );
+  }
+}
+
+class CreateTodoItemRoute extends GoRouteData with $CreateTodoItemRoute {
+  final int? taskListLocalID;
+  CreateTodoItemRoute({this.taskListLocalID});
+
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return ModalSheetPage(
+      fullscreenDialog: false,
+      swipeDismissible: true,
+      transitionCurve: Curves.easeIn,
+      viewportBuilder: (context, child) =>
+          SheetViewport(padding: EdgeInsets.zero, child: child),
+      child: SheetKeyboardDismissible(
+        dismissBehavior: SheetKeyboardDismissBehavior.onDragDown(
+          isContentScrollAware: true,
+        ),
+        child: Sheet(
+          scrollConfiguration: const SheetScrollConfiguration(),
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.viewInsetsOf(context).bottom,
+          ),
+          decoration: MaterialSheetDecoration(
+            size: SheetSize.fit,
+            clipBehavior: Clip.antiAlias,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            ),
+          ),
+          physics: BouncingSheetPhysics(),
+          child: CreateTodoItemScreen(taskListLocalID: taskListLocalID),
+        ),
+      ),
+    );
+  }
+}
+
+class UpdateTodoItemRoute extends GoRouteData with $UpdateTodoItemRoute {
+  final int todoLocalID;
+
+  const UpdateTodoItemRoute({required this.todoLocalID});
+
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return ModalSheetPage(
+      fullscreenDialog: false,
+      swipeDismissible: true,
+      transitionCurve: Curves.easeIn,
+      viewportBuilder: (context, child) =>
+          SheetViewport(padding: EdgeInsets.zero, child: child),
+      child: SheetKeyboardDismissible(
+        dismissBehavior: SheetKeyboardDismissBehavior.onDragDown(
+          isContentScrollAware: true,
+        ),
+        child: Sheet(
+          scrollConfiguration: const SheetScrollConfiguration(),
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.viewInsetsOf(context).bottom,
+          ),
+          decoration: MaterialSheetDecoration(
+            size: SheetSize.fit,
+            clipBehavior: Clip.antiAlias,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            ),
+          ),
+          physics: BouncingSheetPhysics(),
+          child: UpdateTodoItemScreen(todoLocalId: todoLocalID),
+        ),
+      ),
+    );
   }
 }
 
@@ -583,13 +1088,20 @@ class CreateCommunitiesRoute extends GoRouteData with $CreateCommunitiesRoute {
   }
 }
 
-@TypedGoRoute<TrimVideoRoute>(path: "/video-trimer/:videoPath")
+@TypedGoRoute<TrimVideoRoute>(path: "/video-trimmer")
 class TrimVideoRoute extends GoRouteData with $TrimVideoRoute {
-  TrimVideoRoute({required this.videoPath});
-  final String videoPath;
+  /// [$extra] is the source video's file path, passed via `extra` (not a
+  /// URL path segment - a filesystem path has no business being
+  /// percent-encoded into a navigable route) and fully typed by
+  /// go_router_builder's `$extra` convention, so both this constructor and
+  /// `state.extra` on the receiving side are `String`, not `Object?`.
+  const TrimVideoRoute(this.$extra);
+
+  final String $extra;
+
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return VideoTrimmerPage(videoPath: videoPath);
+    return VideoTrimmerPage(videoPath: $extra);
   }
 }
 
@@ -641,7 +1153,7 @@ class AchievementDetailPageRoute extends GoRouteData
   routes: [TypedGoRoute<ExamTimetableSearchRoute>(path: "search")],
 )
 class ExamTimetableRoute extends GoRouteData with $ExamTimetableRoute {
-  final String institutionId;
+  final int institutionId;
 
   const ExamTimetableRoute({required this.institutionId});
 
@@ -653,7 +1165,7 @@ class ExamTimetableRoute extends GoRouteData with $ExamTimetableRoute {
 
 class ExamTimetableSearchRoute extends GoRouteData
     with $ExamTimetableSearchRoute {
-  final String institutionId;
+  final int institutionId;
 
   const ExamTimetableSearchRoute({required this.institutionId});
 
@@ -931,11 +1443,32 @@ class AddCoursesRoute extends GoRouteData with $AddCoursesRoute {
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return ModalSheetPage(
-      viewportBuilder: (context, child) => SheetViewport(
-        padding: EdgeInsets.only(top: MediaQuery.viewPaddingOf(context).top),
-        child: child,
+      fullscreenDialog: false,
+      swipeDismissible: true,
+      transitionCurve: Curves.bounceIn,
+      viewportBuilder: (context, child) =>
+          SheetViewport(padding: EdgeInsets.zero, child: child),
+      child: SheetKeyboardDismissible(
+        dismissBehavior: SheetKeyboardDismissBehavior.onDragDown(
+          isContentScrollAware: true,
+        ),
+        child: Sheet(
+          scrollConfiguration: const SheetScrollConfiguration(),
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.viewInsetsOf(context).bottom,
+          ),
+          decoration: MaterialSheetDecoration(
+            size: SheetSize.fit,
+            clipBehavior: Clip.antiAlias,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            ),
+          ),
+          physics: BouncingSheetPhysics(),
+
+          child: const AddCourseSheet(),
+        ),
       ),
-      child: Sheet(child: const AddCourseSheet()),
     );
   }
 }

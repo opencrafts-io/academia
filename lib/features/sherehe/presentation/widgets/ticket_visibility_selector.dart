@@ -1,23 +1,28 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/features/institution/domain/domain.dart';
 import 'package:academia/features/sherehe/presentation/constants/sherehe_constants.dart';
+import 'package:academia/features/sherehe/presentation/utils/sherehe_institution_route_args.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class TicketVisibilitySelector extends StatefulWidget {
   final ScopeTypes? selectedScopeType;
   final List<Institution> selectedInstitutions;
-  final bool? isEditingTicket;
+  final List<Institution>? eligibleInstitutions;
   final Function(List<Institution>?)? onInstitutionsChanged;
   final ValueChanged<ScopeTypes?> onScopeChanged;
+  final bool? isTicketPage;
+  final bool? isEventScopeInstitution;
 
   const TicketVisibilitySelector({
     super.key,
     required this.selectedScopeType,
     required this.selectedInstitutions,
+    this.eligibleInstitutions = const [],
     required this.onInstitutionsChanged,
     required this.onScopeChanged,
-    this.isEditingTicket = false,
+    this.isTicketPage = false,
+    this.isEventScopeInstitution = false,
   });
 
   @override
@@ -44,6 +49,8 @@ class _TicketVisibilitySelectorState extends State<TicketVisibilitySelector> {
 
   @override
   Widget build(BuildContext context) {
+    bool onlyShowEligibleInstitutions =
+        widget.isTicketPage == true && widget.isEventScopeInstitution == true;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -60,17 +67,18 @@ class _TicketVisibilitySelectorState extends State<TicketVisibilitySelector> {
             floatingLabelBehavior: FloatingLabelBehavior.always,
           ),
           // hide private option for now
-          items: ScopeTypes.values
-              .where((scopeType) => scopeType != ScopeTypes.private)
-              .map((scopeType) {
-                return DropdownMenuItem<ScopeTypes>(
-                  value: scopeType,
-                  child: Text(scopeType.label),
-                );
-              })
-              .toList(),
+          items: ScopeTypes.values.map((scopeType) {
+            return DropdownMenuItem<ScopeTypes>(
+              value: scopeType,
+              child: Text(scopeType.label),
+            );
+          }).toList(),
           onChanged: (val) {
             widget.onScopeChanged(val);
+          },
+          validator: (value) {
+            if (value == null) return "Please Select ticket scope";
+            return null;
           },
         ),
 
@@ -84,7 +92,11 @@ class _TicketVisibilitySelectorState extends State<TicketVisibilitySelector> {
                   subtitle:
                       "Search and select one or more institutions. Only users from selected institutions will be able to view and purchase this ticket.",
                 ).location,
-                extra: widget.selectedInstitutions,
+                extra: ShereheInstitutionRouteArgs(
+                  selectedInstitutions: widget.selectedInstitutions,
+                  eligibleInstitutions: onlyShowEligibleInstitutions ? widget.eligibleInstitutions : [],
+                  onlyShowEligibleInstitutions: onlyShowEligibleInstitutions,
+                ),
               );
 
               if (result != null && result is List<Institution>) {

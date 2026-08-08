@@ -1,29 +1,15 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class Block extends Equatable {
-  final int id;
-  final String blockType;
-  final String? blockedId;
-  final String? blockedName;
-  final String? blockedImage;
-  final DateTime createdAt;
+part 'block.freezed.dart';
 
-  const Block({
-    required this.id,
-    required this.blockType,
-    this.blockedId,
-    this.blockedName,
-    this.blockedImage,
-    required this.createdAt,
-  });
-
-  @override
-  List<Object?> get props => [
-    id,
-    blockType,
-    blockedId,
-    blockedName,
-    blockedImage,
-    createdAt,
-  ];
+@freezed
+abstract class Block with _$Block {
+  const factory Block({
+    required int id,
+    required String blockType,
+    String? blockedId,
+    String? blockedName,
+    String? blockedImage,
+    required DateTime createdAt,
+  }) = _Block;
 }

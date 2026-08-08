@@ -1,50 +1,21 @@
-part of 'chirp_community_membership_cubit.dart';
+import 'package:academia/features/chirp/memberships/domain/entities/chirp_community_membership.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-sealed class ChirpCommunityMembershipState extends Equatable {
-  @override
-  bool? get stringify => true;
-  @override
-  List<Object?> get props => [];
-}
+part 'chirp_community_membership_state.freezed.dart';
 
-class ChirpCommunityMembershipInitialState
-    extends ChirpCommunityMembershipState {}
-
-class ChirpCommunityMembershipCommunityLeftState
-    extends ChirpCommunityMembershipState {
-  final int communityID;
-
-  ChirpCommunityMembershipCommunityLeftState({required this.communityID});
-
-  @override
-  List<Object?> get props => [communityID];
-}
-
-class ChirpCommunityMembershipStateLoadingState
-    extends ChirpCommunityMembershipState {
-  @override
-  bool? get stringify => true;
-
-  @override
-  List<Object?> get props => [];
-}
-
-class ChirpCommunityMembershipLoadedState
-    extends ChirpCommunityMembershipState {
-  final ChirpCommunityMembership membership;
-
-  ChirpCommunityMembershipLoadedState({required this.membership});
-  @override
-  bool? get stringify => true;
-
-  @override
-  List<Object?> get props => [membership];
-}
-
-class ChirpCommunityMembershipErrorState extends ChirpCommunityMembershipState {
-  final String error;
-  ChirpCommunityMembershipErrorState({required this.error});
-
-  @override
-  List<Object?> get props => [error];
+@freezed
+sealed class ChirpCommunityMembershipState
+    with _$ChirpCommunityMembershipState {
+  const factory ChirpCommunityMembershipState.initial() =
+      ChirpCommunityMembershipInitialState;
+  const factory ChirpCommunityMembershipState.communityLeft({
+    required int communityID,
+  }) = ChirpCommunityMembershipCommunityLeftState;
+  const factory ChirpCommunityMembershipState.loading() =
+      ChirpCommunityMembershipStateLoadingState;
+  const factory ChirpCommunityMembershipState.loaded({
+    required ChirpCommunityMembership membership,
+  }) = ChirpCommunityMembershipLoadedState;
+  const factory ChirpCommunityMembershipState.error({required String error}) =
+      ChirpCommunityMembershipErrorState;
 }

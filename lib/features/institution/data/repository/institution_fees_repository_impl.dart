@@ -40,4 +40,3 @@ class InstitutionFeesRepositoryImpl implements InstitutionFeesRepository {
     );
   }
 }
-

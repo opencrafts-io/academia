@@ -3,10 +3,10 @@ import java.io.FileInputStream
 
 plugins {
     id("com.android.application")
+    id("org.jetbrains.kotlin.android")
     // START: FlutterFire Configuration
     id("com.google.gms.google-services")
     // END: FlutterFire Configuration
-    id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
@@ -28,10 +28,6 @@ android {
         // Sets Java compatibility to Java 11
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
     defaultConfig {
@@ -64,7 +60,7 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = true
-            isShrinkResources = true
+            isShrinkResources = false
             // Specifies the location of the R8/ProGuard rules file
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -72,13 +68,9 @@ android {
             )
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            if (signingConfigs.findByName("staging") != null) {
-                signingConfig = signingConfigs.getByName("staging")
-            } else if (signingConfigs.findByName("release") != null) {
-                signingConfig = signingConfigs.getByName("release")
-            } else {
-                signingConfig = signingConfigs.getByName("debug")
-            }
+            signingConfig = signingConfigs.findByName("release") 
+                ?: signingConfigs.findByName("staging") 
+                ?: signingConfigs.getByName("debug")
         }
     }
 
@@ -105,6 +97,13 @@ android {
             versionNameSuffix = "-stg"
             // buildConfigField "String", "API_BASE_URL", "\"https://stg.api.example.com\""
         }
+    }
+}
+
+
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
     }
 }
 

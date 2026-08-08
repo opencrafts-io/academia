@@ -7,3 +7,6 @@ export 'models/exam_timetable_extension.dart';
 
 // Repository Implementation
 export 'repository/exam_timetable_repository_impl.dart';
+
+// Services
+export 'services/exam_notification_service_impl.dart';

@@ -1,31 +1,23 @@
 import 'package:academia/features/agenda/data/models/agenda_event.dart';
-import 'package:academia/features/chirp/common/data/models/chirp_user.dart';
-import 'package:academia/features/chirp/communities/data/models/community_model.dart';
-import 'package:academia/features/chirp/interactions/data/models/block_model.dart';
-import 'package:academia/features/chirp/interactions/data/models/report_model.dart';
-import 'package:academia/features/chirp/memberships/data/models/chirp_community_membership.dart';
-import 'package:academia/features/chirp/posts/data/models/attachment_model.dart';
-import 'package:academia/features/chirp/posts/data/models/post_model.dart';
-import 'package:academia/features/chirp/posts/data/models/comment_model.dart';
 import 'package:academia/features/course/data/models/course.dart';
-import 'package:academia/features/exam_timetable/data/models/exam_timetable.dart';
-import 'package:academia/features/institution/data/models/institution.dart';
-import 'package:academia/features/institution/data/models/institution_profile.dart';
-import 'package:academia/features/institution/data/models/institution_scrapping_command.dart';
-import 'package:academia/features/institution/data/models/institution_fee_transaction.dart';
-import 'package:academia/features/institution/data/models/institution_key.dart';
+import 'package:academia/database/tables/tables.dart';
+export 'package:academia/database/tables/tables.dart';
 import 'package:academia/features/leaderboard/data/models/leaderboard_rank.dart';
-import 'package:academia/features/chirp/posts/data/models/groups/group_model.dart';
 import 'package:academia/features/profile/data/models/user_profile.dart';
 import 'package:academia/features/semester/data/models/semester.dart';
 import 'package:academia/features/streaks/data/streak_activity.dart';
 import 'package:academia/features/streaks/data/streak_milestone.dart';
 import 'package:academia/features/timetable/data/models/timetable.dart';
 import 'package:academia/features/timetable/data/models/timetable_entry.dart';
-import 'package:academia/features/todos/data/models/todo.dart';
+import 'package:academia/features/todos/data/models/todo_lists.dart';
+import 'package:academia/features/todos/data/models/todo_items.dart';
+import 'package:academia/features/todos/data/models/todo_tag_items.dart';
+import 'package:academia/features/todos/data/models/todo_item_tags.dart';
+import 'package:academia/features/todos/domain/enums/sync_status.dart';
+import 'package:academia/features/todos/domain/enums/todo_status.dart';
+import 'package:academia/features/todos/domain/enums/todo_priority.dart';
 import 'package:academia/features/sherehe/data/data.dart';
-import 'package:academia/features/notifications/data/models/notification_table.dart';
-import 'package:flutter/material.dart' show Color;
+import 'dart:ui' show Color;
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:logger/logger.dart';
@@ -41,11 +33,10 @@ part 'database.g.dart';
     UserProfile,
 
     // Posts
-    AttachmentTable,
-    PostTable,
-    CommentTable,
+    Attachments,
+    Posts,
+    Comments,
 
-    Todo,
     EventTable,
     AttendeeTable,
     TicketTable,
@@ -54,23 +45,20 @@ part 'database.g.dart';
     DashboardStatsTable,
     TicketStatsTable,
     ScannerTable,
-    GroupTable,
+    InviteTable,
 
-    BlockTable,
-    ReportTable,
+    Blocks,
+    Reports,
 
     // Agenda
     AgendaEvent,
 
-    // Notifications
-    NotificationTable,
-
     // Institution
-    Institution,
-    InstitutionScrappingCommand,
-    InstitutionKey,
-    InstitutionProfile,
-    InstitutionFeeTransaction,
+    Institutions,
+    InstitutionScrappingCommands,
+    InstitutionKeys,
+    InstitutionProfiles,
+    InstitutionFeeTransactions,
 
     /************************************************************
     *                           SEMESTER
@@ -87,17 +75,17 @@ part 'database.g.dart';
     TimetableEntry,
 
     // Exam Timetable
-    ExamTimetable,
+    ExamTimetables,
 
     /**************************************************************
     *              CHIRP FEATURE DATA MODELS
     **************************************************************/
     // Users
-    ChirpUser,
+    ChirpUsers,
     //Communities
-    Community,
+    Communities,
     // Memberships
-    ChirpCommunityMembership,
+    ChirpCommunityMemberships,
 
     /**************************************************************
     *               LEADERBOARD FEATURE DATA MODELS
@@ -107,6 +95,12 @@ part 'database.g.dart';
     // ---------------------- STREAKS -----------------------------
     StreakActivity,
     StreakMilestone,
+
+    // ----------------------- TODOS -------------------------------
+    TodoLists,
+    TodoTagItems,
+    TodoItems,
+    TodoItemTags,
   ],
 )
 class AppDataBase extends _$AppDataBase {
@@ -117,7 +111,7 @@ class AppDataBase extends _$AppDataBase {
   AppDataBase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 30;
+  int get schemaVersion => 37;
 
   @override
   MigrationStrategy get migration {
@@ -176,6 +170,27 @@ class AppDataBase extends _$AppDataBase {
               break;
             case 29:
               await migrate29To30(m);
+              break;
+            case 30:
+              await migrate30To31(m);
+              break;
+            case 31:
+              await migrate31To32(m);
+              break;
+            case 32:
+              await migrate32To33(m);
+              break;
+            case 33:
+              await migrate33To34(m);
+              break;
+            case 34:
+              await migrate34To35(m);
+              break;
+            case 35:
+              await migrate35To36(m);
+              break;
+            case 36:
+              await migrate36To37(m);
               break;
           }
         }

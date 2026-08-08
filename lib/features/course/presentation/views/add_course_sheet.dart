@@ -1,3 +1,4 @@
+import 'package:academia/core/core.dart';
 import 'package:academia/features/course/course.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -65,21 +66,43 @@ class _AddCourseSheetState extends State<AddCourseSheet> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildM3TextField(
-                label: 'Course Title',
+              TextFormField(
                 controller: _nameController,
-                icon: Icons.auto_stories_rounded,
-                hint: 'e.g. Advanced Calculus',
+                style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: -1.0,
+                  color: _selectedColor,
+                ),
+                cursorHeight: 32,
+                autofocus: true,
+                textCapitalization: TextCapitalization.sentences,
+                autovalidateMode: AutovalidateMode.onUserInteractionIfError,
+                validator: (val) {
+                  final value = val?.trim() ?? '';
+                  if (value.isEmpty) return 'Required field';
+                  return null;
+                },
+                maxLength: 30,
+                keyboardType: TextInputType.name,
+                decoration: InputDecoration(
+                  hintText: "Course Title",
+                  hintStyle: Theme.of(context).textTheme.displaySmall?.copyWith(
+                    color: _selectedColor.withAlpha(128),
+                    fontWeight: FontWeight.bold,
+                  ),
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.zero,
+                ),
               ),
               const SizedBox(height: 20),
-              _buildM3TextField(
+              M3TextField(
                 label: 'Course Code',
                 controller: _codeController,
                 icon: Icons.fingerprint_rounded,
                 hint: 'e.g. MATH402',
               ),
               const SizedBox(height: 20),
-              _buildM3TextField(
+              M3TextField(
                 label: 'Instructor',
                 controller: _instructorController,
                 icon: Icons.badge_rounded,
@@ -92,97 +115,18 @@ class _AddCourseSheetState extends State<AddCourseSheet> {
                   color: colorScheme.onSurfaceVariant,
                 ),
               ),
-              const SizedBox(height: 16),
-              _buildColorPicker(),
+              ColorSeedCard(
+                currentColor: _selectedColor,
+                onColorChanged: (color) => setState(() {
+                  _selectedColor = color;
+                }),
+              ),
+              // _buildColorPicker(),
             ],
           ),
         ),
       ),
       bottomBar: _buildBottomAction(colorScheme),
-    );
-  }
-
-  Widget _buildM3TextField({
-    required String label,
-    required TextEditingController controller,
-    required IconData icon,
-    String? hint,
-  }) {
-    return TextFormField(
-      controller: controller,
-      style: Theme.of(context).textTheme.bodyLarge,
-      decoration: InputDecoration(
-        labelText: label,
-        hintText: hint,
-        prefixIcon: Icon(icon),
-        filled: true,
-        fillColor: Theme.of(
-          context,
-        ).colorScheme.surfaceContainerHighest.withAlpha(128),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
-          borderSide: BorderSide.none,
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
-          borderSide: BorderSide.none,
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
-          borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.primary,
-            width: 2,
-          ),
-        ),
-        floatingLabelStyle: TextStyle(
-          fontWeight: FontWeight.bold,
-          color: Theme.of(context).colorScheme.primary,
-        ),
-      ),
-      validator: (val) =>
-          (val == null || val.isEmpty) ? 'Required field' : null,
-    );
-  }
-
-  Widget _buildColorPicker() {
-    final colors = [
-      const Color(0xFF6750A4),
-      const Color(0xFFB3261E),
-      const Color(0xFF21005D),
-      const Color(0xFF386A20),
-      const Color(0xFF7D5260),
-      const Color(0xFF006A6A),
-    ];
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: colors.map((color) {
-        final isSelected = _selectedColor == color;
-        return GestureDetector(
-          onTap: () => setState(() => _selectedColor = color),
-          child: Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.circle,
-              border: isSelected
-                  ? Border.all(color: Colors.white, width: 3)
-                  : Border.all(color: Colors.transparent, width: 0),
-              boxShadow: [
-                BoxShadow(
-                  color: isSelected ? color.withAlpha(120) : Colors.transparent,
-                  blurRadius: isSelected ? 12 : 0,
-                  offset: isSelected ? const Offset(0, 4) : Offset.zero,
-                ),
-              ],
-            ),
-            child: isSelected
-                ? const Icon(Icons.check, color: Colors.white, size: 20)
-                : null,
-          ),
-        );
-      }).toList(),
     );
   }
 

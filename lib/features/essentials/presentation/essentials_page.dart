@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sliver_tools/sliver_tools.dart';
-import 'package:animated_emoji/animated_emoji.dart';
 import 'package:academia/injection_container.dart';
 import '../widgets/essential_category_tile.dart';
 
@@ -60,24 +59,21 @@ class _EssentialsPageState extends State<EssentialsPage> {
 
   void _navigateToExamTimetable() async {
     final institutionState = context.read<InstitutionBloc>().state;
+    final institutions = institutionState.whenOrNull(
+      loaded: (institutions) => institutions,
+    );
 
-    if (institutionState is InstitutionLoadedState &&
-        institutionState.institutions.isNotEmpty) {
-      final primaryInstitution = institutionState.institutions.first;
+    if (institutions != null && institutions.isNotEmpty) {
+      final primaryInstitution = institutions.first;
 
-      context.read<ScrappingCommandBloc>().add(
-        GetScrappingCommandEvent(
-          institutionID: primaryInstitution.institutionId,
-        ),
+      final result = await sl<FetchInstitutionScrappingCommandUsecase>()(
+        primaryInstitution.institutionId,
       );
-      final resolvedState = await context
-          .read<ScrappingCommandBloc>()
-          .stream
-          .firstWhere((s) => s is! ScrappingCommandLoading);
 
-      final isSupported =
-          resolvedState is ScrappingCommandLoaded &&
-          resolvedState.command != null;
+      final isSupported = result.fold(
+        (failure) => false,
+        (command) => command != null,
+      );
 
       if (!mounted) return;
 
@@ -86,7 +82,7 @@ class _EssentialsPageState extends State<EssentialsPage> {
         adService.showInterstitialAd();
         if (!mounted) return;
         ExamTimetableRoute(
-          institutionId: primaryInstitution.institutionId.toString(),
+          institutionId: primaryInstitution.institutionId,
         ).push(context);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -96,10 +92,70 @@ class _EssentialsPageState extends State<EssentialsPage> {
         );
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("No institution data found")),
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => const LinkInstitutionRequiredPage(),
+        ),
       );
     }
+  }
+
+  /// Hand-curated asymmetric "mood tile" arrangement for the 4 essential
+  /// items - a big featured tile, a paired row, then another big tile -
+  /// rather than a uniform grid. Falls back to a simple even row on wider
+  /// (tablet/desktop) layouts, where the vertical bookend rhythm doesn't
+  /// make sense.
+  Widget _buildToolsGrid(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final palette = [
+      (colorScheme.primaryContainer, colorScheme.onPrimaryContainer),
+      (colorScheme.secondaryContainer, colorScheme.onSecondaryContainer),
+      (colorScheme.tertiaryContainer, colorScheme.onTertiaryContainer),
+      (colorScheme.surfaceContainerHighest, colorScheme.onSurfaceVariant),
+    ];
+
+    Widget tile(int index, {bool featured = false}) {
+      final item = essentialItems[index];
+      final (color, onColor) = palette[index % palette.length];
+      return EssentialCategoryTile(
+        title: item.title,
+        iconPath: item.iconPath,
+        onTap: item.ontap,
+        color: color,
+        onColor: onColor,
+        featured: featured,
+      );
+    }
+
+    if (!ResponsiveBreakPoints.isMobile(context)) {
+      return Row(
+        children: [
+          for (var i = 0; i < essentialItems.length; i++) ...[
+            if (i > 0) const SizedBox(width: 12),
+            Expanded(child: SizedBox(height: 120, child: tile(i))),
+          ],
+        ],
+      );
+    }
+
+    return Column(
+      children: [
+        SizedBox(height: 140, child: tile(0, featured: true)),
+        const SizedBox(height: 12),
+        SizedBox(
+          height: 116,
+          child: Row(
+            children: [
+              Expanded(child: tile(1)),
+              const SizedBox(width: 12),
+              Expanded(child: tile(2)),
+            ],
+          ),
+        ),
+        const SizedBox(height: 12),
+        SizedBox(height: 140, child: tile(3, featured: true)),
+      ],
+    );
   }
 
   @override
@@ -115,11 +171,15 @@ class _EssentialsPageState extends State<EssentialsPage> {
                 Row(
                   children: [
                     Text(
-                      "Essentials ",
+                      "Essentials",
                       style: Theme.of(context).textTheme.headlineLarge
                           ?.copyWith(fontWeight: FontWeight.bold),
                     ),
-                    AnimatedEmoji(AnimatedEmojis.salute, repeat: false),
+                    SizedBox(width: 8),
+                    Assets.icons.animalsIconButterfly.image(
+                      height: 40,
+                      width: 40,
+                    ),
                   ],
                 ),
                 Text(
@@ -147,42 +207,46 @@ class _EssentialsPageState extends State<EssentialsPage> {
             padding: EdgeInsetsGeometry.symmetric(horizontal: 16),
             sliver: MultiSliver(
               children: [
-                Card.outlined(
+                Card.filled(
+                  color: Theme.of(context).colorScheme.surfaceContainerHigh,
+                  clipBehavior: Clip.hardEdge,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
                   child: ListTile(
-                    leading: Icon(Icons.settings),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 4,
+                    ),
+                    leading: CircleAvatar(
+                      radius: 22,
+                      backgroundColor: Theme.of(
+                        context,
+                      ).colorScheme.primaryContainer,
+                      child: Icon(
+                        Icons.settings_rounded,
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+                      ),
+                    ),
                     title: Text("Settings & Preferences"),
                     subtitle: Text("Make Academia behave how you like"),
+                    trailing: Icon(
+                      Icons.chevron_right_rounded,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
                     onTap: () => SettingsPageRoute().push(context),
                     subtitleTextStyle: Theme.of(context).textTheme.bodySmall,
                   ),
                 ),
+                SizedBox(height: 22),
                 Text(
                   "Explore tools",
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 22),
-                SliverGrid.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: ResponsiveBreakPoints.isMobile(context)
-                        ? 2
-                        : 6,
-                    childAspectRatio: 2.8,
-                  ),
-                  itemCount: essentialItems.length,
-                  itemBuilder: (context, index) => EssentialCategoryTile(
-                    title: essentialItems[index].title,
-                    iconWidget: Image.asset(
-                      essentialItems[index].iconPath,
-                      height: 32,
-                    ),
-                    onTap: essentialItems[index].ontap,
-                    position: index,
-                    crossAxisCount: 2,
-                    totalItems: essentialItems.length,
-                  ),
-                ),
+                SizedBox(height: 12),
+                _buildToolsGrid(context),
                 SizedBox(height: 22),
                 BannerAdWidget(size: AdSize.banner),
               ],

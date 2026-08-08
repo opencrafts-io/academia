@@ -8,6 +8,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   desktop_webview_window
   dynamic_color
   file_selector_linux
+  flutter_inappwebview_linux
   flutter_secure_storage_linux
   url_launcher_linux
   window_to_front

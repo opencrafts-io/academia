@@ -18,6 +18,9 @@ class DioClient {
   }) {
     dio = Dio(
       BaseOptions(
+        connectTimeout: Duration(seconds: 30),
+        receiveTimeout: Duration(seconds: 45),
+        sendTimeout: Duration(seconds: 30),
         baseUrl: flavor.apiBaseUrl,
         preserveHeaderCase: true,
         receiveDataWhenStatusError: true,
@@ -54,7 +57,20 @@ class DioClient {
               Logger().w(
                 'No token for request to ${options.path}: ${failure.message}',
               );
-              handler.next(options);
+
+              options.cancelToken?.cancel(
+                "Unauthenticated request rejected. "
+                "Add auth credentials or enable skipAuth.",
+              );
+
+              handler.reject(
+                DioException.requestCancelled(
+                  requestOptions: options,
+                  reason:
+                      "Unauthenticated request rejected. "
+                      "Add auth credentials or enable skipAuth.",
+                ),
+              );
             },
             (token) {
               options.headers['Authorization'] = 'Bearer ${token.accessToken}';

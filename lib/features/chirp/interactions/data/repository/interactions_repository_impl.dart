@@ -24,9 +24,9 @@ class InteractionsRepositoryImpl implements InteractionsRepository {
   Future<Either<Failure, Block>> blockUser(String userId) async {
     final result = await remoteDataSource.blockUser(userId);
 
-    return result.fold((failure) => Left(failure), (blockData) async {
-      await localDataSource.createOrUpdateBlock(blockData);
-      return Right(blockData.toEntity());
+    return result.fold((failure) => Left(failure), (blockDto) async {
+      await localDataSource.createOrUpdateBlock(blockDto.toData());
+      return Right(blockDto.toEntity());
     });
   }
 
@@ -35,9 +35,9 @@ class InteractionsRepositoryImpl implements InteractionsRepository {
   Future<Either<Failure, Block>> blockCommunity(int communityId) async {
     final result = await remoteDataSource.blockCommunity(communityId);
 
-    return result.fold((failure) => Left(failure), (blockData) async {
-      await localDataSource.createOrUpdateBlock(blockData);
-      return Right(blockData.toEntity());
+    return result.fold((failure) => Left(failure), (blockDto) async {
+      await localDataSource.createOrUpdateBlock(blockDto.toData());
+      return Right(blockDto.toEntity());
     });
   }
 
@@ -76,11 +76,11 @@ class InteractionsRepositoryImpl implements InteractionsRepository {
         }
         return Left(failure);
       },
-      (blockDataList) async {
-        for (final blockData in blockDataList) {
-          await localDataSource.createOrUpdateBlock(blockData);
+      (blockDtoList) async {
+        for (final blockDto in blockDtoList) {
+          await localDataSource.createOrUpdateBlock(blockDto.toData());
         }
-        return Right(blockDataList.map((data) => data.toEntity()).toList());
+        return Right(blockDtoList.map((dto) => dto.toEntity()).toList());
       },
     );
   }
@@ -119,9 +119,9 @@ class InteractionsRepositoryImpl implements InteractionsRepository {
       reason: reason,
     );
 
-    return result.fold((failure) => Left(failure), (reportData) async {
-      await localDataSource.createOrUpdateReport(reportData);
-      return Right(reportData.toEntity());
+    return result.fold((failure) => Left(failure), (reportDto) async {
+      await localDataSource.createOrUpdateReport(reportDto.toData());
+      return Right(reportDto.toEntity());
     });
   }
 
@@ -136,9 +136,9 @@ class InteractionsRepositoryImpl implements InteractionsRepository {
       reason: reason,
     );
 
-    return result.fold((failure) => Left(failure), (reportData) async {
-      await localDataSource.createOrUpdateReport(reportData);
-      return Right(reportData.toEntity());
+    return result.fold((failure) => Left(failure), (reportDto) async {
+      await localDataSource.createOrUpdateReport(reportDto.toData());
+      return Right(reportDto.toEntity());
     });
   }
 
@@ -153,9 +153,9 @@ class InteractionsRepositoryImpl implements InteractionsRepository {
       reason: reason,
     );
 
-    return result.fold((failure) => Left(failure), (reportData) async {
-      await localDataSource.createOrUpdateReport(reportData);
-      return Right(reportData.toEntity());
+    return result.fold((failure) => Left(failure), (reportDto) async {
+      await localDataSource.createOrUpdateReport(reportDto.toData());
+      return Right(reportDto.toEntity());
     });
   }
 
@@ -170,9 +170,9 @@ class InteractionsRepositoryImpl implements InteractionsRepository {
       reason: reason,
     );
 
-    return result.fold((failure) => Left(failure), (reportData) async {
-      await localDataSource.createOrUpdateReport(reportData);
-      return Right(reportData.toEntity());
+    return result.fold((failure) => Left(failure), (reportDto) async {
+      await localDataSource.createOrUpdateReport(reportDto.toData());
+      return Right(reportDto.toEntity());
     });
   }
 

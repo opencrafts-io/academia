@@ -3,33 +3,33 @@ import 'database.dart';
 
 extension AppDatabaseExtension on AppDataBase {
   Future<void> migrate14To15(Migrator m) async {
-    await m.createTable(examTimetable);
+    await m.createTable(examTimetables);
   }
 
   Future<void> migrate15To16(Migrator m) async {
-    await m.createTable(institutionScrappingCommand);
+    await m.createTable(institutionScrappingCommands);
   }
 
   Future<void> migrate16To17(Migrator m) async {
-    await m.createTable(institutionKey);
+    await m.createTable(institutionKeys);
   }
 
   Future<void> migrate17To18(Migrator m) async {
-    await m.createTable(institutionProfile);
+    await m.createTable(institutionProfiles);
   }
 
   Future<void> migrate18To19(Migrator m) async {
-    m.drop(institutionProfile);
-    m.create(institutionProfile);
+    m.drop(institutionProfiles);
+    m.create(institutionProfiles);
   }
 
   Future<void> migrate19To20(Migrator m) async {
-    m.drop(institutionProfile);
-    m.create(institutionProfile);
+    m.drop(institutionProfiles);
+    m.create(institutionProfiles);
   }
 
   Future<void> migrate20To21(Migrator m) async {
-    await m.createTable(institutionFeeTransaction);
+    await m.createTable(institutionFeeTransactions);
   }
 
   Future<void> migrate21To22(Migrator m) async {
@@ -98,5 +98,53 @@ extension AppDatabaseExtension on AppDataBase {
   Future<void> migrate29To30(Migrator m) async {
     await m.database.customStatement("DROP TABLE IF EXISTS 'ticket_table';");
     await m.createTable(ticketTable);
+  }
+
+  Future<void> migrate30To31(Migrator m) async {
+    await m.database.customStatement("DROP TABLE IF EXISTS 'todo';");
+  }
+
+  Future<void> migrate31To32(Migrator m) async {
+    m.createTable(todoLists);
+  }
+
+  Future<void> migrate32To33(Migrator m) async {
+    await m.createTable(todoTagItems);
+    await m.createTable(todoItems);
+    await m.createTable(todoItemTags);
+  }
+
+  Future<void> migrate33To34(Migrator m) async {
+    await m.database.customStatement("DROP TABLE IF EXISTS 'invite_table';");
+    await m.database.customStatement("DROP TABLE IF EXISTS 'ticket_table';");
+    await m.database.customStatement(
+      "DROP TABLE IF EXISTS 'ticket_stats_table';",
+    );
+    await m.createTable(inviteTable);
+    await m.createTable(ticketTable);
+    await m.createTable(ticketStatsTable);
+  }
+
+  Future<void> migrate34To35(Migrator m) async {
+    await m.database.customStatement(
+      "DROP TABLE IF EXISTS 'notification_table';",
+    );
+  }
+
+  Future<void> migrate35To36(Migrator m) async {
+    // Schema changed: added institutionId to the primary key so cached exams
+    // from different institutions sharing a course code no longer collide.
+    // Course codes aren't globally unique, so old rows can't be reliably
+    // reattributed to an institution; the cache clears and repopulates from
+    // the next fetch/auto-import instead.
+    await m.database.customStatement("DROP TABLE IF EXISTS 'exam_timetable';");
+    await m.createTable(examTimetables);
+  }
+
+  Future<void> migrate36To37(Migrator m) async {
+    // GroupTable ('group_table') backed an orphaned Groups subsystem with
+    // zero repository/usecase/DI/UI wiring anywhere in the app - dead schema,
+    // safe to drop outright.
+    await m.deleteTable('group_table');
   }
 }
