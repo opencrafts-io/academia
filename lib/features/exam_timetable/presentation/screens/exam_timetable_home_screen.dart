@@ -229,7 +229,7 @@ class _ExamTimetableHomeScreenState extends State<ExamTimetableHomeScreen> {
 
                   if (state is ExamTimetableEmpty ||
                       (displayExams != null && displayExams.isEmpty)) {
-                    return const EmptyState();
+                    return EmptyState(onSearchTap: _navigateToSearch);
                   }
 
                   if (displayExams != null) {

@@ -92,8 +92,10 @@ class _EssentialsPageState extends State<EssentialsPage> {
         );
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("No institution data found")),
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => const LinkInstitutionRequiredPage(),
+        ),
       );
     }
   }
