@@ -9,12 +9,16 @@ class CreateTicketScreen extends StatefulWidget {
   final String eventId;
   final DateTime eventStartDateTime;
   final DateTime eventEndDateTime;
+  final bool? isEventScopeInstitution;
+  final List<Institution>? eligibleInstitutions;
 
   const CreateTicketScreen({
     super.key,
     required this.eventId,
     required this.eventStartDateTime,
     required this.eventEndDateTime,
+    this.isEventScopeInstitution = false,
+    this.eligibleInstitutions = const [],
   });
 
   @override
@@ -198,6 +202,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                               selectedScopeType: _selectedScopeType,
                               selectedInstitutions: _selectedInstitutions
                                   .toList(),
+                              isTicketPage: true,
+                              isEventScopeInstitution:
+                                  widget.isEventScopeInstitution,
+                              eligibleInstitutions: widget.eligibleInstitutions,
                               onScopeChanged: (value) {
                                 setState(() {
                                   _selectedScopeType = value;

@@ -198,16 +198,21 @@ class _ShereheDetailsPageState extends State<ShereheDetailsPage> {
 
                                     case 'dashboard':
                                       if (isOrganizer) {
-                                        OrganizerDashboardRoute(
-                                          eventId: state.event.id,
-                                          eventName: state.event.eventName,
-                                          eventLocation:
-                                              state.event.eventLocation,
-                                          eventStartDate: state.event.startDate,
-                                          eventEndDate: state.event.endDate,
-                                          eventPosterImage:
-                                              state.event.eventPosterImage,
-                                        ).push(context);
+                                        context.push(
+                                          OrganizerDashboardRoute(
+                                            eventId: state.event.id,
+                                            eventName: state.event.eventName,
+                                            eventLocation:
+                                                state.event.eventLocation,
+                                            eventStartDate:
+                                                state.event.startDate,
+                                            eventEndDate: state.event.endDate,
+                                            eventPosterImage:
+                                                state.event.eventPosterImage,
+                                            eventScope: state.event.scope,
+                                          ).location,
+                                          extra: state.event.institutions,
+                                        );
                                       }
                                       break;
 

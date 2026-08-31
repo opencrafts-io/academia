@@ -1,11 +1,13 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/constants/responsive_break_points.dart';
 import 'package:academia/core/core.dart';
+import 'package:academia/features/institution/domain/entities/institution.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:academia/gen/assets.gen.dart';
 import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 class OrganizerDashboardPage extends StatefulWidget {
@@ -15,6 +17,8 @@ class OrganizerDashboardPage extends StatefulWidget {
   final String eventStartDate;
   final String eventEndDate;
   final String? eventPosterImage;
+  final String eventScope;
+  final List<Institution>? eventInstitutions;
 
   const OrganizerDashboardPage({
     super.key,
@@ -24,6 +28,8 @@ class OrganizerDashboardPage extends StatefulWidget {
     required this.eventStartDate,
     required this.eventEndDate,
     this.eventPosterImage,
+    required this.eventScope,
+    this.eventInstitutions,
   });
 
   @override
@@ -33,6 +39,8 @@ class OrganizerDashboardPage extends StatefulWidget {
 class _OrganizerDashboardPageState extends State<OrganizerDashboardPage> {
   @override
   Widget build(BuildContext context) {
+    final eventScope = ScopeTypesX.fromBackend(widget.eventScope);
+
     return BlocProvider(
       create: (context) =>
           sl<AttendeesAndScannerStatsBloc>()
@@ -74,9 +82,8 @@ class _OrganizerDashboardPageState extends State<OrganizerDashboardPage> {
                             widget.eventName,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: Theme.of(context).textTheme.titleLarge
+                                ?.copyWith(fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
@@ -116,7 +123,9 @@ class _OrganizerDashboardPageState extends State<OrganizerDashboardPage> {
                             } else if (state is LoadingState) {
                               return Padding(
                                 padding: EdgeInsets.symmetric(vertical: 24),
-                                child: Center(child: SpinningScallopIndicator()),
+                                child: Center(
+                                  child: SpinningScallopIndicator(),
+                                ),
                               );
                             } else if (state is ErrorState) {
                               return Center(
@@ -124,7 +133,9 @@ class _OrganizerDashboardPageState extends State<OrganizerDashboardPage> {
                                   padding: const EdgeInsets.all(16.0),
                                   child: Text(
                                     "Failed to load stats.",
-                                    style: Theme.of(context).textTheme.titleMedium
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium
                                         ?.copyWith(
                                           fontStyle: FontStyle.italic,
                                           color: Theme.of(
@@ -141,9 +152,8 @@ class _OrganizerDashboardPageState extends State<OrganizerDashboardPage> {
                         const SizedBox(height: 20),
                         Text(
                           "Organizer Actions",
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: Theme.of(context).textTheme.titleLarge
+                              ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 20),
                         SliverGrid(
@@ -158,19 +168,27 @@ class _OrganizerDashboardPageState extends State<OrganizerDashboardPage> {
                                 eventStartDate: widget.eventStartDate,
                                 eventEndDate: widget.eventEndDate,
                                 eventPosterImage: widget.eventPosterImage,
+                                eventScope: widget.eventScope,
                               ).push(context),
                             ),
                             _MenuCard(
-                              iconPath: Assets.icons.dashboardIconsNotebook.path,
+                              iconPath:
+                                  Assets.icons.dashboardIconsNotebook.path,
                               title: 'Ticket Management',
-                              onTap: () => AllEventTicketsRoute(
-                                eventId: widget.eventId,
-                                eventName: widget.eventName,
-                                eventLocation: widget.eventLocation,
-                                eventStartDate: widget.eventStartDate,
-                                eventEndDate: widget.eventEndDate,
-                                eventPosterImage: widget.eventPosterImage,
-                              ).push(context),
+                              onTap: () => context.push(
+                                AllEventTicketsRoute(
+                                  eventId: widget.eventId,
+                                  eventName: widget.eventName,
+                                  eventLocation: widget.eventLocation,
+                                  eventStartDate: widget.eventStartDate,
+                                  eventEndDate: widget.eventEndDate,
+                                  eventPosterImage: widget.eventPosterImage,
+                                  isEventScopeInstitution:
+                                      eventScope == ScopeTypes.institution,
+                                  eventScope: widget.eventScope,
+                                ).location,
+                                extra: widget.eventInstitutions,
+                              ),
                             ),
                             _MenuCard(
                               iconPath: Assets.icons.dashboardIconsMobile.path,
@@ -182,6 +200,7 @@ class _OrganizerDashboardPageState extends State<OrganizerDashboardPage> {
                                 eventStartDate: widget.eventStartDate,
                                 eventEndDate: widget.eventEndDate,
                                 eventPosterImage: widget.eventPosterImage,
+                                eventScope: widget.eventScope,
                               ).push(context),
                             ),
                             _MenuCard(
@@ -194,17 +213,20 @@ class _OrganizerDashboardPageState extends State<OrganizerDashboardPage> {
                                 eventStartDate: widget.eventStartDate,
                                 eventEndDate: widget.eventEndDate,
                                 eventPosterImage: widget.eventPosterImage,
+                                eventScope: widget.eventScope,
                               ).push(context),
                             ),
                           ]),
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: ResponsiveBreakPoints.isMobile(context)
-                                ? 2
-                                : 6,
-                            childAspectRatio: 1.2,
-                            mainAxisSpacing: 12,
-                            crossAxisSpacing: 12,
-                          ),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount:
+                                    ResponsiveBreakPoints.isMobile(context)
+                                    ? 2
+                                    : 6,
+                                childAspectRatio: 1.2,
+                                mainAxisSpacing: 12,
+                                crossAxisSpacing: 12,
+                              ),
                         ),
                       ],
                     ),
@@ -213,7 +235,7 @@ class _OrganizerDashboardPageState extends State<OrganizerDashboardPage> {
               ),
             ),
           );
-        }
+        },
       ),
     );
   }

@@ -8,12 +8,18 @@ class AddTicketScreen extends StatefulWidget {
   final DateTime eventStartDateTime;
   final DateTime eventEndDateTime;
   final bool isMultiDayEvent;
+  final bool? isTicketPage;
+  final bool? isEventScopeInstitution;
+  final List<Institution>? eligibleInstitutions;
 
   const AddTicketScreen({
     super.key,
     required this.isMultiDayEvent,
     required this.eventStartDateTime,
     required this.eventEndDateTime,
+    this.isTicketPage = false,
+    this.isEventScopeInstitution = false,
+    this.eligibleInstitutions,
   });
 
   @override
@@ -161,6 +167,9 @@ class _AddTicketScreenState extends State<AddTicketScreen> {
                     TicketVisibilitySelector(
                       selectedScopeType: _selectedScopeType,
                       selectedInstitutions: _selectedInstitutions.toList(),
+                      isTicketPage: widget.isTicketPage,
+                      isEventScopeInstitution: widget.isEventScopeInstitution,
+                      eligibleInstitutions: widget.eligibleInstitutions,
                       onScopeChanged: (value) {
                         setState(() {
                           _selectedScopeType = value;

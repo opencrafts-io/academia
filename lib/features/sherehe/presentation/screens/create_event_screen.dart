@@ -653,6 +653,11 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                   },
                 ),
                 TicketSelectionPage(
+                  selectedEventScopeType: _selectedEventScopeType,
+                  eligibleInstitutions:
+                      _selectedEventScopeType == ScopeTypes.institution
+                      ? _selectedEventInstitutions.toList()
+                      : null,
                   eventStartDateTime: _selectedStartDateTime ?? DateTime.now(),
                   eventEndDateTime: _selectedEndDateTime ?? DateTime.now(),
                   tickets: _tickets,
