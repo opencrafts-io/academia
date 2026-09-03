@@ -19,6 +19,7 @@ class _PaywallPageState extends State<PaywallPage> {
         child: CustomScrollView(
           slivers: [
             SliverAppBar(
+              automaticallyImplyLeading: false,
               floating: false,
               snap: false,
               pinned: false,
@@ -51,7 +52,10 @@ class _PaywallPageState extends State<PaywallPage> {
                       ),
                     ),
                     SizedBox(height: 12),
-                    Text("Choose the plan that's right for you."),
+                    Text(
+                      "Unlock all the features to get the best out of Academia"
+                      " and boost your productivity",
+                    ),
                     SizedBox(height: 12),
                     Spacer(),
 

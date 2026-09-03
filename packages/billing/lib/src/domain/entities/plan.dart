@@ -1,0 +1,20 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'plan.freezed.dart';
+
+@freezed
+abstract class Plan with _$Plan {
+  const factory Plan({
+    required bool active,
+    required int billingIntervalDays,
+    required String code,
+    required DateTime createdAt,
+    required String createdBy,
+    required String currency,
+    required String description,
+    required String name,
+    required num price,
+    required DateTime updatedAt,
+    required bool visible,
+  }) = _Plan;
+}
