@@ -20,7 +20,7 @@ class PlanRemoteDatasourceImpl implements PlanRemoteDataSource {
   final ApiClient _apiClient;
 
   static String get _basePath =>
-      kDebugMode ? "qa-verisafe/plans" : "verisafe/plans";
+      kDebugMode ? "/qa-verisafe/plans" : "/verisafe/plans";
 
   @override
   Future<Either<Failure, List<PlanDto>>> getPlans() {

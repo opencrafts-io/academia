@@ -1,6 +1,7 @@
 import 'package:database/app_database_v2.dart';
 import 'package:drift/drift.dart';
 import 'package:database/tables/tables.dart';
+import 'package:injectable/injectable.dart';
 
 part 'plan_dao.g.dart';
 
@@ -17,6 +18,7 @@ part 'plan_dao.g.dart';
 /// final activePlans = await planDao.getAvailablePlans();
 /// final plan = await planDao.getPlanByCode('PREMIUM\_ANNUAL');
 /// ```
+@injectable
 @DriftAccessor(tables: [Plans])
 class PlanDao extends DatabaseAccessor<AppDatabaseV2> with _$PlanDaoMixin {
   PlanDao(super.db);

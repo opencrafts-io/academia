@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
+import 'package:injectable/injectable.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'tables/tables.dart';
@@ -10,13 +11,13 @@ import 'app_database_v2.steps.dart';
 
 part 'app_database_v2.g.dart';
 
+@LazySingleton()
 @DriftDatabase(tables: [Plans], daos: [PlanDao])
 class AppDatabaseV2 extends _$AppDatabaseV2 {
   // After generating code, this class needs to define a `schemaVersion` getter
   // and a constructor telling drift where the database should be stored.
   // These are described in the getting started guide: https://drift.simonbinder.eu/setup/
-  AppDatabaseV2([QueryExecutor? executor])
-    : super(executor ?? _openConnection());
+  AppDatabaseV2() : super(_openConnection());
 
   @override
   int get schemaVersion => 2;
