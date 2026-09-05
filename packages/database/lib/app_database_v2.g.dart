@@ -703,6 +703,7 @@ abstract class _$AppDatabaseV2 extends GeneratedDatabase {
   _$AppDatabaseV2(QueryExecutor e) : super(e);
   $AppDatabaseV2Manager get managers => $AppDatabaseV2Manager(this);
   late final $PlansTable plans = $PlansTable(this);
+  late final PlanDao planDao = PlanDao(this as AppDatabaseV2);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
