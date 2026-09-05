@@ -124,7 +124,7 @@ class PlanDao extends DatabaseAccessor<AppDatabaseV2> with _$PlanDaoMixin {
   ///   May throw database-related exceptions if the insert fails (e.g.,
   ///   constraint violations, invalid data).
   Future<int> insertPlan(PlansCompanion plan) {
-    return into(plans).insert(plan);
+    return into(plans).insert(plan, onConflict: DoUpdate((p) => plan));
   }
 
   /// Updates an existing plan record in the database.

@@ -1,4 +1,5 @@
 import 'package:academia/config/flavor.dart';
+import 'package:academia/core/core.dart';
 import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
 import 'package:academia/features/auth/data/data.dart';
@@ -8,6 +9,7 @@ import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/semester/semester.dart';
 import 'package:academia/features/todos/data/repository/todo_item_repository_impl.dart';
 import 'package:academia/features/todos/data/repository/todo_tag_repository_impl.dart';
+import 'package:dio/dio.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
@@ -38,13 +40,17 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
 
   sl.registerLazySingleton<AuthLocalDatasource>(() => AuthLocalDatasource());
 
-  sl.registerSingleton<DioClient>(
+  final dioClient = sl.registerSingleton<DioClient>(
     DioClient(
       flavor,
       authLocalDatasource: sl.get<AuthLocalDatasource>(),
       requestInspector: isBackground ? null : sl<DioRequestInspector>(),
     ),
   );
+
+  sl.registerSingleton<Dio>(dioClient.dio);
+
+  configureDependencies(sl);
 
   if (!isBackground) {
     sl.registerLazySingleton<InAppUpdateBloc>(() => InAppUpdateBloc());

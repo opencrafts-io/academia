@@ -6,3 +6,4 @@ library;
 export 'src/usecase/usecase.dart';
 export 'src/failure/failure.dart';
 export 'src/network/network.dart';
+export 'src/di/core_module.dart';

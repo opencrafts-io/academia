@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:get_it/get_it.dart';
 
 import '../presentation.dart';
 
@@ -11,6 +13,9 @@ class PaywallRoute extends GoRouteData with $PaywallRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return PaywallPage();
+    return BlocProvider(
+      create: (_) => GetIt.instance<PlanCubit>(),
+      child: PaywallPage(),
+    );
   }
 }
