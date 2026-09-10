@@ -43,86 +43,96 @@ class PlanWidget extends StatelessWidget {
         ? theme.colorScheme.onPrimaryContainer
         : theme.colorScheme.onSurfaceVariant;
 
-    return AnimatedContainer(
-      curve: Curves.easeInOutCubicEmphasized,
-      duration: Duration(milliseconds: 300),
-      clipBehavior: .hardEdge,
-      decoration: ShapeDecoration(
-        color: isSelected
-            ? theme.colorScheme.primaryContainer
-            : theme.colorScheme.surfaceContainer,
-        shape: RoundedSuperellipseBorder(
-          side: BorderSide(
-            width: isSelected ? 2 : 1,
-            color: isSelected
-                ? theme.colorScheme.primary
-                : theme.colorScheme.outlineVariant,
-          ),
-          borderRadius: .circular(12),
-        ),
-      ),
-      child: Material(
-        type: .transparency,
-        elevation: 0,
+    return Semantics(
+      button: true,
+      selected: isSelected,
+      label:
+          '${plan.name}, ${formatPlanPrice(plan)}, '
+          '${formatBillingInterval(plan.billingIntervalDays)}',
+      child: AnimatedContainer(
+        curve: Curves.easeInOutCubicEmphasized,
+        duration: Duration(milliseconds: 300),
         clipBehavior: .hardEdge,
-        child: InkWell(
-          onTap: () {
-            onTap?.call(plan);
-          },
-          child: Padding(
-            padding: .all(12),
-            child: Row(
-              crossAxisAlignment: .start,
-              mainAxisAlignment: .spaceBetween,
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: Column(
-                    crossAxisAlignment: .start,
-                    children: [
-                      Text(
-                        plan.name,
-                        style: theme.textTheme.headlineSmall?.copyWith(
-                          fontWeight: .w700,
-                          color: foreground,
+        decoration: ShapeDecoration(
+          color: isSelected
+              ? theme.colorScheme.primaryContainer
+              : theme.colorScheme.surfaceContainer,
+          shape: RoundedSuperellipseBorder(
+            side: BorderSide(
+              width: isSelected ? 2 : 1,
+              color: isSelected
+                  ? theme.colorScheme.primary
+                  : theme.colorScheme.outlineVariant,
+            ),
+            borderRadius: .circular(12),
+          ),
+        ),
+        child: Material(
+          type: .transparency,
+          elevation: 0,
+          clipBehavior: .hardEdge,
+          child: InkWell(
+            onTap: () {
+              onTap?.call(plan);
+            },
+            child: Padding(
+              padding: .all(12),
+              child: Row(
+                crossAxisAlignment: .start,
+                mainAxisAlignment: .spaceBetween,
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Column(
+                      crossAxisAlignment: .start,
+                      children: [
+                        Text(
+                          plan.name,
+                          style: theme.textTheme.headlineSmall?.copyWith(
+                            fontWeight: .w700,
+                            fontSize: 20,
+                            color: foreground,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        plan.description,
-                        style: theme.textTheme.bodyLarge?.copyWith(
-                          color: subForeground,
+                        SizedBox(height: 8),
+                        Text(
+                          plan.description,
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            color: subForeground,
+                          ),
                         ),
-                      ),
 
-                      SizedBox(height: 4),
+                        SizedBox(height: 4),
 
-                      _BillingIntervalBadge(
-                        label: formatBillingInterval(plan.billingIntervalDays),
-                        isSelected: isSelected,
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Column(
-                    mainAxisAlignment: .start,
-                    crossAxisAlignment: .end,
-                    children: [
-                      Text(
-                        '${plan.currency} ${(plan.price / 100).toStringAsFixed(2)}',
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: .w700,
-                          color: isSelected
-                              ? theme.colorScheme.primary
-                              : foreground,
+                        _BillingIntervalBadge(
+                          label: formatBillingInterval(
+                            plan.billingIntervalDays,
+                          ),
+                          isSelected: isSelected,
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                  Expanded(
+                    flex: 1,
+                    child: Column(
+                      mainAxisAlignment: .start,
+                      crossAxisAlignment: .end,
+                      children: [
+                        Text(
+                          formatPlanPrice(plan),
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            fontWeight: .w700,
+                            color: isSelected
+                                ? theme.colorScheme.primary
+                                : foreground,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -130,6 +140,10 @@ class PlanWidget extends StatelessWidget {
     );
   }
 }
+
+/// Formats a Swagger monetary value, which is represented in minor units.
+String formatPlanPrice(Plan plan) =>
+    '${plan.currency} ${(plan.price / 100).toStringAsFixed(2)}';
 
 /// A small pill-shaped badge used to surface secondary plan info (like the
 /// billing cadence) as a distinct, tappable-looking chip rather than plain

@@ -12,10 +12,32 @@ class PaywallRoute extends GoRouteData with $PaywallRoute {
   const PaywallRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return BlocProvider(
-      create: (_) => GetIt.instance<PlanCubit>(),
-      child: PaywallPage(),
+  CustomTransitionPage<void> buildPage(
+    BuildContext context,
+    GoRouterState state,
+  ) {
+    return CustomTransitionPage(
+      child: BlocProvider(
+        create: (_) =>
+            GetIt.instance<SubscriptionManagementBloc>()
+              ..add(const LoadSubscriptionManagement()),
+        child: const PaywallPage(),
+      ),
+      transitionsBuilder:
+          (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) {
+            var tween = Tween(
+              begin: Offset(0.0, 1.0),
+              end: Offset.zero,
+            ).chain(CurveTween(curve: Curves.easeInOutQuad));
+            var offsetAnimation = animation.drive(tween);
+
+            return SlideTransition(position: offsetAnimation, child: child);
+          },
     );
   }
 }
