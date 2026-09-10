@@ -42,9 +42,7 @@ class PlanRepositoryImpl implements domain.PlanRepository {
   Future<Either<Failure, List<domain.Plan>>> getPlans({
     bool visible = true,
   }) async {
-    final remoteResult = await _planRemoteDataSource.getPlans(
-      visible: visible,
-    );
+    final remoteResult = await _planRemoteDataSource.getPlans(visible: visible);
 
     return remoteResult.fold<Future<Either<Failure, List<domain.Plan>>>>(
       (failure) async {
@@ -74,7 +72,7 @@ class PlanRepositoryImpl implements domain.PlanRepository {
 
     final companion = existingResult.fold(
       (_) => planDto.toCompanion(),
-      (existingPlan) => planDto.toCompanion(id: existingPlan.id),
+      (existingPlan) => planDto.toCompanion(existingId: existingPlan.id),
     );
     final writeResult = await _planLocalDatasource.cachePlan(companion);
 
