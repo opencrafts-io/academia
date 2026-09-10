@@ -9,6 +9,7 @@ import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/semester/semester.dart';
 import 'package:academia/features/todos/data/repository/todo_item_repository_impl.dart';
 import 'package:academia/features/todos/data/repository/todo_tag_repository_impl.dart';
+import 'package:ads/ads.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
 import 'package:flutter/foundation.dart';
@@ -30,14 +31,6 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
 
   final cacheDB = sl.registerSingleton<AppDataBase>(AppDataBase());
 
-  if (!isBackground) {
-    final AdService adService = AdService();
-    await adService.initialize();
-    adService.loadInterstitialAd();
-
-    sl.registerLazySingleton<AdService>(() => adService);
-  }
-
   sl.registerLazySingleton<AuthLocalDatasource>(() => AuthLocalDatasource());
 
   final dioClient = sl.registerSingleton<DioClient>(
@@ -53,6 +46,10 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   configureDependencies(sl);
 
   if (!isBackground) {
+    final adService = sl<AdService>();
+    await adService.initialize();
+    await adService.loadInterstitialAd();
+
     sl.registerLazySingleton<InAppUpdateBloc>(() => InAppUpdateBloc());
   }
 

@@ -1,6 +1,6 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/core/core.dart';
-import 'package:academia/features/admob/admob.dart';
+import 'package:ads/ads.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';

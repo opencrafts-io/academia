@@ -126,6 +126,9 @@ dependencies:
   # application billing subsystem
   billing:
     path: packages/billing/
+  # application ads subsystem
+  ads:
+    path: packages/ads/
   injectable: ^3.0.0
 
 dev_dependencies:

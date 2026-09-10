@@ -1,7 +1,7 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/constants/responsive_break_points.dart';
 import 'package:academia/core/core.dart';
-import 'package:academia/features/admob/admob.dart';
+import 'package:ads/ads.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
