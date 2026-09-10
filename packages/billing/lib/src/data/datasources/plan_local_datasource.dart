@@ -15,6 +15,22 @@ class PlanLocalDatasource {
 
   PlanLocalDatasource({required this._planDao});
 
+  Future<Either<Failure, Unit>> cachePlan(PlansCompanion plan) async {
+    try {
+      await _planDao.upsertPlan(plan);
+      return const Right(unit);
+    } catch (e, stackTrace) {
+      return Left(
+        Failure.cache(
+          message: 'Failed to cache plan',
+          error: e,
+          stackTrace: stackTrace,
+          code: 'PLAN_CACHE_ERROR',
+        ),
+      );
+    }
+  }
+
   /// Retrieves all plans from the local database.
   ///
   /// Fetches all plan records regardless of their visibility or active status.

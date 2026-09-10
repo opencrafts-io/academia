@@ -16,8 +16,14 @@ import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 
 import '../data/data.dart' as _i433;
+import '../data/datasources/entitlement_local_datasource.dart' as _i763;
+import '../data/datasources/entitlement_remote_datasource.dart' as _i368;
+import '../data/datasources/order_local_datasource.dart' as _i942;
+import '../data/datasources/order_remote_datasource.dart' as _i908;
 import '../data/datasources/plan_local_datasource.dart' as _i774;
 import '../data/datasources/plan_remote_datasource.dart' as _i745;
+import '../data/datasources/subscription_local_datasource.dart' as _i376;
+import '../data/datasources/subscription_remote_datasource.dart' as _i215;
 import '../data/repository/plan_repository_impl.dart' as _i68;
 import '../domain/domain.dart' as _i515;
 import '../domain/usecases/get_plan_by_code.dart' as _i361;
@@ -31,8 +37,33 @@ _i174.GetIt initBilling(
   _i526.EnvironmentFilter? environmentFilter,
 }) {
   final gh = _i526.GetItHelper(getIt, environment, environmentFilter);
+  gh.factory<_i942.OrderLocalDatasource>(
+    () => _i942.OrderLocalDatasource(orderDao: gh<_i252.OrderDao>()),
+  );
+  gh.lazySingleton<_i908.OrderRemoteDataSource>(
+    () => _i908.OrderRemoteDatasourceImpl(apiClient: gh<_i494.ApiClient>()),
+  );
+  gh.factory<_i763.EntitlementLocalDatasource>(
+    () => _i763.EntitlementLocalDatasource(
+      entitlementDao: gh<_i252.EntitlementDao>(),
+    ),
+  );
+  gh.lazySingleton<_i215.SubscriptionRemoteDataSource>(
+    () => _i215.SubscriptionRemoteDatasourceImpl(
+      apiClient: gh<_i494.ApiClient>(),
+    ),
+  );
+  gh.factory<_i376.SubscriptionLocalDatasource>(
+    () => _i376.SubscriptionLocalDatasource(
+      subscriptionDao: gh<_i252.SubscriptionDao>(),
+    ),
+  );
   gh.factory<_i774.PlanLocalDatasource>(
     () => _i774.PlanLocalDatasource(planDao: gh<_i252.PlanDao>()),
+  );
+  gh.lazySingleton<_i368.EntitlementRemoteDataSource>(
+    () =>
+        _i368.EntitlementRemoteDatasourceImpl(apiClient: gh<_i494.ApiClient>()),
   );
   gh.lazySingleton<_i745.PlanRemoteDataSource>(
     () => _i745.PlanRemoteDatasourceImpl(apiClient: gh<_i494.ApiClient>()),

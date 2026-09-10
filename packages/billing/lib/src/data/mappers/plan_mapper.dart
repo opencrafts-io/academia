@@ -16,7 +16,7 @@ extension PlanDtoMapper on PlanDto {
       currency: currency,
       description: description,
       name: name,
-      price: price,
+      price: price.round(),
       updatedAt: updatedAt,
       visible: visible,
     );
@@ -60,7 +60,7 @@ extension PlanMapper on domain.Plan {
       currency: currency,
       description: description,
       name: name,
-      price: price,
+      price: price.round(),
       updatedAt: updatedAt,
       visible: visible,
     );
@@ -99,7 +99,7 @@ extension PlanEntityMapper on database.Plan {
       currency: currency,
       description: description,
       name: name,
-      price: price,
+      price: price.round(),
       updatedAt: updatedAt,
       visible: visible,
     );
