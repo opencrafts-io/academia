@@ -15,10 +15,22 @@ RouteBase get $paywallRoute => GoRouteData.$route(
 );
 
 mixin $PaywallRoute on GoRouteData {
-  static PaywallRoute _fromState(GoRouterState state) => const PaywallRoute();
+  static PaywallRoute _fromState(GoRouterState state) => PaywallRoute(
+    featureName: state.uri.queryParameters['feature-name'] ?? 'this feature',
+    accessMessage: state.uri.queryParameters['access-message'],
+  );
+
+  PaywallRoute get _self => this as PaywallRoute;
 
   @override
-  String get location => GoRouteData.$location('/billing');
+  String get location => GoRouteData.$location(
+    '/billing',
+    queryParams: {
+      if (_self.featureName != 'this feature')
+        'feature-name': _self.featureName,
+      if (_self.accessMessage != null) 'access-message': _self.accessMessage,
+    },
+  );
 
   @override
   void go(BuildContext context) => context.go(location);

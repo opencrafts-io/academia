@@ -195,40 +195,31 @@ class _PaywallIntro extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
-    return Card(
-      color: colors.primaryContainer,
-      child: Padding(
-        padding: const EdgeInsets.all(18),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(Icons.lock_open_rounded, color: colors.onPrimaryContainer),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Upgrade to use $featureName',
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w800,
-                      color: colors.onPrimaryContainer,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    accessMessage ??
-                        'Your current access does not include this feature. '
-                            'Choose a plan to continue using it.',
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: colors.onPrimaryContainer,
-                    ),
-                  ),
-                ],
-              ),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8, 24, 8, 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(Icons.lock_open_rounded, size: 72, color: colors.primary),
+          const SizedBox(height: 28),
+          Text(
+            'Upgrade to use $featureName',
+            style: theme.textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.w800,
+              color: colors.onSurface,
             ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 14),
+          Text(
+            accessMessage ??
+                "Your current access does not include this feature. "
+                    "Choose a plan to continue using it.",
+            style: theme.textTheme.bodyLarge?.copyWith(
+              color: colors.onSurfaceVariant,
+              height: 1.35,
+            ),
+          ),
+        ],
       ),
     );
   }

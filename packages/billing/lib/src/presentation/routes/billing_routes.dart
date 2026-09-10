@@ -9,7 +9,10 @@ part 'billing_routes.g.dart';
 
 @TypedGoRoute<PaywallRoute>(path: '/billing')
 class PaywallRoute extends GoRouteData with $PaywallRoute {
-  const PaywallRoute();
+  const PaywallRoute({this.featureName = 'this feature', this.accessMessage});
+
+  final String featureName;
+  final String? accessMessage;
 
   @override
   CustomTransitionPage<void> buildPage(
@@ -21,7 +24,10 @@ class PaywallRoute extends GoRouteData with $PaywallRoute {
         create: (_) =>
             GetIt.instance<SubscriptionManagementBloc>()
               ..add(const LoadSubscriptionManagement()),
-        child: const PaywallPage(),
+        child: PaywallPage(
+          featureName: featureName,
+          accessMessage: accessMessage,
+        ),
       ),
       transitionsBuilder:
           (
