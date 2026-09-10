@@ -129,6 +129,10 @@ class PlanDao extends DatabaseAccessor<AppDatabaseV2> with _$PlanDaoMixin {
     return into(plans).insert(plan, onConflict: DoUpdate((p) => plan));
   }
 
+  Future<void> upsertPlan(PlansCompanion plan) async {
+    await into(plans).insertOnConflictUpdate(plan);
+  }
+
   /// Updates an existing plan record in the database.
   ///
   /// Replaces the entire plan record with the data provided in the [plan]

@@ -14,7 +14,10 @@ import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 
 import '../app_database_v2.dart' as _i883;
+import '../daos/entitlement_dao.dart' as _i344;
+import '../daos/order_dao.dart' as _i237;
 import '../daos/plan_dao.dart' as _i433;
+import '../daos/subscription_dao.dart' as _i951;
 
 // initializes the registration of main-scope dependencies inside of GetIt
 _i174.GetIt initAppDatabaseV2(
@@ -24,6 +27,13 @@ _i174.GetIt initAppDatabaseV2(
 }) {
   final gh = _i526.GetItHelper(getIt, environment, environmentFilter);
   gh.lazySingleton<_i883.AppDatabaseV2>(() => _i883.AppDatabaseV2());
+  gh.factory<_i344.EntitlementDao>(
+    () => _i344.EntitlementDao(gh<_i883.AppDatabaseV2>()),
+  );
+  gh.factory<_i237.OrderDao>(() => _i237.OrderDao(gh<_i883.AppDatabaseV2>()));
   gh.factory<_i433.PlanDao>(() => _i433.PlanDao(gh<_i883.AppDatabaseV2>()));
+  gh.factory<_i951.SubscriptionDao>(
+    () => _i951.SubscriptionDao(gh<_i883.AppDatabaseV2>()),
+  );
   return getIt;
 }

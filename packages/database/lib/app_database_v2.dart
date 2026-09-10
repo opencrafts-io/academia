@@ -12,15 +12,25 @@ import 'app_database_v2.steps.dart';
 part 'app_database_v2.g.dart';
 
 @LazySingleton()
-@DriftDatabase(tables: [Plans], daos: [PlanDao])
+@DriftDatabase(
+  tables: [
+    Plans,
+    BillingOrders,
+    BillingSubscriptions,
+    BillingSubscriptionStatuses,
+    BillingEntitlements,
+  ],
+  daos: [PlanDao, OrderDao, SubscriptionDao, EntitlementDao],
+)
 class AppDatabaseV2 extends _$AppDatabaseV2 {
   // After generating code, this class needs to define a `schemaVersion` getter
   // and a constructor telling drift where the database should be stored.
   // These are described in the getting started guide: https://drift.simonbinder.eu/setup/
-  AppDatabaseV2() : super(_openConnection());
+  AppDatabaseV2([QueryExecutor? executor])
+    : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   static QueryExecutor _openConnection() {
     driftRuntimeOptions.defaultSerializer = const ValueSerializer.defaults(
@@ -112,6 +122,12 @@ extension Migrations on GeneratedDatabase {
   OnUpgrade get _schemaUpgrade => stepByStep(
     from1To2: (m, schema) async {
       await m.createTable(schema.plans);
+    },
+    from2To3: (m, schema) async {
+      await m.createTable(schema.billingOrders);
+      await m.createTable(schema.billingSubscriptions);
+      await m.createTable(schema.billingSubscriptionStatuses);
+      await m.createTable(schema.billingEntitlements);
     },
   );
 }
