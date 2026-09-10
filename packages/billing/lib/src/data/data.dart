@@ -16,3 +16,7 @@ export 'mappers/plan_mapper.dart';
 export 'mappers/order_mapper.dart';
 export 'mappers/subscription_mapper.dart';
 export 'mappers/entitlement_mapper.dart';
+export 'repository/plan_repository_impl.dart';
+export 'repository/order_repository_impl.dart';
+export 'repository/subscription_repository_impl.dart';
+export 'repository/entitlement_repository_impl.dart';

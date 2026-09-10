@@ -39,12 +39,18 @@ class PlanRepositoryImpl implements domain.PlanRepository {
   }
 
   @override
-  Future<Either<Failure, List<domain.Plan>>> getPlans() async {
-    final remoteResult = await _planRemoteDataSource.getPlans();
+  Future<Either<Failure, List<domain.Plan>>> getPlans({
+    bool visible = true,
+  }) async {
+    final remoteResult = await _planRemoteDataSource.getPlans(
+      visible: visible,
+    );
 
     return remoteResult.fold<Future<Either<Failure, List<domain.Plan>>>>(
       (failure) async {
-        final localResult = await _planLocalDatasource.getAllPlans();
+        final localResult = visible
+            ? await _planLocalDatasource.getAvailablePlans()
+            : await _planLocalDatasource.getAllPlans();
         return localResult.fold(
           (localFailure) => left(localFailure),
           (plans) => right(plans.map((plan) => plan.toDomain()).toList()),
@@ -66,12 +72,11 @@ class PlanRepositoryImpl implements domain.PlanRepository {
       planDto.code,
     );
 
-    final writeResult = await existingResult.fold(
-      (_) => _planLocalDatasource.createPlan(planDto.toCompanion()),
-      (existingPlan) => _planLocalDatasource.updatePlan(
-        planDto.toCompanion(id: existingPlan.id),
-      ),
+    final companion = existingResult.fold(
+      (_) => planDto.toCompanion(),
+      (existingPlan) => planDto.toCompanion(id: existingPlan.id),
     );
+    final writeResult = await _planLocalDatasource.cachePlan(companion);
 
     writeResult.fold((failure) {
       if (kDebugMode) {

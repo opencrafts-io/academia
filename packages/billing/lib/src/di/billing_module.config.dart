@@ -24,7 +24,10 @@ import '../data/datasources/plan_local_datasource.dart' as _i774;
 import '../data/datasources/plan_remote_datasource.dart' as _i745;
 import '../data/datasources/subscription_local_datasource.dart' as _i376;
 import '../data/datasources/subscription_remote_datasource.dart' as _i215;
+import '../data/repository/entitlement_repository_impl.dart' as _i973;
+import '../data/repository/order_repository_impl.dart' as _i642;
 import '../data/repository/plan_repository_impl.dart' as _i68;
+import '../data/repository/subscription_repository_impl.dart' as _i949;
 import '../domain/domain.dart' as _i515;
 import '../domain/usecases/get_plan_by_code.dart' as _i361;
 import '../domain/usecases/get_plans.dart' as _i113;
@@ -68,16 +71,34 @@ _i174.GetIt initBilling(
   gh.lazySingleton<_i745.PlanRemoteDataSource>(
     () => _i745.PlanRemoteDatasourceImpl(apiClient: gh<_i494.ApiClient>()),
   );
+  gh.lazySingleton<_i515.EntitlementRepository>(
+    () => _i973.EntitlementRepositoryImpl(
+      localDataSource: gh<_i433.EntitlementLocalDatasource>(),
+      remoteDataSource: gh<_i433.EntitlementRemoteDataSource>(),
+    ),
+  );
   gh.lazySingleton<_i515.PlanRepository>(
     () => _i68.PlanRepositoryImpl(
       planLocalDatasource: gh<_i433.PlanLocalDatasource>(),
       planRemoteDataSource: gh<_i433.PlanRemoteDataSource>(),
     ),
   );
+  gh.lazySingleton<_i515.SubscriptionRepository>(
+    () => _i949.SubscriptionRepositoryImpl(
+      localDataSource: gh<_i433.SubscriptionLocalDatasource>(),
+      remoteDataSource: gh<_i433.SubscriptionRemoteDataSource>(),
+    ),
+  );
   gh.factory<_i361.GetPlanByCode>(
     () => _i361.GetPlanByCode(gh<_i515.PlanRepository>()),
   );
   gh.factory<_i113.GetPlans>(() => _i113.GetPlans(gh<_i515.PlanRepository>()));
+  gh.lazySingleton<_i515.OrderRepository>(
+    () => _i642.OrderRepositoryImpl(
+      localDataSource: gh<_i433.OrderLocalDatasource>(),
+      remoteDataSource: gh<_i433.OrderRemoteDataSource>(),
+    ),
+  );
   gh.lazySingleton<_i906.PlanCubit>(
     () => _i906.PlanCubit(gh<_i515.GetPlans>(), gh<_i515.GetPlanByCode>()),
   );
