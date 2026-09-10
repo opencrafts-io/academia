@@ -1,4 +1,5 @@
 import 'package:ads/src/ad_service.dart';
+import 'package:ads/src/banner_ad_size.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -6,13 +7,13 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 class BannerAdWidget extends StatefulWidget {
   const BannerAdWidget({
     super.key,
-    required this.size,
+    this.size = BannerAdSize.banner,
     this.adRequest,
     this.listener,
     this.adService,
   });
 
-  final AdSize size;
+  final BannerAdSize size;
   final AdRequest? adRequest;
   final BannerAdListener? listener;
   final AdService? adService;

@@ -22,4 +22,11 @@ void main() {
       },
     );
   });
+
+  group('BannerAdSize', () {
+    test('keeps banner dimensions inside the ads package API', () {
+      expect(BannerAdSize.banner.width, 320);
+      expect(BannerAdSize.banner.height, 50);
+    });
+  });
 }

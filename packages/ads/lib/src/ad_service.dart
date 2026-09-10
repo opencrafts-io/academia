@@ -5,6 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:injectable/injectable.dart';
 
+import 'banner_ad_size.dart';
+
 typedef NoAdsEntitlementReader = Future<bool> Function({bool forceRefresh});
 
 /// Handles all ad-related operations.
@@ -71,7 +73,7 @@ class AdService {
   }
 
   Future<BannerAd?> createBannerAd({
-    required AdSize size,
+    BannerAdSize size = BannerAdSize.banner,
     AdRequest? adRequest,
     BannerAdListener? bannerAdListener,
   }) async {
@@ -81,7 +83,7 @@ class AdService {
     if (id == null) return null;
 
     return BannerAd(
-      size: size,
+      size: size.googleAdSize,
       request: adRequest ?? const AdRequest(),
       adUnitId: id,
       listener: bannerAdListener ?? const BannerAdListener(),

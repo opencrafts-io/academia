@@ -5,7 +5,6 @@ import 'package:ads/ads.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:academia/injection_container.dart';
@@ -248,7 +247,7 @@ class _EssentialsPageState extends State<EssentialsPage> {
                 SizedBox(height: 12),
                 _buildToolsGrid(context),
                 SizedBox(height: 22),
-                BannerAdWidget(size: AdSize.banner),
+                BannerAdWidget(),
               ],
             ),
           ),

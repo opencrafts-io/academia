@@ -6,7 +6,6 @@ import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 class ShereheHome extends StatefulWidget {
@@ -197,9 +196,7 @@ class _ShereheHomeState extends State<ShereheHome>
                         const SliverToBoxAdapter(
                           child: Padding(
                             padding: EdgeInsets.symmetric(vertical: 12),
-                            child: Center(
-                              child: BannerAdWidget(size: AdSize.banner),
-                            ),
+                            child: Center(child: BannerAdWidget()),
                           ),
                         ),
                       );

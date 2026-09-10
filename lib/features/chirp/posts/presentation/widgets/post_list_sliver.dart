@@ -5,7 +5,6 @@ import 'package:ads/ads.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:loading_indicator_m3e/loading_indicator_m3e.dart';
 
 /// Renders the post-list portion of a [FeedBloc]-backed screen (the global
@@ -79,7 +78,7 @@ class _PostListSliverState extends State<PostListSliver> {
         ),
       );
       if (widget.interleaveAds && (i + 1) % _adInterval == 0) {
-        items.add(BannerAdWidget(key: ValueKey('ad_$i'), size: AdSize.banner));
+        items.add(BannerAdWidget(key: ValueKey('ad_$i')));
       }
     }
     return items;
