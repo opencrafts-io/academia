@@ -29,6 +29,7 @@ import '../data/repository/order_repository_impl.dart' as _i642;
 import '../data/repository/plan_repository_impl.dart' as _i68;
 import '../data/repository/subscription_repository_impl.dart' as _i949;
 import '../domain/domain.dart' as _i515;
+import '../domain/services/billing_service.dart' as _i692;
 import '../domain/usecases/get_current_subscription_status.dart' as _i1067;
 import '../domain/usecases/get_entitlements_by_plan_code.dart' as _i26;
 import '../domain/usecases/get_order_by_id.dart' as _i44;
@@ -44,9 +45,13 @@ _i174.GetIt initBilling(
   _i526.EnvironmentFilter? environmentFilter,
 }) {
   final gh = _i526.GetItHelper(getIt, environment, environmentFilter);
+  gh.lazySingleton<_i692.SubscriptionAccessPolicy>(
+    () => const _i692.DefaultSubscriptionAccessPolicy(),
+  );
   gh.factory<_i942.OrderLocalDatasource>(
     () => _i942.OrderLocalDatasource(orderDao: gh<_i252.OrderDao>()),
   );
+  gh.lazySingleton<_i692.BillingClock>(() => const _i692.SystemBillingClock());
   gh.lazySingleton<_i908.OrderRemoteDataSource>(
     () => _i908.OrderRemoteDatasourceImpl(apiClient: gh<_i494.ApiClient>()),
   );
@@ -104,6 +109,14 @@ _i174.GetIt initBilling(
     () => _i361.GetPlanByCode(gh<_i515.PlanRepository>()),
   );
   gh.factory<_i113.GetPlans>(() => _i113.GetPlans(gh<_i515.PlanRepository>()));
+  gh.lazySingleton<_i692.BillingService>(
+    () => _i692.BillingService(
+      getCurrentSubscriptionStatus: gh<_i515.GetCurrentSubscriptionStatus>(),
+      getEntitlementsByPlanCode: gh<_i515.GetEntitlementsByPlanCode>(),
+      accessPolicy: gh<_i692.SubscriptionAccessPolicy>(),
+      clock: gh<_i692.BillingClock>(),
+    ),
+  );
   gh.lazySingleton<_i515.OrderRepository>(
     () => _i642.OrderRepositoryImpl(
       localDataSource: gh<_i433.OrderLocalDatasource>(),

@@ -12,3 +12,4 @@ export 'usecases/get_orders.dart';
 export 'usecases/get_order_by_id.dart';
 export 'usecases/get_current_subscription_status.dart';
 export 'usecases/get_entitlements_by_plan_code.dart';
+export 'services/billing_service.dart';
