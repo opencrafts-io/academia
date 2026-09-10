@@ -29,6 +29,10 @@ import '../data/repository/order_repository_impl.dart' as _i642;
 import '../data/repository/plan_repository_impl.dart' as _i68;
 import '../data/repository/subscription_repository_impl.dart' as _i949;
 import '../domain/domain.dart' as _i515;
+import '../domain/usecases/get_current_subscription_status.dart' as _i1067;
+import '../domain/usecases/get_entitlements_by_plan_code.dart' as _i26;
+import '../domain/usecases/get_order_by_id.dart' as _i44;
+import '../domain/usecases/get_orders.dart' as _i15;
 import '../domain/usecases/get_plan_by_code.dart' as _i361;
 import '../domain/usecases/get_plans.dart' as _i113;
 import '../presentation/cubits/plan_cubit.dart' as _i906;
@@ -89,6 +93,13 @@ _i174.GetIt initBilling(
       remoteDataSource: gh<_i433.SubscriptionRemoteDataSource>(),
     ),
   );
+  gh.factory<_i1067.GetCurrentSubscriptionStatus>(
+    () =>
+        _i1067.GetCurrentSubscriptionStatus(gh<_i515.SubscriptionRepository>()),
+  );
+  gh.factory<_i26.GetEntitlementsByPlanCode>(
+    () => _i26.GetEntitlementsByPlanCode(gh<_i515.EntitlementRepository>()),
+  );
   gh.factory<_i361.GetPlanByCode>(
     () => _i361.GetPlanByCode(gh<_i515.PlanRepository>()),
   );
@@ -102,5 +113,9 @@ _i174.GetIt initBilling(
   gh.lazySingleton<_i906.PlanCubit>(
     () => _i906.PlanCubit(gh<_i515.GetPlans>(), gh<_i515.GetPlanByCode>()),
   );
+  gh.factory<_i44.GetOrderById>(
+    () => _i44.GetOrderById(gh<_i515.OrderRepository>()),
+  );
+  gh.factory<_i15.GetOrders>(() => _i15.GetOrders(gh<_i515.OrderRepository>()));
   return getIt;
 }
