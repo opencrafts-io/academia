@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:posthog_flutter/posthog_flutter.dart';
 import 'guards/guards.dart';
+import 'package:billing/billing.dart' as billing;
 
 class AppRouter {
   static final GlobalKey<NavigatorState> globalNavigatorKey =
@@ -19,7 +20,7 @@ class AppRouter {
   ];
 
   static final router = GoRouter(
-    routes: $appRoutes,
+    routes: [...$appRoutes, ...billing.routes],
     initialLocation: SplashScreenRoute().location,
     observers: [
       if (sl<FlavorConfig>().isProduction) PosthogObserver(),
