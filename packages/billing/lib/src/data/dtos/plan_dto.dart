@@ -14,7 +14,7 @@ abstract class PlanDto with _$PlanDto {
     required String currency,
     required String description,
     required String name,
-    required num price,
+    required int price,
     @JsonKey(name: "updated_at") required DateTime updatedAt,
     required bool visible,
   }) = _PlanDto;

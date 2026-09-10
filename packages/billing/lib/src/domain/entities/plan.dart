@@ -13,7 +13,7 @@ abstract class Plan with _$Plan {
     required String currency,
     required String description,
     required String name,
-    required num price,
+    required int price,
     required DateTime updatedAt,
     required bool visible,
   }) = _Plan;

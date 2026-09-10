@@ -1,4 +1,11 @@
 export 'dtos/plan_dto.dart';
+export 'dtos/order_dto.dart';
+export 'dtos/subscription_dto.dart';
+export 'dtos/subscription_status_dto.dart';
+export 'dtos/entitlement_dto.dart';
 export 'datasources/plan_local_datasource.dart';
 export 'datasources/plan_remote_datasource.dart';
 export 'mappers/plan_mapper.dart';
+export 'mappers/order_mapper.dart';
+export 'mappers/subscription_mapper.dart';
+export 'mappers/entitlement_mapper.dart';

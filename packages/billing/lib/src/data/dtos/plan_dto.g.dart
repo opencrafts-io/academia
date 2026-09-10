@@ -15,7 +15,7 @@ _PlanDto _$PlanDtoFromJson(Map<String, dynamic> json) => _PlanDto(
   currency: json['currency'] as String,
   description: json['description'] as String,
   name: json['name'] as String,
-  price: json['price'] as num,
+  price: (json['price'] as num).toInt(),
   updatedAt: DateTime.parse(json['updated_at'] as String),
   visible: json['visible'] as bool,
 );

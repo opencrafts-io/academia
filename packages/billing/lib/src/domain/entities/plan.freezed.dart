@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Plan {
 
- bool get active; int get billingIntervalDays; String get code; DateTime get createdAt; String get createdBy; String get currency; String get description; String get name; num get price; DateTime get updatedAt; bool get visible;
+ bool get active; int get billingIntervalDays; String get code; DateTime get createdAt; String get createdBy; String get currency; String get description; String get name; int get price; DateTime get updatedAt; bool get visible;
 /// Create a copy of Plan
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -51,7 +51,7 @@ abstract mixin class $PlanCopyWith<$Res>  {
   factory $PlanCopyWith(Plan value, $Res Function(Plan) _then) = _$PlanCopyWithImpl;
 @useResult
 $Res call({
- bool active, int billingIntervalDays, String code, DateTime createdAt, String createdBy, String currency, String description, String name, num price, DateTime updatedAt, bool visible
+ bool active, int billingIntervalDays, String code, DateTime createdAt, String createdBy, String currency, String description, String name, int price, DateTime updatedAt, bool visible
 });
 
 
@@ -79,7 +79,7 @@ as String,currency: null == currency ? _self.currency : currency // ignore: cast
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,price: null == price ? _self.price : price // ignore: cast_nullable_to_non_nullable
-as num,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as int,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,visible: null == visible ? _self.visible : visible // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
@@ -166,7 +166,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool active,  int billingIntervalDays,  String code,  DateTime createdAt,  String createdBy,  String currency,  String description,  String name,  num price,  DateTime updatedAt,  bool visible)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool active,  int billingIntervalDays,  String code,  DateTime createdAt,  String createdBy,  String currency,  String description,  String name,  int price,  DateTime updatedAt,  bool visible)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Plan() when $default != null:
 return $default(_that.active,_that.billingIntervalDays,_that.code,_that.createdAt,_that.createdBy,_that.currency,_that.description,_that.name,_that.price,_that.updatedAt,_that.visible);case _:
@@ -187,7 +187,7 @@ return $default(_that.active,_that.billingIntervalDays,_that.code,_that.createdA
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool active,  int billingIntervalDays,  String code,  DateTime createdAt,  String createdBy,  String currency,  String description,  String name,  num price,  DateTime updatedAt,  bool visible)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool active,  int billingIntervalDays,  String code,  DateTime createdAt,  String createdBy,  String currency,  String description,  String name,  int price,  DateTime updatedAt,  bool visible)  $default,) {final _that = this;
 switch (_that) {
 case _Plan():
 return $default(_that.active,_that.billingIntervalDays,_that.code,_that.createdAt,_that.createdBy,_that.currency,_that.description,_that.name,_that.price,_that.updatedAt,_that.visible);case _:
@@ -207,7 +207,7 @@ return $default(_that.active,_that.billingIntervalDays,_that.code,_that.createdA
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool active,  int billingIntervalDays,  String code,  DateTime createdAt,  String createdBy,  String currency,  String description,  String name,  num price,  DateTime updatedAt,  bool visible)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool active,  int billingIntervalDays,  String code,  DateTime createdAt,  String createdBy,  String currency,  String description,  String name,  int price,  DateTime updatedAt,  bool visible)?  $default,) {final _that = this;
 switch (_that) {
 case _Plan() when $default != null:
 return $default(_that.active,_that.billingIntervalDays,_that.code,_that.createdAt,_that.createdBy,_that.currency,_that.description,_that.name,_that.price,_that.updatedAt,_that.visible);case _:
@@ -233,7 +233,7 @@ class _Plan implements Plan {
 @override final  String currency;
 @override final  String description;
 @override final  String name;
-@override final  num price;
+@override final  int price;
 @override final  DateTime updatedAt;
 @override final  bool visible;
 
@@ -269,7 +269,7 @@ abstract mixin class _$PlanCopyWith<$Res> implements $PlanCopyWith<$Res> {
   factory _$PlanCopyWith(_Plan value, $Res Function(_Plan) _then) = __$PlanCopyWithImpl;
 @override @useResult
 $Res call({
- bool active, int billingIntervalDays, String code, DateTime createdAt, String createdBy, String currency, String description, String name, num price, DateTime updatedAt, bool visible
+ bool active, int billingIntervalDays, String code, DateTime createdAt, String createdBy, String currency, String description, String name, int price, DateTime updatedAt, bool visible
 });
 
 
@@ -297,7 +297,7 @@ as String,currency: null == currency ? _self.currency : currency // ignore: cast
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,price: null == price ? _self.price : price // ignore: cast_nullable_to_non_nullable
-as num,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as int,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,visible: null == visible ? _self.visible : visible // ignore: cast_nullable_to_non_nullable
 as bool,
   ));

@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PlanDto {
 
- bool get active;@JsonKey(name: "billing_interval_days") int get billingIntervalDays; String get code;@JsonKey(name: "created_at") DateTime get createdAt;@JsonKey(name: "created_by") String get createdBy; String get currency; String get description; String get name; num get price;@JsonKey(name: "updated_at") DateTime get updatedAt; bool get visible;
+ bool get active;@JsonKey(name: "billing_interval_days") int get billingIntervalDays; String get code;@JsonKey(name: "created_at") DateTime get createdAt;@JsonKey(name: "created_by") String get createdBy; String get currency; String get description; String get name; int get price;@JsonKey(name: "updated_at") DateTime get updatedAt; bool get visible;
 /// Create a copy of PlanDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -54,7 +54,7 @@ abstract mixin class $PlanDtoCopyWith<$Res>  {
   factory $PlanDtoCopyWith(PlanDto value, $Res Function(PlanDto) _then) = _$PlanDtoCopyWithImpl;
 @useResult
 $Res call({
- bool active,@JsonKey(name: "billing_interval_days") int billingIntervalDays, String code,@JsonKey(name: "created_at") DateTime createdAt,@JsonKey(name: "created_by") String createdBy, String currency, String description, String name, num price,@JsonKey(name: "updated_at") DateTime updatedAt, bool visible
+ bool active,@JsonKey(name: "billing_interval_days") int billingIntervalDays, String code,@JsonKey(name: "created_at") DateTime createdAt,@JsonKey(name: "created_by") String createdBy, String currency, String description, String name, int price,@JsonKey(name: "updated_at") DateTime updatedAt, bool visible
 });
 
 
@@ -82,7 +82,7 @@ as String,currency: null == currency ? _self.currency : currency // ignore: cast
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,price: null == price ? _self.price : price // ignore: cast_nullable_to_non_nullable
-as num,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as int,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,visible: null == visible ? _self.visible : visible // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
@@ -169,7 +169,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool active, @JsonKey(name: "billing_interval_days")  int billingIntervalDays,  String code, @JsonKey(name: "created_at")  DateTime createdAt, @JsonKey(name: "created_by")  String createdBy,  String currency,  String description,  String name,  num price, @JsonKey(name: "updated_at")  DateTime updatedAt,  bool visible)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool active, @JsonKey(name: "billing_interval_days")  int billingIntervalDays,  String code, @JsonKey(name: "created_at")  DateTime createdAt, @JsonKey(name: "created_by")  String createdBy,  String currency,  String description,  String name,  int price, @JsonKey(name: "updated_at")  DateTime updatedAt,  bool visible)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PlanDto() when $default != null:
 return $default(_that.active,_that.billingIntervalDays,_that.code,_that.createdAt,_that.createdBy,_that.currency,_that.description,_that.name,_that.price,_that.updatedAt,_that.visible);case _:
@@ -190,7 +190,7 @@ return $default(_that.active,_that.billingIntervalDays,_that.code,_that.createdA
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool active, @JsonKey(name: "billing_interval_days")  int billingIntervalDays,  String code, @JsonKey(name: "created_at")  DateTime createdAt, @JsonKey(name: "created_by")  String createdBy,  String currency,  String description,  String name,  num price, @JsonKey(name: "updated_at")  DateTime updatedAt,  bool visible)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool active, @JsonKey(name: "billing_interval_days")  int billingIntervalDays,  String code, @JsonKey(name: "created_at")  DateTime createdAt, @JsonKey(name: "created_by")  String createdBy,  String currency,  String description,  String name,  int price, @JsonKey(name: "updated_at")  DateTime updatedAt,  bool visible)  $default,) {final _that = this;
 switch (_that) {
 case _PlanDto():
 return $default(_that.active,_that.billingIntervalDays,_that.code,_that.createdAt,_that.createdBy,_that.currency,_that.description,_that.name,_that.price,_that.updatedAt,_that.visible);case _:
@@ -210,7 +210,7 @@ return $default(_that.active,_that.billingIntervalDays,_that.code,_that.createdA
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool active, @JsonKey(name: "billing_interval_days")  int billingIntervalDays,  String code, @JsonKey(name: "created_at")  DateTime createdAt, @JsonKey(name: "created_by")  String createdBy,  String currency,  String description,  String name,  num price, @JsonKey(name: "updated_at")  DateTime updatedAt,  bool visible)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool active, @JsonKey(name: "billing_interval_days")  int billingIntervalDays,  String code, @JsonKey(name: "created_at")  DateTime createdAt, @JsonKey(name: "created_by")  String createdBy,  String currency,  String description,  String name,  int price, @JsonKey(name: "updated_at")  DateTime updatedAt,  bool visible)?  $default,) {final _that = this;
 switch (_that) {
 case _PlanDto() when $default != null:
 return $default(_that.active,_that.billingIntervalDays,_that.code,_that.createdAt,_that.createdBy,_that.currency,_that.description,_that.name,_that.price,_that.updatedAt,_that.visible);case _:
@@ -236,7 +236,7 @@ class _PlanDto implements PlanDto {
 @override final  String currency;
 @override final  String description;
 @override final  String name;
-@override final  num price;
+@override final  int price;
 @override@JsonKey(name: "updated_at") final  DateTime updatedAt;
 @override final  bool visible;
 
@@ -275,7 +275,7 @@ abstract mixin class _$PlanDtoCopyWith<$Res> implements $PlanDtoCopyWith<$Res> {
   factory _$PlanDtoCopyWith(_PlanDto value, $Res Function(_PlanDto) _then) = __$PlanDtoCopyWithImpl;
 @override @useResult
 $Res call({
- bool active,@JsonKey(name: "billing_interval_days") int billingIntervalDays, String code,@JsonKey(name: "created_at") DateTime createdAt,@JsonKey(name: "created_by") String createdBy, String currency, String description, String name, num price,@JsonKey(name: "updated_at") DateTime updatedAt, bool visible
+ bool active,@JsonKey(name: "billing_interval_days") int billingIntervalDays, String code,@JsonKey(name: "created_at") DateTime createdAt,@JsonKey(name: "created_by") String createdBy, String currency, String description, String name, int price,@JsonKey(name: "updated_at") DateTime updatedAt, bool visible
 });
 
 
@@ -303,7 +303,7 @@ as String,currency: null == currency ? _self.currency : currency // ignore: cast
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,price: null == price ? _self.price : price // ignore: cast_nullable_to_non_nullable
-as num,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as int,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,visible: null == visible ? _self.visible : visible // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
