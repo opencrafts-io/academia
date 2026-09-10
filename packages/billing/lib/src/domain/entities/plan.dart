@@ -5,6 +5,8 @@ part 'plan.freezed.dart';
 @freezed
 abstract class Plan with _$Plan {
   const factory Plan({
+    /// Server identifier used when attaching this plan to an order item.
+    int? id,
     required bool active,
     required int billingIntervalDays,
     required String code,

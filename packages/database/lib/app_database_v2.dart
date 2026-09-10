@@ -7,7 +7,6 @@ import 'package:path_provider/path_provider.dart';
 
 import 'tables/tables.dart';
 import 'daos/daos.dart';
-import 'app_database_v2.steps.dart';
 
 part 'app_database_v2.g.dart';
 
@@ -16,6 +15,7 @@ part 'app_database_v2.g.dart';
   tables: [
     Plans,
     BillingOrders,
+    BillingOrderItems,
     BillingSubscriptions,
     BillingSubscriptionStatuses,
     BillingEntitlements,
@@ -30,7 +30,7 @@ class AppDatabaseV2 extends _$AppDatabaseV2 {
     : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   static QueryExecutor _openConnection() {
     driftRuntimeOptions.defaultSerializer = const ValueSerializer.defaults(
@@ -116,18 +116,19 @@ class AppDatabaseV2 extends _$AppDatabaseV2 {
 }
 
 extension Migrations on GeneratedDatabase {
-  // Extracting the `stepByStep` call into a static field or method ensures that you're not
-  // accidentally referring to the current database schema (via a getter on the database class).
-  // This ensures that each step brings the database into the correct snapshot.
-  OnUpgrade get _schemaUpgrade => stepByStep(
-    from1To2: (m, schema) async {
-      await m.createTable(schema.plans);
-    },
-    from2To3: (m, schema) async {
-      await m.createTable(schema.billingOrders);
-      await m.createTable(schema.billingSubscriptions);
-      await m.createTable(schema.billingSubscriptionStatuses);
-      await m.createTable(schema.billingEntitlements);
-    },
-  );
+  OnUpgrade get _schemaUpgrade => (m, from, to) async {
+    final db = this as AppDatabaseV2;
+    if (from < 2) {
+      await m.createTable(db.plans);
+    }
+    if (from < 3) {
+      await m.createTable(db.billingOrders);
+      await m.createTable(db.billingSubscriptions);
+      await m.createTable(db.billingSubscriptionStatuses);
+      await m.createTable(db.billingEntitlements);
+    }
+    if (from < 4) {
+      await m.createTable(db.billingOrderItems);
+    }
+  };
 }

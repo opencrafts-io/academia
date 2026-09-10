@@ -7,6 +7,7 @@ part of 'plan_dto.dart';
 // **************************************************************************
 
 _PlanDto _$PlanDtoFromJson(Map<String, dynamic> json) => _PlanDto(
+  id: (json['id'] as num?)?.toInt(),
   active: json['active'] as bool,
   billingIntervalDays: (json['billing_interval_days'] as num).toInt(),
   code: json['code'] as String,
@@ -21,6 +22,7 @@ _PlanDto _$PlanDtoFromJson(Map<String, dynamic> json) => _PlanDto(
 );
 
 Map<String, dynamic> _$PlanDtoToJson(_PlanDto instance) => <String, dynamic>{
+  'id': instance.id,
   'active': instance.active,
   'billing_interval_days': instance.billingIntervalDays,
   'code': instance.code,

@@ -15,7 +15,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Plan {
 
- bool get active; int get billingIntervalDays; String get code; DateTime get createdAt; String get createdBy; String get currency; String get description; String get name; int get price; DateTime get updatedAt; bool get visible;
+/// Server identifier used when attaching this plan to an order item.
+ int? get id; bool get active; int get billingIntervalDays; String get code; DateTime get createdAt; String get createdBy; String get currency; String get description; String get name; int get price; DateTime get updatedAt; bool get visible;
 /// Create a copy of Plan
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -27,20 +28,20 @@ $PlanCopyWith<Plan> get copyWith => _$PlanCopyWithImpl<Plan>(this as Plan, _$ide
 @override
 bool operator ==(Object other) {
   final _this = this as Plan;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Plan&&(identical(other.active, _this.active) || other.active == _this.active)&&(identical(other.billingIntervalDays, _this.billingIntervalDays) || other.billingIntervalDays == _this.billingIntervalDays)&&(identical(other.code, _this.code) || other.code == _this.code)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.createdBy, _this.createdBy) || other.createdBy == _this.createdBy)&&(identical(other.currency, _this.currency) || other.currency == _this.currency)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.price, _this.price) || other.price == _this.price)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt)&&(identical(other.visible, _this.visible) || other.visible == _this.visible));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Plan&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.active, _this.active) || other.active == _this.active)&&(identical(other.billingIntervalDays, _this.billingIntervalDays) || other.billingIntervalDays == _this.billingIntervalDays)&&(identical(other.code, _this.code) || other.code == _this.code)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.createdBy, _this.createdBy) || other.createdBy == _this.createdBy)&&(identical(other.currency, _this.currency) || other.currency == _this.currency)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.price, _this.price) || other.price == _this.price)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt)&&(identical(other.visible, _this.visible) || other.visible == _this.visible));
 }
 
 
 @override
 int get hashCode {
   final _this = this as Plan;
-  return Object.hash(runtimeType,_this.active,_this.billingIntervalDays,_this.code,_this.createdAt,_this.createdBy,_this.currency,_this.description,_this.name,_this.price,_this.updatedAt,_this.visible);
+  return Object.hash(runtimeType,_this.id,_this.active,_this.billingIntervalDays,_this.code,_this.createdAt,_this.createdBy,_this.currency,_this.description,_this.name,_this.price,_this.updatedAt,_this.visible);
 }
 
 @override
 String toString() {
   final _this = this as Plan;
-  return 'Plan(active: ${_this.active}, billingIntervalDays: ${_this.billingIntervalDays}, code: ${_this.code}, createdAt: ${_this.createdAt}, createdBy: ${_this.createdBy}, currency: ${_this.currency}, description: ${_this.description}, name: ${_this.name}, price: ${_this.price}, updatedAt: ${_this.updatedAt}, visible: ${_this.visible})';
+  return 'Plan(id: ${_this.id}, active: ${_this.active}, billingIntervalDays: ${_this.billingIntervalDays}, code: ${_this.code}, createdAt: ${_this.createdAt}, createdBy: ${_this.createdBy}, currency: ${_this.currency}, description: ${_this.description}, name: ${_this.name}, price: ${_this.price}, updatedAt: ${_this.updatedAt}, visible: ${_this.visible})';
 }
 
 
@@ -51,7 +52,7 @@ abstract mixin class $PlanCopyWith<$Res>  {
   factory $PlanCopyWith(Plan value, $Res Function(Plan) _then) = _$PlanCopyWithImpl;
 @useResult
 $Res call({
- bool active, int billingIntervalDays, String code, DateTime createdAt, String createdBy, String currency, String description, String name, int price, DateTime updatedAt, bool visible
+ int? id, bool active, int billingIntervalDays, String code, DateTime createdAt, String createdBy, String currency, String description, String name, int price, DateTime updatedAt, bool visible
 });
 
 
@@ -68,9 +69,10 @@ class _$PlanCopyWithImpl<$Res>
 
 /// Create a copy of Plan
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? active = null,Object? billingIntervalDays = null,Object? code = null,Object? createdAt = null,Object? createdBy = null,Object? currency = null,Object? description = null,Object? name = null,Object? price = null,Object? updatedAt = null,Object? visible = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? active = null,Object? billingIntervalDays = null,Object? code = null,Object? createdAt = null,Object? createdBy = null,Object? currency = null,Object? description = null,Object? name = null,Object? price = null,Object? updatedAt = null,Object? visible = null,}) {
   return _then(Plan(
-active: null == active ? _self.active : active // ignore: cast_nullable_to_non_nullable
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int?,active: null == active ? _self.active : active // ignore: cast_nullable_to_non_nullable
 as bool,billingIntervalDays: null == billingIntervalDays ? _self.billingIntervalDays : billingIntervalDays // ignore: cast_nullable_to_non_nullable
 as int,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
@@ -166,10 +168,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool active,  int billingIntervalDays,  String code,  DateTime createdAt,  String createdBy,  String currency,  String description,  String name,  int price,  DateTime updatedAt,  bool visible)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  bool active,  int billingIntervalDays,  String code,  DateTime createdAt,  String createdBy,  String currency,  String description,  String name,  int price,  DateTime updatedAt,  bool visible)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Plan() when $default != null:
-return $default(_that.active,_that.billingIntervalDays,_that.code,_that.createdAt,_that.createdBy,_that.currency,_that.description,_that.name,_that.price,_that.updatedAt,_that.visible);case _:
+return $default(_that.id,_that.active,_that.billingIntervalDays,_that.code,_that.createdAt,_that.createdBy,_that.currency,_that.description,_that.name,_that.price,_that.updatedAt,_that.visible);case _:
   return orElse();
 
 }
@@ -187,10 +189,10 @@ return $default(_that.active,_that.billingIntervalDays,_that.code,_that.createdA
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool active,  int billingIntervalDays,  String code,  DateTime createdAt,  String createdBy,  String currency,  String description,  String name,  int price,  DateTime updatedAt,  bool visible)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  bool active,  int billingIntervalDays,  String code,  DateTime createdAt,  String createdBy,  String currency,  String description,  String name,  int price,  DateTime updatedAt,  bool visible)  $default,) {final _that = this;
 switch (_that) {
 case _Plan():
-return $default(_that.active,_that.billingIntervalDays,_that.code,_that.createdAt,_that.createdBy,_that.currency,_that.description,_that.name,_that.price,_that.updatedAt,_that.visible);case _:
+return $default(_that.id,_that.active,_that.billingIntervalDays,_that.code,_that.createdAt,_that.createdBy,_that.currency,_that.description,_that.name,_that.price,_that.updatedAt,_that.visible);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -207,10 +209,10 @@ return $default(_that.active,_that.billingIntervalDays,_that.code,_that.createdA
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool active,  int billingIntervalDays,  String code,  DateTime createdAt,  String createdBy,  String currency,  String description,  String name,  int price,  DateTime updatedAt,  bool visible)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  bool active,  int billingIntervalDays,  String code,  DateTime createdAt,  String createdBy,  String currency,  String description,  String name,  int price,  DateTime updatedAt,  bool visible)?  $default,) {final _that = this;
 switch (_that) {
 case _Plan() when $default != null:
-return $default(_that.active,_that.billingIntervalDays,_that.code,_that.createdAt,_that.createdBy,_that.currency,_that.description,_that.name,_that.price,_that.updatedAt,_that.visible);case _:
+return $default(_that.id,_that.active,_that.billingIntervalDays,_that.code,_that.createdAt,_that.createdBy,_that.currency,_that.description,_that.name,_that.price,_that.updatedAt,_that.visible);case _:
   return null;
 
 }
@@ -222,9 +224,11 @@ return $default(_that.active,_that.billingIntervalDays,_that.code,_that.createdA
 
 
 class _Plan implements Plan {
-  const _Plan({required this.active, required this.billingIntervalDays, required this.code, required this.createdAt, required this.createdBy, required this.currency, required this.description, required this.name, required this.price, required this.updatedAt, required this.visible});
+  const _Plan({this.id, required this.active, required this.billingIntervalDays, required this.code, required this.createdAt, required this.createdBy, required this.currency, required this.description, required this.name, required this.price, required this.updatedAt, required this.visible});
   
 
+/// Server identifier used when attaching this plan to an order item.
+@override final  int? id;
 @override final  bool active;
 @override final  int billingIntervalDays;
 @override final  String code;
@@ -247,18 +251,18 @@ _$PlanCopyWith<_Plan> get copyWith => __$PlanCopyWithImpl<_Plan>(this, _$identit
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Plan&&(identical(other.active, active) || other.active == active)&&(identical(other.billingIntervalDays, billingIntervalDays) || other.billingIntervalDays == billingIntervalDays)&&(identical(other.code, code) || other.code == code)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.createdBy, createdBy) || other.createdBy == createdBy)&&(identical(other.currency, currency) || other.currency == currency)&&(identical(other.description, description) || other.description == description)&&(identical(other.name, name) || other.name == name)&&(identical(other.price, price) || other.price == price)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.visible, visible) || other.visible == visible));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Plan&&(identical(other.id, id) || other.id == id)&&(identical(other.active, active) || other.active == active)&&(identical(other.billingIntervalDays, billingIntervalDays) || other.billingIntervalDays == billingIntervalDays)&&(identical(other.code, code) || other.code == code)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.createdBy, createdBy) || other.createdBy == createdBy)&&(identical(other.currency, currency) || other.currency == currency)&&(identical(other.description, description) || other.description == description)&&(identical(other.name, name) || other.name == name)&&(identical(other.price, price) || other.price == price)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.visible, visible) || other.visible == visible));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,active,billingIntervalDays,code,createdAt,createdBy,currency,description,name,price,updatedAt,visible);
+    return Object.hash(runtimeType,id,active,billingIntervalDays,code,createdAt,createdBy,currency,description,name,price,updatedAt,visible);
 }
 
 @override
 String toString() {
-    return 'Plan(active: $active, billingIntervalDays: $billingIntervalDays, code: $code, createdAt: $createdAt, createdBy: $createdBy, currency: $currency, description: $description, name: $name, price: $price, updatedAt: $updatedAt, visible: $visible)';
+    return 'Plan(id: $id, active: $active, billingIntervalDays: $billingIntervalDays, code: $code, createdAt: $createdAt, createdBy: $createdBy, currency: $currency, description: $description, name: $name, price: $price, updatedAt: $updatedAt, visible: $visible)';
 }
 
 
@@ -269,7 +273,7 @@ abstract mixin class _$PlanCopyWith<$Res> implements $PlanCopyWith<$Res> {
   factory _$PlanCopyWith(_Plan value, $Res Function(_Plan) _then) = __$PlanCopyWithImpl;
 @override @useResult
 $Res call({
- bool active, int billingIntervalDays, String code, DateTime createdAt, String createdBy, String currency, String description, String name, int price, DateTime updatedAt, bool visible
+ int? id, bool active, int billingIntervalDays, String code, DateTime createdAt, String createdBy, String currency, String description, String name, int price, DateTime updatedAt, bool visible
 });
 
 
@@ -286,9 +290,10 @@ class __$PlanCopyWithImpl<$Res>
 
 /// Create a copy of Plan
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? active = null,Object? billingIntervalDays = null,Object? code = null,Object? createdAt = null,Object? createdBy = null,Object? currency = null,Object? description = null,Object? name = null,Object? price = null,Object? updatedAt = null,Object? visible = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? active = null,Object? billingIntervalDays = null,Object? code = null,Object? createdAt = null,Object? createdBy = null,Object? currency = null,Object? description = null,Object? name = null,Object? price = null,Object? updatedAt = null,Object? visible = null,}) {
   return _then(_Plan(
-active: null == active ? _self.active : active // ignore: cast_nullable_to_non_nullable
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int?,active: null == active ? _self.active : active // ignore: cast_nullable_to_non_nullable
 as bool,billingIntervalDays: null == billingIntervalDays ? _self.billingIntervalDays : billingIntervalDays // ignore: cast_nullable_to_non_nullable
 as int,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable

@@ -6,6 +6,7 @@ part 'plan_dto.g.dart';
 @freezed
 abstract class PlanDto with _$PlanDto {
   const factory PlanDto({
+    int? id,
     required bool active,
     @JsonKey(name: "billing_interval_days") required int billingIntervalDays,
     required String code,

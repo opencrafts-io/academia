@@ -8,7 +8,7 @@ import 'package:injectable/injectable.dart';
 part 'order_dao.g.dart';
 
 @injectable
-@DriftAccessor(tables: [BillingOrders])
+@DriftAccessor(tables: [BillingOrders, BillingOrderItems])
 class OrderDao extends DatabaseAccessor<AppDatabaseV2> with _$OrderDaoMixin {
   OrderDao(super.db);
 
@@ -32,12 +32,24 @@ class OrderDao extends DatabaseAccessor<AppDatabaseV2> with _$OrderDaoMixin {
   }
 
   Future<BillingOrder?> getOrderById(String id) {
-    return (select(billingOrders)..where((order) => order.id.equals(id)))
-        .getSingleOrNull();
+    return (select(
+      billingOrders,
+    )..where((order) => order.id.equals(id))).getSingleOrNull();
   }
 
   Future<void> upsertOrder(BillingOrdersCompanion order) async {
     await into(billingOrders).insertOnConflictUpdate(order);
+  }
+
+  Future<List<BillingOrderItem>> getOrderItems(String orderId) {
+    return (select(billingOrderItems)
+          ..where((item) => item.orderId.equals(orderId))
+          ..orderBy([(item) => OrderingTerm.asc(item.createdAt)]))
+        .get();
+  }
+
+  Future<void> upsertOrderItem(BillingOrderItemsCompanion item) async {
+    await into(billingOrderItems).insertOnConflictUpdate(item);
   }
 
   static List<int> decodeMetadata(String value) {

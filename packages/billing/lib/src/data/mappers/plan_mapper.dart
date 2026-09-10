@@ -8,6 +8,7 @@ extension PlanDtoMapper on PlanDto {
   /// Converts this DTO into the domain entity.
   domain.Plan toDomain() {
     return domain.Plan(
+      id: id,
       active: active,
       billingIntervalDays: billingIntervalDays,
       code: code,
@@ -27,9 +28,12 @@ extension PlanDtoMapper on PlanDto {
   /// Pass [id] when updating an existing row (typically looked up by
   /// [code]); leave it `null` when inserting a new row with an
   /// autoincrementing primary key.
-  database.PlansCompanion toCompanion({int? id}) {
+  database.PlansCompanion toCompanion({int? existingId}) {
+    final resolvedId = existingId ?? id;
     return database.PlansCompanion(
-      id: id == null ? const database.Value.absent() : database.Value(id),
+      id: resolvedId == null
+          ? const database.Value.absent()
+          : database.Value(resolvedId),
       active: database.Value(active),
       billingIntervalDays: database.Value(billingIntervalDays),
       code: database.Value(code),
@@ -52,6 +56,7 @@ extension PlanMapper on domain.Plan {
   /// create/update request body).
   PlanDto toDto() {
     return PlanDto(
+      id: id,
       active: active,
       billingIntervalDays: billingIntervalDays,
       code: code,
@@ -69,9 +74,12 @@ extension PlanMapper on domain.Plan {
   /// Converts this domain entity into a companion for writing to the
   /// local database. Pass [id] when updating an existing row; leave it
   /// `null` when inserting a new row with an autoincrementing primary key.
-  database.PlansCompanion toCompanion({int? id}) {
+  database.PlansCompanion toCompanion({int? existingId}) {
+    final resolvedId = existingId ?? id;
     return database.PlansCompanion(
-      id: id == null ? const database.Value.absent() : database.Value(id),
+      id: resolvedId == null
+          ? const database.Value.absent()
+          : database.Value(resolvedId),
       active: database.Value(active),
       billingIntervalDays: database.Value(billingIntervalDays),
       code: database.Value(code),
@@ -91,6 +99,7 @@ extension PlanMapper on domain.Plan {
 extension PlanEntityMapper on database.Plan {
   domain.Plan toDomain() {
     return domain.Plan(
+      id: id,
       active: active,
       billingIntervalDays: billingIntervalDays,
       code: code,

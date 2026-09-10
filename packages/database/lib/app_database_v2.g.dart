@@ -1498,6 +1498,611 @@ class BillingOrdersCompanion extends UpdateCompanion<BillingOrder> {
   }
 }
 
+class $BillingOrderItemsTable extends BillingOrderItems
+    with TableInfo<$BillingOrderItemsTable, BillingOrderItem> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $BillingOrderItemsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _orderIdMeta = const VerificationMeta(
+    'orderId',
+  );
+  @override
+  late final GeneratedColumn<String> orderId = GeneratedColumn<String>(
+    'order_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _planIdMeta = const VerificationMeta('planId');
+  @override
+  late final GeneratedColumn<int> planId = GeneratedColumn<int>(
+    'plan_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _quantityMeta = const VerificationMeta(
+    'quantity',
+  );
+  @override
+  late final GeneratedColumn<int> quantity = GeneratedColumn<int>(
+    'quantity',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _unitPriceMeta = const VerificationMeta(
+    'unitPrice',
+  );
+  @override
+  late final GeneratedColumn<int> unitPrice = GeneratedColumn<int>(
+    'unit_price',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _discountMeta = const VerificationMeta(
+    'discount',
+  );
+  @override
+  late final GeneratedColumn<int> discount = GeneratedColumn<int>(
+    'discount',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _taxMeta = const VerificationMeta('tax');
+  @override
+  late final GeneratedColumn<int> tax = GeneratedColumn<int>(
+    'tax',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _addedByMeta = const VerificationMeta(
+    'addedBy',
+  );
+  @override
+  late final GeneratedColumn<String> addedBy = GeneratedColumn<String>(
+    'added_by',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    orderId,
+    planId,
+    quantity,
+    unitPrice,
+    discount,
+    tax,
+    addedBy,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'billing_order_items';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<BillingOrderItem> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('order_id')) {
+      context.handle(
+        _orderIdMeta,
+        orderId.isAcceptableOrUnknown(data['order_id']!, _orderIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_orderIdMeta);
+    }
+    if (data.containsKey('plan_id')) {
+      context.handle(
+        _planIdMeta,
+        planId.isAcceptableOrUnknown(data['plan_id']!, _planIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_planIdMeta);
+    }
+    if (data.containsKey('quantity')) {
+      context.handle(
+        _quantityMeta,
+        quantity.isAcceptableOrUnknown(data['quantity']!, _quantityMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_quantityMeta);
+    }
+    if (data.containsKey('unit_price')) {
+      context.handle(
+        _unitPriceMeta,
+        unitPrice.isAcceptableOrUnknown(data['unit_price']!, _unitPriceMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_unitPriceMeta);
+    }
+    if (data.containsKey('discount')) {
+      context.handle(
+        _discountMeta,
+        discount.isAcceptableOrUnknown(data['discount']!, _discountMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_discountMeta);
+    }
+    if (data.containsKey('tax')) {
+      context.handle(
+        _taxMeta,
+        tax.isAcceptableOrUnknown(data['tax']!, _taxMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_taxMeta);
+    }
+    if (data.containsKey('added_by')) {
+      context.handle(
+        _addedByMeta,
+        addedBy.isAcceptableOrUnknown(data['added_by']!, _addedByMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_addedByMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  BillingOrderItem map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return BillingOrderItem(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      orderId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}order_id'],
+      )!,
+      planId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}plan_id'],
+      )!,
+      quantity: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}quantity'],
+      )!,
+      unitPrice: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}unit_price'],
+      )!,
+      discount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}discount'],
+      )!,
+      tax: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}tax'],
+      )!,
+      addedBy: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}added_by'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $BillingOrderItemsTable createAlias(String alias) {
+    return $BillingOrderItemsTable(attachedDatabase, alias);
+  }
+}
+
+class BillingOrderItem extends DataClass
+    implements Insertable<BillingOrderItem> {
+  final String id;
+  final String orderId;
+  final int planId;
+  final int quantity;
+  final int unitPrice;
+  final int discount;
+  final int tax;
+  final String addedBy;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const BillingOrderItem({
+    required this.id,
+    required this.orderId,
+    required this.planId,
+    required this.quantity,
+    required this.unitPrice,
+    required this.discount,
+    required this.tax,
+    required this.addedBy,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['order_id'] = Variable<String>(orderId);
+    map['plan_id'] = Variable<int>(planId);
+    map['quantity'] = Variable<int>(quantity);
+    map['unit_price'] = Variable<int>(unitPrice);
+    map['discount'] = Variable<int>(discount);
+    map['tax'] = Variable<int>(tax);
+    map['added_by'] = Variable<String>(addedBy);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  BillingOrderItemsCompanion toCompanion(bool nullToAbsent) {
+    return BillingOrderItemsCompanion(
+      id: Value(id),
+      orderId: Value(orderId),
+      planId: Value(planId),
+      quantity: Value(quantity),
+      unitPrice: Value(unitPrice),
+      discount: Value(discount),
+      tax: Value(tax),
+      addedBy: Value(addedBy),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory BillingOrderItem.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return BillingOrderItem(
+      id: serializer.fromJson<String>(json['id']),
+      orderId: serializer.fromJson<String>(json['orderId']),
+      planId: serializer.fromJson<int>(json['planId']),
+      quantity: serializer.fromJson<int>(json['quantity']),
+      unitPrice: serializer.fromJson<int>(json['unitPrice']),
+      discount: serializer.fromJson<int>(json['discount']),
+      tax: serializer.fromJson<int>(json['tax']),
+      addedBy: serializer.fromJson<String>(json['addedBy']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'orderId': serializer.toJson<String>(orderId),
+      'planId': serializer.toJson<int>(planId),
+      'quantity': serializer.toJson<int>(quantity),
+      'unitPrice': serializer.toJson<int>(unitPrice),
+      'discount': serializer.toJson<int>(discount),
+      'tax': serializer.toJson<int>(tax),
+      'addedBy': serializer.toJson<String>(addedBy),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  BillingOrderItem copyWith({
+    String? id,
+    String? orderId,
+    int? planId,
+    int? quantity,
+    int? unitPrice,
+    int? discount,
+    int? tax,
+    String? addedBy,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => BillingOrderItem(
+    id: id ?? this.id,
+    orderId: orderId ?? this.orderId,
+    planId: planId ?? this.planId,
+    quantity: quantity ?? this.quantity,
+    unitPrice: unitPrice ?? this.unitPrice,
+    discount: discount ?? this.discount,
+    tax: tax ?? this.tax,
+    addedBy: addedBy ?? this.addedBy,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  BillingOrderItem copyWithCompanion(BillingOrderItemsCompanion data) {
+    return BillingOrderItem(
+      id: data.id.present ? data.id.value : this.id,
+      orderId: data.orderId.present ? data.orderId.value : this.orderId,
+      planId: data.planId.present ? data.planId.value : this.planId,
+      quantity: data.quantity.present ? data.quantity.value : this.quantity,
+      unitPrice: data.unitPrice.present ? data.unitPrice.value : this.unitPrice,
+      discount: data.discount.present ? data.discount.value : this.discount,
+      tax: data.tax.present ? data.tax.value : this.tax,
+      addedBy: data.addedBy.present ? data.addedBy.value : this.addedBy,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BillingOrderItem(')
+          ..write('id: $id, ')
+          ..write('orderId: $orderId, ')
+          ..write('planId: $planId, ')
+          ..write('quantity: $quantity, ')
+          ..write('unitPrice: $unitPrice, ')
+          ..write('discount: $discount, ')
+          ..write('tax: $tax, ')
+          ..write('addedBy: $addedBy, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    orderId,
+    planId,
+    quantity,
+    unitPrice,
+    discount,
+    tax,
+    addedBy,
+    createdAt,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is BillingOrderItem &&
+          other.id == this.id &&
+          other.orderId == this.orderId &&
+          other.planId == this.planId &&
+          other.quantity == this.quantity &&
+          other.unitPrice == this.unitPrice &&
+          other.discount == this.discount &&
+          other.tax == this.tax &&
+          other.addedBy == this.addedBy &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class BillingOrderItemsCompanion extends UpdateCompanion<BillingOrderItem> {
+  final Value<String> id;
+  final Value<String> orderId;
+  final Value<int> planId;
+  final Value<int> quantity;
+  final Value<int> unitPrice;
+  final Value<int> discount;
+  final Value<int> tax;
+  final Value<String> addedBy;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const BillingOrderItemsCompanion({
+    this.id = const Value.absent(),
+    this.orderId = const Value.absent(),
+    this.planId = const Value.absent(),
+    this.quantity = const Value.absent(),
+    this.unitPrice = const Value.absent(),
+    this.discount = const Value.absent(),
+    this.tax = const Value.absent(),
+    this.addedBy = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  BillingOrderItemsCompanion.insert({
+    required String id,
+    required String orderId,
+    required int planId,
+    required int quantity,
+    required int unitPrice,
+    required int discount,
+    required int tax,
+    required String addedBy,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       orderId = Value(orderId),
+       planId = Value(planId),
+       quantity = Value(quantity),
+       unitPrice = Value(unitPrice),
+       discount = Value(discount),
+       tax = Value(tax),
+       addedBy = Value(addedBy),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<BillingOrderItem> custom({
+    Expression<String>? id,
+    Expression<String>? orderId,
+    Expression<int>? planId,
+    Expression<int>? quantity,
+    Expression<int>? unitPrice,
+    Expression<int>? discount,
+    Expression<int>? tax,
+    Expression<String>? addedBy,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (orderId != null) 'order_id': orderId,
+      if (planId != null) 'plan_id': planId,
+      if (quantity != null) 'quantity': quantity,
+      if (unitPrice != null) 'unit_price': unitPrice,
+      if (discount != null) 'discount': discount,
+      if (tax != null) 'tax': tax,
+      if (addedBy != null) 'added_by': addedBy,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  BillingOrderItemsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? orderId,
+    Value<int>? planId,
+    Value<int>? quantity,
+    Value<int>? unitPrice,
+    Value<int>? discount,
+    Value<int>? tax,
+    Value<String>? addedBy,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return BillingOrderItemsCompanion(
+      id: id ?? this.id,
+      orderId: orderId ?? this.orderId,
+      planId: planId ?? this.planId,
+      quantity: quantity ?? this.quantity,
+      unitPrice: unitPrice ?? this.unitPrice,
+      discount: discount ?? this.discount,
+      tax: tax ?? this.tax,
+      addedBy: addedBy ?? this.addedBy,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (orderId.present) {
+      map['order_id'] = Variable<String>(orderId.value);
+    }
+    if (planId.present) {
+      map['plan_id'] = Variable<int>(planId.value);
+    }
+    if (quantity.present) {
+      map['quantity'] = Variable<int>(quantity.value);
+    }
+    if (unitPrice.present) {
+      map['unit_price'] = Variable<int>(unitPrice.value);
+    }
+    if (discount.present) {
+      map['discount'] = Variable<int>(discount.value);
+    }
+    if (tax.present) {
+      map['tax'] = Variable<int>(tax.value);
+    }
+    if (addedBy.present) {
+      map['added_by'] = Variable<String>(addedBy.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BillingOrderItemsCompanion(')
+          ..write('id: $id, ')
+          ..write('orderId: $orderId, ')
+          ..write('planId: $planId, ')
+          ..write('quantity: $quantity, ')
+          ..write('unitPrice: $unitPrice, ')
+          ..write('discount: $discount, ')
+          ..write('tax: $tax, ')
+          ..write('addedBy: $addedBy, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $BillingSubscriptionsTable extends BillingSubscriptions
     with TableInfo<$BillingSubscriptionsTable, BillingSubscription> {
   @override
@@ -2911,6 +3516,8 @@ abstract class _$AppDatabaseV2 extends GeneratedDatabase {
   $AppDatabaseV2Manager get managers => $AppDatabaseV2Manager(this);
   late final $PlansTable plans = $PlansTable(this);
   late final $BillingOrdersTable billingOrders = $BillingOrdersTable(this);
+  late final $BillingOrderItemsTable billingOrderItems =
+      $BillingOrderItemsTable(this);
   late final $BillingSubscriptionsTable billingSubscriptions =
       $BillingSubscriptionsTable(this);
   late final $BillingSubscriptionStatusesTable billingSubscriptionStatuses =
@@ -2932,6 +3539,7 @@ abstract class _$AppDatabaseV2 extends GeneratedDatabase {
   List<DatabaseSchemaEntity> get allSchemaEntities => [
     plans,
     billingOrders,
+    billingOrderItems,
     billingSubscriptions,
     billingSubscriptionStatuses,
     billingEntitlements,
@@ -3652,6 +4260,323 @@ typedef $$BillingOrdersTableProcessedTableManager =
         BaseReferences<_$AppDatabaseV2, $BillingOrdersTable, BillingOrder>,
       ),
       BillingOrder,
+      PrefetchHooks Function()
+    >;
+typedef $$BillingOrderItemsTableCreateCompanionBuilder =
+    BillingOrderItemsCompanion Function({
+      required String id,
+      required String orderId,
+      required int planId,
+      required int quantity,
+      required int unitPrice,
+      required int discount,
+      required int tax,
+      required String addedBy,
+      required DateTime createdAt,
+      required DateTime updatedAt,
+      Value<int> rowid,
+    });
+typedef $$BillingOrderItemsTableUpdateCompanionBuilder =
+    BillingOrderItemsCompanion Function({
+      Value<String> id,
+      Value<String> orderId,
+      Value<int> planId,
+      Value<int> quantity,
+      Value<int> unitPrice,
+      Value<int> discount,
+      Value<int> tax,
+      Value<String> addedBy,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+
+class $$BillingOrderItemsTableFilterComposer
+    extends Composer<_$AppDatabaseV2, $BillingOrderItemsTable> {
+  $$BillingOrderItemsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get orderId => $composableBuilder(
+    column: $table.orderId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get planId => $composableBuilder(
+    column: $table.planId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get quantity => $composableBuilder(
+    column: $table.quantity,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get unitPrice => $composableBuilder(
+    column: $table.unitPrice,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get discount => $composableBuilder(
+    column: $table.discount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get tax => $composableBuilder(
+    column: $table.tax,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get addedBy => $composableBuilder(
+    column: $table.addedBy,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$BillingOrderItemsTableOrderingComposer
+    extends Composer<_$AppDatabaseV2, $BillingOrderItemsTable> {
+  $$BillingOrderItemsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get orderId => $composableBuilder(
+    column: $table.orderId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get planId => $composableBuilder(
+    column: $table.planId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get quantity => $composableBuilder(
+    column: $table.quantity,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get unitPrice => $composableBuilder(
+    column: $table.unitPrice,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get discount => $composableBuilder(
+    column: $table.discount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get tax => $composableBuilder(
+    column: $table.tax,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get addedBy => $composableBuilder(
+    column: $table.addedBy,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$BillingOrderItemsTableAnnotationComposer
+    extends Composer<_$AppDatabaseV2, $BillingOrderItemsTable> {
+  $$BillingOrderItemsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get orderId =>
+      $composableBuilder(column: $table.orderId, builder: (column) => column);
+
+  GeneratedColumn<int> get planId =>
+      $composableBuilder(column: $table.planId, builder: (column) => column);
+
+  GeneratedColumn<int> get quantity =>
+      $composableBuilder(column: $table.quantity, builder: (column) => column);
+
+  GeneratedColumn<int> get unitPrice =>
+      $composableBuilder(column: $table.unitPrice, builder: (column) => column);
+
+  GeneratedColumn<int> get discount =>
+      $composableBuilder(column: $table.discount, builder: (column) => column);
+
+  GeneratedColumn<int> get tax =>
+      $composableBuilder(column: $table.tax, builder: (column) => column);
+
+  GeneratedColumn<String> get addedBy =>
+      $composableBuilder(column: $table.addedBy, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$BillingOrderItemsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabaseV2,
+          $BillingOrderItemsTable,
+          BillingOrderItem,
+          $$BillingOrderItemsTableFilterComposer,
+          $$BillingOrderItemsTableOrderingComposer,
+          $$BillingOrderItemsTableAnnotationComposer,
+          $$BillingOrderItemsTableCreateCompanionBuilder,
+          $$BillingOrderItemsTableUpdateCompanionBuilder,
+          (
+            BillingOrderItem,
+            BaseReferences<
+              _$AppDatabaseV2,
+              $BillingOrderItemsTable,
+              BillingOrderItem
+            >,
+          ),
+          BillingOrderItem,
+          PrefetchHooks Function()
+        > {
+  $$BillingOrderItemsTableTableManager(
+    _$AppDatabaseV2 db,
+    $BillingOrderItemsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$BillingOrderItemsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$BillingOrderItemsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$BillingOrderItemsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> orderId = const Value.absent(),
+                Value<int> planId = const Value.absent(),
+                Value<int> quantity = const Value.absent(),
+                Value<int> unitPrice = const Value.absent(),
+                Value<int> discount = const Value.absent(),
+                Value<int> tax = const Value.absent(),
+                Value<String> addedBy = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => BillingOrderItemsCompanion(
+                id: id,
+                orderId: orderId,
+                planId: planId,
+                quantity: quantity,
+                unitPrice: unitPrice,
+                discount: discount,
+                tax: tax,
+                addedBy: addedBy,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String orderId,
+                required int planId,
+                required int quantity,
+                required int unitPrice,
+                required int discount,
+                required int tax,
+                required String addedBy,
+                required DateTime createdAt,
+                required DateTime updatedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => BillingOrderItemsCompanion.insert(
+                id: id,
+                orderId: orderId,
+                planId: planId,
+                quantity: quantity,
+                unitPrice: unitPrice,
+                discount: discount,
+                tax: tax,
+                addedBy: addedBy,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$BillingOrderItemsTable, BillingOrderItem>(table),
+                  BaseReferences<
+                    _$AppDatabaseV2,
+                    $BillingOrderItemsTable,
+                    BillingOrderItem
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$BillingOrderItemsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabaseV2,
+      $BillingOrderItemsTable,
+      BillingOrderItem,
+      $$BillingOrderItemsTableFilterComposer,
+      $$BillingOrderItemsTableOrderingComposer,
+      $$BillingOrderItemsTableAnnotationComposer,
+      $$BillingOrderItemsTableCreateCompanionBuilder,
+      $$BillingOrderItemsTableUpdateCompanionBuilder,
+      (
+        BillingOrderItem,
+        BaseReferences<
+          _$AppDatabaseV2,
+          $BillingOrderItemsTable,
+          BillingOrderItem
+        >,
+      ),
+      BillingOrderItem,
       PrefetchHooks Function()
     >;
 typedef $$BillingSubscriptionsTableCreateCompanionBuilder =
@@ -4461,6 +5386,8 @@ class $AppDatabaseV2Manager {
       $$PlansTableTableManager(_db, _db.plans);
   $$BillingOrdersTableTableManager get billingOrders =>
       $$BillingOrdersTableTableManager(_db, _db.billingOrders);
+  $$BillingOrderItemsTableTableManager get billingOrderItems =>
+      $$BillingOrderItemsTableTableManager(_db, _db.billingOrderItems);
   $$BillingSubscriptionsTableTableManager get billingSubscriptions =>
       $$BillingSubscriptionsTableTableManager(_db, _db.billingSubscriptions);
   $$BillingSubscriptionStatusesTableTableManager

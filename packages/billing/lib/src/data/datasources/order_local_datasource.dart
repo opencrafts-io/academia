@@ -11,6 +11,25 @@ class OrderLocalDatasource {
 
   final OrderDao _orderDao;
 
+  Future<Either<Failure, List<domain.OrderItem>>> getOrderItems(
+    String orderId,
+  ) async {
+    try {
+      final rows = await _orderDao.getOrderItems(orderId);
+      return Right(rows.map((row) => row.toDomain()).toList());
+    } catch (e, stackTrace) {
+      return Left(
+        Failure.cache(
+          message: 'Failed to retrieve cached order items',
+          error: e,
+          stackTrace: stackTrace,
+          code: 'ORDER_ITEMS_FETCH_CACHE_ERROR',
+          metadata: {'order_id': orderId},
+        ),
+      );
+    }
+  }
+
   Future<Either<Failure, List<domain.Order>>> getOrders({
     String? status,
     int? page,
@@ -73,6 +92,23 @@ class OrderLocalDatasource {
           stackTrace: stackTrace,
           code: 'ORDER_CACHE_ERROR',
           metadata: {'order_id': order.id},
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, Unit>> cacheOrderItem(domain.OrderItem item) async {
+    try {
+      await _orderDao.upsertOrderItem(item.toCompanion());
+      return const Right(unit);
+    } catch (e, stackTrace) {
+      return Left(
+        Failure.cache(
+          message: 'Failed to cache order item ${item.id}',
+          error: e,
+          stackTrace: stackTrace,
+          code: 'ORDER_ITEM_CACHE_ERROR',
+          metadata: {'order_id': item.orderId, 'item_id': item.id},
         ),
       );
     }

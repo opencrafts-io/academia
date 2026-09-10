@@ -8,6 +8,10 @@ abstract class PlanRepository {
 }
 
 abstract class OrderRepository {
+  Future<Either<Failure, domain.Order>> createOrder(
+    domain.CreateOrderRequest request,
+  );
+
   Future<Either<Failure, List<domain.Order>>> getOrders({
     String? status,
     int? page,
@@ -15,6 +19,12 @@ abstract class OrderRepository {
   });
 
   Future<Either<Failure, domain.Order>> getOrderById(String id);
+
+  Future<Either<Failure, List<domain.OrderItem>>> getOrderItems(String orderId);
+
+  Future<Either<Failure, domain.OrderItem>> createOrderItem(
+    domain.CreateOrderItemRequest request,
+  );
 }
 
 abstract class SubscriptionRepository {
