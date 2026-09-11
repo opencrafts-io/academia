@@ -1,11 +1,10 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/constants/responsive_break_points.dart';
 import 'package:academia/core/core.dart';
-import 'package:academia/features/admob/admob.dart';
+import 'package:ads/ads.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:academia/injection_container.dart';
@@ -238,6 +237,33 @@ class _EssentialsPageState extends State<EssentialsPage> {
                     subtitleTextStyle: Theme.of(context).textTheme.bodySmall,
                   ),
                 ),
+                const SizedBox(height: 12),
+                Card.filled(
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                  clipBehavior: Clip.hardEdge,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 4,
+                    ),
+                    leading: Icon(
+                      Icons.lock_clock_rounded,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    ),
+                    title: const Text('Lock In'),
+                    subtitle: const Text(
+                      'Block distracting apps during focus time',
+                    ),
+                    trailing: Icon(
+                      Icons.chevron_right_rounded,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    ),
+                    onTap: () => LockInRoute().push(context),
+                  ),
+                ),
                 SizedBox(height: 22),
                 Text(
                   "Explore tools",
@@ -248,7 +274,7 @@ class _EssentialsPageState extends State<EssentialsPage> {
                 SizedBox(height: 12),
                 _buildToolsGrid(context),
                 SizedBox(height: 22),
-                BannerAdWidget(size: AdSize.banner),
+                BannerAdWidget(),
               ],
             ),
           ),

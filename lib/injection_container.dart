@@ -1,4 +1,5 @@
 import 'package:academia/config/flavor.dart';
+import 'package:academia/core/core.dart';
 import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
 import 'package:academia/features/auth/data/data.dart';
@@ -8,9 +9,13 @@ import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/semester/semester.dart';
 import 'package:academia/features/todos/data/repository/todo_item_repository_impl.dart';
 import 'package:academia/features/todos/data/repository/todo_tag_repository_impl.dart';
+import 'package:ads/ads.dart';
+import 'package:database/daos/lock_in_dao.dart';
+import 'package:dio/dio.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
+import 'package:lock_in/lock_in.dart';
 
 final sl = GetIt.instance;
 
@@ -28,17 +33,9 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
 
   final cacheDB = sl.registerSingleton<AppDataBase>(AppDataBase());
 
-  if (!isBackground) {
-    final AdService adService = AdService();
-    await adService.initialize();
-    adService.loadInterstitialAd();
-
-    sl.registerLazySingleton<AdService>(() => adService);
-  }
-
   sl.registerLazySingleton<AuthLocalDatasource>(() => AuthLocalDatasource());
 
-  sl.registerSingleton<DioClient>(
+  final dioClient = sl.registerSingleton<DioClient>(
     DioClient(
       flavor,
       authLocalDatasource: sl.get<AuthLocalDatasource>(),
@@ -46,7 +43,22 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     ),
   );
 
+  sl.registerSingleton<Dio>(dioClient.dio);
+
+  configureDependencies(sl);
+
+  sl.registerLazySingleton<LockInService>(
+    () => LockInService(LockInRepository(sl<LockInDao>()), AppBlockerGateway()),
+  );
+  if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+    await sl<LockInService>().start();
+  }
+
   if (!isBackground) {
+    final adService = sl<AdService>();
+    await adService.initialize();
+    await adService.loadInterstitialAd();
+
     sl.registerLazySingleton<InAppUpdateBloc>(() => InAppUpdateBloc());
   }
 
