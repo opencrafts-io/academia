@@ -17,6 +17,20 @@ class LockInService {
 
   Stream<List<LockRule>> watchRules() => _repository.watchRules();
 
+  /// Finds the active saved rule window for an app opened at [at].
+  Future<LockRuleWindow?> activeWindowFor(
+    String appIdentifier, {
+    DateTime? at,
+  }) async {
+    final localTime = at ?? DateTime.now();
+    for (final rule in await rules()) {
+      if (!rule.apps.any((app) => app.identifier == appIdentifier)) continue;
+      final window = rule.activeWindowAt(localTime);
+      if (window != null) return window;
+    }
+    return null;
+  }
+
   Future<List<BlockedApp>> installedApps() async {
     final apps = await _gateway.getInstalledApps();
     _appNames.addEntries(

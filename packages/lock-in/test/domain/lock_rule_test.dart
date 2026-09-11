@@ -23,6 +23,25 @@ void main() {
       expect(rule.isActiveAt(DateTime(2026, 9, 8, 7)), isFalse);
     });
 
+    test('describes the active window and its next-day end time', () {
+      const rule = LockRule(
+        id: 'wind-down',
+        name: 'Wind down',
+        apps: [instagram],
+        weekdays: {DateTime.monday},
+        startMinutes: 22 * 60,
+        endMinutes: 7 * 60,
+      );
+      final window = rule.activeWindowAt(DateTime(2026, 9, 8, 1, 30));
+
+      expect(window?.startsAt, DateTime(2026, 9, 7, 22));
+      expect(window?.endsAt, DateTime(2026, 9, 8, 7));
+      expect(
+        window?.progressAt(DateTime(2026, 9, 8, 1, 30)),
+        closeTo(.39, .01),
+      );
+    });
+
     test('reports conflicting enabled rules that share an app', () {
       const morning = LockRule(
         id: 'work',

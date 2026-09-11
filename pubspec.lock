@@ -43,10 +43,9 @@ packages:
   app_blocker:
     dependency: transitive
     description:
-      name: app_blocker
-      sha256: "9d352f497f1722564e4a2ee9b20b5c319a8af3309e03cba533f358d441afbc36"
-      url: "https://pub.dev"
-    source: hosted
+      path: "packages/app-blocker"
+      relative: true
+    source: path
     version: "2.2.0"
   app_tracking_transparency:
     dependency: "direct main"

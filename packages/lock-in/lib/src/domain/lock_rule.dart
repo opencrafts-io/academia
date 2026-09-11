@@ -82,6 +82,41 @@ class LockRule {
     return weekdays.contains(priorWeekday);
   }
 
+  /// Returns the concrete local-time window containing [localTime].
+  ///
+  /// This gives presentation code an exact end time without duplicating the
+  /// weekly and overnight scheduling rules used by the platform blocker.
+  LockRuleWindow? activeWindowAt(DateTime localTime) {
+    if (!isActiveAt(localTime)) return null;
+
+    final currentMinutes = localTime.hour * 60 + localTime.minute;
+    final startsOnPreviousDay = isOvernight && currentMinutes < endMinutes;
+    final startDate = startsOnPreviousDay
+        ? localTime.subtract(const Duration(days: 1))
+        : localTime;
+    final startsAt = DateTime(
+      startDate.year,
+      startDate.month,
+      startDate.day,
+      startMinutes ~/ 60,
+      startMinutes % 60,
+    );
+    final endDate = isOvernight
+        ? startsAt.add(const Duration(days: 1))
+        : startsAt;
+    return LockRuleWindow(
+      rule: this,
+      startsAt: startsAt,
+      endsAt: DateTime(
+        endDate.year,
+        endDate.month,
+        endDate.day,
+        endMinutes ~/ 60,
+        endMinutes % 60,
+      ),
+    );
+  }
+
   bool conflictsWith(LockRule other) {
     if (!enabled || !other.enabled) return false;
     if (!apps.any(other.apps.contains)) return false;
@@ -136,6 +171,39 @@ class LockRule {
     endMinutes,
     enabled,
   );
+}
+
+/// A concrete occurrence of a recurring [LockRule] in local time.
+class LockRuleWindow {
+  const LockRuleWindow({
+    required this.rule,
+    required this.startsAt,
+    required this.endsAt,
+  });
+
+  final LockRule rule;
+  final DateTime startsAt;
+  final DateTime endsAt;
+
+  Duration remainingAt(DateTime time) {
+    final remaining = endsAt.difference(time);
+    return remaining.isNegative ? Duration.zero : remaining;
+  }
+
+  /// The fraction of the window elapsed at [time], clamped to 0–1.
+  double progressAt(DateTime time) {
+    final totalMicroseconds = endsAt.difference(startsAt).inMicroseconds;
+    if (totalMicroseconds <= 0) return 1;
+    final elapsedMicroseconds = time.difference(startsAt).inMicroseconds;
+    return (elapsedMicroseconds / totalMicroseconds).clamp(0, 1).toDouble();
+  }
+
+  BlockedApp? appWithIdentifier(String identifier) {
+    for (final app in rule.apps) {
+      if (app.identifier == identifier) return app;
+    }
+    return null;
+  }
 }
 
 class _WeeklyInterval {

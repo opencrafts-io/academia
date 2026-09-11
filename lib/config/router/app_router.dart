@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:posthog_flutter/posthog_flutter.dart';
 import 'guards/guards.dart';
 import 'package:billing/billing.dart' as billing;
+import 'package:lock_in/lock_in.dart';
 
 class AppRouter {
   static final GlobalKey<NavigatorState> globalNavigatorKey =
@@ -20,7 +21,19 @@ class AppRouter {
   ];
 
   static final router = GoRouter(
-    routes: [...$appRoutes, ...billing.routes],
+    routes: [
+      ...$appRoutes,
+      GoRoute(
+        path: '/lock-in/blocked',
+        builder: (context, state) => LockInBlockedPage(
+          appIdentifier: state.uri.queryParameters['packageName'],
+          loadBlockWindow: (appIdentifier, now) => sl<LockInService>()
+              .activeWindowFor(appIdentifier, at: now),
+          onReturnHome: () => context.go(HomeRoute().location),
+        ),
+      ),
+      ...billing.routes,
+    ],
     initialLocation: SplashScreenRoute().location,
     observers: [
       if (sl<FlavorConfig>().isProduction) PosthogObserver(),
@@ -29,6 +42,7 @@ class AppRouter {
     ],
     navigatorKey: globalNavigatorKey,
     redirect: (context, state) {
+      if (state.uri.path == '/lock-in/blocked') return null;
       for (final guard in _guards) {
         final String? redirectPath = guard.check(context, state);
 
