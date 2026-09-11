@@ -109,6 +109,7 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
             localId: localModel?.localId ?? 0,
             taskListLocalId: resolvedListLocalId,
             isDirty: false,
+            focusedSeconds: localModel?.focusedSeconds ?? 0,
           );
 
           if (localModel != null) {
@@ -179,6 +180,7 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
             localId: localItem?.localId ?? 0,
             taskListLocalId: resolvedListLocalId,
             isDirty: false,
+            focusedSeconds: localItem?.focusedSeconds ?? 0,
           );
           if (localItem == null) {
             await localDataSource.createTodoItem(dataModel);
@@ -248,6 +250,7 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
                 ? resolvedListLocalId
                 : entity.taskListLocalId,
             isDirty: false,
+            focusedSeconds: createdLocal.focusedSeconds,
           );
           await localDataSource.updateTodoItem(synced);
           return Right(synced.toDomain(tags: entity.tags));
@@ -286,10 +289,24 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
       return remoteResult.fold(
         (_) => Right(updatedLocal.toDomain(tags: entity.tags)),
         (dto) async {
+          // Re-read the current local row rather than reusing the
+          // pre-await `updatedLocal` snapshot — a linked Pomodoro session
+          // may have incremented focusedSeconds while this remote call
+          // was in flight, and writing back the stale value would
+          // silently discard that tracked time.
+          final freshLocal = await localDataSource.getTodoItemByID(
+            updatedLocal.localId,
+          );
+          final currentFocusedSeconds = freshLocal.fold(
+            (_) => updatedLocal.focusedSeconds,
+            (fresh) => fresh?.focusedSeconds ?? updatedLocal.focusedSeconds,
+          );
+
           final synced = dto.toDataModel(
             localId: updatedLocal.localId,
             taskListLocalId: entity.taskListLocalId,
             isDirty: false,
+            focusedSeconds: currentFocusedSeconds,
           );
           await localDataSource.updateTodoItem(synced);
           return Right(synced.toDomain(tags: entity.tags));
@@ -358,6 +375,7 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
           updatedAt: DateTime.now(),
           isPendingDeletion: item.isPendingDeletion,
           isDirty: true,
+          focusedSeconds: item.focusedSeconds,
         ),
       );
 
@@ -375,6 +393,7 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
             localId: local.localId,
             taskListLocalId: local.taskListLocalId,
             isDirty: false,
+            focusedSeconds: local.focusedSeconds,
           );
           await localDataSource.updateTodoItem(synced);
           final tags = await _resolveTags(synced.localId);
@@ -418,6 +437,7 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
           updatedAt: DateTime.now(),
           isPendingDeletion: item.isPendingDeletion,
           isDirty: true,
+          focusedSeconds: item.focusedSeconds,
         ),
       );
 
@@ -437,6 +457,7 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
             localId: local.localId,
             taskListLocalId: local.taskListLocalId,
             isDirty: false,
+            focusedSeconds: local.focusedSeconds,
           );
           await localDataSource.updateTodoItem(synced);
           final tags = await _resolveTags(synced.localId);
@@ -514,16 +535,41 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
             : await remoteDataSource.updateTodoItem(item.toDto());
 
         remoteOp.fold((_) => null, (dto) async {
+          // Re-read rather than reusing `item.focusedSeconds` — the batch
+          // of dirty items was fetched before this remote call, and a
+          // linked Pomodoro session may have incremented it since.
+          final freshLocal = await localDataSource.getTodoItemByID(
+            item.localId,
+          );
+          final currentFocusedSeconds = freshLocal.fold(
+            (_) => item.focusedSeconds,
+            (fresh) => fresh?.focusedSeconds ?? item.focusedSeconds,
+          );
+
           await localDataSource.updateTodoItem(
             dto.toDataModel(
               localId: item.localId,
               taskListLocalId: item.taskListLocalId,
               isDirty: false,
+              focusedSeconds: currentFocusedSeconds,
             ),
           );
         });
       }
       return const Right(unit);
+    });
+  }
+
+  @override
+  Future<Either<Failure, TodoItemEntity>> addFocusedTime({
+    required int todoLocalId,
+    required Duration duration,
+  }) async {
+    final result = await localDataSource.addFocusedTime(todoLocalId, duration);
+
+    return result.fold((failure) => Left(failure), (updated) async {
+      final tags = await _resolveTags(updated.localId);
+      return Right(updated.toDomain(tags: tags));
     });
   }
 

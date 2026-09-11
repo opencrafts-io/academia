@@ -16,7 +16,9 @@ mixin _$TodoItemEntity {
 
  int get localId; String? get id;// Local FK to the parent TodoList
  int get taskListLocalId; String get title; String? get notes; TodoStatus get status; TodoPriority get priority; DateTime? get due; DateTime? get completed; int get subtaskCount; String? get position; bool get hidden;// Resolved tag entities — populated at query time via the junction table
- List<TodoTagEntity> get tags; SyncStatus get syncStatus; DateTime? get lastSyncedAt; DateTime? get createdAt; DateTime? get updatedAt; bool get isPendingDeletion; bool get isDirty;
+ List<TodoTagEntity> get tags; SyncStatus get syncStatus; DateTime? get lastSyncedAt; DateTime? get createdAt; DateTime? get updatedAt; bool get isPendingDeletion; bool get isDirty;/// Cumulative seconds spent focusing on this task via linked Pomodoro
+/// sessions. Local-only — not part of the remote API.
+ int get focusedSeconds;
 /// Create a copy of TodoItemEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -27,16 +29,16 @@ $TodoItemEntityCopyWith<TodoItemEntity> get copyWith => _$TodoItemEntityCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TodoItemEntity&&(identical(other.localId, localId) || other.localId == localId)&&(identical(other.id, id) || other.id == id)&&(identical(other.taskListLocalId, taskListLocalId) || other.taskListLocalId == taskListLocalId)&&(identical(other.title, title) || other.title == title)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.status, status) || other.status == status)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.due, due) || other.due == due)&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.subtaskCount, subtaskCount) || other.subtaskCount == subtaskCount)&&(identical(other.position, position) || other.position == position)&&(identical(other.hidden, hidden) || other.hidden == hidden)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.syncStatus, syncStatus) || other.syncStatus == syncStatus)&&(identical(other.lastSyncedAt, lastSyncedAt) || other.lastSyncedAt == lastSyncedAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.isPendingDeletion, isPendingDeletion) || other.isPendingDeletion == isPendingDeletion)&&(identical(other.isDirty, isDirty) || other.isDirty == isDirty));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TodoItemEntity&&(identical(other.localId, localId) || other.localId == localId)&&(identical(other.id, id) || other.id == id)&&(identical(other.taskListLocalId, taskListLocalId) || other.taskListLocalId == taskListLocalId)&&(identical(other.title, title) || other.title == title)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.status, status) || other.status == status)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.due, due) || other.due == due)&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.subtaskCount, subtaskCount) || other.subtaskCount == subtaskCount)&&(identical(other.position, position) || other.position == position)&&(identical(other.hidden, hidden) || other.hidden == hidden)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.syncStatus, syncStatus) || other.syncStatus == syncStatus)&&(identical(other.lastSyncedAt, lastSyncedAt) || other.lastSyncedAt == lastSyncedAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.isPendingDeletion, isPendingDeletion) || other.isPendingDeletion == isPendingDeletion)&&(identical(other.isDirty, isDirty) || other.isDirty == isDirty)&&(identical(other.focusedSeconds, focusedSeconds) || other.focusedSeconds == focusedSeconds));
 }
 
 
 @override
-int get hashCode => Object.hashAll([runtimeType,localId,id,taskListLocalId,title,notes,status,priority,due,completed,subtaskCount,position,hidden,const DeepCollectionEquality().hash(tags),syncStatus,lastSyncedAt,createdAt,updatedAt,isPendingDeletion,isDirty]);
+int get hashCode => Object.hashAll([runtimeType,localId,id,taskListLocalId,title,notes,status,priority,due,completed,subtaskCount,position,hidden,const DeepCollectionEquality().hash(tags),syncStatus,lastSyncedAt,createdAt,updatedAt,isPendingDeletion,isDirty,focusedSeconds]);
 
 @override
 String toString() {
-  return 'TodoItemEntity(localId: $localId, id: $id, taskListLocalId: $taskListLocalId, title: $title, notes: $notes, status: $status, priority: $priority, due: $due, completed: $completed, subtaskCount: $subtaskCount, position: $position, hidden: $hidden, tags: $tags, syncStatus: $syncStatus, lastSyncedAt: $lastSyncedAt, createdAt: $createdAt, updatedAt: $updatedAt, isPendingDeletion: $isPendingDeletion, isDirty: $isDirty)';
+  return 'TodoItemEntity(localId: $localId, id: $id, taskListLocalId: $taskListLocalId, title: $title, notes: $notes, status: $status, priority: $priority, due: $due, completed: $completed, subtaskCount: $subtaskCount, position: $position, hidden: $hidden, tags: $tags, syncStatus: $syncStatus, lastSyncedAt: $lastSyncedAt, createdAt: $createdAt, updatedAt: $updatedAt, isPendingDeletion: $isPendingDeletion, isDirty: $isDirty, focusedSeconds: $focusedSeconds)';
 }
 
 
@@ -47,7 +49,7 @@ abstract mixin class $TodoItemEntityCopyWith<$Res>  {
   factory $TodoItemEntityCopyWith(TodoItemEntity value, $Res Function(TodoItemEntity) _then) = _$TodoItemEntityCopyWithImpl;
 @useResult
 $Res call({
- int localId, String? id, int taskListLocalId, String title, String? notes, TodoStatus status, TodoPriority priority, DateTime? due, DateTime? completed, int subtaskCount, String? position, bool hidden, List<TodoTagEntity> tags, SyncStatus syncStatus, DateTime? lastSyncedAt, DateTime? createdAt, DateTime? updatedAt, bool isPendingDeletion, bool isDirty
+ int localId, String? id, int taskListLocalId, String title, String? notes, TodoStatus status, TodoPriority priority, DateTime? due, DateTime? completed, int subtaskCount, String? position, bool hidden, List<TodoTagEntity> tags, SyncStatus syncStatus, DateTime? lastSyncedAt, DateTime? createdAt, DateTime? updatedAt, bool isPendingDeletion, bool isDirty, int focusedSeconds
 });
 
 
@@ -64,7 +66,7 @@ class _$TodoItemEntityCopyWithImpl<$Res>
 
 /// Create a copy of TodoItemEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? localId = null,Object? id = freezed,Object? taskListLocalId = null,Object? title = null,Object? notes = freezed,Object? status = null,Object? priority = null,Object? due = freezed,Object? completed = freezed,Object? subtaskCount = null,Object? position = freezed,Object? hidden = null,Object? tags = null,Object? syncStatus = null,Object? lastSyncedAt = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? isPendingDeletion = null,Object? isDirty = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? localId = null,Object? id = freezed,Object? taskListLocalId = null,Object? title = null,Object? notes = freezed,Object? status = null,Object? priority = null,Object? due = freezed,Object? completed = freezed,Object? subtaskCount = null,Object? position = freezed,Object? hidden = null,Object? tags = null,Object? syncStatus = null,Object? lastSyncedAt = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? isPendingDeletion = null,Object? isDirty = null,Object? focusedSeconds = null,}) {
   return _then(_self.copyWith(
 localId: null == localId ? _self.localId : localId // ignore: cast_nullable_to_non_nullable
 as int,id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
@@ -85,7 +87,8 @@ as DateTime?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ig
 as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,isPendingDeletion: null == isPendingDeletion ? _self.isPendingDeletion : isPendingDeletion // ignore: cast_nullable_to_non_nullable
 as bool,isDirty: null == isDirty ? _self.isDirty : isDirty // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,focusedSeconds: null == focusedSeconds ? _self.focusedSeconds : focusedSeconds // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 
@@ -170,10 +173,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int localId,  String? id,  int taskListLocalId,  String title,  String? notes,  TodoStatus status,  TodoPriority priority,  DateTime? due,  DateTime? completed,  int subtaskCount,  String? position,  bool hidden,  List<TodoTagEntity> tags,  SyncStatus syncStatus,  DateTime? lastSyncedAt,  DateTime? createdAt,  DateTime? updatedAt,  bool isPendingDeletion,  bool isDirty)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int localId,  String? id,  int taskListLocalId,  String title,  String? notes,  TodoStatus status,  TodoPriority priority,  DateTime? due,  DateTime? completed,  int subtaskCount,  String? position,  bool hidden,  List<TodoTagEntity> tags,  SyncStatus syncStatus,  DateTime? lastSyncedAt,  DateTime? createdAt,  DateTime? updatedAt,  bool isPendingDeletion,  bool isDirty,  int focusedSeconds)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TodoItemEntity() when $default != null:
-return $default(_that.localId,_that.id,_that.taskListLocalId,_that.title,_that.notes,_that.status,_that.priority,_that.due,_that.completed,_that.subtaskCount,_that.position,_that.hidden,_that.tags,_that.syncStatus,_that.lastSyncedAt,_that.createdAt,_that.updatedAt,_that.isPendingDeletion,_that.isDirty);case _:
+return $default(_that.localId,_that.id,_that.taskListLocalId,_that.title,_that.notes,_that.status,_that.priority,_that.due,_that.completed,_that.subtaskCount,_that.position,_that.hidden,_that.tags,_that.syncStatus,_that.lastSyncedAt,_that.createdAt,_that.updatedAt,_that.isPendingDeletion,_that.isDirty,_that.focusedSeconds);case _:
   return orElse();
 
 }
@@ -191,10 +194,10 @@ return $default(_that.localId,_that.id,_that.taskListLocalId,_that.title,_that.n
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int localId,  String? id,  int taskListLocalId,  String title,  String? notes,  TodoStatus status,  TodoPriority priority,  DateTime? due,  DateTime? completed,  int subtaskCount,  String? position,  bool hidden,  List<TodoTagEntity> tags,  SyncStatus syncStatus,  DateTime? lastSyncedAt,  DateTime? createdAt,  DateTime? updatedAt,  bool isPendingDeletion,  bool isDirty)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int localId,  String? id,  int taskListLocalId,  String title,  String? notes,  TodoStatus status,  TodoPriority priority,  DateTime? due,  DateTime? completed,  int subtaskCount,  String? position,  bool hidden,  List<TodoTagEntity> tags,  SyncStatus syncStatus,  DateTime? lastSyncedAt,  DateTime? createdAt,  DateTime? updatedAt,  bool isPendingDeletion,  bool isDirty,  int focusedSeconds)  $default,) {final _that = this;
 switch (_that) {
 case _TodoItemEntity():
-return $default(_that.localId,_that.id,_that.taskListLocalId,_that.title,_that.notes,_that.status,_that.priority,_that.due,_that.completed,_that.subtaskCount,_that.position,_that.hidden,_that.tags,_that.syncStatus,_that.lastSyncedAt,_that.createdAt,_that.updatedAt,_that.isPendingDeletion,_that.isDirty);case _:
+return $default(_that.localId,_that.id,_that.taskListLocalId,_that.title,_that.notes,_that.status,_that.priority,_that.due,_that.completed,_that.subtaskCount,_that.position,_that.hidden,_that.tags,_that.syncStatus,_that.lastSyncedAt,_that.createdAt,_that.updatedAt,_that.isPendingDeletion,_that.isDirty,_that.focusedSeconds);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -211,10 +214,10 @@ return $default(_that.localId,_that.id,_that.taskListLocalId,_that.title,_that.n
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int localId,  String? id,  int taskListLocalId,  String title,  String? notes,  TodoStatus status,  TodoPriority priority,  DateTime? due,  DateTime? completed,  int subtaskCount,  String? position,  bool hidden,  List<TodoTagEntity> tags,  SyncStatus syncStatus,  DateTime? lastSyncedAt,  DateTime? createdAt,  DateTime? updatedAt,  bool isPendingDeletion,  bool isDirty)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int localId,  String? id,  int taskListLocalId,  String title,  String? notes,  TodoStatus status,  TodoPriority priority,  DateTime? due,  DateTime? completed,  int subtaskCount,  String? position,  bool hidden,  List<TodoTagEntity> tags,  SyncStatus syncStatus,  DateTime? lastSyncedAt,  DateTime? createdAt,  DateTime? updatedAt,  bool isPendingDeletion,  bool isDirty,  int focusedSeconds)?  $default,) {final _that = this;
 switch (_that) {
 case _TodoItemEntity() when $default != null:
-return $default(_that.localId,_that.id,_that.taskListLocalId,_that.title,_that.notes,_that.status,_that.priority,_that.due,_that.completed,_that.subtaskCount,_that.position,_that.hidden,_that.tags,_that.syncStatus,_that.lastSyncedAt,_that.createdAt,_that.updatedAt,_that.isPendingDeletion,_that.isDirty);case _:
+return $default(_that.localId,_that.id,_that.taskListLocalId,_that.title,_that.notes,_that.status,_that.priority,_that.due,_that.completed,_that.subtaskCount,_that.position,_that.hidden,_that.tags,_that.syncStatus,_that.lastSyncedAt,_that.createdAt,_that.updatedAt,_that.isPendingDeletion,_that.isDirty,_that.focusedSeconds);case _:
   return null;
 
 }
@@ -226,7 +229,7 @@ return $default(_that.localId,_that.id,_that.taskListLocalId,_that.title,_that.n
 
 
 class _TodoItemEntity implements TodoItemEntity {
-  const _TodoItemEntity({required this.localId, this.id, required this.taskListLocalId, required this.title, this.notes, required this.status, required this.priority, this.due, this.completed, required this.subtaskCount, this.position, required this.hidden, final  List<TodoTagEntity> tags = const [], required this.syncStatus, this.lastSyncedAt, this.createdAt, this.updatedAt, required this.isPendingDeletion, required this.isDirty}): _tags = tags;
+  const _TodoItemEntity({required this.localId, this.id, required this.taskListLocalId, required this.title, this.notes, required this.status, required this.priority, this.due, this.completed, required this.subtaskCount, this.position, required this.hidden, final  List<TodoTagEntity> tags = const [], required this.syncStatus, this.lastSyncedAt, this.createdAt, this.updatedAt, required this.isPendingDeletion, required this.isDirty, this.focusedSeconds = 0}): _tags = tags;
   
 
 @override final  int localId;
@@ -257,6 +260,9 @@ class _TodoItemEntity implements TodoItemEntity {
 @override final  DateTime? updatedAt;
 @override final  bool isPendingDeletion;
 @override final  bool isDirty;
+/// Cumulative seconds spent focusing on this task via linked Pomodoro
+/// sessions. Local-only — not part of the remote API.
+@override@JsonKey() final  int focusedSeconds;
 
 /// Create a copy of TodoItemEntity
 /// with the given fields replaced by the non-null parameter values.
@@ -268,16 +274,16 @@ _$TodoItemEntityCopyWith<_TodoItemEntity> get copyWith => __$TodoItemEntityCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TodoItemEntity&&(identical(other.localId, localId) || other.localId == localId)&&(identical(other.id, id) || other.id == id)&&(identical(other.taskListLocalId, taskListLocalId) || other.taskListLocalId == taskListLocalId)&&(identical(other.title, title) || other.title == title)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.status, status) || other.status == status)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.due, due) || other.due == due)&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.subtaskCount, subtaskCount) || other.subtaskCount == subtaskCount)&&(identical(other.position, position) || other.position == position)&&(identical(other.hidden, hidden) || other.hidden == hidden)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.syncStatus, syncStatus) || other.syncStatus == syncStatus)&&(identical(other.lastSyncedAt, lastSyncedAt) || other.lastSyncedAt == lastSyncedAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.isPendingDeletion, isPendingDeletion) || other.isPendingDeletion == isPendingDeletion)&&(identical(other.isDirty, isDirty) || other.isDirty == isDirty));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TodoItemEntity&&(identical(other.localId, localId) || other.localId == localId)&&(identical(other.id, id) || other.id == id)&&(identical(other.taskListLocalId, taskListLocalId) || other.taskListLocalId == taskListLocalId)&&(identical(other.title, title) || other.title == title)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.status, status) || other.status == status)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.due, due) || other.due == due)&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.subtaskCount, subtaskCount) || other.subtaskCount == subtaskCount)&&(identical(other.position, position) || other.position == position)&&(identical(other.hidden, hidden) || other.hidden == hidden)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.syncStatus, syncStatus) || other.syncStatus == syncStatus)&&(identical(other.lastSyncedAt, lastSyncedAt) || other.lastSyncedAt == lastSyncedAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.isPendingDeletion, isPendingDeletion) || other.isPendingDeletion == isPendingDeletion)&&(identical(other.isDirty, isDirty) || other.isDirty == isDirty)&&(identical(other.focusedSeconds, focusedSeconds) || other.focusedSeconds == focusedSeconds));
 }
 
 
 @override
-int get hashCode => Object.hashAll([runtimeType,localId,id,taskListLocalId,title,notes,status,priority,due,completed,subtaskCount,position,hidden,const DeepCollectionEquality().hash(_tags),syncStatus,lastSyncedAt,createdAt,updatedAt,isPendingDeletion,isDirty]);
+int get hashCode => Object.hashAll([runtimeType,localId,id,taskListLocalId,title,notes,status,priority,due,completed,subtaskCount,position,hidden,const DeepCollectionEquality().hash(_tags),syncStatus,lastSyncedAt,createdAt,updatedAt,isPendingDeletion,isDirty,focusedSeconds]);
 
 @override
 String toString() {
-  return 'TodoItemEntity(localId: $localId, id: $id, taskListLocalId: $taskListLocalId, title: $title, notes: $notes, status: $status, priority: $priority, due: $due, completed: $completed, subtaskCount: $subtaskCount, position: $position, hidden: $hidden, tags: $tags, syncStatus: $syncStatus, lastSyncedAt: $lastSyncedAt, createdAt: $createdAt, updatedAt: $updatedAt, isPendingDeletion: $isPendingDeletion, isDirty: $isDirty)';
+  return 'TodoItemEntity(localId: $localId, id: $id, taskListLocalId: $taskListLocalId, title: $title, notes: $notes, status: $status, priority: $priority, due: $due, completed: $completed, subtaskCount: $subtaskCount, position: $position, hidden: $hidden, tags: $tags, syncStatus: $syncStatus, lastSyncedAt: $lastSyncedAt, createdAt: $createdAt, updatedAt: $updatedAt, isPendingDeletion: $isPendingDeletion, isDirty: $isDirty, focusedSeconds: $focusedSeconds)';
 }
 
 
@@ -288,7 +294,7 @@ abstract mixin class _$TodoItemEntityCopyWith<$Res> implements $TodoItemEntityCo
   factory _$TodoItemEntityCopyWith(_TodoItemEntity value, $Res Function(_TodoItemEntity) _then) = __$TodoItemEntityCopyWithImpl;
 @override @useResult
 $Res call({
- int localId, String? id, int taskListLocalId, String title, String? notes, TodoStatus status, TodoPriority priority, DateTime? due, DateTime? completed, int subtaskCount, String? position, bool hidden, List<TodoTagEntity> tags, SyncStatus syncStatus, DateTime? lastSyncedAt, DateTime? createdAt, DateTime? updatedAt, bool isPendingDeletion, bool isDirty
+ int localId, String? id, int taskListLocalId, String title, String? notes, TodoStatus status, TodoPriority priority, DateTime? due, DateTime? completed, int subtaskCount, String? position, bool hidden, List<TodoTagEntity> tags, SyncStatus syncStatus, DateTime? lastSyncedAt, DateTime? createdAt, DateTime? updatedAt, bool isPendingDeletion, bool isDirty, int focusedSeconds
 });
 
 
@@ -305,7 +311,7 @@ class __$TodoItemEntityCopyWithImpl<$Res>
 
 /// Create a copy of TodoItemEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? localId = null,Object? id = freezed,Object? taskListLocalId = null,Object? title = null,Object? notes = freezed,Object? status = null,Object? priority = null,Object? due = freezed,Object? completed = freezed,Object? subtaskCount = null,Object? position = freezed,Object? hidden = null,Object? tags = null,Object? syncStatus = null,Object? lastSyncedAt = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? isPendingDeletion = null,Object? isDirty = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? localId = null,Object? id = freezed,Object? taskListLocalId = null,Object? title = null,Object? notes = freezed,Object? status = null,Object? priority = null,Object? due = freezed,Object? completed = freezed,Object? subtaskCount = null,Object? position = freezed,Object? hidden = null,Object? tags = null,Object? syncStatus = null,Object? lastSyncedAt = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? isPendingDeletion = null,Object? isDirty = null,Object? focusedSeconds = null,}) {
   return _then(_TodoItemEntity(
 localId: null == localId ? _self.localId : localId // ignore: cast_nullable_to_non_nullable
 as int,id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
@@ -326,7 +332,8 @@ as DateTime?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ig
 as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,isPendingDeletion: null == isPendingDeletion ? _self.isPendingDeletion : isPendingDeletion // ignore: cast_nullable_to_non_nullable
 as bool,isDirty: null == isDirty ? _self.isDirty : isDirty // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,focusedSeconds: null == focusedSeconds ? _self.focusedSeconds : focusedSeconds // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 

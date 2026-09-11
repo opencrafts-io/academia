@@ -11,6 +11,7 @@ class TodoItemCubit extends SafeCubit<TodoItemState> {
   final ReopenTodoItem reopenItemUseCase;
   final MoveTodoItem moveItemUseCase;
   final SyncTodoItems syncItemsUseCase;
+  final AddFocusedTimeToTodoItem addFocusedTimeUseCase;
 
   /// The local ID of the task list this cubit is scoped to.
   /// Null means all lists are shown.
@@ -26,6 +27,7 @@ class TodoItemCubit extends SafeCubit<TodoItemState> {
     required this.reopenItemUseCase,
     required this.moveItemUseCase,
     required this.syncItemsUseCase,
+    required this.addFocusedTimeUseCase,
     this.taskListLocalId,
   }) : super(const TodoItemState.initial()) {
     _init();
@@ -267,6 +269,27 @@ class TodoItemCubit extends SafeCubit<TodoItemState> {
         emit(latest.copyWith(items: synced));
       },
     );
+  }
+
+  /// Adds [duration] to an item's cumulative tracked focus time, e.g. after
+  /// a completed Pomodoro session. Local-only, so no rollback is needed on
+  /// failure — there's no remote write to fail.
+  Future<void> addFocusedTime({
+    required int localId,
+    required Duration duration,
+  }) async {
+    final result = await addFocusedTimeUseCase(
+      AddFocusedTimeToTodoItemParams(todoLocalId: localId, duration: duration),
+    );
+
+    result.fold((_) => null, (updated) {
+      final latest = state.mapOrNull(success: (s) => s);
+      if (latest == null) return;
+      final synced = latest.items.map((existing) {
+        return existing.localId == updated.localId ? updated : existing;
+      }).toList();
+      emit(latest.copyWith(items: synced));
+    });
   }
 
   /// Pushes all locally dirty or pending-deletion items to the remote,

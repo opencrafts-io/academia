@@ -201,6 +201,11 @@ class _TodoHomeScreenState extends State<TodoHomeScreen>
                     actions: [
                       _buildNotificationRequestButton(),
                       IconButton(
+                        onPressed: () => PomodoroTimerRoute().push(context),
+                        icon: const Icon(Icons.timer_outlined),
+                        tooltip: "Focus timer",
+                      ),
+                      IconButton(
                         onPressed: _showHelpDialog,
                         icon: Icon(Icons.lightbulb_outline),
                       ),

@@ -1402,6 +1402,10 @@ RouteBase get $todosRoute => GoRouteData.$route(
       path: 'todo-item/:todoLocalID',
       factory: $UpdateTodoItemRoute._fromState,
     ),
+    GoRouteData.$route(
+      path: 'pomodoro-timer',
+      factory: $PomodoroTimerRoute._fromState,
+    ),
   ],
 );
 
@@ -1539,6 +1543,41 @@ mixin $UpdateTodoItemRoute on GoRouteData {
   @override
   String get location => GoRouteData.$location(
     '/todos/todo-item/${Uri.encodeComponent(_self.todoLocalID.toString())}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $PomodoroTimerRoute on GoRouteData {
+  static PomodoroTimerRoute _fromState(GoRouterState state) =>
+      PomodoroTimerRoute(
+        todoLocalID: _$convertMapValue(
+          'todo-local-i-d',
+          state.uri.queryParameters,
+          int.tryParse,
+        ),
+      );
+
+  PomodoroTimerRoute get _self => this as PomodoroTimerRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/todos/pomodoro-timer',
+    queryParams: {
+      if (_self.todoLocalID != null)
+        'todo-local-i-d': _self.todoLocalID!.toString(),
+    },
   );
 
   @override

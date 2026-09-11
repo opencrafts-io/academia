@@ -857,6 +857,7 @@ class QrCodeScannerRoute extends GoRouteData with $QrCodeScannerRoute {
 
     TypedGoRoute<CreateTodoItemRoute>(path: "create-todo-item"),
     TypedGoRoute<UpdateTodoItemRoute>(path: "todo-item/:todoLocalID"),
+    TypedGoRoute<PomodoroTimerRoute>(path: "pomodoro-timer"),
   ],
 )
 class TodosRoute extends GoRouteData with $TodosRoute {
@@ -1004,6 +1005,17 @@ class CreateTodoItemRoute extends GoRouteData with $CreateTodoItemRoute {
         ),
       ),
     );
+  }
+}
+
+class PomodoroTimerRoute extends GoRouteData with $PomodoroTimerRoute {
+  final int? todoLocalID;
+
+  const PomodoroTimerRoute({this.todoLocalID});
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return PomodoroTimerScreen(todoLocalId: todoLocalID);
   }
 }
 

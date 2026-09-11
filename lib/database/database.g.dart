@@ -22264,6 +22264,18 @@ class $TodoItemsTable extends TodoItems
     ),
     defaultValue: const Constant(true),
   );
+  static const VerificationMeta _focusedSecondsMeta = const VerificationMeta(
+    'focusedSeconds',
+  );
+  @override
+  late final GeneratedColumn<int> focusedSeconds = GeneratedColumn<int>(
+    'focused_seconds',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     localId,
@@ -22284,6 +22296,7 @@ class $TodoItemsTable extends TodoItems
     updatedAt,
     isPendingDeletion,
     isDirty,
+    focusedSeconds,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -22400,6 +22413,15 @@ class $TodoItemsTable extends TodoItems
         isDirty.isAcceptableOrUnknown(data['is_dirty']!, _isDirtyMeta),
       );
     }
+    if (data.containsKey('focused_seconds')) {
+      context.handle(
+        _focusedSecondsMeta,
+        focusedSeconds.isAcceptableOrUnknown(
+          data['focused_seconds']!,
+          _focusedSecondsMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -22487,6 +22509,10 @@ class $TodoItemsTable extends TodoItems
         DriftSqlType.bool,
         data['${effectivePrefix}is_dirty'],
       )!,
+      focusedSeconds: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}focused_seconds'],
+      )!,
     );
   }
 
@@ -22522,6 +22548,10 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
   final DateTime? updatedAt;
   final bool isPendingDeletion;
   final bool isDirty;
+
+  /// Cumulative seconds spent focusing on this task via linked Pomodoro
+  /// sessions. Local-only — not part of the remote API.
+  final int focusedSeconds;
   const TodoItem({
     required this.localId,
     this.id,
@@ -22541,6 +22571,7 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
     this.updatedAt,
     required this.isPendingDeletion,
     required this.isDirty,
+    required this.focusedSeconds,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -22591,6 +22622,7 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
     }
     map['is_pending_deletion'] = Variable<bool>(isPendingDeletion);
     map['is_dirty'] = Variable<bool>(isDirty);
+    map['focused_seconds'] = Variable<int>(focusedSeconds);
     return map;
   }
 
@@ -22626,6 +22658,7 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
           : Value(updatedAt),
       isPendingDeletion: Value(isPendingDeletion),
       isDirty: Value(isDirty),
+      focusedSeconds: Value(focusedSeconds),
     );
   }
 
@@ -22659,6 +22692,7 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
       updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
       isPendingDeletion: serializer.fromJson<bool>(json['isPendingDeletion']),
       isDirty: serializer.fromJson<bool>(json['isDirty']),
+      focusedSeconds: serializer.fromJson<int>(json['focusedSeconds']),
     );
   }
   @override
@@ -22689,6 +22723,7 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
       'updatedAt': serializer.toJson<DateTime?>(updatedAt),
       'isPendingDeletion': serializer.toJson<bool>(isPendingDeletion),
       'isDirty': serializer.toJson<bool>(isDirty),
+      'focusedSeconds': serializer.toJson<int>(focusedSeconds),
     };
   }
 
@@ -22711,6 +22746,7 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
     Value<DateTime?> updatedAt = const Value.absent(),
     bool? isPendingDeletion,
     bool? isDirty,
+    int? focusedSeconds,
   }) => TodoItem(
     localId: localId ?? this.localId,
     id: id.present ? id.value : this.id,
@@ -22730,6 +22766,7 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
     updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
     isPendingDeletion: isPendingDeletion ?? this.isPendingDeletion,
     isDirty: isDirty ?? this.isDirty,
+    focusedSeconds: focusedSeconds ?? this.focusedSeconds,
   );
   TodoItem copyWithCompanion(TodoItemsCompanion data) {
     return TodoItem(
@@ -22761,6 +22798,9 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
           ? data.isPendingDeletion.value
           : this.isPendingDeletion,
       isDirty: data.isDirty.present ? data.isDirty.value : this.isDirty,
+      focusedSeconds: data.focusedSeconds.present
+          ? data.focusedSeconds.value
+          : this.focusedSeconds,
     );
   }
 
@@ -22784,7 +22824,8 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('isPendingDeletion: $isPendingDeletion, ')
-          ..write('isDirty: $isDirty')
+          ..write('isDirty: $isDirty, ')
+          ..write('focusedSeconds: $focusedSeconds')
           ..write(')'))
         .toString();
   }
@@ -22809,6 +22850,7 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
     updatedAt,
     isPendingDeletion,
     isDirty,
+    focusedSeconds,
   );
   @override
   bool operator ==(Object other) =>
@@ -22831,7 +22873,8 @@ class TodoItem extends DataClass implements Insertable<TodoItem> {
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
           other.isPendingDeletion == this.isPendingDeletion &&
-          other.isDirty == this.isDirty);
+          other.isDirty == this.isDirty &&
+          other.focusedSeconds == this.focusedSeconds);
 }
 
 class TodoItemsCompanion extends UpdateCompanion<TodoItem> {
@@ -22853,6 +22896,7 @@ class TodoItemsCompanion extends UpdateCompanion<TodoItem> {
   final Value<DateTime?> updatedAt;
   final Value<bool> isPendingDeletion;
   final Value<bool> isDirty;
+  final Value<int> focusedSeconds;
   const TodoItemsCompanion({
     this.localId = const Value.absent(),
     this.id = const Value.absent(),
@@ -22872,6 +22916,7 @@ class TodoItemsCompanion extends UpdateCompanion<TodoItem> {
     this.updatedAt = const Value.absent(),
     this.isPendingDeletion = const Value.absent(),
     this.isDirty = const Value.absent(),
+    this.focusedSeconds = const Value.absent(),
   });
   TodoItemsCompanion.insert({
     this.localId = const Value.absent(),
@@ -22892,6 +22937,7 @@ class TodoItemsCompanion extends UpdateCompanion<TodoItem> {
     this.updatedAt = const Value.absent(),
     this.isPendingDeletion = const Value.absent(),
     this.isDirty = const Value.absent(),
+    this.focusedSeconds = const Value.absent(),
   }) : taskListLocalId = Value(taskListLocalId),
        title = Value(title);
   static Insertable<TodoItem> custom({
@@ -22913,6 +22959,7 @@ class TodoItemsCompanion extends UpdateCompanion<TodoItem> {
     Expression<DateTime>? updatedAt,
     Expression<bool>? isPendingDeletion,
     Expression<bool>? isDirty,
+    Expression<int>? focusedSeconds,
   }) {
     return RawValuesInsertable({
       if (localId != null) 'local_id': localId,
@@ -22933,6 +22980,7 @@ class TodoItemsCompanion extends UpdateCompanion<TodoItem> {
       if (updatedAt != null) 'updated_at': updatedAt,
       if (isPendingDeletion != null) 'is_pending_deletion': isPendingDeletion,
       if (isDirty != null) 'is_dirty': isDirty,
+      if (focusedSeconds != null) 'focused_seconds': focusedSeconds,
     });
   }
 
@@ -22955,6 +23003,7 @@ class TodoItemsCompanion extends UpdateCompanion<TodoItem> {
     Value<DateTime?>? updatedAt,
     Value<bool>? isPendingDeletion,
     Value<bool>? isDirty,
+    Value<int>? focusedSeconds,
   }) {
     return TodoItemsCompanion(
       localId: localId ?? this.localId,
@@ -22975,6 +23024,7 @@ class TodoItemsCompanion extends UpdateCompanion<TodoItem> {
       updatedAt: updatedAt ?? this.updatedAt,
       isPendingDeletion: isPendingDeletion ?? this.isPendingDeletion,
       isDirty: isDirty ?? this.isDirty,
+      focusedSeconds: focusedSeconds ?? this.focusedSeconds,
     );
   }
 
@@ -23041,6 +23091,9 @@ class TodoItemsCompanion extends UpdateCompanion<TodoItem> {
     if (isDirty.present) {
       map['is_dirty'] = Variable<bool>(isDirty.value);
     }
+    if (focusedSeconds.present) {
+      map['focused_seconds'] = Variable<int>(focusedSeconds.value);
+    }
     return map;
   }
 
@@ -23064,7 +23117,8 @@ class TodoItemsCompanion extends UpdateCompanion<TodoItem> {
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('isPendingDeletion: $isPendingDeletion, ')
-          ..write('isDirty: $isDirty')
+          ..write('isDirty: $isDirty, ')
+          ..write('focusedSeconds: $focusedSeconds')
           ..write(')'))
         .toString();
   }
@@ -36981,6 +37035,7 @@ typedef $$TodoItemsTableCreateCompanionBuilder =
       Value<DateTime?> updatedAt,
       Value<bool> isPendingDeletion,
       Value<bool> isDirty,
+      Value<int> focusedSeconds,
     });
 typedef $$TodoItemsTableUpdateCompanionBuilder =
     TodoItemsCompanion Function({
@@ -37002,6 +37057,7 @@ typedef $$TodoItemsTableUpdateCompanionBuilder =
       Value<DateTime?> updatedAt,
       Value<bool> isPendingDeletion,
       Value<bool> isDirty,
+      Value<int> focusedSeconds,
     });
 
 final class $$TodoItemsTableReferences
@@ -37150,6 +37206,11 @@ class $$TodoItemsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<int> get focusedSeconds => $composableBuilder(
+    column: $table.focusedSeconds,
+    builder: (column) => ColumnFilters(column),
+  );
+
   $$TodoListsTableFilterComposer get taskListLocalId {
     final $$TodoListsTableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -37293,6 +37354,11 @@ class $$TodoItemsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get focusedSeconds => $composableBuilder(
+    column: $table.focusedSeconds,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$TodoListsTableOrderingComposer get taskListLocalId {
     final $$TodoListsTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -37385,6 +37451,11 @@ class $$TodoItemsTableAnnotationComposer
 
   GeneratedColumn<bool> get isDirty =>
       $composableBuilder(column: $table.isDirty, builder: (column) => column);
+
+  GeneratedColumn<int> get focusedSeconds => $composableBuilder(
+    column: $table.focusedSeconds,
+    builder: (column) => column,
+  );
 
   $$TodoListsTableAnnotationComposer get taskListLocalId {
     final $$TodoListsTableAnnotationComposer composer = $composerBuilder(
@@ -37481,6 +37552,7 @@ class $$TodoItemsTableTableManager
                 Value<DateTime?> updatedAt = const Value.absent(),
                 Value<bool> isPendingDeletion = const Value.absent(),
                 Value<bool> isDirty = const Value.absent(),
+                Value<int> focusedSeconds = const Value.absent(),
               }) => TodoItemsCompanion(
                 localId: localId,
                 id: id,
@@ -37500,6 +37572,7 @@ class $$TodoItemsTableTableManager
                 updatedAt: updatedAt,
                 isPendingDeletion: isPendingDeletion,
                 isDirty: isDirty,
+                focusedSeconds: focusedSeconds,
               ),
           createCompanionCallback:
               ({
@@ -37521,6 +37594,7 @@ class $$TodoItemsTableTableManager
                 Value<DateTime?> updatedAt = const Value.absent(),
                 Value<bool> isPendingDeletion = const Value.absent(),
                 Value<bool> isDirty = const Value.absent(),
+                Value<int> focusedSeconds = const Value.absent(),
               }) => TodoItemsCompanion.insert(
                 localId: localId,
                 id: id,
@@ -37540,6 +37614,7 @@ class $$TodoItemsTableTableManager
                 updatedAt: updatedAt,
                 isPendingDeletion: isPendingDeletion,
                 isDirty: isDirty,
+                focusedSeconds: focusedSeconds,
               ),
           withReferenceMapper: (p0) => p0
               .map(
