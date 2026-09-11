@@ -129,6 +129,9 @@ dependencies:
   # application ads subsystem
   ads:
     path: packages/ads/
+  # local focus app-blocking subsystem
+  lock_in:
+    path: packages/lock-in/
   injectable: ^3.0.0
 
 dev_dependencies:

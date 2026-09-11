@@ -40,6 +40,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
+  app_blocker:
+    dependency: transitive
+    description:
+      name: app_blocker
+      sha256: "9d352f497f1722564e4a2ee9b20b5c319a8af3309e03cba533f358d441afbc36"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.0"
   app_tracking_transparency:
     dependency: "direct main"
     description:
@@ -1370,6 +1378,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.1.1"
+  lock_in:
+    dependency: "direct main"
+    description:
+      path: "packages/lock-in"
+      relative: true
+    source: path
+    version: "0.0.1"
   logger:
     dependency: "direct main"
     description:

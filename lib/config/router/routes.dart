@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:academia/features/features.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
+import 'package:lock_in/lock_in.dart';
 
 part 'routes.g.dart';
 
@@ -73,6 +74,14 @@ class EssentialsRoute extends GoRouteData with $EssentialsRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return EssentialsPage();
+  }
+}
+
+@TypedGoRoute<LockInRoute>(path: '/lock-in')
+class LockInRoute extends GoRouteData with $LockInRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return LockInPage(service: sl<LockInService>());
   }
 }
 

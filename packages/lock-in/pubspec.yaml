@@ -1,0 +1,21 @@
+name: lock_in
+description: Local Android focus-app blocking subsystem for Academia.
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ^3.10.0
+
+dependencies:
+  app_blocker: ^2.2.0
+  database:
+    path: ../database/
+  flutter:
+    sdk: flutter
+  material3_indicators: ^2026.7.12+2
+
+dev_dependencies:
+  drift: ^2.34.4
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter

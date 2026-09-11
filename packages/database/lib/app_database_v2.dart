@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
-import 'package:injectable/injectable.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'tables/tables.dart';
@@ -10,7 +9,6 @@ import 'daos/daos.dart';
 
 part 'app_database_v2.g.dart';
 
-@LazySingleton()
 @DriftDatabase(
   tables: [
     Plans,
@@ -19,8 +17,10 @@ part 'app_database_v2.g.dart';
     BillingSubscriptions,
     BillingSubscriptionStatuses,
     BillingEntitlements,
+    LockInRuleRecords,
+    LockInAttempts,
   ],
-  daos: [PlanDao, OrderDao, SubscriptionDao, EntitlementDao],
+  daos: [PlanDao, OrderDao, SubscriptionDao, EntitlementDao, LockInDao],
 )
 class AppDatabaseV2 extends _$AppDatabaseV2 {
   // After generating code, this class needs to define a `schemaVersion` getter
@@ -30,7 +30,7 @@ class AppDatabaseV2 extends _$AppDatabaseV2 {
     : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   static QueryExecutor _openConnection() {
     driftRuntimeOptions.defaultSerializer = const ValueSerializer.defaults(
@@ -129,6 +129,10 @@ extension Migrations on GeneratedDatabase {
     }
     if (from < 4) {
       await m.createTable(db.billingOrderItems);
+    }
+    if (from < 5) {
+      await m.createTable(db.lockInRuleRecords);
+      await m.createTable(db.lockInAttempts);
     }
   };
 }

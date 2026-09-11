@@ -3511,6 +3511,843 @@ class BillingEntitlementsCompanion extends UpdateCompanion<BillingEntitlement> {
   }
 }
 
+class $LockInRuleRecordsTable extends LockInRuleRecords
+    with TableInfo<$LockInRuleRecordsTable, LockInRuleRecord> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LockInRuleRecordsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _appsJsonMeta = const VerificationMeta(
+    'appsJson',
+  );
+  @override
+  late final GeneratedColumn<String> appsJson = GeneratedColumn<String>(
+    'apps_json',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _weekdaysJsonMeta = const VerificationMeta(
+    'weekdaysJson',
+  );
+  @override
+  late final GeneratedColumn<String> weekdaysJson = GeneratedColumn<String>(
+    'weekdays_json',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _startMinutesMeta = const VerificationMeta(
+    'startMinutes',
+  );
+  @override
+  late final GeneratedColumn<int> startMinutes = GeneratedColumn<int>(
+    'start_minutes',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _endMinutesMeta = const VerificationMeta(
+    'endMinutes',
+  );
+  @override
+  late final GeneratedColumn<int> endMinutes = GeneratedColumn<int>(
+    'end_minutes',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _enabledMeta = const VerificationMeta(
+    'enabled',
+  );
+  @override
+  late final GeneratedColumn<bool> enabled = GeneratedColumn<bool>(
+    'enabled',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("enabled" IN (0, 1))',
+    ),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    name,
+    appsJson,
+    weekdaysJson,
+    startMinutes,
+    endMinutes,
+    enabled,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'lock_in_rule_records';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<LockInRuleRecord> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('apps_json')) {
+      context.handle(
+        _appsJsonMeta,
+        appsJson.isAcceptableOrUnknown(data['apps_json']!, _appsJsonMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_appsJsonMeta);
+    }
+    if (data.containsKey('weekdays_json')) {
+      context.handle(
+        _weekdaysJsonMeta,
+        weekdaysJson.isAcceptableOrUnknown(
+          data['weekdays_json']!,
+          _weekdaysJsonMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_weekdaysJsonMeta);
+    }
+    if (data.containsKey('start_minutes')) {
+      context.handle(
+        _startMinutesMeta,
+        startMinutes.isAcceptableOrUnknown(
+          data['start_minutes']!,
+          _startMinutesMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_startMinutesMeta);
+    }
+    if (data.containsKey('end_minutes')) {
+      context.handle(
+        _endMinutesMeta,
+        endMinutes.isAcceptableOrUnknown(data['end_minutes']!, _endMinutesMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_endMinutesMeta);
+    }
+    if (data.containsKey('enabled')) {
+      context.handle(
+        _enabledMeta,
+        enabled.isAcceptableOrUnknown(data['enabled']!, _enabledMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_enabledMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  LockInRuleRecord map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LockInRuleRecord(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      appsJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}apps_json'],
+      )!,
+      weekdaysJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}weekdays_json'],
+      )!,
+      startMinutes: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}start_minutes'],
+      )!,
+      endMinutes: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}end_minutes'],
+      )!,
+      enabled: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}enabled'],
+      )!,
+    );
+  }
+
+  @override
+  $LockInRuleRecordsTable createAlias(String alias) {
+    return $LockInRuleRecordsTable(attachedDatabase, alias);
+  }
+}
+
+class LockInRuleRecord extends DataClass
+    implements Insertable<LockInRuleRecord> {
+  final String id;
+  final String name;
+  final String appsJson;
+  final String weekdaysJson;
+  final int startMinutes;
+  final int endMinutes;
+  final bool enabled;
+  const LockInRuleRecord({
+    required this.id,
+    required this.name,
+    required this.appsJson,
+    required this.weekdaysJson,
+    required this.startMinutes,
+    required this.endMinutes,
+    required this.enabled,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['name'] = Variable<String>(name);
+    map['apps_json'] = Variable<String>(appsJson);
+    map['weekdays_json'] = Variable<String>(weekdaysJson);
+    map['start_minutes'] = Variable<int>(startMinutes);
+    map['end_minutes'] = Variable<int>(endMinutes);
+    map['enabled'] = Variable<bool>(enabled);
+    return map;
+  }
+
+  LockInRuleRecordsCompanion toCompanion(bool nullToAbsent) {
+    return LockInRuleRecordsCompanion(
+      id: Value(id),
+      name: Value(name),
+      appsJson: Value(appsJson),
+      weekdaysJson: Value(weekdaysJson),
+      startMinutes: Value(startMinutes),
+      endMinutes: Value(endMinutes),
+      enabled: Value(enabled),
+    );
+  }
+
+  factory LockInRuleRecord.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LockInRuleRecord(
+      id: serializer.fromJson<String>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      appsJson: serializer.fromJson<String>(json['appsJson']),
+      weekdaysJson: serializer.fromJson<String>(json['weekdaysJson']),
+      startMinutes: serializer.fromJson<int>(json['startMinutes']),
+      endMinutes: serializer.fromJson<int>(json['endMinutes']),
+      enabled: serializer.fromJson<bool>(json['enabled']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'name': serializer.toJson<String>(name),
+      'appsJson': serializer.toJson<String>(appsJson),
+      'weekdaysJson': serializer.toJson<String>(weekdaysJson),
+      'startMinutes': serializer.toJson<int>(startMinutes),
+      'endMinutes': serializer.toJson<int>(endMinutes),
+      'enabled': serializer.toJson<bool>(enabled),
+    };
+  }
+
+  LockInRuleRecord copyWith({
+    String? id,
+    String? name,
+    String? appsJson,
+    String? weekdaysJson,
+    int? startMinutes,
+    int? endMinutes,
+    bool? enabled,
+  }) => LockInRuleRecord(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    appsJson: appsJson ?? this.appsJson,
+    weekdaysJson: weekdaysJson ?? this.weekdaysJson,
+    startMinutes: startMinutes ?? this.startMinutes,
+    endMinutes: endMinutes ?? this.endMinutes,
+    enabled: enabled ?? this.enabled,
+  );
+  LockInRuleRecord copyWithCompanion(LockInRuleRecordsCompanion data) {
+    return LockInRuleRecord(
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      appsJson: data.appsJson.present ? data.appsJson.value : this.appsJson,
+      weekdaysJson: data.weekdaysJson.present
+          ? data.weekdaysJson.value
+          : this.weekdaysJson,
+      startMinutes: data.startMinutes.present
+          ? data.startMinutes.value
+          : this.startMinutes,
+      endMinutes: data.endMinutes.present
+          ? data.endMinutes.value
+          : this.endMinutes,
+      enabled: data.enabled.present ? data.enabled.value : this.enabled,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LockInRuleRecord(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('appsJson: $appsJson, ')
+          ..write('weekdaysJson: $weekdaysJson, ')
+          ..write('startMinutes: $startMinutes, ')
+          ..write('endMinutes: $endMinutes, ')
+          ..write('enabled: $enabled')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    name,
+    appsJson,
+    weekdaysJson,
+    startMinutes,
+    endMinutes,
+    enabled,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LockInRuleRecord &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.appsJson == this.appsJson &&
+          other.weekdaysJson == this.weekdaysJson &&
+          other.startMinutes == this.startMinutes &&
+          other.endMinutes == this.endMinutes &&
+          other.enabled == this.enabled);
+}
+
+class LockInRuleRecordsCompanion extends UpdateCompanion<LockInRuleRecord> {
+  final Value<String> id;
+  final Value<String> name;
+  final Value<String> appsJson;
+  final Value<String> weekdaysJson;
+  final Value<int> startMinutes;
+  final Value<int> endMinutes;
+  final Value<bool> enabled;
+  final Value<int> rowid;
+  const LockInRuleRecordsCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.appsJson = const Value.absent(),
+    this.weekdaysJson = const Value.absent(),
+    this.startMinutes = const Value.absent(),
+    this.endMinutes = const Value.absent(),
+    this.enabled = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  LockInRuleRecordsCompanion.insert({
+    required String id,
+    required String name,
+    required String appsJson,
+    required String weekdaysJson,
+    required int startMinutes,
+    required int endMinutes,
+    required bool enabled,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       name = Value(name),
+       appsJson = Value(appsJson),
+       weekdaysJson = Value(weekdaysJson),
+       startMinutes = Value(startMinutes),
+       endMinutes = Value(endMinutes),
+       enabled = Value(enabled);
+  static Insertable<LockInRuleRecord> custom({
+    Expression<String>? id,
+    Expression<String>? name,
+    Expression<String>? appsJson,
+    Expression<String>? weekdaysJson,
+    Expression<int>? startMinutes,
+    Expression<int>? endMinutes,
+    Expression<bool>? enabled,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (appsJson != null) 'apps_json': appsJson,
+      if (weekdaysJson != null) 'weekdays_json': weekdaysJson,
+      if (startMinutes != null) 'start_minutes': startMinutes,
+      if (endMinutes != null) 'end_minutes': endMinutes,
+      if (enabled != null) 'enabled': enabled,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  LockInRuleRecordsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? name,
+    Value<String>? appsJson,
+    Value<String>? weekdaysJson,
+    Value<int>? startMinutes,
+    Value<int>? endMinutes,
+    Value<bool>? enabled,
+    Value<int>? rowid,
+  }) {
+    return LockInRuleRecordsCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      appsJson: appsJson ?? this.appsJson,
+      weekdaysJson: weekdaysJson ?? this.weekdaysJson,
+      startMinutes: startMinutes ?? this.startMinutes,
+      endMinutes: endMinutes ?? this.endMinutes,
+      enabled: enabled ?? this.enabled,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (appsJson.present) {
+      map['apps_json'] = Variable<String>(appsJson.value);
+    }
+    if (weekdaysJson.present) {
+      map['weekdays_json'] = Variable<String>(weekdaysJson.value);
+    }
+    if (startMinutes.present) {
+      map['start_minutes'] = Variable<int>(startMinutes.value);
+    }
+    if (endMinutes.present) {
+      map['end_minutes'] = Variable<int>(endMinutes.value);
+    }
+    if (enabled.present) {
+      map['enabled'] = Variable<bool>(enabled.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LockInRuleRecordsCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('appsJson: $appsJson, ')
+          ..write('weekdaysJson: $weekdaysJson, ')
+          ..write('startMinutes: $startMinutes, ')
+          ..write('endMinutes: $endMinutes, ')
+          ..write('enabled: $enabled, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $LockInAttemptsTable extends LockInAttempts
+    with TableInfo<$LockInAttemptsTable, LockInAttempt> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LockInAttemptsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _appIdentifierMeta = const VerificationMeta(
+    'appIdentifier',
+  );
+  @override
+  late final GeneratedColumn<String> appIdentifier = GeneratedColumn<String>(
+    'app_identifier',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _appNameMeta = const VerificationMeta(
+    'appName',
+  );
+  @override
+  late final GeneratedColumn<String> appName = GeneratedColumn<String>(
+    'app_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _ruleIdMeta = const VerificationMeta('ruleId');
+  @override
+  late final GeneratedColumn<String> ruleId = GeneratedColumn<String>(
+    'rule_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _occurredAtMeta = const VerificationMeta(
+    'occurredAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> occurredAt = GeneratedColumn<DateTime>(
+    'occurred_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    appIdentifier,
+    appName,
+    ruleId,
+    occurredAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'lock_in_attempts';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<LockInAttempt> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('app_identifier')) {
+      context.handle(
+        _appIdentifierMeta,
+        appIdentifier.isAcceptableOrUnknown(
+          data['app_identifier']!,
+          _appIdentifierMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_appIdentifierMeta);
+    }
+    if (data.containsKey('app_name')) {
+      context.handle(
+        _appNameMeta,
+        appName.isAcceptableOrUnknown(data['app_name']!, _appNameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_appNameMeta);
+    }
+    if (data.containsKey('rule_id')) {
+      context.handle(
+        _ruleIdMeta,
+        ruleId.isAcceptableOrUnknown(data['rule_id']!, _ruleIdMeta),
+      );
+    }
+    if (data.containsKey('occurred_at')) {
+      context.handle(
+        _occurredAtMeta,
+        occurredAt.isAcceptableOrUnknown(data['occurred_at']!, _occurredAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_occurredAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  LockInAttempt map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LockInAttempt(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      appIdentifier: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}app_identifier'],
+      )!,
+      appName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}app_name'],
+      )!,
+      ruleId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}rule_id'],
+      ),
+      occurredAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}occurred_at'],
+      )!,
+    );
+  }
+
+  @override
+  $LockInAttemptsTable createAlias(String alias) {
+    return $LockInAttemptsTable(attachedDatabase, alias);
+  }
+}
+
+class LockInAttempt extends DataClass implements Insertable<LockInAttempt> {
+  final int id;
+  final String appIdentifier;
+  final String appName;
+  final String? ruleId;
+  final DateTime occurredAt;
+  const LockInAttempt({
+    required this.id,
+    required this.appIdentifier,
+    required this.appName,
+    this.ruleId,
+    required this.occurredAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['app_identifier'] = Variable<String>(appIdentifier);
+    map['app_name'] = Variable<String>(appName);
+    if (!nullToAbsent || ruleId != null) {
+      map['rule_id'] = Variable<String>(ruleId);
+    }
+    map['occurred_at'] = Variable<DateTime>(occurredAt);
+    return map;
+  }
+
+  LockInAttemptsCompanion toCompanion(bool nullToAbsent) {
+    return LockInAttemptsCompanion(
+      id: Value(id),
+      appIdentifier: Value(appIdentifier),
+      appName: Value(appName),
+      ruleId: ruleId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(ruleId),
+      occurredAt: Value(occurredAt),
+    );
+  }
+
+  factory LockInAttempt.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LockInAttempt(
+      id: serializer.fromJson<int>(json['id']),
+      appIdentifier: serializer.fromJson<String>(json['appIdentifier']),
+      appName: serializer.fromJson<String>(json['appName']),
+      ruleId: serializer.fromJson<String?>(json['ruleId']),
+      occurredAt: serializer.fromJson<DateTime>(json['occurredAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'appIdentifier': serializer.toJson<String>(appIdentifier),
+      'appName': serializer.toJson<String>(appName),
+      'ruleId': serializer.toJson<String?>(ruleId),
+      'occurredAt': serializer.toJson<DateTime>(occurredAt),
+    };
+  }
+
+  LockInAttempt copyWith({
+    int? id,
+    String? appIdentifier,
+    String? appName,
+    Value<String?> ruleId = const Value.absent(),
+    DateTime? occurredAt,
+  }) => LockInAttempt(
+    id: id ?? this.id,
+    appIdentifier: appIdentifier ?? this.appIdentifier,
+    appName: appName ?? this.appName,
+    ruleId: ruleId.present ? ruleId.value : this.ruleId,
+    occurredAt: occurredAt ?? this.occurredAt,
+  );
+  LockInAttempt copyWithCompanion(LockInAttemptsCompanion data) {
+    return LockInAttempt(
+      id: data.id.present ? data.id.value : this.id,
+      appIdentifier: data.appIdentifier.present
+          ? data.appIdentifier.value
+          : this.appIdentifier,
+      appName: data.appName.present ? data.appName.value : this.appName,
+      ruleId: data.ruleId.present ? data.ruleId.value : this.ruleId,
+      occurredAt: data.occurredAt.present
+          ? data.occurredAt.value
+          : this.occurredAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LockInAttempt(')
+          ..write('id: $id, ')
+          ..write('appIdentifier: $appIdentifier, ')
+          ..write('appName: $appName, ')
+          ..write('ruleId: $ruleId, ')
+          ..write('occurredAt: $occurredAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, appIdentifier, appName, ruleId, occurredAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LockInAttempt &&
+          other.id == this.id &&
+          other.appIdentifier == this.appIdentifier &&
+          other.appName == this.appName &&
+          other.ruleId == this.ruleId &&
+          other.occurredAt == this.occurredAt);
+}
+
+class LockInAttemptsCompanion extends UpdateCompanion<LockInAttempt> {
+  final Value<int> id;
+  final Value<String> appIdentifier;
+  final Value<String> appName;
+  final Value<String?> ruleId;
+  final Value<DateTime> occurredAt;
+  const LockInAttemptsCompanion({
+    this.id = const Value.absent(),
+    this.appIdentifier = const Value.absent(),
+    this.appName = const Value.absent(),
+    this.ruleId = const Value.absent(),
+    this.occurredAt = const Value.absent(),
+  });
+  LockInAttemptsCompanion.insert({
+    this.id = const Value.absent(),
+    required String appIdentifier,
+    required String appName,
+    this.ruleId = const Value.absent(),
+    required DateTime occurredAt,
+  }) : appIdentifier = Value(appIdentifier),
+       appName = Value(appName),
+       occurredAt = Value(occurredAt);
+  static Insertable<LockInAttempt> custom({
+    Expression<int>? id,
+    Expression<String>? appIdentifier,
+    Expression<String>? appName,
+    Expression<String>? ruleId,
+    Expression<DateTime>? occurredAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (appIdentifier != null) 'app_identifier': appIdentifier,
+      if (appName != null) 'app_name': appName,
+      if (ruleId != null) 'rule_id': ruleId,
+      if (occurredAt != null) 'occurred_at': occurredAt,
+    });
+  }
+
+  LockInAttemptsCompanion copyWith({
+    Value<int>? id,
+    Value<String>? appIdentifier,
+    Value<String>? appName,
+    Value<String?>? ruleId,
+    Value<DateTime>? occurredAt,
+  }) {
+    return LockInAttemptsCompanion(
+      id: id ?? this.id,
+      appIdentifier: appIdentifier ?? this.appIdentifier,
+      appName: appName ?? this.appName,
+      ruleId: ruleId ?? this.ruleId,
+      occurredAt: occurredAt ?? this.occurredAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (appIdentifier.present) {
+      map['app_identifier'] = Variable<String>(appIdentifier.value);
+    }
+    if (appName.present) {
+      map['app_name'] = Variable<String>(appName.value);
+    }
+    if (ruleId.present) {
+      map['rule_id'] = Variable<String>(ruleId.value);
+    }
+    if (occurredAt.present) {
+      map['occurred_at'] = Variable<DateTime>(occurredAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LockInAttemptsCompanion(')
+          ..write('id: $id, ')
+          ..write('appIdentifier: $appIdentifier, ')
+          ..write('appName: $appName, ')
+          ..write('ruleId: $ruleId, ')
+          ..write('occurredAt: $occurredAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabaseV2 extends GeneratedDatabase {
   _$AppDatabaseV2(QueryExecutor e) : super(e);
   $AppDatabaseV2Manager get managers => $AppDatabaseV2Manager(this);
@@ -3524,6 +4361,9 @@ abstract class _$AppDatabaseV2 extends GeneratedDatabase {
       $BillingSubscriptionStatusesTable(this);
   late final $BillingEntitlementsTable billingEntitlements =
       $BillingEntitlementsTable(this);
+  late final $LockInRuleRecordsTable lockInRuleRecords =
+      $LockInRuleRecordsTable(this);
+  late final $LockInAttemptsTable lockInAttempts = $LockInAttemptsTable(this);
   late final PlanDao planDao = PlanDao(this as AppDatabaseV2);
   late final OrderDao orderDao = OrderDao(this as AppDatabaseV2);
   late final SubscriptionDao subscriptionDao = SubscriptionDao(
@@ -3532,6 +4372,7 @@ abstract class _$AppDatabaseV2 extends GeneratedDatabase {
   late final EntitlementDao entitlementDao = EntitlementDao(
     this as AppDatabaseV2,
   );
+  late final LockInDao lockInDao = LockInDao(this as AppDatabaseV2);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -3543,6 +4384,8 @@ abstract class _$AppDatabaseV2 extends GeneratedDatabase {
     billingSubscriptions,
     billingSubscriptionStatuses,
     billingEntitlements,
+    lockInRuleRecords,
+    lockInAttempts,
   ];
 }
 
@@ -5378,6 +6221,485 @@ typedef $$BillingEntitlementsTableProcessedTableManager =
       BillingEntitlement,
       PrefetchHooks Function()
     >;
+typedef $$LockInRuleRecordsTableCreateCompanionBuilder =
+    LockInRuleRecordsCompanion Function({
+      required String id,
+      required String name,
+      required String appsJson,
+      required String weekdaysJson,
+      required int startMinutes,
+      required int endMinutes,
+      required bool enabled,
+      Value<int> rowid,
+    });
+typedef $$LockInRuleRecordsTableUpdateCompanionBuilder =
+    LockInRuleRecordsCompanion Function({
+      Value<String> id,
+      Value<String> name,
+      Value<String> appsJson,
+      Value<String> weekdaysJson,
+      Value<int> startMinutes,
+      Value<int> endMinutes,
+      Value<bool> enabled,
+      Value<int> rowid,
+    });
+
+class $$LockInRuleRecordsTableFilterComposer
+    extends Composer<_$AppDatabaseV2, $LockInRuleRecordsTable> {
+  $$LockInRuleRecordsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get appsJson => $composableBuilder(
+    column: $table.appsJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get weekdaysJson => $composableBuilder(
+    column: $table.weekdaysJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get startMinutes => $composableBuilder(
+    column: $table.startMinutes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get endMinutes => $composableBuilder(
+    column: $table.endMinutes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get enabled => $composableBuilder(
+    column: $table.enabled,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$LockInRuleRecordsTableOrderingComposer
+    extends Composer<_$AppDatabaseV2, $LockInRuleRecordsTable> {
+  $$LockInRuleRecordsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get appsJson => $composableBuilder(
+    column: $table.appsJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get weekdaysJson => $composableBuilder(
+    column: $table.weekdaysJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get startMinutes => $composableBuilder(
+    column: $table.startMinutes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get endMinutes => $composableBuilder(
+    column: $table.endMinutes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get enabled => $composableBuilder(
+    column: $table.enabled,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$LockInRuleRecordsTableAnnotationComposer
+    extends Composer<_$AppDatabaseV2, $LockInRuleRecordsTable> {
+  $$LockInRuleRecordsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get appsJson =>
+      $composableBuilder(column: $table.appsJson, builder: (column) => column);
+
+  GeneratedColumn<String> get weekdaysJson => $composableBuilder(
+    column: $table.weekdaysJson,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get startMinutes => $composableBuilder(
+    column: $table.startMinutes,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get endMinutes => $composableBuilder(
+    column: $table.endMinutes,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get enabled =>
+      $composableBuilder(column: $table.enabled, builder: (column) => column);
+}
+
+class $$LockInRuleRecordsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabaseV2,
+          $LockInRuleRecordsTable,
+          LockInRuleRecord,
+          $$LockInRuleRecordsTableFilterComposer,
+          $$LockInRuleRecordsTableOrderingComposer,
+          $$LockInRuleRecordsTableAnnotationComposer,
+          $$LockInRuleRecordsTableCreateCompanionBuilder,
+          $$LockInRuleRecordsTableUpdateCompanionBuilder,
+          (
+            LockInRuleRecord,
+            BaseReferences<
+              _$AppDatabaseV2,
+              $LockInRuleRecordsTable,
+              LockInRuleRecord
+            >,
+          ),
+          LockInRuleRecord,
+          PrefetchHooks Function()
+        > {
+  $$LockInRuleRecordsTableTableManager(
+    _$AppDatabaseV2 db,
+    $LockInRuleRecordsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$LockInRuleRecordsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$LockInRuleRecordsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$LockInRuleRecordsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String> appsJson = const Value.absent(),
+                Value<String> weekdaysJson = const Value.absent(),
+                Value<int> startMinutes = const Value.absent(),
+                Value<int> endMinutes = const Value.absent(),
+                Value<bool> enabled = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => LockInRuleRecordsCompanion(
+                id: id,
+                name: name,
+                appsJson: appsJson,
+                weekdaysJson: weekdaysJson,
+                startMinutes: startMinutes,
+                endMinutes: endMinutes,
+                enabled: enabled,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String name,
+                required String appsJson,
+                required String weekdaysJson,
+                required int startMinutes,
+                required int endMinutes,
+                required bool enabled,
+                Value<int> rowid = const Value.absent(),
+              }) => LockInRuleRecordsCompanion.insert(
+                id: id,
+                name: name,
+                appsJson: appsJson,
+                weekdaysJson: weekdaysJson,
+                startMinutes: startMinutes,
+                endMinutes: endMinutes,
+                enabled: enabled,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$LockInRuleRecordsTable, LockInRuleRecord>(table),
+                  BaseReferences<
+                    _$AppDatabaseV2,
+                    $LockInRuleRecordsTable,
+                    LockInRuleRecord
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$LockInRuleRecordsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabaseV2,
+      $LockInRuleRecordsTable,
+      LockInRuleRecord,
+      $$LockInRuleRecordsTableFilterComposer,
+      $$LockInRuleRecordsTableOrderingComposer,
+      $$LockInRuleRecordsTableAnnotationComposer,
+      $$LockInRuleRecordsTableCreateCompanionBuilder,
+      $$LockInRuleRecordsTableUpdateCompanionBuilder,
+      (
+        LockInRuleRecord,
+        BaseReferences<
+          _$AppDatabaseV2,
+          $LockInRuleRecordsTable,
+          LockInRuleRecord
+        >,
+      ),
+      LockInRuleRecord,
+      PrefetchHooks Function()
+    >;
+typedef $$LockInAttemptsTableCreateCompanionBuilder =
+    LockInAttemptsCompanion Function({
+      Value<int> id,
+      required String appIdentifier,
+      required String appName,
+      Value<String?> ruleId,
+      required DateTime occurredAt,
+    });
+typedef $$LockInAttemptsTableUpdateCompanionBuilder =
+    LockInAttemptsCompanion Function({
+      Value<int> id,
+      Value<String> appIdentifier,
+      Value<String> appName,
+      Value<String?> ruleId,
+      Value<DateTime> occurredAt,
+    });
+
+class $$LockInAttemptsTableFilterComposer
+    extends Composer<_$AppDatabaseV2, $LockInAttemptsTable> {
+  $$LockInAttemptsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get appIdentifier => $composableBuilder(
+    column: $table.appIdentifier,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get appName => $composableBuilder(
+    column: $table.appName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get ruleId => $composableBuilder(
+    column: $table.ruleId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get occurredAt => $composableBuilder(
+    column: $table.occurredAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$LockInAttemptsTableOrderingComposer
+    extends Composer<_$AppDatabaseV2, $LockInAttemptsTable> {
+  $$LockInAttemptsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get appIdentifier => $composableBuilder(
+    column: $table.appIdentifier,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get appName => $composableBuilder(
+    column: $table.appName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get ruleId => $composableBuilder(
+    column: $table.ruleId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get occurredAt => $composableBuilder(
+    column: $table.occurredAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$LockInAttemptsTableAnnotationComposer
+    extends Composer<_$AppDatabaseV2, $LockInAttemptsTable> {
+  $$LockInAttemptsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get appIdentifier => $composableBuilder(
+    column: $table.appIdentifier,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get appName =>
+      $composableBuilder(column: $table.appName, builder: (column) => column);
+
+  GeneratedColumn<String> get ruleId =>
+      $composableBuilder(column: $table.ruleId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get occurredAt => $composableBuilder(
+    column: $table.occurredAt,
+    builder: (column) => column,
+  );
+}
+
+class $$LockInAttemptsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabaseV2,
+          $LockInAttemptsTable,
+          LockInAttempt,
+          $$LockInAttemptsTableFilterComposer,
+          $$LockInAttemptsTableOrderingComposer,
+          $$LockInAttemptsTableAnnotationComposer,
+          $$LockInAttemptsTableCreateCompanionBuilder,
+          $$LockInAttemptsTableUpdateCompanionBuilder,
+          (
+            LockInAttempt,
+            BaseReferences<
+              _$AppDatabaseV2,
+              $LockInAttemptsTable,
+              LockInAttempt
+            >,
+          ),
+          LockInAttempt,
+          PrefetchHooks Function()
+        > {
+  $$LockInAttemptsTableTableManager(
+    _$AppDatabaseV2 db,
+    $LockInAttemptsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$LockInAttemptsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$LockInAttemptsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$LockInAttemptsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> appIdentifier = const Value.absent(),
+                Value<String> appName = const Value.absent(),
+                Value<String?> ruleId = const Value.absent(),
+                Value<DateTime> occurredAt = const Value.absent(),
+              }) => LockInAttemptsCompanion(
+                id: id,
+                appIdentifier: appIdentifier,
+                appName: appName,
+                ruleId: ruleId,
+                occurredAt: occurredAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String appIdentifier,
+                required String appName,
+                Value<String?> ruleId = const Value.absent(),
+                required DateTime occurredAt,
+              }) => LockInAttemptsCompanion.insert(
+                id: id,
+                appIdentifier: appIdentifier,
+                appName: appName,
+                ruleId: ruleId,
+                occurredAt: occurredAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$LockInAttemptsTable, LockInAttempt>(table),
+                  BaseReferences<
+                    _$AppDatabaseV2,
+                    $LockInAttemptsTable,
+                    LockInAttempt
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$LockInAttemptsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabaseV2,
+      $LockInAttemptsTable,
+      LockInAttempt,
+      $$LockInAttemptsTableFilterComposer,
+      $$LockInAttemptsTableOrderingComposer,
+      $$LockInAttemptsTableAnnotationComposer,
+      $$LockInAttemptsTableCreateCompanionBuilder,
+      $$LockInAttemptsTableUpdateCompanionBuilder,
+      (
+        LockInAttempt,
+        BaseReferences<_$AppDatabaseV2, $LockInAttemptsTable, LockInAttempt>,
+      ),
+      LockInAttempt,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseV2Manager {
   final _$AppDatabaseV2 _db;
@@ -5398,4 +6720,8 @@ class $AppDatabaseV2Manager {
       );
   $$BillingEntitlementsTableTableManager get billingEntitlements =>
       $$BillingEntitlementsTableTableManager(_db, _db.billingEntitlements);
+  $$LockInRuleRecordsTableTableManager get lockInRuleRecords =>
+      $$LockInRuleRecordsTableTableManager(_db, _db.lockInRuleRecords);
+  $$LockInAttemptsTableTableManager get lockInAttempts =>
+      $$LockInAttemptsTableTableManager(_db, _db.lockInAttempts);
 }

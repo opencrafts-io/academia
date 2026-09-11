@@ -237,6 +237,33 @@ class _EssentialsPageState extends State<EssentialsPage> {
                     subtitleTextStyle: Theme.of(context).textTheme.bodySmall,
                   ),
                 ),
+                const SizedBox(height: 12),
+                Card.filled(
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                  clipBehavior: Clip.hardEdge,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 4,
+                    ),
+                    leading: Icon(
+                      Icons.lock_clock_rounded,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    ),
+                    title: const Text('Lock In'),
+                    subtitle: const Text(
+                      'Block distracting apps during focus time',
+                    ),
+                    trailing: Icon(
+                      Icons.chevron_right_rounded,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    ),
+                    onTap: () => LockInRoute().push(context),
+                  ),
+                ),
                 SizedBox(height: 22),
                 Text(
                   "Explore tools",
