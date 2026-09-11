@@ -84,6 +84,46 @@ class _LockInPageState extends State<LockInPage> with WidgetsBindingObserver {
     if (mounted) await _refresh();
   }
 
+  Future<void> _deleteRule(LockRule rule) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        icon: const Icon(Icons.delete_outline_rounded),
+        title: Text('Delete ${rule.name}?'),
+        content: const Text(
+          'This removes the rule and its scheduled app blocking. Your blocked-open history stays on this device.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+              foregroundColor: Theme.of(context).colorScheme.onError,
+            ),
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Delete rule'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      await widget.service.deleteRule(rule.id);
+      if (mounted) await _refresh();
+    } on StateError catch (error) {
+      if (mounted) {
+        messenger.showSnackBar(
+          SnackBar(content: Text(error.message.toString())),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,6 +170,15 @@ class _LockInPageState extends State<LockInPage> with WidgetsBindingObserver {
               ),
             );
           }
+          final enabledRules = overview.rules.where((rule) => rule.enabled);
+          final protectedApps = {
+            for (final rule in enabledRules)
+              ...rule.apps.map((app) => app.identifier),
+          };
+          final blockedOpens = overview.attempts.values.fold(
+            0,
+            (total, count) => total + count,
+          );
           return RefreshIndicator.noSpinner(
             onRefresh: _refresh,
             child: CustomScrollView(
@@ -146,6 +195,69 @@ class _LockInPageState extends State<LockInPage> with WidgetsBindingObserver {
                           onGrant: _requestPermission,
                         )
                       else ...[
+                        Text(
+                          'Focus statistics',
+                          style: Theme.of(
+                            context,
+                          ).textTheme.titleLarge?.copyWith(fontWeight: .w800),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Your last 12 weeks, stored on this device.',
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurfaceVariant,
+                              ),
+                        ),
+                        const SizedBox(height: 12),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _FocusStatCard(
+                                value: blockedOpens,
+                                label: 'Blocked opens',
+                                detail: 'During focus time',
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.primaryContainer,
+                                foreground: Theme.of(
+                                  context,
+                                ).colorScheme.onPrimaryContainer,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: _FocusStatCard(
+                                value: enabledRules.length,
+                                label: 'Active rules',
+                                detail: 'Keeping you on track',
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.secondaryContainer,
+                                foreground: Theme.of(
+                                  context,
+                                ).colorScheme.onSecondaryContainer,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: _FocusStatCard(
+                                value: protectedApps.length,
+                                label: 'Apps protected',
+                                detail: 'Across your rules',
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.tertiaryContainer,
+                                foreground: Theme.of(
+                                  context,
+                                ).colorScheme.onTertiaryContainer,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 28),
                         Text(
                           'Recovery activity',
                           style: Theme.of(
@@ -197,28 +309,18 @@ class _LockInPageState extends State<LockInPage> with WidgetsBindingObserver {
                               ),
                             ),
                           ),
-                        for (final rule in overview.rules)
+                        for (final entry in overview.rules.indexed) ...[
                           _RuleCard(
-                            rule: rule,
-                            onEdit: () => _editRule(rule),
-                            onDelete: () async {
-                              final messenger = ScaffoldMessenger.of(context);
-                              try {
-                                await widget.service.deleteRule(rule.id);
-                                if (mounted) {
-                                  await _refresh();
-                                }
-                              } on StateError catch (error) {
-                                if (mounted) {
-                                  messenger.showSnackBar(
-                                    SnackBar(
-                                      content: Text(error.message.toString()),
-                                    ),
-                                  );
-                                }
-                              }
-                            },
+                            rule: entry.$2,
+                            onEdit: () => _editRule(entry.$2),
+                            onDelete: () => _deleteRule(entry.$2),
                           ),
+                          if (entry.$1 < overview.rules.length - 1)
+                            SizedBox(
+                              key: ValueKey('lock-in-rule-gap-${entry.$2.id}'),
+                              height: 12,
+                            ),
+                        ],
                       ],
                     ],
                   ),
@@ -292,6 +394,75 @@ class _PermissionCard extends StatelessWidget {
   }
 }
 
+class _FocusStatCard extends StatelessWidget {
+  const _FocusStatCard({
+    required this.value,
+    required this.label,
+    required this.detail,
+    required this.color,
+    required this.foreground,
+  });
+
+  final int value;
+  final String label;
+  final String detail;
+  final Color color;
+  final Color foreground;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      label: '$value $label. $detail.',
+      child: Container(
+        constraints: const BoxConstraints(minHeight: 144),
+        padding: const EdgeInsets.all(12),
+        decoration: ShapeDecoration(
+          color: color,
+          shape: RoundedSuperellipseBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: .start,
+          mainAxisAlignment: .spaceBetween,
+          children: [
+            Text(
+              '$value',
+              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                color: foreground,
+                fontWeight: .w800,
+              ),
+            ),
+            Column(
+              crossAxisAlignment: .start,
+              children: [
+                Text(
+                  label,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    color: foreground,
+                    fontWeight: .w700,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  detail,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: foreground.withValues(alpha: .72),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _RuleCard extends StatelessWidget {
   const _RuleCard({
     required this.rule,
@@ -316,7 +487,6 @@ class _RuleCard extends StatelessWidget {
     ).format(context);
     final colors = Theme.of(context).colorScheme;
     return Semantics(
-      button: !active,
       label: '${rule.name}, ${rule.apps.length} apps, $start to $end',
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
@@ -333,26 +503,77 @@ class _RuleCard extends StatelessWidget {
         ),
         child: Material(
           type: .transparency,
-          child: InkWell(
-            onTap: active ? null : onEdit,
-            child: ListTile(
-              title: Text(
-                rule.name,
-                style: Theme.of(
-                  context,
-                ).textTheme.titleMedium?.copyWith(fontWeight: .w700),
+          child: Column(
+            children: [
+              ListTile(
+                title: Text(
+                  rule.name,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleMedium?.copyWith(fontWeight: .w700),
+                ),
+                subtitle: Text(
+                  '${rule.apps.length} apps · $start–$end${rule.isOvernight ? ' next day' : ''}${active ? ' · Active' : ''}',
+                ),
               ),
-              subtitle: Text(
-                '${rule.apps.length} apps · $start–$end${rule.isOvernight ? ' next day' : ''}${active ? ' · Active' : ''}',
+              if (active)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                  child: Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: ShapeDecoration(
+                      color: colors.primary.withValues(alpha: .12),
+                      shape: RoundedSuperellipseBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.info_outline_rounded,
+                          color: colors.onPrimaryContainer,
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            'This rule is active and cannot be changed until it ends.',
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(
+                                  color: colors.onPrimaryContainer,
+                                  fontWeight: .w600,
+                                ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: active ? null : onEdit,
+                        icon: const Icon(Icons.edit_outlined),
+                        label: const Text('Edit rule'),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: TextButton.icon(
+                        style: TextButton.styleFrom(
+                          foregroundColor: colors.error,
+                        ),
+                        onPressed: active ? null : onDelete,
+                        icon: const Icon(Icons.delete_outline_rounded),
+                        label: const Text('Delete rule'),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              trailing: IconButton(
-                tooltip: active
-                    ? 'Active rules cannot be removed'
-                    : 'Delete rule',
-                onPressed: active ? null : onDelete,
-                icon: const Icon(Icons.delete_outline_rounded),
-              ),
-            ),
+            ],
           ),
         ),
       ),

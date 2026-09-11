@@ -12,12 +12,14 @@ import 'package:lock_in/src/presentation/lock_rule_editor_page.dart';
 void main() {
   late AppDatabaseV2 database;
   late _PermissionGateway gateway;
+  late LockInRepository repository;
   late LockInService service;
 
   setUp(() {
     database = AppDatabaseV2(NativeDatabase.memory());
     gateway = _PermissionGateway();
-    service = LockInService(LockInRepository(LockInDao(database)), gateway);
+    repository = LockInRepository(LockInDao(database));
+    service = LockInService(repository, gateway);
   });
 
   tearDown(() async {
@@ -80,6 +82,165 @@ void main() {
     expect(find.text('Instagram'), findsOneWidget);
     expect(find.byType(Image), findsOneWidget);
   });
+
+  testWidgets('shows local focus statistics on the dashboard', (tester) async {
+    gateway.grantPermission();
+    await repository.saveRule(
+      const LockRule(
+        id: 'work',
+        name: 'Work hours',
+        apps: [
+          BlockedApp(
+            identifier: 'com.instagram.android',
+            displayName: 'Instagram',
+          ),
+        ],
+        weekdays: {DateTime.monday},
+        startMinutes: 9 * 60,
+        endMinutes: 17 * 60,
+      ),
+    );
+    await repository.recordAttempt(
+      appIdentifier: 'com.instagram.android',
+      appName: 'Instagram',
+      ruleId: 'work',
+      occurredAt: DateTime.now(),
+    );
+    await tester.pumpWidget(MaterialApp(home: LockInPage(service: service)));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Focus statistics'), findsOneWidget);
+    expect(find.text('Blocked opens'), findsOneWidget);
+    expect(find.text('Active rules'), findsOneWidget);
+    expect(find.text('Apps protected'), findsOneWidget);
+  });
+
+  testWidgets('keeps Save rule in the persistent editor action bar', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(home: LockRuleEditorPage(service: service)),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('lock-in-save-action')), findsOneWidget);
+  });
+
+  testWidgets('updates an existing rule from the dashboard', (tester) async {
+    gateway.grantPermission();
+    await repository.saveRule(_inactiveRule());
+    await tester.pumpWidget(MaterialApp(home: LockInPage(service: service)));
+    await tester.pumpAndSettle();
+
+    await tester.scrollUntilVisible(find.text('Edit rule'), 300);
+    await tester.tap(find.text('Edit rule'));
+    await tester.pumpAndSettle();
+    expect(find.text('Edit Lock In rule'), findsOneWidget);
+
+    await tester.enterText(find.byType(TextField), 'Deep work');
+    await tester.tap(find.byKey(const Key('lock-in-save-action')));
+    await tester.pumpAndSettle();
+
+    await tester.scrollUntilVisible(find.text('Deep work'), 300);
+    expect(find.text('Deep work'), findsOneWidget);
+  });
+
+  testWidgets('confirms before deleting an existing rule', (tester) async {
+    gateway.grantPermission();
+    await repository.saveRule(_inactiveRule());
+    await tester.pumpWidget(MaterialApp(home: LockInPage(service: service)));
+    await tester.pumpAndSettle();
+
+    await tester.scrollUntilVisible(find.text('Delete rule'), 300);
+    await tester.tap(find.text('Delete rule'));
+    await tester.pumpAndSettle();
+    expect(find.text('Delete Work hours?'), findsOneWidget);
+
+    await tester.tap(find.text('Delete rule').last);
+    await tester.pumpAndSettle();
+
+    await tester.scrollUntilVisible(find.textContaining('No rules yet'), 300);
+    expect(find.textContaining('No rules yet'), findsOneWidget);
+  });
+
+  testWidgets('explains why an active rule cannot be changed', (tester) async {
+    gateway.grantPermission();
+    await repository.saveRule(_activeRule());
+    await tester.pumpWidget(MaterialApp(home: LockInPage(service: service)));
+    await tester.pumpAndSettle();
+
+    await tester.scrollUntilVisible(
+      find.text('This rule is active and cannot be changed until it ends.'),
+      300,
+    );
+
+    expect(
+      find.text('This rule is active and cannot be changed until it ends.'),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('separates dashboard rule cards', (tester) async {
+    gateway.grantPermission();
+    await repository.saveRule(_inactiveRule());
+    await repository.saveRule(
+      _inactiveRule(
+        id: 'study',
+        name: 'Study time',
+        appIdentifier: 'com.youtube.android',
+      ),
+    );
+    expect(await repository.getRules(), hasLength(2));
+    await tester.pumpWidget(MaterialApp(home: LockInPage(service: service)));
+    await tester.pumpAndSettle();
+
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, -1000));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget.key == const ValueKey('lock-in-rule-gap-work') ||
+            widget.key == const ValueKey('lock-in-rule-gap-study'),
+      ),
+      findsOneWidget,
+    );
+  });
+}
+
+LockRule _inactiveRule({
+  String id = 'work',
+  String name = 'Work hours',
+  String appIdentifier = 'com.instagram.android',
+}) {
+  final weekday = DateTime.now().weekday == DateTime.monday
+      ? DateTime.tuesday
+      : DateTime.monday;
+  return LockRule(
+    id: id,
+    name: name,
+    apps: [BlockedApp(identifier: appIdentifier, displayName: 'Instagram')],
+    weekdays: {weekday},
+    startMinutes: 9 * 60,
+    endMinutes: 17 * 60,
+  );
+}
+
+LockRule _activeRule() {
+  final now = DateTime.now();
+  final currentMinute = now.hour * 60 + now.minute;
+  final startsAt = currentMinute == 1439 ? 1438 : currentMinute;
+  final endsAt = currentMinute == 1439 ? 0 : currentMinute + 1;
+  return LockRule(
+    id: 'active-work',
+    name: 'Active work',
+    apps: const [
+      BlockedApp(identifier: 'com.instagram.android', displayName: 'Instagram'),
+    ],
+    weekdays: {now.weekday},
+    startMinutes: startsAt,
+    endMinutes: endsAt,
+  );
 }
 
 final _transparentPng = Uint8List.fromList(const [

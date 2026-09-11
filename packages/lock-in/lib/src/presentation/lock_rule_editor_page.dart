@@ -110,6 +110,25 @@ class _LockRuleEditorPageState extends State<LockRuleEditorPage> {
           widget.rule == null ? 'New Lock In rule' : 'Edit Lock In rule',
         ),
       ),
+      bottomNavigationBar: SafeArea(
+        minimum: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+        child: FilledButton.icon(
+          key: const Key('lock-in-save-action'),
+          onPressed: _saving ? null : _save,
+          icon: _saving
+              ? const SizedBox.square(
+                  dimension: 20,
+                  child: WavyCircularProgressIndicator(
+                    size: 20,
+                    amplitude: 2,
+                    frequency: 8,
+                  ),
+                )
+              : const Icon(Icons.check_rounded),
+          label: Text(_saving ? 'Saving…' : 'Save rule'),
+          style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(56)),
+        ),
+      ),
       body: FutureBuilder<List<BlockedApp>>(
         future: _apps,
         builder: (context, snapshot) {
@@ -194,10 +213,6 @@ class _LockRuleEditorPageState extends State<LockRuleEditorPage> {
                 ),
               ),
               const SizedBox(height: 20),
-              FilledButton(
-                onPressed: _saving ? null : _save,
-                child: Text(_saving ? 'Saving…' : 'Save rule'),
-              ),
             ],
           );
         },
