@@ -9,8 +9,8 @@ import 'package:material3_indicators/material3_indicators.dart';
 /// Explains a blocked feature and owns the in-app plan selection flow.
 ///
 /// The optional [onWebHandoffRequested] callback is deliberately the final
-/// seam in this feature. The app can prepare an order without knowing how the
-/// separate checkout web app is hosted or navigated to.
+/// seam in this feature. The app receives a short-lived checkout URL without
+/// this package deciding how the separate checkout web app is opened.
 class PaywallPage extends StatelessWidget {
   const PaywallPage({
     super.key,
@@ -21,7 +21,7 @@ class PaywallPage extends StatelessWidget {
 
   final String featureName;
   final String? accessMessage;
-  final ValueChanged<Order>? onWebHandoffRequested;
+  final ValueChanged<CheckoutSession>? onWebHandoffRequested;
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +31,26 @@ class PaywallPage extends StatelessWidget {
     >(
       listener: (context, state) {
         final failure = state.failure;
-        if (failure == null) return;
+        if (failure != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(failure.message), behavior: .floating),
+          );
+        }
+        final session = state.checkoutSession;
+        if (state.status != SubscriptionManagementStatus.checkoutSessionReady ||
+            session == null) {
+          return;
+        }
+        final callback = onWebHandoffRequested;
+        if (callback != null) {
+          callback(session);
+          return;
+        }
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(failure.message), behavior: .floating),
+          const SnackBar(
+            content: Text('Checkout is ready to continue on the web.'),
+            behavior: .floating,
+          ),
         );
       },
       builder: (context, state) {
@@ -131,7 +148,7 @@ class PaywallPage extends StatelessWidget {
                               .add(const CreateSubscriptionOrder()),
                           onWebHandoff: state.order == null
                               ? null
-                              : () => _showWebHandoff(context, state.order!),
+                              : () => _showWebHandoff(context),
                         ),
                         const SizedBox(height: 8),
                         Center(
@@ -158,7 +175,7 @@ class PaywallPage extends StatelessWidget {
     );
   }
 
-  Future<void> _showWebHandoff(BuildContext context, Order order) async {
+  Future<void> _showWebHandoff(BuildContext context) async {
     final shouldContinue = await showModalBottomSheet<bool>(
       context: context,
       showDragHandle: true,
@@ -169,18 +186,8 @@ class PaywallPage extends StatelessWidget {
     );
     if (shouldContinue != true || !context.mounted) return;
 
-    final callback = onWebHandoffRequested;
-    if (callback != null) {
-      callback(order);
-      return;
-    }
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-          'Your order is ready. Web checkout will be connected here.',
-        ),
-        behavior: .floating,
-      ),
+    context.read<SubscriptionManagementBloc>().add(
+      const RequestCheckoutSession(),
     );
   }
 }
@@ -239,8 +246,11 @@ class _PaywallAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isCreating =
-        state.status == SubscriptionManagementStatus.creatingOrder;
-    final isReady = state.status == SubscriptionManagementStatus.orderReady;
+        state.status == SubscriptionManagementStatus.creatingOrder ||
+        state.status == SubscriptionManagementStatus.creatingCheckoutSession;
+    final isReady =
+        state.status == SubscriptionManagementStatus.orderReady ||
+        state.status == SubscriptionManagementStatus.checkoutSessionReady;
     final enabled = isReady
         ? onWebHandoff != null || state.order != null
         : state.selectedPlan != null && !isCreating;
@@ -263,7 +273,10 @@ class _PaywallAction extends StatelessWidget {
             : Icon(isReady ? Icons.open_in_new_rounded : Icons.arrow_forward),
         label: Text(
           isCreating
-              ? 'Preparing order…'
+              ? state.status ==
+                        SubscriptionManagementStatus.creatingCheckoutSession
+                    ? 'Preparing checkout…'
+                    : 'Preparing order…'
               : isReady
               ? 'Continue on the web'
               : 'Review order',

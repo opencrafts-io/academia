@@ -14,18 +14,21 @@ class SubscriptionManagementBloc
     this._getCurrentSubscriptionStatus,
     this._createOrder,
     this._createOrderItem,
+    this._createCheckoutSession,
   ) : super(const SubscriptionManagementState()) {
     on<LoadSubscriptionManagement>(_load);
     on<RefreshSubscriptionManagement>(_load);
     on<SelectSubscriptionPlan>(_selectPlan);
     on<CreateSubscriptionOrder>(_createSubscriptionOrder);
     on<ClearSubscriptionOrder>(_clearOrder);
+    on<RequestCheckoutSession>(_createCheckoutSessionRequest);
   }
 
   final GetPlans _getPlans;
   final GetCurrentSubscriptionStatus _getCurrentSubscriptionStatus;
   final CreateOrder _createOrder;
   final CreateOrderItem _createOrderItem;
+  final CreateCheckoutSession _createCheckoutSession;
 
   Future<void> _load(
     SubscriptionManagementEvent event,
@@ -75,6 +78,7 @@ class SubscriptionManagementBloc
         selectedPlan: selectedPlan,
         clearOrder: true,
         orderItems: const [],
+        clearCheckoutSession: true,
         clearFailure: true,
       ),
     );
@@ -91,6 +95,7 @@ class SubscriptionManagementBloc
         selectedPlan: event.plan,
         clearOrder: true,
         orderItems: const [],
+        clearCheckoutSession: true,
         clearFailure: true,
       ),
     );
@@ -130,6 +135,7 @@ class SubscriptionManagementBloc
     emit(
       state.copyWith(
         status: SubscriptionManagementStatus.creatingOrder,
+        clearCheckoutSession: true,
         clearFailure: true,
       ),
     );
@@ -191,7 +197,55 @@ class SubscriptionManagementBloc
         status: SubscriptionManagementStatus.ready,
         clearOrder: true,
         orderItems: const [],
+        clearCheckoutSession: true,
         clearFailure: true,
+      ),
+    );
+  }
+
+  Future<void> _createCheckoutSessionRequest(
+    RequestCheckoutSession event,
+    Emitter<SubscriptionManagementState> emit,
+  ) async {
+    final order = state.order;
+    if (order == null) {
+      emit(
+        state.copyWith(
+          status: SubscriptionManagementStatus.failure,
+          failure: const Failure.validation(
+            message: 'Create an order before starting checkout',
+            code: 'BILLING_ORDER_REQUIRED',
+          ),
+        ),
+      );
+      return;
+    }
+
+    emit(
+      state.copyWith(
+        status: SubscriptionManagementStatus.creatingCheckoutSession,
+        clearCheckoutSession: true,
+        clearFailure: true,
+      ),
+    );
+    final result = await _createCheckoutSession(
+      CreateCheckoutSessionRequest(orderId: order.id),
+    );
+    if (isClosed) return;
+
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          status: SubscriptionManagementStatus.failure,
+          failure: failure,
+        ),
+      ),
+      (session) => emit(
+        state.copyWith(
+          status: SubscriptionManagementStatus.checkoutSessionReady,
+          checkoutSession: session,
+          clearFailure: true,
+        ),
       ),
     );
   }

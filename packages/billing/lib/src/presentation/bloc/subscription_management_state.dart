@@ -7,6 +7,8 @@ enum SubscriptionManagementStatus {
   ready,
   creatingOrder,
   orderReady,
+  creatingCheckoutSession,
+  checkoutSessionReady,
   failure,
 }
 
@@ -19,6 +21,7 @@ class SubscriptionManagementState {
     this.selectedPlan,
     this.order,
     this.orderItems = const [],
+    this.checkoutSession,
     this.failure,
   });
 
@@ -28,6 +31,7 @@ class SubscriptionManagementState {
   final Plan? selectedPlan;
   final Order? order;
   final List<OrderItem> orderItems;
+  final CheckoutSession? checkoutSession;
   final Failure? failure;
 
   bool get hasOrder => order != null;
@@ -41,6 +45,8 @@ class SubscriptionManagementState {
     Order? order,
     bool clearOrder = false,
     List<OrderItem>? orderItems,
+    CheckoutSession? checkoutSession,
+    bool clearCheckoutSession = false,
     Failure? failure,
     bool clearFailure = false,
   }) {
@@ -53,6 +59,9 @@ class SubscriptionManagementState {
           : selectedPlan ?? this.selectedPlan,
       order: clearOrder ? null : order ?? this.order,
       orderItems: orderItems ?? this.orderItems,
+      checkoutSession: clearCheckoutSession
+          ? null
+          : checkoutSession ?? this.checkoutSession,
       failure: clearFailure ? null : failure ?? this.failure,
     );
   }

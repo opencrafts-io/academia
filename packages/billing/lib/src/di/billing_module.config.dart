@@ -16,6 +16,7 @@ import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 
 import '../data/data.dart' as _i433;
+import '../data/datasources/checkout_remote_datasource.dart' as _i585;
 import '../data/datasources/entitlement_local_datasource.dart' as _i763;
 import '../data/datasources/entitlement_remote_datasource.dart' as _i368;
 import '../data/datasources/order_local_datasource.dart' as _i942;
@@ -24,12 +25,14 @@ import '../data/datasources/plan_local_datasource.dart' as _i774;
 import '../data/datasources/plan_remote_datasource.dart' as _i745;
 import '../data/datasources/subscription_local_datasource.dart' as _i376;
 import '../data/datasources/subscription_remote_datasource.dart' as _i215;
+import '../data/repository/checkout_repository_impl.dart' as _i308;
 import '../data/repository/entitlement_repository_impl.dart' as _i973;
 import '../data/repository/order_repository_impl.dart' as _i642;
 import '../data/repository/plan_repository_impl.dart' as _i68;
 import '../data/repository/subscription_repository_impl.dart' as _i949;
 import '../domain/domain.dart' as _i515;
 import '../domain/services/billing_service.dart' as _i692;
+import '../domain/usecases/create_checkout_session.dart' as _i867;
 import '../domain/usecases/create_order.dart' as _i170;
 import '../domain/usecases/create_order_item.dart' as _i727;
 import '../domain/usecases/get_current_subscription_status.dart' as _i1067;
@@ -56,6 +59,9 @@ _i174.GetIt initBilling(
     () => _i942.OrderLocalDatasource(orderDao: gh<_i252.OrderDao>()),
   );
   gh.lazySingleton<_i692.BillingClock>(() => const _i692.SystemBillingClock());
+  gh.lazySingleton<_i585.CheckoutRemoteDataSource>(
+    () => _i585.CheckoutRemoteDatasourceImpl(apiClient: gh<_i494.ApiClient>()),
+  );
   gh.lazySingleton<_i908.OrderRemoteDataSource>(
     () => _i908.OrderRemoteDatasourceImpl(apiClient: gh<_i494.ApiClient>()),
   );
@@ -90,6 +96,11 @@ _i174.GetIt initBilling(
       remoteDataSource: gh<_i433.EntitlementRemoteDataSource>(),
     ),
   );
+  gh.lazySingleton<_i515.CheckoutRepository>(
+    () => _i308.CheckoutRepositoryImpl(
+      remoteDataSource: gh<_i433.CheckoutRemoteDataSource>(),
+    ),
+  );
   gh.lazySingleton<_i515.PlanRepository>(
     () => _i68.PlanRepositoryImpl(
       planLocalDatasource: gh<_i433.PlanLocalDatasource>(),
@@ -121,6 +132,9 @@ _i174.GetIt initBilling(
       clock: gh<_i692.BillingClock>(),
     ),
   );
+  gh.factory<_i867.CreateCheckoutSession>(
+    () => _i867.CreateCheckoutSession(gh<_i515.CheckoutRepository>()),
+  );
   gh.lazySingleton<_i515.OrderRepository>(
     () => _i642.OrderRepositoryImpl(
       localDataSource: gh<_i433.OrderLocalDatasource>(),
@@ -149,6 +163,7 @@ _i174.GetIt initBilling(
       gh<_i515.GetCurrentSubscriptionStatus>(),
       gh<_i515.CreateOrder>(),
       gh<_i515.CreateOrderItem>(),
+      gh<_i515.CreateCheckoutSession>(),
     ),
   );
   return getIt;

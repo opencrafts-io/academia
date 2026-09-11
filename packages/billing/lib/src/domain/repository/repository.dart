@@ -27,6 +27,12 @@ abstract class OrderRepository {
   );
 }
 
+abstract class CheckoutRepository {
+  Future<Either<Failure, domain.CheckoutSession>> createCheckoutSession(
+    domain.CreateCheckoutSessionRequest request,
+  );
+}
+
 abstract class SubscriptionRepository {
   Future<Either<Failure, domain.SubscriptionStatus>> getCurrentStatus();
 }

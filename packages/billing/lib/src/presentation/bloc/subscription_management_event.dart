@@ -25,3 +25,7 @@ class CreateSubscriptionOrder extends SubscriptionManagementEvent {
 class ClearSubscriptionOrder extends SubscriptionManagementEvent {
   const ClearSubscriptionOrder();
 }
+
+class RequestCheckoutSession extends SubscriptionManagementEvent {
+  const RequestCheckoutSession();
+}

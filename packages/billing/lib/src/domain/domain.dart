@@ -4,6 +4,8 @@ export 'entities/order.dart';
 export 'entities/order_item.dart';
 export 'entities/create_order_request.dart';
 export 'entities/create_order_item_request.dart';
+export 'entities/checkout_session.dart';
+export 'entities/create_checkout_session_request.dart';
 export 'entities/subscription.dart';
 export 'entities/subscription_status.dart';
 
@@ -15,6 +17,7 @@ export 'usecases/get_orders.dart';
 export 'usecases/get_order_by_id.dart';
 export 'usecases/create_order.dart';
 export 'usecases/create_order_item.dart';
+export 'usecases/create_checkout_session.dart';
 export 'usecases/get_order_items.dart';
 export 'usecases/get_current_subscription_status.dart';
 export 'usecases/get_entitlements_by_plan_code.dart';

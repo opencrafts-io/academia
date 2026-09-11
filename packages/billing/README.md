@@ -77,6 +77,7 @@ requests use `/verisafe`.
 | Plans | `/qa-verisafe/plans` or `/verisafe/plans` |
 | Orders | `/qa-verisafe/orders` or `/verisafe/orders` |
 | Order items | `/orders/{orderId}/items` under the active prefix |
+| Checkout sessions | `/checkout-sessions` under the active prefix |
 | Current subscription | `/subscriptions/me` under the active prefix |
 | Entitlements | `/entitlements/{planCode}` under the active prefix |
 
@@ -112,10 +113,14 @@ Use `SubscriptionManagementBloc` for the package paywall flow. It can:
 - select an active, visible plan;
 - create an order;
 - create the order item for the selected plan;
+- create a short-lived checkout session for the prepared order;
 - clear the pending order state.
 
-Creating an order does not complete payment by itself. Checkout/payment is
-handled outside this package by the web billing flow.
+Creating an order or checkout session does not complete payment by itself.
+The paywall exposes the returned `CheckoutSession` through
+`onWebHandoffRequested`; the host app decides how and where to open its
+`checkoutUrl`. Checkout/payment is handled outside this package by the web
+billing flow.
 
 ### Call Use Cases Directly
 
