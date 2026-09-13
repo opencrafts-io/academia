@@ -572,58 +572,68 @@ class _PostCardState extends State<PostCard> {
                 builder: (context, feedState) {
                   return BlocBuilder<PostCubit, Post>(
                     builder: (context, post) {
-                      return Row(
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          PostLikeButton(
-                            upvotes: post.upvotes,
-                            isLiked: post.isLikedByMe,
-                            onTap: () {
-                              final profileState = context
-                                  .read<ProfileBloc>()
-                                  .state;
-                              if (profileState is! ProfileLoadedState) return;
-                              final cubit = context.read<PostCubit>();
-                              final previousFeedState = context
-                                  .read<FeedBloc>()
-                                  .state;
-                              cubit.toggleLikeOptimistic();
-                              context.read<FeedBloc>().add(
-                                ToggleLikePost(
-                                  post: post,
-                                  isCurrentlyLiked: post.isLikedByMe,
-                                  voterId: profileState.profile.id,
-                                  previousState: previousFeedState,
+                          if (post.poll != null) ...[
+                            const PollWidget(),
+                            const SizedBox(height: 8),
+                          ],
+                          Row(
+                            children: [
+                              PostLikeButton(
+                                upvotes: post.upvotes,
+                                isLiked: post.isLikedByMe,
+                                onTap: () {
+                                  final profileState = context
+                                      .read<ProfileBloc>()
+                                      .state;
+                                  if (profileState is! ProfileLoadedState)
+                                    return;
+                                  final cubit = context.read<PostCubit>();
+                                  final previousFeedState = context
+                                      .read<FeedBloc>()
+                                      .state;
+                                  cubit.toggleLikeOptimistic();
+                                  context.read<FeedBloc>().add(
+                                    ToggleLikePost(
+                                      post: post,
+                                      isCurrentlyLiked: post.isLikedByMe,
+                                      voterId: profileState.profile.id,
+                                      previousState: previousFeedState,
+                                    ),
+                                  );
+                                },
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 6,
                                 ),
-                              );
-                            },
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 6,
-                            ),
-                            iconSize: 18,
-                          ),
-                          const SizedBox(width: 8),
+                                iconSize: 18,
+                              ),
+                              const SizedBox(width: 8),
 
-                          FilledButton.icon(
-                            style: FilledButton.styleFrom(
-                              padding: const EdgeInsets.all(2),
-                              backgroundColor: Theme.of(
-                                context,
-                              ).colorScheme.tertiaryContainer,
-                              foregroundColor: Theme.of(
-                                context,
-                              ).colorScheme.onTertiaryContainer,
-                            ),
-                            icon: const Icon(Icons.chat),
-                            onPressed: widget.onTap,
-                            label: Text('${post.commentCount}'),
-                          ),
-                          const SizedBox(width: 8),
-                          OutlinedButton.icon(
-                            iconAlignment: IconAlignment.start,
-                            onPressed: null,
-                            label: Text(post.viewsCount.toString()),
-                            icon: const Icon(Icons.visibility),
+                              FilledButton.icon(
+                                style: FilledButton.styleFrom(
+                                  padding: const EdgeInsets.all(2),
+                                  backgroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.tertiaryContainer,
+                                  foregroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.onTertiaryContainer,
+                                ),
+                                icon: const Icon(Icons.chat),
+                                onPressed: widget.onTap,
+                                label: Text('${post.commentCount}'),
+                              ),
+                              const SizedBox(width: 8),
+                              OutlinedButton.icon(
+                                iconAlignment: IconAlignment.start,
+                                onPressed: null,
+                                label: Text(post.viewsCount.toString()),
+                                icon: const Icon(Icons.visibility),
+                              ),
+                            ],
                           ),
                         ],
                       );
@@ -666,8 +676,8 @@ class PostLikeButton extends StatelessWidget {
         ? Theme.of(context).colorScheme.error
         : Theme.of(context).colorScheme.onSurfaceVariant;
 
-    final effectivePadding = padding ??
-        const EdgeInsets.symmetric(horizontal: 12, vertical: 8);
+    final effectivePadding =
+        padding ?? const EdgeInsets.symmetric(horizontal: 12, vertical: 8);
     final effectiveIconSize = iconSize ?? 20;
 
     return GestureDetector(

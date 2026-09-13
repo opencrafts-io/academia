@@ -509,10 +509,21 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   sl.registerFactory<ChirpRemoteDataSource>(
     () => ChirpRemoteDataSource(dioClient: sl.get<DioClient>(), flavor: flavor),
   );
+  // Polls: the chirp backend has no poll endpoints yet, so an in-memory mock
+  // stands in (singleton so votes persist across repository instances).
+  // TODO(polls): swap to ChirpPollRemoteDataSource once the backend ships:
+  //   () => ChirpPollRemoteDataSource(dioClient: sl(), flavor: flavor)
+  sl.registerLazySingleton<PollRemoteDataSource>(
+    () => MockPollRemoteDataSource(
+      // Fail every 5th vote in development so rollback UX is exercised.
+      failEveryNth: flavor.isDevelopment ? 5 : 0,
+    ),
+  );
   sl.registerFactory<ChirpRepository>(
     () => ChirpRepositoryImpl(
       remoteDataSource: sl.get<ChirpRemoteDataSource>(),
       localDataSource: sl<ChirpPostLocalDataSource>(),
+      pollRemoteDataSource: sl<PollRemoteDataSource>(),
     ),
   );
   sl.registerFactory(() => GetFeedPostsUsecase(sl()));
@@ -548,6 +559,15 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     () => LikePostUsecase(chirpRepository: sl.get<ChirpRepository>()),
   );
   sl.registerFactory(
+    () => VoteOnPollUsecase(chirpRepository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
+    () => RetractPollVoteUsecase(chirpRepository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
+    () => GetPollVotersUsecase(chirpRepository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
     () => FeedBloc(
       getPostsFromCommunityUsecase: sl<GetPostsFromCommunityUsecase>(),
       getFeedPosts: sl.get<GetFeedPostsUsecase>(),
@@ -557,6 +577,8 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
       createPostAttachment: sl.get<CreatePostAttachmentUsecase>(),
       deletePost: sl.get<DeletePostUsecase>(),
       likePost: sl.get<LikePostUsecase>(),
+      voteOnPoll: sl.get<VoteOnPollUsecase>(),
+      retractPollVote: sl.get<RetractPollVoteUsecase>(),
       // addComment: sl.get<CommentUsecase>(),
       // getPostReplies: sl.get<GetPostRepliesUsecase>(),
     ),

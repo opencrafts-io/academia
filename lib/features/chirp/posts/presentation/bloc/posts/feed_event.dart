@@ -30,6 +30,7 @@ class CreatePostEvent extends FeedEvent {
   final int communityId;
   final String content;
   final List<XFile> attachments;
+  final PollDraft? poll;
 
   CreatePostEvent({
     required this.title,
@@ -37,6 +38,7 @@ class CreatePostEvent extends FeedEvent {
     required this.communityId,
     required this.content,
     this.attachments = const [],
+    this.poll,
   });
 }
 
@@ -57,6 +59,7 @@ class ToggleLikePost extends FeedEvent {
   final Post post;
   final bool isCurrentlyLiked;
   final String voterId;
+
   /// The state before the optimistic update — used to restore on failure.
   final FeedState? previousState;
 
@@ -75,4 +78,27 @@ class UpdatePostInFeed extends FeedEvent {
 
   @override
   List<Object> get props => [updatedPost];
+}
+
+/// Replace the user's poll selection on [post] with [optionIds].
+/// The UI applies the change optimistically via [PostCubit] first; on failure
+/// the bloc emits [PollVoteError] so the card can roll back.
+class VoteOnPollEvent extends FeedEvent {
+  final Post post;
+  final List<int> optionIds;
+  final String voterId;
+
+  VoteOnPollEvent({
+    required this.post,
+    required this.optionIds,
+    required this.voterId,
+  });
+}
+
+/// Remove all of the user's poll selections on [post].
+class RetractPollVoteEvent extends FeedEvent {
+  final Post post;
+  final String voterId;
+
+  RetractPollVoteEvent({required this.post, required this.voterId});
 }

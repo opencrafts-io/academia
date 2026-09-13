@@ -31,6 +31,7 @@ class _AddPostPageState extends State<AddPostPage> {
   final List<XFile> attachments = [];
   Community? _selectedCommunity;
   String? authorId;
+  PollDraft? _pollDraft;
 
   final TextEditingController _postTitleController = TextEditingController();
   final TextEditingController _postDescriptionController =
@@ -126,6 +127,12 @@ class _AddPostPageState extends State<AddPostPage> {
     }
   }
 
+  Future<void> _openPollSheet() async {
+    final draft = await showCreatePollSheet(context, initial: _pollDraft);
+    if (draft == null || !mounted) return;
+    setState(() => _pollDraft = draft);
+  }
+
   void _showSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message), behavior: SnackBarBehavior.floating),
@@ -149,6 +156,7 @@ class _AddPostPageState extends State<AddPostPage> {
         communityId: _selectedCommunity!.id,
         content: _postDescriptionController.text.trim(),
         attachments: List<XFile>.from(attachments),
+        poll: _pollDraft,
       ),
     );
 
@@ -158,6 +166,7 @@ class _AddPostPageState extends State<AddPostPage> {
       _postDescriptionController.clear();
       attachments.clear();
       _selectedCommunity = null;
+      _pollDraft = null;
     });
 
     context.pop(true);
@@ -401,6 +410,15 @@ class _AddPostPageState extends State<AddPostPage> {
                                 _pickVideo(ImageSource.gallery),
                             icon: Icons.video_library_outlined,
                           ),
+                          LabeledIconButton(
+                            label: _pollDraft == null
+                                ? "Add poll"
+                                : "Edit poll",
+                            onPressed: _openPollSheet,
+                            icon: _pollDraft == null
+                                ? Icons.poll_outlined
+                                : Icons.poll,
+                          ),
                         ],
                       ),
                       Divider(),
@@ -409,6 +427,17 @@ class _AddPostPageState extends State<AddPostPage> {
                 ),
               ),
             ),
+            if (_pollDraft != null)
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                sliver: SliverToBoxAdapter(
+                  child: PollDraftPreview(
+                    draft: _pollDraft!,
+                    onEdit: _openPollSheet,
+                    onRemove: () => setState(() => _pollDraft = null),
+                  ),
+                ),
+              ),
             SliverVisibility(
               visible: attachments.isNotEmpty,
               maintainSize: false,

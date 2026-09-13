@@ -1,4 +1,5 @@
 export 'entities/post.dart';
+export 'entities/poll.dart';
 export 'repository/chirp_repository.dart';
 export 'usecases/get_feed_posts_usecase.dart';
 export 'usecases/cache_posts.dart';
@@ -15,3 +16,6 @@ export 'usecases/mark_post_as_viewed_usecase.dart';
 export 'usecases/delete_post_usecase.dart';
 export 'usecases/get_posts_from_community_usecase.dart';
 export 'usecases/delete_post_comment_usecase.dart';
+export 'usecases/vote_on_poll_usecase.dart';
+export 'usecases/retract_poll_vote_usecase.dart';
+export 'usecases/get_poll_voters_usecase.dart';

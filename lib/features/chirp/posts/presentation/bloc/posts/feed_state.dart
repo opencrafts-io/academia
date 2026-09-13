@@ -126,3 +126,15 @@ class PostLikeError extends FeedState {
   @override
   List<Object?> get props => [post, message];
 }
+
+/// Emitted when a poll vote/retract API call fails.
+/// The [post] is the original pre-vote version for UI rollback.
+class PollVoteError extends FeedState {
+  final Post post;
+  final String message;
+
+  PollVoteError({required this.post, required this.message});
+
+  @override
+  List<Object?> get props => [post, message];
+}

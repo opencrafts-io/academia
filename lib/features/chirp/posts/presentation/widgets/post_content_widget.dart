@@ -85,8 +85,7 @@ class _PostContentWidgetState extends State<PostContentWidget> {
                   onPressed: () {
                     final url =
                         'https://academia.opencrafts.io${PostDetailRoute(postId: widget.post.id).location}';
-                    final box =
-                        context.findRenderObject() as RenderBox?;
+                    final box = context.findRenderObject() as RenderBox?;
                     Share.share(
                       'Check out this post on Academia:\n\n'
                       '📝 ${widget.post.title}\n\n'
@@ -197,9 +196,9 @@ class _PostContentWidgetState extends State<PostContentWidget> {
                               listener: (context, state) {
                                 if (state is PostLikeError &&
                                     state.post.id == widget.post.id) {
-                                  context
-                                      .read<PostCubit>()
-                                      .rollbackLike(state.post);
+                                  context.read<PostCubit>().rollbackLike(
+                                    state.post,
+                                  );
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: Text(
@@ -221,57 +220,79 @@ class _PostContentWidgetState extends State<PostContentWidget> {
                               builder: (context, _) {
                                 return BlocBuilder<PostCubit, Post>(
                                   builder: (context, post) {
-                                    return Row(
+                                    return Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        PostLikeButton(
-                                          upvotes: post.upvotes,
-                                          isLiked: post.isLikedByMe,
-                                          onTap: () {
-                                            final profileState =
-                                                context.read<ProfileBloc>().state;
-                                            if (profileState
-                                                is! ProfileLoadedState) return;
-                                            final cubit =
-                                                context.read<PostCubit>();
-                                            final previousFeedState =
-                                                context.read<FeedBloc>().state;
-                                            cubit.toggleLikeOptimistic();
-                                            context.read<FeedBloc>().add(
-                                              ToggleLikePost(
-                                                post: post,
-                                                isCurrentlyLiked:
-                                                    post.isLikedByMe,
-                                                voterId:
-                                                    profileState.profile.id,
-                                                previousState: previousFeedState,
+                                        if (post.poll != null) ...[
+                                          const PollWidget(),
+                                          const SizedBox(height: 8),
+                                        ],
+                                        Row(
+                                          children: [
+                                            PostLikeButton(
+                                              upvotes: post.upvotes,
+                                              isLiked: post.isLikedByMe,
+                                              onTap: () {
+                                                final profileState = context
+                                                    .read<ProfileBloc>()
+                                                    .state;
+                                                if (profileState
+                                                    is! ProfileLoadedState)
+                                                  return;
+                                                final cubit = context
+                                                    .read<PostCubit>();
+                                                final previousFeedState =
+                                                    context
+                                                        .read<FeedBloc>()
+                                                        .state;
+                                                cubit.toggleLikeOptimistic();
+                                                context.read<FeedBloc>().add(
+                                                  ToggleLikePost(
+                                                    post: post,
+                                                    isCurrentlyLiked:
+                                                        post.isLikedByMe,
+                                                    voterId:
+                                                        profileState.profile.id,
+                                                    previousState:
+                                                        previousFeedState,
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                            const SizedBox(width: 8),
+                                            FilledButton.icon(
+                                              style: FilledButton.styleFrom(
+                                                padding: const EdgeInsets.all(
+                                                  2,
+                                                ),
+                                                backgroundColor: Theme.of(
+                                                  context,
+                                                ).colorScheme.tertiaryContainer,
+                                                foregroundColor:
+                                                    Theme.of(context)
+                                                        .colorScheme
+                                                        .onTertiaryContainer,
                                               ),
-                                            );
-                                          },
-                                        ),
-                                        const SizedBox(width: 8),
-                                        FilledButton.icon(
-                                          style: FilledButton.styleFrom(
-                                            padding: const EdgeInsets.all(2),
-                                            backgroundColor: Theme.of(
-                                              context,
-                                            ).colorScheme.tertiaryContainer,
-                                            foregroundColor: Theme.of(
-                                              context,
-                                            ).colorScheme.onTertiaryContainer,
-                                          ),
-                                          icon: const Icon(Icons.chat),
-                                          onPressed: () {},
-                                          label:
-                                              Text('${post.commentCount}'),
-                                        ),
-                                        const SizedBox(width: 8),
-                                        OutlinedButton.icon(
-                                          iconAlignment: IconAlignment.start,
-                                          onPressed: null,
-                                          label: Text(
-                                            post.viewsCount.toString(),
-                                          ),
-                                          icon: const Icon(Icons.visibility),
+                                              icon: const Icon(Icons.chat),
+                                              onPressed: () {},
+                                              label: Text(
+                                                '${post.commentCount}',
+                                              ),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            OutlinedButton.icon(
+                                              iconAlignment:
+                                                  IconAlignment.start,
+                                              onPressed: null,
+                                              label: Text(
+                                                post.viewsCount.toString(),
+                                              ),
+                                              icon: const Icon(
+                                                Icons.visibility,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     );
@@ -423,4 +444,3 @@ class _PostContentWidgetState extends State<PostContentWidget> {
     );
   }
 }
-

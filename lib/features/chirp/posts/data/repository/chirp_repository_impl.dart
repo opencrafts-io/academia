@@ -1,4 +1,5 @@
 import 'package:academia/core/core.dart';
+import 'package:academia/database/database.dart';
 import 'package:academia/features/features.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
@@ -6,11 +7,20 @@ import 'package:dio/dio.dart';
 class ChirpRepositoryImpl implements ChirpRepository {
   final ChirpRemoteDataSource remoteDataSource;
   final ChirpPostLocalDataSource localDataSource;
+  final PollRemoteDataSource pollRemoteDataSource;
 
   ChirpRepositoryImpl({
     required this.remoteDataSource,
     required this.localDataSource,
+    required this.pollRemoteDataSource,
   });
+
+  /// While polls are mocked, feed posts get demo polls attached here so the
+  /// UI is exercisable. A no-op once the real datasource is wired in DI.
+  PostData _decoratePoll(PostData post) {
+    final ds = pollRemoteDataSource;
+    return ds is MockPollRemoteDataSource ? ds.decorate(post) : post;
+  }
 
   @override
   Future<Either<Failure, PaginatedData<Post>>> getFeedPosts({
@@ -33,8 +43,8 @@ class ChirpRepositoryImpl implements ChirpRepository {
           (retrieved) {
             return right(
               PaginatedData(
-                results: retrieved.map((e)=> e.toEntity()).toList(),
-                count:  retrieved.length,
+                results: retrieved.map((e) => e.toEntity()).toList(),
+                count: retrieved.length,
                 next: null,
                 previous: null,
               ),
@@ -44,7 +54,8 @@ class ChirpRepositoryImpl implements ChirpRepository {
       },
       (posts) async {
         final postEntities = <Post>[];
-        for (final post in posts.results) {
+        for (final raw in posts.results) {
+          final post = _decoratePoll(raw);
           await localDataSource.createOrUpdatePost(post);
           postEntities.add(post.toEntity());
         }
@@ -67,7 +78,8 @@ class ChirpRepositoryImpl implements ChirpRepository {
 
     return localRes.fold((failure) async {
       final result = await remoteDataSource.getPostDetails(postId: postId);
-      return result.fold((failure) => left(failure), (post) async {
+      return result.fold((failure) => left(failure), (raw) async {
+        final post = _decoratePoll(raw);
         await localDataSource.createOrUpdatePost(post);
         return right(post.toEntity());
       });
@@ -88,14 +100,22 @@ class ChirpRepositoryImpl implements ChirpRepository {
     required String authorId,
     required int communityId,
     required String content,
+    PollDraft? poll,
   }) async {
     final result = await remoteDataSource.createPost(
       title: title,
       authorId: authorId,
       communityId: communityId,
       content: content,
+      poll: poll,
     );
-    return result.fold((failure) => left(failure), (created) async {
+    return result.fold((failure) => left(failure), (raw) async {
+      var created = raw;
+      // The mock backend can't create polls server-side, so mint one here.
+      final ds = pollRemoteDataSource;
+      if (poll != null && ds is MockPollRemoteDataSource) {
+        created = ds.attachDraft(raw, poll);
+      }
       await localDataSource.createOrUpdatePost(created);
       return right(created.toEntity());
     });
@@ -195,7 +215,9 @@ class ChirpRepositoryImpl implements ChirpRepository {
       (failure) => left(failure),
       (posts) => right(
         PaginatedData(
-          results: posts.results.map((e) => e.toEntity()).toList(),
+          results: posts.results
+              .map((e) => _decoratePoll(e).toEntity())
+              .toList(),
           count: posts.count,
           next: posts.next,
           previous: posts.previous,
@@ -215,20 +237,90 @@ class ChirpRepositoryImpl implements ChirpRepository {
       isCurrentlyLiked: isCurrentlyLiked,
       voterId: voterId,
     );
+    return result.fold((failure) => left(failure), (data) {
+      final updatedPost = post.copyWith(
+        upvotes:
+            (data['upvotes'] as int?) ??
+            (isCurrentlyLiked
+                ? (post.upvotes - 1).clamp(0, double.maxFinite.toInt())
+                : post.upvotes + 1),
+        isLikedByMe: data['is_liked'] as bool? ?? !isCurrentlyLiked,
+      );
+      // Best-effort local cache update
+      localDataSource.createOrUpdatePost(updatedPost.toData());
+      return right(updatedPost);
+    });
+  }
+
+  Future<Either<Failure, Post>> _applyPollResult(
+    Post post,
+    Either<Failure, PollData> result,
+  ) async {
+    return result.fold((failure) => left(failure), (pollData) async {
+      final updatedPost = post.copyWith(poll: pollData.toEntity());
+      // Best-effort local cache update
+      await localDataSource.createOrUpdatePost(updatedPost.toData());
+      return right(updatedPost);
+    });
+  }
+
+  @override
+  Future<Either<Failure, Post>> voteOnPoll({
+    required Post post,
+    required List<int> optionIds,
+    required String voterId,
+  }) async {
+    final poll = post.poll;
+    if (poll == null) {
+      return left(NetworkFailure(message: 'Post has no poll', error: 'poll'));
+    }
+    final result = await pollRemoteDataSource.vote(
+      pollId: poll.id,
+      voterId: voterId,
+      optionIds: optionIds,
+    );
+    return _applyPollResult(post, result);
+  }
+
+  @override
+  Future<Either<Failure, Post>> retractPollVote({
+    required Post post,
+    required String voterId,
+  }) async {
+    final poll = post.poll;
+    if (poll == null) {
+      return left(NetworkFailure(message: 'Post has no poll', error: 'poll'));
+    }
+    final result = await pollRemoteDataSource.retractVote(
+      pollId: poll.id,
+      voterId: voterId,
+    );
+    return _applyPollResult(post, result);
+  }
+
+  @override
+  Future<Either<Failure, PaginatedData<PollVoter>>> getPollVoters({
+    required int pollId,
+    int? optionId,
+    required int page,
+    required int pageSize,
+  }) async {
+    final result = await pollRemoteDataSource.getVoters(
+      pollId: pollId,
+      optionId: optionId,
+      page: page,
+      pageSize: pageSize,
+    );
     return result.fold(
       (failure) => left(failure),
-      (data) {
-        final updatedPost = post.copyWith(
-          upvotes: (data['upvotes'] as int?) ??
-              (isCurrentlyLiked
-                  ? (post.upvotes - 1).clamp(0, double.maxFinite.toInt())
-                  : post.upvotes + 1),
-          isLikedByMe: data['is_liked'] as bool? ?? !isCurrentlyLiked,
-        );
-        // Best-effort local cache update
-        localDataSource.createOrUpdatePost(updatedPost.toData());
-        return right(updatedPost);
-      },
+      (voters) => right(
+        PaginatedData(
+          results: voters.results.map((e) => e.toEntity()).toList(),
+          count: voters.count,
+          next: voters.next,
+          previous: voters.previous,
+        ),
+      ),
     );
   }
 }

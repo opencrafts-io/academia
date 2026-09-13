@@ -1,4 +1,6 @@
+import 'package:academia/core/core.dart';
 import 'package:academia/features/features.dart';
+import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,6 +19,8 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
   final DeletePostUsecase deletePost;
   final GetPostsFromCommunityUsecase getPostsFromCommunityUsecase;
   final LikePostUsecase likePost;
+  final VoteOnPollUsecase voteOnPoll;
+  final RetractPollVoteUsecase retractPollVote;
   final Logger _logger = Logger();
 
   FeedBloc({
@@ -28,6 +32,8 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     required this.deletePost,
     required this.getPostsFromCommunityUsecase,
     required this.likePost,
+    required this.voteOnPoll,
+    required this.retractPollVote,
   }) : super(FeedInitial()) {
     on<LoadPostsForCommunityEvent>(_onLoadPostsForCommunity);
     on<LoadFeedEvent>(_onLoadFeed);
@@ -36,6 +42,8 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     on<MarkPostAsViewed>(_onMarkPostAsViewed);
     on<UpdatePostInFeed>(_onUpdatePostInFeed);
     on<ToggleLikePost>(_onToggleLikePost);
+    on<VoteOnPollEvent>(_onVoteOnPoll);
+    on<RetractPollVoteEvent>(_onRetractPollVote);
     //   List<PostReply>? addReplyToParent(
     //     List<PostReply> replies,
     //     String parentId,
@@ -365,6 +373,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
       authorId: event.authorId,
       communityId: event.communityId,
       content: event.content,
+      poll: event.poll,
     );
 
     await result.fold(
@@ -578,5 +587,73 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         }
       },
     );
+  }
+
+  /// Monotonic per-post counter so that when several poll mutations for the
+  /// same post are in flight (events run concurrently), only the response to
+  /// the most recently dispatched one is applied. The server uses replace
+  /// semantics, so the latest request always reflects the user's intent.
+  final Map<int, int> _pollMutationSeq = {};
+
+  int _nextPollSeq(int postId) =>
+      _pollMutationSeq[postId] = (_pollMutationSeq[postId] ?? 0) + 1;
+
+  bool _isLatestPollSeq(int postId, int seq) => _pollMutationSeq[postId] == seq;
+
+  /// Shared success/failure handling for poll mutations.
+  ///
+  /// The feed list is never mutated optimistically (only the card's
+  /// [PostCubit] is), so on failure we only need to signal the rollback via
+  /// [PollVoteError] and then re-emit the state that was current so the feed
+  /// doesn't get stuck on the error state.
+  void _applyPollMutation(
+    Emitter<FeedState> emit,
+    Either<Failure, Post> result, {
+    required Post originalPost,
+  }) {
+    final current = state;
+    result.fold(
+      (failure) {
+        _logger.e('Poll mutation failed: ${failure.message}');
+        emit(PollVoteError(post: originalPost, message: failure.message));
+        emit(current);
+      },
+      (updatedPost) {
+        if (current is FeedLoaded) {
+          final updatedPosts = current.posts.map((p) {
+            return p.id == updatedPost.id ? updatedPost : p;
+          }).toList();
+          emit(current.copyWith(posts: updatedPosts));
+        }
+      },
+    );
+  }
+
+  Future<void> _onVoteOnPoll(
+    VoteOnPollEvent event,
+    Emitter<FeedState> emit,
+  ) async {
+    final seq = _nextPollSeq(event.post.id);
+    final result = await voteOnPoll(
+      post: event.post,
+      optionIds: event.optionIds,
+      voterId: event.voterId,
+    );
+    // A newer vote for this post superseded us; its response wins.
+    if (!_isLatestPollSeq(event.post.id, seq)) return;
+    _applyPollMutation(emit, result, originalPost: event.post);
+  }
+
+  Future<void> _onRetractPollVote(
+    RetractPollVoteEvent event,
+    Emitter<FeedState> emit,
+  ) async {
+    final seq = _nextPollSeq(event.post.id);
+    final result = await retractPollVote(
+      post: event.post,
+      voterId: event.voterId,
+    );
+    if (!_isLatestPollSeq(event.post.id, seq)) return;
+    _applyPollMutation(emit, result, originalPost: event.post);
   }
 }

@@ -15,6 +15,7 @@ class Post extends Equatable {
   final int viewsCount;
   final int commentCount;
   final List<Comment> comments;
+  final Poll? poll;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -31,6 +32,7 @@ class Post extends Equatable {
     required this.viewsCount,
     required this.commentCount,
     this.comments = const [],
+    this.poll,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -48,6 +50,8 @@ class Post extends Equatable {
     int? viewsCount,
     int? commentCount,
     List<Comment>? comments,
+    Poll? poll,
+    bool clearPoll = false,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -64,6 +68,7 @@ class Post extends Equatable {
       viewsCount: viewsCount ?? this.viewsCount,
       commentCount: commentCount ?? this.commentCount,
       comments: comments ?? this.comments,
+      poll: clearPoll ? null : (poll ?? this.poll),
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -83,6 +88,7 @@ class Post extends Equatable {
     viewsCount,
     commentCount,
     comments,
+    poll,
     createdAt,
     updatedAt,
   ];

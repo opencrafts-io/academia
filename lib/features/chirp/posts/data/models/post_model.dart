@@ -29,13 +29,17 @@ class PostTable extends Table {
 
   TextColumn get comments => text().map(JsonListConverter())();
 
+  /// Optional poll attached to the post, stored as its raw JSON blob.
+  @JsonKey("poll")
+  TextColumn get poll => text().map(JsonConverter()).nullable()();
+
   @JsonKey("created_at")
   DateTimeColumn get createdAt => dateTime()();
 
   @JsonKey("updated_at")
   DateTimeColumn get updatedAt => dateTime()();
 
-  /// For internal trackog of when the post was lastly cached on the 
+  /// For internal trackog of when the post was lastly cached on the
   // local device
   @JsonKey("cached_at")
   DateTimeColumn get cachedAt =>
