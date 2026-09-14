@@ -27,10 +27,6 @@ platform :ios do
     setup_ci if is_ci
     sync_staging_signing
 
-    Dir.chdir("../..") do
-      sh("flutter build ios --release --no-codesign --flavor staging --target lib/main_staging.dart")
-    end
-
     build_ios_app(
       workspace: "Runner.xcworkspace",
       scheme: "staging",
