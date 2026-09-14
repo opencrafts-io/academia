@@ -62,7 +62,7 @@ Configure these repository secrets before enabling the workflow:
 - `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEY_ALIAS`, `ANDROID_KEY_PASSWORD`, and `ANDROID_STORE_PASSWORD`
 - `MATCH_GIT_URL`, `MATCH_GIT_BASIC_AUTHORIZATION`, and `MATCH_PASSWORD`
 
-The iOS Match repository must contain read-only `adhoc` profiles for `io.opencrafts.academia.stg` and `io.opencrafts.academia.stg.OneSignalNotificationServiceExtension`. Override those identifiers only when necessary with `IOS_STAGING_APP_IDENTIFIER` and `IOS_STAGING_EXTENSION_IDENTIFIER` environment variables.
+The iOS Match repository must contain read-only `appstore` profiles for `io.opencrafts.academia` and `io.opencrafts.academia.OneSignalNotificationServiceExtension`. Override those identifiers only when necessary with `IOS_STAGING_APP_IDENTIFIER` and `IOS_STAGING_EXTENSION_IDENTIFIER` environment variables.
 
 To reproduce a release locally after configuring signing, run:
 

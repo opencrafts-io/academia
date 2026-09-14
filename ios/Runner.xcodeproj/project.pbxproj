@@ -1531,7 +1531,7 @@
 				FLUTTER_TARGET = lib/main_staging.dart;
 				INFOPLIST_FILE = Runner/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
-				PRODUCT_BUNDLE_IDENTIFIER = io.opencrafts.academia.stg;
+				PRODUCT_BUNDLE_IDENTIFIER = io.opencrafts.academia;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -1547,7 +1547,7 @@
 				DEVELOPMENT_TEAM = 484L529PU2;
 				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
-				PRODUCT_BUNDLE_IDENTIFIER = io.opencrafts.academia.stg.OneSignalNotificationServiceExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = io.opencrafts.academia.OneSignalNotificationServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
