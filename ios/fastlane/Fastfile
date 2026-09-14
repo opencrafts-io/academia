@@ -1,0 +1,51 @@
+default_platform(:ios)
+
+def staging_app_identifier
+  ENV.fetch("IOS_STAGING_APP_IDENTIFIER", "").then do |identifier|
+    identifier.empty? ? "io.opencrafts.academia.stg" : identifier
+  end
+end
+
+def staging_extension_identifier
+  identifier = ENV.fetch("IOS_STAGING_EXTENSION_IDENTIFIER", "")
+  identifier.empty? ? "#{staging_app_identifier}.OneSignalNotificationServiceExtension" : identifier
+end
+
+platform :ios do
+
+  desc "Install the read-only ad-hoc signing profiles required by the staging build"
+  lane :sync_staging_signing do
+    match(
+      git_url: ENV.fetch("MATCH_GIT_URL"),
+      git_basic_authorization: ENV.fetch("MATCH_GIT_BASIC_AUTHORIZATION"),
+      type: "adhoc",
+      readonly: is_ci,
+      app_identifier: [staging_app_identifier, staging_extension_identifier]
+    )
+  end
+
+  desc "Build a signed staging IPA"
+  lane :build_staging do
+    setup_ci if is_ci
+    sync_staging_signing
+
+    Dir.chdir("../..") do
+      sh("flutter build ios --release --no-codesign --flavor staging --target lib/main_staging.dart")
+    end
+
+    build_ios_app(
+      workspace: "Runner.xcworkspace",
+      scheme: "staging",
+      configuration: "Release-staging",
+      clean: false,
+      export_method: "ad-hoc",
+      export_options: {
+        method: "ad-hoc",
+        signingStyle: "manual",
+        provisioningProfiles: lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING]
+      },
+      output_directory: "../build/ios/ipa",
+      output_name: "academia-staging.ipa"
+    )
+  end
+end

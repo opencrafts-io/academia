@@ -53,6 +53,26 @@ to the application.
 
  Running the above commands on unsupported platforms will raise a warnig that its unsupported but will just build correctly
 
+## Staging releases
+
+Pushing to `staging` runs `.github/workflows/staging-release.yml`. It builds the Android staging APK and iOS staging IPA concurrently with Fastlane on GitHub-hosted runners, then publishes both files to one GitHub prerelease.
+
+Configure these repository secrets before enabling the workflow:
+
+- `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEY_ALIAS`, `ANDROID_KEY_PASSWORD`, and `ANDROID_STORE_PASSWORD`
+- `MATCH_GIT_URL`, `MATCH_GIT_BASIC_AUTHORIZATION`, and `MATCH_PASSWORD`
+
+The iOS Match repository must contain read-only `adhoc` profiles for `io.opencrafts.academia.stg` and `io.opencrafts.academia.stg.OneSignalNotificationServiceExtension`. Override those identifiers only when necessary with `IOS_STAGING_APP_IDENTIFIER` and `IOS_STAGING_EXTENSION_IDENTIFIER` environment variables.
+
+To reproduce a release locally after configuring signing, run:
+
+```bash
+bundle install
+flutter pub get
+bundle exec fastlane --fastfile android/fastlane/Fastfile build_staging
+bundle exec fastlane --fastfile ios/fastlane/Fastfile build_staging
+```
+
 
 
 #  A Word About Code Structure
@@ -106,4 +126,3 @@ By using dependency injection, we ensure that:
     Components don't have to worry about the lifecycle of their dependencies, which reduces the likelihood of errors like memory leaks or incorrect configurations.
 
     The overall architecture remains modular and flexible, with each component focusing on its core responsibility.
-

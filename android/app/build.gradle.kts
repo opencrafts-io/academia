@@ -43,16 +43,16 @@ android {
 
     signingConfigs {
         create("release") {
-            keyAlias = keystoreProperties["keyAlias"] as String?
-            keyPassword = keystoreProperties["keyPassword"] as String?
-            storeFile = keystoreProperties["storeFile"]?.let { file(it) }
-            storePassword = keystoreProperties["storePassword"] as String?
+            keyAlias = keystoreProperties["keyAlias"] as String? ?: System.getenv("ANDROID_KEY_ALIAS")
+            keyPassword = keystoreProperties["keyPassword"] as String? ?: System.getenv("ANDROID_KEY_PASSWORD")
+            storeFile = (keystoreProperties["storeFile"] as String? ?: System.getenv("ANDROID_KEYSTORE_PATH"))?.let { file(it) }
+            storePassword = keystoreProperties["storePassword"] as String? ?: System.getenv("ANDROID_STORE_PASSWORD")
         }
         create("staging") {
-            keyAlias = keystoreProperties["keyAlias"] as String?
-            keyPassword = keystoreProperties["keyPassword"] as String?
-            storeFile = keystoreProperties["storeFile"]?.let { file(it) }
-            storePassword = keystoreProperties["storePassword"] as String?
+            keyAlias = keystoreProperties["keyAlias"] as String? ?: System.getenv("ANDROID_KEY_ALIAS")
+            keyPassword = keystoreProperties["keyPassword"] as String? ?: System.getenv("ANDROID_KEY_PASSWORD")
+            storeFile = (keystoreProperties["storeFile"] as String? ?: System.getenv("ANDROID_KEYSTORE_PATH"))?.let { file(it) }
+            storePassword = keystoreProperties["storePassword"] as String? ?: System.getenv("ANDROID_STORE_PASSWORD")
         }
 
     }
