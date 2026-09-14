@@ -1,0 +1,10 @@
+default_platform(:android)
+
+platform :android do
+  desc "Build a signed staging APK"
+  lane :build_staging do
+    Dir.chdir("../..") do
+      sh("flutter build apk --release --flavor staging --target lib/main_staging.dart")
+    end
+  end
+end

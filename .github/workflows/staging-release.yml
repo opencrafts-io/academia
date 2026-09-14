@@ -1,0 +1,127 @@
+name: Staging mobile release
+
+on:
+  push:
+    branches: [staging, fastlane]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: staging-release-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FLUTTER_VERSION: 3.44.0
+
+jobs:
+  android:
+    name: Android staging APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: gradle
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+      - name: Restore Bundler cache
+        uses: actions/cache@v5
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-bundler-${{ hashFiles('Gemfile') }}
+      - name: Install Ruby dependencies
+        run: bundle config set path vendor/bundle && bundle install --jobs 4 --retry 3
+      - name: Install Flutter dependencies
+        run: flutter pub get
+      - name: Configure Android signing
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          ANDROID_STORE_PASSWORD: ${{ secrets.ANDROID_STORE_PASSWORD }}
+        run: |
+          test -n "$KEYSTORE_BASE64" && test -n "$ANDROID_KEY_ALIAS" && test -n "$ANDROID_KEY_PASSWORD" && test -n "$ANDROID_STORE_PASSWORD"
+          printf '%s' "$KEYSTORE_BASE64" | base64 --decode > android/app/staging.keystore
+          printf 'ANDROID_KEYSTORE_PATH=%s\n' "$GITHUB_WORKSPACE/android/app/staging.keystore" >> "$GITHUB_ENV"
+      - name: Build with Fastlane
+        working-directory: android
+        env:
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          ANDROID_STORE_PASSWORD: ${{ secrets.ANDROID_STORE_PASSWORD }}
+        run: bundle exec fastlane build_staging
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android-staging-apk
+          path: build/app/outputs/flutter-apk/app-staging-release.apk
+          if-no-files-found: error
+
+  ios:
+    name: iOS staging IPA
+    runs-on: macos-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+      - name: Restore Bundler cache
+        uses: actions/cache@v5
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-bundler-${{ hashFiles('Gemfile') }}
+      - name: Install Ruby dependencies
+        run: bundle config set path vendor/bundle && bundle install --jobs 4 --retry 3
+      - name: Install Flutter dependencies
+        run: flutter pub get
+      - name: Install CocoaPods
+        working-directory: ios
+        run: bundle exec pod install
+      - name: Build with Fastlane
+        working-directory: ios
+        env:
+          MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+        run: bundle exec fastlane build_staging
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ios-staging-ipa
+          path: build/ios/ipa/academia-staging.ipa
+          if-no-files-found: error
+
+  release:
+    name: Publish staging prerelease
+    needs: [android, ios]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/download-artifact@v4
+        with:
+          path: release-assets
+          merge-multiple: true
+      - name: Create GitHub prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ github.sha }}
+          RUN_NUMBER: ${{ github.run_number }}
+        run: |
+          VERSION=$(awk '/^version:/ { print $2 }' pubspec.yaml)
+          TAG="staging-v${VERSION}-${RUN_NUMBER}"
+          gh release create "$TAG" release-assets/* --target "$SHA" --title "Staging ${VERSION}" --prerelease --generate-notes

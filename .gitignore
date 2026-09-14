@@ -47,6 +47,8 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+/android/app/staging.keystore
+/vendor/bundle
 
 TODO.md
 sentry.properties

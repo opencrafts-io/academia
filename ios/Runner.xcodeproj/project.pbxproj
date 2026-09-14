@@ -92,6 +92,7 @@
 		99DC7F74A961B0130DF4CD3A /* Pods-Runner.release-dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release-dev.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release-dev.xcconfig"; sourceTree = "<group>"; };
 		9EDA2ECCD37603D7EE3CD671 /* Pods-RunnerTests.release-dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.release-dev.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.release-dev.xcconfig"; sourceTree = "<group>"; };
 		ACB54B5305B636ECB21349C1 /* Pods-RunnerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.release.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.release.xcconfig"; sourceTree = "<group>"; };
+		A1B2C3D4E5F60708090A0B05 /* Release-staging.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Release-staging.xcconfig"; path = "Flutter/Release-staging.xcconfig"; sourceTree = "<group>"; };
 		C857399B09ED4504FA243278 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C8B54D032F7AA3FA006BCB7E /* RunnerDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RunnerDebug.entitlements; sourceTree = "<group>"; };
 		D0D0D24BFBBB36E73FEECF44 /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -205,6 +206,7 @@
 				3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */,
 				9740EEB21CF90195004384FC /* Debug.xcconfig */,
 				7AFA3C8E1D35360C0083082E /* Release.xcconfig */,
+				A1B2C3D4E5F60708090A0B05 /* Release-staging.xcconfig */,
 				9740EEB31CF90195004384FC /* Generated.xcconfig */,
 			);
 			name = Flutter;
@@ -1510,6 +1512,62 @@
 			};
 			name = "Release-prod";
 		};
+		A1B2C3D4E5F60708090A0001 /* Release-staging */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = iphoneos;
+			};
+			name = "Release-staging";
+		};
+		A1B2C3D4E5F60708090A0002 /* Release-staging */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A1B2C3D4E5F60708090A0B05 /* Release-staging.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-staging";
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = 484L529PU2;
+				FLUTTER_TARGET = lib/main_staging.dart;
+				INFOPLIST_FILE = Runner/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				PRODUCT_BUNDLE_IDENTIFIER = io.opencrafts.academia;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+			};
+			name = "Release-staging";
+		};
+		A1B2C3D4E5F60708090A0003 /* Release-staging */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F303F2A4C08E7D835BF6B13A /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = OneSignalNotificationServiceExtension/OneSignalNotificationServiceExtension.entitlements;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = 484L529PU2;
+				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				PRODUCT_BUNDLE_IDENTIFIER = io.opencrafts.academia.OneSignalNotificationServiceExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = "Release-staging";
+		};
+		A1B2C3D4E5F60708090A0004 /* Release-staging */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = ACB54B5305B636ECB21349C1 /* Pods-RunnerTests.release.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = io.opencrafts.academia.stg.RunnerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Runner.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Runner";
+			};
+			name = "Release-staging";
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1521,6 +1579,7 @@
 				331C8089294A63A400263BE5 /* Release */,
 				E8A5EA2E2E852F7F00BFE79A /* Release-dev */,
 				E8D171142E764D52009387A9 /* Release-prod */,
+				A1B2C3D4E5F60708090A0004 /* Release-staging */,
 				331C808A294A63A400263BE5 /* Profile */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -1534,6 +1593,7 @@
 				97C147041CF9000F007C117D /* Release */,
 				E8A5EA2C2E852F7F00BFE79A /* Release-dev */,
 				E8D171122E764D52009387A9 /* Release-prod */,
+				A1B2C3D4E5F60708090A0001 /* Release-staging */,
 				249021D3217E4FDB00AE95B9 /* Profile */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -1547,6 +1607,7 @@
 				97C147071CF9000F007C117D /* Release */,
 				E8A5EA2D2E852F7F00BFE79A /* Release-dev */,
 				E8D171132E764D52009387A9 /* Release-prod */,
+				A1B2C3D4E5F60708090A0002 /* Release-staging */,
 				249021D4217E4FDB00AE95B9 /* Profile */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -1560,6 +1621,7 @@
 				E86C6D772EA7CDD7007B1210 /* Release */,
 				E86C6D782EA7CDD7007B1210 /* Release-dev */,
 				E86C6D792EA7CDD7007B1210 /* Release-prod */,
+				A1B2C3D4E5F60708090A0003 /* Release-staging */,
 				E86C6D7A2EA7CDD7007B1210 /* Profile */,
 			);
 			defaultConfigurationIsVisible = 0;
