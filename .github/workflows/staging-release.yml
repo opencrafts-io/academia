@@ -55,11 +55,12 @@ jobs:
           printf '%s' "$KEYSTORE_BASE64" | base64 --decode > android/app/staging.keystore
           printf 'ANDROID_KEYSTORE_PATH=%s\n' "$GITHUB_WORKSPACE/android/app/staging.keystore" >> "$GITHUB_ENV"
       - name: Build with Fastlane
+        working-directory: android
         env:
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
           ANDROID_STORE_PASSWORD: ${{ secrets.ANDROID_STORE_PASSWORD }}
-        run: bundle exec fastlane --fastfile android/fastlane/Fastfile build_staging
+        run: bundle exec fastlane build_staging
       - uses: actions/upload-artifact@v4
         with:
           name: android-staging-apk
@@ -90,13 +91,15 @@ jobs:
       - name: Install Flutter dependencies
         run: flutter pub get
       - name: Install CocoaPods
-        run: bundle exec pod install --project-directory=ios --deployment
+        working-directory: ios
+        run: bundle exec pod install
       - name: Build with Fastlane
+        working-directory: ios
         env:
           MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
           MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-        run: bundle exec fastlane --fastfile ios/fastlane/Fastfile build_staging
+        run: bundle exec fastlane build_staging
       - uses: actions/upload-artifact@v4
         with:
           name: ios-staging-ipa
