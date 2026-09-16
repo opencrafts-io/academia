@@ -10,6 +10,7 @@ List<RouteBase> get $appRoutes => [
   $splashScreenRoute,
   $layoutShellRoute,
   $notificationPermissionRoute,
+  $lockInRoute,
   $feedRoute,
   $postDetailRoute,
   $addPostRoute,
@@ -221,6 +222,29 @@ mixin $NotificationPermissionRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/notification-allow');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $lockInRoute =>
+    GoRouteData.$route(path: '/lock-in', factory: $LockInRoute._fromState);
+
+mixin $LockInRoute on GoRouteData {
+  static LockInRoute _fromState(GoRouterState state) => LockInRoute();
+
+  @override
+  String get location => GoRouteData.$location('/lock-in');
 
   @override
   void go(BuildContext context) => context.go(location);

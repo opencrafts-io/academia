@@ -28272,10 +28272,7 @@ final class $$InstitutionsTableReferences
   static MultiTypedResultKey<$InstitutionKeysTable, List<InstitutionKey>>
   _institutionKeysRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
     db.institutionKeys,
-    aliasName: $_aliasNameGenerator(
-      db.institutions.institutionId,
-      db.institutionKeys.institutionID,
-    ),
+    aliasName: 'institution__institution_id__institution_key__institution_id',
   );
 
   $$InstitutionKeysTableProcessedTableManager get institutionKeysRefs {
@@ -28298,14 +28295,13 @@ final class $$InstitutionsTableReferences
     $InstitutionFeeTransactionsTable,
     List<InstitutionFeeTransaction>
   >
-  _institutionFeeTransactionsRefsTable(_$AppDataBase db) =>
-      MultiTypedResultKey.fromTable(
-        db.institutionFeeTransactions,
-        aliasName: $_aliasNameGenerator(
-          db.institutions.institutionId,
-          db.institutionFeeTransactions.institution,
-        ),
-      );
+  _institutionFeeTransactionsRefsTable(
+    _$AppDataBase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.institutionFeeTransactions,
+    aliasName:
+        'institution__institution_id__institution_fee_transaction__institution',
+  );
 
   $$InstitutionFeeTransactionsTableProcessedTableManager
   get institutionFeeTransactionsRefs {
@@ -28330,10 +28326,7 @@ final class $$InstitutionsTableReferences
   static MultiTypedResultKey<$SemesterTable, List<SemesterData>>
   _semesterRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
     db.semester,
-    aliasName: $_aliasNameGenerator(
-      db.institutions.institutionId,
-      db.semester.institutionId,
-    ),
+    aliasName: 'institution__institution_id__semester__institution_id',
   );
 
   $$SemesterTableProcessedTableManager get semesterRefs {
@@ -28353,10 +28346,7 @@ final class $$InstitutionsTableReferences
     _$AppDataBase db,
   ) => MultiTypedResultKey.fromTable(
     db.course,
-    aliasName: $_aliasNameGenerator(
-      db.institutions.institutionId,
-      db.course.institution,
-    ),
+    aliasName: 'institution__institution_id__course__institution',
   );
 
   $$CourseTableProcessedTableManager get courseRefs {
@@ -28375,10 +28365,7 @@ final class $$InstitutionsTableReferences
   static MultiTypedResultKey<$TimetableTable, List<TimetableData>>
   _timetableRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
     db.timetable,
-    aliasName: $_aliasNameGenerator(
-      db.institutions.institutionId,
-      db.timetable.institution,
-    ),
+    aliasName: 'institution__institution_id__timetable__institution',
   );
 
   $$TimetableTableProcessedTableManager get timetableRefs {
@@ -28397,10 +28384,7 @@ final class $$InstitutionsTableReferences
   static MultiTypedResultKey<$ExamTimetablesTable, List<ExamTimetable>>
   _examTimetablesRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
     db.examTimetables,
-    aliasName: $_aliasNameGenerator(
-      db.institutions.institutionId,
-      db.examTimetables.institutionId,
-    ),
+    aliasName: 'institution__institution_id__exam_timetable__institution_id',
   );
 
   $$ExamTimetablesTableProcessedTableManager get examTimetablesRefs {
@@ -29149,10 +29133,8 @@ final class $$InstitutionScrappingCommandsTableReferences
   static MultiTypedResultKey<$InstitutionKeysTable, List<InstitutionKey>>
   _institutionKeysRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
     db.institutionKeys,
-    aliasName: $_aliasNameGenerator(
-      db.institutionScrappingCommands.commandID,
-      db.institutionKeys.commandID,
-    ),
+    aliasName:
+        'institution_scrapping_command__command_i_d__institution_key__command_i_d',
   );
 
   $$InstitutionKeysTableProcessedTableManager get institutionKeysRefs {
@@ -29542,10 +29524,7 @@ final class $$InstitutionKeysTableReferences
 
   static $InstitutionsTable _institutionIDTable(_$AppDataBase db) =>
       db.institutions.createAlias(
-        $_aliasNameGenerator(
-          db.institutionKeys.institutionID,
-          db.institutions.institutionId,
-        ),
+        'institution_key__institution_id__institution__institution_id',
       );
 
   $$InstitutionsTableProcessedTableManager get institutionID {
@@ -29562,13 +29541,11 @@ final class $$InstitutionKeysTableReferences
     );
   }
 
-  static $InstitutionScrappingCommandsTable _commandIDTable(_$AppDataBase db) =>
-      db.institutionScrappingCommands.createAlias(
-        $_aliasNameGenerator(
-          db.institutionKeys.commandID,
-          db.institutionScrappingCommands.commandID,
-        ),
-      );
+  static $InstitutionScrappingCommandsTable _commandIDTable(
+    _$AppDataBase db,
+  ) => db.institutionScrappingCommands.createAlias(
+    'institution_key__command_i_d__institution_scrapping_command__command_i_d',
+  );
 
   $$InstitutionScrappingCommandsTableProcessedTableManager get commandID {
     final $_column = $_itemColumn<String>('command_i_d')!;
@@ -30571,10 +30548,7 @@ final class $$InstitutionFeeTransactionsTableReferences
 
   static $InstitutionsTable _institutionTable(_$AppDataBase db) =>
       db.institutions.createAlias(
-        $_aliasNameGenerator(
-          db.institutionFeeTransactions.institution,
-          db.institutions.institutionId,
-        ),
+        'institution_fee_transaction__institution__institution__institution_id',
       );
 
   $$InstitutionsTableProcessedTableManager get institution {
@@ -31000,13 +30974,9 @@ final class $$SemesterTableReferences
     extends BaseReferences<_$AppDataBase, $SemesterTable, SemesterData> {
   $$SemesterTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $InstitutionsTable _institutionIdTable(_$AppDataBase db) =>
-      db.institutions.createAlias(
-        $_aliasNameGenerator(
-          db.semester.institutionId,
-          db.institutions.institutionId,
-        ),
-      );
+  static $InstitutionsTable _institutionIdTable(_$AppDataBase db) => db
+      .institutions
+      .createAlias('semester__institution_id__institution__institution_id');
 
   $$InstitutionsTableProcessedTableManager? get institutionId {
     final $_column = $_itemColumn<int>('institution_id');
@@ -31026,7 +30996,7 @@ final class $$SemesterTableReferences
     _$AppDataBase db,
   ) => MultiTypedResultKey.fromTable(
     db.course,
-    aliasName: $_aliasNameGenerator(db.semester.id, db.course.semester),
+    aliasName: 'semester__id__course__semester',
   );
 
   $$CourseTableProcessedTableManager get courseRefs {
@@ -31436,13 +31406,9 @@ final class $$CourseTableReferences
     extends BaseReferences<_$AppDataBase, $CourseTable, CourseData> {
   $$CourseTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $InstitutionsTable _institutionTable(_$AppDataBase db) =>
-      db.institutions.createAlias(
-        $_aliasNameGenerator(
-          db.course.institution,
-          db.institutions.institutionId,
-        ),
-      );
+  static $InstitutionsTable _institutionTable(_$AppDataBase db) => db
+      .institutions
+      .createAlias('course__institution__institution__institution_id');
 
   $$InstitutionsTableProcessedTableManager? get institution {
     final $_column = $_itemColumn<int>('institution');
@@ -31458,8 +31424,8 @@ final class $$CourseTableReferences
     );
   }
 
-  static $SemesterTable _semesterTable(_$AppDataBase db) => db.semester
-      .createAlias($_aliasNameGenerator(db.course.semester, db.semester.id));
+  static $SemesterTable _semesterTable(_$AppDataBase db) =>
+      db.semester.createAlias('course__semester__semester__id');
 
   $$SemesterTableProcessedTableManager? get semester {
     final $_column = $_itemColumn<int>('semester');
@@ -31478,7 +31444,7 @@ final class $$CourseTableReferences
   static MultiTypedResultKey<$TimetableEntryTable, List<TimetableEntryData>>
   _timetableEntryRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
     db.timetableEntry,
-    aliasName: $_aliasNameGenerator(db.course.id, db.timetableEntry.courseId),
+    aliasName: 'course__id__timetable_entry__course_id',
   );
 
   $$TimetableEntryTableProcessedTableManager get timetableEntryRefs {
@@ -32081,13 +32047,9 @@ final class $$TimetableTableReferences
     extends BaseReferences<_$AppDataBase, $TimetableTable, TimetableData> {
   $$TimetableTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $InstitutionsTable _institutionTable(_$AppDataBase db) =>
-      db.institutions.createAlias(
-        $_aliasNameGenerator(
-          db.timetable.institution,
-          db.institutions.institutionId,
-        ),
-      );
+  static $InstitutionsTable _institutionTable(_$AppDataBase db) => db
+      .institutions
+      .createAlias('timetable__institution__institution__institution_id');
 
   $$InstitutionsTableProcessedTableManager? get institution {
     final $_column = $_itemColumn<int>('institution');
@@ -32106,10 +32068,7 @@ final class $$TimetableTableReferences
   static MultiTypedResultKey<$TimetableEntryTable, List<TimetableEntryData>>
   _timetableEntryRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
     db.timetableEntry,
-    aliasName: $_aliasNameGenerator(
-      db.timetable.id,
-      db.timetableEntry.timetableId,
-    ),
+    aliasName: 'timetable__id__timetable_entry__timetable_id',
   );
 
   $$TimetableEntryTableProcessedTableManager get timetableEntryRefs {
@@ -32596,9 +32555,8 @@ final class $$TimetableEntryTableReferences
     super.$_typedResult,
   );
 
-  static $CourseTable _courseIdTable(_$AppDataBase db) => db.course.createAlias(
-    $_aliasNameGenerator(db.timetableEntry.courseId, db.course.id),
-  );
+  static $CourseTable _courseIdTable(_$AppDataBase db) =>
+      db.course.createAlias('timetable_entry__course_id__course__id');
 
   $$CourseTableProcessedTableManager get courseId {
     final $_column = $_itemColumn<String>('course_id')!;
@@ -32615,9 +32573,7 @@ final class $$TimetableEntryTableReferences
   }
 
   static $TimetableTable _timetableIdTable(_$AppDataBase db) =>
-      db.timetable.createAlias(
-        $_aliasNameGenerator(db.timetableEntry.timetableId, db.timetable.id),
-      );
+      db.timetable.createAlias('timetable_entry__timetable_id__timetable__id');
 
   $$TimetableTableProcessedTableManager get timetableId {
     final $_column = $_itemColumn<String>('timetable_id')!;
@@ -33196,10 +33152,7 @@ final class $$ExamTimetablesTableReferences
 
   static $InstitutionsTable _institutionIdTable(_$AppDataBase db) =>
       db.institutions.createAlias(
-        $_aliasNameGenerator(
-          db.examTimetables.institutionId,
-          db.institutions.institutionId,
-        ),
+        'exam_timetable__institution_id__institution__institution_id',
       );
 
   $$InstitutionsTableProcessedTableManager get institutionId {
@@ -33608,10 +33561,7 @@ final class $$ChirpUsersTableReferences
   _chirpCommunityMembershipsRefsTable(_$AppDataBase db) =>
       MultiTypedResultKey.fromTable(
         db.chirpCommunityMemberships,
-        aliasName: $_aliasNameGenerator(
-          db.chirpUsers.userID,
-          db.chirpCommunityMemberships.userID,
-        ),
+        aliasName: 'chirp_user__user_i_d__chirp_community_membership__user_i_d',
       );
 
   $$ChirpCommunityMembershipsTableProcessedTableManager
@@ -34611,10 +34561,7 @@ final class $$ChirpCommunityMembershipsTableReferences
 
   static $ChirpUsersTable _userIDTable(_$AppDataBase db) =>
       db.chirpUsers.createAlias(
-        $_aliasNameGenerator(
-          db.chirpCommunityMemberships.userID,
-          db.chirpUsers.userID,
-        ),
+        'chirp_community_membership__user_i_d__chirp_user__user_i_d',
       );
 
   $$ChirpUsersTableProcessedTableManager get userID {
@@ -35365,10 +35312,7 @@ final class $$StreakActivityTableReferences
   static MultiTypedResultKey<$StreakMilestoneTable, List<StreakMilestoneData>>
   _streakMilestoneRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
     db.streakMilestone,
-    aliasName: $_aliasNameGenerator(
-      db.streakActivity.id,
-      db.streakMilestone.activityID,
-    ),
+    aliasName: 'streak_activity__id__streak_milestone__activity_i_d',
   );
 
   $$StreakMilestoneTableProcessedTableManager get streakMilestoneRefs {
@@ -35797,13 +35741,9 @@ final class $$StreakMilestoneTableReferences
     super.$_typedResult,
   );
 
-  static $StreakActivityTable _activityIDTable(_$AppDataBase db) =>
-      db.streakActivity.createAlias(
-        $_aliasNameGenerator(
-          db.streakMilestone.activityID,
-          db.streakActivity.id,
-        ),
-      );
+  static $StreakActivityTable _activityIDTable(_$AppDataBase db) => db
+      .streakActivity
+      .createAlias('streak_milestone__activity_i_d__streak_activity__id');
 
   $$StreakActivityTableProcessedTableManager get activityID {
     final $_column = $_itemColumn<String>('activity_i_d')!;
@@ -36195,10 +36135,7 @@ final class $$TodoListsTableReferences
   static MultiTypedResultKey<$TodoItemsTable, List<TodoItem>>
   _todoItemsRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
     db.todoItems,
-    aliasName: $_aliasNameGenerator(
-      db.todoLists.localId,
-      db.todoItems.taskListLocalId,
-    ),
+    aliasName: 'todo_lists__local_id__todo_items__task_list_local_id',
   );
 
   $$TodoItemsTableProcessedTableManager get todoItemsRefs {
@@ -36628,10 +36565,7 @@ final class $$TodoTagItemsTableReferences
   static MultiTypedResultKey<$TodoItemTagsTable, List<TodoItemTag>>
   _todoItemTagsRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
     db.todoItemTags,
-    aliasName: $_aliasNameGenerator(
-      db.todoTagItems.localId,
-      db.todoItemTags.tagLocalId,
-    ),
+    aliasName: 'todo_tag_items__local_id__todo_item_tags__tag_local_id',
   );
 
   $$TodoItemTagsTableProcessedTableManager get todoItemTagsRefs {
@@ -37008,13 +36942,8 @@ final class $$TodoItemsTableReferences
     extends BaseReferences<_$AppDataBase, $TodoItemsTable, TodoItem> {
   $$TodoItemsTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $TodoListsTable _taskListLocalIdTable(_$AppDataBase db) =>
-      db.todoLists.createAlias(
-        $_aliasNameGenerator(
-          db.todoItems.taskListLocalId,
-          db.todoLists.localId,
-        ),
-      );
+  static $TodoListsTable _taskListLocalIdTable(_$AppDataBase db) => db.todoLists
+      .createAlias('todo_items__task_list_local_id__todo_lists__local_id');
 
   $$TodoListsTableProcessedTableManager get taskListLocalId {
     final $_column = $_itemColumn<int>('task_list_local_id')!;
@@ -37033,10 +36962,7 @@ final class $$TodoItemsTableReferences
   static MultiTypedResultKey<$TodoItemTagsTable, List<TodoItemTag>>
   _todoItemTagsRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
     db.todoItemTags,
-    aliasName: $_aliasNameGenerator(
-      db.todoItems.localId,
-      db.todoItemTags.todoLocalId,
-    ),
+    aliasName: 'todo_items__local_id__todo_item_tags__todo_local_id',
   );
 
   $$TodoItemTagsTableProcessedTableManager get todoItemTagsRefs {
@@ -37650,10 +37576,8 @@ final class $$TodoItemTagsTableReferences
     extends BaseReferences<_$AppDataBase, $TodoItemTagsTable, TodoItemTag> {
   $$TodoItemTagsTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $TodoItemsTable _todoLocalIdTable(_$AppDataBase db) =>
-      db.todoItems.createAlias(
-        $_aliasNameGenerator(db.todoItemTags.todoLocalId, db.todoItems.localId),
-      );
+  static $TodoItemsTable _todoLocalIdTable(_$AppDataBase db) => db.todoItems
+      .createAlias('todo_item_tags__todo_local_id__todo_items__local_id');
 
   $$TodoItemsTableProcessedTableManager get todoLocalId {
     final $_column = $_itemColumn<int>('todo_local_id')!;
@@ -37669,13 +37593,9 @@ final class $$TodoItemTagsTableReferences
     );
   }
 
-  static $TodoTagItemsTable _tagLocalIdTable(_$AppDataBase db) =>
-      db.todoTagItems.createAlias(
-        $_aliasNameGenerator(
-          db.todoItemTags.tagLocalId,
-          db.todoTagItems.localId,
-        ),
-      );
+  static $TodoTagItemsTable _tagLocalIdTable(_$AppDataBase db) => db
+      .todoTagItems
+      .createAlias('todo_item_tags__tag_local_id__todo_tag_items__local_id');
 
   $$TodoTagItemsTableProcessedTableManager get tagLocalId {
     final $_column = $_itemColumn<int>('tag_local_id')!;

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="accessibility_service_description">Uses accessibility features to detect when
+        blocked apps are opened and display a block screen.</string>
+</resources>

@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:academia/config/config.dart';
 import 'package:academia/features/features.dart';
-import 'package:academia/features/permissions/permissions.dart';
 import 'package:academia/gen/assets.gen.dart';
+import 'package:academia/injection_container.dart';
+import 'package:billing/billing.dart' as billing;
+import 'package:core/core.dart' as core;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_symbols_icons/symbols.dart';
@@ -124,14 +126,24 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late Future<billing.SubscriptionStatus?> _subscriptionStatusFuture;
+
   @override
   void initState() {
     super.initState();
+    _subscriptionStatusFuture = _loadSubscriptionStatus();
     final permissions = [
       AppPermission.notification,
       if (Platform.isAndroid) AppPermission.preciseAlarm,
     ];
     context.read<PermissionCubit>().checkMultiplePermissions(permissions);
+  }
+
+  Future<billing.SubscriptionStatus?> _loadSubscriptionStatus() async {
+    final result = await sl<billing.GetCurrentSubscriptionStatus>()(
+      const core.NoUseCaseParams(),
+    );
+    return result.fold((_) => null, (status) => status);
   }
 
   void _showActionsSheet(BuildContext context) {
@@ -142,6 +154,21 @@ class _HomePageState extends State<HomePage> {
       isScrollControlled: true,
       builder: (_) => const _HomeActionsSheet(),
     );
+  }
+
+  Future<void> _openBilling() async {
+    await const billing.PaywallRoute(
+      featureName: 'Academia Premium',
+      accessMessage: 'Upgrade to unlock premium tools across Academia.',
+    ).push(context);
+    if (!mounted) return;
+    setState(() {
+      _subscriptionStatusFuture = _loadSubscriptionStatus();
+    });
+  }
+
+  bool _shouldShowPremiumUpgrade(billing.SubscriptionStatus? status) {
+    return status == null || !status.active || status.subscription == null;
   }
 
   @override
@@ -213,6 +240,20 @@ class _HomePageState extends State<HomePage> {
                   ),
                   centerTitle: false,
                   actions: [
+                    FutureBuilder(
+                      future: _subscriptionStatusFuture,
+                      builder: (context, snapshot) {
+                        if (!_shouldShowPremiumUpgrade(snapshot.data)) {
+                          return const SizedBox.shrink();
+                        }
+
+                        return IconButton(
+                          onPressed: _openBilling,
+                          icon: const Icon(Symbols.workspace_premium_rounded),
+                          tooltip: 'Upgrade',
+                        );
+                      },
+                    ),
                     IconButton(
                       onPressed: () => showSearch(
                         context: context,

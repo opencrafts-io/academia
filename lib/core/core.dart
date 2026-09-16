@@ -22,3 +22,4 @@ export 'presentation/widgets/linkified_text.dart';
 export 'presentation/safe_cubit.dart';
 
 export 'notifications/notification_namespace.dart';
+export 'di/injection.dart';

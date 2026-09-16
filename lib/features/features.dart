@@ -6,7 +6,6 @@ export 'chirp/chirp.dart';
 export 'agenda/agenda.dart';
 export 'todos/todos.dart';
 export 'notifications/notifications.dart';
-export 'admob/admob.dart';
 export 'essentials/essentials.dart';
 export 'leaderboard/leaderboard.dart';
 export 'streaks/streaks.dart';

@@ -1,0 +1,74 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Enumerate installed apps to populate the app list. -->
+    <uses-permission
+        android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission" />
+
+    <!-- Reschedule alarms after device reboot. -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <!-- Schedule exact alarms for time-based blocking. -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+
+    <application>
+
+        <!--
+          Accessibility service — the core blocking mechanism.
+
+          The user enables this once in Settings → Accessibility → App Blocker.
+          After that, the system wakes us exactly when the foreground window
+          changes (TYPE_WINDOW_STATE_CHANGED). No polling, no persistent
+          notification, no battery drain.
+        -->
+        <service
+            android:name=".blocking.AppBlockerAccessibilityService"
+            android:exported="true"
+            android:label="App Blocker"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/app_blocker_service_config" />
+        </service>
+
+        <!--
+          Full-screen block screen shown when a blocked app comes to the foreground.
+
+          Uses taskAffinity="" so it runs in its own task, separate from the host
+          app's task. excludeFromRecents prevents it from appearing in the
+          recent-apps switcher, which would be confusing for end users.
+        -->
+        <activity
+            android:name=".blocking.BlockedAppActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:taskAffinity=""
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+
+        <!-- Restores schedule alarms after a device reboot. -->
+        <receiver
+            android:name=".receiver.BootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Receives AlarmManager broadcasts to start/end scheduled blocks. -->
+        <receiver
+            android:name=".scheduling.ScheduleAlarmReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.khanhtq.app_blocker.SCHEDULE_START" />
+                <action android:name="com.khanhtq.app_blocker.SCHEDULE_END" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+
+</manifest>
