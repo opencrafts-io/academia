@@ -129,6 +129,12 @@ dependencies:
   # application ads subsystem
   ads:
     path: packages/ads/
+  # application analytics infrastructure subsystem
+  analytics:
+    path: packages/analytics/
+  # application in-app update subsystem
+  in_app_update:
+    path: packages/in_app_update/
   # local focus app-blocking subsystem
   lock_in:
     path: packages/lock-in/

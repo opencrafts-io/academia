@@ -51,8 +51,6 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     final adService = sl<AdService>();
     await adService.initialize();
     await adService.loadInterstitialAd();
-
-    sl.registerLazySingleton<InAppUpdateBloc>(() => InAppUpdateBloc());
   }
 
   sl.registerFactory(

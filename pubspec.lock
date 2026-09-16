@@ -16,6 +16,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  analytics:
+    dependency: "direct main"
+    description:
+      path: "packages/analytics"
+      relative: true
+    source: path
+    version: "0.0.1"
   analyzer:
     dependency: transitive
     description:
@@ -1249,6 +1256,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.1"
+  in_app_update:
+    dependency: "direct main"
+    description:
+      path: "packages/in_app_update"
+      relative: true
+    source: path
+    version: "0.0.1"
   injectable:
     dependency: "direct main"
     description:

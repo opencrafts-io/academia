@@ -7,8 +7,11 @@ import 'package:dio_request_inspector/dio_request_inspector.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:posthog_flutter/posthog_flutter.dart';
+
 import 'guards/guards.dart';
+
 import 'package:billing/billing.dart' as billing;
+import 'package:in_app_update/in_app_update.dart' as in_app_update;
 import 'package:lock_in/lock_in.dart';
 
 class AppRouter {
@@ -28,12 +31,13 @@ class AppRouter {
         path: '/lock-in/blocked',
         builder: (context, state) => LockInBlockedPage(
           appIdentifier: state.uri.queryParameters['packageName'],
-          loadBlockWindow: (appIdentifier, now) => sl<LockInService>()
-              .activeWindowFor(appIdentifier, at: now),
+          loadBlockWindow: (appIdentifier, now) =>
+              sl<LockInService>().activeWindowFor(appIdentifier, at: now),
           onReturnHome: () => context.go(HomeRoute().location),
         ),
       ),
       ...billing.routes,
+      ...in_app_update.routes,
     ],
     initialLocation: SplashScreenRoute().location,
     observers: [
@@ -43,7 +47,10 @@ class AppRouter {
     ],
     navigatorKey: globalNavigatorKey,
     redirect: (context, state) {
-      if (state.uri.path == '/lock-in/blocked') return null;
+      if (state.uri.path == '/lock-in/blocked' ||
+          state.uri.path.startsWith('/app-update/')) {
+        return null;
+      }
       for (final guard in _guards) {
         final String? redirectPath = guard.check(context, state);
 
