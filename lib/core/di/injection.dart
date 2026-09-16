@@ -5,8 +5,10 @@ import 'package:billing/billing.dart';
 import 'package:ads/ads.dart';
 import 'package:analytics/analytics.dart';
 import 'package:academia/core/in_app_update/posthog_app_update_configuration_source.dart';
+import 'package:academia/core/permissions/posthog_permission_request_observer.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:lock_in/lock_in.dart';
+import 'package:permissions/permissions.dart';
 import 'package:settings/settings.dart';
 
 import 'package:injectable/injectable.dart';
@@ -22,6 +24,10 @@ void configureDependencies(GetIt getIt, FlavorConfig flavorConfig) {
   configureAdsDependencies(getIt);
   configureAnalyticsDependencies(getIt);
   configureSettingsDependencies(getIt);
+  configurePermissionsDependencies(
+    getIt,
+    permissionRequestObserver: PosthogPermissionRequestObserver(),
+  );
   configureInAppUpdateDependencies(
     getIt,
     configurationSource: flavorConfig.isProduction

@@ -79,7 +79,6 @@ dependencies:
       ref: v2.0.0
   google_fonts: ^8.0.2
   rrule: ^0.2.17
-  permission_handler: ^12.0.1
   animated_emoji: ^3.2.1
   share_plus: ^10.1.4
   video_trimmer: ^5.0.0
@@ -138,6 +137,9 @@ dependencies:
   # application settings subsystem
   settings:
     path: packages/settings/
+  # application permissions subsystem
+  permissions:
+    path: packages/permissions/
   # local focus app-blocking subsystem
   lock_in:
     path: packages/lock-in/

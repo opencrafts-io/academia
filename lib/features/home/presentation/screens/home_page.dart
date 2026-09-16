@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:permissions/permissions.dart';
 
 class _HomeActionsSheet extends StatelessWidget {
   const _HomeActionsSheet();
@@ -133,10 +134,10 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _subscriptionStatusFuture = _loadSubscriptionStatus();
     final permissions = [
-      AppPermission.notification,
-      if (Platform.isAndroid) AppPermission.preciseAlarm,
+      PermissionCapability.notifications,
+      if (Platform.isAndroid) PermissionCapability.preciseAlarms,
     ];
-    context.read<PermissionCubit>().checkMultiplePermissions(permissions);
+    context.read<PermissionCubit>().checkAll(permissions);
   }
 
   Future<billing.SubscriptionStatus?> _loadSubscriptionStatus() async {

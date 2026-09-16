@@ -12,4 +12,3 @@ export 'streaks/streaks.dart';
 export 'exam_timetable/exam_timetable.dart';
 export 'timetable/timetable.dart';
 export 'splash/splash.dart';
-export 'permissions/permissions.dart';

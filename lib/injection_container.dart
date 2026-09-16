@@ -1190,24 +1190,6 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     ),
   );
 
-  // Permissions
-  sl.registerFactory<PermissionDatasource>(() => PermissionDatasourceImpl());
-  sl.registerFactory<PermissionRepository>(
-    () => PermissionRepositoryImpl(permissionDatasource: sl()),
-  );
-  sl.registerFactory<RequestPermissionUsecase>(
-    () => RequestPermissionUsecase(permissionRepository: sl()),
-  );
-  sl.registerFactory<CheckPermissionUsecase>(
-    () => CheckPermissionUsecase(permissionRepository: sl()),
-  );
-  sl.registerFactory<PermissionCubit>(
-    () => PermissionCubit(
-      checkPermissionUsecase: sl(),
-      requestPermissionUsecase: sl(),
-    ),
-  );
-
   /**********************************************************************
    *                               LEADERBOARD
    **********************************************************************/

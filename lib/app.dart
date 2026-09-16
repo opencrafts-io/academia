@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:in_app_update/in_app_update.dart';
+import 'package:permissions/permissions.dart';
 import 'package:settings/settings.dart';
 
 class Academia extends StatefulWidget {

@@ -1,9 +1,11 @@
 import 'package:academia/core/di/injection.dart';
+import 'package:academia/core/permissions/posthog_permission_request_observer.dart';
 import 'package:analytics/analytics.dart';
 import 'package:core/config/flavor.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:in_app_update/in_app_update.dart';
+import 'package:permissions/permissions.dart';
 import 'package:settings/settings.dart';
 
 void main() {
@@ -22,6 +24,11 @@ void main() {
     expect(getIt<FeatureFlagReader>(), isA<FeatureFlagReader>());
     expect(getIt<InAppUpdateBloc>(), isA<InAppUpdateBloc>());
     expect(getIt.isRegistered<SettingsCubit>(), isTrue);
+    expect(getIt.isRegistered<PermissionCubit>(), isTrue);
+    expect(
+      getIt<PermissionRequestObserver>(),
+      isA<PosthogPermissionRequestObserver>(),
+    );
     expect(
       getIt<AppUpdateConfigurationSource>(),
       isA<DisabledAppUpdateConfigurationSource>(),
