@@ -21,7 +21,7 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.47.2'
+          flutter-version: '3.47.4'
       
       - name: Install dependencies
         run: flutter pub get
@@ -39,7 +39,7 @@ jobs:
           scan-type: 'fs'
           format: 'table'
           output: 'trivy_report_${{ env.SHA7 }}.txt'
-      
+
       - name: Send All Reports to Discord
         if: always()
         env:
@@ -55,7 +55,16 @@ jobs:
           else
             STATUS="Needs a quick tune-up"
           fi
-          MSG="**Security check for $PR_TITLE**\n**Status**: $STATUS\n**Code analysis**: $ANALYZE_STATUS\n**Trivy scan**: $TRIVY_STATUS\n**Branch**: \`$HEAD_REF\` → \`$BASE_REF\`\nIf a check failed, download the reports below or run \`flutter analyze\` and \`trivy fs .\` locally.\n**Run**: $RUN_URL"
+          MSG="$(cat <<EOF
+          **Security check for $PR_TITLE**
+          **Status**: $STATUS
+          **Code analysis**: $ANALYZE_STATUS
+          **Trivy scan**: $TRIVY_STATUS
+          **Branch**: \`$HEAD_REF\` → \`$BASE_REF\`
+          If a check failed, download the reports below or run \`flutter analyze\` and \`trivy fs .\` locally.
+          **Run**: $RUN_URL
+          EOF
+          )"
           
           curl -H "Content-Type: multipart/form-data" \
                -F "content=$MSG" \
