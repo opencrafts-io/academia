@@ -10,7 +10,6 @@ import 'package:academia/features/semester/semester.dart';
 import 'package:academia/features/todos/data/repository/todo_item_repository_impl.dart';
 import 'package:academia/features/todos/data/repository/todo_tag_repository_impl.dart';
 import 'package:ads/ads.dart';
-import 'package:database/daos/lock_in_dao.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
 import 'package:flutter/foundation.dart';
@@ -44,9 +43,6 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
 
   configureDependencies(sl, flavor);
 
-  sl.registerLazySingleton<LockInService>(
-    () => LockInService(LockInRepository(sl<LockInDao>()), AppBlockerGateway()),
-  );
   if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
     await sl<LockInService>().start();
   }
