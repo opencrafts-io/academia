@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:academia/background_task/daily_login_background_task.dart';
 import 'package:academia/config/router/router.dart';
 import 'package:academia/features/course/course.dart';
 import 'package:academia/features/features.dart';
@@ -10,15 +7,12 @@ import 'package:academia/features/semester/semester.dart';
 import 'package:academia/features/settings/presentation/cubit/settings_state.dart';
 import 'package:academia/gen/fonts.gen.dart';
 import 'package:academia/injection_container.dart';
-import 'package:academia/splash_remover.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:logger/logger.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:workmanager/workmanager.dart';
 
 class Academia extends StatefulWidget {
   const Academia({super.key});
@@ -32,22 +26,6 @@ class _AcademiaState extends State<Academia> {
 
   @override
   void initState() {
-    SharedPreferences.getInstance().then((prefs) {
-      prefs.setString(
-        "user_activity",
-        jsonEncode({"last_app_launch_date": DateTime.now().toLocal().toString()}),
-      );
-    });
-
-    final DailyLoginBackgroundTask dailyLoginBackgroundTask =
-        DailyLoginBackgroundTask();
-    Workmanager().registerPeriodicTask(
-      dailyLoginBackgroundTask.taskName,
-      dailyLoginBackgroundTask.taskName,
-      frequency: dailyLoginBackgroundTask.frequency,
-      constraints: dailyLoginBackgroundTask.constraints
-          .toWorkManagerConstraints(),
-    );
     setOptimalDisplayMode();
     super.initState();
   }
@@ -93,31 +71,10 @@ class _AcademiaState extends State<Academia> {
         ),
         BlocProvider(create: (context) => sl<SettingsCubit>()),
         BlocProvider(
-          create: (context) => AuthBloc(
-            signOutUsecase: sl(),
-            signInWithProviderUsecase: sl(),
-            signInWithAppleUsecase: sl(),
-            signInAsReviewUsecase: sl(),
-            refreshVerisafeTokenUsecase: sl(),
-            signInWithSpotifyUsecase: sl.get<SignInWithSpotifyUsecase>(),
-            getPreviousAuthState: sl.get<GetPreviousAuthState>(),
-            signInWithGoogle: sl.get<SignInWithGoogleUsecase>(),
-          )..add(AuthCheckStatusEvent()),
+          create: (context) => sl<AuthBloc>()..add(AuthCheckStatusEvent()),
         ),
         BlocProvider(create: (context) => sl<ShereheHomeBloc>()),
-        BlocProvider(create: (context) => sl<ShereheDetailsBloc>()),
-        BlocProvider(create: (context) => sl<GetEventScannerByUserIdBloc>()),
-        BlocProvider(create: (context) => sl<OrganizedEventsBloc>()),
         BlocProvider(create: (context) => sl<CreateEventBloc>()),
-        BlocProvider(create: (context) => sl<UserTicketSelectionBloc>()),
-        BlocProvider(create: (context) => sl<AllUserEventTicketsBloc>()),
-        BlocProvider(create: (context) => sl<UserEventTicketsBloc>()),
-        BlocProvider(create: (context) => sl<ValidateAttendeeBloc>()),
-        BlocProvider(create: (context) => sl<TicketPaymentBloc>()),
-        BlocProvider(create: (context) => sl<AttendeesAndScannerStatsBloc>()),
-        BlocProvider(create: (context) => sl<TicketStatsBloc>()),
-        BlocProvider(create: (context) => sl<AllAttendeesBloc>()),
-        BlocProvider(create: (context) => sl<AllScannersBloc>()),
         BlocProvider(create: (context) => sl<ScannerActionsBloc>()),
 
         BlocProvider(create: (context) => sl<FeedBloc>()),
@@ -135,24 +92,11 @@ class _AcademiaState extends State<Academia> {
         BlocProvider(create: (context) => sl<ReportBloc>()),
         BlocProvider(create: (context) => sl<ExamTimetableBloc>()),
         BlocProvider(
-          create: (context) => ProfileBloc(
-            getCachedProfileUsecase: sl.get<GetCachedProfileUsecase>(),
-            refreshCurrentUserProfileUsecase: sl
-                .get<RefreshCurrentUserProfileUsecase>(),
-            updateUserProfile: sl.get<UpdateUserProfile>(),
-            updateUserPhone: sl.get<UpdateUserPhone>(),
-            requestAccountDeletionUsecase: sl
-                .get<RequestAccountDeletionUsecase>(),
-            requestAccountRecoveryUsecase: sl
-                .get<RequestAccountRecoveryUsecase>(),
-          )..add(GetCachedProfileEvent()),
+          create: (context) => sl<ProfileBloc>()..add(GetCachedProfileEvent()),
         ),
-        BlocProvider(
-          create: (context) => sl<TodoBloc>()
-            ..add(FetchCachedTodosEvent())
-            ..add(SyncTodosWithGoogleCalendar()),
-        ),
-
+        BlocProvider(create: (context) => sl<TodoListCubit>()),
+        BlocProvider(create: (context) => sl<TodoTagCubit>()),
+        BlocProvider(create: (context) => sl<TodoItemCubit>()),
         BlocProvider(create: (context) => sl<CommunityListingCubit>()),
         BlocProvider(
           create: (context) => CreateCommunityBloc(
@@ -164,24 +108,6 @@ class _AcademiaState extends State<Academia> {
         BlocProvider(
           create: (context) =>
               sl<AgendaEventBloc>()..add(FetchCachedAgendaEventsEvent()),
-        ),
-        BlocProvider(
-          create: (context) => sl<NotificationBloc>()
-            ..add(
-              InitializeLocalNotificationEvent(
-                channels: [
-                  NotificationChannelConfig.reminders,
-                  NotificationChannelConfig.alerts,
-                  NotificationChannelConfig.updates,
-                  NotificationChannelConfig.courseAlerts,
-                ],
-              ),
-            )
-            ..add(
-              InitializeOneSignalEvent(
-                appId: "88ca0bb7-c0d7-4e36-b9e6-ea0e29213593",
-              ),
-            ),
         ),
         BlocProvider(create: (context) => sl<SemesterCubit>()),
         BlocProvider(create: (context) => sl<CourseCubit>()),
@@ -200,12 +126,8 @@ class _AcademiaState extends State<Academia> {
             BlocListener<AuthBloc, AuthState>(
               listener: (context, state) {
                 AppRouter.router.refresh();
-              },
-            ),
-            BlocListener<NotificationBloc, NotificationState>(
-              listener: (context, state) {
-                if (state is NotificationErrorState) {
-                  _logger.e(state.message);
+                if (state is AuthAuthenticated) {
+                  context.read<FeedBloc>().add(CheckFeedLikeStatuses());
                 }
               },
             ),
@@ -219,91 +141,88 @@ class _AcademiaState extends State<Academia> {
               },
             ),
           ],
-          child: SplashRemover(
-            child: BlocBuilder<SettingsCubit, SettingsState>(
-              builder: (context, state) {
-                final seedColor = Color(state.colorSeedValue);
-                final surfaceColor = state.extraDarkMode
-                    ? const Color(0xFF000000)
-                    : null;
+          child: BlocBuilder<SettingsCubit, SettingsState>(
+            builder: (context, state) {
+              final seedColor = Color(state.colorSeedValue);
+              final surfaceColor = state.extraDarkMode
+                  ? const Color(0xFF000000)
+                  : null;
 
-                ColorScheme buildColorScheme({
-                  required Brightness brightness,
-                  ColorScheme? preferredScheme,
-                }) {
-                  final baseScheme =
-                      preferredScheme ??
-                      ColorScheme.fromSeed(
-                        seedColor: seedColor,
-                        brightness: brightness,
-                      );
-
-                  return surfaceColor != null
-                      ? baseScheme.copyWith(
-                          surface: brightness == Brightness.light
-                              ? null
-                              : surfaceColor,
-                        )
-                      : baseScheme;
-                }
-
-                return MaterialApp.router(
-                  debugShowCheckedModeBanner: false,
-                  showPerformanceOverlay: kProfileMode,
-                  themeMode: state.themeMode,
-                  theme: ThemeData(
-                    fontFamily: FontFamily.productSans,
-                    useMaterial3: state.enableMaterialYou,
-                    brightness: Brightness.light,
-                    colorScheme: buildColorScheme(
-                      brightness: Brightness.light,
-                      preferredScheme: state.automaticallyPickAccentColor
-                          ? lightScheme
-                          : null,
-                    ),
-                  ),
-
-                  darkTheme: ThemeData(
-                    fontFamily: FontFamily.productSans,
-                    useMaterial3: state.enableMaterialYou,
-                    brightness: Brightness.dark,
-                    colorScheme: buildColorScheme(
-                      brightness: Brightness.dark,
-                      preferredScheme: state.automaticallyPickAccentColor
-                          ? darkScheme
-                          : null,
-                    ),
-                  ),
-                  routerConfig: AppRouter.router,
-                  builder: (context, child) {
-                    return BlocListener<InAppUpdateBloc, InAppUpdateState>(
-                      listener: (context, state) {
-                        if (state is InAppUpdateRequired) {
-                          showModalBottomSheet(
-                            context:
-                                AppRouter.globalNavigatorKey.currentContext!,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(32),
-                            ),
-                            isDismissible: !state.isMandatory,
-                            enableDrag: false,
-                            useSafeArea: false,
-                            builder: (dialogContext) => AppUpdatePage(
-                              message: state.message,
-                              isMandatory: state.isMandatory,
-                              onUpdate: () => context
-                                  .read<InAppUpdateBloc>()
-                                  .redirectToStore(),
-                            ),
-                          );
-                        }
-                      },
-                      child: child ?? SizedBox.shrink(),
+              ColorScheme buildColorScheme({
+                required Brightness brightness,
+                ColorScheme? preferredScheme,
+              }) {
+                final baseScheme =
+                    preferredScheme ??
+                    ColorScheme.fromSeed(
+                      seedColor: seedColor,
+                      brightness: brightness,
                     );
-                  },
-                );
-              },
-            ),
+
+                return surfaceColor != null
+                    ? baseScheme.copyWith(
+                        surface: brightness == Brightness.light
+                            ? null
+                            : surfaceColor,
+                      )
+                    : baseScheme;
+              }
+
+              return MaterialApp.router(
+                debugShowCheckedModeBanner: false,
+                showPerformanceOverlay: kProfileMode,
+                themeMode: state.themeMode,
+                theme: ThemeData(
+                  fontFamily: FontFamily.productSans,
+                  useMaterial3: state.enableMaterialYou,
+                  brightness: Brightness.light,
+                  colorScheme: buildColorScheme(
+                    brightness: Brightness.light,
+                    preferredScheme: state.automaticallyPickAccentColor
+                        ? lightScheme
+                        : null,
+                  ),
+                ),
+
+                darkTheme: ThemeData(
+                  fontFamily: FontFamily.productSans,
+                  useMaterial3: state.enableMaterialYou,
+                  brightness: Brightness.dark,
+                  colorScheme: buildColorScheme(
+                    brightness: Brightness.dark,
+                    preferredScheme: state.automaticallyPickAccentColor
+                        ? darkScheme
+                        : null,
+                  ),
+                ),
+                routerConfig: AppRouter.router,
+                builder: (context, child) {
+                  return BlocListener<InAppUpdateBloc, InAppUpdateState>(
+                    listener: (context, state) {
+                      if (state is InAppUpdateRequired) {
+                        showModalBottomSheet(
+                          context: AppRouter.globalNavigatorKey.currentContext!,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(32),
+                          ),
+                          isDismissible: !state.isMandatory,
+                          enableDrag: false,
+                          useSafeArea: false,
+                          builder: (dialogContext) => AppUpdatePage(
+                            message: state.message,
+                            isMandatory: state.isMandatory,
+                            onUpdate: () => context
+                                .read<InAppUpdateBloc>()
+                                .redirectToStore(),
+                          ),
+                        );
+                      }
+                    },
+                    child: child ?? SizedBox.shrink(),
+                  );
+                },
+              );
+            },
           ),
         ),
       ),

@@ -16,4 +16,7 @@ class TicketStatsTable extends Table {
 
    @JsonKey('tickets_remaining')
   IntColumn get ticketsRemaining => integer()();
+
+  @JsonKey('scope')
+  TextColumn get scope => text()();
 }

@@ -1,4 +1,4 @@
-import 'package:academia/features/institution/data/models/institution.dart';
+import 'package:academia/database/tables/tables.dart';
 import 'package:drift/drift.dart';
 import 'package:academia/core/core.dart';
 
@@ -16,7 +16,7 @@ class Timetable extends Table {
 
   @JsonKey("institution_id")
   IntColumn get institution =>
-      integer().nullable().references(Institution, #institutionId)();
+      integer().nullable().references(Institutions, #institutionId)();
 
   @JsonKey("is_synced")
   BoolColumn get isSynced => boolean().withDefault(Constant(false))();

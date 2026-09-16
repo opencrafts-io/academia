@@ -67,20 +67,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     }
   }
 
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _startDateTimeController.dispose();
-    _endDateTimeController.dispose();
-    _aboutController.dispose();
-    _locationController.dispose();
-    _paybillNumberController.dispose();
-    _accountReferenceController.dispose();
-    _tillNumberController.dispose();
-    _sendMoneyPhoneController.dispose();
-    super.dispose();
-  }
-
   Future<void> _selectDateAndTime({
     required BuildContext context,
     required bool isStart,
@@ -100,6 +86,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         context: context,
         initialTime: TimeOfDay.fromDateTime(currentDateTime),
       );
+      if (!context.mounted) return;
       if (pickedTime != null) {
         final selectedDateTime = DateTime(
           pickedDate.year,
@@ -108,15 +95,36 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           pickedTime.hour,
           pickedTime.minute,
         );
+
+        // Prevent selecting past date/time
+        if (selectedDateTime.isBefore(
+          DateTime(
+            DateTime.now().year,
+            DateTime.now().month,
+            DateTime.now().day,
+            DateTime.now().hour,
+            DateTime.now().minute,
+          ),
+        )) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Date and time cannot be in the past"),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+          return;
+        }
         setState(() {
           if (isStart) {
             _selectedStartDateTime = selectedDateTime;
+            _syncTicketsWithEventDates();
             _startDateTimeController.text = DateFormat.yMMMMEEEEd()
                 .add_jm()
                 .format(selectedDateTime);
             //reset end date time if it is before start date time
-            if (_selectedEndDateTime != null &&
-                _selectedEndDateTime!.isBefore(selectedDateTime)) {
+            if (_selectedEndDateTime == null) return;
+            if (_selectedEndDateTime!.isBefore(selectedDateTime) ||
+                _selectedEndDateTime!.isAtSameMomentAs(selectedDateTime)) {
               _selectedEndDateTime = null;
               _endDateTimeController.clear();
             }
@@ -124,6 +132,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             //prevent invalid end date time
             if (_selectedStartDateTime != null &&
                 selectedDateTime.isBefore(_selectedStartDateTime!)) {
+              _selectedEndDateTime = null;
+              _endDateTimeController.clear();
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text(
@@ -133,8 +143,22 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                 ),
               );
               return;
+            } else if (_selectedStartDateTime != null &&
+                selectedDateTime.isAtSameMomentAs(_selectedStartDateTime!)) {
+              _selectedEndDateTime = null;
+              _endDateTimeController.clear();
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text(
+                    "End date and time cannot be the same as start date and time",
+                  ),
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+              return;
             }
             _selectedEndDateTime = selectedDateTime;
+            _syncTicketsWithEventDates();
             _endDateTimeController.text = DateFormat.yMMMMEEEEd()
                 .add_jm()
                 .format(selectedDateTime);
@@ -333,6 +357,70 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     }
   }
 
+  /*
+  This is to adjust ticket dates if they are out of sync with event dates after the user changes event start or end date time. 
+  This is to prevent invalid ticket date ranges and ensure tickets are always within event date range 
+  */
+  void _syncTicketsWithEventDates() {
+    if (_selectedStartDateTime == null || _selectedEndDateTime == null) {
+      return;
+    }
+
+    if (_tickets.isEmpty) return;
+
+    final eventStart = _selectedStartDateTime!;
+    final eventEnd = _selectedEndDateTime!;
+
+    setState(() {
+      _tickets = _tickets.map((ticketUI) {
+        final ticket = ticketUI.ticket;
+
+        DateTime ticketStart = DateTime.parse(
+          ticket.startDate ?? eventStart.toUtc().toIso8601String(),
+        );
+        DateTime ticketEnd = DateTime.parse(
+          ticket.endDate ?? eventEnd.toUtc().toIso8601String(),
+        );
+
+        // Clamp start
+        if (ticketStart.isBefore(eventStart)) {
+          ticketStart = eventStart;
+        }
+
+        // Clamp end
+        if (ticketEnd.isAfter(eventEnd)) {
+          ticketEnd = eventEnd;
+        }
+
+        // Prevent invalid ranges
+        if (ticketEnd.isBefore(ticketStart) ||
+            ticketEnd.isAtSameMomentAs(ticketStart)) {
+          ticketEnd = eventEnd;
+        }
+
+        return ticketUI.copyWith(
+          ticket: ticket.copyWith(
+            startDate: ticketStart.toUtc().toIso8601String(),
+            endDate: ticketEnd.toUtc().toIso8601String(),
+          ),
+          selectedTicketDateRange: DateTimeRange(
+            start: ticketStart,
+            end: ticketEnd,
+          ),
+        );
+      }).toList();
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          "Ticket validity dates were adjusted to match the event dates.",
+        ),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
   void _showGenreSelectionDialog() {
     List<String> tempSelectedGenres = List.from(_selectedGenres);
     showDialog(
@@ -340,7 +428,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       builder: (BuildContext dialogContext) {
         return StatefulBuilder(
           builder: (context, StateSetter setStateDialog) {
-            return AlertDialog.adaptive(
+            return AlertDialog(
               title: const Text('Select Genres'),
               content: SingleChildScrollView(
                 child: ListBody(
@@ -398,8 +486,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         eventName: _nameController.text.trim(),
         eventDescription: _aboutController.text.trim(),
         eventLocation: _locationController.text.trim(),
-        eventStartDate: _selectedStartDateTime!.toIso8601String(),
-        eventEndDate: _selectedEndDateTime!.toIso8601String(),
+        eventStartDate: _selectedStartDateTime!.toUtc().toIso8601String(),
+        eventEndDate: _selectedEndDateTime!.toUtc().toIso8601String(),
         organizerId: organizerId ?? "N/A",
         eventCardImage: _selectedCardImage,
         eventPosterImage: _selectedPosterImage,
@@ -565,10 +653,22 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                   },
                 ),
                 TicketSelectionPage(
+                  selectedEventScopeType: _selectedEventScopeType,
+                  eligibleInstitutions:
+                      _selectedEventScopeType == ScopeTypes.institution
+                      ? _selectedEventInstitutions.toList()
+                      : null,
+                  eventStartDateTime: _selectedStartDateTime ?? DateTime.now(),
+                  eventEndDateTime: _selectedEndDateTime ?? DateTime.now(),
                   tickets: _tickets,
                   onAddTicket: (ticket) {
                     setState(() {
                       _tickets.add(ticket);
+                    });
+                  },
+                  onUpdateTicket: (oldTicket, updatedTicket) {
+                    setState(() {
+                      _tickets[_tickets.indexOf(oldTicket)] = updatedTicket;
                     });
                   },
                   onRemoveTicket: (ticket) {
@@ -619,7 +719,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                       }
                     },
                   ),
-                Stage4ReviewAndSubmit(
+                SubmitEventPage(
                   onSubmit: _submitForm,
                   onPrevious: _moveToPreviousPage,
                   userName: organizerName ?? "Guest",
@@ -630,5 +730,19 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _startDateTimeController.dispose();
+    _endDateTimeController.dispose();
+    _aboutController.dispose();
+    _locationController.dispose();
+    _paybillNumberController.dispose();
+    _accountReferenceController.dispose();
+    _tillNumberController.dispose();
+    _sendMoneyPhoneController.dispose();
+    super.dispose();
   }
 }

@@ -104,7 +104,7 @@ class _CountdownTimerState extends State<CountdownTimer> {
           Row(
             children: [
               Icon(
-                Icons.timer_outlined,
+                Icons.timer_rounded,
                 color: colorScheme.onPrimaryContainer,
                 size: 24,
               ),

@@ -171,7 +171,7 @@ class CourseAlertBackgroundTask extends BackgroundTask {
               "${entry.courseId}_${entry.startDate.millisecondsSinceEpoch}",
           30,
         ),
-        channelKey: 'course_alerts',
+        channelKey: 'course_alerts_v2',
         title: 'Upcoming ${course.courseName}',
         summary: 'Starting in 30 minutes',
         body: '• Room: $location\n• Prep: Check your materials',
@@ -215,7 +215,7 @@ class CourseAlertBackgroundTask extends BackgroundTask {
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
         id: _generateNotificationId(entry.id ?? '', 15),
-        channelKey: 'course_alerts',
+        channelKey: 'course_alerts_v2',
         title: 'Upcoming: ${course.courseName}',
         summary: 'Starting in 15 minutes',
         body: '• Room: $location\n• Prep: Check your materials',
@@ -257,7 +257,7 @@ class CourseAlertBackgroundTask extends BackgroundTask {
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
         id: _generateNotificationId(entry.id ?? '', 0),
-        channelKey: 'course_alerts',
+        channelKey: 'course_alerts_v2',
         title: 'Time for ${course.courseName}!',
         summary: 'Starting Now • ${entry.durationMinutes}m',
         body: '📍 $location\n👨‍🏫 ${course.instructor}',
@@ -303,7 +303,7 @@ class CourseAlertBackgroundTask extends BackgroundTask {
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
         id: _generateNotificationId(entry.id ?? '', -1),
-        channelKey: 'course_alerts',
+        channelKey: 'course_alerts_v2',
         title: '${course.courseName} is in progress',
         body: '📍 $location\n👨‍🏫 ${course.instructor}',
         summary:

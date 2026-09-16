@@ -103,6 +103,22 @@ class $AssetsIconsGen {
   AssetGenImage get communicationIconVideoCall =>
       const AssetGenImage('assets/icons/Communication Icon - Video Call.png');
 
+  /// File path: assets/icons/Dashboard Icons - boy.png
+  AssetGenImage get dashboardIconsBoy =>
+      const AssetGenImage('assets/icons/Dashboard Icons - boy.png');
+
+  /// File path: assets/icons/Dashboard Icons - link.png
+  AssetGenImage get dashboardIconsLink =>
+      const AssetGenImage('assets/icons/Dashboard Icons - link.png');
+
+  /// File path: assets/icons/Dashboard Icons - mobile.png
+  AssetGenImage get dashboardIconsMobile =>
+      const AssetGenImage('assets/icons/Dashboard Icons - mobile.png');
+
+  /// File path: assets/icons/Dashboard Icons - notebook.png
+  AssetGenImage get dashboardIconsNotebook =>
+      const AssetGenImage('assets/icons/Dashboard Icons - notebook.png');
+
   /// File path: assets/icons/Food & Drink Icon - Beer Mug.png
   AssetGenImage get foodDrinkIconBeerMug =>
       const AssetGenImage('assets/icons/Food & Drink Icon - Beer Mug.png');
@@ -726,6 +742,10 @@ class $AssetsIconsGen {
     communicationIconMessageBubble,
     communicationIconPhone,
     communicationIconVideoCall,
+    dashboardIconsBoy,
+    dashboardIconsLink,
+    dashboardIconsMobile,
+    dashboardIconsNotebook,
     foodDrinkIconBeerMug,
     foodDrinkIconBread,
     foodDrinkIconCake,
@@ -1028,9 +1048,7 @@ class $PackagesAnimatedEmojiLottieGen {
   ];
 }
 
-class Assets {
-  const Assets._();
-
+abstract final class Assets {
   static const $AssetsIconsGen icons = $AssetsIconsGen();
   static const $AssetsIllustrationsGen illustrations =
       $AssetsIllustrationsGen();

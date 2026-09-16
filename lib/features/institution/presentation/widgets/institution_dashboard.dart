@@ -38,24 +38,21 @@ class _InstitutionDashboardState extends State<InstitutionDashboard> {
     return MultiBlocListener(
       listeners: [
         BlocListener<ScrappingCommandBloc, ScrappingCommandState>(
-          listener: (context, state) {
-            if (state is ScrappingCommandLoaded) {}
-          },
+          listener: (context, state) {},
         ),
         BlocListener<StudentProfileBloc, StudentProfileState>(
           listener: (context, state) {},
         ),
         BlocListener<MagnetBloc, MagnetState>(
           listener: (context, state) {
-            if (state is MagnetProcessing || state is MagnetInitializing) {
-              setState(() {
-                _showSyncCard = false;
-              });
-            } else if (state is MagnetError || state is MagnetInitial) {
-              setState(() {
-                _showSyncCard = true;
-              });
-            }
+            state.maybeWhen(
+              processing: (command, progress) =>
+                  setState(() => _showSyncCard = false),
+              initializing: () => setState(() => _showSyncCard = false),
+              error: (message) => setState(() => _showSyncCard = true),
+              initial: () => setState(() => _showSyncCard = true),
+              orElse: () {},
+            );
           },
         ),
       ],
@@ -71,53 +68,39 @@ class _InstitutionDashboardState extends State<InstitutionDashboard> {
                   }),
                 ),
               Text(state.runtimeType.toString()),
-              if (state is MagnetProcessing)
-                Column(
-                  children: [
-                    LoadingIndicatorM3E(),
-                    SizedBox(height: 16),
-                    Text(
-                      state.progress?.instructionType ?? "Crunching numbers",
-                    ),
-                  ],
-                ),
-              if (state is MagnetSuccess)
-                Column(
-                  children: [
-                    Image.memory(
-                      state.result.data["post_click_screenshot"],
-                      height: 500,
-                      width: 500,
-                    ),
-                    Image.memory(
-                      state.result.data["post_dashboard_screenshot"],
-                      height: 500,
-                      width: 500,
-                    ),
-                  ],
-                ),
+              ...state.maybeWhen(
+                processing: (command, progress) => [
+                  Column(
+                    children: [
+                      LoadingIndicatorM3E(),
+                      SizedBox(height: 16),
+                      Text(progress?.instructionType ?? "Crunching numbers"),
+                    ],
+                  ),
+                ],
+                orElse: () => const <Widget>[],
+              ),
+              ...state.maybeWhen(
+                success: (result) => [
+                  Column(
+                    children: [
+                      Image.memory(
+                        result.data["post_click_screenshot"],
+                        height: 500,
+                        width: 500,
+                      ),
+                      Image.memory(
+                        result.data["post_dashboard_screenshot"],
+                        height: 500,
+                        width: 500,
+                      ),
+                    ],
+                  ),
+                ],
+                orElse: () => const <Widget>[],
+              ),
               FilledButton(
                 onPressed: () {
-                  // final scrappingCommandState = context
-                  //     .read<ScrappingCommandBloc>()
-                  //     .state;
-                  // final magnetState = context.read<MagnetBloc>().state;
-                  // final institutionKeyState = context
-                  //     .read<InstitutionKeyBloc>()
-                  //     .state;
-
-                  // if ((magnetState is MagnetReady ||
-                  //         magnetState is MagnetSuccess) &&
-                  //     scrappingCommandState is ScrappingCommandLoaded &&
-                  //     institutionKeyState is InstitutionKeyLoaded) {
-                  //   context.read<MagnetBloc>().add(
-                  //     ExecuteScrappingCommand(
-                  //       command: scrappingCommandState.command!,
-                  //       institutionKey: institutionKeyState.key!,
-                  //     ),
-                  //   );
-                  //   return;
-                  // }
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text("Institution not supported"),

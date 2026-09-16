@@ -38,7 +38,9 @@ class ChirpCommunityMembershipRepositoryImpl
       fetched,
     ) async {
       final res = await chirpCommunityMembershipLocalDatasource
-          .saveAllCommunityMemberships(fetched);
+          .saveAllCommunityMemberships(
+            fetched.map((dto) => dto.toData()).toList(),
+          );
       return res.fold(
         (failure) => left(failure),
         (rawMemberships) => right(
@@ -56,10 +58,10 @@ class ChirpCommunityMembershipRepositoryImpl
         .joinCommunity(communityID: communityID);
 
     return remoteResult.fold((serverFailure) => Left(serverFailure), (
-      remoteData,
+      remoteDto,
     ) async {
       final localResult = await chirpCommunityMembershipLocalDatasource
-          .createOrUpdateCommunityMembership(remoteData);
+          .createOrUpdateCommunityMembership(remoteDto.toData());
       return localResult.fold(
         (cacheFailure) => Left(cacheFailure),
         (data) => Right(data.toEntity()),
@@ -102,7 +104,9 @@ class ChirpCommunityMembershipRepositoryImpl
       },
       (fetchedMemberships) async {
         final saveResult = await chirpCommunityMembershipLocalDatasource
-            .saveAllCommunityMemberships(fetchedMemberships);
+            .saveAllCommunityMemberships(
+              fetchedMemberships.map((dto) => dto.toData()).toList(),
+            );
         return saveResult.fold((cacheFailure) => Left(cacheFailure), (
           savedMemberships,
         ) {
@@ -131,10 +135,10 @@ class ChirpCommunityMembershipRepositoryImpl
           (failure) {
             return left(failure);
           },
-          (membershipData) async {
+          (membershipDto) async {
             await chirpCommunityMembershipLocalDatasource
-                .createOrUpdateCommunityMembership(membershipData);
-            return right(membershipData.toEntity());
+                .createOrUpdateCommunityMembership(membershipDto.toData());
+            return right(membershipDto.toEntity());
           },
         );
       },

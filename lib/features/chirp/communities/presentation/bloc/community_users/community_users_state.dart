@@ -1,30 +1,15 @@
-part of 'community_users_bloc.dart';
+import 'package:academia/features/chirp/communities/domain/entities/paginated_response.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-abstract class CommunityUsersState extends Equatable {
-  const CommunityUsersState();
+part 'community_users_state.freezed.dart';
 
-  @override
-  List<Object?> get props => [];
-}
-
-class CommunityUsersInitial extends CommunityUsersState {}
-
-class CommunityUsersLoading extends CommunityUsersState {}
-
-class CommunityUsersLoaded extends CommunityUsersState {
-  final PaginatedResponse paginatedResponse;
-
-  const CommunityUsersLoaded(this.paginatedResponse);
-
-  @override
-  List<Object?> get props => [paginatedResponse];
-}
-
-class CommunityUsersFailure extends CommunityUsersState {
-  final String message;
-
-  const CommunityUsersFailure(this.message);
-
-  @override
-  List<Object?> get props => [message];
+@freezed
+sealed class CommunityUsersState with _$CommunityUsersState {
+  const factory CommunityUsersState.initial() = CommunityUsersInitial;
+  const factory CommunityUsersState.loading() = CommunityUsersLoading;
+  const factory CommunityUsersState.loaded(
+    PaginatedResponse paginatedResponse,
+  ) = CommunityUsersLoaded;
+  const factory CommunityUsersState.failure(String message) =
+      CommunityUsersFailure;
 }

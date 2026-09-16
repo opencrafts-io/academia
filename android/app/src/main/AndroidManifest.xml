@@ -41,8 +41,7 @@
 
                 <data
                     android:host="academia.opencrafts.io"
-                    android:scheme="http" />
-                <data android:scheme="https" />
+                    android:scheme="https" />
             </intent-filter>
         </activity>
 
@@ -51,6 +50,7 @@
         <activity
             android:name="com.linusu.flutter_web_auth_2.CallbackActivity"
             android:exported="true"
+            android:launchMode="singleTask"
             android:taskAffinity=""
           >
             <intent-filter android:label="flutter_web_auth_2">

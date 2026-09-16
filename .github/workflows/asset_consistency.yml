@@ -16,7 +16,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: 3.41.6 
+          flutter-version: 3.47.4
           cache: true
 
       - name: Install Dependencies
@@ -31,11 +31,11 @@ jobs:
         run: |
           if [[ -n $(git status --porcelain) ]]; then
             echo "-------------------------------------------------------"
-            echo "❌ ERROR: Generated files do not match pubspec.yaml"
+            echo "ERROR: Generated files do not match pubspec.yaml"
             echo "Please run 'dart run build_runner build' and commit changes."
             echo "-------------------------------------------------------"
             git status
             exit 1
           else
-            echo "✅ Assets are synchronized."
+            echo "Assets are synchronized."
           fi

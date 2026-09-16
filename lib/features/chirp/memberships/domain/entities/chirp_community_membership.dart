@@ -1,47 +1,18 @@
-class ChirpCommunityMembership {
-  final int id;
-  final int communityID;
-  final String userID;
-  final String role;
-  final bool banned;
-  final String? bannedByID;
-  final String? bannedReason;
-  final DateTime? bannedAt;
-  final DateTime joinedAt;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  ChirpCommunityMembership({
-    required this.id,
-    required this.communityID,
-    required this.userID,
-    required this.role,
-    this.banned = false,
-    this.bannedByID,
-    this.bannedReason,
-    this.bannedAt,
-    DateTime? joinedAt,
-  }) : joinedAt = joinedAt ?? DateTime.now();
+part 'chirp_community_membership.freezed.dart';
 
-  ChirpCommunityMembership copyWith({
-    int? id,
-    int? communityID,
-    String? userID,
-    String? role,
-    bool? banned,
+@freezed
+abstract class ChirpCommunityMembership with _$ChirpCommunityMembership {
+  const factory ChirpCommunityMembership({
+    required int id,
+    required int communityID,
+    required String userID,
+    required String role,
+    @Default(false) bool banned,
     String? bannedByID,
     String? bannedReason,
     DateTime? bannedAt,
-    DateTime? joinedAt,
-  }) {
-    return ChirpCommunityMembership(
-      id: id ?? this.id,
-      communityID: communityID ?? this.communityID,
-      userID: userID ?? this.userID,
-      role: role ?? this.role,
-      banned: banned ?? this.banned,
-      bannedByID: bannedByID ?? this.bannedByID,
-      bannedReason: bannedReason ?? this.bannedReason,
-      bannedAt: bannedAt ?? this.bannedAt,
-      joinedAt: joinedAt ?? this.joinedAt,
-    );
-  }
+    required DateTime joinedAt,
+  }) = _ChirpCommunityMembership;
 }

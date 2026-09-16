@@ -1,28 +1,14 @@
-part of 'create_community_bloc.dart';
+import 'package:academia/features/chirp/communities/domain/entities/community.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-abstract class CreateCommunityState extends Equatable {
-  const CreateCommunityState();
+part 'create_community_state.freezed.dart';
 
-  @override
-  List<Object?> get props => [];
-}
-
-class CreateCommunityInitial extends CreateCommunityState {}
-
-class CreateCommunityLoading extends CreateCommunityState {}
-
-class CreateCommunitySuccess extends CreateCommunityState {
-  final Community community;
-  const CreateCommunitySuccess({required this.community});
-
-  @override
-  List<Object?> get props => [community];
-}
-
-class CreateCommunityFailure extends CreateCommunityState {
-  final String message;
-  const CreateCommunityFailure({required this.message});
-
-  @override
-  List<Object?> get props => [message];
+@freezed
+sealed class CreateCommunityState with _$CreateCommunityState {
+  const factory CreateCommunityState.initial() = CreateCommunityInitial;
+  const factory CreateCommunityState.loading() = CreateCommunityLoading;
+  const factory CreateCommunityState.success({required Community community}) =
+      CreateCommunitySuccess;
+  const factory CreateCommunityState.failure({required String message}) =
+      CreateCommunityFailure;
 }

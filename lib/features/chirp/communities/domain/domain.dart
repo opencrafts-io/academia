@@ -1,6 +1,5 @@
 export 'entities/community.dart';
 export 'entities/community_user.dart';
-export 'entities/paginated_communities.dart';
 export 'entities/paginated_response.dart';
 export 'usecases/create_community_use_case.dart';
 export 'usecases/get_community_by_id_use_case.dart';

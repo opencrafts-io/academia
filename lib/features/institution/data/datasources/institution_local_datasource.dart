@@ -8,12 +8,12 @@ class InstitutionLocalDatasource {
 
   InstitutionLocalDatasource({required this.localDB});
 
-  Future<Either<Failure, InstitutionData>> createOrUpdateInstitutionDetails(
-    InstitutionData institutionData,
+  Future<Either<Failure, Institution>> createOrUpdateInstitutionDetails(
+    Institution institutionData,
   ) async {
     try {
       final created = await localDB
-          .into(localDB.institution)
+          .into(localDB.institutions)
           .insertReturning(
             institutionData,
             onConflict: DoUpdate((ins) => institutionData),
@@ -31,9 +31,9 @@ class InstitutionLocalDatasource {
     }
   }
 
-  Future<Either<Failure, List<InstitutionData>>> getCachedInstitutions() async {
+  Future<Either<Failure, List<Institution>>> getCachedInstitutions() async {
     try {
-      final retrieved = await localDB.select(localDB.institution).get();
+      final retrieved = await localDB.select(localDB.institutions).get();
       return right(retrieved);
     } catch (e) {
       return left(
@@ -52,7 +52,7 @@ class InstitutionLocalDatasource {
   ) async {
     try {
       await (localDB.delete(
-        localDB.institution,
+        localDB.institutions,
       )..where((ins) => ins.institutionId.equals(institutionID))).go();
       return right(null);
     } catch (e) {

@@ -48,3 +48,23 @@ class UpdateTicketError extends TicketStatsState {
   @override
   List<Object?> get props => [message];
 }
+
+class AddTicketLoading extends TicketStatsState {}
+
+class AddTicketSuccess extends TicketStatsState {
+  final Ticket ticket;
+
+  const AddTicketSuccess({required this.ticket});
+
+  @override
+  List<Object?> get props => [ticket];
+}
+
+class AddTicketError extends TicketStatsState {
+  final String message;
+
+  const AddTicketError({required this.message});
+
+  @override
+  List<Object?> get props => [message];
+}

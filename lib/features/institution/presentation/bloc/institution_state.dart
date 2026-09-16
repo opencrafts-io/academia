@@ -1,55 +1,14 @@
-part of 'institution_bloc.dart';
+import 'package:academia/features/institution/domain/domain.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-abstract class InstitutionState extends Equatable {
-  @override
-  List<Object?> get props => [];
+part 'institution_state.freezed.dart';
 
-  @override
-  bool? get stringify => true;
-}
-
-class InstitutionInitialState extends InstitutionState {
-  @override
-  List<Object?> get props => [];
-
-  @override
-  bool? get stringify => true;
-}
-
-class InstitutionLoadingState extends InstitutionState {
-  @override
-  List<Object?> get props => [];
-
-  @override
-  bool? get stringify => true;
-}
-
-class InstitutionLinkedState extends InstitutionState {
-  @override
-  List<Object?> get props => [];
-
-  @override
-  bool? get stringify => true;
-}
-
-class InstitutionErrorState extends InstitutionState {
-  final String error;
-  InstitutionErrorState({required this.error});
-
-  @override
-  List<Object?> get props => [error];
-
-  @override
-  bool? get stringify => true;
-}
-
-class InstitutionLoadedState extends InstitutionState {
-  final List<Institution> institutions;
-  InstitutionLoadedState({required this.institutions});
-
-  @override
-  List<Object?> get props => [institutions];
-
-  @override
-  bool? get stringify => true;
+@freezed
+sealed class InstitutionState with _$InstitutionState {
+  const factory InstitutionState.initial() = _Initial;
+  const factory InstitutionState.loading() = _Loading;
+  const factory InstitutionState.linked() = _Linked;
+  const factory InstitutionState.error(String error) = _Error;
+  const factory InstitutionState.loaded(List<Institution> institutions) =
+      _Loaded;
 }

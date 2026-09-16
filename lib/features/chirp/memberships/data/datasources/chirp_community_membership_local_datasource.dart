@@ -11,12 +11,12 @@ class ChirpCommunityMembershipLocalDatasource {
 
   /// --- 1. Create or Update Single Membership ---
   /// Inserts a new membership or updates an existing one if a conflict occurs
-  Future<Either<Failure, ChirpCommunityMembershipData>>
-  createOrUpdateCommunityMembership(ChirpCommunityMembershipData data) async {
+  Future<Either<Failure, ChirpCommunityMembership>>
+  createOrUpdateCommunityMembership(ChirpCommunityMembership data) async {
     try {
       await _deleteAllExpiredCachedCommunityMemberships();
       final modified = await localDB
-          .into(localDB.chirpCommunityMembership)
+          .into(localDB.chirpCommunityMemberships)
           .insertReturning(data, onConflict: DoUpdate((d) => data));
 
       return right(modified);
@@ -34,9 +34,9 @@ class ChirpCommunityMembershipLocalDatasource {
   /// --- 2. Save/Update a List of Memberships (Bulk Operation) ---
   /// Uses a batch operation for highly efficient insertion and updating of
   /// multiple records.
-  Future<Either<Failure, List<ChirpCommunityMembershipData>>>
+  Future<Either<Failure, List<ChirpCommunityMembership>>>
   saveAllCommunityMemberships(
-    List<ChirpCommunityMembershipData> dataList,
+    List<ChirpCommunityMembership> dataList,
   ) async {
     try {
       await _deleteAllExpiredCachedCommunityMemberships();
@@ -45,7 +45,7 @@ class ChirpCommunityMembershipLocalDatasource {
       // 1. Perform a batch operation
       await localDB.batch((batch) {
         batch.insertAll(
-          localDB.chirpCommunityMembership,
+          localDB.chirpCommunityMemberships,
           dataList,
           // Use insertOrReplace to handle conflicts efficiently on bulk data.
           mode: InsertMode.insertOrReplace,
@@ -63,12 +63,12 @@ class ChirpCommunityMembershipLocalDatasource {
   }
 
   /// --- 3. Returns a list of all cached community memberships
-  Future<Either<Failure, List<ChirpCommunityMembershipData>>>
+  Future<Either<Failure, List<ChirpCommunityMembership>>>
   getAllCachedCommunityMemberships() async {
     try {
       await _deleteAllExpiredCachedCommunityMemberships();
       final memberships = await localDB
-          .select(localDB.chirpCommunityMembership)
+          .select(localDB.chirpCommunityMemberships)
           .get();
       return right(memberships);
     } catch (e) {
@@ -82,12 +82,12 @@ class ChirpCommunityMembershipLocalDatasource {
   }
 
   /// --- 4. Returns a list of all cached community memberships
-  Future<Either<Failure, List<ChirpCommunityMembershipData>>>
+  Future<Either<Failure, List<ChirpCommunityMembership>>>
   getCommunityMembershipByCommunityID(int communityID) async {
     try {
       await _deleteAllExpiredCachedCommunityMemberships();
       final memberships =
-          await (localDB.select(localDB.chirpCommunityMembership)..where(
+          await (localDB.select(localDB.chirpCommunityMemberships)..where(
                 (membership) => membership.communityID.equals(communityID),
               ))
               .get();
@@ -104,7 +104,7 @@ class ChirpCommunityMembershipLocalDatasource {
     await _deleteAllExpiredCachedCommunityMemberships();
     try {
       await (localDB.delete(
-        localDB.chirpCommunityMembership,
+        localDB.chirpCommunityMemberships,
       )..where((community) => community.id.equals(communityID))).go();
 
       return right(null);
@@ -115,13 +115,13 @@ class ChirpCommunityMembershipLocalDatasource {
     }
   }
 
-  Future<Either<Failure, ChirpCommunityMembershipData>> getMembership({
+  Future<Either<Failure, ChirpCommunityMembership>> getMembership({
     required int communityID,
     required String userID,
   }) async {
     try {
       await _deleteAllExpiredCachedCommunityMemberships();
-      final query = localDB.select(localDB.chirpCommunityMembership)
+      final query = localDB.select(localDB.chirpCommunityMemberships)
         ..where(
           (tbl) =>
               tbl.communityID.equals(communityID) & tbl.userID.equals(userID),
@@ -154,7 +154,7 @@ class ChirpCommunityMembershipLocalDatasource {
 
     try {
       // Delete all memberships that are older than the TTL
-      await (localDB.delete(localDB.chirpCommunityMembership)..where(
+      await (localDB.delete(localDB.chirpCommunityMemberships)..where(
             (membership) =>
                 membership.cachedAt.isSmallerThanValue(expirationThreshold),
           ))

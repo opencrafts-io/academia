@@ -1,0 +1,36 @@
+name: app_blocker
+description: "Cross-platform app blocking plugin for Flutter. Block apps with custom block screen (Android) and Screen Time Shield (iOS). Supports scheduling and profiles."
+version: 2.2.0
+homepage: https://github.com/kaneiof/app_blocker
+repository: https://github.com/kaneiof/app_blocker
+issue_tracker: https://github.com/kaneiof/app_blocker/issues
+
+topics:
+  - app-blocking
+  - parental-controls
+  - screen-time
+  - digital-wellbeing
+  - focus
+
+environment:
+  sdk: ^3.12.0
+  flutter: '>=3.44.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  plugin_platform_interface: ^2.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: com.khanhtq.app_blocker
+        pluginClass: AppBlockerPlugin
+      ios:
+        pluginClass: AppBlockerPlugin

@@ -1,39 +1,15 @@
-part of 'institution_key_bloc.dart';
+import 'package:academia/features/institution/domain/domain.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-abstract class InstitutionKeyState extends Equatable {
-  const InstitutionKeyState();
+part 'institution_key_state.freezed.dart';
 
-  @override
-  List<Object?> get props => [];
-}
-
-/// Initial state before any action
-class InstitutionKeyInitial extends InstitutionKeyState {
-  const InstitutionKeyInitial();
-}
-
-/// State while loading the key
-class InstitutionKeyLoading extends InstitutionKeyState {
-  const InstitutionKeyLoading();
-}
-
-/// State when the key is successfully loaded
-class InstitutionKeyLoaded extends InstitutionKeyState {
-  final InstitutionKey? key;
-
-  const InstitutionKeyLoaded({required this.key});
-
-  @override
-  List<Object?> get props => [key];
-}
-
-/// State when an error occurs
-class InstitutionKeyError extends InstitutionKeyState {
-  final String message;
-  final InstitutionKey? key;
-
-  const InstitutionKeyError({required this.message, this.key});
-
-  @override
-  List<Object?> get props => [message, key];
+@freezed
+sealed class InstitutionKeyState with _$InstitutionKeyState {
+  const factory InstitutionKeyState.initial() = _Initial;
+  const factory InstitutionKeyState.loading() = _Loading;
+  const factory InstitutionKeyState.loaded(InstitutionKey? key) = _Loaded;
+  const factory InstitutionKeyState.error({
+    required String message,
+    InstitutionKey? key,
+  }) = _Error;
 }

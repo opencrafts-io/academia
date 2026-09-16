@@ -6,6 +6,7 @@ class TicketStats extends Equatable {
   final int ticketPrice;
   final int ticketsSold;
   final int ticketsRemaining;
+  final String scope;
 
   const TicketStats({
     required this.ticketId,
@@ -13,6 +14,7 @@ class TicketStats extends Equatable {
     required this.ticketPrice,
     required this.ticketsSold,
     required this.ticketsRemaining,
+    required this.scope,
   });
 
   TicketStats copyWith({
@@ -21,6 +23,7 @@ class TicketStats extends Equatable {
     int? ticketPrice,
     int? ticketsSold,
     int? ticketsRemaining,
+    String? scope,
   }) {
     return TicketStats(
       ticketId: ticketId ?? this.ticketId,
@@ -28,6 +31,7 @@ class TicketStats extends Equatable {
       ticketPrice: ticketPrice ?? this.ticketPrice,
       ticketsSold: ticketsSold ?? this.ticketsSold,
       ticketsRemaining: ticketsRemaining ?? this.ticketsRemaining,
+      scope: scope ?? this.scope,
     );
   }
 
@@ -38,6 +42,7 @@ class TicketStats extends Equatable {
     ticketPrice,
     ticketsSold,
     ticketsRemaining,
+    scope,
   ];
 
   @override

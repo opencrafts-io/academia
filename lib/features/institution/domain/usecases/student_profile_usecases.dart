@@ -1,5 +1,7 @@
 import 'package:academia/core/error/failures.dart';
 import 'package:academia/core/usecase/usecase.dart';
+import 'package:academia/features/institution/data/dtos/institution_profile_api_dto.dart';
+import 'package:academia/features/institution/data/models/institution_profile_helper.dart';
 import 'package:academia/features/institution/domain/domain.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
@@ -233,9 +235,9 @@ class SyncInstitutionProfileUsecase
       "updated_at": DateTime.now().toIso8601String(),
     };
 
-    final profile = InstitutionProfile.fromJson(
+    final profile = InstitutionProfileApiDto.fromJson(
       Map<String, dynamic>.from(params.rawData)..addEntries(extra.entries),
-    );
+    ).toEntity();
 
     return createProfileUsecase(CreateProfileParams(profile: profile));
   }

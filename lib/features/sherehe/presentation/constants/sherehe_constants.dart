@@ -33,18 +33,42 @@ final List<String> availableGenres = [
   'Other',
 ];
 
-enum TicketGroupTypes { individual, groupOfTwo, groupOfFive }
+enum TicketGroupTypes {
+  individual,
+  groupOfTwo,
+  groupOfThree,
+  groupOfFour,
+  groupOfFive,
+  groupOfSix,
+  groupOfSeven,
+  groupOfEight,
+  groupOfNine,
+  groupOfTen,
+}
 
 extension TicketGroupTypesX on TicketGroupTypes {
-  // UI Label
   String get label {
     switch (this) {
       case TicketGroupTypes.individual:
         return "Individual";
       case TicketGroupTypes.groupOfTwo:
         return "Group of 2";
+      case TicketGroupTypes.groupOfThree:
+        return "Group of 3";
+      case TicketGroupTypes.groupOfFour:
+        return "Group of 4";
       case TicketGroupTypes.groupOfFive:
         return "Group of 5";
+      case TicketGroupTypes.groupOfSix:
+        return "Group of 6";
+      case TicketGroupTypes.groupOfSeven:
+        return "Group of 7";
+      case TicketGroupTypes.groupOfEight:
+        return "Group of 8";
+      case TicketGroupTypes.groupOfNine:
+        return "Group of 9";
+      case TicketGroupTypes.groupOfTen:
+        return "Group of 10";
     }
   }
 
@@ -52,9 +76,18 @@ extension TicketGroupTypesX on TicketGroupTypes {
     switch (this) {
       case TicketGroupTypes.individual:
         return Icons.person_outline;
+
       case TicketGroupTypes.groupOfTwo:
+      case TicketGroupTypes.groupOfThree:
         return Icons.people_outline;
+
+      case TicketGroupTypes.groupOfFour:
       case TicketGroupTypes.groupOfFive:
+      case TicketGroupTypes.groupOfSix:
+      case TicketGroupTypes.groupOfSeven:
+      case TicketGroupTypes.groupOfEight:
+      case TicketGroupTypes.groupOfNine:
+      case TicketGroupTypes.groupOfTen:
         return Icons.groups_2_outlined;
     }
   }
@@ -65,21 +98,47 @@ extension TicketGroupTypesX on TicketGroupTypes {
         return 1;
       case TicketGroupTypes.groupOfTwo:
         return 2;
+      case TicketGroupTypes.groupOfThree:
+        return 3;
+      case TicketGroupTypes.groupOfFour:
+        return 4;
       case TicketGroupTypes.groupOfFive:
         return 5;
+      case TicketGroupTypes.groupOfSix:
+        return 6;
+      case TicketGroupTypes.groupOfSeven:
+        return 7;
+      case TicketGroupTypes.groupOfEight:
+        return 8;
+      case TicketGroupTypes.groupOfNine:
+        return 9;
+      case TicketGroupTypes.groupOfTen:
+        return 10;
     }
   }
 
-  // Convert FROM backend value
-  //placeholder for now, will adjust as needed when integrating with backend
   static TicketGroupTypes fromBackend(String value) {
     switch (value) {
       case "INDIVIDUAL":
         return TicketGroupTypes.individual;
       case "GROUP_OF_TWO":
         return TicketGroupTypes.groupOfTwo;
+      case "GROUP_OF_THREE":
+        return TicketGroupTypes.groupOfThree;
+      case "GROUP_OF_FOUR":
+        return TicketGroupTypes.groupOfFour;
       case "GROUP_OF_FIVE":
         return TicketGroupTypes.groupOfFive;
+      case "GROUP_OF_SIX":
+        return TicketGroupTypes.groupOfSix;
+      case "GROUP_OF_SEVEN":
+        return TicketGroupTypes.groupOfSeven;
+      case "GROUP_OF_EIGHT":
+        return TicketGroupTypes.groupOfEight;
+      case "GROUP_OF_NINE":
+        return TicketGroupTypes.groupOfNine;
+      case "GROUP_OF_TEN":
+        return TicketGroupTypes.groupOfTen;
       default:
         throw Exception("Unknown TicketGroupTypes: $value");
     }

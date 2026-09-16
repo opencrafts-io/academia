@@ -32,6 +32,7 @@ abstract class SettingsState with _$SettingsState {
     @Default(true) bool automaticallyPickAccentColor,
     @Default('en') String language,
     @Default(true) bool showDailyScheduleOnFeed,
+    @Default(true) bool chirpMuteVideos,
   }) = _SettingsState;
 
   factory SettingsState.fromJson(Map<String, dynamic> json) =>

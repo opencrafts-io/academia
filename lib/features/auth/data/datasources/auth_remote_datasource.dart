@@ -1,4 +1,4 @@
-import 'package:academia/config/flavor.dart';
+import 'package:core/config/flavor.dart';
 import 'package:academia/features/auth/data/models/token.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/core/network/network.dart';

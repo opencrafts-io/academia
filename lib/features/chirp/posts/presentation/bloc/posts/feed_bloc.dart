@@ -7,8 +7,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:logger/logger.dart';
 
+export 'feed_state.dart';
+
 part 'feed_event.dart';
-part 'feed_state.dart';
 
 class FeedBloc extends Bloc<FeedEvent, FeedState> {
   final GetFeedPostsUsecase getFeedPosts;
@@ -21,6 +22,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
   final LikePostUsecase likePost;
   final VoteOnPollUsecase voteOnPoll;
   final RetractPollVoteUsecase retractPollVote;
+  final CheckPostLikedUsecase checkPostLiked;
   final Logger _logger = Logger();
 
   FeedBloc({
@@ -34,6 +36,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     required this.likePost,
     required this.voteOnPoll,
     required this.retractPollVote,
+    required this.checkPostLiked,
   }) : super(FeedInitial()) {
     on<LoadPostsForCommunityEvent>(_onLoadPostsForCommunity);
     on<LoadFeedEvent>(_onLoadFeed);
@@ -44,6 +47,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     on<ToggleLikePost>(_onToggleLikePost);
     on<VoteOnPollEvent>(_onVoteOnPoll);
     on<RetractPollVoteEvent>(_onRetractPollVote);
+    on<CheckFeedLikeStatuses>(_onCheckFeedLikeStatuses);
     //   List<PostReply>? addReplyToParent(
     //     List<PostReply> replies,
     //     String parentId,
@@ -269,6 +273,8 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
               hasMore: paginatedData.hasMore,
             ),
           );
+          // Refresh like statuses after the initial page loads
+          if (!isClosed) add(CheckFeedLikeStatuses());
         }
       },
     );
@@ -356,6 +362,8 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
               hasMore: paginatedData.hasMore,
             ),
           );
+          // Refresh like statuses after the initial page loads.
+          if (!isClosed) add(CheckFeedLikeStatuses());
         }
       },
     );
@@ -521,13 +529,11 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
       );
 
       if (existingPost.id != 0) {
-        // Emit PostDetailLoaded directly - no API call
         emit(PostDetailLoaded(post: existingPost));
         return;
       }
     }
 
-    //  Step 2: Fallback — fetch from API if not found locally
     emit(PostDetailLoading());
     final result = await getPostDetail(postId: event.postId);
 
@@ -564,20 +570,17 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
   ) async {
     final result = await likePost(
       post: event.post,
-      isCurrentlyLiked: event.isCurrentlyLiked,
+      voteValue: event.voteValue,
       voterId: event.voterId,
     );
 
     result.fold(
       (failure) {
-        _logger.e('Failed to toggle like: ${failure.message}');
-        // Emit a PostLikeError so caller can roll back optimistic UI
+        _logger.e('Failed to cast vote: ${failure.message}');
         emit(PostLikeError(post: event.post, message: failure.message));
-        // Restore previous state so the feed is not stuck
         if (event.previousState != null) emit(event.previousState!);
       },
       (updatedPost) {
-        // Update the post in feed state if it's still visible
         if (state is FeedLoaded) {
           final currentState = state as FeedLoaded;
           final updatedPosts = currentState.posts.map((p) {
@@ -655,5 +658,30 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     );
     if (!_isLatestPollSeq(event.post.id, seq)) return;
     _applyPollMutation(emit, result, originalPost: event.post);
+  }
+
+  Future<void> _onCheckFeedLikeStatuses(
+    CheckFeedLikeStatuses event,
+    Emitter<FeedState> emit,
+  ) async {
+    if (state is! FeedLoaded) return;
+    final currentState = state as FeedLoaded;
+
+    final updatedPosts = <Post>[];
+    for (final post in currentState.posts) {
+      final result = await checkPostLiked(postId: post.id);
+      result.fold(
+        (failure) {
+          updatedPosts.add(post);
+        },
+        (voteValue) {
+          updatedPosts.add(post.copyWith(myVote: voteValue));
+        },
+      );
+    }
+
+    if (!isClosed) {
+      emit(currentState.copyWith(posts: updatedPosts));
+    }
   }
 }

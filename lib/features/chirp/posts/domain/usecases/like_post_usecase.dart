@@ -9,12 +9,12 @@ class LikePostUsecase {
 
   Future<Either<Failure, Post>> call({
     required Post post,
-    required bool isCurrentlyLiked,
+    required int voteValue,
     required String voterId,
   }) async {
     return chirpRepository.toggleLike(
       post: post,
-      isCurrentlyLiked: isCurrentlyLiked,
+      voteValue: voteValue,
       voterId: voterId,
     );
   }

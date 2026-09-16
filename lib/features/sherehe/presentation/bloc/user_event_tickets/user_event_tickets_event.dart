@@ -21,3 +21,12 @@ class FetchUserEventTickets extends UserEventTicketsEvent {
   @override
   List<Object?> get props => [eventId, page, limit];
 }
+
+class FetchUserAttendeeTickets extends UserEventTicketsEvent {
+  final List<Attendee> attendees;
+
+  const FetchUserAttendeeTickets({required this.attendees});
+
+  @override
+  List<Object?> get props => [attendees];
+}

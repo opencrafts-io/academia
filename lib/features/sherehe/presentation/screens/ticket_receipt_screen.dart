@@ -91,11 +91,14 @@ class TicketReceiptScreen extends StatelessWidget {
             const Spacer(),
 
             // Done button
-            SizedBox(
-              width: double.infinity,
-              child: FilledButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text("Done"),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              child: SizedBox(
+                width: double.infinity,
+                child: FilledButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text("Done"),
+                ),
               ),
             ),
           ],

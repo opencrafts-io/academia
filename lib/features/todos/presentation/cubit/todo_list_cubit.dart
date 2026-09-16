@@ -1,0 +1,212 @@
+import 'package:academia/core/core.dart';
+import 'package:academia/features/todos/todos.dart';
+
+class TodoListCubit extends SafeCubit<TodoListState> {
+  final GetTodoLists getTodoListsUseCase;
+  final CreateTodoList createTodoListUseCase;
+  final UpdateTodoList updateTodoListUseCase;
+  final DeleteTodoList deleteTodoListUseCase;
+  final SyncTodoLists syncTodoListsUseCase;
+  final GetDefaultTodoListUsecase getDefaultTodoListUsecase;
+  final MarkTodoListModified markTodoListModifiedUseCase;
+
+  TodoListCubit({
+    required this.getTodoListsUseCase,
+    required this.createTodoListUseCase,
+    required this.updateTodoListUseCase,
+    required this.deleteTodoListUseCase,
+    required this.syncTodoListsUseCase,
+    required this.getDefaultTodoListUsecase,
+    required this.markTodoListModifiedUseCase,
+  }) : super(const TodoListState.initial()) {
+    _init();
+  }
+
+  Future<void> _init() async {
+    emit(TodoListState.loading());
+    await loadTodoLists();
+    final defaultList = await getDefaultTodoList();
+    if (defaultList != null) {
+      final currentState = state.mapOrNull(success: (s) => s);
+      if (currentState != null) {
+        final updated = currentState.todoLists
+            .where((l) => l.id != defaultList.id)
+            .toList();
+        updated.add(defaultList);
+        emit(
+          TodoListState.success(
+            todoLists: updated,
+            nextUrl: currentState.nextUrl,
+          ),
+        );
+      }
+    }
+  }
+
+  /// Initial fetch
+  Future<void> loadTodoLists() async {
+    emit(const TodoListState.loading());
+    final result = await getTodoListsUseCase(const GetTodoListsParams());
+
+    result.fold(
+      (f) => emit(TodoListState.failure(f)),
+      (page) => emit(
+        TodoListState.success(todoLists: page.items, nextUrl: page.nextUrl),
+      ),
+    );
+  }
+
+  /// Returns the default todo list from the current state if already loaded,
+  /// otherwise fetches it from the repository.
+  Future<TodoListEntity?> getDefaultTodoList() async {
+    // Check in-memory state first to avoid a round-trip
+    final currentState = state.mapOrNull(success: (s) => s);
+    if (currentState != null) {
+      final cached = currentState.todoLists
+          .where((list) => list.isDefault)
+          .firstOrNull;
+      if (cached != null) return cached;
+    }
+
+    final result = await getDefaultTodoListUsecase(NoParams());
+    return result.fold((_) => null, (list) => list);
+  }
+
+  /// Load next page (Endless Scroll)
+  Future<void> loadMore() async {
+    final currentState = state
+        .mapOrNull<TodoListSuccess>(); // Helper to get current success state
+    if (currentState == null ||
+        currentState.nextUrl == null ||
+        currentState.isPaginating) {
+      return;
+    }
+
+    emit(currentState.copyWith(isPaginating: true));
+
+    final result = await getTodoListsUseCase(
+      GetTodoListsParams(url: currentState.nextUrl),
+    );
+
+    result.fold(
+      (f) => emit(
+        currentState.copyWith(isPaginating: false),
+      ), // Handle silently or show toast
+      (page) => emit(
+        currentState.copyWith(
+          todoLists: [...currentState.todoLists, ...page.items],
+          nextUrl: page.nextUrl,
+          isPaginating: false,
+        ),
+      ),
+    );
+  }
+
+  Future<void> createTodoList(TodoListEntity todoList) async {
+    final currentState =
+        state.mapOrNull(success: (s) => s) ??
+        const TodoListSuccess(todoLists: []);
+
+    final todoLists = [todoList, ...currentState.todoLists];
+    emit(currentState.copyWith(todoLists: todoLists));
+
+    final result = await createTodoListUseCase(todoList);
+
+    result.fold((failure) => null, (newTodoList) {
+      final latestState = state.mapOrNull(success: (s) => s);
+      if (latestState == null) return;
+
+      final syncedList = latestState.todoLists.map((existingItem) {
+        if (existingItem.title == todoList.title &&
+            existingItem.syncStatus == SyncStatus.pending) {
+          return newTodoList;
+        }
+        return existingItem;
+      }).toList();
+
+      emit(latestState.copyWith(todoLists: syncedList));
+    });
+  }
+
+  /// Moves the list with [localId] to the front of the in-memory list
+  /// (optimistically), reflecting that it was just modified, e.g. because a
+  /// new item was added to it. Persists the new `updatedAt` locally so the
+  /// order survives reloads.
+  Future<void> markListModified(int localId) async {
+    final currentState = state.mapOrNull(success: (s) => s);
+    if (currentState == null) return;
+
+    final index = currentState.todoLists.indexWhere(
+      (l) => l.localId == localId,
+    );
+    if (index == -1) return;
+
+    final modified = currentState.todoLists[index].copyWith(
+      updatedAt: DateTime.now(),
+    );
+    final reordered = [
+      modified,
+      ...currentState.todoLists.where((l) => l.localId != localId),
+    ];
+    emit(currentState.copyWith(todoLists: reordered));
+
+    await markTodoListModifiedUseCase(localId);
+  }
+
+  Future<void> sync() async {
+    final currentState = state.mapOrNull<TodoListSuccess>();
+    if (currentState != null) emit(currentState.copyWith(isSyncing: true));
+
+    await syncTodoListsUseCase(NoParams());
+
+    await loadTodoLists();
+  }
+
+  Future<void> updateTodoList(TodoListEntity todoList) async {
+    final currentState =
+        state.mapOrNull(success: (s) => s) ??
+        const TodoListSuccess(todoLists: []);
+
+    final updatedLists = currentState.todoLists.map((existing) {
+      return existing.localId == todoList.localId ? todoList : existing;
+    }).toList();
+
+    emit(currentState.copyWith(todoLists: updatedLists));
+
+    final result = await updateTodoListUseCase(todoList);
+    result.fold(
+      (error) {
+        emit(currentState);
+      },
+      (updated) {
+        final latestState = state.mapOrNull(success: (s) => s);
+        if (latestState == null) return;
+        final syncedLists = latestState.todoLists.map((existing) {
+          return existing.localId == updated.localId ? updated : existing;
+        }).toList();
+        emit(latestState.copyWith(todoLists: syncedLists));
+      },
+    );
+  }
+
+  //
+  Future<void> deleteTodoList(int todoListId) async {
+    final currentState =
+        state.mapOrNull(success: (s) => s) ??
+        const TodoListSuccess(todoLists: []);
+
+    final lists = currentState.todoLists.toList();
+    final deletedList = lists.firstWhere((list) => list.localId == todoListId);
+    lists.removeWhere((list) => list.localId == todoListId);
+
+    emit(currentState.copyWith(todoLists: lists));
+
+    try {
+      await deleteTodoListUseCase(todoListId);
+    } catch (e) {
+      lists.add(deletedList);
+      emit(currentState.copyWith(todoLists: lists));
+      print("Delete failed: $e");
+    }
+  }
+}

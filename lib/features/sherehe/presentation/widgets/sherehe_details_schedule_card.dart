@@ -16,10 +16,9 @@ class ShereheDetailsScheduleCard extends StatelessWidget {
     final start = DateTime.parse(startDate).toLocal();
     final end = DateTime.parse(endDate).toLocal();
 
-    final isSameDay =
-        start.year == end.year &&
-        start.month == end.month &&
-        start.day == end.day;
+    final duration = end.difference(start);
+
+    final isSameDay = duration.inHours <= 24;
 
     return Card(
       elevation: 1,

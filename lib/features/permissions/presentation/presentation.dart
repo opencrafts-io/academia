@@ -1,2 +1,2 @@
 export 'cubit/permission_cubit.dart';
-export 'permission_notification_alert_card.dart';
+export 'screens/notification_permission_screen.dart';

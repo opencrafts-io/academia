@@ -83,9 +83,9 @@ class InviteLinkWidget extends StatelessWidget {
             onPressed: () {
               final box = context.findRenderObject() as RenderBox?;
               Share.share(
-                "👋 Hey! I’m inviting you to join our community on Academia.\n\n"
-                "Tap the link below to accept your invite:\n$inviteLink",
-                subject: "Join our community on Academia!",
+                "You're invited to join our community on Academia.\n\n"
+                "Tap the link to accept your invite:\n$inviteLink",
+                subject: "Join our community on Academia",
                 sharePositionOrigin: box != null
                     ? box.localToGlobal(Offset.zero) & box.size
                     : null,

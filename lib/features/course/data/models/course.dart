@@ -1,5 +1,5 @@
 import 'package:academia/core/core.dart';
-import 'package:academia/features/institution/data/models/institution.dart';
+import 'package:academia/database/tables/tables.dart';
 import 'package:academia/features/semester/data/models/semester.dart';
 import 'package:drift/drift.dart';
 
@@ -11,7 +11,7 @@ class Course extends Table {
   IntColumn get serverId => integer().unique().nullable()();
 
   IntColumn get institution =>
-      integer().nullable().references(Institution, #institutionId)();
+      integer().nullable().references(Institutions, #institutionId)();
 
   IntColumn get semester => integer().nullable().references(Semester, #id)();
 

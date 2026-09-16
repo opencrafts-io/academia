@@ -1,0 +1,10 @@
+targets:
+  $default:
+    builders:
+      drift_dev:
+        options:
+          test_dir: test/drift/
+          schema_dir: drift_schemas/
+          databases:
+            # Required: A name for the database and its path
+            academia_v2: lib/app_database_v2.dart

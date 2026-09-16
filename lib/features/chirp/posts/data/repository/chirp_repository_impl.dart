@@ -1,5 +1,5 @@
 import 'package:academia/core/core.dart';
-import 'package:academia/database/database.dart';
+import 'package:academia/database/database.dart' as db;
 import 'package:academia/features/features.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
@@ -17,7 +17,7 @@ class ChirpRepositoryImpl implements ChirpRepository {
 
   /// While polls are mocked, feed posts get demo polls attached here so the
   /// UI is exercisable. A no-op once the real datasource is wired in DI.
-  PostData _decoratePoll(PostData post) {
+  db.Post _decoratePoll(db.Post post) {
     final ds = pollRemoteDataSource;
     return ds is MockPollRemoteDataSource ? ds.decorate(post) : post;
   }
@@ -54,8 +54,8 @@ class ChirpRepositoryImpl implements ChirpRepository {
       },
       (posts) async {
         final postEntities = <Post>[];
-        for (final raw in posts.results) {
-          final post = _decoratePoll(raw);
+        for (final postDto in posts.results) {
+          final post = _decoratePoll(postDto.toData());
           await localDataSource.createOrUpdatePost(post);
           postEntities.add(post.toEntity());
         }
@@ -78,8 +78,8 @@ class ChirpRepositoryImpl implements ChirpRepository {
 
     return localRes.fold((failure) async {
       final result = await remoteDataSource.getPostDetails(postId: postId);
-      return result.fold((failure) => left(failure), (raw) async {
-        final post = _decoratePoll(raw);
+      return result.fold((failure) => left(failure), (postDto) async {
+        final post = _decoratePoll(postDto.toData());
         await localDataSource.createOrUpdatePost(post);
         return right(post.toEntity());
       });
@@ -109,12 +109,12 @@ class ChirpRepositoryImpl implements ChirpRepository {
       content: content,
       poll: poll,
     );
-    return result.fold((failure) => left(failure), (raw) async {
-      var created = raw;
+    return result.fold((failure) => left(failure), (createdDto) async {
+      var created = createdDto.toData();
       // The mock backend can't create polls server-side, so mint one here.
       final ds = pollRemoteDataSource;
       if (poll != null && ds is MockPollRemoteDataSource) {
-        created = ds.attachDraft(raw, poll);
+        created = ds.attachDraft(created, poll);
       }
       await localDataSource.createOrUpdatePost(created);
       return right(created.toEntity());
@@ -216,7 +216,7 @@ class ChirpRepositoryImpl implements ChirpRepository {
       (posts) => right(
         PaginatedData(
           results: posts.results
-              .map((e) => _decoratePoll(e).toEntity())
+              .map((e) => _decoratePoll(e.toData()).toEntity())
               .toList(),
           count: posts.count,
           next: posts.next,
@@ -229,27 +229,66 @@ class ChirpRepositoryImpl implements ChirpRepository {
   @override
   Future<Either<Failure, Post>> toggleLike({
     required Post post,
-    required bool isCurrentlyLiked,
+    required int voteValue,
     required String voterId,
   }) async {
     final result = await remoteDataSource.toggleLike(
       postId: post.id,
-      isCurrentlyLiked: isCurrentlyLiked,
+      voteValue: voteValue,
       voterId: voterId,
     );
-    return result.fold((failure) => left(failure), (data) {
-      final updatedPost = post.copyWith(
-        upvotes:
-            (data['upvotes'] as int?) ??
-            (isCurrentlyLiked
-                ? (post.upvotes - 1).clamp(0, double.maxFinite.toInt())
-                : post.upvotes + 1),
-        isLikedByMe: data['is_liked'] as bool? ?? !isCurrentlyLiked,
-      );
-      // Best-effort local cache update
-      localDataSource.createOrUpdatePost(updatedPost.toData());
-      return right(updatedPost);
-    });
+    return result.fold(
+      (failure) => left(failure),
+      (data) {
+        final newVote = (data['my_vote'] as int?) ?? voteValue;
+        final oldVote = post.myVote;
+        final int upvotesDelta = newVote - oldVote;
+        final updatedPost = post.copyWith(
+          upvotes: (data['upvotes'] as int?) ?? (post.upvotes + upvotesDelta),
+          myVote: newVote,
+        );
+        // Best-effort local cache update
+        localDataSource.createOrUpdatePost(updatedPost.toData());
+        return right(updatedPost);
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, int>> checkIsLiked({required int postId}) {
+    return remoteDataSource.checkIsLiked(postId: postId);
+  }
+
+  @override
+  Future<Either<Failure, Comment>> toggleCommentLike({
+    required Comment comment,
+    required int voteValue,
+    required String voterId,
+  }) async {
+    final result = await remoteDataSource.toggleCommentLike(
+      commentId: comment.id,
+      voteValue: voteValue,
+      voterId: voterId,
+    );
+    return result.fold(
+      (failure) => left(failure),
+      (data) {
+        final newVote = (data['my_vote'] as int?) ?? voteValue;
+        final oldVote = comment.myVote;
+        final int upvotesDelta = newVote - oldVote;
+        final updatedComment = comment.copyWith(
+          upvotes:
+              (data['upvotes'] as int?) ?? (comment.upvotes + upvotesDelta),
+          myVote: newVote,
+        );
+        return right(updatedComment);
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, int>> checkIsCommentLiked({required int commentId}) {
+    return remoteDataSource.checkIsCommentLiked(commentId: commentId);
   }
 
   Future<Either<Failure, Post>> _applyPollResult(

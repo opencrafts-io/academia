@@ -4,8 +4,9 @@ import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+export 'community_home_state.dart';
+
 part 'community_home_event.dart';
-part 'community_home_state.dart';
 
 class CommunityHomeBloc extends Bloc<CommunityHomeEvent, CommunityHomeState> {
   final GetCommunityByIdUseCase getCommunityByIdUseCase;
@@ -16,7 +17,7 @@ class CommunityHomeBloc extends Bloc<CommunityHomeEvent, CommunityHomeState> {
     required this.getCommunityByIdUseCase,
     required this.deleteCommunityUseCase,
     required this.addCommunityGuidelinesUsecase,
-  }) : super(CommunityHomeInitial()) {
+  }) : super(const CommunityHomeState.initial()) {
     on<FetchCommunityById>(_onFetchCommunityById);
     on<DeleteCommunity>(_onDeletingGroup);
     on<UpdateCommunity>(_onUpdateCommunity);
@@ -32,8 +33,8 @@ class CommunityHomeBloc extends Bloc<CommunityHomeEvent, CommunityHomeState> {
     );
 
     result.fold(
-      (failure) => emit(CommunityHomeFailure(failure.message)),
-      (community) => emit(CommunityHomeLoaded(community)),
+      (failure) => emit(CommunityHomeState.failure(failure.message)),
+      (community) => emit(CommunityHomeState.loaded(community)),
     );
   }
 
@@ -41,14 +42,15 @@ class CommunityHomeBloc extends Bloc<CommunityHomeEvent, CommunityHomeState> {
     DeleteCommunity event,
     Emitter<CommunityHomeState> emit,
   ) async {
-    emit(CommunityHomeLoading());
+    emit(const CommunityHomeState.loading());
     final result = await deleteCommunityUseCase(
       event.communityID,
     );
 
     result.fold(
-      (failure) => emit(CommunityCriticalActionFailure(failure.message)),
-      (_) => emit(CommunityDeleted()),
+      (failure) =>
+          emit(CommunityHomeState.criticalActionFailure(failure.message)),
+      (_) => emit(const CommunityHomeState.deleted()),
     );
   }
 
@@ -56,14 +58,14 @@ class CommunityHomeBloc extends Bloc<CommunityHomeEvent, CommunityHomeState> {
     UpdateCommunity event,
     Emitter<CommunityHomeState> emit,
   ) async {
-    emit(CommunityHomeLoaded(event.community));
+    emit(CommunityHomeState.loaded(event.community));
   }
 
   Future<void> _onAddCommunityGuidelines(
     AddCommunityGuidelines event,
     Emitter<CommunityHomeState> emit,
   ) async {
-    emit(CommunityHomeLoading());
+    emit(const CommunityHomeState.loading());
     final result = await addCommunityGuidelinesUsecase(
       communityId: event.communityId,
       rule: event.rule,
@@ -71,8 +73,8 @@ class CommunityHomeBloc extends Bloc<CommunityHomeEvent, CommunityHomeState> {
     );
 
     result.fold(
-      (failure) => emit(CommunityHomeFailure(failure.message)),
-      (community) => emit(CommunityHomeLoaded(community)),
+      (failure) => emit(CommunityHomeState.failure(failure.message)),
+      (community) => emit(CommunityHomeState.loaded(community)),
     );
   }
 }

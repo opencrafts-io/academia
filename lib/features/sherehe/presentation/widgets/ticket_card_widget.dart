@@ -10,6 +10,8 @@ class TicketCardWidget extends StatelessWidget {
   final Event? event;
   final TicketStubMode mode;
   final String? attendeeId;
+  final String? ticketStartDate;
+  final String? ticketEndDate;
 
   const TicketCardWidget({
     super.key,
@@ -18,6 +20,8 @@ class TicketCardWidget extends StatelessWidget {
     required this.mode,
     this.event,
     this.attendeeId,
+    this.ticketStartDate,
+    this.ticketEndDate,
   });
 
   @override
@@ -98,6 +102,8 @@ class TicketCardWidget extends StatelessWidget {
                         attendeeId: attendeeId!,
                         ticketName: ticket.ticketName,
                         quantity: quantity,
+                        ticketStartDate: ticketStartDate,
+                        ticketEndDate: ticketEndDate,
                       ).location,
                       extra: event,
                     ),

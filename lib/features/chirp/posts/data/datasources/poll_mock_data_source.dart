@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:academia/core/core.dart';
-import 'package:academia/database/database.dart';
+import 'package:academia/database/database.dart' as db;
 import 'package:academia/features/chirp/posts/posts.dart';
 import 'package:dartz/dartz.dart';
 import 'package:drift/drift.dart' show Value;
@@ -179,7 +179,7 @@ class MockPollRemoteDataSource implements PollRemoteDataSource {
   /// Registers any poll already present on [post] (e.g. from a create call)
   /// and, for a deterministic subset of posts, attaches a seeded demo poll.
   /// Returns the post with an up-to-date `poll` blob.
-  PostData decorate(PostData post) {
+  db.Post decorate(db.Post post) {
     final existing = post.poll;
     if (existing != null && existing.isNotEmpty) {
       final data = PollData.fromJson(existing);
@@ -201,12 +201,12 @@ class MockPollRemoteDataSource implements PollRemoteDataSource {
     );
   }
 
-  List<PostData> decorateAll(List<PostData> posts) =>
+  List<db.Post> decorateAll(List<db.Post> posts) =>
       posts.map(decorate).toList();
 
   /// Builds the poll a freshly created post should carry. The real backend
   /// would do this server-side; here we mint ids and register it.
-  PostData attachDraft(PostData post, PollDraft draft) {
+  db.Post attachDraft(db.Post post, PollDraft draft) {
     final pollId = _seedPollId(post.id);
     final data = PollData(
       id: pollId,

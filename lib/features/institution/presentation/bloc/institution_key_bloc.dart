@@ -1,12 +1,13 @@
-
 import 'package:academia/core/error/failures.dart';
 import 'package:academia/features/institution/domain/domain.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'institution_key_state.dart';
+export 'institution_key_state.dart';
+
 part 'institution_key_event.dart';
-part 'institution_key_state.dart';
 
 class InstitutionKeyBloc
     extends Bloc<InstitutionKeyEvent, InstitutionKeyState> {
@@ -16,7 +17,7 @@ class InstitutionKeyBloc
   InstitutionKeyBloc({
     required this.getInstitutionKeyUsecase,
     required this.saveInstitutionKeyUsecase,
-  }) : super(const InstitutionKeyInitial()) {
+  }) : super(const InstitutionKeyState.initial()) {
     on<GetInstitutionKeyEvent>(_onGetInstitutionKey);
     on<SaveInstitutionKeyEvent>(_onSaveInstitutionKey);
   }
@@ -26,21 +27,19 @@ class InstitutionKeyBloc
     GetInstitutionKeyEvent event,
     Emitter<InstitutionKeyState> emit,
   ) async {
-    emit(const InstitutionKeyLoading());
+    emit(const InstitutionKeyState.loading());
 
     await emit.forEach(
       getInstitutionKeyUsecase(event.institutionID),
       onData: (Either<Failure, InstitutionKey?> either) {
         return either.fold(
-          (failure) => InstitutionKeyError(
-            message: failure.message,
-            key: null,
-          ),
-          (key) => InstitutionKeyLoaded(key: key),
+          (failure) =>
+              InstitutionKeyState.error(message: failure.message, key: null),
+          (key) => InstitutionKeyState.loaded(key),
         );
       },
       onError: (error, stackTrace) {
-        return InstitutionKeyError(
+        return InstitutionKeyState.error(
           message: 'Unexpected error: $error',
           key: null,
         );
@@ -53,18 +52,15 @@ class InstitutionKeyBloc
     SaveInstitutionKeyEvent event,
     Emitter<InstitutionKeyState> emit,
   ) async {
-    emit(const InstitutionKeyLoading());
+    emit(const InstitutionKeyState.loading());
 
     final result = await saveInstitutionKeyUsecase(event.key);
 
     result.fold(
       (failure) => emit(
-        InstitutionKeyError(
-          message: failure.message,
-          key: event.key,
-        ),
+        InstitutionKeyState.error(message: failure.message, key: event.key),
       ),
-      (_) => emit(InstitutionKeyLoaded(key: event.key)),
+      (_) => emit(InstitutionKeyState.loaded(event.key)),
     );
   }
 }

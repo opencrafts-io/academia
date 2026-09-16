@@ -41,7 +41,7 @@ class BasicEventDetailsPage extends StatelessWidget {
         return "Only people from selected institutions can see and attend this event.";
 
       case ScopeTypes.private:
-        return "Only people you directly share the event with can access it. An event link will be sent to your email after creation, which you can share with your guests.";
+        return "Only people you directly share an event link with can access it. You can manage the event links through the created Event's Organizer Dashboard.";
 
       default:
         return "Choose who can see and attend your event.";

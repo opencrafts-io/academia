@@ -12,6 +12,7 @@ class UserEventTicketsBloc
   UserEventTicketsBloc({required this.getUserPurchasedTicketsForEvent})
     : super(UserEventTicketInitial()) {
     on<FetchUserEventTickets>(_onFetchUserEventTickets);
+    on<FetchUserAttendeeTickets>(_onFetchUserAttendeeTickets);
   }
 
   Future<void> _onFetchUserEventTickets(
@@ -90,5 +91,12 @@ class UserEventTicketsBloc
         }
       },
     );
+  }
+
+  Future<void> _onFetchUserAttendeeTickets(
+    FetchUserAttendeeTickets event,
+    Emitter<UserEventTicketsState> emit,
+  ) async {
+    emit(FetchUserAttendeeTicketsSuccess(attendees: event.attendees));
   }
 }

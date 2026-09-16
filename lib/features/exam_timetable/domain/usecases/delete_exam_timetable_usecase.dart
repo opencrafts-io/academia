@@ -9,10 +9,11 @@ class DeleteExamByCourseCodeUseCase {
 
   Future<Either<Failure, void>> call({
     required String courseCode,
+    required int institutionId,
   }) {
     return repository.deleteExamByCourseCode(
       courseCode: courseCode,
+      institutionId: institutionId,
     );
   }
 }
-

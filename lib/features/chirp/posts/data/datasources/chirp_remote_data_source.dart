@@ -1,7 +1,6 @@
-import 'package:academia/config/config.dart';
+import 'package:core/config/flavor.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/core/network/network.dart';
-import 'package:academia/database/database.dart';
 import 'package:academia/features/chirp/posts/posts.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
@@ -23,7 +22,7 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
     }
   }
 
-  Future<Either<Failure, PaginatedData<PostData>>> getPosts({
+  Future<Either<Failure, PaginatedData<PostApiDto>>> getPosts({
     required int page,
     required int pageSize,
   }) async {
@@ -46,7 +45,7 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
       return Right(
         PaginatedData(
           results: (res.data['results'] as List)
-              .map((json) => PostData.fromJson(json))
+              .map((json) => PostApiDto.fromJson(json))
               .toList(),
           count: res.data['count'],
           next: res.data['next'],
@@ -66,7 +65,7 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
     }
   }
 
-  Future<Either<Failure, PostData>> getPostDetails({
+  Future<Either<Failure, PostApiDto>> getPostDetails({
     required int postId,
   }) async {
     try {
@@ -80,7 +79,7 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
 
       if (res.statusCode == 200) {
         final Map<String, dynamic> json = Map<String, dynamic>.from(res.data);
-        return right(PostData.fromJson(json));
+        return right(PostApiDto.fromJson(json));
       }
 
       return left(
@@ -117,7 +116,7 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
     }
   }
 
-  Future<Either<Failure, PaginatedData<CommentData>>> getPostComments({
+  Future<Either<Failure, PaginatedData<CommentApiDto>>> getPostComments({
     required int postId,
     required int page,
     required int pageSize,
@@ -140,7 +139,7 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
       return Right(
         PaginatedData(
           results: (res.data['results'] as List)
-              .map((json) => CommentData.fromJson(json))
+              .map((json) => CommentApiDto.fromJson(json))
               .toList(),
           count: res.data['count'],
           next: res.data['next'],
@@ -160,7 +159,7 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
     }
   }
 
-  Future<Either<Failure, PostData>> createPost({
+  Future<Either<Failure, PostApiDto>> createPost({
     required String title,
     required String authorId,
     required int communityId,
@@ -188,7 +187,7 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
 
       if (res.statusCode == 201) {
         final Map<String, dynamic> json = Map<String, dynamic>.from(res.data);
-        return right(PostData.fromJson(json));
+        return right(PostApiDto.fromJson(json));
       }
 
       return left(
@@ -206,7 +205,7 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
     }
   }
 
-  Future<Either<Failure, CommentData>> createComment({
+  Future<Either<Failure, CommentApiDto>> createComment({
     required int postId,
     required String authorId,
     required String content,
@@ -235,7 +234,7 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
 
       if (res.statusCode == 201) {
         final Map<String, dynamic> json = Map<String, dynamic>.from(res.data);
-        return right(CommentData.fromJson(json));
+        return right(CommentApiDto.fromJson(json));
       }
 
       return left(
@@ -253,7 +252,7 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
     }
   }
 
-  Future<Either<Failure, AttachmentData>> createPostAttachment({
+  Future<Either<Failure, AttachmentApiDto>> createPostAttachment({
     required int postId,
     required MultipartFile file,
   }) async {
@@ -272,7 +271,7 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
 
       if (res.statusCode == 201) {
         final Map<String, dynamic> json = Map<String, dynamic>.from(res.data);
-        return Right(AttachmentData.fromJson(json));
+        return Right(AttachmentApiDto.fromJson(json));
       }
 
       return Left(
@@ -359,7 +358,7 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
     }
   }
 
-  Future<Either<Failure, PaginatedData<PostData>>> getPostsFromCommunity({
+  Future<Either<Failure, PaginatedData<PostApiDto>>> getPostsFromCommunity({
     required int communityId,
     required int page,
     required int pageSize,
@@ -378,7 +377,7 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
         return right(
           PaginatedData(
             results: (res.data['results'] as List)
-                .map((json) => PostData.fromJson(json))
+                .map((json) => PostApiDto.fromJson(json))
                 .toList(),
             count: res.data['count'],
             next: res.data['next'],
@@ -403,11 +402,48 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
     }
   }
 
-  /// Toggles a like on a post. Pass [isCurrentlyLiked] = true to unlike.
-  /// Returns a map with: {'upvotes': int, 'is_liked': bool}
+  // Checks the current authenticated user's vote on post
+  Future<Either<Failure, int>> checkIsLiked({
+    required int postId,
+  }) async {
+    try {
+      if (!await isConnectedToInternet()) {
+        return handleNoConnection();
+      }
+
+      final res = await dioClient.dio.get(
+        '/$servicePrefix/posts/$postId/vote/',
+        queryParameters: {'post_id': postId},
+      );
+
+      if (res.statusCode == 200) {
+        final value = res.data['value'];
+        return right((value as num?)?.toInt() ?? 0);
+      }
+
+      return left(
+        NetworkFailure(message: 'Unexpected response', error: res.data),
+      );
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) {
+        // Not voted
+        return right(0);
+      }
+      return handleDioError(e);
+    } catch (e) {
+      return left(
+        ServerFailure(
+          message: 'An unexpected error occurred while checking vote status',
+          error: e,
+        ),
+      );
+    }
+  }
+
+  // Submits a vote on a post.
   Future<Either<Failure, Map<String, dynamic>>> toggleLike({
     required int postId,
-    required bool isCurrentlyLiked,
+    required int voteValue,
     required String voterId,
   }) async {
     try {
@@ -415,59 +451,140 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
         return handleNoConnection();
       }
 
-      final endpoint = isCurrentlyLiked
+      final bool isRetract = voteValue == 0;
+      final endpoint = isRetract
           ? '/$servicePrefix/posts/$postId/vote/redact/'
           : '/$servicePrefix/posts/$postId/vote/';
 
       final body = {
         'voter_id': voterId,
         'post_id': postId,
-        'value': isCurrentlyLiked ? -1 : 1,
+        'value': isRetract ? -1 : voteValue,
       };
 
-      _logger.i(
-        '[toggleLike] ${isCurrentlyLiked ? "DELETE" : "POST"} $endpoint body=$body',
-      );
-
       final Response<dynamic> res;
-      if (isCurrentlyLiked) {
+      if (isRetract) {
         res = await dioClient.dio.delete(endpoint, data: body);
       } else {
         res = await dioClient.dio.post(endpoint, data: body);
       }
 
-      _logger.i('[toggleLike] status=${res.statusCode} body=${res.data}');
-
-      // 200 (liked), 201 (created like), 204 (unliked)
       if (res.statusCode == 200 ||
           res.statusCode == 201 ||
           res.statusCode == 204) {
         final data = res.data is Map<String, dynamic>
             ? res.data as Map<String, dynamic>
             : <String, dynamic>{};
-        _logger.i('[toggleLike] success — parsed data: $data');
         return right({
           'upvotes': data['upvotes'] ?? data['likes_count'],
-          'is_liked': !isCurrentlyLiked,
+          'my_vote': isRetract ? 0 : voteValue,
         });
       }
 
-      _logger.e(
-        '[toggleLike] Unexpected status ${res.statusCode} — body: ${res.data}',
-      );
       return left(
         NetworkFailure(message: "Unexpected response", error: res.data),
       );
     } on DioException catch (e) {
-      _logger.e(
-        '[toggleLike] DioException: ${e.response?.statusCode} ${e.response?.data}',
-      );
       return handleDioError(e);
     } catch (e) {
-      _logger.e('[toggleLike] Unexpected error: $e');
       return left(
         ServerFailure(
-          message: "An unexpected error occurred while toggling like",
+          message: "An unexpected error occurred while casting vote",
+          error: e,
+        ),
+      );
+    }
+  }
+
+  // Checks the current authenticated user's vote on a comment
+  Future<Either<Failure, int>> checkIsCommentLiked({
+    required int commentId,
+  }) async {
+    try {
+      if (!await isConnectedToInternet()) {
+        return handleNoConnection();
+      }
+
+      final res = await dioClient.dio.get(
+        '/$servicePrefix/posts/comments/$commentId/vote/',
+        queryParameters: {'comment_id': commentId},
+      );
+
+      if (res.statusCode == 200) {
+        final value = res.data['value'];
+        return right((value as num?)?.toInt() ?? 0);
+      }
+
+      return left(
+        NetworkFailure(message: 'Unexpected response', error: res.data),
+      );
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) {
+        // Not voted
+        return right(0);
+      }
+      return handleDioError(e);
+    } catch (e) {
+      return left(
+        ServerFailure(
+          message:
+              'An unexpected error occurred while checking comment vote status',
+          error: e,
+        ),
+      );
+    }
+  }
+
+  // Submits a vote on a comment.
+  Future<Either<Failure, Map<String, dynamic>>> toggleCommentLike({
+    required int commentId,
+    required int voteValue,
+    required String voterId,
+  }) async {
+    try {
+      if (!await isConnectedToInternet()) {
+        return handleNoConnection();
+      }
+
+      final bool isRetract = voteValue == 0;
+      final endpoint = isRetract
+          ? '/$servicePrefix/posts/comments/$commentId/vote/redact/'
+          : '/$servicePrefix/posts/comments/$commentId/vote/';
+
+      final body = {
+        'voter_id': voterId,
+        'comment_id': commentId,
+        'value': isRetract ? -1 : voteValue,
+      };
+
+      final Response<dynamic> res;
+      if (isRetract) {
+        res = await dioClient.dio.delete(endpoint, data: body);
+      } else {
+        res = await dioClient.dio.post(endpoint, data: body);
+      }
+
+      if (res.statusCode == 200 ||
+          res.statusCode == 201 ||
+          res.statusCode == 204) {
+        final data = res.data is Map<String, dynamic>
+            ? res.data as Map<String, dynamic>
+            : <String, dynamic>{};
+        return right({
+          'upvotes': data['upvotes'] ?? data['likes_count'],
+          'my_vote': isRetract ? 0 : voteValue,
+        });
+      }
+
+      return left(
+        NetworkFailure(message: "Unexpected response", error: res.data),
+      );
+    } on DioException catch (e) {
+      return handleDioError(e);
+    } catch (e) {
+      return left(
+        ServerFailure(
+          message: "An unexpected error occurred while casting comment vote",
           error: e,
         ),
       );

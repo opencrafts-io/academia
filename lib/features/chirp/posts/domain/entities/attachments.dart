@@ -1,53 +1,16 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class Attachments extends Equatable {
-  final int id;
-  final int postId;
-  final String attachmentType;
-  final String file;
-  final String name;
-  final int size;
-  final DateTime createdAt;
+part 'attachments.freezed.dart';
 
-  const Attachments({
-    required this.id,
-    required this.postId,
-    required this.attachmentType,
-    required this.file,
-    required this.name,
-    required this.size,
-    required this.createdAt,
-  });
-
-  Attachments copyWith({
-    int? id,
-    int? postId,
-    String? attachmentType,
-    String? file,
-    String? name,
-    int? size,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-  }) {
-    return Attachments(
-      id: id ?? this.id,
-      postId: postId ?? this.postId,
-      attachmentType: attachmentType ?? this.attachmentType,
-      file: file ?? this.file,
-      name: name ?? this.name,
-      size: size ?? this.size,
-      createdAt: createdAt ?? this.createdAt,
-    );
-  }
-
-  @override
-  List<Object?> get props => [
-    id,
-    postId,
-    attachmentType,
-    file,
-    name,
-    size,
-    createdAt,
-  ];
+@freezed
+abstract class Attachments with _$Attachments {
+  const factory Attachments({
+    required int id,
+    required int postId,
+    required String attachmentType,
+    required String file,
+    required String name,
+    required int size,
+    required DateTime createdAt,
+  }) = _Attachments;
 }

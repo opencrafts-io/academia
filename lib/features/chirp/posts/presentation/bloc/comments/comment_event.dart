@@ -27,3 +27,17 @@ class GetPostComments extends CommentEvent {
 
   GetPostComments({required this.postId, this.page = 1, this.pageSize = 20});
 }
+
+class ToggleCommentVote extends CommentEvent {
+  final Comment comment;
+  final int voteValue;
+  final String voterId;
+
+  ToggleCommentVote({
+    required this.comment,
+    required this.voteValue,
+    required this.voterId,
+  });
+}
+
+class CheckCommentVoteStatuses extends CommentEvent {}

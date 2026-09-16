@@ -12,32 +12,39 @@ class EssentialsInstitutionSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<InstitutionBloc, InstitutionState>(
       builder: (context, state) {
-        if (state is InstitutionLoadedState) {
-          return ListView.builder(
+        return state.maybeWhen(
+          loaded: (institutions) => ListView.builder(
             padding: EdgeInsets.zero,
             shrinkWrap: true,
             itemBuilder: (context, index) {
-              final institution = state.institutions[index];
+              final institution = institutions[index];
               return _InstitutionCard(institution: institution);
             },
-            itemCount: state.institutions.length,
-          );
-        }
-
-        if (state is InstitutionLoadingState) {
-          return Skeletonizer(
+            itemCount: institutions.length,
+          ),
+          loading: () => Skeletonizer(
             enabled: true,
             child: Card.filled(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24),
+              ),
               child: ListTile(
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 4,
+                ),
                 title: Text("Hogwart's School"),
                 subtitle: Text("https://some-dummy-institution.ac.ke"),
-                trailing: Icon(Icons.open_in_new),
-                leading: Icon(Icons.school),
+                trailing: Icon(Icons.open_in_new_rounded),
+                leading: CircleAvatar(
+                  radius: 24,
+                  child: Icon(Icons.school_rounded),
+                ),
               ),
             ),
-          );
-        }
-        return SizedBox.shrink();
+          ),
+          orElse: () => SizedBox.shrink(),
+        );
       },
     );
   }
@@ -49,18 +56,33 @@ class _InstitutionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Card.filled(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+      color: colorScheme.surfaceContainerHigh,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       clipBehavior: Clip.antiAliasWithSaveLayer,
       child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         onTap: () => InstitutionHomePageRoute(
           institutionID: institution.institutionId,
         ).push(context),
-
-        leading: Assets.icons.motarboard.image(height: 40),
-        title: Text(institution.name),
+        leading: CircleAvatar(
+          radius: 24,
+          backgroundColor: colorScheme.tertiaryContainer,
+          child: Assets.icons.motarboard.image(height: 26),
+        ),
+        title: Text(
+          institution.name,
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+        ),
         subtitle: Text(institution.domains?.first ?? ''),
-        trailing: Icon(Icons.open_in_new),
+        trailing: Icon(
+          Icons.open_in_new_rounded,
+          color: colorScheme.onSurfaceVariant,
+        ),
       ),
     );
   }

@@ -1,18 +1,13 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class InstitutionKey extends Equatable {
-  final int institutionId;
-  final String commandId;
-  final Map<String, dynamic> keySets;
-  final DateTime createdAt;
+part 'institution_key.freezed.dart';
 
-  const InstitutionKey({
-    required this.institutionId,
-    required this.commandId,
-    required this.keySets,
-    required this.createdAt,
-  });
-
-  @override
-  List<Object?> get props => [institutionId, commandId, keySets, createdAt];
+@freezed
+abstract class InstitutionKey with _$InstitutionKey {
+  const factory InstitutionKey({
+    required int institutionId,
+    required String commandId,
+    required Map<String, dynamic> keySets,
+    required DateTime createdAt,
+  }) = _InstitutionKey;
 }

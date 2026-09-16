@@ -1,5 +1,5 @@
 import 'package:academia/core/error/failures.dart';
-import 'package:academia/database/database.dart';
+import 'package:academia/database/database.dart' as db;
 import 'package:academia/features/chirp/communities/communities.dart';
 import 'package:academia/features/chirp/communities/data/models/paginated_users_model_helper.dart';
 import 'package:dartz/dartz.dart';
@@ -21,8 +21,8 @@ class CommunityRepositoryImpl implements CommunityRepository {
       community: community.toData(),
     );
 
-    return result.fold((failure) => left(failure), (community) {
-      return right(community.toEntity());
+    return result.fold((failure) => left(failure), (communityDto) {
+      return right(communityDto.toEntity());
     });
   }
 
@@ -36,7 +36,7 @@ class CommunityRepositoryImpl implements CommunityRepository {
     );
 
     if (localResult.isRight()) {
-      return right(((localResult as Right).value as CommunityData).toEntity());
+      return right(((localResult as Right).value as db.Community).toEntity());
     }
 
     // If not found locally, fetch from remote and cache
@@ -44,9 +44,11 @@ class CommunityRepositoryImpl implements CommunityRepository {
       communityId: communityID,
     );
 
-    return result.fold((failure) => left(failure), (community) async {
-      await communityLocalDatasource.createorUpdateCommunity(community);
-      return right(community.toEntity());
+    return result.fold((failure) => left(failure), (communityDto) async {
+      await communityLocalDatasource.createorUpdateCommunity(
+        communityDto.toData(),
+      );
+      return right(communityDto.toEntity());
     });
   }
 
@@ -66,8 +68,8 @@ class CommunityRepositoryImpl implements CommunityRepository {
       memberName: memberName,
     );
 
-    return result.fold((failure) => left(failure), (community) {
-      return right(community.toEntity());
+    return result.fold((failure) => left(failure), (communityDto) {
+      return right(communityDto.toEntity());
     });
   }
 
@@ -83,9 +85,11 @@ class CommunityRepositoryImpl implements CommunityRepository {
       userName: userName,
     );
 
-    return await result.fold((failure) => left(failure), (community) async {
-      await communityLocalDatasource.createorUpdateCommunity(community);
-      return right(community.toEntity());
+    return await result.fold((failure) => left(failure), (communityDto) async {
+      await communityLocalDatasource.createorUpdateCommunity(
+        communityDto.toData(),
+      );
+      return right(communityDto.toEntity());
     });
   }
 
@@ -149,8 +153,8 @@ class CommunityRepositoryImpl implements CommunityRepository {
       userId: userId,
     );
 
-    return result.fold((failure) => left(failure), (community) {
-      return right(community.toEntity());
+    return result.fold((failure) => left(failure), (communityDto) {
+      return right(communityDto.toEntity());
     });
   }
 
@@ -171,7 +175,7 @@ class CommunityRepositoryImpl implements CommunityRepository {
               .getCachedCommunities();
           if (cacheRes.isRight()) {
             final rawCommunities =
-                (cacheRes as Right).value as List<CommunityData>;
+                (cacheRes as Right).value as List<db.Community>;
             return right(
               rawCommunities.map((e) => e.toEntity()).toList(),
             ); // Return cache if available
@@ -181,14 +185,14 @@ class CommunityRepositoryImpl implements CommunityRepository {
           failure,
         ); // If there's no cache or network failure, return error
       },
-      (rawCommunities) async {
+      (communityDtos) async {
         final List<Community> communities = [];
-        for (final community in rawCommunities) {
+        for (final communityDto in communityDtos) {
           final result = await communityLocalDatasource.createorUpdateCommunity(
-            community,
+            communityDto.toData(),
           );
           if (result.isRight()) {
-            communities.add(community.toEntity());
+            communities.add(communityDto.toEntity());
           }
         }
         return right(communities);
@@ -210,7 +214,7 @@ class CommunityRepositoryImpl implements CommunityRepository {
 
     return result.fold(
       (failure) => left(failure),
-      (searched) => right(searched.map((e) => e.toEntity()).toList()),
+      (searchedDtos) => right(searchedDtos.map((e) => e.toEntity()).toList()),
     );
   }
 }

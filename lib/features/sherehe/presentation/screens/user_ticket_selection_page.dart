@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UserTicketSelectionPage extends StatefulWidget {
-  final String eventId;
   final Ticket? selectedTicket;
   final int quantity;
   final void Function(Ticket? ticket) onTicketSelected;
@@ -15,7 +14,6 @@ class UserTicketSelectionPage extends StatefulWidget {
 
   const UserTicketSelectionPage({
     super.key,
-    required this.eventId,
     required this.selectedTicket,
     required this.quantity,
     required this.onTicketSelected,

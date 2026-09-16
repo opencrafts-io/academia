@@ -37,10 +37,10 @@ class ShereheDetailsBloc
           emit(ShereheDetailsLoaded(event: event));
         },
       );
+      return;
     }
 
     // if initialEvent and invite are both null, then we try to fetch the event by id
-
     emit(ShereheDetailsLoading());
 
     final result = await getSpecificEventUseCase.execute(
