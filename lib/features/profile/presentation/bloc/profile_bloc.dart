@@ -1,4 +1,4 @@
-import 'package:academia/config/config.dart';
+import 'package:core/config/flavor.dart';
 import 'package:academia/core/usecase/usecase.dart';
 import 'package:academia/features/features.dart';
 import 'package:equatable/equatable.dart';

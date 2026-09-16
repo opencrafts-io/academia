@@ -1,6 +1,7 @@
-import 'package:academia/config/config.dart';
+import 'package:core/config/flavor.dart';
 import 'package:academia/config/router/app_navigation_observer.dart';
 import 'package:academia/config/router/route_guard.dart';
+import 'package:academia/config/router/routes.dart';
 import 'package:academia/injection_container.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
 import 'package:flutter/material.dart';

@@ -1,6 +1,6 @@
+import 'package:academia/config/config.dart';
 import 'dart:async';
 
-import 'package:academia/config/config.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/injection_container.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';

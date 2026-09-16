@@ -1,4 +1,4 @@
-import 'package:academia/config/flavor.dart';
+import 'package:core/config/flavor.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
@@ -28,9 +28,6 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     sl.registerSingleton<DioRequestInspector>(inspector);
   }
 
-  // Register the flavor
-  sl.registerSingleton<FlavorConfig>(flavor);
-
   final cacheDB = sl.registerSingleton<AppDataBase>(AppDataBase());
 
   sl.registerLazySingleton<AuthLocalDatasource>(() => AuthLocalDatasource());
@@ -45,7 +42,7 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
 
   sl.registerSingleton<Dio>(dioClient.dio);
 
-  configureDependencies(sl);
+  configureDependencies(sl, flavor);
 
   sl.registerLazySingleton<LockInService>(
     () => LockInService(LockInRepository(sl<LockInDao>()), AppBlockerGateway()),

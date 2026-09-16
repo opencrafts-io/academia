@@ -2,7 +2,7 @@ import 'package:academia/features/institution/domain/domain.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:posthog_flutter/posthog_flutter.dart';
-import 'package:academia/config/config.dart';
+import 'package:core/config/flavor.dart';
 import 'package:academia/injection_container.dart';
 
 import 'institution_state.dart';

@@ -1,4 +1,4 @@
-import 'package:academia/config/config.dart';
+import 'package:core/config/flavor.dart';
 import 'package:academia/core/error/failures.dart';
 import 'package:academia/core/network/connectivity_checker.dart';
 import 'package:academia/core/network/dio_client.dart';
