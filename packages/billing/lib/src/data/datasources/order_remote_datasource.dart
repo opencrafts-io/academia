@@ -23,14 +23,18 @@ abstract interface class OrderRemoteDataSource {
 
 @LazySingleton(as: OrderRemoteDataSource)
 class OrderRemoteDatasourceImpl implements OrderRemoteDataSource {
-  OrderRemoteDatasourceImpl({required this._apiClient});
+  OrderRemoteDatasourceImpl({
+    required this._apiClient,
+    required this._billingApiPaths,
+  });
 
   final ApiClient _apiClient;
+  final BillingApiPaths _billingApiPaths;
 
   @override
   Future<Either<Failure, OrderDto>> createOrder(CreateOrderDto request) {
     return _apiClient.post(
-      BillingApiPaths.orders,
+      _billingApiPaths.orders,
       data: request.toJson(),
       decoder: (json) => OrderDto.fromJson(json as Map<String, dynamic>),
     );
@@ -43,7 +47,7 @@ class OrderRemoteDatasourceImpl implements OrderRemoteDataSource {
     int? pageSize,
   }) {
     return _apiClient.get(
-      BillingApiPaths.orders,
+      _billingApiPaths.orders,
       queryParameters: {
         if (status != null) 'status': status,
         if (page != null) 'page': page,
@@ -58,7 +62,7 @@ class OrderRemoteDatasourceImpl implements OrderRemoteDataSource {
   @override
   Future<Either<Failure, OrderDto>> getOrderById(String id) {
     return _apiClient.get(
-      '${BillingApiPaths.orders}/$id',
+      '${_billingApiPaths.orders}/$id',
       decoder: (json) => OrderDto.fromJson(json as Map<String, dynamic>),
     );
   }
@@ -66,7 +70,7 @@ class OrderRemoteDatasourceImpl implements OrderRemoteDataSource {
   @override
   Future<Either<Failure, List<OrderItemDto>>> getOrderItems(String orderId) {
     return _apiClient.get(
-      BillingApiPaths.orderItems(orderId),
+      _billingApiPaths.orderItems(orderId),
       decoder: (json) => (json as List<dynamic>)
           .map((item) => OrderItemDto.fromJson(item as Map<String, dynamic>))
           .toList(),
@@ -78,7 +82,7 @@ class OrderRemoteDatasourceImpl implements OrderRemoteDataSource {
     CreateOrderItemDto request,
   ) {
     return _apiClient.post(
-      BillingApiPaths.orderItems(request.orderId),
+      _billingApiPaths.orderItems(request.orderId),
       data: request.toJson(),
       decoder: (json) => OrderItemDto.fromJson(json as Map<String, dynamic>),
     );

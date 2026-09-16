@@ -1,5 +1,5 @@
-import 'dart:io';
 import 'package:academia/config/config.dart';
+import 'dart:io';
 import 'package:academia/features/features.dart';
 import 'package:academia/gen/assets.gen.dart';
 import 'package:academia/injection_container.dart';

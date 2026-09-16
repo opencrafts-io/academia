@@ -4,6 +4,8 @@ import 'package:billing/src/domain/entities/checkout_session.dart';
 import 'package:billing/src/domain/entities/create_checkout_session_request.dart';
 import 'package:billing/src/domain/repository/repository.dart';
 import 'package:billing/src/domain/usecases/create_checkout_session.dart';
+import 'package:billing/src/data/datasources/billing_api_paths.dart';
+import 'package:core/config/flavor.dart';
 import 'package:core/core.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -18,8 +20,16 @@ void main() {
         },
       );
 
-      final result = await CheckoutRemoteDatasourceImpl(apiClient: apiClient)
-          .createCheckoutSession(
+      final result = await CheckoutRemoteDatasourceImpl(
+        apiClient: apiClient,
+        billingApiPaths: BillingApiPaths(
+          FlavorConfig(
+            flavor: Flavor.staging,
+            appName: 'Academia Staging',
+            apiBaseUrl: 'https://staging.example.com',
+          ),
+        ),
+      ).createCheckoutSession(
             const CreateCheckoutSessionDto(orderId: 'ORD-ABC12345'),
           );
 

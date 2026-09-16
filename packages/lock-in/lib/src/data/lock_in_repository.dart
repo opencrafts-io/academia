@@ -2,10 +2,12 @@ import 'dart:convert';
 
 import 'package:database/app_database_v2.dart';
 import 'package:database/daos/lock_in_dao.dart';
+import 'package:injectable/injectable.dart';
 
 import '../domain/lock_rule.dart';
 
 /// Local source of truth for Lock In configuration and recovery analytics.
+@LazySingleton()
 class LockInRepository {
   LockInRepository(this._dao);
 

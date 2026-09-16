@@ -1,4 +1,4 @@
-import 'package:academia/config/flavor.dart';
+import 'package:core/config/flavor.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/features/auth/auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
