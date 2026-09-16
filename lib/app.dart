@@ -5,7 +5,6 @@ import 'package:academia/features/course/course.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/semester/semester.dart';
-import 'package:academia/features/settings/presentation/cubit/settings_state.dart';
 import 'package:academia/gen/fonts.gen.dart';
 import 'package:academia/injection_container.dart';
 import 'package:dynamic_color/dynamic_color.dart';
@@ -14,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:in_app_update/in_app_update.dart';
+import 'package:settings/settings.dart';
 
 class Academia extends StatefulWidget {
   const Academia({super.key});

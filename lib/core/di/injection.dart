@@ -7,6 +7,7 @@ import 'package:analytics/analytics.dart';
 import 'package:academia/core/in_app_update/posthog_app_update_configuration_source.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:lock_in/lock_in.dart';
+import 'package:settings/settings.dart';
 
 import 'package:injectable/injectable.dart';
 
@@ -20,6 +21,7 @@ void configureDependencies(GetIt getIt, FlavorConfig flavorConfig) {
   configureBillingDependencies(getIt);
   configureAdsDependencies(getIt);
   configureAnalyticsDependencies(getIt);
+  configureSettingsDependencies(getIt);
   configureInAppUpdateDependencies(
     getIt,
     configurationSource: flavorConfig.isProduction

@@ -1,7 +1,10 @@
-import 'package:hydrated_bloc/hydrated_bloc.dart';
-import 'settings_state.dart';
 import 'package:flutter/material.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:injectable/injectable.dart';
 
+import 'settings_state.dart';
+
+@injectable
 class SettingsCubit extends HydratedCubit<SettingsState> {
   SettingsCubit() : super(const SettingsState());
 
@@ -24,10 +27,9 @@ class SettingsCubit extends HydratedCubit<SettingsState> {
       automaticallyPickAccentColor: !state.automaticallyPickAccentColor,
     ),
   );
+
   void toggleShowDailyScheduleOnFeed() => emit(
-    state.copyWith(
-      showDailyScheduleOnFeed: !state.showDailyScheduleOnFeed,
-    ),
+    state.copyWith(showDailyScheduleOnFeed: !state.showDailyScheduleOnFeed),
   );
 
   void toggleChirpMuteVideos() =>

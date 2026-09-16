@@ -1184,36 +1184,6 @@ class ExamTimetableSearchRoute extends GoRouteData
   }
 }
 
-@TypedGoRoute<SettingsPageRoute>(path: "/settings")
-class SettingsPageRoute extends GoRouteData with $SettingsPageRoute {
-  @override
-  CustomTransitionPage<void> buildPage(
-    BuildContext context,
-    GoRouterState state,
-  ) {
-    return CustomTransitionPage<void>(
-      key: state.pageKey,
-      child: SettingsPage(),
-      transitionDuration: Duration(milliseconds: 300),
-      transitionsBuilder:
-          (
-            BuildContext context,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-            Widget child,
-          ) {
-            var tween = Tween(
-              begin: Offset(0.0, 1.0),
-              end: Offset.zero,
-            ).chain(CurveTween(curve: Curves.easeInOutQuad));
-            var offsetAnimation = animation.drive(tween);
-
-            return SlideTransition(position: offsetAnimation, child: child);
-          },
-    );
-  }
-}
-
 @TypedShellRoute<InstitutionShellRouteData>(
   routes: [
     TypedGoRoute<InstitutionHomePageRoute>(

@@ -1,7 +1,7 @@
-import 'package:academia/features/settings/presentation/cubit/settings_state.dart';
-import 'package:academia/features/settings/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:settings/src/presentation/cubit/settings_cubit.dart';
+import 'package:settings/src/presentation/cubit/settings_state.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -16,7 +16,7 @@ class SettingsPage extends StatelessWidget {
             snap: true,
             pinned: true,
             floating: true,
-            title: const Text("Settings"),
+            title: const Text('Settings'),
           ),
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -32,7 +32,7 @@ class SettingsPage extends StatelessWidget {
                           const SizedBox(height: 8),
                           _SettingsSection(
                             icon: Icons.palette_rounded,
-                            title: "Appearance",
+                            title: 'Appearance',
                             children: [
                               _ThemeModeRow(
                                 currentMode: state.themeMode,
@@ -43,8 +43,8 @@ class SettingsPage extends StatelessWidget {
                                 },
                               ),
                               _ToggleRow(
-                                title: "Enable material you",
-                                subTitle: "Makes the app feel more modern",
+                                title: 'Enable material you',
+                                subTitle: 'Makes the app feel more modern',
                                 value: state.enableMaterialYou,
                                 onChanged: (_) {
                                   context
@@ -53,9 +53,9 @@ class SettingsPage extends StatelessWidget {
                                 },
                               ),
                               _ToggleRow(
-                                title: "Automatic Color scheme",
+                                title: 'Automatic Color scheme',
                                 subTitle:
-                                    "Pick your color scheme based on wallpaper",
+                                    'Pick your color scheme based on wallpaper',
                                 value: state.automaticallyPickAccentColor,
                                 onChanged: (_) {
                                   context
@@ -77,11 +77,11 @@ class SettingsPage extends StatelessWidget {
                           const SizedBox(height: 20),
                           _SettingsSection(
                             icon: Icons.tune_rounded,
-                            title: "Display",
+                            title: 'Display',
                             children: [
                               _ToggleRow(
-                                title: "Compact Mode",
-                                subTitle: "Reduce spacing and padding",
+                                title: 'Compact Mode',
+                                subTitle: 'Reduce spacing and padding',
                                 value: state.compactMode,
                                 onChanged: (_) {
                                   context
@@ -90,9 +90,9 @@ class SettingsPage extends StatelessWidget {
                                 },
                               ),
                               _ToggleRow(
-                                title: "Extra Dark Mode",
+                                title: 'Extra Dark Mode',
                                 subTitle:
-                                    "Enable extra dark mode for OLED displays",
+                                    'Enable extra dark mode for OLED displays',
                                 value: state.extraDarkMode,
                                 onChanged: (_) {
                                   context
@@ -105,12 +105,11 @@ class SettingsPage extends StatelessWidget {
                           const SizedBox(height: 20),
                           _SettingsSection(
                             icon: Icons.school_rounded,
-                            title: "Courses",
+                            title: 'Courses',
                             children: [
                               _ToggleRow(
-                                title: "Daily schedule at glance",
-                                subTitle:
-                                    "Pin a smart shortcut for today’s courses to the top of your feed.",
+                                title: 'Daily schedule at glance',
+                                subTitle: 'Pin a smart shortcut for today’s courses to the top of your feed.',
                                 value: state.showDailyScheduleOnFeed,
                                 onChanged: (_) {
                                   context
@@ -123,13 +122,11 @@ class SettingsPage extends StatelessWidget {
                           const SizedBox(height: 20),
                           _SettingsSection(
                             icon: Icons.forum_rounded,
-                            title: "Chirp",
+                            title: 'Chirp',
                             children: [
                               _ToggleRow(
-                                title: "Mute videos",
-                                subTitle:
-                                    "Feed videos autoplay muted by default. "
-                                    "Turning this off autoplays with sound.",
+                                title: 'Mute videos',
+                                subTitle: 'Feed videos autoplay muted by default. Turning this off autoplays with sound.',
                                 value: state.chirpMuteVideos,
                                 onChanged: (_) {
                                   context
@@ -154,19 +151,16 @@ class SettingsPage extends StatelessWidget {
   }
 }
 
-/// A tonal, grouped card for a settings section: a small labeled header
-/// above a single rounded container holding all of the section's rows,
-/// separated by hairline dividers - rather than one bordered card per row.
 class _SettingsSection extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final List<Widget> children;
-
   const _SettingsSection({
     required this.icon,
     required this.title,
     required this.children,
   });
+
+  final IconData icon;
+  final String title;
+  final List<Widget> children;
 
   @override
   Widget build(BuildContext context) {
@@ -201,15 +195,15 @@ class _SettingsSection extends StatelessWidget {
           margin: EdgeInsets.zero,
           child: Column(
             children: [
-              for (var i = 0; i < children.length; i++) ...[
-                if (i > 0)
+              for (var index = 0; index < children.length; index++) ...[
+                if (index > 0)
                   Divider(
                     height: 1,
                     indent: 16,
                     endIndent: 16,
                     color: colorScheme.outlineVariant.withValues(alpha: 0.4),
                   ),
-                children[i],
+                children[index],
               ],
             ],
           ),
@@ -220,10 +214,10 @@ class _SettingsSection extends StatelessWidget {
 }
 
 class _ThemeModeRow extends StatelessWidget {
+  const _ThemeModeRow({required this.currentMode, required this.onChanged});
+
   final ThemeMode currentMode;
   final ValueChanged<ThemeMode> onChanged;
-
-  const _ThemeModeRow({required this.currentMode, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -232,7 +226,7 @@ class _ThemeModeRow extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Theme", style: Theme.of(context).textTheme.labelLarge),
+          Text('Theme', style: Theme.of(context).textTheme.labelLarge),
           const SizedBox(height: 12),
           SegmentedButton<ThemeMode>(
             showSelectedIcon: false,
@@ -263,23 +257,23 @@ class _ThemeModeRow extends StatelessWidget {
 }
 
 class _ColorSeedRow extends StatelessWidget {
-  final Color currentColor;
-  final ValueChanged<Color> onColorChanged;
-
   const _ColorSeedRow({
     required this.currentColor,
     required this.onColorChanged,
   });
 
+  final Color currentColor;
+  final ValueChanged<Color> onColorChanged;
+
   @override
   Widget build(BuildContext context) {
-    final colors = [
-      const Color(0xFF6200EE),
-      const Color(0xFF03DAC6),
-      const Color(0xFFFF0266),
-      const Color(0xFFFF6E40),
-      const Color(0xFFFFC400),
-      const Color(0xFF00B8D4),
+    const colors = [
+      Color(0xFF6200EE),
+      Color(0xFF03DAC6),
+      Color(0xFFFF0266),
+      Color(0xFFFF6E40),
+      Color(0xFFFFC400),
+      Color(0xFF00B8D4),
       Colors.blue,
       Colors.green,
       Colors.purple,
@@ -291,7 +285,7 @@ class _ColorSeedRow extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Accent color", style: Theme.of(context).textTheme.labelLarge),
+          Text('Accent color', style: Theme.of(context).textTheme.labelLarge),
           const SizedBox(height: 12),
           Wrap(
             spacing: 12,
@@ -336,17 +330,17 @@ class _ColorSeedRow extends StatelessWidget {
 }
 
 class _ToggleRow extends StatelessWidget {
-  final bool value;
-  final String title;
-  final String subTitle;
-  final ValueChanged<bool> onChanged;
-
   const _ToggleRow({
     required this.value,
     required this.title,
     required this.subTitle,
     required this.onChanged,
   });
+
+  final bool value;
+  final String title;
+  final String subTitle;
+  final ValueChanged<bool> onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -355,9 +349,8 @@ class _ToggleRow extends StatelessWidget {
       title: Text(title, style: Theme.of(context).textTheme.labelLarge),
       subtitle: Text(
         subTitle,
-        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-          color: Theme.of(context).colorScheme.onSurfaceVariant,
-        ),
+        style: Theme.of(context).textTheme.bodySmall
+            ?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
       ),
       value: value,
       onChanged: onChanged,

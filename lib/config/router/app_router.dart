@@ -13,6 +13,7 @@ import 'guards/guards.dart';
 import 'package:billing/billing.dart' as billing;
 import 'package:in_app_update/in_app_update.dart' as in_app_update;
 import 'package:lock_in/lock_in.dart';
+import 'package:settings/settings.dart' as settings;
 
 class AppRouter {
   static final GlobalKey<NavigatorState> globalNavigatorKey =
@@ -38,6 +39,7 @@ class AppRouter {
       ),
       ...billing.routes,
       ...in_app_update.routes,
+      ...settings.routes,
     ],
     initialLocation: SplashScreenRoute().location,
     observers: [

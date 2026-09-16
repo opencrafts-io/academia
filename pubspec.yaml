@@ -135,6 +135,9 @@ dependencies:
   # application in-app update subsystem
   in_app_update:
     path: packages/in_app_update/
+  # application settings subsystem
+  settings:
+    path: packages/settings/
   # local focus app-blocking subsystem
   lock_in:
     path: packages/lock-in/
