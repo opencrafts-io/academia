@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'post.dart';
@@ -9,13 +9,13 @@ part of 'post.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Post {
 
- int get id; Community get community; String get authorId; String get title; String get content; int get upvotes; int get downvotes;// 1 = upvoted, -1 = downvoted, 0 = no vote
- int get myVote; List<Attachments> get attachments; int get viewsCount; int get commentCount; List<Comment> get comments; DateTime get createdAt; DateTime get updatedAt;
+ int get id; Community get community; String get authorId; String get title; String get content; int get upvotes; int get downvotes; int get myVote; List<Attachments> get attachments; int get viewsCount; int get commentCount; List<Comment> get comments; DateTime get createdAt; DateTime get updatedAt;
 /// Create a copy of Post
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26,16 +26,21 @@ $PostCopyWith<Post> get copyWith => _$PostCopyWithImpl<Post>(this as Post, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Post&&(identical(other.id, id) || other.id == id)&&(identical(other.community, community) || other.community == community)&&(identical(other.authorId, authorId) || other.authorId == authorId)&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content)&&(identical(other.upvotes, upvotes) || other.upvotes == upvotes)&&(identical(other.downvotes, downvotes) || other.downvotes == downvotes)&&(identical(other.myVote, myVote) || other.myVote == myVote)&&const DeepCollectionEquality().equals(other.attachments, attachments)&&(identical(other.viewsCount, viewsCount) || other.viewsCount == viewsCount)&&(identical(other.commentCount, commentCount) || other.commentCount == commentCount)&&const DeepCollectionEquality().equals(other.comments, comments)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  final _this = this as Post;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Post&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.community, _this.community) || other.community == _this.community)&&(identical(other.authorId, _this.authorId) || other.authorId == _this.authorId)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.content, _this.content) || other.content == _this.content)&&(identical(other.upvotes, _this.upvotes) || other.upvotes == _this.upvotes)&&(identical(other.downvotes, _this.downvotes) || other.downvotes == _this.downvotes)&&(identical(other.myVote, _this.myVote) || other.myVote == _this.myVote)&&const DeepCollectionEquality().equals(other.attachments, _this.attachments)&&(identical(other.viewsCount, _this.viewsCount) || other.viewsCount == _this.viewsCount)&&(identical(other.commentCount, _this.commentCount) || other.commentCount == _this.commentCount)&&const DeepCollectionEquality().equals(other.comments, _this.comments)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,community,authorId,title,content,upvotes,downvotes,myVote,const DeepCollectionEquality().hash(attachments),viewsCount,commentCount,const DeepCollectionEquality().hash(comments),createdAt,updatedAt);
+int get hashCode {
+  final _this = this as Post;
+  return Object.hash(runtimeType,_this.id,_this.community,_this.authorId,_this.title,_this.content,_this.upvotes,_this.downvotes,_this.myVote,const DeepCollectionEquality().hash(_this.attachments),_this.viewsCount,_this.commentCount,const DeepCollectionEquality().hash(_this.comments),_this.createdAt,_this.updatedAt);
+}
 
 @override
 String toString() {
-  return 'Post(id: $id, community: $community, authorId: $authorId, title: $title, content: $content, upvotes: $upvotes, downvotes: $downvotes, myVote: $myVote, attachments: $attachments, viewsCount: $viewsCount, commentCount: $commentCount, comments: $comments, createdAt: $createdAt, updatedAt: $updatedAt)';
+  final _this = this as Post;
+  return 'Post(id: ${_this.id}, community: ${_this.community}, authorId: ${_this.authorId}, title: ${_this.title}, content: ${_this.content}, upvotes: ${_this.upvotes}, downvotes: ${_this.downvotes}, myVote: ${_this.myVote}, attachments: ${_this.attachments}, viewsCount: ${_this.viewsCount}, commentCount: ${_this.commentCount}, comments: ${_this.comments}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt})';
 }
 
 
@@ -64,7 +69,7 @@ class _$PostCopyWithImpl<$Res>
 /// Create a copy of Post
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? community = null,Object? authorId = null,Object? title = null,Object? content = null,Object? upvotes = null,Object? downvotes = null,Object? myVote = null,Object? attachments = null,Object? viewsCount = null,Object? commentCount = null,Object? comments = null,Object? createdAt = null,Object? updatedAt = null,}) {
-  return _then(_self.copyWith(
+  return _then(Post(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,community: null == community ? _self.community : community // ignore: cast_nullable_to_non_nullable
 as Community,authorId: null == authorId ? _self.authorId : authorId // ignore: cast_nullable_to_non_nullable
@@ -229,7 +234,7 @@ return $default(_that.id,_that.community,_that.authorId,_that.title,_that.conten
 
 
 class _Post implements Post {
-  const _Post({required this.id, required this.community, required this.authorId, required this.title, required this.content, required this.upvotes, required this.downvotes, this.myVote = 0, final  List<Attachments> attachments = const [], required this.viewsCount, required this.commentCount, final  List<Comment> comments = const [], required this.createdAt, required this.updatedAt}): _attachments = attachments,_comments = comments;
+  const _Post({required this.id, required this.community, required this.authorId, required this.title, required this.content, required this.upvotes, required this.downvotes, this.myVote = 0,  List<Attachments> attachments = const [], required this.viewsCount, required this.commentCount,  List<Comment> comments = const [], required this.createdAt, required this.updatedAt}): _attachments = attachments,_comments = comments;
   
 
 @override final  int id;
@@ -239,7 +244,6 @@ class _Post implements Post {
 @override final  String content;
 @override final  int upvotes;
 @override final  int downvotes;
-// 1 = upvoted, -1 = downvoted, 0 = no vote
 @override@JsonKey() final  int myVote;
  final  List<Attachments> _attachments;
 @override@JsonKey() List<Attachments> get attachments {
@@ -270,16 +274,18 @@ _$PostCopyWith<_Post> get copyWith => __$PostCopyWithImpl<_Post>(this, _$identit
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Post&&(identical(other.id, id) || other.id == id)&&(identical(other.community, community) || other.community == community)&&(identical(other.authorId, authorId) || other.authorId == authorId)&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content)&&(identical(other.upvotes, upvotes) || other.upvotes == upvotes)&&(identical(other.downvotes, downvotes) || other.downvotes == downvotes)&&(identical(other.myVote, myVote) || other.myVote == myVote)&&const DeepCollectionEquality().equals(other._attachments, _attachments)&&(identical(other.viewsCount, viewsCount) || other.viewsCount == viewsCount)&&(identical(other.commentCount, commentCount) || other.commentCount == commentCount)&&const DeepCollectionEquality().equals(other._comments, _comments)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Post&&(identical(other.id, id) || other.id == id)&&(identical(other.community, community) || other.community == community)&&(identical(other.authorId, authorId) || other.authorId == authorId)&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content)&&(identical(other.upvotes, upvotes) || other.upvotes == upvotes)&&(identical(other.downvotes, downvotes) || other.downvotes == downvotes)&&(identical(other.myVote, myVote) || other.myVote == myVote)&&const DeepCollectionEquality().equals(other.attachments, _attachments)&&(identical(other.viewsCount, viewsCount) || other.viewsCount == viewsCount)&&(identical(other.commentCount, commentCount) || other.commentCount == commentCount)&&const DeepCollectionEquality().equals(other.comments, _comments)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,community,authorId,title,content,upvotes,downvotes,myVote,const DeepCollectionEquality().hash(_attachments),viewsCount,commentCount,const DeepCollectionEquality().hash(_comments),createdAt,updatedAt);
+int get hashCode {
+    return Object.hash(runtimeType,id,community,authorId,title,content,upvotes,downvotes,myVote,const DeepCollectionEquality().hash(_attachments),viewsCount,commentCount,const DeepCollectionEquality().hash(_comments),createdAt,updatedAt);
+}
 
 @override
 String toString() {
-  return 'Post(id: $id, community: $community, authorId: $authorId, title: $title, content: $content, upvotes: $upvotes, downvotes: $downvotes, myVote: $myVote, attachments: $attachments, viewsCount: $viewsCount, commentCount: $commentCount, comments: $comments, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Post(id: $id, community: $community, authorId: $authorId, title: $title, content: $content, upvotes: $upvotes, downvotes: $downvotes, myVote: $myVote, attachments: $attachments, viewsCount: $viewsCount, commentCount: $commentCount, comments: $comments, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 

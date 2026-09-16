@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'institution_fee_transaction.dart';
@@ -9,6 +9,7 @@ part of 'institution_fee_transaction.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $InstitutionFeeTransactionCopyWith<InstitutionFeeTransaction> get copyWith => _$
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is InstitutionFeeTransaction&&(identical(other.id, id) || other.id == id)&&(identical(other.institution, institution) || other.institution == institution)&&(identical(other.referenceNumber, referenceNumber) || other.referenceNumber == referenceNumber)&&(identical(other.runningBalance, runningBalance) || other.runningBalance == runningBalance)&&(identical(other.debit, debit) || other.debit == debit)&&(identical(other.credit, credit) || other.credit == credit)&&(identical(other.postingDate, postingDate) || other.postingDate == postingDate)&&(identical(other.description, description) || other.description == description)&&(identical(other.title, title) || other.title == title)&&(identical(other.currency, currency) || other.currency == currency));
+  final _this = this as InstitutionFeeTransaction;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is InstitutionFeeTransaction&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.institution, _this.institution) || other.institution == _this.institution)&&(identical(other.referenceNumber, _this.referenceNumber) || other.referenceNumber == _this.referenceNumber)&&(identical(other.runningBalance, _this.runningBalance) || other.runningBalance == _this.runningBalance)&&(identical(other.debit, _this.debit) || other.debit == _this.debit)&&(identical(other.credit, _this.credit) || other.credit == _this.credit)&&(identical(other.postingDate, _this.postingDate) || other.postingDate == _this.postingDate)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.currency, _this.currency) || other.currency == _this.currency));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,institution,referenceNumber,runningBalance,debit,credit,postingDate,description,title,currency);
+int get hashCode {
+  final _this = this as InstitutionFeeTransaction;
+  return Object.hash(runtimeType,_this.id,_this.institution,_this.referenceNumber,_this.runningBalance,_this.debit,_this.credit,_this.postingDate,_this.description,_this.title,_this.currency);
+}
 
 @override
 String toString() {
-  return 'InstitutionFeeTransaction(id: $id, institution: $institution, referenceNumber: $referenceNumber, runningBalance: $runningBalance, debit: $debit, credit: $credit, postingDate: $postingDate, description: $description, title: $title, currency: $currency)';
+  final _this = this as InstitutionFeeTransaction;
+  return 'InstitutionFeeTransaction(id: ${_this.id}, institution: ${_this.institution}, referenceNumber: ${_this.referenceNumber}, runningBalance: ${_this.runningBalance}, debit: ${_this.debit}, credit: ${_this.credit}, postingDate: ${_this.postingDate}, description: ${_this.description}, title: ${_this.title}, currency: ${_this.currency})';
 }
 
 
@@ -63,7 +69,7 @@ class _$InstitutionFeeTransactionCopyWithImpl<$Res>
 /// Create a copy of InstitutionFeeTransaction
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? institution = null,Object? referenceNumber = freezed,Object? runningBalance = freezed,Object? debit = freezed,Object? credit = freezed,Object? postingDate = freezed,Object? description = freezed,Object? title = freezed,Object? currency = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(InstitutionFeeTransaction(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,institution: null == institution ? _self.institution : institution // ignore: cast_nullable_to_non_nullable
 as int,referenceNumber: freezed == referenceNumber ? _self.referenceNumber : referenceNumber // ignore: cast_nullable_to_non_nullable
@@ -239,16 +245,18 @@ _$InstitutionFeeTransactionCopyWith<_InstitutionFeeTransaction> get copyWith => 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InstitutionFeeTransaction&&(identical(other.id, id) || other.id == id)&&(identical(other.institution, institution) || other.institution == institution)&&(identical(other.referenceNumber, referenceNumber) || other.referenceNumber == referenceNumber)&&(identical(other.runningBalance, runningBalance) || other.runningBalance == runningBalance)&&(identical(other.debit, debit) || other.debit == debit)&&(identical(other.credit, credit) || other.credit == credit)&&(identical(other.postingDate, postingDate) || other.postingDate == postingDate)&&(identical(other.description, description) || other.description == description)&&(identical(other.title, title) || other.title == title)&&(identical(other.currency, currency) || other.currency == currency));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _InstitutionFeeTransaction&&(identical(other.id, id) || other.id == id)&&(identical(other.institution, institution) || other.institution == institution)&&(identical(other.referenceNumber, referenceNumber) || other.referenceNumber == referenceNumber)&&(identical(other.runningBalance, runningBalance) || other.runningBalance == runningBalance)&&(identical(other.debit, debit) || other.debit == debit)&&(identical(other.credit, credit) || other.credit == credit)&&(identical(other.postingDate, postingDate) || other.postingDate == postingDate)&&(identical(other.description, description) || other.description == description)&&(identical(other.title, title) || other.title == title)&&(identical(other.currency, currency) || other.currency == currency));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,institution,referenceNumber,runningBalance,debit,credit,postingDate,description,title,currency);
+int get hashCode {
+    return Object.hash(runtimeType,id,institution,referenceNumber,runningBalance,debit,credit,postingDate,description,title,currency);
+}
 
 @override
 String toString() {
-  return 'InstitutionFeeTransaction(id: $id, institution: $institution, referenceNumber: $referenceNumber, runningBalance: $runningBalance, debit: $debit, credit: $credit, postingDate: $postingDate, description: $description, title: $title, currency: $currency)';
+    return 'InstitutionFeeTransaction(id: $id, institution: $institution, referenceNumber: $referenceNumber, runningBalance: $runningBalance, debit: $debit, credit: $credit, postingDate: $postingDate, description: $description, title: $title, currency: $currency)';
 }
 
 

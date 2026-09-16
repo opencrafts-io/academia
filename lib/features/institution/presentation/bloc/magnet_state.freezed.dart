@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'magnet_state.dart';
@@ -9,6 +9,7 @@ part of 'magnet_state.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -20,7 +21,7 @@ mixin _$MagnetState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MagnetState);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is MagnetState);
 }
 
 
@@ -29,7 +30,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'MagnetState()';
+    return 'MagnetState()';
 }
 
 
@@ -209,7 +210,7 @@ class _Initial implements MagnetState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial);
 }
 
 
@@ -218,7 +219,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'MagnetState.initial()';
+    return 'MagnetState.initial()';
 }
 
 
@@ -241,7 +242,7 @@ class _Initializing implements MagnetState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initializing);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initializing);
 }
 
 
@@ -250,7 +251,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'MagnetState.initializing()';
+    return 'MagnetState.initializing()';
 }
 
 
@@ -278,16 +279,18 @@ _$ReadyCopyWith<_Ready> get copyWith => __$ReadyCopyWithImpl<_Ready>(this, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Ready&&(identical(other.magnet, magnet) || other.magnet == magnet));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Ready&&(identical(other.magnet, magnet) || other.magnet == magnet));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,magnet);
+int get hashCode {
+    return Object.hash(runtimeType,magnet);
+}
 
 @override
 String toString() {
-  return 'MagnetState.ready(magnet: $magnet)';
+    return 'MagnetState.ready(magnet: $magnet)';
 }
 
 
@@ -345,16 +348,18 @@ _$ProcessingCopyWith<_Processing> get copyWith => __$ProcessingCopyWithImpl<_Pro
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Processing&&(identical(other.command, command) || other.command == command)&&(identical(other.progress, progress) || other.progress == progress));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Processing&&(identical(other.command, command) || other.command == command)&&(identical(other.progress, progress) || other.progress == progress));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,command,progress);
+int get hashCode {
+    return Object.hash(runtimeType,command,progress);
+}
 
 @override
 String toString() {
-  return 'MagnetState.processing(command: $command, progress: $progress)';
+    return 'MagnetState.processing(command: $command, progress: $progress)';
 }
 
 
@@ -421,16 +426,18 @@ _$SuccessCopyWith<_Success> get copyWith => __$SuccessCopyWithImpl<_Success>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Success&&(identical(other.result, result) || other.result == result));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Success&&(identical(other.result, result) || other.result == result));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,result);
+int get hashCode {
+    return Object.hash(runtimeType,result);
+}
 
 @override
 String toString() {
-  return 'MagnetState.success(result: $result)';
+    return 'MagnetState.success(result: $result)';
 }
 
 
@@ -496,16 +503,18 @@ _$ErrorCopyWith<_Error> get copyWith => __$ErrorCopyWithImpl<_Error>(this, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.message, message) || other.message == message));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.message, message) || other.message == message));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,message);
+int get hashCode {
+    return Object.hash(runtimeType,message);
+}
 
 @override
 String toString() {
-  return 'MagnetState.error(message: $message)';
+    return 'MagnetState.error(message: $message)';
 }
 
 

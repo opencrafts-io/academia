@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'streak_milestone.dart';
@@ -9,6 +9,7 @@ part of 'streak_milestone.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $StreakMilestoneCopyWith<StreakMilestone> get copyWith => _$StreakMilestoneCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StreakMilestone&&(identical(other.id, id) || other.id == id)&&(identical(other.activityID, activityID) || other.activityID == activityID)&&(identical(other.daysRequired, daysRequired) || other.daysRequired == daysRequired)&&(identical(other.bonusPoints, bonusPoints) || other.bonusPoints == bonusPoints)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.isActive, isActive) || other.isActive == isActive)&&(identical(other.cachedAt, cachedAt) || other.cachedAt == cachedAt));
+  final _this = this as StreakMilestone;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StreakMilestone&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.activityID, _this.activityID) || other.activityID == _this.activityID)&&(identical(other.daysRequired, _this.daysRequired) || other.daysRequired == _this.daysRequired)&&(identical(other.bonusPoints, _this.bonusPoints) || other.bonusPoints == _this.bonusPoints)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.isActive, _this.isActive) || other.isActive == _this.isActive)&&(identical(other.cachedAt, _this.cachedAt) || other.cachedAt == _this.cachedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,activityID,daysRequired,bonusPoints,title,description,isActive,cachedAt);
+int get hashCode {
+  final _this = this as StreakMilestone;
+  return Object.hash(runtimeType,_this.id,_this.activityID,_this.daysRequired,_this.bonusPoints,_this.title,_this.description,_this.isActive,_this.cachedAt);
+}
 
 @override
 String toString() {
-  return 'StreakMilestone(id: $id, activityID: $activityID, daysRequired: $daysRequired, bonusPoints: $bonusPoints, title: $title, description: $description, isActive: $isActive, cachedAt: $cachedAt)';
+  final _this = this as StreakMilestone;
+  return 'StreakMilestone(id: ${_this.id}, activityID: ${_this.activityID}, daysRequired: ${_this.daysRequired}, bonusPoints: ${_this.bonusPoints}, title: ${_this.title}, description: ${_this.description}, isActive: ${_this.isActive}, cachedAt: ${_this.cachedAt})';
 }
 
 
@@ -63,7 +69,7 @@ class _$StreakMilestoneCopyWithImpl<$Res>
 /// Create a copy of StreakMilestone
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? activityID = null,Object? daysRequired = null,Object? bonusPoints = null,Object? title = null,Object? description = null,Object? isActive = null,Object? cachedAt = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(StreakMilestone(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,activityID: null == activityID ? _self.activityID : activityID // ignore: cast_nullable_to_non_nullable
 as String,daysRequired: null == daysRequired ? _self.daysRequired : daysRequired // ignore: cast_nullable_to_non_nullable
@@ -235,16 +241,18 @@ _$StreakMilestoneCopyWith<_StreakMilestone> get copyWith => __$StreakMilestoneCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StreakMilestone&&(identical(other.id, id) || other.id == id)&&(identical(other.activityID, activityID) || other.activityID == activityID)&&(identical(other.daysRequired, daysRequired) || other.daysRequired == daysRequired)&&(identical(other.bonusPoints, bonusPoints) || other.bonusPoints == bonusPoints)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.isActive, isActive) || other.isActive == isActive)&&(identical(other.cachedAt, cachedAt) || other.cachedAt == cachedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _StreakMilestone&&(identical(other.id, id) || other.id == id)&&(identical(other.activityID, activityID) || other.activityID == activityID)&&(identical(other.daysRequired, daysRequired) || other.daysRequired == daysRequired)&&(identical(other.bonusPoints, bonusPoints) || other.bonusPoints == bonusPoints)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.isActive, isActive) || other.isActive == isActive)&&(identical(other.cachedAt, cachedAt) || other.cachedAt == cachedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,activityID,daysRequired,bonusPoints,title,description,isActive,cachedAt);
+int get hashCode {
+    return Object.hash(runtimeType,id,activityID,daysRequired,bonusPoints,title,description,isActive,cachedAt);
+}
 
 @override
 String toString() {
-  return 'StreakMilestone(id: $id, activityID: $activityID, daysRequired: $daysRequired, bonusPoints: $bonusPoints, title: $title, description: $description, isActive: $isActive, cachedAt: $cachedAt)';
+    return 'StreakMilestone(id: $id, activityID: $activityID, daysRequired: $daysRequired, bonusPoints: $bonusPoints, title: $title, description: $description, isActive: $isActive, cachedAt: $cachedAt)';
 }
 
 

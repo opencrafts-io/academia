@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'magnet_fee_statement_dto.dart';
@@ -9,6 +9,7 @@ part of 'magnet_fee_statement_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $MagnetFeeStatementDtoCopyWith<MagnetFeeStatementDto> get copyWith => _$MagnetFe
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MagnetFeeStatementDto&&(identical(other.title, title) || other.title == title)&&(identical(other.institution, institution) || other.institution == institution)&&(identical(other.referenceNumber, referenceNumber) || other.referenceNumber == referenceNumber)&&(identical(other.runningBalance, runningBalance) || other.runningBalance == runningBalance)&&(identical(other.debit, debit) || other.debit == debit)&&(identical(other.credit, credit) || other.credit == credit)&&(identical(other.postingDateRaw, postingDateRaw) || other.postingDateRaw == postingDateRaw)&&(identical(other.date, date) || other.date == date)&&(identical(other.description, description) || other.description == description)&&(identical(other.currency, currency) || other.currency == currency));
+  final _this = this as MagnetFeeStatementDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MagnetFeeStatementDto&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.institution, _this.institution) || other.institution == _this.institution)&&(identical(other.referenceNumber, _this.referenceNumber) || other.referenceNumber == _this.referenceNumber)&&(identical(other.runningBalance, _this.runningBalance) || other.runningBalance == _this.runningBalance)&&(identical(other.debit, _this.debit) || other.debit == _this.debit)&&(identical(other.credit, _this.credit) || other.credit == _this.credit)&&(identical(other.postingDateRaw, _this.postingDateRaw) || other.postingDateRaw == _this.postingDateRaw)&&(identical(other.date, _this.date) || other.date == _this.date)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.currency, _this.currency) || other.currency == _this.currency));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,title,institution,referenceNumber,runningBalance,debit,credit,postingDateRaw,date,description,currency);
+int get hashCode {
+  final _this = this as MagnetFeeStatementDto;
+  return Object.hash(runtimeType,_this.title,_this.institution,_this.referenceNumber,_this.runningBalance,_this.debit,_this.credit,_this.postingDateRaw,_this.date,_this.description,_this.currency);
+}
 
 @override
 String toString() {
-  return 'MagnetFeeStatementDto(title: $title, institution: $institution, referenceNumber: $referenceNumber, runningBalance: $runningBalance, debit: $debit, credit: $credit, postingDateRaw: $postingDateRaw, date: $date, description: $description, currency: $currency)';
+  final _this = this as MagnetFeeStatementDto;
+  return 'MagnetFeeStatementDto(title: ${_this.title}, institution: ${_this.institution}, referenceNumber: ${_this.referenceNumber}, runningBalance: ${_this.runningBalance}, debit: ${_this.debit}, credit: ${_this.credit}, postingDateRaw: ${_this.postingDateRaw}, date: ${_this.date}, description: ${_this.description}, currency: ${_this.currency})';
 }
 
 
@@ -66,7 +72,7 @@ class _$MagnetFeeStatementDtoCopyWithImpl<$Res>
 /// Create a copy of MagnetFeeStatementDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? title = freezed,Object? institution = null,Object? referenceNumber = freezed,Object? runningBalance = freezed,Object? debit = freezed,Object? credit = freezed,Object? postingDateRaw = freezed,Object? date = freezed,Object? description = freezed,Object? currency = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(MagnetFeeStatementDto(
 title: freezed == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String?,institution: null == institution ? _self.institution : institution // ignore: cast_nullable_to_non_nullable
 as int,referenceNumber: freezed == referenceNumber ? _self.referenceNumber : referenceNumber // ignore: cast_nullable_to_non_nullable
@@ -245,16 +251,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MagnetFeeStatementDto&&(identical(other.title, title) || other.title == title)&&(identical(other.institution, institution) || other.institution == institution)&&(identical(other.referenceNumber, referenceNumber) || other.referenceNumber == referenceNumber)&&(identical(other.runningBalance, runningBalance) || other.runningBalance == runningBalance)&&(identical(other.debit, debit) || other.debit == debit)&&(identical(other.credit, credit) || other.credit == credit)&&(identical(other.postingDateRaw, postingDateRaw) || other.postingDateRaw == postingDateRaw)&&(identical(other.date, date) || other.date == date)&&(identical(other.description, description) || other.description == description)&&(identical(other.currency, currency) || other.currency == currency));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MagnetFeeStatementDto&&(identical(other.title, title) || other.title == title)&&(identical(other.institution, institution) || other.institution == institution)&&(identical(other.referenceNumber, referenceNumber) || other.referenceNumber == referenceNumber)&&(identical(other.runningBalance, runningBalance) || other.runningBalance == runningBalance)&&(identical(other.debit, debit) || other.debit == debit)&&(identical(other.credit, credit) || other.credit == credit)&&(identical(other.postingDateRaw, postingDateRaw) || other.postingDateRaw == postingDateRaw)&&(identical(other.date, date) || other.date == date)&&(identical(other.description, description) || other.description == description)&&(identical(other.currency, currency) || other.currency == currency));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,title,institution,referenceNumber,runningBalance,debit,credit,postingDateRaw,date,description,currency);
+int get hashCode {
+    return Object.hash(runtimeType,title,institution,referenceNumber,runningBalance,debit,credit,postingDateRaw,date,description,currency);
+}
 
 @override
 String toString() {
-  return 'MagnetFeeStatementDto(title: $title, institution: $institution, referenceNumber: $referenceNumber, runningBalance: $runningBalance, debit: $debit, credit: $credit, postingDateRaw: $postingDateRaw, date: $date, description: $description, currency: $currency)';
+    return 'MagnetFeeStatementDto(title: $title, institution: $institution, referenceNumber: $referenceNumber, runningBalance: $runningBalance, debit: $debit, credit: $credit, postingDateRaw: $postingDateRaw, date: $date, description: $description, currency: $currency)';
 }
 
 

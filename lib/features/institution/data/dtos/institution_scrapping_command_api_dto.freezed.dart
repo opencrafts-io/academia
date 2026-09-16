@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'institution_scrapping_command_api_dto.dart';
@@ -9,6 +9,7 @@ part of 'institution_scrapping_command_api_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $InstitutionScrappingCommandApiDtoCopyWith<InstitutionScrappingCommandApiDto> ge
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is InstitutionScrappingCommandApiDto&&(identical(other.institution, institution) || other.institution == institution)&&(identical(other.commandId, commandId) || other.commandId == commandId)&&(identical(other.name, name) || other.name == name)&&(identical(other.url, url) || other.url == url)&&(identical(other.description, description) || other.description == description)&&(identical(other.requiresInteraction, requiresInteraction) || other.requiresInteraction == requiresInteraction)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&const DeepCollectionEquality().equals(other.instructions, instructions));
+  final _this = this as InstitutionScrappingCommandApiDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is InstitutionScrappingCommandApiDto&&(identical(other.institution, _this.institution) || other.institution == _this.institution)&&(identical(other.commandId, _this.commandId) || other.commandId == _this.commandId)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.url, _this.url) || other.url == _this.url)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.requiresInteraction, _this.requiresInteraction) || other.requiresInteraction == _this.requiresInteraction)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&const DeepCollectionEquality().equals(other.instructions, _this.instructions));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,institution,commandId,name,url,description,requiresInteraction,createdAt,const DeepCollectionEquality().hash(instructions));
+int get hashCode {
+  final _this = this as InstitutionScrappingCommandApiDto;
+  return Object.hash(runtimeType,_this.institution,_this.commandId,_this.name,_this.url,_this.description,_this.requiresInteraction,_this.createdAt,const DeepCollectionEquality().hash(_this.instructions));
+}
 
 @override
 String toString() {
-  return 'InstitutionScrappingCommandApiDto(institution: $institution, commandId: $commandId, name: $name, url: $url, description: $description, requiresInteraction: $requiresInteraction, createdAt: $createdAt, instructions: $instructions)';
+  final _this = this as InstitutionScrappingCommandApiDto;
+  return 'InstitutionScrappingCommandApiDto(institution: ${_this.institution}, commandId: ${_this.commandId}, name: ${_this.name}, url: ${_this.url}, description: ${_this.description}, requiresInteraction: ${_this.requiresInteraction}, createdAt: ${_this.createdAt}, instructions: ${_this.instructions})';
 }
 
 
@@ -66,7 +72,7 @@ class _$InstitutionScrappingCommandApiDtoCopyWithImpl<$Res>
 /// Create a copy of InstitutionScrappingCommandApiDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? institution = null,Object? commandId = null,Object? name = null,Object? url = freezed,Object? description = freezed,Object? requiresInteraction = null,Object? createdAt = freezed,Object? instructions = null,}) {
-  return _then(_self.copyWith(
+  return _then(InstitutionScrappingCommandApiDto(
 institution: null == institution ? _self.institution : institution // ignore: cast_nullable_to_non_nullable
 as int,commandId: null == commandId ? _self.commandId : commandId // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -216,7 +222,7 @@ return $default(_that.institution,_that.commandId,_that.name,_that.url,_that.des
 @JsonSerializable()
 
 class _InstitutionScrappingCommandApiDto implements InstitutionScrappingCommandApiDto {
-  const _InstitutionScrappingCommandApiDto({required this.institution, @JsonKey(name: 'command_id') required this.commandId, required this.name, this.url, this.description, @JsonKey(name: 'requires_interaction') this.requiresInteraction = false, @JsonKey(name: 'created_at') this.createdAt, required final  List<dynamic> instructions}): _instructions = instructions;
+  const _InstitutionScrappingCommandApiDto({required this.institution, @JsonKey(name: 'command_id') required this.commandId, required this.name, this.url, this.description, @JsonKey(name: 'requires_interaction') this.requiresInteraction = false, @JsonKey(name: 'created_at') this.createdAt, required  List<dynamic> instructions}): _instructions = instructions;
   factory _InstitutionScrappingCommandApiDto.fromJson(Map<String, dynamic> json) => _$InstitutionScrappingCommandApiDtoFromJson(json);
 
 @override final  int institution;
@@ -247,16 +253,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InstitutionScrappingCommandApiDto&&(identical(other.institution, institution) || other.institution == institution)&&(identical(other.commandId, commandId) || other.commandId == commandId)&&(identical(other.name, name) || other.name == name)&&(identical(other.url, url) || other.url == url)&&(identical(other.description, description) || other.description == description)&&(identical(other.requiresInteraction, requiresInteraction) || other.requiresInteraction == requiresInteraction)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&const DeepCollectionEquality().equals(other._instructions, _instructions));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _InstitutionScrappingCommandApiDto&&(identical(other.institution, institution) || other.institution == institution)&&(identical(other.commandId, commandId) || other.commandId == commandId)&&(identical(other.name, name) || other.name == name)&&(identical(other.url, url) || other.url == url)&&(identical(other.description, description) || other.description == description)&&(identical(other.requiresInteraction, requiresInteraction) || other.requiresInteraction == requiresInteraction)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&const DeepCollectionEquality().equals(other.instructions, _instructions));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,institution,commandId,name,url,description,requiresInteraction,createdAt,const DeepCollectionEquality().hash(_instructions));
+int get hashCode {
+    return Object.hash(runtimeType,institution,commandId,name,url,description,requiresInteraction,createdAt,const DeepCollectionEquality().hash(_instructions));
+}
 
 @override
 String toString() {
-  return 'InstitutionScrappingCommandApiDto(institution: $institution, commandId: $commandId, name: $name, url: $url, description: $description, requiresInteraction: $requiresInteraction, createdAt: $createdAt, instructions: $instructions)';
+    return 'InstitutionScrappingCommandApiDto(institution: $institution, commandId: $commandId, name: $name, url: $url, description: $description, requiresInteraction: $requiresInteraction, createdAt: $createdAt, instructions: $instructions)';
 }
 
 

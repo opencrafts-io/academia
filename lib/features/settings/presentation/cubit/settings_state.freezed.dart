@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'settings_state.dart';
@@ -9,6 +9,7 @@ part of 'settings_state.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $SettingsStateCopyWith<SettingsState> get copyWith => _$SettingsStateCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SettingsState&&(identical(other.themeMode, themeMode) || other.themeMode == themeMode)&&(identical(other.colorSeedValue, colorSeedValue) || other.colorSeedValue == colorSeedValue)&&(identical(other.compactMode, compactMode) || other.compactMode == compactMode)&&(identical(other.extraDarkMode, extraDarkMode) || other.extraDarkMode == extraDarkMode)&&(identical(other.enableMaterialYou, enableMaterialYou) || other.enableMaterialYou == enableMaterialYou)&&(identical(other.automaticallyPickAccentColor, automaticallyPickAccentColor) || other.automaticallyPickAccentColor == automaticallyPickAccentColor)&&(identical(other.language, language) || other.language == language)&&(identical(other.showDailyScheduleOnFeed, showDailyScheduleOnFeed) || other.showDailyScheduleOnFeed == showDailyScheduleOnFeed)&&(identical(other.chirpMuteVideos, chirpMuteVideos) || other.chirpMuteVideos == chirpMuteVideos));
+  final _this = this as SettingsState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SettingsState&&(identical(other.themeMode, _this.themeMode) || other.themeMode == _this.themeMode)&&(identical(other.colorSeedValue, _this.colorSeedValue) || other.colorSeedValue == _this.colorSeedValue)&&(identical(other.compactMode, _this.compactMode) || other.compactMode == _this.compactMode)&&(identical(other.extraDarkMode, _this.extraDarkMode) || other.extraDarkMode == _this.extraDarkMode)&&(identical(other.enableMaterialYou, _this.enableMaterialYou) || other.enableMaterialYou == _this.enableMaterialYou)&&(identical(other.automaticallyPickAccentColor, _this.automaticallyPickAccentColor) || other.automaticallyPickAccentColor == _this.automaticallyPickAccentColor)&&(identical(other.language, _this.language) || other.language == _this.language)&&(identical(other.showDailyScheduleOnFeed, _this.showDailyScheduleOnFeed) || other.showDailyScheduleOnFeed == _this.showDailyScheduleOnFeed)&&(identical(other.chirpMuteVideos, _this.chirpMuteVideos) || other.chirpMuteVideos == _this.chirpMuteVideos));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,themeMode,colorSeedValue,compactMode,extraDarkMode,enableMaterialYou,automaticallyPickAccentColor,language,showDailyScheduleOnFeed,chirpMuteVideos);
+int get hashCode {
+  final _this = this as SettingsState;
+  return Object.hash(runtimeType,_this.themeMode,_this.colorSeedValue,_this.compactMode,_this.extraDarkMode,_this.enableMaterialYou,_this.automaticallyPickAccentColor,_this.language,_this.showDailyScheduleOnFeed,_this.chirpMuteVideos);
+}
 
 @override
 String toString() {
-  return 'SettingsState(themeMode: $themeMode, colorSeedValue: $colorSeedValue, compactMode: $compactMode, extraDarkMode: $extraDarkMode, enableMaterialYou: $enableMaterialYou, automaticallyPickAccentColor: $automaticallyPickAccentColor, language: $language, showDailyScheduleOnFeed: $showDailyScheduleOnFeed, chirpMuteVideos: $chirpMuteVideos)';
+  final _this = this as SettingsState;
+  return 'SettingsState(themeMode: ${_this.themeMode}, colorSeedValue: ${_this.colorSeedValue}, compactMode: ${_this.compactMode}, extraDarkMode: ${_this.extraDarkMode}, enableMaterialYou: ${_this.enableMaterialYou}, automaticallyPickAccentColor: ${_this.automaticallyPickAccentColor}, language: ${_this.language}, showDailyScheduleOnFeed: ${_this.showDailyScheduleOnFeed}, chirpMuteVideos: ${_this.chirpMuteVideos})';
 }
 
 
@@ -66,7 +72,7 @@ class _$SettingsStateCopyWithImpl<$Res>
 /// Create a copy of SettingsState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? themeMode = null,Object? colorSeedValue = null,Object? compactMode = null,Object? extraDarkMode = null,Object? enableMaterialYou = null,Object? automaticallyPickAccentColor = null,Object? language = null,Object? showDailyScheduleOnFeed = null,Object? chirpMuteVideos = null,}) {
-  return _then(_self.copyWith(
+  return _then(SettingsState(
 themeMode: null == themeMode ? _self.themeMode : themeMode // ignore: cast_nullable_to_non_nullable
 as ThemeMode,colorSeedValue: null == colorSeedValue ? _self.colorSeedValue : colorSeedValue // ignore: cast_nullable_to_non_nullable
 as int,compactMode: null == compactMode ? _self.compactMode : compactMode // ignore: cast_nullable_to_non_nullable
@@ -243,16 +249,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SettingsState&&(identical(other.themeMode, themeMode) || other.themeMode == themeMode)&&(identical(other.colorSeedValue, colorSeedValue) || other.colorSeedValue == colorSeedValue)&&(identical(other.compactMode, compactMode) || other.compactMode == compactMode)&&(identical(other.extraDarkMode, extraDarkMode) || other.extraDarkMode == extraDarkMode)&&(identical(other.enableMaterialYou, enableMaterialYou) || other.enableMaterialYou == enableMaterialYou)&&(identical(other.automaticallyPickAccentColor, automaticallyPickAccentColor) || other.automaticallyPickAccentColor == automaticallyPickAccentColor)&&(identical(other.language, language) || other.language == language)&&(identical(other.showDailyScheduleOnFeed, showDailyScheduleOnFeed) || other.showDailyScheduleOnFeed == showDailyScheduleOnFeed)&&(identical(other.chirpMuteVideos, chirpMuteVideos) || other.chirpMuteVideos == chirpMuteVideos));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SettingsState&&(identical(other.themeMode, themeMode) || other.themeMode == themeMode)&&(identical(other.colorSeedValue, colorSeedValue) || other.colorSeedValue == colorSeedValue)&&(identical(other.compactMode, compactMode) || other.compactMode == compactMode)&&(identical(other.extraDarkMode, extraDarkMode) || other.extraDarkMode == extraDarkMode)&&(identical(other.enableMaterialYou, enableMaterialYou) || other.enableMaterialYou == enableMaterialYou)&&(identical(other.automaticallyPickAccentColor, automaticallyPickAccentColor) || other.automaticallyPickAccentColor == automaticallyPickAccentColor)&&(identical(other.language, language) || other.language == language)&&(identical(other.showDailyScheduleOnFeed, showDailyScheduleOnFeed) || other.showDailyScheduleOnFeed == showDailyScheduleOnFeed)&&(identical(other.chirpMuteVideos, chirpMuteVideos) || other.chirpMuteVideos == chirpMuteVideos));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,themeMode,colorSeedValue,compactMode,extraDarkMode,enableMaterialYou,automaticallyPickAccentColor,language,showDailyScheduleOnFeed,chirpMuteVideos);
+int get hashCode {
+    return Object.hash(runtimeType,themeMode,colorSeedValue,compactMode,extraDarkMode,enableMaterialYou,automaticallyPickAccentColor,language,showDailyScheduleOnFeed,chirpMuteVideos);
+}
 
 @override
 String toString() {
-  return 'SettingsState(themeMode: $themeMode, colorSeedValue: $colorSeedValue, compactMode: $compactMode, extraDarkMode: $extraDarkMode, enableMaterialYou: $enableMaterialYou, automaticallyPickAccentColor: $automaticallyPickAccentColor, language: $language, showDailyScheduleOnFeed: $showDailyScheduleOnFeed, chirpMuteVideos: $chirpMuteVideos)';
+    return 'SettingsState(themeMode: $themeMode, colorSeedValue: $colorSeedValue, compactMode: $compactMode, extraDarkMode: $extraDarkMode, enableMaterialYou: $enableMaterialYou, automaticallyPickAccentColor: $automaticallyPickAccentColor, language: $language, showDailyScheduleOnFeed: $showDailyScheduleOnFeed, chirpMuteVideos: $chirpMuteVideos)';
 }
 
 

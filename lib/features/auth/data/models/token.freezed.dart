@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'token.dart';
@@ -9,6 +9,7 @@ part of 'token.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $TokenDataCopyWith<TokenData> get copyWith => _$TokenDataCopyWithImpl<TokenData>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TokenData&&(identical(other.provider, provider) || other.provider == provider)&&(identical(other.accessToken, accessToken) || other.accessToken == accessToken)&&(identical(other.refreshToken, refreshToken) || other.refreshToken == refreshToken)&&(identical(other.accessExpiresAt, accessExpiresAt) || other.accessExpiresAt == accessExpiresAt)&&(identical(other.refreshExpiresAt, refreshExpiresAt) || other.refreshExpiresAt == refreshExpiresAt));
+  final _this = this as TokenData;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TokenData&&(identical(other.provider, _this.provider) || other.provider == _this.provider)&&(identical(other.accessToken, _this.accessToken) || other.accessToken == _this.accessToken)&&(identical(other.refreshToken, _this.refreshToken) || other.refreshToken == _this.refreshToken)&&(identical(other.accessExpiresAt, _this.accessExpiresAt) || other.accessExpiresAt == _this.accessExpiresAt)&&(identical(other.refreshExpiresAt, _this.refreshExpiresAt) || other.refreshExpiresAt == _this.refreshExpiresAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,provider,accessToken,refreshToken,accessExpiresAt,refreshExpiresAt);
+int get hashCode {
+  final _this = this as TokenData;
+  return Object.hash(runtimeType,_this.provider,_this.accessToken,_this.refreshToken,_this.accessExpiresAt,_this.refreshExpiresAt);
+}
 
 @override
 String toString() {
-  return 'TokenData(provider: $provider, accessToken: $accessToken, refreshToken: $refreshToken, accessExpiresAt: $accessExpiresAt, refreshExpiresAt: $refreshExpiresAt)';
+  final _this = this as TokenData;
+  return 'TokenData(provider: ${_this.provider}, accessToken: ${_this.accessToken}, refreshToken: ${_this.refreshToken}, accessExpiresAt: ${_this.accessExpiresAt}, refreshExpiresAt: ${_this.refreshExpiresAt})';
 }
 
 
@@ -66,7 +72,7 @@ class _$TokenDataCopyWithImpl<$Res>
 /// Create a copy of TokenData
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? provider = null,Object? accessToken = null,Object? refreshToken = null,Object? accessExpiresAt = null,Object? refreshExpiresAt = null,}) {
-  return _then(_self.copyWith(
+  return _then(TokenData(
 provider: null == provider ? _self.provider : provider // ignore: cast_nullable_to_non_nullable
 as String,accessToken: null == accessToken ? _self.accessToken : accessToken // ignore: cast_nullable_to_non_nullable
 as String,refreshToken: null == refreshToken ? _self.refreshToken : refreshToken // ignore: cast_nullable_to_non_nullable
@@ -235,16 +241,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TokenData&&(identical(other.provider, provider) || other.provider == provider)&&(identical(other.accessToken, accessToken) || other.accessToken == accessToken)&&(identical(other.refreshToken, refreshToken) || other.refreshToken == refreshToken)&&(identical(other.accessExpiresAt, accessExpiresAt) || other.accessExpiresAt == accessExpiresAt)&&(identical(other.refreshExpiresAt, refreshExpiresAt) || other.refreshExpiresAt == refreshExpiresAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _TokenData&&(identical(other.provider, provider) || other.provider == provider)&&(identical(other.accessToken, accessToken) || other.accessToken == accessToken)&&(identical(other.refreshToken, refreshToken) || other.refreshToken == refreshToken)&&(identical(other.accessExpiresAt, accessExpiresAt) || other.accessExpiresAt == accessExpiresAt)&&(identical(other.refreshExpiresAt, refreshExpiresAt) || other.refreshExpiresAt == refreshExpiresAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,provider,accessToken,refreshToken,accessExpiresAt,refreshExpiresAt);
+int get hashCode {
+    return Object.hash(runtimeType,provider,accessToken,refreshToken,accessExpiresAt,refreshExpiresAt);
+}
 
 @override
 String toString() {
-  return 'TokenData(provider: $provider, accessToken: $accessToken, refreshToken: $refreshToken, accessExpiresAt: $accessExpiresAt, refreshExpiresAt: $refreshExpiresAt)';
+    return 'TokenData(provider: $provider, accessToken: $accessToken, refreshToken: $refreshToken, accessExpiresAt: $accessExpiresAt, refreshExpiresAt: $refreshExpiresAt)';
 }
 
 

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'todo_item_dto.dart';
@@ -9,14 +9,14 @@ part of 'todo_item_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$TodoItemDto {
 
- String? get id;@JsonKey(name: 'task_list') String? get taskList; String get title; String? get notes; String? get status;@JsonKey(name: 'status_display') String? get statusDisplay; String? get priority;@JsonKey(name: 'priority_display') String? get priorityDisplay; String? get due; String? get completed;@JsonKey(name: 'subtask_count') int get subtaskCount; String? get position; bool get hidden;// List of tag UUIDs — resolve to local IDs at mapping time
- List<String> get tags;@JsonKey(name: 'sync_status') String? get syncStatus;@JsonKey(name: 'sync_status_display') String? get syncStatusDisplay;@JsonKey(name: 'last_synced_at') String? get lastSyncedAt;@JsonKey(name: 'created_at') String? get createdAt;@JsonKey(name: 'updated_at') String? get updatedAt;
+ String? get id;@JsonKey(name: 'task_list') String? get taskList; String get title; String? get notes; String? get status;@JsonKey(name: 'status_display') String? get statusDisplay; String? get priority;@JsonKey(name: 'priority_display') String? get priorityDisplay; String? get due; String? get completed;@JsonKey(name: 'subtask_count') int get subtaskCount; String? get position; bool get hidden; List<String> get tags;@JsonKey(name: 'sync_status') String? get syncStatus;@JsonKey(name: 'sync_status_display') String? get syncStatusDisplay;@JsonKey(name: 'last_synced_at') String? get lastSyncedAt;@JsonKey(name: 'created_at') String? get createdAt;@JsonKey(name: 'updated_at') String? get updatedAt;
 /// Create a copy of TodoItemDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,21 @@ $TodoItemDtoCopyWith<TodoItemDto> get copyWith => _$TodoItemDtoCopyWithImpl<Todo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TodoItemDto&&(identical(other.id, id) || other.id == id)&&(identical(other.taskList, taskList) || other.taskList == taskList)&&(identical(other.title, title) || other.title == title)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.status, status) || other.status == status)&&(identical(other.statusDisplay, statusDisplay) || other.statusDisplay == statusDisplay)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.priorityDisplay, priorityDisplay) || other.priorityDisplay == priorityDisplay)&&(identical(other.due, due) || other.due == due)&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.subtaskCount, subtaskCount) || other.subtaskCount == subtaskCount)&&(identical(other.position, position) || other.position == position)&&(identical(other.hidden, hidden) || other.hidden == hidden)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.syncStatus, syncStatus) || other.syncStatus == syncStatus)&&(identical(other.syncStatusDisplay, syncStatusDisplay) || other.syncStatusDisplay == syncStatusDisplay)&&(identical(other.lastSyncedAt, lastSyncedAt) || other.lastSyncedAt == lastSyncedAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  final _this = this as TodoItemDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TodoItemDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.taskList, _this.taskList) || other.taskList == _this.taskList)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.notes, _this.notes) || other.notes == _this.notes)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.statusDisplay, _this.statusDisplay) || other.statusDisplay == _this.statusDisplay)&&(identical(other.priority, _this.priority) || other.priority == _this.priority)&&(identical(other.priorityDisplay, _this.priorityDisplay) || other.priorityDisplay == _this.priorityDisplay)&&(identical(other.due, _this.due) || other.due == _this.due)&&(identical(other.completed, _this.completed) || other.completed == _this.completed)&&(identical(other.subtaskCount, _this.subtaskCount) || other.subtaskCount == _this.subtaskCount)&&(identical(other.position, _this.position) || other.position == _this.position)&&(identical(other.hidden, _this.hidden) || other.hidden == _this.hidden)&&const DeepCollectionEquality().equals(other.tags, _this.tags)&&(identical(other.syncStatus, _this.syncStatus) || other.syncStatus == _this.syncStatus)&&(identical(other.syncStatusDisplay, _this.syncStatusDisplay) || other.syncStatusDisplay == _this.syncStatusDisplay)&&(identical(other.lastSyncedAt, _this.lastSyncedAt) || other.lastSyncedAt == _this.lastSyncedAt)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,taskList,title,notes,status,statusDisplay,priority,priorityDisplay,due,completed,subtaskCount,position,hidden,const DeepCollectionEquality().hash(tags),syncStatus,syncStatusDisplay,lastSyncedAt,createdAt,updatedAt]);
+int get hashCode {
+  final _this = this as TodoItemDto;
+  return Object.hashAll([runtimeType,_this.id,_this.taskList,_this.title,_this.notes,_this.status,_this.statusDisplay,_this.priority,_this.priorityDisplay,_this.due,_this.completed,_this.subtaskCount,_this.position,_this.hidden,const DeepCollectionEquality().hash(_this.tags),_this.syncStatus,_this.syncStatusDisplay,_this.lastSyncedAt,_this.createdAt,_this.updatedAt]);
+}
 
 @override
 String toString() {
-  return 'TodoItemDto(id: $id, taskList: $taskList, title: $title, notes: $notes, status: $status, statusDisplay: $statusDisplay, priority: $priority, priorityDisplay: $priorityDisplay, due: $due, completed: $completed, subtaskCount: $subtaskCount, position: $position, hidden: $hidden, tags: $tags, syncStatus: $syncStatus, syncStatusDisplay: $syncStatusDisplay, lastSyncedAt: $lastSyncedAt, createdAt: $createdAt, updatedAt: $updatedAt)';
+  final _this = this as TodoItemDto;
+  return 'TodoItemDto(id: ${_this.id}, taskList: ${_this.taskList}, title: ${_this.title}, notes: ${_this.notes}, status: ${_this.status}, statusDisplay: ${_this.statusDisplay}, priority: ${_this.priority}, priorityDisplay: ${_this.priorityDisplay}, due: ${_this.due}, completed: ${_this.completed}, subtaskCount: ${_this.subtaskCount}, position: ${_this.position}, hidden: ${_this.hidden}, tags: ${_this.tags}, syncStatus: ${_this.syncStatus}, syncStatusDisplay: ${_this.syncStatusDisplay}, lastSyncedAt: ${_this.lastSyncedAt}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt})';
 }
 
 
@@ -67,7 +72,7 @@ class _$TodoItemDtoCopyWithImpl<$Res>
 /// Create a copy of TodoItemDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? taskList = freezed,Object? title = null,Object? notes = freezed,Object? status = freezed,Object? statusDisplay = freezed,Object? priority = freezed,Object? priorityDisplay = freezed,Object? due = freezed,Object? completed = freezed,Object? subtaskCount = null,Object? position = freezed,Object? hidden = null,Object? tags = null,Object? syncStatus = freezed,Object? syncStatusDisplay = freezed,Object? lastSyncedAt = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(TodoItemDto(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,taskList: freezed == taskList ? _self.taskList : taskList // ignore: cast_nullable_to_non_nullable
 as String?,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -228,7 +233,7 @@ return $default(_that.id,_that.taskList,_that.title,_that.notes,_that.status,_th
 @JsonSerializable()
 
 class _TodoItemDto implements TodoItemDto {
-  const _TodoItemDto({required this.id, @JsonKey(name: 'task_list') required this.taskList, required this.title, required this.notes, required this.status, @JsonKey(name: 'status_display') required this.statusDisplay, required this.priority, @JsonKey(name: 'priority_display') required this.priorityDisplay, required this.due, required this.completed, @JsonKey(name: 'subtask_count') required this.subtaskCount, required this.position, required this.hidden, required final  List<String> tags, @JsonKey(name: 'sync_status') required this.syncStatus, @JsonKey(name: 'sync_status_display') required this.syncStatusDisplay, @JsonKey(name: 'last_synced_at') required this.lastSyncedAt, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt}): _tags = tags;
+  const _TodoItemDto({required this.id, @JsonKey(name: 'task_list') required this.taskList, required this.title, required this.notes, required this.status, @JsonKey(name: 'status_display') required this.statusDisplay, required this.priority, @JsonKey(name: 'priority_display') required this.priorityDisplay, required this.due, required this.completed, @JsonKey(name: 'subtask_count') required this.subtaskCount, required this.position, required this.hidden, required  List<String> tags, @JsonKey(name: 'sync_status') required this.syncStatus, @JsonKey(name: 'sync_status_display') required this.syncStatusDisplay, @JsonKey(name: 'last_synced_at') required this.lastSyncedAt, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt}): _tags = tags;
   factory _TodoItemDto.fromJson(Map<String, dynamic> json) => _$TodoItemDtoFromJson(json);
 
 @override final  String? id;
@@ -244,9 +249,7 @@ class _TodoItemDto implements TodoItemDto {
 @override@JsonKey(name: 'subtask_count') final  int subtaskCount;
 @override final  String? position;
 @override final  bool hidden;
-// List of tag UUIDs — resolve to local IDs at mapping time
  final  List<String> _tags;
-// List of tag UUIDs — resolve to local IDs at mapping time
 @override List<String> get tags {
   if (_tags is EqualUnmodifiableListView) return _tags;
   // ignore: implicit_dynamic_type
@@ -272,16 +275,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TodoItemDto&&(identical(other.id, id) || other.id == id)&&(identical(other.taskList, taskList) || other.taskList == taskList)&&(identical(other.title, title) || other.title == title)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.status, status) || other.status == status)&&(identical(other.statusDisplay, statusDisplay) || other.statusDisplay == statusDisplay)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.priorityDisplay, priorityDisplay) || other.priorityDisplay == priorityDisplay)&&(identical(other.due, due) || other.due == due)&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.subtaskCount, subtaskCount) || other.subtaskCount == subtaskCount)&&(identical(other.position, position) || other.position == position)&&(identical(other.hidden, hidden) || other.hidden == hidden)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.syncStatus, syncStatus) || other.syncStatus == syncStatus)&&(identical(other.syncStatusDisplay, syncStatusDisplay) || other.syncStatusDisplay == syncStatusDisplay)&&(identical(other.lastSyncedAt, lastSyncedAt) || other.lastSyncedAt == lastSyncedAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _TodoItemDto&&(identical(other.id, id) || other.id == id)&&(identical(other.taskList, taskList) || other.taskList == taskList)&&(identical(other.title, title) || other.title == title)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.status, status) || other.status == status)&&(identical(other.statusDisplay, statusDisplay) || other.statusDisplay == statusDisplay)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.priorityDisplay, priorityDisplay) || other.priorityDisplay == priorityDisplay)&&(identical(other.due, due) || other.due == due)&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.subtaskCount, subtaskCount) || other.subtaskCount == subtaskCount)&&(identical(other.position, position) || other.position == position)&&(identical(other.hidden, hidden) || other.hidden == hidden)&&const DeepCollectionEquality().equals(other.tags, _tags)&&(identical(other.syncStatus, syncStatus) || other.syncStatus == syncStatus)&&(identical(other.syncStatusDisplay, syncStatusDisplay) || other.syncStatusDisplay == syncStatusDisplay)&&(identical(other.lastSyncedAt, lastSyncedAt) || other.lastSyncedAt == lastSyncedAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,taskList,title,notes,status,statusDisplay,priority,priorityDisplay,due,completed,subtaskCount,position,hidden,const DeepCollectionEquality().hash(_tags),syncStatus,syncStatusDisplay,lastSyncedAt,createdAt,updatedAt]);
+int get hashCode {
+    return Object.hashAll([runtimeType,id,taskList,title,notes,status,statusDisplay,priority,priorityDisplay,due,completed,subtaskCount,position,hidden,const DeepCollectionEquality().hash(_tags),syncStatus,syncStatusDisplay,lastSyncedAt,createdAt,updatedAt]);
+}
 
 @override
 String toString() {
-  return 'TodoItemDto(id: $id, taskList: $taskList, title: $title, notes: $notes, status: $status, statusDisplay: $statusDisplay, priority: $priority, priorityDisplay: $priorityDisplay, due: $due, completed: $completed, subtaskCount: $subtaskCount, position: $position, hidden: $hidden, tags: $tags, syncStatus: $syncStatus, syncStatusDisplay: $syncStatusDisplay, lastSyncedAt: $lastSyncedAt, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'TodoItemDto(id: $id, taskList: $taskList, title: $title, notes: $notes, status: $status, statusDisplay: $statusDisplay, priority: $priority, priorityDisplay: $priorityDisplay, due: $due, completed: $completed, subtaskCount: $subtaskCount, position: $position, hidden: $hidden, tags: $tags, syncStatus: $syncStatus, syncStatusDisplay: $syncStatusDisplay, lastSyncedAt: $lastSyncedAt, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
