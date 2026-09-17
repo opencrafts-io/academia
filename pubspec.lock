@@ -95,7 +95,7 @@ packages:
     source: hosted
     version: "2.13.1"
   awesome_notifications:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: awesome_notifications
       sha256: fb4d5d6effd904720cbc85cfbe796da35f6b0ff079c0798c1a387616200bd80c
@@ -103,7 +103,7 @@ packages:
     source: hosted
     version: "0.11.0"
   awesome_notifications_core:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: awesome_notifications_core
       sha256: f8a227159f70e30d0f4c1d8996cf7e3865fec7c9030df752dfa51d177dc08b38
@@ -1559,6 +1559,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.5.0"
+  notifications:
+    dependency: "direct main"
+    description:
+      path: "packages/notifications"
+      relative: true
+    source: path
+    version: "0.0.1"
   objective_c:
     dependency: transitive
     description:
@@ -1576,7 +1583,7 @@ packages:
     source: hosted
     version: "2.1.0"
   onesignal_flutter:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: onesignal_flutter
       sha256: "74521a8bfbe9253a5fdfdd52981e8bb4f6da2fbbb92792d4ff368917ac395716"

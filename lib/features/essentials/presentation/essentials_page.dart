@@ -1,5 +1,4 @@
 import 'package:academia/config/config.dart';
-import 'package:academia/constants/responsive_break_points.dart';
 import 'package:academia/core/core.dart';
 import 'package:ads/ads.dart';
 import 'package:academia/features/institution/institution.dart';
@@ -9,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:settings/settings.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:academia/injection_container.dart';
+
 import '../widgets/essential_category_tile.dart';
 
 class EssentialsPage extends StatefulWidget {
@@ -81,9 +81,8 @@ class _EssentialsPageState extends State<EssentialsPage> {
         final adService = sl<AdService>();
         adService.showInterstitialAd();
         if (!mounted) return;
-        ExamTimetableRoute(
-          institutionId: primaryInstitution.institutionId,
-        ).push(context);
+        ExamTimetableRoute(institutionId: primaryInstitution.institutionId)
+            .push(context);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -96,61 +95,52 @@ class _EssentialsPageState extends State<EssentialsPage> {
     }
   }
 
-  /// Hand-curated asymmetric "mood tile" arrangement for the 4 essential
-  /// items - a big featured tile, a paired row, then another big tile -
-  /// rather than a uniform grid. Falls back to a simple even row on wider
-  /// (tablet/desktop) layouts, where the vertical bookend rhythm doesn't
-  /// make sense.
+  /// A compact two-column tool grid that keeps every destination equally easy
+  /// to scan, regardless of the screen width.
   Widget _buildToolsGrid(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final palette = [
-      (colorScheme.primaryContainer, colorScheme.onPrimaryContainer),
-      (colorScheme.secondaryContainer, colorScheme.onSecondaryContainer),
-      (colorScheme.tertiaryContainer, colorScheme.onTertiaryContainer),
-      (colorScheme.surfaceContainerHighest, colorScheme.onSurfaceVariant),
-    ];
+    const columnCount = 2;
+    const cornerRadius = Radius.circular(8);
+    final lastRow = (essentialItems.length - 1) ~/ columnCount;
 
-    Widget tile(int index, {bool featured = false}) {
+    Widget tile(int index) {
       final item = essentialItems[index];
-      final (color, onColor) = palette[index % palette.length];
+      final row = index ~/ columnCount;
+      final column = index % columnCount;
+
       return EssentialCategoryTile(
         title: item.title,
         iconPath: item.iconPath,
         onTap: item.ontap,
-        color: color,
-        onColor: onColor,
-        featured: featured,
-      );
-    }
-
-    if (!ResponsiveBreakPoints.isMobile(context)) {
-      return Row(
-        children: [
-          for (var i = 0; i < essentialItems.length; i++) ...[
-            if (i > 0) const SizedBox(width: 12),
-            Expanded(child: SizedBox(height: 120, child: tile(i))),
-          ],
-        ],
-      );
-    }
-
-    return Column(
-      children: [
-        SizedBox(height: 140, child: tile(0, featured: true)),
-        const SizedBox(height: 12),
-        SizedBox(
-          height: 116,
-          child: Row(
-            children: [
-              Expanded(child: tile(1)),
-              const SizedBox(width: 12),
-              Expanded(child: tile(2)),
-            ],
-          ),
+        color: colorScheme.surfaceContainerHigh,
+        onColor: colorScheme.onSurface,
+        borderRadius: BorderRadius.only(
+          topLeft: row == 0 && column == 0 ? cornerRadius : Radius.zero,
+          topRight: row == 0 && column == columnCount - 1
+              ? cornerRadius
+              : Radius.zero,
+          bottomLeft: row == lastRow && column == 0
+              ? cornerRadius
+              : Radius.zero,
+          bottomRight: row == lastRow && column == columnCount - 1
+              ? cornerRadius
+              : Radius.zero,
         ),
-        const SizedBox(height: 12),
-        SizedBox(height: 140, child: tile(3, featured: true)),
-      ],
+      );
+    }
+
+    return GridView.builder(
+      padding: .symmetric(vertical: 16),
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: essentialItems.length,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: columnCount,
+        mainAxisExtent: 64,
+        crossAxisSpacing: 2,
+        mainAxisSpacing: 2,
+      ),
+      itemBuilder: (context, index) => tile(index),
     );
   }
 
@@ -216,9 +206,9 @@ class _EssentialsPageState extends State<EssentialsPage> {
                     ),
                     leading: CircleAvatar(
                       radius: 22,
-                      backgroundColor: Theme.of(
-                        context,
-                      ).colorScheme.primaryContainer,
+                      backgroundColor: Theme.of(context)
+                          .colorScheme
+                          .primaryContainer,
                       child: Icon(
                         Icons.settings_rounded,
                         color: Theme.of(context).colorScheme.onPrimaryContainer,
@@ -264,11 +254,9 @@ class _EssentialsPageState extends State<EssentialsPage> {
                 SizedBox(height: 22),
                 Text(
                   "Explore tools",
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: Theme.of(context).textTheme.titleMedium
+                      ?.copyWith(fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 12),
                 _buildToolsGrid(context),
                 SizedBox(height: 22),
                 BannerAdWidget(),

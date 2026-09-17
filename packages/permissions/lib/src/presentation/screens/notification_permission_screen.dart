@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -60,8 +58,8 @@ class _NotificationPermissionScreenState
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Be sure to also enable alarms and reminders for '
-                  'time sensitive alerts like todos and class schedules',
+                  'You can enable time-sensitive reminders later in '
+                  'notification settings.',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 const SizedBox(height: 28),
@@ -143,9 +141,6 @@ class _NotificationPermissionScreenState
     await permissions.request(PermissionCapability.notifications);
     if (!context.mounted) return;
 
-    if (Platform.isAndroid) {
-      await permissions.request(PermissionCapability.preciseAlarms);
-    }
     if (context.mounted) context.pop();
   }
 }

@@ -6,7 +6,7 @@ import 'package:analytics/analytics.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:notifications/notifications.dart';
 
 part 'profile_event.dart';
 part 'profile_state.dart';
@@ -19,6 +19,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final RequestAccountDeletionUsecase requestAccountDeletionUsecase;
   final RequestAccountRecoveryUsecase requestAccountRecoveryUsecase;
   final AnalyticsTracker analyticsTracker;
+  final NotificationIdentityService notificationIdentityService;
   final Logger _logger = Logger();
 
   ProfileBloc({
@@ -29,6 +30,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     required this.requestAccountDeletionUsecase,
     required this.requestAccountRecoveryUsecase,
     required this.analyticsTracker,
+    required this.notificationIdentityService,
   }) : super(ProfileInitialState()) {
     on<RefreshProfileEvent>((event, emit) async {
       final result = await refreshCurrentUserProfileUsecase(NoParams());
@@ -51,11 +53,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           emit(ProfileErrorState(message: failure.message));
         },
         (userProfile) {
-          _identifyProfile(userProfile.id, userProfile.onboarded);
-          OneSignal.login(userProfile.id);
-          OneSignal.User.addEmail(userProfile.email);
-          OneSignal.User.addAliases({"name": userProfile.name});
-          OneSignal.User.addSms(userProfile.phone ?? "NA");
+          _identifyProfile(userProfile);
 
           emit(ProfileLoadedState(profile: userProfile));
         },
@@ -70,11 +68,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           emit(ProfileErrorState(message: failure.message));
         },
         (userProfile) {
-          _identifyProfile(userProfile.id, userProfile.onboarded);
-          OneSignal.login(userProfile.id);
-          OneSignal.User.addEmail(userProfile.email);
-          OneSignal.User.addAliases({"name": userProfile.name});
-          OneSignal.User.addSms(userProfile.phone ?? "NA");
+          _identifyProfile(userProfile);
 
           emit(ProfileLoadedState(profile: userProfile));
         },
@@ -89,11 +83,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           emit(ProfileErrorState(message: failure.message));
         },
         (userProfile) {
-          _identifyProfile(userProfile.id, userProfile.onboarded);
-          OneSignal.login(userProfile.id);
-          OneSignal.User.addEmail(userProfile.email);
-          OneSignal.User.addAliases({"name": userProfile.name});
-          OneSignal.User.addSms(userProfile.phone ?? "NA");
+          _identifyProfile(userProfile);
 
           emit(ProfileLoadedState(profile: userProfile));
         },
@@ -131,12 +121,22 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     });
   }
 
-  void _identifyProfile(String userId, bool hasCompletedOnboarding) {
+  void _identifyProfile(UserProfile userProfile) {
     unawaited(
       analyticsTracker.identify(
         AnalyticsIdentity(
-          userId: userId,
-          hasCompletedOnboarding: hasCompletedOnboarding,
+          userId: userProfile.id,
+          hasCompletedOnboarding: userProfile.onboarded,
+        ),
+      ),
+    );
+    unawaited(
+      notificationIdentityService.identify(
+        NotificationIdentity(
+          userId: userProfile.id,
+          email: userProfile.email,
+          displayName: userProfile.name,
+          phoneNumber: userProfile.phone,
         ),
       ),
     );

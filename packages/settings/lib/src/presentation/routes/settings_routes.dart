@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:settings/src/presentation/cubit/notification_preferences_cubit.dart';
+import 'package:settings/src/presentation/views/notification_settings_page.dart';
 import 'package:settings/src/presentation/views/settings_page.dart';
 
 part 'settings_routes.g.dart';
 
-@TypedGoRoute<SettingsPageRoute>(path: '/settings')
+@TypedGoRoute<SettingsPageRoute>(
+  path: '/settings',
+  routes: [TypedGoRoute<NotificationSettingsRoute>(path: 'notifications')],
+)
 class SettingsPageRoute extends GoRouteData with $SettingsPageRoute {
   const SettingsPageRoute();
 
@@ -35,4 +42,15 @@ class SettingsPageRoute extends GoRouteData with $SettingsPageRoute {
           },
     );
   }
+}
+
+class NotificationSettingsRoute extends GoRouteData
+    with $NotificationSettingsRoute {
+  const NotificationSettingsRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) => BlocProvider(
+    create: (_) => GetIt.I<NotificationPreferencesCubit>()..refresh(),
+    child: const NotificationSettingsPage(),
+  );
 }

@@ -1,10 +1,8 @@
 import 'package:academia/config/config.dart';
-import 'dart:io' show Platform;
 import 'package:academia/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:vibration/vibration.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permissions/permissions.dart';
@@ -31,14 +29,7 @@ class _TodoHomeScreenState extends State<TodoHomeScreen>
   @override
   void initState() {
     super.initState();
-    final permissions = [PermissionCapability.notifications];
-
-    if (!kIsWeb) {
-      if (Platform.isAndroid) {
-        permissions.add(PermissionCapability.preciseAlarms);
-      }
-    }
-    context.read<PermissionCubit>().checkAll(permissions);
+    context.read<PermissionCubit>().check(PermissionCapability.notifications);
   }
 
   Future<void> _showHelpDialog() {
@@ -74,7 +65,6 @@ class _TodoHomeScreenState extends State<TodoHomeScreen>
 
                   if (!context.mounted) return;
 
-                  // Check both permissions
                   await context.read<PermissionCubit>().check(
                     PermissionCapability.notifications,
                   );
@@ -114,19 +104,9 @@ class _TodoHomeScreenState extends State<TodoHomeScreen>
                     );
                   }
 
-                  // Request Notification permission
                   await context.read<PermissionCubit>().request(
                     PermissionCapability.notifications,
                   );
-
-                  // Also request Precise Alarm permission for timing accuracy
-                  if (Platform.isAndroid) {
-                    if (context.mounted) {
-                      await context.read<PermissionCubit>().request(
-                        PermissionCapability.preciseAlarms,
-                      );
-                    }
-                  }
                 },
                 icon: Icon(
                   Icons.notification_important_outlined,

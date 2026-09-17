@@ -105,6 +105,7 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
       getPreviousAuthState: sl.get<GetPreviousAuthState>(),
       signInWithGoogle: sl.get<SignInWithGoogleUsecase>(),
       analyticsTracker: sl(),
+      notificationIdentityService: sl(),
     ),
   );
 
@@ -291,12 +292,13 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
       requestAccountDeletionUsecase: sl.get<RequestAccountDeletionUsecase>(),
       requestAccountRecoveryUsecase: sl.get<RequestAccountRecoveryUsecase>(),
       analyticsTracker: sl(),
+      notificationIdentityService: sl(),
     ),
   );
 
   // Todos
   sl.registerLazySingleton<TodoNotificationService>(
-    () => TodoNotificationServiceImpl(),
+    () => TodoNotificationServiceImpl(sl()),
   );
   sl.registerFactory<TodoListLocalDatasource>(
     () => TodoListLocalDatasource(cacheDB: sl()),
@@ -735,16 +737,6 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     () => InteractionsLocalDataSource(db: sl()),
   );
 
-  /*************************************************************************
-      // NOTIFICATIONS
-   *************************************************************************/
-  sl.registerSingletonAsync<NotificationService>(() async {
-    await NotificationChannelMigration.run();
-    final svc = NotificationServiceImpl();
-    await svc.init();
-    return svc;
-  });
-
   // --- Institutions ---
   sl.registerFactory<InstitutionLocalDatasource>(
     () => InstitutionLocalDatasource(localDB: sl<AppDataBase>()),
@@ -987,7 +979,7 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
 
   // Exam Timetable
   sl.registerLazySingleton<ExamNotificationService>(
-    () => ExamNotificationServiceImpl(),
+    () => ExamNotificationServiceImpl(sl()),
   );
 
   // Data sources

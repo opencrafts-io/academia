@@ -20,6 +20,9 @@ class _Gateway implements PosthogFeatureFlagGateway {
   String? requestedKey;
 
   @override
+  Future<bool> isEnabled(String key) async => false;
+
+  @override
   Future<Object?> readPayload(String key) async {
     requestedKey = key;
     return _payload;

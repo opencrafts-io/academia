@@ -74,9 +74,6 @@
         <meta-data
             android:name="onesignal_app_id"
             android:value="88ca0bb7-c0d7-4e36-b9e6-ea0e29213593" />
-        <meta-data
-            android:name="onesignal_google_project_number"
-            android:value="YOUR_GOOGLE_PROJECT_NUMBER" />
 
 
         <!-- google ads -->
@@ -112,6 +109,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />

@@ -16,6 +16,8 @@ dependencies:
   go_router: ^18.0.1
   hydrated_bloc: ^11.0.0
   injectable: ^3.0.0
+  permissions:
+    path: ../permissions
   sliver_tools: ^0.2.12
 
 dev_dependencies:
