@@ -4,6 +4,8 @@ import 'package:posthog_flutter/posthog_flutter.dart';
 
 abstract interface class PosthogFeatureFlagGateway {
   Future<Object?> readPayload(String key);
+
+  Future<bool> isEnabled(String key);
 }
 
 @LazySingleton(as: FeatureFlagReader)
@@ -14,6 +16,9 @@ class PosthogFeatureFlagReader implements FeatureFlagReader {
 
   @override
   Future<Object?> readJson(String key) => _gateway.readPayload(key);
+
+  @override
+  Future<bool> isEnabled(String key) => _gateway.isEnabled(key);
 }
 
 @LazySingleton(as: PosthogFeatureFlagGateway)
@@ -27,5 +32,12 @@ class PosthogFlutterFeatureFlagGateway implements PosthogFeatureFlagGateway {
     await _posthog.reloadFeatureFlags();
     final result = await _posthog.getFeatureFlagResult(key, sendEvent: false);
     return result?.payload;
+  }
+
+  @override
+  Future<bool> isEnabled(String key) async {
+    await _posthog.reloadFeatureFlags();
+    final result = await _posthog.getFeatureFlagResult(key, sendEvent: false);
+    return result?.enabled ?? false;
   }
 }

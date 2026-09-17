@@ -128,11 +128,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  static const _premiumUpgradeFlagKey = 'allow_premium_upgrade';
+
+  late Future<bool> _premiumUpgradeEnabledFuture;
   late Future<billing.SubscriptionStatus?> _subscriptionStatusFuture;
 
   @override
   void initState() {
     super.initState();
+    _premiumUpgradeEnabledFuture = _isPremiumUpgradeEnabled();
     _subscriptionStatusFuture = _loadSubscriptionStatus();
     WidgetsBinding.instance.addPostFrameCallback(
       (_) => unawaited(_promptForNotificationsIfNeeded()),
@@ -160,6 +164,12 @@ class _HomePageState extends State<HomePage> {
       const core.NoUseCaseParams(),
     );
     return result.fold((_) => null, (status) => status);
+  }
+
+  Future<bool> _isPremiumUpgradeEnabled() {
+    if (kDebugMode) return Future.value(true);
+
+    return sl<FeatureFlagReader>().isEnabled(_premiumUpgradeFlagKey);
   }
 
   void _showActionsSheet(BuildContext context) {
@@ -236,16 +246,27 @@ class _HomePageState extends State<HomePage> {
                 centerTitle: false,
                 actions: [
                   FutureBuilder(
-                    future: _subscriptionStatusFuture,
-                    builder: (context, snapshot) {
-                      if (!_shouldShowPremiumUpgrade(snapshot.data)) {
+                    future: _premiumUpgradeEnabledFuture,
+                    builder: (context, flagSnapshot) {
+                      if (flagSnapshot.data != true) {
                         return const SizedBox.shrink();
                       }
 
-                      return IconButton(
-                        onPressed: _openBilling,
-                        icon: const Icon(Symbols.workspace_premium_rounded),
-                        tooltip: 'Upgrade',
+                      return FutureBuilder(
+                        future: _subscriptionStatusFuture,
+                        builder: (context, subscriptionSnapshot) {
+                          if (!_shouldShowPremiumUpgrade(
+                            subscriptionSnapshot.data,
+                          )) {
+                            return const SizedBox.shrink();
+                          }
+
+                          return IconButton(
+                            onPressed: _openBilling,
+                            icon: const Icon(Symbols.workspace_premium_rounded),
+                            tooltip: 'Upgrade',
+                          );
+                        },
                       );
                     },
                   ),

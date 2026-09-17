@@ -24,6 +24,9 @@ class _FeatureFlagReader implements FeatureFlagReader {
   String? requestedKey;
 
   @override
+  Future<bool> isEnabled(String key) async => false;
+
+  @override
   Future<Object?> readJson(String key) async {
     requestedKey = key;
     return _payload;
