@@ -25,7 +25,7 @@ class PosthogFlutterFeatureFlagGateway implements PosthogFeatureFlagGateway {
   @override
   Future<Object?> readPayload(String key) async {
     await _posthog.reloadFeatureFlags();
-    final result = await _posthog.getFeatureFlagResult(key);
+    final result = await _posthog.getFeatureFlagResult(key, sendEvent: false);
     return result?.payload;
   }
 }

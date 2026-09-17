@@ -104,6 +104,7 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
       signInWithSpotifyUsecase: sl.get<SignInWithSpotifyUsecase>(),
       getPreviousAuthState: sl.get<GetPreviousAuthState>(),
       signInWithGoogle: sl.get<SignInWithGoogleUsecase>(),
+      analyticsTracker: sl(),
     ),
   );
 
@@ -289,6 +290,7 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
       updateUserPhone: sl.get<UpdateUserPhone>(),
       requestAccountDeletionUsecase: sl.get<RequestAccountDeletionUsecase>(),
       requestAccountRecoveryUsecase: sl.get<RequestAccountRecoveryUsecase>(),
+      analyticsTracker: sl(),
     ),
   );
 
@@ -964,6 +966,7 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
       getAllCachedInstitutionsUsecase: sl(),
       searchForInstitutionByNameUsecase: sl(),
       getAllUserAccountInstitutionsUsecase: sl(),
+      analyticsTracker: sl(),
     ),
   );
 

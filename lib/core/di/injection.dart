@@ -5,7 +5,7 @@ import 'package:billing/billing.dart';
 import 'package:ads/ads.dart';
 import 'package:analytics/analytics.dart';
 import 'package:academia/core/in_app_update/posthog_app_update_configuration_source.dart';
-import 'package:academia/core/permissions/posthog_permission_request_observer.dart';
+import 'package:academia/core/permissions/analytics_permission_request_observer.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:lock_in/lock_in.dart';
 import 'package:permissions/permissions.dart';
@@ -20,13 +20,20 @@ void configureDependencies(GetIt getIt, FlavorConfig flavorConfig) {
   configureCoreDependencies(getIt, flavorConfig);
   configureLocalDatabaseDependencies(getIt);
   configureLockInDependencies(getIt);
+  configureAnalyticsDependencies(
+    getIt,
+    analyticsGateway: flavorConfig.isProduction
+        ? PosthogAnalyticsGateway()
+        : const DisabledAnalyticsGateway(),
+  );
   configureBillingDependencies(getIt);
   configureAdsDependencies(getIt);
-  configureAnalyticsDependencies(getIt);
   configureSettingsDependencies(getIt);
   configurePermissionsDependencies(
     getIt,
-    permissionRequestObserver: PosthogPermissionRequestObserver(),
+    permissionRequestObserver: AnalyticsPermissionRequestObserver(
+      getIt<AnalyticsTracker>(),
+    ),
   );
   configureInAppUpdateDependencies(
     getIt,

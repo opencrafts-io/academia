@@ -10,6 +10,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 
+import 'package:analytics/analytics.dart' as _i548;
 import 'package:core/config/flavor.dart' as _i666;
 import 'package:core/core.dart' as _i494;
 import 'package:database/database.dart' as _i252;
@@ -181,6 +182,7 @@ _i174.GetIt initBilling(
       gh<_i515.CreateOrder>(),
       gh<_i515.CreateOrderItem>(),
       gh<_i515.CreateCheckoutSession>(),
+      gh<_i548.AnalyticsTracker>(),
     ),
   );
   return getIt;

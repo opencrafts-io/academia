@@ -1,8 +1,13 @@
+import 'dart:async';
+
 import 'package:academia/config/config.dart';
+
 import 'dart:io';
+
 import 'package:academia/features/features.dart';
 import 'package:academia/gen/assets.gen.dart';
 import 'package:academia/injection_container.dart';
+import 'package:analytics/analytics.dart';
 import 'package:billing/billing.dart' as billing;
 import 'package:core/core.dart' as core;
 import 'package:flutter/material.dart';
@@ -89,9 +94,8 @@ class _SheetSectionLabel extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(24, 8, 24, 4),
       child: Text(
         label,
-        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-          color: Theme.of(context).colorScheme.onSurfaceVariant,
-        ),
+        style: Theme.of(context).textTheme.labelSmall
+            ?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
       ),
     );
   }
@@ -158,6 +162,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _openBilling() async {
+    unawaited(sl<AnalyticsTracker>().track(AnalyticsEvent.paywallViewed()));
     await const billing.PaywallRoute(
       featureName: 'Academia Premium',
       accessMessage: 'Upgrade to unlock premium tools across Academia.',

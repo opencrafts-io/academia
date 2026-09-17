@@ -9,5 +9,7 @@ void main() {
     configureAnalyticsDependencies(getIt);
 
     expect(getIt.isRegistered<FeatureFlagReader>(), isTrue);
+    expect(getIt.isRegistered<AnalyticsGateway>(), isTrue);
+    expect(getIt.isRegistered<AnalyticsTracker>(), isTrue);
   });
 }
