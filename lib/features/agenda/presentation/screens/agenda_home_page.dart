@@ -220,25 +220,13 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
             icon: Icons.task_alt,
             iconColor: Theme.of(context).colorScheme.onSecondaryContainer,
             backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-            onPressed: () {
-              showModalBottomSheet(
-                showDragHandle: true,
-                isScrollControlled: true,
-                constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height * 0.9,
-                ),
-                context: context,
-                builder: (context) => CreateTodoBottomSheet(),
-              );
-            },
+            onPressed: () => CreateTodoItemRoute().push(context),
           ),
           FabAction(
             icon: Symbols.calendar_add_on,
             iconColor: Theme.of(context).colorScheme.onSecondaryContainer,
             backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-            onPressed: () {
-              CreateAgendaEventRoute().push(context);
-            },
+            onPressed: () => CreateAgendaEventRoute().push(context),
           ),
         ],
       ),

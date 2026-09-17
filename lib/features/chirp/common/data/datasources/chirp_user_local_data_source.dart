@@ -16,13 +16,13 @@ class ChirpUserLocalDataSource {
   /// createorUpdateChirpUser
   /// Attempts to cache a chip user. If the chirp user already exists the data
   /// is updated with the new data
-  Future<Either<Failure, ChirpUserData>> createorUpdateChirpUser(
-    ChirpUserData chirpUser,
+  Future<Either<Failure, ChirpUser>> createorUpdateChirpUser(
+    ChirpUser chirpUser,
   ) async {
     try {
       await _deleteAllExpiredCachedUsers();
       final manipulated = await localDB
-          .into(localDB.chirpUser)
+          .into(localDB.chirpUsers)
           .insertReturning(
             chirpUser.copyWith(cachedAt: Value(DateTime.now())),
             onConflict: DoUpdate(
@@ -50,13 +50,13 @@ class ChirpUserLocalDataSource {
   ///
   /// NOTE that [chirpUserID] case will be ignored and use a lowercase version
   /// for comparison
-  Future<Either<Failure, ChirpUserData?>> getCachedChirpUserByID(
+  Future<Either<Failure, ChirpUser?>> getCachedChirpUserByID(
     String chirpUserID,
   ) async {
     try {
       await _deleteAllExpiredCachedUsers();
       final retrieved =
-          await (localDB.select(localDB.chirpUser)..where(
+          await (localDB.select(localDB.chirpUsers)..where(
                 (user) => user.userID.lower().equals(chirpUserID.toLowerCase()),
               ))
               .getSingleOrNull();
@@ -79,13 +79,13 @@ class ChirpUserLocalDataSource {
   /// it returns a failure with a message of what exactly went wrong
   ///
   /// NOTE that [chirpUsername] is and will search with case sentitivity
-  Future<Either<Failure, ChirpUserData?>> getCachedChirpUserByUsername(
+  Future<Either<Failure, ChirpUser?>> getCachedChirpUserByUsername(
     String chirpUsername,
   ) async {
     try {
       await _deleteAllExpiredCachedUsers();
       final retrieved =
-          await (localDB.select(localDB.chirpUser)
+          await (localDB.select(localDB.chirpUsers)
                 ..where((user) => user.username.equals(chirpUsername)))
               .getSingleOrNull();
       return right(retrieved);
@@ -106,13 +106,13 @@ class ChirpUserLocalDataSource {
   ///
   /// NOTE that [chirpUserID] will ignore case and compare the lowercase
   /// versions
-  Future<Either<Failure, ChirpUserData?>> deleteCachedChirpUserByID(
+  Future<Either<Failure, ChirpUser?>> deleteCachedChirpUserByID(
     String chirpUserID,
   ) async {
     try {
       await _deleteAllExpiredCachedUsers();
       final deleted =
-          await (localDB.delete(localDB.chirpUser)..where(
+          await (localDB.delete(localDB.chirpUsers)..where(
                 (user) => user.userID.lower().equals(chirpUserID.toLowerCase()),
               ))
               .goAndReturn();
@@ -133,7 +133,7 @@ class ChirpUserLocalDataSource {
   /// Performs a truncate operation on the chirp user local cache
   Future<Either<Failure, void>> deleteAllCachedChirpUsers() async {
     try {
-      await localDB.delete(localDB.chirpUser).go();
+      await localDB.delete(localDB.chirpUsers).go();
       return right(null);
     } catch (e) {
       return left(
@@ -152,7 +152,7 @@ class ChirpUserLocalDataSource {
   Future<Either<Failure, void>> _deleteAllExpiredCachedUsers() async {
     try {
       final expirationThreshold = DateTime.now().subtract(ttl);
-      await (localDB.delete(localDB.chirpUser)..where(
+      await (localDB.delete(localDB.chirpUsers)..where(
             (chirpUser) =>
                 chirpUser.cachedAt.isSmallerThanValue(expirationThreshold),
           ))

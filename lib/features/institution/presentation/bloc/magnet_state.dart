@@ -1,35 +1,17 @@
-part of 'magnet_bloc.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:magnet/magnet.dart';
 
-sealed class MagnetState extends Equatable {
-  const MagnetState();
-  @override
-  List<Object?> get props => [];
-}
+part 'magnet_state.freezed.dart';
 
-class MagnetInitial extends MagnetState {}
-
-class MagnetInitializing extends MagnetState {}
-
-class MagnetReady extends MagnetState {
-  final Magnet magnet;
-  const MagnetReady(this.magnet);
-}
-
-class MagnetProcessing extends MagnetState {
-  final ScrappingCommand command;
-  final InstructionProgressEvent? progress;
-  const MagnetProcessing({required this.command, this.progress});
-
-  @override
-  List<Object?> get props => [command, progress];
-}
-
-class MagnetSuccess extends MagnetState {
-  final ScrappingResult result;
-  const MagnetSuccess(this.result);
-}
-
-class MagnetError extends MagnetState {
-  final String message;
-  const MagnetError(this.message);
+@freezed
+sealed class MagnetState with _$MagnetState {
+  const factory MagnetState.initial() = _Initial;
+  const factory MagnetState.initializing() = _Initializing;
+  const factory MagnetState.ready(Magnet magnet) = _Ready;
+  const factory MagnetState.processing({
+    required ScrappingCommand command,
+    InstructionProgressEvent? progress,
+  }) = _Processing;
+  const factory MagnetState.success(ScrappingResult result) = _Success;
+  const factory MagnetState.error(String message) = _Error;
 }

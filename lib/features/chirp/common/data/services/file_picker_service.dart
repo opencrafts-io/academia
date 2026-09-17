@@ -22,7 +22,7 @@ class FilePickerService {
     ],
   }) async {
     try {
-      final result = await FilePicker.platform.pickFiles(
+      final result = await FilePicker.pickFiles(
         allowMultiple: allowMultiple,
         allowedExtensions: allowedExtensions,
         type: FileType.custom,
@@ -44,7 +44,7 @@ class FilePickerService {
     bool allowMultiple = true,
   }) async {
     try {
-      final result = await FilePicker.platform.pickFiles(
+      final result = await FilePicker.pickFiles(
         allowMultiple: allowMultiple,
         type: FileType.image,
       );
@@ -65,7 +65,7 @@ class FilePickerService {
     bool allowMultiple = true,
   }) async {
     try {
-      final result = await FilePicker.platform.pickFiles(
+      final result = await FilePicker.pickFiles(
         allowMultiple: allowMultiple,
         type: FileType.video,
       );
@@ -86,7 +86,7 @@ class FilePickerService {
     bool allowMultiple = true,
   }) async {
     try {
-      final result = await FilePicker.platform.pickFiles(
+      final result = await FilePicker.pickFiles(
         allowMultiple: allowMultiple,
         type: FileType.custom,
         allowedExtensions: ['pdf', 'doc', 'docx', 'txt', 'rtf'],

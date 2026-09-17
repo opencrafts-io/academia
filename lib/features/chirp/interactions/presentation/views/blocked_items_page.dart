@@ -1,9 +1,9 @@
 import 'package:academia/core/clippers/clippers.dart';
 import 'package:academia/features/chirp/chirp.dart';
+import 'package:academia/gen/assets.gen.dart';
 import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lottie/lottie.dart';
 
 import '../widgets/blocked_community_card.dart';
 import '../widgets/blocked_user_card.dart';
@@ -83,11 +83,7 @@ class BlockedUsersTab extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Lottie.asset(
-                      "assets/lotties/organize.json",
-                      height: 200,
-                      repeat: false,
-                    ),
+                    Assets.icons.shield.image(height: 160),
                     const SizedBox(height: 16),
                     Text(
                       'No blocked users',
@@ -254,11 +250,7 @@ class BlockedCommunitiesTab extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Lottie.asset(
-                      "assets/lotties/organize.json",
-                      height: 200,
-                      repeat: false,
-                    ),
+                    Assets.icons.shield.image(height: 160),
                     const SizedBox(height: 16),
                     Text(
                       'No blocked communities',
@@ -405,4 +397,3 @@ class BlockedCommunitiesTab extends StatelessWidget {
     );
   }
 }
-

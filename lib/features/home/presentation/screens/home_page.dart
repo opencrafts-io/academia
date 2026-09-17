@@ -1,12 +1,17 @@
-import 'dart:io';
+import 'dart:async';
+
 import 'package:academia/config/config.dart';
 import 'package:academia/features/features.dart';
-import 'package:academia/features/permissions/permissions.dart';
 import 'package:academia/gen/assets.gen.dart';
+import 'package:academia/injection_container.dart';
+import 'package:analytics/analytics.dart';
+import 'package:billing/billing.dart' as billing;
+import 'package:core/core.dart' as core;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:material_symbols_icons/symbols.dart';
+import 'package:permissions/permissions.dart';
 
 class _HomeActionsSheet extends StatelessWidget {
   const _HomeActionsSheet();
@@ -86,9 +91,8 @@ class _SheetSectionLabel extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(24, 8, 24, 4),
       child: Text(
         label,
-        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-          color: Theme.of(context).colorScheme.onSurfaceVariant,
-        ),
+        style: Theme.of(context).textTheme.labelSmall
+            ?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
       ),
     );
   }
@@ -124,14 +128,48 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  static const _premiumUpgradeFlagKey = 'allow_premium_upgrade';
+
+  late Future<bool> _premiumUpgradeEnabledFuture;
+  late Future<billing.SubscriptionStatus?> _subscriptionStatusFuture;
+
   @override
   void initState() {
     super.initState();
-    final permissions = [AppPermission.notification];
-    if (Platform.isAndroid) {
-      permissions.add(AppPermission.preciseAlarm);
-    }
-    context.read<PermissionCubit>().checkMultiplePermissions(permissions);
+    _premiumUpgradeEnabledFuture = _isPremiumUpgradeEnabled();
+    _subscriptionStatusFuture = _loadSubscriptionStatus();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => unawaited(_promptForNotificationsIfNeeded()),
+    );
+  }
+
+  bool get _supportsNotificationPrompt =>
+      !kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.android ||
+          defaultTargetPlatform == TargetPlatform.iOS);
+
+  Future<void> _promptForNotificationsIfNeeded() async {
+    if (!_supportsNotificationPrompt) return;
+
+    final status = await sl<PermissionGateway>().check(
+      PermissionCapability.notifications,
+    );
+    if (!mounted || !shouldPromptForNotificationOnLaunch(status)) return;
+
+    await const NotificationPermissionRoute().push(context);
+  }
+
+  Future<billing.SubscriptionStatus?> _loadSubscriptionStatus() async {
+    final result = await sl<billing.GetCurrentSubscriptionStatus>()(
+      const core.NoUseCaseParams(),
+    );
+    return result.fold((_) => null, (status) => status);
+  }
+
+  Future<bool> _isPremiumUpgradeEnabled() {
+    if (kDebugMode) return Future.value(true);
+
+    return sl<FeatureFlagReader>().isEnabled(_premiumUpgradeFlagKey);
   }
 
   void _showActionsSheet(BuildContext context) {
@@ -144,125 +182,137 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Future<void> _openBilling() async {
+    unawaited(sl<AnalyticsTracker>().track(AnalyticsEvent.paywallViewed()));
+    await const billing.PaywallRoute(
+      featureName: 'Academia Premium',
+      accessMessage: 'Upgrade to unlock premium tools across Academia.',
+    ).push(context);
+    if (!mounted) return;
+    setState(() {
+      _subscriptionStatusFuture = _loadSubscriptionStatus();
+    });
+  }
+
+  bool _shouldShowPremiumUpgrade(billing.SubscriptionStatus? status) {
+    return status == null || !status.active || status.subscription == null;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<PermissionCubit, PermissionState>(
-      listener: (context, state) {
-        if (state is PermissionPermanentlyDenied) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                'Notifications are permanently disabled. '
-                'Re-enable them in your phone settings.',
-              ),
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
-        }
-      },
-      builder: (context, permissionState) {
-        final showBanner =
-            permissionState is PermissionDenied ||
-            permissionState is PermissionPermanentlyDenied;
-
-        return DefaultTabController(
-          initialIndex: 1,
-          length: 3,
-          child: Scaffold(
-            body: NestedScrollView(
-              headerSliverBuilder: (context, innerBoxIsScrolled) => [
-                SliverOverlapAbsorber(
-                  handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
-                    context,
-                  ),
-                  sliver: SliverAppBar(
-                    pinned: true,
-                    forceElevated: innerBoxIsScrolled,
-                    leading: Assets.icons.academia.image(),
-                    title: InkWell(
-                      onTap: () => _showActionsSheet(context),
-                      child:
-                          Row(
-                                mainAxisSize: MainAxisSize.min,
-                                spacing: 4,
-                                children: [
-                                  Text(
-                                    'Academia',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headlineMedium
-                                        ?.copyWith(fontWeight: FontWeight.bold),
-                                  ),
-                                  const Icon(
-                                    Icons.arrow_drop_down_circle_outlined,
-                                    size: 20,
-                                  ),
-                                ],
-                              )
-                              .animate(
-                                onPlay: (controller) =>
-                                    controller.repeat(reverse: true),
-                              )
-                              .scaleXY(
-                                begin: 1.0,
-                                end: 1.1,
-                                duration: 1000.ms,
-                                curve: Curves.elasticOut,
+    return DefaultTabController(
+      initialIndex: 1,
+      length: 3,
+      child: Scaffold(
+        body: NestedScrollView(
+          headerSliverBuilder: (context, innerBoxIsScrolled) => [
+            SliverOverlapAbsorber(
+              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+              sliver: SliverAppBar(
+                pinned: true,
+                forceElevated: innerBoxIsScrolled,
+                leading: Assets.icons.academia.image(),
+                title: InkWell(
+                  onTap: () => _showActionsSheet(context),
+                  child:
+                      Row(
+                            mainAxisSize: MainAxisSize.min,
+                            spacing: 4,
+                            children: [
+                              Text(
+                                'Academia',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headlineMedium
+                                    ?.copyWith(fontWeight: FontWeight.bold),
                               ),
-                    ),
-                    centerTitle: false,
-                    actions: [
-                      IconButton(
-                        onPressed: () => showSearch(
-                          context: context,
-                          delegate: GlobalSearchDelegate(),
-                        ),
-                        icon: const Icon(Icons.search),
-                        tooltip: 'Search',
-                      ),
-                      IconButton(
-                        onPressed: () => ProfileRoute().push(context),
-                        icon: const UserAvatar(
-                          scallopDepth: 4,
-                          numberOfScallops: 8,
-                        ),
-                        tooltip: 'Profile',
-                      ),
-                    ],
-                    bottom: _HomeTabBar(showBanner: showBanner),
-                  ),
+                              const Icon(
+                                Icons.arrow_drop_down_circle_outlined,
+                                size: 20,
+                              ),
+                            ],
+                          )
+                          .animate(
+                            onPlay: (controller) =>
+                                controller.repeat(reverse: true),
+                          )
+                          .scaleXY(
+                            begin: 1.0,
+                            end: 1.1,
+                            duration: 1000.ms,
+                            curve: Curves.elasticOut,
+                          ),
                 ),
-              ],
-              body: const TabBarView(
-                children: [LeaderboardHomepage(), FeedPage(), ShereheHome()],
+                centerTitle: false,
+                actions: [
+                  FutureBuilder(
+                    future: _premiumUpgradeEnabledFuture,
+                    builder: (context, flagSnapshot) {
+                      if (flagSnapshot.data != true) {
+                        return const SizedBox.shrink();
+                      }
+
+                      return FutureBuilder(
+                        future: _subscriptionStatusFuture,
+                        builder: (context, subscriptionSnapshot) {
+                          if (!_shouldShowPremiumUpgrade(
+                            subscriptionSnapshot.data,
+                          )) {
+                            return const SizedBox.shrink();
+                          }
+
+                          return IconButton(
+                            onPressed: _openBilling,
+                            icon: const Icon(Symbols.workspace_premium_rounded),
+                            tooltip: 'Upgrade',
+                          );
+                        },
+                      );
+                    },
+                  ),
+                  IconButton(
+                    onPressed: () => showSearch(
+                      context: context,
+                      delegate: GlobalSearchDelegate(),
+                    ),
+                    icon: const Icon(Icons.search),
+                    tooltip: 'Search',
+                  ),
+                  IconButton(
+                    onPressed: () => ProfileRoute().push(context),
+                    icon: const UserAvatar(
+                      scallopDepth: 4,
+                      numberOfScallops: 8,
+                    ),
+                    tooltip: 'Profile',
+                  ),
+                ],
+                bottom: _HomeTabBar(),
               ),
             ),
+          ],
+          body: const TabBarView(
+            children: [LeaderboardHomepage(), FeedPage(), ShereheHome()],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }
 
 class _HomeTabBar extends StatelessWidget implements PreferredSizeWidget {
-  const _HomeTabBar({required this.showBanner});
-
-  final bool showBanner;
+  const _HomeTabBar();
 
   static const double _tabBarHeight = 48;
-  static const double _bannerHeight = 80;
 
   @override
-  Size get preferredSize => Size.fromHeight(
-    showBanner ? _tabBarHeight + _bannerHeight : _tabBarHeight,
-  );
+  Size get preferredSize => Size.fromHeight(_tabBarHeight);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (showBanner) const PermissionNotificationAlertCard(),
         const TabBar.secondary(
           isScrollable: true,
           tabAlignment: TabAlignment.center,

@@ -4,7 +4,7 @@ import 'package:academia/gen/assets.gen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:icons_plus/icons_plus.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -139,7 +139,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             ).add(AuthSignInWithAppleEvent());
                           },
                           label: Text("Continue with Apple"),
-                          icon: Icon(FontAwesome.apple_brand),
+                          icon: FaIcon(FontAwesomeIcons.apple),
                         ),
 
                         FilledButton.icon(
@@ -150,7 +150,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             ).add(AuthSignInWithGoogleEvent());
                           },
                           label: Text("Continue with Google"),
-                          icon: Icon(FontAwesome.google_brand),
+                          icon: FaIcon(FontAwesomeIcons.google),
                         ),
                         SizedBox(height: 22),
                         Text.rich(

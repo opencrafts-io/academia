@@ -1,12 +1,14 @@
+import 'dart:async';
+
 import 'package:academia/features/institution/domain/domain.dart';
+import 'package:analytics/analytics.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:posthog_flutter/posthog_flutter.dart';
-import 'package:academia/config/config.dart';
-import 'package:academia/injection_container.dart';
+
+import 'institution_state.dart';
+export 'institution_state.dart';
 
 part 'institution_event.dart';
-part 'institution_state.dart';
 
 class InstitutionBloc extends Bloc<InstitutionEvent, InstitutionState> {
   final SearchForInstitutionByNameUsecase searchForInstitutionByNameUsecase;
@@ -15,7 +17,7 @@ class InstitutionBloc extends Bloc<InstitutionEvent, InstitutionState> {
   final GetAllCachedInstitutionsUsecase getAllCachedInstitutionsUsecase;
   final GetAllUserAccountInstitutionsUsecase
   getAllUserAccountInstitutionsUsecase;
-  final Posthog posthog = Posthog();
+  final AnalyticsTracker analyticsTracker;
 
   InstitutionBloc({
     required this.searchForInstitutionByNameUsecase,
@@ -23,7 +25,8 @@ class InstitutionBloc extends Bloc<InstitutionEvent, InstitutionState> {
     required this.getAllCachedInstitutionsUsecase,
     required this.addAccountToInstitution,
     required this.removeAccountFromInstitutionUsecase,
-  }) : super(InstitutionInitialState()) {
+    required this.analyticsTracker,
+  }) : super(const InstitutionState.initial()) {
     on<SearchInstitutionByNameEvent>(_onSearchInstitutionByName);
     on<LinkAccountToInstitutionEvent>(_onLinkAccountToInstitution);
     on<GetCachedUserInstitutionsEvent>(_onGetCachedUserInstitutions);
@@ -35,21 +38,18 @@ class InstitutionBloc extends Bloc<InstitutionEvent, InstitutionState> {
     SearchInstitutionByNameEvent event,
     Emitter<InstitutionState> emit,
   ) async {
-    emit(InstitutionLoadingState());
+    emit(const InstitutionState.loading());
     final result = await searchForInstitutionByNameUsecase(
       event.nameSearchTerm,
     );
-    result.fold((error) => emit(InstitutionErrorState(error: error.message)), (
+    result.fold((error) => emit(InstitutionState.error(error.message)), (
       institutions,
     ) {
-      if (sl<FlavorConfig>().isProduction) {
-        posthog.capture(
-          eventName: "institution_search",
-          properties: {"institution": event.nameSearchTerm},
-        );
-      }
+      unawaited(
+        analyticsTracker.track(AnalyticsEvent.institutionSearchCompleted()),
+      );
 
-      emit(InstitutionLoadedState(institutions: institutions));
+      emit(InstitutionState.loaded(institutions));
     });
   }
 
@@ -57,7 +57,7 @@ class InstitutionBloc extends Bloc<InstitutionEvent, InstitutionState> {
     LinkAccountToInstitutionEvent event,
     Emitter<InstitutionState> emit,
   ) async {
-    emit(InstitutionLoadingState());
+    emit(const InstitutionState.loading());
     final result = await addAccountToInstitution(
       AddAccountToInstitutionParams(
         accountID: event.accountID,
@@ -65,19 +65,9 @@ class InstitutionBloc extends Bloc<InstitutionEvent, InstitutionState> {
       ),
     );
 
-    result.fold((error) => emit(InstitutionErrorState(error: error.message)), (
-      link,
-    ) {
-      if (sl<FlavorConfig>().isProduction) {
-        posthog.capture(
-          eventName: "institution_link",
-          properties: {
-            "institution": event.institutionID,
-            "user": event.accountID,
-          },
-        );
-      }
-      emit(InstitutionLinkedState());
+    result.fold((error) => emit(InstitutionState.error(error.message)), (link) {
+      unawaited(analyticsTracker.track(AnalyticsEvent.institutionLinked()));
+      emit(const InstitutionState.linked());
     });
   }
 
@@ -85,7 +75,7 @@ class InstitutionBloc extends Bloc<InstitutionEvent, InstitutionState> {
     UnLinkAccountFromInstitutionEvent event,
     Emitter<InstitutionState> emit,
   ) async {
-    emit(InstitutionLoadingState());
+    emit(const InstitutionState.loading());
     final result = await removeAccountFromInstitutionUsecase(
       RemoveAccountFromInstitutionParams(
         accountID: event.accountID,
@@ -93,19 +83,9 @@ class InstitutionBloc extends Bloc<InstitutionEvent, InstitutionState> {
       ),
     );
 
-    result.fold((error) => emit(InstitutionErrorState(error: error.message)), (
-      link,
-    ) {
-      if (sl<FlavorConfig>().isProduction) {
-        posthog.capture(
-          eventName: "institution_unlink",
-          properties: {
-            "institution": event.institutionID,
-            "user": event.accountID,
-          },
-        );
-      }
-      emit(InstitutionLinkedState());
+    result.fold((error) => emit(InstitutionState.error(error.message)), (link) {
+      unawaited(analyticsTracker.track(AnalyticsEvent.institutionUnlinked()));
+      emit(const InstitutionState.linked());
     });
   }
 
@@ -113,12 +93,11 @@ class InstitutionBloc extends Bloc<InstitutionEvent, InstitutionState> {
     GetCachedUserInstitutionsEvent event,
     Emitter<InstitutionState> emit,
   ) async {
-    emit(InstitutionLoadingState());
+    emit(const InstitutionState.loading());
     final result = await getAllCachedInstitutionsUsecase(event.accountID);
     result.fold(
-      (error) => emit(InstitutionErrorState(error: error.message)),
-      (institutions) =>
-          emit(InstitutionLoadedState(institutions: institutions)),
+      (error) => emit(InstitutionState.error(error.message)),
+      (institutions) => emit(InstitutionState.loaded(institutions)),
     );
   }
 
@@ -126,12 +105,11 @@ class InstitutionBloc extends Bloc<InstitutionEvent, InstitutionState> {
     RefreshUserInstitutionsEvent event,
     Emitter<InstitutionState> emit,
   ) async {
-    emit(InstitutionLoadingState());
+    emit(const InstitutionState.loading());
     final result = await getAllUserAccountInstitutionsUsecase(event.accountID);
     result.fold(
-      (error) => emit(InstitutionErrorState(error: error.message)),
-      (institutions) =>
-          emit(InstitutionLoadedState(institutions: institutions)),
+      (error) => emit(InstitutionState.error(error.message)),
+      (institutions) => emit(InstitutionState.loaded(institutions)),
     );
   }
 }

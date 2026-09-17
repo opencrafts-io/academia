@@ -5,7 +5,7 @@ class CommentWidget extends StatelessWidget {
   final Comment reply;
   final Function(Comment) onReplyTo;
   final String Function(DateTime) formatTime;
-  final Function(Comment, bool)? onVote; // TODO: not yet implemented
+  final Function(Comment, bool)? onVote;
 
   const CommentWidget({
     super.key,

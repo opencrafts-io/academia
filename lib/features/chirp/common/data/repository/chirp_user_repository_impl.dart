@@ -25,14 +25,14 @@ class ChirpUserRepositoryImpl extends ChirpUserRepository {
 
     return remoteResult.fold(
       (failure) => left(failure),
-      (chirpUserData) async {
+      (chirpUserDto) async {
         final cacheResult = await chirpUserLocalDataSource
-            .createorUpdateChirpUser(chirpUserData);
+            .createorUpdateChirpUser(chirpUserDto.toData());
         return cacheResult.fold(
           (cacheFailure) =>
               left(cacheFailure),
           (cachedUser) =>
-              right(cachedUser.toEntity()), 
+              right(cachedUser.toEntity()),
         );
       },
     );
@@ -53,9 +53,9 @@ class ChirpUserRepositoryImpl extends ChirpUserRepository {
       username,
     );
 
-    return remoteResult.fold((failure) => left(failure), (chirpUserData) async {
+    return remoteResult.fold((failure) => left(failure), (chirpUserDto) async {
       final cacheResult = await chirpUserLocalDataSource
-          .createorUpdateChirpUser(chirpUserData);
+          .createorUpdateChirpUser(chirpUserDto.toData());
       return cacheResult.fold(
         (cacheFailure) => left(cacheFailure),
         (cachedUser) => right(cachedUser.toEntity()),

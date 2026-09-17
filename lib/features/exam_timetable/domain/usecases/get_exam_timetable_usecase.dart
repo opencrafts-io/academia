@@ -8,7 +8,7 @@ class GetExamTimetableUseCase {
   GetExamTimetableUseCase(this.repository);
 
   Future<Either<Failure, List<ExamTimetable>>> call({
-    required String institutionId,
+    required int institutionId,
     required List<String> courseCodes,
   }) {
     return repository.getExamTimetable(

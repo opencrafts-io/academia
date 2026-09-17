@@ -2,7 +2,6 @@ import 'package:academia/core/core.dart';
 import 'package:academia/features/chirp/posts/posts.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-// import 'package:dio/dio.dart';
 
 abstract class ChirpRepository {
   Future<Either<Failure, PaginatedData<Post>>> getFeedPosts({
@@ -51,4 +50,20 @@ abstract class ChirpRepository {
     required int page,
     required int pageSize,
   });
+
+  Future<Either<Failure, Post>> toggleLike({
+    required Post post,
+    required int voteValue,
+    required String voterId,
+  });
+
+  Future<Either<Failure, int>> checkIsLiked({required int postId});
+
+  Future<Either<Failure, Comment>> toggleCommentLike({
+    required Comment comment,
+    required int voteValue,
+    required String voterId,
+  });
+
+  Future<Either<Failure, int>> checkIsCommentLiked({required int commentId});
 }

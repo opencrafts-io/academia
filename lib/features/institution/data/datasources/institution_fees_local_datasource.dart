@@ -4,14 +4,14 @@ import 'package:academia/core/core.dart';
 import 'package:drift/drift.dart';
 
 abstract class InstitutionFeesLocalDatasource {
-  Stream<Either<Failure, List<InstitutionFeeTransactionData>>>
+  Stream<Either<Failure, List<InstitutionFeeTransaction>>>
   watchFeesTransactionForInstitution({required int institutionID});
 
-  Stream<Either<Failure, List<InstitutionFeeTransactionData>>>
+  Stream<Either<Failure, List<InstitutionFeeTransaction>>>
   watchAllFeesTransactions();
 
   Future<Either<Failure, void>> saveInstitutionFeeTransaction({
-    required InstitutionFeeTransactionData institutionFeeTransaction,
+    required InstitutionFeeTransaction institutionFeeTransaction,
   });
 }
 
@@ -22,9 +22,9 @@ class InstitutionFeesLocalDatasourceImpl
   InstitutionFeesLocalDatasourceImpl(this.db);
 
   @override
-  Stream<Either<Failure, List<InstitutionFeeTransactionData>>>
+  Stream<Either<Failure, List<InstitutionFeeTransaction>>>
   watchFeesTransactionForInstitution({required int institutionID}) {
-    final query = db.select(db.institutionFeeTransaction)
+    final query = db.select(db.institutionFeeTransactions)
       ..where((t) => t.institution.equals(institutionID))
       ..orderBy([
         (t) => OrderingTerm(expression: t.postingDate, mode: OrderingMode.desc),
@@ -40,9 +40,9 @@ class InstitutionFeesLocalDatasourceImpl
   }
 
   @override
-  Stream<Either<Failure, List<InstitutionFeeTransactionData>>>
+  Stream<Either<Failure, List<InstitutionFeeTransaction>>>
   watchAllFeesTransactions() {
-    final query = db.select(db.institutionFeeTransaction)
+    final query = db.select(db.institutionFeeTransactions)
       ..orderBy([
         (t) => OrderingTerm(expression: t.postingDate, mode: OrderingMode.desc),
       ]);
@@ -58,11 +58,11 @@ class InstitutionFeesLocalDatasourceImpl
 
   @override
   Future<Either<Failure, void>> saveInstitutionFeeTransaction({
-    required InstitutionFeeTransactionData institutionFeeTransaction,
+    required InstitutionFeeTransaction institutionFeeTransaction,
   }) async {
     try {
       await db
-          .into(db.institutionFeeTransaction)
+          .into(db.institutionFeeTransactions)
           .insertOnConflictUpdate(institutionFeeTransaction);
       return const Right(null);
     } catch (e) {

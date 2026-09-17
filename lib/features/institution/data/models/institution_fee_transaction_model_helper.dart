@@ -1,8 +1,7 @@
-import 'package:academia/database/database.dart';
+import 'package:academia/database/database.dart' as db;
 import 'package:academia/features/institution/institution.dart';
 
-extension InstitutionFeeTransactionModelHelper
-    on InstitutionFeeTransactionData {
+extension InstitutionFeeTransactionModelHelper on db.InstitutionFeeTransaction {
   InstitutionFeeTransaction toEntity() => InstitutionFeeTransaction(
     id: id,
     institution: institution,
@@ -18,7 +17,7 @@ extension InstitutionFeeTransactionModelHelper
 }
 
 extension InstitutionFeeTransactionHelper on InstitutionFeeTransaction {
-  InstitutionFeeTransactionData toData() => InstitutionFeeTransactionData(
+  db.InstitutionFeeTransaction toData() => db.InstitutionFeeTransaction(
     id: id,
     institution: institution,
     referenceNumber: referenceNumber,

@@ -1,18 +1,19 @@
 import 'package:academia/features/chirp/communities/domain/entities/community_users_enum.dart';
-import 'package:academia/features/chirp/communities/domain/entities/paginated_response.dart';
 import 'package:academia/features/chirp/communities/domain/usecases/get_community_members_usecase.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'community_users_state.dart';
+export 'community_users_state.dart';
+
 part 'community_users_event.dart';
-part 'community_users_state.dart';
 
 class CommunityUsersBloc extends Bloc<CommunityUsersEvent, CommunityUsersState> {
   final GetCommunityMembersUsecase getCommunityMembersUsecase;
 
   CommunityUsersBloc({
     required this.getCommunityMembersUsecase,
-  }) : super(CommunityUsersInitial()) {
+  }) : super(const CommunityUsersState.initial()) {
     on<FetchCommunityMembers>(_onFetchCommunityMembers);
   }
 
@@ -20,7 +21,7 @@ class CommunityUsersBloc extends Bloc<CommunityUsersEvent, CommunityUsersState> 
     FetchCommunityMembers event,
     Emitter<CommunityUsersState> emit,
   ) async {
-    emit(CommunityUsersLoading());
+    emit(const CommunityUsersState.loading());
 
     final result =
         await getCommunityMembersUsecase(
@@ -30,8 +31,9 @@ class CommunityUsersBloc extends Bloc<CommunityUsersEvent, CommunityUsersState> 
     );
 
     result.fold(
-      (failure) => emit(CommunityUsersFailure(failure.message)),
-      (paginatedResponse) => emit(CommunityUsersLoaded(paginatedResponse)),
+      (failure) => emit(CommunityUsersState.failure(failure.message)),
+      (paginatedResponse) =>
+          emit(CommunityUsersState.loaded(paginatedResponse)),
     );
   }
 }

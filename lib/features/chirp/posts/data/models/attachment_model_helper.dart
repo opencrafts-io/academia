@@ -1,7 +1,23 @@
-
-import 'package:academia/database/database.dart';
+import 'package:academia/database/database.dart' as db;
 import 'package:academia/features/chirp/posts/posts.dart';
-extension AttachmentEntityHelper on AttachmentData {
+
+extension AttachmentApiDtoMapper on AttachmentApiDto {
+  db.Attachment toData() {
+    return db.Attachment(
+      id: id,
+      postId: postId,
+      attachmentType: attachmentType,
+      name: name,
+      size: size,
+      file: file,
+      createdAt: createdAt,
+    );
+  }
+
+  Attachments toEntity() => toData().toEntity();
+}
+
+extension AttachmentEntityHelper on db.Attachment {
   Attachments toEntity() {
     return Attachments(
       id: id,
@@ -16,10 +32,10 @@ extension AttachmentEntityHelper on AttachmentData {
 }
 
 extension AttachmentHelper on Attachments {
-  AttachmentData toData({required String postId}) {
-    return AttachmentData(
+  db.Attachment toData({required int postId}) {
+    return db.Attachment(
       id: id,
-      postId: int.tryParse(postId) ?? 0,
+      postId: postId,
       attachmentType: attachmentType,
       name: name,
       size: size,
@@ -28,6 +44,3 @@ extension AttachmentHelper on Attachments {
     );
   }
 }
-
-
-

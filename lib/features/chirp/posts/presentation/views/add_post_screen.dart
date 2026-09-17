@@ -1,20 +1,15 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:academia/config/router/routes.dart';
-import 'package:academia/core/core.dart';
 import 'package:academia/features/features.dart';
-import 'package:animated_emoji/animated_emoji.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:academia/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:go_router/go_router.dart';
-import 'package:image_editor_plus/image_editor_plus.dart';
-import 'package:image_editor_plus/options.dart' as o;
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sliver_tools/sliver_tools.dart';
-import 'package:get_thumbnail_video/video_thumbnail.dart' as gt;
 
 class AddPostPage extends StatefulWidget {
   final Community? preselectedCommunity;
@@ -27,10 +22,10 @@ class AddPostPage extends StatefulWidget {
 
 class _AddPostPageState extends State<AddPostPage> {
   final picker = ImagePicker();
-  XFile? file;
   final List<XFile> attachments = [];
   Community? _selectedCommunity;
   String? authorId;
+  bool _isSubmitting = false;
 
   final TextEditingController _postTitleController = TextEditingController();
   final TextEditingController _postDescriptionController =
@@ -39,54 +34,69 @@ class _AddPostPageState extends State<AddPostPage> {
 
   final formState = GlobalKey<FormState>();
 
-  Future<void> _pickImage(ImageSource source) async {
+  /// Compresses [imageData] and writes it to a fresh temp file, without
+  /// forcing any crop - the original framing is preserved. Cropping is an
+  /// optional, on-demand action from the attachment carousel.
+  Future<XFile> _saveAttachment(Uint8List imageData) async {
+    final tempDir = await getTemporaryDirectory();
+    final filePath =
+        '${tempDir.path}/${DateTime.now().microsecondsSinceEpoch}.jpg';
+
+    final compressed = await FlutterImageCompress.compressWithList(
+      imageData,
+      quality: 80,
+      minWidth: 1080,
+      minHeight: 1080,
+    );
+
+    final file = File(filePath);
+    await file.writeAsBytes(compressed);
+    return XFile(file.path);
+  }
+
+  Future<void> _captureImage() async {
     try {
-      final pickedFile = await picker.pickImage(source: source);
+      final pickedFile = await picker.pickImage(source: ImageSource.camera);
       if (pickedFile == null) return;
 
-      final imageData = await pickedFile.readAsBytes();
+      final saved = await _saveAttachment(await pickedFile.readAsBytes());
+      setState(() => attachments.add(saved));
+    } catch (e) {
+      _showSnackBar("Couldn't process that image. Please try again.");
+    }
+  }
+
+  Future<void> _pickImagesFromGallery() async {
+    try {
+      final pickedFiles = await picker.pickMultiImage();
+      if (pickedFiles.isEmpty) return;
+
+      final saved = await Future.wait(
+        pickedFiles.map((f) async => _saveAttachment(await f.readAsBytes())),
+      );
+      setState(() => attachments.addAll(saved));
+    } catch (e) {
+      _showSnackBar("Couldn't process those images. Please try again.");
+    }
+  }
+
+  Future<void> _cropAttachment(int index) async {
+    try {
+      final original = await attachments[index].readAsBytes();
       if (!mounted) return;
 
-      final editedImage = await Navigator.push(
+      final cropped = await Navigator.push<Uint8List>(
         context,
         MaterialPageRoute(
-          builder: (context) => ImageCropper(
-            image: imageData,
-            availableRatios: [o.AspectRatio(title: "4:5", ratio: 4 / 5)],
-          ),
+          builder: (context) => ImageCropScreen(image: original),
         ),
       );
+      if (cropped == null) return;
 
-      final tempDir = await getTemporaryDirectory();
-      final filePath =
-          '${tempDir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
-
-      Uint8List finalImageBytes;
-
-      if (editedImage != null) {
-        finalImageBytes = await FlutterImageCompress.compressWithList(
-          editedImage,
-          quality: 75,
-          minWidth: 1080,
-          minHeight: 1080,
-        );
-      } else {
-        finalImageBytes = await FlutterImageCompress.compressWithList(
-          imageData,
-          quality: 70,
-          minWidth: 1080,
-          minHeight: 1080,
-        );
-      }
-
-      final file = File(filePath);
-      await file.writeAsBytes(finalImageBytes);
-
-      setState(() {
-        attachments.add(XFile(file.path));
-      });
+      final saved = await _saveAttachment(cropped);
+      setState(() => attachments[index] = saved);
     } catch (e) {
-      _showSnackBar("Failed to pick or edit image: $e");
+      _showSnackBar("Couldn't crop that image. Please try again.");
     }
   }
 
@@ -98,51 +108,40 @@ class _AddPostPageState extends State<AddPostPage> {
       if (!mounted) return;
 
       final trimmedVideoPath = await TrimVideoRoute(
-        videoPath: pickedFile.path,
-      ).push(context);
+        pickedFile.path,
+      ).push<String>(context);
 
       if (trimmedVideoPath != null) {
         setState(() => attachments.add(XFile(trimmedVideoPath)));
       }
     } catch (e) {
-      _showSnackBar("Failed to pick or trim video: $e");
-    }
-  }
-
-  Future<Uint8List?> _getAttachmentThumbnail(XFile attachment) async {
-    try {
-      if (attachment.path.contains('mp4')) {
-        final thumbnailBytes = await gt.VideoThumbnail.thumbnailData(
-          video: attachment.path,
-          quality: 25,
-        );
-        return thumbnailBytes;
-      } else {
-        return await attachment.readAsBytes();
-      }
-    } catch (e) {
-      _showSnackBar("Failed to generate thumbnail for post attachment");
-      return null;
+      _showSnackBar("Couldn't process that video. Please try again.");
     }
   }
 
   void _showSnackBar(String message) {
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message), behavior: SnackBarBehavior.floating),
     );
   }
 
   Future<void> _submitPost() async {
+    if (_isSubmitting) return;
     if (!formState.currentState!.validate()) {
-      _showSnackBar("Please provide required details before continuing");
+      _showSnackBar("Please fill in the required details");
       return;
     }
     if (_selectedCommunity == null) {
-      _showSnackBar("Please select a community to post in.");
+      _showSnackBar("Choose a community to post in");
       return;
     }
     if (!mounted) return;
-    context.read<FeedBloc>().add(
+
+    setState(() => _isSubmitting = true);
+
+    final feedBloc = context.read<FeedBloc>();
+    feedBloc.add(
       CreatePostEvent(
         title: _postTitleController.text.trim(),
         authorId: authorId ?? '',
@@ -152,15 +151,31 @@ class _AddPostPageState extends State<AddPostPage> {
       ),
     );
 
-    _showSnackBar("Submitting post...");
-    setState(() {
-      _postTitleController.clear();
-      _postDescriptionController.clear();
-      attachments.clear();
-      _selectedCommunity = null;
-    });
+    final result = await feedBloc.stream
+        .firstWhere((state) => state is PostCreated || state is PostCreateError)
+        .timeout(
+          const Duration(seconds: 120),
+          onTimeout: () => const FeedState.postCreateError(
+            "Post submission timed out. Please try again.",
+          ),
+        );
 
-    context.pop(true);
+    if (!mounted) return;
+
+    if (result is PostCreated) {
+      setState(() {
+        _isSubmitting = false;
+        _postTitleController.clear();
+        _postDescriptionController.clear();
+        attachments.clear();
+        _selectedCommunity = null;
+      });
+      _showSnackBar("Post created successfully!");
+      context.pop(true);
+    } else {
+      setState(() => _isSubmitting = false);
+      _showSnackBar("Failed to create post. Please try again.");
+    }
   }
 
   @override
@@ -169,11 +184,7 @@ class _AddPostPageState extends State<AddPostPage> {
 
     final userState = context.read<ProfileBloc>().state;
 
-    if (userState is ProfileLoadedState) {
-      authorId = userState.profile.id;
-    } else {
-      authorId = null;
-    }
+    authorId = userState is ProfileLoadedState ? userState.profile.id : null;
 
     if (widget.preselectedCommunity != null) {
       _selectedCommunity = widget.preselectedCommunity;
@@ -191,146 +202,79 @@ class _AddPostPageState extends State<AddPostPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
+          child: FilledButton.icon(
+            style: FilledButton.styleFrom(padding: const EdgeInsets.all(22)),
+            onPressed: _isSubmitting ? null : () => _submitPost(),
+            label: Text(_isSubmitting ? "Creating post..." : "Create post"),
+            icon: _isSubmitting
+                ? SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: colorScheme.onPrimary,
+                    ),
+                  )
+                : const Icon(Icons.add_rounded),
+          ),
+        ),
+      ),
       body: Form(
         key: formState,
         child: CustomScrollView(
           slivers: [
-            SliverAppBar.large(title: Text("Create Post")),
+            const SliverAppBar.large(title: Text("Create post")),
             SliverPadding(
-              padding: EdgeInsetsGeometry.all(12),
+              padding: const EdgeInsets.all(12),
               sliver: SliverToBoxAdapter(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SearchAnchor.bar(
+                    CommunitySearchField(
                       searchController: _searchController,
-                      barElevation: WidgetStateProperty.all(0),
-                      barHintText: "Select community",
-                      barHintStyle: WidgetStateProperty.all(
-                        Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          color: Theme.of(context).colorScheme.outline,
-                        ),
-                      ),
-                      barBackgroundColor: WidgetStateProperty.all(
-                        Theme.of(context).colorScheme.outlineVariant,
-                      ),
-                      barTextStyle: WidgetStatePropertyAll(
-                        Theme.of(context).textTheme.headlineSmall,
-                      ),
-
-                      onTap: () {
-                        context
-                            .read<CommunityListingCubit>()
-                            .getPostableCommunities(page: 1);
-                      },
-
-                      suggestionsBuilder: (context, controller) {
-                        if (controller.text.trim().isNotEmpty) {
-                          context
-                              .read<CommunityListingCubit>()
-                              .getPostableCommunities(
-                                page: 1,
-
-                                // searchTerm: controller.text.trim(),
-                              );
-                        }
-                        return [
-                          BlocBuilder<
-                            CommunityListingCubit,
-                            CommunityListingState
-                          >(
-                            builder: (context, state) {
-                              if (state is CommunityListingLoadingState) {
-                                return Column(
-                                  children: [SpinningScallopIndicator()],
-                                );
-                              } else if (state is CommunityListingLoadedState) {
-                                final communities = state.communities;
-                                if (communities.isEmpty) {
-                                  return const ListTile(
-                                    leading: AnimatedEmoji(AnimatedEmojis.sad),
-                                    title: Text(
-                                      "No communities found try joining one",
-                                    ),
-                                  );
-                                }
-                                return Column(
-                                  children: communities
-                                      .map(
-                                        (community) => ListTile(
-                                          onTap: () {
-                                            setState(() {
-                                              _selectedCommunity = community;
-                                              controller.closeView(
-                                                community.name,
-                                              );
-                                            });
-                                          },
-                                          leading: CircleAvatar(
-                                            backgroundImage:
-                                                community.profilePictureUrl ==
-                                                    null
-                                                ? null
-                                                : CachedNetworkImageProvider(
-                                                    community
-                                                        .profilePictureUrl!,
-                                                    errorListener: (error) {},
-                                                  ),
-                                            child:
-                                                community.profilePictureUrl ==
-                                                    null
-                                                ? Text(community.name[0])
-                                                : null,
-                                          ),
-                                          title: Text(community.name),
-                                          subtitle: Text(
-                                            community.description ??
-                                                'No description',
-                                          ),
-                                        ),
-                                      )
-                                      .toList(),
-                                );
-                              }
-
-                              return SizedBox.shrink();
-                            },
-                          ),
-                        ];
-                      },
+                      onCommunitySelected: (community) =>
+                          setState(() => _selectedCommunity = community),
                     ),
-                    SizedBox(height: 22),
-                    Text("Configure your post"),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 22),
+                    PostComposerSectionHeader(
+                      title: "Post details",
+                      icon: Assets.icons.pencil,
+                    ),
+                    const SizedBox(height: 8),
                     TextFormField(
                       controller: _postTitleController,
                       textCapitalization: TextCapitalization.sentences,
                       maxLength: 250,
-                      style: Theme.of(context).textTheme.headlineSmall,
+                      minLines: 1,
+                      maxLines: null,
+                      style: textTheme.headlineSmall,
                       validator: (input) {
                         if (input!.length < 3) {
-                          return "Please provide a longer title";
+                          return "Please add a title";
                         }
                         return null;
                       },
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       decoration: InputDecoration(
-                        prefixIcon: AnimatedEmoji(AnimatedEmojis.thinkingFace),
                         border: OutlineInputBorder(
                           borderSide: BorderSide.none,
                           borderRadius: BorderRadius.circular(12),
                         ),
-
-                        hintText: "Whats on your mind",
-                        hintStyle: Theme.of(context).textTheme.headlineSmall
-                            ?.copyWith(
-                              color: Theme.of(context).colorScheme.outline,
-                            ),
+                        hintText: "What's on your mind?",
+                        hintStyle: textTheme.headlineSmall?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                        ),
                       ),
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     TextFormField(
                       controller: _postDescriptionController,
                       maxLines: null,
@@ -338,20 +282,19 @@ class _AddPostPageState extends State<AddPostPage> {
                       textCapitalization: TextCapitalization.sentences,
                       validator: (input) {
                         if (input!.length < 3) {
-                          return "Please describe your post ..";
+                          return "Add a bit more detail";
                         }
                         return null;
                       },
                       autovalidateMode: AutovalidateMode.onUserInteraction,
-
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderSide: BorderSide.none,
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        hintText: "Talk about the issue alittle more..",
+                        hintText: "Add some details about your post",
                         filled: true,
-                        fillColor: Theme.of(context).colorScheme.outlineVariant,
+                        fillColor: colorScheme.surfaceContainerHigh,
                       ),
                     ),
                   ],
@@ -359,51 +302,22 @@ class _AddPostPageState extends State<AddPostPage> {
               ),
             ),
             SliverPadding(
-              padding: EdgeInsets.all(12),
+              padding: const EdgeInsets.all(12),
               sliver: SliverPinnedHeader(
                 child: Container(
-                  color: Theme.of(context).colorScheme.surface,
+                  color: colorScheme.surface,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Configure post attachments"),
-                      SizedBox(height: 22),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Column(
-                            children: [
-                              LabeledIconButton(
-                                onPressed: () async =>
-                                    _pickImage(ImageSource.camera),
-
-                                label: "Take photo",
-                                icon: Icons.photo_camera_outlined,
-                              ),
-                            ],
-                          ),
-                          LabeledIconButton(
-                            label: "Take Video",
-                            onPressed: () async =>
-                                _pickVideo(ImageSource.camera),
-                            icon: Icons.video_camera_back_outlined,
-                          ),
-
-                          LabeledIconButton(
-                            onPressed: () async =>
-                                _pickImage(ImageSource.gallery),
-                            label: "Photo Gallery",
-                            icon: Icons.add_photo_alternate_outlined,
-                          ),
-                          LabeledIconButton(
-                            label: "Video gallery",
-                            onPressed: () async =>
-                                _pickVideo(ImageSource.gallery),
-                            icon: Icons.video_library_outlined,
-                          ),
-                        ],
+                      PostComposerSectionHeader(title: "Add photos or videos"),
+                      const SizedBox(height: 16),
+                      AttachmentPickerRow(
+                        onTakePhoto: _captureImage,
+                        onTakeVideo: () => _pickVideo(ImageSource.camera),
+                        onPickPhoto: _pickImagesFromGallery,
+                        onPickVideo: () => _pickVideo(ImageSource.gallery),
                       ),
-                      Divider(),
+                      const Divider(),
                     ],
                   ),
                 ),
@@ -414,204 +328,22 @@ class _AddPostPageState extends State<AddPostPage> {
               maintainSize: false,
               maintainState: true,
               sliver: SliverPadding(
-                padding: EdgeInsetsGeometry.all(12),
+                padding: const EdgeInsets.all(12),
                 sliver: SliverToBoxAdapter(
-                  child: SizedBox(
-                    height: 300,
-                    child: CarouselView.weighted(
-                      enableSplash: true,
-                      onTap: (index) {
-                        showModalBottomSheet(
-                          showDragHandle: true,
-                          context: context,
-                          builder: (context) => Container(
-                            padding: EdgeInsets.all(12),
-                            child: Column(
-                              children: [
-                                Card.filled(
-                                  clipBehavior: Clip.hardEdge,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadiusGeometry.vertical(
-                                      top: Radius.circular(22),
-                                    ),
-                                  ),
-                                  margin: EdgeInsets.all(0),
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.primaryContainer,
-                                  child: ListTile(
-                                    leading: Icon(Icons.save),
-                                    title: Text("View Attachment"),
-                                    onTap: () async {},
-                                  ),
-                                ),
-
-                                Card.filled(
-                                  clipBehavior: Clip.hardEdge,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadiusGeometry.zero,
-                                  ),
-                                  margin: EdgeInsets.all(0),
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.primaryContainer,
-                                  child: ListTile(
-                                    leading: Icon(Icons.save),
-                                    title: Text("Save to gallery"),
-                                    onTap: () async {
-                                      await attachments[index].saveTo(
-                                        "academia_img_${DateTime.now().toString()}",
-                                      );
-                                      if (!context.mounted) return;
-                                      context.pop();
-                                      _showSnackBar("Successfully saved!");
-                                    },
-                                  ),
-                                ),
-                                Card.filled(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadiusGeometry.vertical(
-                                      bottom: Radius.circular(22),
-                                    ),
-                                  ),
-
-                                  margin: EdgeInsets.all(0),
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.errorContainer,
-                                  child: ListTile(
-                                    leading: Icon(Icons.delete),
-                                    title: Text("Remove selected attachment"),
-                                    onTap: () {
-                                      setState(() {
-                                        attachments.removeAt(index);
-                                      });
-                                      if (!context.mounted) return;
-                                      context.pop();
-                                      _showSnackBar(
-                                        "Item successfully removed",
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                      consumeMaxWeight: true,
-                      itemSnapping: true,
-                      shrinkExtent: 50,
-                      flexWeights: [1, 5, 1],
-                      children: attachments.map((attachment) {
-                        return FutureBuilder(
-                          future: _getAttachmentThumbnail(
-                            attachment,
-                          ), // Use the helper function here
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                    ConnectionState.done &&
-                                snapshot.hasData) {
-                              return Stack(
-                                fit: StackFit.expand,
-                                children: [
-                                  // Display the image or video thumbnail
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    child: Image.memory(
-                                      snapshot.data!,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                  if (attachment.path.endsWith('mp4'))
-                                    Align(
-                                      alignment: Alignment.center,
-                                      child: Icon(
-                                        Icons.play_circle_outline,
-                                        size: 32,
-                                      ),
-                                    ),
-                                ],
-                              );
-                            } else if (snapshot.hasError) {
-                              return const Center(
-                                child: Text('Error loading attachment'),
-                              );
-                            } else {
-                              return const Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            }
-                          },
-                        );
-                      }).toList(),
-                    ),
+                  child: AttachmentPreviewCarousel(
+                    attachments: attachments,
+                    onRemove: (index) =>
+                        setState(() => attachments.removeAt(index)),
+                    onCrop: _cropAttachment,
+                    onMessage: _showSnackBar,
                   ),
                 ),
               ),
             ),
-
-            SliverPadding(
-              padding: EdgeInsets.all(12),
-              sliver: SliverToBoxAdapter(
-                child: Align(
-                  alignment: Alignment.center,
-                  child: FilledButton.icon(
-                    style: FilledButton.styleFrom(padding: EdgeInsets.all(22)),
-                    onPressed: () => _submitPost(),
-                    label: Text("Create post"),
-                    icon: Icon(Icons.add),
-                  ),
-                ),
-              ),
-            ),
+            const SliverToBoxAdapter(child: SizedBox(height: 12)),
           ],
         ),
       ),
-    );
-  }
-}
-
-class LabeledIconButton extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final VoidCallback onPressed;
-
-  const LabeledIconButton({
-    super.key,
-    required this.icon,
-    required this.label,
-    required this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onPressed,
-      borderRadius: BorderRadius.circular(8.0),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, size: 24.0),
-            const SizedBox(height: 4.0),
-            Text(label, style: TextStyle(fontSize: 12.0)),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class ViewAttachmentPage extends StatelessWidget {
-  const ViewAttachmentPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("View attachment")),
-      body: Center(child: Text("Hello")),
     );
   }
 }

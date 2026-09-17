@@ -1,9 +1,11 @@
-import 'package:academia/config/flavor.dart';
+import 'dart:async';
+
 import 'package:academia/core/core.dart';
 import 'package:academia/features/auth/auth.dart';
+import 'package:analytics/analytics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:posthog_flutter/posthog_flutter.dart';
-import 'package:academia/injection_container.dart';
+import 'package:logger/logger.dart';
+import 'package:notifications/notifications.dart';
 
 import 'package:equatable/equatable.dart';
 
@@ -19,7 +21,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final SignInAsReviewUsecase signInAsReviewUsecase;
   final SignInWithProviderUsecase signInWithProviderUsecase;
   final SignOutUsecase signOutUsecase;
-  final Posthog posthog = Posthog();
+  final AnalyticsTracker analyticsTracker;
+  final NotificationIdentityService notificationIdentityService;
 
   AuthBloc({
     required this.signInWithGoogle,
@@ -30,6 +33,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required this.signInWithAppleUsecase,
     required this.signInWithProviderUsecase,
     required this.signOutUsecase,
+    required this.analyticsTracker,
+    required this.notificationIdentityService,
   }) : super(const AuthInitial()) {
     // Register event handlers
     on<AuthSignInAsReviewerEvent>(_onSignInAsReviewer);
@@ -54,13 +59,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       (failure) =>
           emit(AuthError(message: (failure as AuthenticationFailure).message)),
       (token) {
-        // Log successfull login
-        if (sl<FlavorConfig>().isProduction) {
-          posthog.capture(
-            eventName: "user_login",
-            properties: {'login_type': 'Google', "successful": 1},
-          );
-        }
+        _recordSignIn(AnalyticsSignInMethod.provider);
         emit(AuthAuthenticated(token: token));
       },
     );
@@ -78,13 +77,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       (failure) =>
           emit(AuthError(message: (failure as AuthenticationFailure).message)),
       (token) {
-        // Log successfull login
-        if (sl<FlavorConfig>().isProduction) {
-          posthog.capture(
-            eventName: "user_login",
-            properties: {'login_type': 'Google', "successful": 1},
-          );
-        }
+        _recordSignIn(AnalyticsSignInMethod.spotify);
 
         emit(AuthAuthenticated(token: token));
       },
@@ -103,13 +96,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       (failure) =>
           emit(AuthError(message: (failure as AuthenticationFailure).message)),
       (token) {
-        // Log successfull login
-        if (sl<FlavorConfig>().isProduction) {
-          posthog.capture(
-            eventName: "user_login",
-            properties: {'login_type': 'Review Sign In', "successful": 1},
-          );
-        }
+        _recordSignIn(AnalyticsSignInMethod.reviewer);
 
         emit(AuthAuthenticated(token: token));
       },
@@ -128,13 +115,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       (failure) =>
           emit(AuthError(message: (failure as AuthenticationFailure).message)),
       (token) {
-        // Log successfull login
-        if (sl<FlavorConfig>().isProduction) {
-          posthog.capture(
-            eventName: "user_login",
-            properties: {'login_type': 'Google', "successful": 1},
-          );
-        }
+        _recordSignIn(AnalyticsSignInMethod.google);
 
         emit(AuthAuthenticated(token: token));
       },
@@ -153,13 +134,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       (failure) =>
           emit(AuthError(message: (failure as AuthenticationFailure).message)),
       (token) {
-        // Log successfull login
-        if (sl<FlavorConfig>().isProduction) {
-          posthog.capture(
-            eventName: "user_login",
-            properties: {'login_type': 'Apple', "successful": 1},
-          );
-        }
+        _recordSignIn(AnalyticsSignInMethod.apple);
 
         emit(AuthAuthenticated(token: token));
       },
@@ -170,21 +145,52 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthCheckStatusEvent event,
     Emitter<AuthState> emit,
   ) async {
-    emit(const AuthLoading()); // Show loading state
+    Logger().i("-- Starting app launch token refresh");
+    emit(const AuthLoading());
     final result = await getPreviousAuthState(NoParams());
-    result.fold(
-      (failure) =>
+
+    await result.fold(
+      (failure) async =>
           emit(AuthError(message: (failure as AuthenticationFailure).message)),
-      (tokens) {
-        if (tokens.any(
+      (tokens) async {
+        if (tokens.isEmpty) {
+          Logger().i("No tokens found. New user or cleared session.");
+          return emit(AuthUnauthenticated());
+        }
+        final targetToken = tokens.firstWhere(
+          (token) => token.provider == "verisafe",
+          orElse: () => tokens.first,
+        );
+
+        final hasValidVerisafeToken = tokens.any(
           (token) =>
               token.provider == "verisafe" &&
-              (token.refreshExpiresAt.isAfter(DateTime.now())),
-        )) {
-          // -- Attempt to refresh verisafe's token
-          refreshVerisafeTokenUsecase(tokens.first);
-          return emit(AuthAuthenticated(token: tokens.first));
+              token.refreshExpiresAt.isAfter(DateTime.now()),
+        );
+
+        if (hasValidVerisafeToken) {
+          final refreshResult = await refreshVerisafeTokenUsecase(targetToken);
+          Logger().i("-- Completed app launch token refresh");
+          return refreshResult.fold(
+            (failure) {
+              // If it's a network issue, let them in anyway using their cached token!
+              if (failure is NetworkFailure) {
+                Logger().i(
+                  "Token refresh failed due to offline status. Proceeding offline.",
+                );
+                return emit(AuthAuthenticated(token: targetToken));
+              }
+              Logger().e(
+                "Token refresh rejected by server: ${failure.message}",
+              );
+              return emit(AuthUnauthenticated());
+            },
+            (newTokens) {
+              return emit(AuthAuthenticated(token: newTokens));
+            },
+          );
         }
+
         return emit(AuthUnauthenticated());
       },
     );
@@ -202,9 +208,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(AuthError(message: failure.message));
       },
       (success) {
-        posthog.capture(eventName: "user_logout");
+        unawaited(analyticsTracker.track(AnalyticsEvent.signOutCompleted()));
+        unawaited(analyticsTracker.reset());
+        unawaited(notificationIdentityService.clear());
         emit(AuthUnauthenticated());
       },
     );
+  }
+
+  void _recordSignIn(AnalyticsSignInMethod method) {
+    unawaited(analyticsTracker.track(AnalyticsEvent.signInCompleted(method)));
   }
 }

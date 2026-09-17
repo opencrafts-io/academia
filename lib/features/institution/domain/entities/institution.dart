@@ -1,19 +1,16 @@
-class Institution {
-  final int institutionId;
-  final String name;
-  final List<String>? webPages;
-  final List<String>? domains;
-  final String? alphaTwoCode;
-  final String? country;
-  final String? stateProvince;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  Institution({
-    required this.institutionId,
-    required this.name,
-    required this.webPages,
-    required this.domains,
-    required this.alphaTwoCode,
-    required this.country,
-    this.stateProvince,
-  });
+part 'institution.freezed.dart';
+
+@freezed
+abstract class Institution with _$Institution {
+  const factory Institution({
+    required int institutionId,
+    required String name,
+    required List<String>? webPages,
+    required List<String>? domains,
+    required String? alphaTwoCode,
+    required String? country,
+    String? stateProvince,
+  }) = _Institution;
 }

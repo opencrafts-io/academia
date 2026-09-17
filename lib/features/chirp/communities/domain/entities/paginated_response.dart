@@ -1,15 +1,14 @@
 import 'package:academia/features/chirp/communities/domain/entities/community_user.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class PaginatedResponse {
-  final int count;
-  final String? next;
-  final String? previous;
-  final List<CommunityUser> users;
+part 'paginated_response.freezed.dart';
 
-  const PaginatedResponse({
-    required this.count,
-    this.next,
-    this.previous,
-    required this.users,
-  });
+@freezed
+abstract class PaginatedResponse with _$PaginatedResponse {
+  const factory PaginatedResponse({
+    required int count,
+    String? next,
+    String? previous,
+    required List<CommunityUser> users,
+  }) = _PaginatedResponse;
 }

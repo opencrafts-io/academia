@@ -1,17 +1,21 @@
+import 'package:academia/config/router/routes.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/features/sherehe/domain/domain.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class EventTicketsPage extends StatefulWidget {
   final String eventId;
-  final Event event;
+  final Event? event;
+  final List<Attendee>? attendees;
 
   const EventTicketsPage({
     super.key,
     required this.eventId,
-    required this.event,
+    this.event,
+    this.attendees,
   });
 
   @override
@@ -25,14 +29,20 @@ class _EventTicketsPageState extends State<EventTicketsPage> {
   @override
   void initState() {
     super.initState();
-    context.read<UserEventTicketsBloc>().add(
-      FetchUserEventTickets(
-        eventId: widget.eventId,
-        page: _currentPage,
-        limit: 10,
-      ),
-    );
-    _scrollController.addListener(_onScroll);
+    if (widget.attendees != null) {
+      context.read<UserEventTicketsBloc>().add(
+        FetchUserAttendeeTickets(attendees: widget.attendees!),
+      );
+    } else {
+      context.read<UserEventTicketsBloc>().add(
+        FetchUserEventTickets(
+          eventId: widget.eventId,
+          page: _currentPage,
+          limit: 10,
+        ),
+      );
+      _scrollController.addListener(_onScroll);
+    }
   }
 
   void _onScroll() {
@@ -70,6 +80,16 @@ class _EventTicketsPageState extends State<EventTicketsPage> {
                 pinned: true,
                 floating: true,
                 title: const Text("My Tickets For This Event"),
+                leading: IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () {
+                    if (context.canPop()) {
+                      context.pop();
+                    } else {
+                      HomeRoute().go(context);
+                    }
+                  },
+                ),
               ),
 
               // Header text
@@ -151,8 +171,10 @@ class _EventTicketsPageState extends State<EventTicketsPage> {
                         return TicketCardWidget(
                           ticket: item.ticket!,
                           quantity: item.ticketQuantity,
-                          event: widget.event,
+                          event: widget.event ?? item.event,
                           attendeeId: item.id,
+                          ticketStartDate: item.ticket?.startDate,
+                          ticketEndDate: item.ticket?.endDate,
                           mode: TicketStubMode.eventTicketPurchased,
                         );
                       },
@@ -170,9 +192,11 @@ class _EventTicketsPageState extends State<EventTicketsPage> {
                       return TicketCardWidget(
                         ticket: item.ticket!,
                         quantity: item.ticketQuantity,
-                        event: widget.event,
+                        event: widget.event ?? item.event,
                         attendeeId: item.id,
                         mode: TicketStubMode.eventTicketPurchased,
+                        ticketStartDate: item.ticket?.startDate,
+                        ticketEndDate: item.ticket?.endDate,
                       );
                     },
                   ),
@@ -196,9 +220,11 @@ class _EventTicketsPageState extends State<EventTicketsPage> {
                       return TicketCardWidget(
                         ticket: item.ticket!,
                         quantity: item.ticketQuantity,
-                        event: widget.event,
+                        event: widget.event ?? item.event,
                         attendeeId: item.id,
                         mode: TicketStubMode.eventTicketPurchased,
+                        ticketStartDate: item.ticket?.startDate,
+                        ticketEndDate: item.ticket?.endDate,
                       );
                     },
                   ),
@@ -230,6 +256,46 @@ class _EventTicketsPageState extends State<EventTicketsPage> {
                     ),
                   ),
                 ),
+              ] else if (state is FetchUserAttendeeTicketsSuccess) ...[
+                if (state.attendees.isEmpty)
+                  // EMPTY LIST UI
+                  const SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.confirmation_number_outlined, size: 60),
+                          SizedBox(height: 16),
+                          Text(
+                            "No tickets to show at the moment.",
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                else
+                  SliverPadding(
+                    padding: const EdgeInsets.all(16.0),
+                    sliver: SliverList.separated(
+                      itemCount: state.attendees.length,
+                      separatorBuilder: (_, _) => const SizedBox(height: 20),
+                      itemBuilder: (context, index) {
+                        final item = state.attendees[index];
+
+                        return TicketCardWidget(
+                          ticket: item.ticket!,
+                          quantity: item.ticketQuantity,
+                          event: item.event,
+                          attendeeId: item.id,
+                          mode: TicketStubMode.eventTicketPurchased,
+                          ticketStartDate: item.ticket?.startDate,
+                          ticketEndDate: item.ticket?.endDate,
+                        );
+                      },
+                    ),
+                  ),
               ] else ...[
                 const SliverFillRemaining(child: SizedBox.shrink()),
               ],

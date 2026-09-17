@@ -1,12 +1,16 @@
 import 'dart:convert';
+
 import 'package:academia/background_task/background_task.dart';
-import 'package:academia/features/notifications/notifications.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/foundation.dart';
+import 'package:notifications/notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workmanager/workmanager.dart';
 
 class DailyLoginBackgroundTask extends BackgroundTask {
+  DailyLoginBackgroundTask(this._scheduler);
+
+  final LocalNotificationScheduler _scheduler;
+
   @override
   String? get taskTag => "io.opencrafts.academia.task.daily_login";
 
@@ -71,35 +75,26 @@ class DailyLoginBackgroundTask extends BackgroundTask {
       body = "You're on a roll! Open the app now to keep your streak alive.";
     }
 
-    AwesomeNotifications().createNotification(
-      content: NotificationContent(
+    await _scheduler.schedule(
+      LocalNotificationRequest(
         id: 10, // Use a consistent ID for streak reminders
-        channelKey: NotificationChannelConfig.alerts.channelKey,
+        channel: LocalNotificationChannel.updates,
         title: title,
         body: body,
-        summary: "Daily Streak Reminder",
-        category: NotificationCategory.Reminder,
-        // Make the notification stand out
-        largeIcon: "resource://drawable/academia",
-        // IMPORTANT: No more 'locked: true'. This is a standard,
-        // dismissible notification.
-        autoDismissible: true,
+        summary: 'Daily Streak Reminder',
+        category: LocalNotificationCategory.reminder,
+        actions: const [
+          LocalNotificationAction(id: 'OPEN_APP', label: 'Keep My Streak!'),
+          LocalNotificationAction(
+            id: 'DISMISS',
+            label: 'Maybe Later',
+            type: LocalNotificationActionType.dismiss,
+          ),
+        ],
+        presentation: const LocalNotificationPresentation(
+          largeIcon: 'resource://drawable/academia',
+        ),
       ),
-      actionButtons: [
-        NotificationActionButton(
-          key: 'OPEN_APP',
-          label: 'Keep My Streak!',
-          // This will launch the app when tapped
-          actionType: ActionType.Default,
-        ),
-        NotificationActionButton(
-          key: 'DISMISS',
-          label: 'Maybe Later',
-          // This will just dismiss the notification
-          actionType: ActionType.DismissAction,
-          isDangerousOption: true,
-        ),
-      ],
     );
 
     return true;

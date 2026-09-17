@@ -1,8 +1,7 @@
 import 'package:academia/features/chirp/memberships/memberships.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:equatable/equatable.dart';
 
-part 'chirp_community_membership_state.dart';
+export 'chirp_community_membership_state.dart';
 
 class ChirpCommunityMembershipCubit
     extends Cubit<ChirpCommunityMembershipState> {
@@ -16,7 +15,7 @@ class ChirpCommunityMembershipCubit
     required this.joinCommunityUsecase,
     required this.leaveCommunityUsecase,
     required this.getPersonalCommunityMembershipForCommunityUsecase,
-  }) : super(ChirpCommunityMembershipInitialState());
+  }) : super(const ChirpCommunityMembershipState.initial());
 
   Future<void> getPersonalCommunityMembershipForCommunity({
     required int communityID,
@@ -31,10 +30,10 @@ class ChirpCommunityMembershipCubit
 
     result.fold(
       (failure) {
-        emit(ChirpCommunityMembershipErrorState(error: failure.message));
+        emit(ChirpCommunityMembershipState.error(error: failure.message));
       },
       (membership) {
-        emit(ChirpCommunityMembershipLoadedState(membership: membership));
+        emit(ChirpCommunityMembershipState.loaded(membership: membership));
       },
     );
   }
@@ -44,10 +43,12 @@ class ChirpCommunityMembershipCubit
 
     result.fold(
       (failure) =>
-          emit(ChirpCommunityMembershipErrorState(error: failure.message)),
+          emit(ChirpCommunityMembershipState.error(error: failure.message)),
       (communityMembership) {
         emit(
-          ChirpCommunityMembershipLoadedState(membership: communityMembership),
+          ChirpCommunityMembershipState.loaded(
+            membership: communityMembership,
+          ),
         );
       },
     );
@@ -58,11 +59,13 @@ class ChirpCommunityMembershipCubit
 
     result.fold(
       (failure) {
-        emit(ChirpCommunityMembershipErrorState(error: failure.message));
+        emit(ChirpCommunityMembershipState.error(error: failure.message));
       },
       (ok) {
         emit(
-          ChirpCommunityMembershipCommunityLeftState(communityID: communityID),
+          ChirpCommunityMembershipState.communityLeft(
+            communityID: communityID,
+          ),
         );
       },
     );

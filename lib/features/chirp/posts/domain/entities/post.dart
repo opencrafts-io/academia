@@ -1,84 +1,26 @@
 import 'package:academia/features/chirp/communities/communities.dart';
 import 'package:academia/features/chirp/posts/domain/domain.dart';
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class Post extends Equatable {
-  final int id;
-  final Community community; 
-  final String authorId;
-  final String title;
-  final String content;
-  final int upvotes;
-  final int downvotes;
-  final List<Attachments> attachments;
-  final int viewsCount;
-  final int commentCount;
-  final List<Comment> comments;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+part 'post.freezed.dart';
 
-  const Post({
-    required this.id,
-    required this.community,
-    required this.authorId,
-    required this.title,
-    required this.content,
-    required this.upvotes,
-    required this.downvotes,
-    this.attachments = const [],
-    required this.viewsCount,
-    required this.commentCount,
-    this.comments = const [],
-    required this.createdAt,
-    required this.updatedAt,
-  });
-
-  Post copyWith({
-    int? id,
-    Community? community,
-    String? authorId,
-    String? title,
-    String? content,
-    int? upvotes,
-    int? downvotes,
-    List<Attachments>? attachments,
-    int? viewsCount,
-    int? commentCount,
-    List<Comment>? comments,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-  }) {
-    return Post(
-      id: id ?? this.id,
-      community: community ?? this.community,
-      authorId: authorId ?? this.authorId,
-      title: title ?? this.title,
-      content: content ?? this.content,
-      upvotes: upvotes ?? this.upvotes,
-      downvotes: downvotes ?? this.downvotes,
-      attachments: attachments ?? this.attachments,
-      viewsCount: viewsCount ?? this.viewsCount,
-      commentCount: commentCount ?? this.commentCount,
-      comments: comments ?? this.comments,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-    );
-  }
-
-  @override
-  List<Object?> get props => [
-    id,
-    community,
-    authorId,
-    title,
-    content,
-    upvotes,
-    downvotes,
-    attachments,
-    viewsCount,
-    commentCount,
-    comments,
-    createdAt,
-    updatedAt,
-  ];
+@freezed
+abstract class Post with _$Post {
+  const factory Post({
+    required int id,
+    required Community community,
+    required String authorId,
+    required String title,
+    required String content,
+    required int upvotes,
+    required int downvotes,
+    // 1 = upvoted, -1 = downvoted, 0 = no vote
+    @Default(0) int myVote,
+    @Default([]) List<Attachments> attachments,
+    required int viewsCount,
+    required int commentCount,
+    @Default([]) List<Comment> comments,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+  }) = _Post;
 }

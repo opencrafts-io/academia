@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:academia/config/config.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:academia/gen/assets.gen.dart';
 

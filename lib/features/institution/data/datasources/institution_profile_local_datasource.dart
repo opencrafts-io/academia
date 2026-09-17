@@ -8,7 +8,7 @@ class InstitutionProfileLocalDatasource {
 
   InstitutionProfileLocalDatasource({required this.appDataBase});
 
-  /// Watches a specific [InstitutionProfileData] by its ID.
+  /// Watches a specific [InstitutionProfile] by its ID.
   ///
   /// The stream emits:
   /// - `Right<InstitutionProfile?>` containing the profile if it exists
@@ -19,13 +19,13 @@ class InstitutionProfileLocalDatasource {
   ///
   /// The stream remains active and will emit new values whenever the
   /// profile is updated.
-  Stream<Either<Failure, InstitutionProfileData?>> watchProfileById({
+  Stream<Either<Failure, InstitutionProfile?>> watchProfileById({
     required int profileId,
   }) {
-    return (appDataBase.select(appDataBase.institutionProfile)
+    return (appDataBase.select(appDataBase.institutionProfiles)
           ..where((profile) => profile.id.equals(profileId)))
         .watchSingleOrNull()
-        .map<Either<Failure, InstitutionProfileData?>>((data) {
+        .map<Either<Failure, InstitutionProfile?>>((data) {
           return Right(data);
         })
         .handleError(
@@ -38,7 +38,7 @@ class InstitutionProfileLocalDatasource {
         );
   }
 
-  /// Watches a specific [InstitutionProfileData] by its
+  /// Watches a specific [InstitutionProfile] by its
   /// linked [userID] and [institutionID].
   ///
   /// The stream emits:
@@ -51,18 +51,18 @@ class InstitutionProfileLocalDatasource {
   /// The stream remains active and will emit new values whenever the
   /// profile is updated.
 
-  Stream<Either<Failure, InstitutionProfileData?>>
+  Stream<Either<Failure, InstitutionProfile?>>
   watchProfileByUserAndInstitution({
     required String userID,
     required int institutionID,
   }) {
-    return (appDataBase.select(appDataBase.institutionProfile)..where(
+    return (appDataBase.select(appDataBase.institutionProfiles)..where(
           (profile) =>
               profile.userID.equals(userID) &
               profile.institutionID.equals(institutionID),
         ))
         .watchSingleOrNull()
-        .map<Either<Failure, InstitutionProfileData?>>((data) {
+        .map<Either<Failure, InstitutionProfile?>>((data) {
           return Right(data);
         })
         .handleError(
@@ -75,7 +75,7 @@ class InstitutionProfileLocalDatasource {
         );
   }
 
-  /// Watches all [InstitutionProfileData]s for a given user.
+  /// Watches all [InstitutionProfile]s for a given user.
   ///
   /// The stream emits:
   /// - `Right<List<InstitutionProfile>>` containing all profiles for the user
@@ -88,14 +88,14 @@ class InstitutionProfileLocalDatasource {
   ///
   /// The stream remains active and will emit new values whenever the
   /// user's profile set changes.
-  Stream<Either<Failure, List<InstitutionProfileData>>> watchProfilesByUser({
+  Stream<Either<Failure, List<InstitutionProfile>>> watchProfilesByUser({
     required String userID,
   }) {
-    return (appDataBase.select(appDataBase.institutionProfile)
+    return (appDataBase.select(appDataBase.institutionProfiles)
           ..where((profile) => profile.userID.equals(userID))
           ..orderBy([(profile) => OrderingTerm.desc(profile.createdAt)]))
         .watch()
-        .map<Either<Failure, List<InstitutionProfileData>>>((profiles) {
+        .map<Either<Failure, List<InstitutionProfile>>>((profiles) {
           return Right(profiles);
         })
         .handleError(
@@ -122,15 +122,15 @@ class InstitutionProfileLocalDatasource {
   ///
   /// The stream remains active and will emit new values whenever the
   /// student's profile set changes.
-  Stream<Either<Failure, InstitutionProfileData?>> watchLatestProfileByStudent({
+  Stream<Either<Failure, InstitutionProfile?>> watchLatestProfileByStudent({
     required String studentId,
   }) {
-    return (appDataBase.select(appDataBase.institutionProfile)
+    return (appDataBase.select(appDataBase.institutionProfiles)
           ..where((profile) => profile.studentID.equals(studentId))
           ..orderBy([(profile) => OrderingTerm.desc(profile.createdAt)])
           ..limit(1))
         .watchSingleOrNull()
-        .map<Either<Failure, InstitutionProfileData?>>((data) {
+        .map<Either<Failure, InstitutionProfile?>>((data) {
           return Right(data);
         })
         .handleError(
@@ -143,7 +143,7 @@ class InstitutionProfileLocalDatasource {
         );
   }
 
-  /// Persists an [InstitutionProfileData] to the local cache.
+  /// Persists an [InstitutionProfile] to the local cache.
   ///
   /// If a profile with the same primary or unique constraint already exists,
   /// it will be updated using an insert-on-conflict strategy.
@@ -156,11 +156,11 @@ class InstitutionProfileLocalDatasource {
   /// any stream updates directly, but may trigger listeners watching
   /// the underlying table.
   Future<Either<Failure, void>> saveInstitutionProfile({
-    required InstitutionProfileData institutionProfile,
+    required InstitutionProfile institutionProfile,
   }) async {
     try {
       await appDataBase
-          .into(appDataBase.institutionProfile)
+          .into(appDataBase.institutionProfiles)
           .insertOnConflictUpdate(institutionProfile);
       return right(null);
     } catch (e) {
@@ -181,12 +181,12 @@ class InstitutionProfileLocalDatasource {
   ///
   /// This method performs a batch write operation for efficiency.
   Future<Either<Failure, void>> saveInstitutionProfiles({
-    required List<InstitutionProfileData> institutionProfiles,
+    required List<InstitutionProfile> institutionProfiles,
   }) async {
     try {
       await appDataBase.batch((batch) {
         batch.insertAllOnConflictUpdate(
-          appDataBase.institutionProfile,
+          appDataBase.institutionProfiles,
           institutionProfiles,
         );
       });
@@ -208,7 +208,7 @@ class InstitutionProfileLocalDatasource {
   }) async {
     try {
       await (appDataBase.delete(
-        appDataBase.institutionProfile,
+        appDataBase.institutionProfiles,
       )..where((profile) => profile.id.equals(profileId))).go();
       return right(null);
     } catch (e) {
@@ -218,7 +218,7 @@ class InstitutionProfileLocalDatasource {
     }
   }
 
-  /// Deletes all [InstitutionProfileData]s for a given user.
+  /// Deletes all [InstitutionProfile]s for a given user.
   ///
   /// Returns:
   /// - `Right(null)` when all profiles are deleted successfully
@@ -228,7 +228,7 @@ class InstitutionProfileLocalDatasource {
   }) async {
     try {
       await (appDataBase.delete(
-        appDataBase.institutionProfile,
+        appDataBase.institutionProfiles,
       )..where((profile) => profile.userID.equals(userID))).go();
       return right(null);
     } catch (e) {
@@ -241,14 +241,14 @@ class InstitutionProfileLocalDatasource {
     }
   }
 
-  /// Clears all [InstitutionProfileData]s from the local cache.
+  /// Clears all [InstitutionProfile]s from the local cache.
   ///
   /// Returns:
   /// - `Right(null)` when all profiles are cleared successfully
   /// - `Left<CacheFailure>` if the clear operation fails
   Future<Either<Failure, void>> clearAllProfiles() async {
     try {
-      await appDataBase.delete(appDataBase.institutionProfile).go();
+      await appDataBase.delete(appDataBase.institutionProfiles).go();
       return right(null);
     } catch (e) {
       return left(

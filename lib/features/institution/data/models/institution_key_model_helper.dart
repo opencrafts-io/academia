@@ -1,7 +1,7 @@
 import 'package:academia/features/institution/domain/domain.dart';
-import 'package:academia/database/database.dart';
+import 'package:academia/database/database.dart' as db;
 
-extension InstitutionKeyModelHelper on InstitutionKeyData {
+extension InstitutionKeyModelHelper on db.InstitutionKey {
   InstitutionKey toEntity() => InstitutionKey(
     keySets: keySets,
     commandId: commandID,
@@ -11,7 +11,7 @@ extension InstitutionKeyModelHelper on InstitutionKeyData {
 }
 
 extension InstitutionKeyEntityHelper on InstitutionKey {
-  InstitutionKeyData toData() => InstitutionKeyData(
+  db.InstitutionKey toData() => db.InstitutionKey(
     createdAt: createdAt,
     keySets: keySets,
     commandID: commandId,

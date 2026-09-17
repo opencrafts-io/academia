@@ -10,7 +10,7 @@ class InstitutionKeyLocalDatasource {
   /// Watches the most recently created [InstitutionKey] for a given institution.
   ///
   /// The stream emits:
-  /// - `Right<InstitutionKeyData?>` containing the latest key if one exists
+  /// - `Right<InstitutionKey?>` containing the latest key if one exists
   /// - `Right(null)` if the institution has no associated keys
   ///
   /// The underlying query orders keys by `createdAt` in descending order and
@@ -21,15 +21,15 @@ class InstitutionKeyLocalDatasource {
   ///
   /// The stream remains active and will emit new values whenever the
   /// institution’s key set changes.
-  Stream<Either<Failure, InstitutionKeyData?>> watchKeyForInstitution({
+  Stream<Either<Failure, InstitutionKey?>> watchKeyForInstitution({
     required int institutionID,
   }) {
-    return (appDataBase.select(appDataBase.institutionKey)
+    return (appDataBase.select(appDataBase.institutionKeys)
           ..where((ins) => ins.institutionID.equals(institutionID))
           ..orderBy([(ins) => OrderingTerm.desc(ins.createdAt)])
           ..limit(1))
         .watchSingleOrNull()
-        .map<Either<Failure, InstitutionKeyData?>>((data) {
+        .map<Either<Failure, InstitutionKey?>>((data) {
           return Right(data);
         })
         .handleError(
@@ -42,30 +42,29 @@ class InstitutionKeyLocalDatasource {
         );
   }
 
-  /// Persists an [InstitutionKeyData] to the local cache.
-  ///
-  /// If a key with the same primary or unique constraint already exists,
-  /// it will be updated using an insert-on-conflict strategy.
-  ///
-  /// Returns:
-  /// - `Right(null)` when the operation completes successfully
-  /// - `Left<CacheFailure>` if the insert or update fails
-  ///
-  /// This method performs a single write operation and does not emit
-  /// any stream updates directly, but may trigger listeners watching
-  /// the underlying table.
-  Future<Either<Failure, void>> saveInstitutionKey({
-    required InstitutionKeyData institutionKey,
+  /// Blanks the `keySets` value of a legacy plaintext row, without deleting
+  /// the row itself. Used once a row's key set has been migrated to secure
+  /// storage, so the plaintext credentials don't linger on disk. This is a
+  /// plain data update (`UPDATE ... SET key_sets = ...`), not a schema
+  /// migration.
+  Future<Either<Failure, void>> blankKeySets({
+    required int institutionID,
+    required String commandID,
   }) async {
     try {
-      await appDataBase
-          .into(appDataBase.institutionKey)
-          .insertOnConflictUpdate(institutionKey);
-
+      await (appDataBase.update(appDataBase.institutionKeys)..where(
+            (k) =>
+                k.institutionID.equals(institutionID) &
+                k.commandID.equals(commandID),
+          ))
+          .write(const InstitutionKeysCompanion(keySets: Value({})));
       return right(null);
     } catch (e) {
       return left(
-        CacheFailure(message: "Failed to save institution key", error: e),
+        CacheFailure(
+          message: "Failed to clear the legacy institution key cache",
+          error: e,
+        ),
       );
     }
   }

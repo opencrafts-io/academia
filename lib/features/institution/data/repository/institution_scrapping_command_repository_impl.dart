@@ -15,6 +15,53 @@ class InstitutionScrappingCommandRepositoryImpl
   });
 
   @override
+  Future<Either<Failure, ScrappingCommand?>> fetchInstitutionScrappingCommand({
+    required int institutionID,
+  }) async {
+    final cachedResult = await institutionCommandLocalDatasource
+        .getCachedInstitutionCommand(institutionID: institutionID);
+
+    final cached = cachedResult.fold((_) => null, (data) => data);
+    if (cached != null) {
+      // Answer instantly from cache and let the network catch up in the
+      // background - don't make navigation wait on it, and don't let it
+      // change the answer we just gave for this call.
+      _refreshInstitutionScrappingCommandInBackground(institutionID);
+      return right(cached.toEntity());
+    }
+
+    // Nothing cached yet (e.g. the first time this institution is ever
+    // checked) - there's nothing to answer instantly with, so this one
+    // time we do have to wait on the network.
+    final result = await institutionCommandRemoteDatasource
+        .fetchInstitutionScrappingCommandByInstitution(
+          institutionID: institutionID,
+        );
+
+    return result.fold((failure) => left(failure), (dto) {
+      institutionCommandLocalDatasource.saveInstitutionCommand(
+        institutionCommand: dto.toData(),
+      );
+      return right(dto.toEntity());
+    });
+  }
+
+  void _refreshInstitutionScrappingCommandInBackground(int institutionID) {
+    institutionCommandRemoteDatasource
+        .fetchInstitutionScrappingCommandByInstitution(
+          institutionID: institutionID,
+        )
+        .then((result) {
+          result.fold(
+            (_) {},
+            (dto) => institutionCommandLocalDatasource.saveInstitutionCommand(
+              institutionCommand: dto.toData(),
+            ),
+          );
+        });
+  }
+
+  @override
   Stream<Either<Failure, ScrappingCommand?>>
   getInstitutionScrappingCommandByInstitutionID({
     required int institutionID,
@@ -26,8 +73,9 @@ class InstitutionScrappingCommandRepositoryImpl
         .then((result) {
           result.fold(
             (error) {},
-            (command) => institutionCommandLocalDatasource
-                .saveInstitutionCommand(institutionCommand: command),
+            (dto) => institutionCommandLocalDatasource.saveInstitutionCommand(
+              institutionCommand: dto.toData(),
+            ),
           );
         });
 

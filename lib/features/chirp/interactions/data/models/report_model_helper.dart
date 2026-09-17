@@ -1,7 +1,25 @@
-import 'package:academia/database/database.dart';
+import 'package:academia/database/database.dart' as db;
+import 'package:academia/features/chirp/interactions/data/dtos/report_api_dto.dart';
 import 'package:academia/features/chirp/interactions/domain/entities/report.dart';
 
-extension ReportModelHelper on ReportData {
+extension ReportApiDtoMapper on ReportApiDto {
+  db.Report toData() => db.Report(
+    id: id,
+    reportType: reportType,
+    reportedUser: reportedUser,
+    reportedPost: reportedPost,
+    reportedComment: reportedComment,
+    reportedCommunity: reportedCommunity,
+    reason: reason,
+    status: status,
+    createdAt: createdAt,
+    updatedAt: updatedAt,
+  );
+
+  Report toEntity() => toData().toEntity();
+}
+
+extension ReportModelHelper on db.Report {
   Report toEntity() {
     return Report(
       id: id,
@@ -15,8 +33,8 @@ extension ReportModelHelper on ReportData {
 }
 
 extension ReportEntityHelper on Report {
-  ReportData toData() {
-    return ReportData(
+  db.Report toData() {
+    return db.Report(
       id: id,
       reportType: reportType,
       reportedUser: null,

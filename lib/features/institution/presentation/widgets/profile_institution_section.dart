@@ -11,18 +11,18 @@ class ProfileInstitutionSection extends StatelessWidget {
     return BlocConsumer<InstitutionBloc, InstitutionState>(
       listener: (context, state) {},
       builder: (context, state) {
-        if (state is InstitutionLoadedState) {
-          if (state.institutions.isEmpty) {
-            return SizedBox();
-          }
-          return Text(state.institutions.first.name);
-        } else if (state is InstitutionErrorState) {
-          return Text(state.error);
-        }
-
-        return Padding(
-          padding: EdgeInsets.all(12),
-          child: SpinningScallopIndicator(),
+        return state.maybeWhen(
+          loaded: (institutions) {
+            if (institutions.isEmpty) {
+              return SizedBox();
+            }
+            return Text(institutions.first.name);
+          },
+          error: (error) => Text(error),
+          orElse: () => Padding(
+            padding: EdgeInsets.all(12),
+            child: SpinningScallopIndicator(),
+          ),
         );
       },
     );

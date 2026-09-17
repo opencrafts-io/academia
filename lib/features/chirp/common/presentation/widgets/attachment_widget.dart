@@ -1,40 +1,67 @@
 import 'package:academia/features/chirp/posts/domain/entities/attachments.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:chewie/chewie.dart';
-import 'package:video_player/video_player.dart';
 
 class AttachmentWidget extends StatelessWidget {
   final Attachments attachment;
+  final double width;
+  final double height;
+  final BoxFit fit;
+  final Color? backgroundColor;
+  final BorderRadius borderRadius;
 
-  const AttachmentWidget({super.key, required this.attachment});
+  const AttachmentWidget({
+    super.key,
+    required this.attachment,
+    this.width = 80,
+    this.height = 80,
+    this.fit = BoxFit.cover,
+    this.backgroundColor,
+    this.borderRadius = const BorderRadius.all(Radius.circular(12)),
+  });
 
   @override
   Widget build(BuildContext context) {
     Widget child;
-    switch (attachment.attachmentType) {
+    switch (attachment.attachmentType.trim().toLowerCase()) {
       case 'image':
-        child = _ImagePreview(url: attachment.file);
+        child = _ImagePreview(
+          url: attachment.file,
+          fit: fit,
+          backgroundColor: backgroundColor,
+          borderRadius: borderRadius,
+        );
         break;
       case 'video':
-        child = _VideoPreview(url: attachment.file);
+        child = _VideoPreview(
+          url: attachment.file,
+          backgroundColor: backgroundColor,
+          borderRadius: borderRadius,
+        );
         break;
       case 'file':
-        child = _FilePreview(url: attachment.file, fileName: attachment.name);
+        child = _FilePreview(
+          url: attachment.file,
+          fileName: attachment.name,
+          backgroundColor: backgroundColor,
+          borderRadius: borderRadius,
+        );
         break;
       default:
         child = const SizedBox.shrink();
     }
-    return SizedBox(width: 80, height: 80, child: child);
+    return SizedBox(width: width, height: height, child: child);
   }
 }
 
 // --- Fullscreen Viewers ---
 
-class _FullScreenImageViewer extends StatelessWidget {
+class FullScreenImageViewer extends StatelessWidget {
   final String url;
-  const _FullScreenImageViewer({required this.url});
+  const FullScreenImageViewer({super.key, required this.url});
 
   @override
   Widget build(BuildContext context) {
@@ -63,48 +90,48 @@ class _FullScreenImageViewer extends StatelessWidget {
   }
 }
 
-class _FullScreenVideoViewer extends StatefulWidget {
+class FullScreenVideoViewer extends StatefulWidget {
   final String url;
-  const _FullScreenVideoViewer({required this.url});
+  const FullScreenVideoViewer({super.key, required this.url});
 
   @override
-  State<_FullScreenVideoViewer> createState() => _FullScreenVideoViewerState();
+  State<FullScreenVideoViewer> createState() => _FullScreenVideoViewerState();
 }
 
-class _FullScreenVideoViewerState extends State<_FullScreenVideoViewer> {
-  late VideoPlayerController _videoPlayerController;
-  late ChewieController _chewieController;
+class _FullScreenVideoViewerState extends State<FullScreenVideoViewer> {
+  late CachedVideoPlayerPlus _cachedPlayer;
+  ChewieController? _chewieController;
   bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _videoPlayerController = VideoPlayerController.networkUrl(
-      Uri.parse(widget.url),
-    );
-    _chewieController = ChewieController(
-      videoPlayerController: _videoPlayerController,
-      autoPlay: true,
-      looping: false,
-      showControls: true,
-      allowFullScreen: true,
-      materialProgressColors: ChewieProgressColors(
-        playedColor: Theme.of(context).colorScheme.primary,
-      ),
-    );
-    _videoPlayerController.initialize().then((_) {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
+    // Shares the same on-disk cache as the muted inline feed preview - if
+    // the user already watched the preview while scrolling, opening
+    // fullscreen reuses that download instead of fetching it again.
+    _cachedPlayer = CachedVideoPlayerPlus.networkUrl(Uri.parse(widget.url));
+    _cachedPlayer.initialize().then((_) {
+      if (!mounted) return;
+      setState(() {
+        _isLoading = false;
+        _chewieController = ChewieController(
+          videoPlayerController: _cachedPlayer.controller,
+          autoPlay: true,
+          looping: false,
+          showControls: true,
+          allowFullScreen: true,
+          materialProgressColors: ChewieProgressColors(
+            playedColor: Theme.of(context).colorScheme.primary,
+          ),
+        );
+      });
     });
   }
 
   @override
   void dispose() {
-    _videoPlayerController.dispose();
-    _chewieController.dispose();
+    _cachedPlayer.dispose();
+    _chewieController?.dispose();
     super.dispose();
   }
 
@@ -121,9 +148,9 @@ class _FullScreenVideoViewerState extends State<_FullScreenVideoViewer> {
         ),
       ),
       body: Center(
-        child: _isLoading
+        child: _isLoading || _chewieController == null
             ? const CircularProgressIndicator()
-            : Chewie(controller: _chewieController),
+            : Chewie(controller: _chewieController!),
       ),
     );
   }
@@ -132,7 +159,10 @@ class _FullScreenVideoViewerState extends State<_FullScreenVideoViewer> {
 // --- Preview Widgets ---
 
 abstract class _PreviewWidget extends StatelessWidget {
-  const _PreviewWidget();
+  const _PreviewWidget({this.backgroundColor, required this.borderRadius});
+
+  final Color? backgroundColor;
+  final BorderRadius borderRadius;
 
   Widget buildPreview(BuildContext context);
   void onPreviewTap(BuildContext context);
@@ -144,12 +174,19 @@ abstract class _PreviewWidget extends StatelessWidget {
       child: Container(
         clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            width: 1.0,
-            color: Theme.of(context).colorScheme.outlineVariant,
-          ),
+          color:
+              backgroundColor ??
+              Theme.of(context).colorScheme.surfaceContainerHighest,
+          borderRadius: borderRadius,
+          // A custom background (e.g. black, for full-bleed feed media) reads
+          // as an intentional frame on its own - the default surface tint
+          // needs the outline border to read as a bounded preview box.
+          border: backgroundColor == null
+              ? Border.all(
+                  width: 1.0,
+                  color: Theme.of(context).colorScheme.outlineVariant,
+                )
+              : null,
         ),
         child: buildPreview(context),
       ),
@@ -159,13 +196,19 @@ abstract class _PreviewWidget extends StatelessWidget {
 
 class _ImagePreview extends _PreviewWidget {
   final String url;
-  const _ImagePreview({required this.url});
+  final BoxFit fit;
+  const _ImagePreview({
+    required this.url,
+    this.fit = BoxFit.cover,
+    super.backgroundColor,
+    required super.borderRadius,
+  });
 
   @override
   void onPreviewTap(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => _FullScreenImageViewer(url: url)),
+      MaterialPageRoute(builder: (_) => FullScreenImageViewer(url: url)),
     );
   }
 
@@ -173,7 +216,7 @@ class _ImagePreview extends _PreviewWidget {
   Widget buildPreview(BuildContext context) {
     return CachedNetworkImage(
       imageUrl: url,
-      fit: BoxFit.cover,
+      fit: fit,
       placeholder: (context, url) => const SizedBox.shrink(),
       errorWidget: (context, url, error) => Icon(
         Icons.broken_image,
@@ -186,13 +229,17 @@ class _ImagePreview extends _PreviewWidget {
 
 class _VideoPreview extends _PreviewWidget {
   final String url;
-  const _VideoPreview({required this.url});
+  const _VideoPreview({
+    required this.url,
+    super.backgroundColor,
+    required super.borderRadius,
+  });
 
   @override
   void onPreviewTap(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => _FullScreenVideoViewer(url: url)),
+      MaterialPageRoute(builder: (_) => FullScreenVideoViewer(url: url)),
     );
   }
 
@@ -223,7 +270,12 @@ class _VideoPreview extends _PreviewWidget {
 class _FilePreview extends _PreviewWidget {
   final String url;
   final String fileName;
-  const _FilePreview({required this.url, required this.fileName});
+  const _FilePreview({
+    required this.url,
+    required this.fileName,
+    super.backgroundColor,
+    required super.borderRadius,
+  });
 
   @override
   Future<void> onPreviewTap(BuildContext context) async {

@@ -1,0 +1,22 @@
+name: notifications
+description: Academia notification delivery subsystem.
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ^3.13.2
+  flutter: ">=1.17.0"
+
+dependencies:
+  awesome_notifications: ^0.11.0
+  awesome_notifications_core: ^0.10.1
+  flutter:
+    sdk: flutter
+  get_it: ^9.2.1
+  injectable: ^3.0.0
+  onesignal_flutter: ^5.3.4
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter

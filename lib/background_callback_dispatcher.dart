@@ -1,10 +1,11 @@
 import 'package:academia/background_task/background_task.dart';
 import 'package:academia/background_task/course_alert_background_task.dart';
 import 'package:academia/background_task/daily_login_background_task.dart';
-import 'package:academia/config/config.dart';
+import 'package:core/config/flavor.dart';
 import 'package:academia/features/course/course.dart';
 import 'package:academia/features/features.dart';
 import 'package:flutter/foundation.dart';
+import 'package:notifications/notifications.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:academia/injection_container.dart' as di;
 
@@ -21,20 +22,28 @@ void backgroundCallbackDispatcher() {
         isBackground: true,
       );
 
-      final notificationRepository = di.sl<NotificationRepository>();
-      await notificationRepository.initializeLocalNotifications([
-        NotificationChannelConfig.courseAlerts,
-      ]);
+      await di.sl.allReady();
 
-      final dailyLogin = DailyLoginBackgroundTask();
+      final scheduler = di.sl<LocalNotificationScheduler>();
+      final dailyLogin = DailyLoginBackgroundTask(scheduler);
       final courseAlert = CourseAlertBackgroundTask(
+        scheduler,
         timetableEntryRepository: di.sl<TimetableEntryRepository>(),
         courseRepository: di.sl<CourseRepository>(),
+      );
+
+      final todoItemSync = TodoItemSyncBackgroundTask(
+        todoItemRepository: di.sl(),
+      );
+      final todoListSync = TodoListSyncBackgroundTask(
+        todoListRepository: di.sl(),
       );
 
       final Map<String, BackgroundTask> taskRegistry = {
         courseAlert.taskName: courseAlert,
         dailyLogin.taskName: dailyLogin,
+        todoItemSync.taskName: todoItemSync,
+        todoListSync.taskName: todoListSync,
       };
 
       final taskToExecute = taskRegistry[task];
@@ -73,6 +82,33 @@ Future<void> registerDefaultBackgroundTasks() async {
     constraints: Constraints(
       requiresBatteryNotLow: false,
       networkType: NetworkType.notRequired,
+    ),
+  );
+
+  // Register TodoList sync task - runs every 1 hour
+  await Workmanager().registerPeriodicTask(
+    'io.opencrafts.academia.todolist.sync',
+    'io.opencrafts.academia.todolist.sync',
+    backoffPolicy: BackoffPolicy.exponential,
+    backoffPolicyDelay: const Duration(minutes: 15),
+    frequency: const Duration(hours: 1),
+    existingWorkPolicy: ExistingPeriodicWorkPolicy.replace,
+    constraints: Constraints(
+      requiresBatteryNotLow: true,
+      networkType: NetworkType.connected,
+    ),
+  );
+
+  await Workmanager().registerPeriodicTask(
+    'io.opencrafts.academia.todoitem.sync',
+    'io.opencrafts.academia.todoitem.sync',
+    backoffPolicy: BackoffPolicy.exponential,
+    backoffPolicyDelay: const Duration(minutes: 15),
+    frequency: const Duration(hours: 1),
+    existingWorkPolicy: ExistingPeriodicWorkPolicy.replace,
+    constraints: Constraints(
+      requiresBatteryNotLow: true,
+      networkType: NetworkType.connected,
     ),
   );
 }

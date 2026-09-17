@@ -3,7 +3,7 @@
 <plist version="1.0">
 	<dict>
 		<key>NSAppleMusicUsageDescription</key>
-		<string>we need access to your media library to allow you to upload or play audio files within the platform.</string>
+		<string>Academia requires access to your media library to allow you to upload, attach, and play audio files and study materials within the app.</string>
 		<key>CADisableMinimumFrameDurationOnPhone</key>
 		<true/>
 		<key>CFBundleDevelopmentRegion</key>
@@ -68,28 +68,34 @@
 			<string>UIInterfaceOrientationLandscapeRight</string>
 		</array>
 		<key>NSCameraUsageDescription</key>
-		<string>We need access to your camera to take pictures.</string>
+		<string>Academia requires camera access to allow you to take profile pictures, scan QR codes, and capture photos to attach to posts and assignments.</string>
 		<key>NSLocationWhenInUseUsageDescription</key>
-		<string>We use your location to ensure you get feeds and stories around you</string>
+		<string>Academia uses your location while the app is in use to display campus updates, local student feeds, and events near your university.</string>
+		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+		<string>Academia uses your location to send location-relevant notifications and display campus updates, local student feeds, and events near your university.</string>
 		<key>NSLocationUsageDescription</key>
-		<string>Used to provide notification service to you</string>
+		<string>Academia uses your location to deliver location-relevant notifications about nearby campus updates, events, and announcements.</string>
 		<key>NSMicrophoneUsageDescription</key>
-		<string>Used to capture audio</string>
+		<string>Academia requires microphone access to record audio notes, create video attachments with audio, and participate in voice features.</string>
 		<key>NSPhotoLibraryUsageDescription</key>
-		<string>We need access to your photo library to save images.</string>
+		<string>Academia requires access to your photo library to let you select and upload profile photos, share image attachments in posts, and save media to your device.</string>
+		<key>NSPhotoLibraryAddUsageDescription</key>
+		<string>Academia requires permission to save photos and media attachments directly to your photo library.</string>
 		<key>NSCalendarsUsageDescription</key>
-		<string>To sync your calendar with Academia</string>
+		<string>Academia requires access to your calendar to sync class timetables, exam dates, and academic deadline reminders.</string>
 		<key>NSCalendarsFullAccessUsageDescription</key>
-		<string>To enable you to add tasks and events to your calendar via Academia</string>
+		<string>Academia requires full calendar access to let you create, edit, and sync assignment deadlines and timetable events directly in your calendar.</string>
+		<key>NSRemindersUsageDescription</key>
+		<string>Academia requires access to your reminders to sync study tasks, assignment deadlines, and personal study reminders.</string>
+		<key>NSRemindersFullAccessUsageDescription</key>
+		<string>Academia requires full access to your reminders to let you create and manage assignment deadlines and study tasks in your iOS reminders.</string>
 		<key>NSUserTrackingUsageDescription</key>
-		<string>Keep track of app logs to ensure best performance possible for your device</string>
+		<string>Academia uses app tracking to deliver personalized content, measure application performance, and provide relevant announcements and features.</string>
 		<key>PermissionGroupNotification</key>
-		<string>Bringing you notifications relevant to you</string>
+		<string>Academia requires notification permission to alert you about assignment deadlines, timetable updates, and messages from peers.</string>
 		<key>com.posthog.posthog.AUTO_INIT</key>
 		<false/>
-		<key>NSUserTrackingUsageDescription</key>
-		<string>This identifier will be used to deliver personalized ads to you.</string>
-    		<key>NSAppTransportSecurity</key>
+		<key>NSAppTransportSecurity</key>
 		<dict>
 			<key>NSAllowsArbitraryLoads</key>
 			<true/>

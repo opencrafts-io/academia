@@ -1,31 +1,16 @@
-part of 'scrapping_command_bloc.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:magnet/magnet.dart';
 
-abstract class ScrappingCommandState extends Equatable {
-  final ScrappingCommand? command;
+part 'scrapping_command_state.freezed.dart';
 
-  const ScrappingCommandState({this.command});
-
-  @override
-  List<Object?> get props => [command];
-}
-
-class ScrappingCommandInitial extends ScrappingCommandState {
-  const ScrappingCommandInitial() : super(command: null);
-}
-
-class ScrappingCommandLoading extends ScrappingCommandState {
-  const ScrappingCommandLoading() : super(command: null);
-}
-
-class ScrappingCommandLoaded extends ScrappingCommandState {
-  const ScrappingCommandLoaded({required super.command});
-}
-
-class ScrappingCommandError extends ScrappingCommandState {
-  final String message;
-
-  const ScrappingCommandError({required this.message, required super.command});
-
-  @override
-  List<Object?> get props => [message, command];
+@freezed
+sealed class ScrappingCommandState with _$ScrappingCommandState {
+  const factory ScrappingCommandState.initial() = _Initial;
+  const factory ScrappingCommandState.loading() = _Loading;
+  const factory ScrappingCommandState.loaded(ScrappingCommand? command) =
+      _Loaded;
+  const factory ScrappingCommandState.error({
+    required String message,
+    ScrappingCommand? command,
+  }) = _Error;
 }

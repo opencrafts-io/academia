@@ -9,6 +9,8 @@ class Ticket extends Equatable {
   final int? ticketFor;
   final List<int>? institutionIds;
   final String? scope;
+  final String? startDate;
+  final String? endDate;
 
   const Ticket({
     this.id,
@@ -19,6 +21,8 @@ class Ticket extends Equatable {
     this.ticketFor,
     this.institutionIds,
     this.scope,
+    this.startDate,
+    this.endDate,
   });
 
   Ticket copyWith({
@@ -30,6 +34,8 @@ class Ticket extends Equatable {
     int? ticketFor,
     List<int>? institutionIds,
     String? scope,
+    String? startDate,
+    String? endDate,
   }) {
     return Ticket(
       id: id ?? this.id,
@@ -40,6 +46,8 @@ class Ticket extends Equatable {
       ticketFor: ticketFor ?? this.ticketFor,
       institutionIds: institutionIds ?? this.institutionIds,
       scope: scope ?? this.scope,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
     );
   }
 
@@ -53,6 +61,8 @@ class Ticket extends Equatable {
     ticketFor,
     institutionIds,
     scope,
+    startDate,
+    endDate,
   ];
 
   @override

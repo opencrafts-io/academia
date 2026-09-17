@@ -1,8 +1,7 @@
 import 'package:academia/features/features.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-part 'community_listing_state.dart';
+export 'community_listing_state.dart';
 
 /// CommunityBloc
 /// Manages all community related functionality e.g performing
@@ -20,7 +19,7 @@ class CommunityListingCubit extends Cubit<CommunityListingState> {
   CommunityListingCubit({
     required this.getPostableCommunitiesUsecase,
     required this.searchForCommunityUsecase,
-  }) : super(CommunityListingInitialState());
+  }) : super(const CommunityListingState.initial());
 
   bool _isFirstPage(int page) => page == 1;
 
@@ -31,7 +30,7 @@ class CommunityListingCubit extends Cubit<CommunityListingState> {
     if (_isFirstPage(page)) {
       _currentPage = 1;
       _currentSearchTerm = null; // Clear any active search term
-      emit(CommunityListingLoadingState());
+      emit(const CommunityListingState.loading());
     } else {
       if (state is CommunityListingLoadedState) {
         emit(
@@ -58,7 +57,7 @@ class CommunityListingCubit extends Cubit<CommunityListingState> {
             ),
           );
         } else {
-          emit(CommunityListingErrorState(message: failure.message));
+          emit(CommunityListingState.error(message: failure.message));
         }
         _isFetching = false;
       },
@@ -76,7 +75,7 @@ class CommunityListingCubit extends Cubit<CommunityListingState> {
         final bool hasReachedMax = newCommunities.length < _pageSize;
 
         emit(
-          CommunityListingLoadedState(
+          CommunityListingState.loaded(
             communities: allCommunities,
             hasReachedMax: hasReachedMax,
             isLoadingMore: false,
@@ -101,7 +100,7 @@ class CommunityListingCubit extends Cubit<CommunityListingState> {
     if (_isFirstPage(page) || searchTerm != _currentSearchTerm) {
       _currentPage = 1;
       _currentSearchTerm = searchTerm;
-      emit(CommunityListingLoadingState());
+      emit(const CommunityListingState.loading());
     } else {
       if (state is CommunityListingLoadedState) {
         emit(
@@ -131,7 +130,7 @@ class CommunityListingCubit extends Cubit<CommunityListingState> {
             ),
           );
         } else {
-          emit(CommunityListingErrorState(message: failure.message));
+          emit(CommunityListingState.error(message: failure.message));
         }
       },
       (newCommunities) {
@@ -151,7 +150,7 @@ class CommunityListingCubit extends Cubit<CommunityListingState> {
         final bool hasReachedMax = newCommunities.length < _pageSize;
 
         emit(
-          CommunityListingLoadedState(
+          CommunityListingState.loaded(
             communities: allCommunities,
             hasReachedMax: hasReachedMax,
             isLoadingMore: false,

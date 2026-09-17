@@ -5,7 +5,7 @@ import 'package:academia/features/exam_timetable/presentation/bloc/exam_timetabl
 import 'package:academia/features/exam_timetable/domain/entity/exam_timetable.dart';
 
 class ExamTimetableSearchScreen extends StatefulWidget {
-  final String institutionId;
+  final int institutionId;
 
   const ExamTimetableSearchScreen({super.key, required this.institutionId});
 
@@ -19,6 +19,20 @@ class _ExamTimetableSearchScreenState extends State<ExamTimetableSearchScreen> {
   final Set<String> _selectedExams = {};
   List<ExamTimetable> _searchResults = [];
   bool _isSearching = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(() {
+      if (_searchController.text.trim().isEmpty && _isSearching) {
+        setState(() {
+          _isSearching = false;
+          _searchResults = [];
+          _selectedExams.clear();
+        });
+      }
+    });
+  }
 
   @override
   void dispose() {
@@ -70,7 +84,10 @@ class _ExamTimetableSearchScreenState extends State<ExamTimetableSearchScreen> {
 
       if (examsToAdd.isNotEmpty) {
         context.read<ExamTimetableBloc>().add(
-          AddExamsToTimetable(exams: examsToAdd),
+          AddExamsToTimetable(
+            institutionId: widget.institutionId,
+            exams: examsToAdd,
+          ),
         );
 
         ScaffoldMessenger.of(context).showSnackBar(
@@ -95,29 +112,46 @@ class _ExamTimetableSearchScreenState extends State<ExamTimetableSearchScreen> {
         backgroundColor: colorScheme.surface,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: colorScheme.onSurface),
+          icon: Icon(Icons.arrow_back_rounded, color: colorScheme.onSurface),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: TextField(
-          controller: _searchController,
-          autofocus: true,
-          style: TextStyle(color: colorScheme.onSurface),
-          decoration: InputDecoration(
-            hintText: _isSearching
-                ? _searchController.text
-                : 'BIL111K, ENG111R, MAT121K',
-            border: InputBorder.none,
-            hintStyle: TextStyle(
-              color: colorScheme.onSurface.withValues(alpha: 0.5),
-            ),
+        title: Container(
+          height: 48,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(
+            color: colorScheme.surfaceContainerHigh,
+            borderRadius: BorderRadius.circular(50),
           ),
-          onSubmitted: (_) => _performSearch(),
-          textInputAction: TextInputAction.search,
+          child: Row(
+            children: [
+              Icon(
+                Icons.search_rounded,
+                size: 20,
+                color: colorScheme.onSurfaceVariant,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: TextField(
+                  controller: _searchController,
+                  autofocus: true,
+                  style: TextStyle(color: colorScheme.onSurface),
+                  decoration: InputDecoration(
+                    hintText: 'BIL111K, ENG111R, MAT121K',
+                    border: InputBorder.none,
+                    isCollapsed: true,
+                    hintStyle: TextStyle(color: colorScheme.onSurfaceVariant),
+                  ),
+                  onSubmitted: (_) => _performSearch(),
+                  textInputAction: TextInputAction.search,
+                ),
+              ),
+            ],
+          ),
         ),
         actions: [
-          if (_searchController.text.isNotEmpty && _isSearching)
+          if (_searchController.text.isNotEmpty)
             IconButton(
-              icon: Icon(Icons.close, color: colorScheme.onSurface),
+              icon: Icon(Icons.close_rounded, color: colorScheme.onSurface),
               onPressed: () {
                 setState(() {
                   _searchController.clear();
@@ -146,74 +180,28 @@ class _ExamTimetableSearchScreenState extends State<ExamTimetableSearchScreen> {
           }
         },
         builder: (context, state) {
+          if (!_isSearching || _searchController.text.trim().isEmpty) {
+            return const _SearchInfoState(
+              icon: Icons.search_rounded,
+              title: 'Provide courses to search for.',
+              subtitle: 'Separate multiple course codes with commas',
+              hint: 'Example: BIL111K, ENG111R, MAT121K',
+            );
+          }
+
           if (state is ExamTimetableLoading) {
             return Center(
               child: CircularProgressIndicator(color: colorScheme.primary),
             );
           }
 
-          if (state is ExamTimetableEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.search_off,
-                    size: 64,
-                    color: colorScheme.onSurface.withValues(alpha: 0.3),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    state.message,
-                    style: theme.textTheme.bodyLarge?.copyWith(
-                      color: colorScheme.onSurface.withValues(alpha: 0.6),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          if (!_isSearching) {
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(32),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.search,
-                      size: 64,
-                      color: colorScheme.onSurface.withValues(alpha: 0.3),
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'Provide courses to search for.',
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        color: colorScheme.onSurface,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Separate multiple course codes with commas',
-                      textAlign: TextAlign.center,
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        color: colorScheme.onSurface.withValues(alpha: 0.6),
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Example: BIL111K, ENG111R, MAT121K',
-                      textAlign: TextAlign.center,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: colorScheme.primary,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+          if (state is ExamTimetableEmpty || _searchResults.isEmpty) {
+            final message = state is ExamTimetableEmpty
+                ? state.message
+                : 'No exams found for the specified course codes';
+            return _SearchInfoState(
+              icon: Icons.search_off_rounded,
+              title: message,
             );
           }
 
@@ -238,31 +226,18 @@ class _ExamTimetableSearchScreenState extends State<ExamTimetableSearchScreen> {
               if (_selectedExams.isNotEmpty)
                 Container(
                   padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: colorScheme.surface,
-                    boxShadow: [
-                      BoxShadow(
-                        color: colorScheme.shadow.withValues(alpha: 0.05),
-                        blurRadius: 10,
-                        offset: const Offset(0, -5),
-                      ),
-                    ],
-                  ),
+                  color: colorScheme.surfaceContainer,
                   child: SafeArea(
-                    child: ElevatedButton(
+                    top: false,
+                    child: FilledButton.icon(
                       onPressed: _addToTimetable,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: colorScheme.primary,
-                        foregroundColor: colorScheme.onPrimary,
+                      style: FilledButton.styleFrom(
                         minimumSize: const Size.fromHeight(50),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
                       ),
-                      child: Text(
+                      icon: const Icon(Icons.add_rounded),
+                      label: Text(
                         'Add ${_selectedExams.length} course${_selectedExams.length > 1 ? 's' : ''} to timetable',
                         style: theme.textTheme.titleMedium?.copyWith(
-                          color: colorScheme.onPrimary,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -272,6 +247,70 @@ class _ExamTimetableSearchScreenState extends State<ExamTimetableSearchScreen> {
             ],
           );
         },
+      ),
+    );
+  }
+}
+
+/// Shared centered icon + message layout for the search screen's prompt
+/// and no-results states.
+class _SearchInfoState extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String? subtitle;
+  final String? hint;
+
+  const _SearchInfoState({
+    required this.icon,
+    required this.title,
+    this.subtitle,
+    this.hint,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 64, color: colorScheme.onSurfaceVariant),
+            const SizedBox(height: 16),
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.titleLarge?.copyWith(
+                color: colorScheme.onSurface,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            if (subtitle != null) ...[
+              const SizedBox(height: 8),
+              Text(
+                subtitle!,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+            if (hint != null) ...[
+              const SizedBox(height: 4),
+              Text(
+                hint!,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: colorScheme.primary,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ],
+        ),
       ),
     );
   }

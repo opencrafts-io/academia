@@ -11,13 +11,13 @@ class CommunityLocalDatasource {
   /// createorUpdateCommunity
   /// Attempts to cache a community. If the community already exists it is
   /// updated with the new information supplied.
-  Future<Either<Failure, CommunityData>> createorUpdateCommunity(
-    CommunityData community,
+  Future<Either<Failure, Community>> createorUpdateCommunity(
+    Community community,
   ) async {
     try {
       await _deleteAllExpiredCachedCommunities();
       final manipulated = await localDB
-          .into(localDB.community)
+          .into(localDB.communities)
           .insertReturning(
             community.copyWith(cachedAt: Value(DateTime.now())),
             onConflict: DoUpdate(
@@ -42,10 +42,10 @@ class CommunityLocalDatasource {
   /// Returns a list of all communities cached.
   /// Interally the function will invalidate cache that is older than the specified
   /// [ttl] duration
-  Future<Either<Failure, List<CommunityData>>> getCachedCommunities() async {
+  Future<Either<Failure, List<Community>>> getCachedCommunities() async {
     try {
       await _deleteAllExpiredCachedCommunities();
-      final communities = await localDB.select(localDB.community).get();
+      final communities = await localDB.select(localDB.communities).get();
 
       return right(communities);
     } catch (e) {
@@ -64,13 +64,13 @@ class CommunityLocalDatasource {
   /// Returns a community by its id specified by [communityID].
   /// Interally the function will invalidate cache that is older than the specified
   /// [ttl] duration
-  Future<Either<Failure, CommunityData>> getCachedCommunityByID(
+  Future<Either<Failure, Community>> getCachedCommunityByID(
     int communityID,
   ) async {
     try {
       await _deleteAllExpiredCachedCommunities();
       final community = await (localDB.select(
-        localDB.community,
+        localDB.communities,
       )..where((community) => community.id.equals(communityID))).getSingle();
 
       return right(community);
@@ -86,11 +86,11 @@ class CommunityLocalDatasource {
     }
   }
 
-  Future<Either<Failure, List<CommunityData>>>
+  Future<Either<Failure, List<Community>>>
   deleteAllCachedCommunities() async {
     try {
       await _deleteAllExpiredCachedCommunities();
-      final deleted = await localDB.delete(localDB.community).goAndReturn();
+      final deleted = await localDB.delete(localDB.communities).goAndReturn();
 
       return right(deleted);
     } catch (e) {
@@ -110,7 +110,7 @@ class CommunityLocalDatasource {
   Future<Either<Failure, void>> _deleteAllExpiredCachedCommunities() async {
     try {
       final expirationThreshold = DateTime.now().subtract(ttl);
-      await (localDB.delete(localDB.community)..where(
+      await (localDB.delete(localDB.communities)..where(
             (community) =>
                 community.cachedAt.isSmallerThanValue(expirationThreshold),
           ))
@@ -132,7 +132,7 @@ class CommunityLocalDatasource {
   Future<Either<Failure, void>> deleteCachedCommunity(int communityID) async {
     try {
       await (localDB.delete(
-        localDB.community,
+        localDB.communities,
       )..where((community) => community.id.equals(communityID))).go();
 
       await _deleteAllExpiredCachedCommunities();

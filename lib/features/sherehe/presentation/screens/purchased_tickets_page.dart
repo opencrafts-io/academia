@@ -202,6 +202,8 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                           mode: TicketStubMode.allTicketsPurchased,
                           event: item.event,
                           attendeeId: item.id,
+                          ticketStartDate: item.ticket?.startDate,
+                          ticketEndDate: item.ticket?.endDate,
                         );
                       },
                     ),
@@ -221,6 +223,8 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                         mode: TicketStubMode.allTicketsPurchased,
                         event: item.event,
                         attendeeId: item.id,
+                        ticketStartDate: item.ticket?.startDate,
+                        ticketEndDate: item.ticket?.endDate,
                       );
                     },
                   ),
@@ -247,6 +251,8 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                         mode: TicketStubMode.allTicketsPurchased,
                         event: item.event,
                         attendeeId: item.id,
+                        ticketStartDate: item.ticket?.startDate,
+                        ticketEndDate: item.ticket?.endDate,
                       );
                     },
                   ),
@@ -329,6 +335,8 @@ class _PurchasedTicketsPageState extends State<PurchasedTicketsPage> {
                           mode: TicketStubMode.allTicketsPurchased,
                           event: item.event,
                           attendeeId: item.id,
+                          ticketStartDate: item.ticket?.startDate,
+                          ticketEndDate: item.ticket?.endDate,
                         );
                       },
                     ),

@@ -8,17 +8,17 @@ abstract class ExamTimetableEvent extends Equatable {
 }
 
 class LoadCachedExams extends ExamTimetableEvent {
-  // final String institutionId;
+  final int institutionId;
   final List<String>? courseCodes;
 
-  const LoadCachedExams({ this.courseCodes});
+  const LoadCachedExams({required this.institutionId, this.courseCodes});
 
   @override
-  List<Object?> get props => [ courseCodes];
+  List<Object?> get props => [institutionId, courseCodes];
 }
 
 class SearchExamTimetable extends ExamTimetableEvent {
-  final String institutionId;
+  final int institutionId;
   final List<String> courseCodes;
 
   const SearchExamTimetable({
@@ -31,16 +31,17 @@ class SearchExamTimetable extends ExamTimetableEvent {
 }
 
 class AddExamsToTimetable extends ExamTimetableEvent {
+  final int institutionId;
   final List<ExamTimetable> exams;
 
-  const AddExamsToTimetable({required this.exams});
+  const AddExamsToTimetable({required this.institutionId, required this.exams});
 
   @override
-  List<Object?> get props => [exams];
+  List<Object?> get props => [institutionId, exams];
 }
 
 class RefreshExamTimetable extends ExamTimetableEvent {
-  final String institutionId;
+  final int institutionId;
   final List<String>? courseCodes;
 
   const RefreshExamTimetable({required this.institutionId, this.courseCodes});
@@ -51,7 +52,7 @@ class RefreshExamTimetable extends ExamTimetableEvent {
 
 class DeleteExamByCourseCode extends ExamTimetableEvent {
   final String courseCode;
-  final String institutionId;
+  final int institutionId;
 
   const DeleteExamByCourseCode({
     required this.courseCode,
@@ -61,4 +62,3 @@ class DeleteExamByCourseCode extends ExamTimetableEvent {
   @override
   List<Object> get props => [courseCode, institutionId];
 }
-

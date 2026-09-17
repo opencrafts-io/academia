@@ -1,16 +1,12 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class BlockStatus extends Equatable {
-  final bool isBlocked;
-  final String entityType;
-  final String entityId;
+part 'block_status.freezed.dart';
 
-  const BlockStatus({
-    required this.isBlocked,
-    required this.entityType,
-    required this.entityId,
-  });
-
-  @override
-  List<Object?> get props => [isBlocked, entityType, entityId];
+@freezed
+abstract class BlockStatus with _$BlockStatus {
+  const factory BlockStatus({
+    required bool isBlocked,
+    required String entityType,
+    required String entityId,
+  }) = _BlockStatus;
 }

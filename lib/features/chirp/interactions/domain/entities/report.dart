@@ -1,29 +1,15 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class Report extends Equatable {
-  final int id;
-  final String reportType;
-  final String reason;
-  final String status;
-  final DateTime createdAt;
-  final DateTime? updatedAt;
+part 'report.freezed.dart';
 
-  const Report({
-    required this.id,
-    required this.reportType,
-    required this.reason,
-    required this.status,
-    required this.createdAt,
-    this.updatedAt,
-  });
-
-  @override
-  List<Object?> get props => [
-    id,
-    reportType,
-    reason,
-    status,
-    createdAt,
-    updatedAt,
-  ];
+@freezed
+abstract class Report with _$Report {
+  const factory Report({
+    required int id,
+    required String reportType,
+    required String reason,
+    required String status,
+    required DateTime createdAt,
+    DateTime? updatedAt,
+  }) = _Report;
 }

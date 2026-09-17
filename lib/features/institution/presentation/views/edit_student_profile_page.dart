@@ -80,192 +80,193 @@ class _EditStudentProfilePageState extends State<EditStudentProfilePage> {
 
     return BlocConsumer<StudentProfileBloc, StudentProfileState>(
       listener: (context, state) {
-        if (state.status == StudentProfileStatus.success &&
-            _draftProfile == null) {
-          setState(() {
-            _draftProfile = state.profile;
-          });
-          if (ModalRoute.of(context)?.isCurrent == true) {
+        state.whenOrNull(
+          success: (profile, profiles) {
+            if (_draftProfile == null) {
+              setState(() {
+                _draftProfile = profile;
+              });
+              if (ModalRoute.of(context)?.isCurrent == true) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    behavior: SnackBarBehavior.floating,
+                    content: Text("Profile updated successfully"),
+                  ),
+                );
+              }
+            }
+          },
+          error: (message, failure) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
+              SnackBar(
+                content: Text(message),
+                backgroundColor: theme.colorScheme.error,
                 behavior: SnackBarBehavior.floating,
-                content: Text("Profile updated successfully"),
               ),
             );
-          }
-        }
-
-        if (state.status == StudentProfileStatus.error) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.errorMessage ?? "An error occurred"),
-              backgroundColor: theme.colorScheme.error,
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
-        }
+          },
+        );
       },
       builder: (context, state) {
-        if (state.status == StudentProfileStatus.loading) {
-          return const Scaffold(body: Center(child: LoadingIndicatorM3E()));
-        }
-
-        return Scaffold(
-          body: Form(
-            key: _formKey,
-            child: CustomScrollView(
-              slivers: [
-                SliverAppBar.large(
-                  title: const Text("View & Edit Profile"),
-                  actions: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: FilledButton.icon(
-                        onPressed: _draftProfile != null ? _onSave : null,
-                        icon: const Icon(Icons.check_circle_outline_rounded),
-                        label: const Text("Save"),
-                      ),
-                    ),
-                  ],
-                ),
-
-                if (_draftProfile != null)
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.all(24.0),
-                      child: Text(
-                        _draftProfile!.studentId,
-                        style: theme.textTheme.displayMedium?.copyWith(
-                          color: theme.colorScheme.secondary,
-                          letterSpacing: 1.2,
+        return state.maybeWhen(
+          loading: () =>
+              const Scaffold(body: Center(child: LoadingIndicatorM3E())),
+          orElse: () => Scaffold(
+            body: Form(
+              key: _formKey,
+              child: CustomScrollView(
+                slivers: [
+                  SliverAppBar.large(
+                    title: const Text("View & Edit Profile"),
+                    actions: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: FilledButton.icon(
+                          onPressed: _draftProfile != null ? _onSave : null,
+                          icon: const Icon(Icons.check_circle_outline_rounded),
+                          label: const Text("Save"),
                         ),
                       ),
-                    ),
+                    ],
                   ),
 
-                // 3. Form Fields
-                if (_draftProfile != null)
-                  SliverPadding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    sliver: SliverList(
-                      delegate: SliverChildListDelegate([
-                        _SectionHeader(title: "Identity"),
-                        const SizedBox(height: 16),
-                        TextFormField(
-                          initialValue: _draftProfile?.studentName,
-                          decoration: const InputDecoration(
-                            labelText: "Full Name",
-                            prefixIcon: Icon(Icons.person_outline_rounded),
+                  if (_draftProfile != null)
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.all(24.0),
+                        child: Text(
+                          _draftProfile!.studentId,
+                          style: theme.textTheme.displayMedium?.copyWith(
+                            color: theme.colorScheme.secondary,
+                            letterSpacing: 1.2,
                           ),
-                          onChanged: (v) => _draftProfile = _draftProfile!
-                              .copyWith(studentName: v),
                         ),
-                        const SizedBox(height: 16),
-                        _GenderSelector(
-                          current: _draftProfile!.gender ?? Gender.unknown,
-                          onChanged: (g) => setState(
-                            () => _draftProfile = _draftProfile!.copyWith(
-                              gender: g,
+                      ),
+                    ),
+
+                  // 3. Form Fields
+                  if (_draftProfile != null)
+                    SliverPadding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      sliver: SliverList(
+                        delegate: SliverChildListDelegate([
+                          _SectionHeader(title: "Identity"),
+                          const SizedBox(height: 16),
+                          TextFormField(
+                            initialValue: _draftProfile?.studentName,
+                            decoration: const InputDecoration(
+                              labelText: "Full Name",
+                              prefixIcon: Icon(Icons.person_outline_rounded),
                             ),
+                            onChanged: (v) => _draftProfile = _draftProfile!
+                                .copyWith(studentName: v),
                           ),
-                        ),
-
-                        const SizedBox(height: 16),
-                        TextFormField(
-                          initialValue: _draftProfile?.major,
-                          decoration: const InputDecoration(
-                            labelText: "Major",
-                            prefixIcon: Icon(Icons.book_outlined),
-                          ),
-                          onChanged: (v) => _draftProfile = _draftProfile!
-                              .copyWith(major: v, program: v),
-                        ),
-
-                        const SizedBox(height: 32),
-
-                        _SectionHeader(title: "Academics"),
-                        const SizedBox(height: 16),
-                        _StatusSegmentedButton(
-                          current:
-                              _draftProfile!.status ?? AcademicStatus.unknown,
-                          onChanged: (s) => setState(
-                            () => _draftProfile = _draftProfile!.copyWith(
-                              status: s,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _DatePickerField(
-                                label: "Enrollment",
-                                date: _draftProfile!.enrollmentDate,
-                                onChanged: (d) {
-                                  setState(
-                                    () => _draftProfile = _draftProfile!
-                                        .copyWith(enrollmentDate: d),
-                                  );
-                                  _autoGuessYear(d);
-                                },
+                          const SizedBox(height: 16),
+                          _GenderSelector(
+                            current: _draftProfile!.gender ?? Gender.unknown,
+                            onChanged: (g) => setState(
+                              () => _draftProfile = _draftProfile!.copyWith(
+                                gender: g,
                               ),
                             ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: _DatePickerField(
-                                label: "Graduation",
-                                date: _draftProfile!.expectedGraduation,
-                                onChanged: (d) => setState(
-                                  () => _draftProfile = _draftProfile!.copyWith(
-                                    expectedGraduation: d,
+                          ),
+
+                          const SizedBox(height: 16),
+                          TextFormField(
+                            initialValue: _draftProfile?.major,
+                            decoration: const InputDecoration(
+                              labelText: "Major",
+                              prefixIcon: Icon(Icons.book_outlined),
+                            ),
+                            onChanged: (v) => _draftProfile = _draftProfile!
+                                .copyWith(major: v, program: v),
+                          ),
+
+                          const SizedBox(height: 32),
+
+                          _SectionHeader(title: "Academics"),
+                          const SizedBox(height: 16),
+                          _StatusSegmentedButton(
+                            current:
+                                _draftProfile!.status ?? AcademicStatus.unknown,
+                            onChanged: (s) => setState(
+                              () => _draftProfile = _draftProfile!.copyWith(
+                                status: s,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: _DatePickerField(
+                                  label: "Enrollment",
+                                  date: _draftProfile!.enrollmentDate,
+                                  onChanged: (d) {
+                                    setState(
+                                      () => _draftProfile = _draftProfile!
+                                          .copyWith(enrollmentDate: d),
+                                    );
+                                    _autoGuessYear(d);
+                                  },
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: _DatePickerField(
+                                  label: "Graduation",
+                                  date: _draftProfile!.expectedGraduation,
+                                  onChanged: (d) => setState(
+                                    () => _draftProfile = _draftProfile!
+                                        .copyWith(expectedGraduation: d),
                                   ),
                                 ),
                               ),
+                            ],
+                          ),
+                          const SizedBox(height: 32),
+
+                          _SectionHeader(title: "Contact"),
+                          const SizedBox(height: 16),
+                          TextFormField(
+                            initialValue: _draftProfile?.phone,
+                            keyboardType: TextInputType.phone,
+                            decoration: const InputDecoration(
+                              labelText: "Phone Number",
+                              prefixIcon: Icon(Icons.phone_outlined),
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: 32),
+                            onChanged: (v) => _draftProfile = _draftProfile!
+                                .copyWith(phone: v),
+                          ),
+                          const SizedBox(height: 16),
+                          TextFormField(
+                            initialValue: _draftProfile?.email,
+                            keyboardType: TextInputType.phone,
+                            decoration: const InputDecoration(
+                              labelText: "Email",
+                              prefixIcon: Icon(Icons.mail_outline_rounded),
+                            ),
+                            onChanged: (v) => _draftProfile = _draftProfile!
+                                .copyWith(email: v),
+                          ),
+                          const SizedBox(height: 16),
 
-                        _SectionHeader(title: "Contact"),
-                        const SizedBox(height: 16),
-                        TextFormField(
-                          initialValue: _draftProfile?.phone,
-                          keyboardType: TextInputType.phone,
-                          decoration: const InputDecoration(
-                            labelText: "Phone Number",
-                            prefixIcon: Icon(Icons.phone_outlined),
+                          TextFormField(
+                            initialValue: _draftProfile?.address,
+                            maxLines: 2,
+                            decoration: const InputDecoration(
+                              labelText: "Residential Address",
+                              prefixIcon: Icon(Icons.map_outlined),
+                            ),
+                            onChanged: (v) => _draftProfile = _draftProfile!
+                                .copyWith(address: v),
                           ),
-                          onChanged: (v) =>
-                              _draftProfile = _draftProfile!.copyWith(phone: v),
-                        ),
-                        const SizedBox(height: 16),
-                        TextFormField(
-                          initialValue: _draftProfile?.email,
-                          keyboardType: TextInputType.phone,
-                          decoration: const InputDecoration(
-                            labelText: "Email",
-                            prefixIcon: Icon(Icons.mail_outline_rounded),
-                          ),
-                          onChanged: (v) =>
-                              _draftProfile = _draftProfile!.copyWith(email: v),
-                        ),
-                        const SizedBox(height: 16),
-
-                        TextFormField(
-                          initialValue: _draftProfile?.address,
-                          maxLines: 2,
-                          decoration: const InputDecoration(
-                            labelText: "Residential Address",
-                            prefixIcon: Icon(Icons.map_outlined),
-                          ),
-                          onChanged: (v) => _draftProfile = _draftProfile!
-                              .copyWith(address: v),
-                        ),
-                        const SizedBox(height: 100),
-                      ]),
+                          const SizedBox(height: 100),
+                        ]),
+                      ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
           ),
         );
