@@ -12,7 +12,9 @@
     <!-- Schedule exact alarms for time-based blocking. -->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
-    <application>
+    <application
+        android:allowBackup="false"
+        android:usesCleartextTraffic="false">
 
         <!--
           Accessibility service — the core blocking mechanism.
@@ -52,7 +54,7 @@
         <!-- Restores schedule alarms after a device reboot. -->
         <receiver
             android:name=".receiver.BootReceiver"
-            android:exported="true">
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <category android:name="android.intent.category.DEFAULT" />
