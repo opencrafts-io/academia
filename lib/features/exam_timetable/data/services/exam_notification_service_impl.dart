@@ -1,7 +1,7 @@
 import 'package:academia/core/core.dart';
 import 'package:academia/features/exam_timetable/domain/domain.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:intl/intl.dart';
+import 'package:notifications/notifications.dart';
 
 /// Room for growth per exam before slot indices would collide with the next
 /// exam's bucket.
@@ -17,6 +17,10 @@ const int _kKeyBucketSize = 1000000;
 enum _ExamReminderSlot { dayBefore, threeHoursBefore, thirtyMinBefore, start }
 
 class ExamNotificationServiceImpl implements ExamNotificationService {
+  ExamNotificationServiceImpl(this._scheduler);
+
+  final LocalNotificationScheduler _scheduler;
+
   int _idFor(String examKey, _ExamReminderSlot slot) {
     final bucket = examKey.hashCode.abs() % _kKeyBucketSize;
     return NotificationNamespaces.exams +
@@ -40,31 +44,26 @@ class ExamNotificationServiceImpl implements ExamNotificationService {
 
       if (scheduledAt.isBefore(DateTime.now())) continue;
 
-      await AwesomeNotifications().createNotification(
-        content: NotificationContent(
+      await _scheduler.schedule(
+        LocalNotificationRequest(
           id: _idFor(key, slot),
-          channelKey: 'exam_alerts_v2',
+          channel: LocalNotificationChannel.examAlerts,
           title: _reminderTitle(slot, courseCode),
           summary: courseCode,
           body: '📍 ${exam.venue} • 🕐 ${_formatTime(exam.startTime)}',
-          category: NotificationCategory.Reminder,
-          largeIcon: 'asset://assets/icons/motarboard.png',
-          roundedLargeIcon: true,
-          wakeUpScreen: true,
-          criticalAlert: true,
-          displayOnForeground: true,
-          displayOnBackground: true,
+          category: LocalNotificationCategory.reminder,
           payload: {
             'institutionId': exam.institutionId.toString(),
             'courseCode': exam.courseCode,
           },
-          notificationLayout: NotificationLayout.BigText,
-        ),
-        schedule: NotificationCalendar.fromDate(
-          date: scheduledAt,
-          preciseAlarm: true,
-          allowWhileIdle: true,
-          repeats: false,
+          schedule: LocalNotificationSchedule.at(scheduledAt, precise: true),
+          presentation: const LocalNotificationPresentation(
+            largeIcon: 'asset://assets/icons/motarboard.png',
+            roundedLargeIcon: true,
+            wakeUpScreen: true,
+            criticalAlert: true,
+            layout: LocalNotificationLayout.bigText,
+          ),
         ),
       );
     }
@@ -77,7 +76,7 @@ class ExamNotificationServiceImpl implements ExamNotificationService {
   }) async {
     final key = _keyFor(institutionId: institutionId, courseCode: courseCode);
     for (final slot in _ExamReminderSlot.values) {
-      await AwesomeNotifications().cancel(_idFor(key, slot));
+      await _scheduler.cancel(_idFor(key, slot));
     }
   }
 

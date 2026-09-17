@@ -1,13 +1,16 @@
 import 'package:academia/core/core.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:academia/features/todos/todos.dart';
-import 'package:flutter/material.dart';
+import 'package:notifications/notifications.dart';
 
 const int _kSlotsPerEntry = 10;
 
 enum _ReminderSlot { dayBefore, hourBefore, thirtyMinBefore, due }
 
 class TodoNotificationServiceImpl implements TodoNotificationService {
+  TodoNotificationServiceImpl(this._scheduler);
+
+  final LocalNotificationScheduler _scheduler;
+
   int _idFor(int localId, _ReminderSlot slot) =>
       NotificationNamespaces.todos + (localId * _kSlotsPerEntry) + slot.index;
 
@@ -20,41 +23,34 @@ class TodoNotificationServiceImpl implements TodoNotificationService {
 
       if (scheduledAt.isBefore(DateTime.now())) continue;
 
-      await AwesomeNotifications().createNotification(
-        content: NotificationContent(
+      await _scheduler.schedule(
+        LocalNotificationRequest(
           id: _idFor(todo.localId, slot),
-          channelKey: 'local_reminder_channel_v2',
+          channel: LocalNotificationChannel.reminders,
           title: _reminderTitle(slot),
           summary: 'Priority: ${todo.priority.name}',
           body: todo.title,
-          category: NotificationCategory.Reminder,
-          largeIcon: 'asset://assets/icons/clock.png',
-          wakeUpScreen: true,
-          criticalAlert: true,
-          displayOnForeground: true,
-          displayOnBackground: true,
+          category: LocalNotificationCategory.reminder,
           payload: {'localId': todo.localId.toString()},
-          notificationLayout: NotificationLayout.BigText,
-        ),
-        actionButtons: [
-          NotificationActionButton(
-            key: 'btn-do',
-            label: 'View To-do',
-            color: Colors.blue,
-            actionType: ActionType.Default,
+          schedule: LocalNotificationSchedule.at(scheduledAt, precise: true),
+          actions: const [
+            LocalNotificationAction(
+              id: 'btn-do',
+              label: 'View To-do',
+              colorValue: 0xFF2196F3,
+            ),
+            LocalNotificationAction(
+              id: 'btn-done',
+              label: 'Mark Done',
+              colorValue: 0xFF4CAF50,
+            ),
+          ],
+          presentation: const LocalNotificationPresentation(
+            largeIcon: 'asset://assets/icons/clock.png',
+            wakeUpScreen: true,
+            criticalAlert: true,
+            layout: LocalNotificationLayout.bigText,
           ),
-          NotificationActionButton(
-            key: 'btn-done',
-            label: 'Mark Done',
-            color: Colors.green,
-            actionType: ActionType.SilentAction,
-          ),
-        ],
-        schedule: NotificationCalendar.fromDate(
-          date: scheduledAt,
-          preciseAlarm: true,
-          allowWhileIdle: true,
-          repeats: false,
         ),
       );
     }
@@ -69,25 +65,26 @@ class TodoNotificationServiceImpl implements TodoNotificationService {
   @override
   Future<void> cancelReminder(int localId) async {
     for (final slot in _ReminderSlot.values) {
-      await AwesomeNotifications().cancel(_idFor(localId, slot));
+      await _scheduler.cancel(_idFor(localId, slot));
     }
   }
 
   @override
   Future<void> cancelAllReminders() async {
-    await AwesomeNotifications().cancelAllSchedules();
+    await _scheduler.cancelAllSchedules();
   }
 
   @override
   Future<void> notifyDeleted(TodoItemEntity todo) async {
-    await AwesomeNotifications().createNotification(
-      content: NotificationContent(
+    await _scheduler.schedule(
+      LocalNotificationRequest(
         id: _idFor(todo.localId, _ReminderSlot.dayBefore),
-        channelKey: 'local_reminder_channel_v2',
+        channel: LocalNotificationChannel.reminders,
         title: _deletedTitle(todo),
         body: _deletedBody(todo),
-        notificationLayout: NotificationLayout.Default,
-        largeIcon: 'asset://assets/icons/trumpet.png',
+        presentation: const LocalNotificationPresentation(
+          largeIcon: 'asset://assets/icons/trumpet.png',
+        ),
       ),
     );
   }

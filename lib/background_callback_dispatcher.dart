@@ -5,6 +5,7 @@ import 'package:core/config/flavor.dart';
 import 'package:academia/features/course/course.dart';
 import 'package:academia/features/features.dart';
 import 'package:flutter/foundation.dart';
+import 'package:notifications/notifications.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:academia/injection_container.dart' as di;
 
@@ -23,8 +24,10 @@ void backgroundCallbackDispatcher() {
 
       await di.sl.allReady();
 
-      final dailyLogin = DailyLoginBackgroundTask();
+      final scheduler = di.sl<LocalNotificationScheduler>();
+      final dailyLogin = DailyLoginBackgroundTask(scheduler);
       final courseAlert = CourseAlertBackgroundTask(
+        scheduler,
         timetableEntryRepository: di.sl<TimetableEntryRepository>(),
         courseRepository: di.sl<CourseRepository>(),
       );

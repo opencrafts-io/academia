@@ -2,14 +2,16 @@ import 'package:academia/features/course/course.dart';
 import 'package:academia/features/features.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:academia/background_task/background_task.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:notifications/notifications.dart';
 
 class CourseAlertBackgroundTask extends BackgroundTask {
   final CourseRepository courseRepository;
   final TimetableEntryRepository timetableEntryRepository;
+  final LocalNotificationScheduler _scheduler;
 
-  CourseAlertBackgroundTask({
+  CourseAlertBackgroundTask(
+    this._scheduler, {
     required this.courseRepository,
     required this.timetableEntryRepository,
   });
@@ -164,44 +166,35 @@ class CourseAlertBackgroundTask extends BackgroundTask {
     required String location,
     DateTime? scheduledDate,
   }) async {
-    await AwesomeNotifications().createNotification(
-      content: NotificationContent(
+    await _scheduler.schedule(
+      LocalNotificationRequest(
         id: _generateNotificationId(
           entry.id ??
               "${entry.courseId}_${entry.startDate.millisecondsSinceEpoch}",
           30,
         ),
-        channelKey: 'course_alerts_v2',
+        channel: LocalNotificationChannel.courseAlerts,
         title: 'Upcoming ${course.courseName}',
         summary: 'Starting in 30 minutes',
         body: '• Room: $location\n• Prep: Check your materials',
-        actionType: ActionType.KeepOnTop,
-        locked: true,
-        autoDismissible: false,
-        notificationLayout: NotificationLayout.BigText,
-        category: NotificationCategory.Reminder,
-        backgroundColor: course.color,
-        color: Colors.white,
-        payload: {},
-        wakeUpScreen: true,
-        criticalAlert: true,
-        displayOnForeground: true,
-        largeIcon: 'asset://assets/icons/alarm.png',
-        roundedLargeIcon: true,
-      ),
-      schedule: scheduledDate != null
-          ? NotificationCalendar.fromDate(
-              date: scheduledDate,
-              preciseAlarm: true,
-            )
-          : null,
-      actionButtons: [
-        NotificationActionButton(
-          key: 'VIEW_DETAILS',
-          label: 'View Details',
-          actionType: ActionType.Default,
+        category: LocalNotificationCategory.reminder,
+        schedule: _scheduleAt(scheduledDate),
+        actions: const [
+          LocalNotificationAction(id: 'VIEW_DETAILS', label: 'View Details'),
+        ],
+        presentation: LocalNotificationPresentation(
+          autoDismissible: false,
+          keepOnTop: true,
+          locked: true,
+          wakeUpScreen: true,
+          criticalAlert: true,
+          layout: LocalNotificationLayout.bigText,
+          largeIcon: 'asset://assets/icons/alarm.png',
+          roundedLargeIcon: true,
+          colorValue: 0xFFFFFFFF,
+          backgroundColorValue: course.color?.toARGB32(),
         ),
-      ],
+      ),
     );
   }
 
@@ -212,38 +205,34 @@ class CourseAlertBackgroundTask extends BackgroundTask {
     required String location,
     DateTime? scheduledDate,
   }) async {
-    await AwesomeNotifications().createNotification(
-      content: NotificationContent(
+    await _scheduler.schedule(
+      LocalNotificationRequest(
         id: _generateNotificationId(entry.id ?? '', 15),
-        channelKey: 'course_alerts_v2',
+        channel: LocalNotificationChannel.courseAlerts,
         title: 'Upcoming: ${course.courseName}',
         summary: 'Starting in 15 minutes',
         body: '• Room: $location\n• Prep: Check your materials',
-        actionType: ActionType.KeepOnTop,
-        locked: true,
-        autoDismissible: false,
-        notificationLayout: NotificationLayout.BigText,
-        category: NotificationCategory.Alarm,
-        backgroundColor: course.color,
-        color: Colors.white,
         payload: {
-          "type": "15_minute_alert",
-          "entry_id": entry.id,
-          "course_id": course.id,
+          'type': '15_minute_alert',
+          if (entry.id != null) 'entry_id': entry.id!,
+          if (course.id != null) 'course_id': course.id!,
         },
-        wakeUpScreen: true,
-        criticalAlert: true,
-        fullScreenIntent: true,
-        displayOnForeground: true,
-        largeIcon: 'asset://assets/icons/time.png',
-        roundedLargeIcon: true,
+        category: LocalNotificationCategory.alarm,
+        schedule: _scheduleAt(scheduledDate),
+        presentation: LocalNotificationPresentation(
+          autoDismissible: false,
+          keepOnTop: true,
+          locked: true,
+          wakeUpScreen: true,
+          criticalAlert: true,
+          fullScreenIntent: true,
+          layout: LocalNotificationLayout.bigText,
+          largeIcon: 'asset://assets/icons/time.png',
+          roundedLargeIcon: true,
+          colorValue: 0xFFFFFFFF,
+          backgroundColorValue: course.color?.toARGB32(),
+        ),
       ),
-      schedule: scheduledDate != null
-          ? NotificationCalendar.fromDate(
-              date: scheduledDate,
-              preciseAlarm: true,
-            )
-          : null,
     );
   }
 
@@ -254,36 +243,29 @@ class CourseAlertBackgroundTask extends BackgroundTask {
     required String location,
     DateTime? scheduledDate,
   }) async {
-    await AwesomeNotifications().createNotification(
-      content: NotificationContent(
+    await _scheduler.schedule(
+      LocalNotificationRequest(
         id: _generateNotificationId(entry.id ?? '', 0),
-        channelKey: 'course_alerts_v2',
+        channel: LocalNotificationChannel.courseAlerts,
         title: 'Time for ${course.courseName}!',
         summary: 'Starting Now • ${entry.durationMinutes}m',
         body: '📍 $location\n👨‍🏫 ${course.instructor}',
-        actionType: ActionType.KeepOnTop,
-        wakeUpScreen: true,
-        criticalAlert: true,
-        locked: true,
-        autoDismissible: false,
-        notificationLayout: NotificationLayout.BigText,
-        displayOnBackground: true,
-        displayOnForeground: true,
-        category: NotificationCategory.Alarm,
-        backgroundColor: course.color,
-        color: Colors.white,
-        payload: {},
-        fullScreenIntent: true,
-        largeIcon: 'asset://assets/icons/motarboard.png',
-        roundedLargeIcon: true,
+        category: LocalNotificationCategory.alarm,
+        schedule: _scheduleAt(scheduledDate),
+        presentation: LocalNotificationPresentation(
+          autoDismissible: false,
+          keepOnTop: true,
+          locked: true,
+          wakeUpScreen: true,
+          criticalAlert: true,
+          fullScreenIntent: true,
+          layout: LocalNotificationLayout.bigText,
+          largeIcon: 'asset://assets/icons/motarboard.png',
+          roundedLargeIcon: true,
+          colorValue: 0xFFFFFFFF,
+          backgroundColorValue: course.color?.toARGB32(),
+        ),
       ),
-      schedule: scheduledDate != null
-          ? NotificationCalendar.fromDate(
-              date: scheduledDate,
-              preciseAlarm: true,
-            )
-          : null,
-      actionButtons: [],
     );
   }
 
@@ -300,35 +282,28 @@ class CourseAlertBackgroundTask extends BackgroundTask {
     final elapsed = effectiveNow.difference(startTime);
     final totalDuration = endTime.difference(startTime).inMinutes;
 
-    await AwesomeNotifications().createNotification(
-      content: NotificationContent(
+    await _scheduler.schedule(
+      LocalNotificationRequest(
         id: _generateNotificationId(entry.id ?? '', -1),
-        channelKey: 'course_alerts_v2',
+        channel: LocalNotificationChannel.courseAlerts,
         title: '${course.courseName} is in progress',
         body: '📍 $location\n👨‍🏫 ${course.instructor}',
         summary:
             'Ends at ${endTime.hour.toString().padLeft(2, '0')}:${endTime.minute.toString().padLeft(2, '0')} ($totalDuration mins total)',
-        actionType: ActionType.KeepOnTop,
-        notificationLayout: NotificationLayout.BigText,
-        category: NotificationCategory.Status,
-        locked: true,
-        autoDismissible: false,
-        backgroundColor: course.color,
-        color: Colors.black,
-        showWhen: true,
-        // The chronometer will count up from the start of the class
-        chronometer: elapsed,
-        payload: {},
-        displayOnForeground: true,
-        largeIcon: 'asset://assets/icons/timer.png',
-        roundedLargeIcon: true,
+        category: LocalNotificationCategory.status,
+        schedule: _scheduleAt(scheduledDate),
+        presentation: LocalNotificationPresentation(
+          autoDismissible: false,
+          keepOnTop: true,
+          locked: true,
+          layout: LocalNotificationLayout.bigText,
+          largeIcon: 'asset://assets/icons/timer.png',
+          roundedLargeIcon: true,
+          colorValue: 0xFF000000,
+          backgroundColorValue: course.color?.toARGB32(),
+          chronometer: elapsed,
+        ),
       ),
-      schedule: scheduledDate != null
-          ? NotificationCalendar.fromDate(
-              date: scheduledDate,
-              preciseAlarm: true,
-            )
-          : null,
     );
   }
 
@@ -353,6 +328,12 @@ class CourseAlertBackgroundTask extends BackgroundTask {
     }
 
     return parts.isEmpty ? 'Location TBA' : parts.join(', ');
+  }
+
+  LocalNotificationSchedule? _scheduleAt(DateTime? scheduledDate) {
+    return scheduledDate == null
+        ? null
+        : LocalNotificationSchedule.at(scheduledDate, precise: true);
   }
 
   /// Generate unique notification ID based on entry ID and alert stage

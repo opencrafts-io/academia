@@ -5,6 +5,7 @@ import 'package:academia/features/auth/auth.dart';
 import 'package:analytics/analytics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
+import 'package:notifications/notifications.dart';
 
 import 'package:equatable/equatable.dart';
 
@@ -21,6 +22,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final SignInWithProviderUsecase signInWithProviderUsecase;
   final SignOutUsecase signOutUsecase;
   final AnalyticsTracker analyticsTracker;
+  final NotificationIdentityService notificationIdentityService;
 
   AuthBloc({
     required this.signInWithGoogle,
@@ -32,6 +34,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required this.signInWithProviderUsecase,
     required this.signOutUsecase,
     required this.analyticsTracker,
+    required this.notificationIdentityService,
   }) : super(const AuthInitial()) {
     // Register event handlers
     on<AuthSignInAsReviewerEvent>(_onSignInAsReviewer);
@@ -207,6 +210,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       (success) {
         unawaited(analyticsTracker.track(AnalyticsEvent.signOutCompleted()));
         unawaited(analyticsTracker.reset());
+        unawaited(notificationIdentityService.clear());
         emit(AuthUnauthenticated());
       },
     );
