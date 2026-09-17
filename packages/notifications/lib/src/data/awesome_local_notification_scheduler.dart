@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:awesome_notifications/awesome_notifications.dart' as awesome;
 import 'package:flutter/material.dart' show Color;
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../application/local_notification_scheduler.dart';
 import '../application/notification_action_handler.dart';
@@ -19,9 +18,6 @@ class AwesomeLocalNotificationScheduler
   AwesomeLocalNotificationScheduler({awesome.AwesomeNotifications? client})
     : _client = client ?? awesome.AwesomeNotifications();
 
-  static const _migrationVersionKey = 'notification_channel_version';
-  static const _targetMigrationVersion = 2;
-
   static NotificationActionHandler? _actionHandler;
 
   final awesome.AwesomeNotifications _client;
@@ -29,7 +25,6 @@ class AwesomeLocalNotificationScheduler
   @override
   Future<void> initialize(NotificationActionHandler actionHandler) async {
     _actionHandler = actionHandler;
-    await _migrateLegacyChannels();
     await _client.initialize(
       'resource://drawable/academia',
       [
@@ -147,24 +142,6 @@ class AwesomeLocalNotificationScheduler
 
   @override
   Future<void> cancelAllSchedules() => _client.cancelAllSchedules();
-
-  Future<void> _migrateLegacyChannels() async {
-    final preferences = await SharedPreferences.getInstance();
-    final currentVersion = preferences.getInt(_migrationVersionKey) ?? 1;
-    if (currentVersion >= _targetMigrationVersion) {
-      return;
-    }
-
-    for (final channel in const [
-      'local_reminder_channel',
-      'local_alert_channel',
-      'local_update_channel',
-      'course_alerts',
-    ]) {
-      await _client.removeChannel(channel);
-    }
-    await preferences.setInt(_migrationVersionKey, _targetMigrationVersion);
-  }
 
   static Future<void> _onActionReceived(awesome.ReceivedAction action) async {
     final handler = _actionHandler;

@@ -1,8 +1,47 @@
+import 'package:awesome_notifications/awesome_notifications.dart' as awesome;
+import 'package:awesome_notifications/awesome_notifications_empty.dart';
+import 'package:awesome_notifications/awesome_notifications_platform_interface.dart'
+    as awesome_platform;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:notifications/notifications.dart';
 
 void main() {
+  late _RecordingAwesomeNotificationsPlatform notificationPlatform;
+
+  setUp(() {
+    notificationPlatform = _RecordingAwesomeNotificationsPlatform();
+    awesome_platform.AwesomeNotificationsPlatform.instance =
+        notificationPlatform;
+  });
+
+  tearDown(() {
+    awesome_platform.AwesomeNotificationsPlatform.resetInstance();
+  });
+
+  test(
+    'initializing active channels preserves notifications on prior channels',
+    () async {
+      final scheduler = AwesomeLocalNotificationScheduler();
+
+      await scheduler.initialize(_RecordingActionHandler());
+
+      expect(notificationPlatform.removedChannels, isEmpty);
+      expect(
+        notificationPlatform.initializedChannels.map(
+          (channel) => channel.channelKey,
+        ),
+        containsAll(<String>[
+          'local_reminder_channel_v2',
+          'local_alert_channel_v2',
+          'local_update_channel_v2',
+          'course_alerts_v2',
+          'exam_alerts_v2',
+        ]),
+      );
+    },
+  );
+
   test('preserves typed local reminder details at the package boundary', () {
     final request = LocalNotificationRequest(
       id: 101,
@@ -129,4 +168,27 @@ class _RecordingInitializer implements NotificationInitializer {
 class _RecordingActionHandler implements NotificationActionHandler {
   @override
   Future<void> handle(NotificationAction action) async {}
+}
+
+class _RecordingAwesomeNotificationsPlatform extends AwesomeNotificationsEmpty {
+  final removedChannels = <String>[];
+  List<awesome.NotificationChannel> initializedChannels = const [];
+
+  @override
+  Future<bool> initialize(
+    String? defaultIcon,
+    List<awesome.NotificationChannel> channels, {
+    List<awesome.NotificationChannelGroup>? channelGroups,
+    bool debug = false,
+    String? languageCode,
+  }) async {
+    initializedChannels = channels;
+    return true;
+  }
+
+  @override
+  Future<bool> removeChannel(String channelKey) async {
+    removedChannels.add(channelKey);
+    return true;
+  }
 }
