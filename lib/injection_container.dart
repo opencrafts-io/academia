@@ -358,6 +358,9 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   sl.registerFactory<ReopenTodoItem>(() => ReopenTodoItem(sl()));
   sl.registerFactory<MoveTodoItem>(() => MoveTodoItem(sl()));
   sl.registerFactory<SyncTodoItems>(() => SyncTodoItems(sl()));
+  sl.registerFactory<AddFocusedTimeToTodoItem>(
+    () => AddFocusedTimeToTodoItem(sl()),
+  );
 
   sl.registerLazySingleton<TodoListCubit>(
     () => TodoListCubit(
@@ -392,7 +395,15 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
       reopenItemUseCase: sl(),
       moveItemUseCase: sl(),
       syncItemsUseCase: sl(),
+      addFocusedTimeUseCase: sl(),
     ),
+  );
+
+  // Registered as a lazy singleton so a running Pomodoro session — and the
+  // focus time it attributes to a linked todo — survives navigating away
+  // from the timer screen.
+  sl.registerLazySingleton<PomodoroCubit>(
+    () => PomodoroCubit(todoItemCubit: sl<TodoItemCubit>()),
   );
 
   // Agenda

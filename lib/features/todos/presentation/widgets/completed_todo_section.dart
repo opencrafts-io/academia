@@ -22,19 +22,15 @@ class CompletedTodoSection extends StatelessWidget {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-      decoration: BoxDecoration(
-        color: scheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(24),
-      ),
-      child: Column(
-        children: [
-          InkWell(
-            borderRadius: BorderRadius.circular(24),
+    return Column(
+      children: [
+        Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(16),
             onTap: onToggleExpanded,
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -54,20 +50,20 @@ class CompletedTodoSection extends StatelessWidget {
               ),
             ),
           ),
-          AnimatedSize(
-            duration: const Duration(milliseconds: 250),
-            curve: Curves.easeInOutCubicEmphasized,
-            alignment: Alignment.topCenter,
-            child: expanded
-                ? Column(
-                    children: items
-                        .map((item) => itemBuilder(context, item))
-                        .toList(),
-                  )
-                : const SizedBox(width: double.infinity),
-          ),
-        ],
-      ),
+        ),
+        AnimatedSize(
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeInOutCubicEmphasized,
+          alignment: Alignment.topCenter,
+          child: expanded
+              ? Column(
+                  children: items
+                      .map((item) => itemBuilder(context, item))
+                      .toList(),
+                )
+              : const SizedBox(width: double.infinity),
+        ),
+      ],
     );
   }
 }

@@ -41,4 +41,8 @@ class TodoItems extends Table {
       boolean().withDefault(const Constant(false))();
 
   BoolColumn get isDirty => boolean().withDefault(const Constant(true))();
+
+  /// Cumulative seconds spent focusing on this task via linked Pomodoro
+  /// sessions. Local-only — not part of the remote API.
+  IntColumn get focusedSeconds => integer().withDefault(const Constant(0))();
 }

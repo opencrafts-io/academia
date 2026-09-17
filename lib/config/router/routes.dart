@@ -246,6 +246,20 @@ class CompleteProfileRoute extends GoRouteData with $CompleteProfileRoute {
   }
 }
 
+@TypedGoRoute<LinkInstitutionRequiredPageRoute>(
+  path: "/link-institution-required",
+)
+class LinkInstitutionRequiredPageRoute extends GoRouteData
+    with $LinkInstitutionRequiredPageRoute {
+  const LinkInstitutionRequiredPageRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const LinkInstitutionRequiredPage();
+  }
+}
+
+
 @TypedGoRoute<ShereheRoute>(
   path: "/sherehe",
   routes: [
@@ -843,6 +857,7 @@ class QrCodeScannerRoute extends GoRouteData with $QrCodeScannerRoute {
 
     TypedGoRoute<CreateTodoItemRoute>(path: "create-todo-item"),
     TypedGoRoute<UpdateTodoItemRoute>(path: "todo-item/:todoLocalID"),
+    TypedGoRoute<PomodoroTimerRoute>(path: "pomodoro-timer"),
   ],
 )
 class TodosRoute extends GoRouteData with $TodosRoute {
@@ -990,6 +1005,17 @@ class CreateTodoItemRoute extends GoRouteData with $CreateTodoItemRoute {
         ),
       ),
     );
+  }
+}
+
+class PomodoroTimerRoute extends GoRouteData with $PomodoroTimerRoute {
+  final int? todoLocalID;
+
+  const PomodoroTimerRoute({this.todoLocalID});
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return PomodoroTimerScreen(todoLocalId: todoLocalID);
   }
 }
 

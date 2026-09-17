@@ -46,8 +46,10 @@ class _TodoItemsListState extends State<TodoItemsList> {
   Widget _buildCard(BuildContext context, TodoItemEntity item) {
     return TodoCard(
       item: item,
-      onTap: () =>
+      onEdit: () =>
           UpdateTodoItemRoute(todoLocalID: item.localId).push(context),
+      onFocusTimer: () =>
+          PomodoroTimerRoute(todoLocalID: item.localId).push(context),
       onComplete: () =>
           context.read<TodoItemCubit>().completeItem(item.localId),
       onReopen: () => context.read<TodoItemCubit>().reopenItem(item.localId),
