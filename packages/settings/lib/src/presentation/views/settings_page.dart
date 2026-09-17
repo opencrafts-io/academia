@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:settings/src/presentation/cubit/settings_cubit.dart';
 import 'package:settings/src/presentation/cubit/settings_state.dart';
+import 'package:settings/src/presentation/routes/settings_routes.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -74,6 +75,34 @@ class SettingsPage extends StatelessWidget {
                                 ),
                             ],
                           ),
+                          _SettingsSection(
+                            icon: Icons.notifications_active_rounded,
+                            title: 'Notifications',
+                            children: [
+                              ListTile(
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                ),
+                                leading: const Icon(
+                                  Icons.notifications_rounded,
+                                ),
+                                title: Text(
+                                  'Notification preferences',
+                                  style: Theme.of(context).textTheme.labelLarge,
+                                ),
+                                subtitle: const Text(
+                                  'Manage alerts, reminders, and device access.',
+                                ),
+                                trailing: const Icon(
+                                  Icons.chevron_right_rounded,
+                                ),
+                                onTap: () => const NotificationSettingsRoute()
+                                    .push(context),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+
                           const SizedBox(height: 20),
                           _SettingsSection(
                             icon: Icons.tune_rounded,

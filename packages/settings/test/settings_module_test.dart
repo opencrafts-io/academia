@@ -52,4 +52,10 @@ void main() {
     expect(route.location, '/settings');
     expect(routes, hasLength(1));
   });
+
+  test('exposes notification configuration as a settings subroute', () {
+    const route = NotificationSettingsRoute();
+
+    expect(route.location, '/settings/notifications');
+  });
 }

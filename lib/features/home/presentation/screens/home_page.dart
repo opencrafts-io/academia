@@ -1,19 +1,16 @@
 import 'dart:async';
 
 import 'package:academia/config/config.dart';
-
-import 'dart:io';
-
 import 'package:academia/features/features.dart';
 import 'package:academia/gen/assets.gen.dart';
 import 'package:academia/injection_container.dart';
 import 'package:analytics/analytics.dart';
 import 'package:billing/billing.dart' as billing;
 import 'package:core/core.dart' as core;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:permissions/permissions.dart';
 
 class _HomeActionsSheet extends StatelessWidget {
@@ -137,11 +134,25 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _subscriptionStatusFuture = _loadSubscriptionStatus();
-    final permissions = [
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => unawaited(_promptForNotificationsIfNeeded()),
+    );
+  }
+
+  bool get _supportsNotificationPrompt =>
+      !kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.android ||
+          defaultTargetPlatform == TargetPlatform.iOS);
+
+  Future<void> _promptForNotificationsIfNeeded() async {
+    if (!_supportsNotificationPrompt) return;
+
+    final status = await sl<PermissionGateway>().check(
       PermissionCapability.notifications,
-      if (Platform.isAndroid) PermissionCapability.preciseAlarms,
-    ];
-    context.read<PermissionCubit>().checkAll(permissions);
+    );
+    if (!mounted || !shouldPromptForNotificationOnLaunch(status)) return;
+
+    await const NotificationPermissionRoute().push(context);
   }
 
   Future<billing.SubscriptionStatus?> _loadSubscriptionStatus() async {
@@ -179,111 +190,88 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<PermissionCubit, PermissionState>(
-      listener: (context, state) {
-        if (state is PermissionPermanentlyDenied) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                'Notifications are permanently disabled. '
-                'Re-enable them in your phone settings.',
-              ),
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
-          return;
-        } else if (state is PermissionDenied) {
-          NotificationPermissionRoute().push(context);
-        }
-      },
-      listenWhen: (previous, current) =>
-          previous != current && current is PermissionDenied ||
-          current is PermissionPermanentlyDenied,
-      child: DefaultTabController(
-        initialIndex: 1,
-        length: 3,
-        child: Scaffold(
-          body: NestedScrollView(
-            headerSliverBuilder: (context, innerBoxIsScrolled) => [
-              SliverOverlapAbsorber(
-                handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
-                  context,
+    return DefaultTabController(
+      initialIndex: 1,
+      length: 3,
+      child: Scaffold(
+        body: NestedScrollView(
+          headerSliverBuilder: (context, innerBoxIsScrolled) => [
+            SliverOverlapAbsorber(
+              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+              sliver: SliverAppBar(
+                pinned: true,
+                forceElevated: innerBoxIsScrolled,
+                leading: Assets.icons.academia.image(),
+                title: InkWell(
+                  onTap: () => _showActionsSheet(context),
+                  child:
+                      Row(
+                            mainAxisSize: MainAxisSize.min,
+                            spacing: 4,
+                            children: [
+                              Text(
+                                'Academia',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headlineMedium
+                                    ?.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                              const Icon(
+                                Icons.arrow_drop_down_circle_outlined,
+                                size: 20,
+                              ),
+                            ],
+                          )
+                          .animate(
+                            onPlay: (controller) =>
+                                controller.repeat(reverse: true),
+                          )
+                          .scaleXY(
+                            begin: 1.0,
+                            end: 1.1,
+                            duration: 1000.ms,
+                            curve: Curves.elasticOut,
+                          ),
                 ),
-                sliver: SliverAppBar(
-                  pinned: true,
-                  forceElevated: innerBoxIsScrolled,
-                  leading: Assets.icons.academia.image(),
-                  title: InkWell(
-                    onTap: () => _showActionsSheet(context),
-                    child:
-                        Row(
-                              mainAxisSize: MainAxisSize.min,
-                              spacing: 4,
-                              children: [
-                                Text(
-                                  'Academia',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headlineMedium
-                                      ?.copyWith(fontWeight: FontWeight.bold),
-                                ),
-                                const Icon(
-                                  Icons.arrow_drop_down_circle_outlined,
-                                  size: 20,
-                                ),
-                              ],
-                            )
-                            .animate(
-                              onPlay: (controller) =>
-                                  controller.repeat(reverse: true),
-                            )
-                            .scaleXY(
-                              begin: 1.0,
-                              end: 1.1,
-                              duration: 1000.ms,
-                              curve: Curves.elasticOut,
-                            ),
-                  ),
-                  centerTitle: false,
-                  actions: [
-                    FutureBuilder(
-                      future: _subscriptionStatusFuture,
-                      builder: (context, snapshot) {
-                        if (!_shouldShowPremiumUpgrade(snapshot.data)) {
-                          return const SizedBox.shrink();
-                        }
+                centerTitle: false,
+                actions: [
+                  FutureBuilder(
+                    future: _subscriptionStatusFuture,
+                    builder: (context, snapshot) {
+                      if (!_shouldShowPremiumUpgrade(snapshot.data)) {
+                        return const SizedBox.shrink();
+                      }
 
-                        return IconButton(
-                          onPressed: _openBilling,
-                          icon: const Icon(Symbols.workspace_premium_rounded),
-                          tooltip: 'Upgrade',
-                        );
-                      },
+                      return IconButton(
+                        onPressed: _openBilling,
+                        icon: const Icon(Symbols.workspace_premium_rounded),
+                        tooltip: 'Upgrade',
+                      );
+                    },
+                  ),
+                  IconButton(
+                    onPressed: () => showSearch(
+                      context: context,
+                      delegate: GlobalSearchDelegate(),
                     ),
-                    IconButton(
-                      onPressed: () => showSearch(
-                        context: context,
-                        delegate: GlobalSearchDelegate(),
-                      ),
-                      icon: const Icon(Icons.search),
-                      tooltip: 'Search',
+                    icon: const Icon(Icons.search),
+                    tooltip: 'Search',
+                  ),
+                  IconButton(
+                    onPressed: () => ProfileRoute().push(context),
+                    icon: const UserAvatar(
+                      scallopDepth: 4,
+                      numberOfScallops: 8,
                     ),
-                    IconButton(
-                      onPressed: () => ProfileRoute().push(context),
-                      icon: const UserAvatar(
-                        scallopDepth: 4,
-                        numberOfScallops: 8,
-                      ),
-                      tooltip: 'Profile',
-                    ),
-                  ],
-                  bottom: _HomeTabBar(),
-                ),
+                    tooltip: 'Profile',
+                  ),
+                ],
+                bottom: _HomeTabBar(),
               ),
-            ],
-            body: const TabBarView(
-              children: [LeaderboardHomepage(), FeedPage(), ShereheHome()],
             ),
+          ],
+          body: const TabBarView(
+            children: [LeaderboardHomepage(), FeedPage(), ShereheHome()],
           ),
         ),
       ),
