@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'attachment_api_dto.dart';
@@ -9,6 +9,7 @@ part of 'attachment_api_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $AttachmentApiDtoCopyWith<AttachmentApiDto> get copyWith => _$AttachmentApiDtoCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AttachmentApiDto&&(identical(other.id, id) || other.id == id)&&(identical(other.attachmentType, attachmentType) || other.attachmentType == attachmentType)&&(identical(other.file, file) || other.file == file)&&(identical(other.size, size) || other.size == size)&&(identical(other.name, name) || other.name == name)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.postId, postId) || other.postId == postId));
+  final _this = this as AttachmentApiDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AttachmentApiDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.attachmentType, _this.attachmentType) || other.attachmentType == _this.attachmentType)&&(identical(other.file, _this.file) || other.file == _this.file)&&(identical(other.size, _this.size) || other.size == _this.size)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.postId, _this.postId) || other.postId == _this.postId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,attachmentType,file,size,name,createdAt,postId);
+int get hashCode {
+  final _this = this as AttachmentApiDto;
+  return Object.hash(runtimeType,_this.id,_this.attachmentType,_this.file,_this.size,_this.name,_this.createdAt,_this.postId);
+}
 
 @override
 String toString() {
-  return 'AttachmentApiDto(id: $id, attachmentType: $attachmentType, file: $file, size: $size, name: $name, createdAt: $createdAt, postId: $postId)';
+  final _this = this as AttachmentApiDto;
+  return 'AttachmentApiDto(id: ${_this.id}, attachmentType: ${_this.attachmentType}, file: ${_this.file}, size: ${_this.size}, name: ${_this.name}, createdAt: ${_this.createdAt}, postId: ${_this.postId})';
 }
 
 
@@ -66,7 +72,7 @@ class _$AttachmentApiDtoCopyWithImpl<$Res>
 /// Create a copy of AttachmentApiDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? attachmentType = null,Object? file = null,Object? size = null,Object? name = null,Object? createdAt = null,Object? postId = null,}) {
-  return _then(_self.copyWith(
+  return _then(AttachmentApiDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,attachmentType: null == attachmentType ? _self.attachmentType : attachmentType // ignore: cast_nullable_to_non_nullable
 as String,file: null == file ? _self.file : file // ignore: cast_nullable_to_non_nullable
@@ -239,16 +245,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AttachmentApiDto&&(identical(other.id, id) || other.id == id)&&(identical(other.attachmentType, attachmentType) || other.attachmentType == attachmentType)&&(identical(other.file, file) || other.file == file)&&(identical(other.size, size) || other.size == size)&&(identical(other.name, name) || other.name == name)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.postId, postId) || other.postId == postId));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AttachmentApiDto&&(identical(other.id, id) || other.id == id)&&(identical(other.attachmentType, attachmentType) || other.attachmentType == attachmentType)&&(identical(other.file, file) || other.file == file)&&(identical(other.size, size) || other.size == size)&&(identical(other.name, name) || other.name == name)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.postId, postId) || other.postId == postId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,attachmentType,file,size,name,createdAt,postId);
+int get hashCode {
+    return Object.hash(runtimeType,id,attachmentType,file,size,name,createdAt,postId);
+}
 
 @override
 String toString() {
-  return 'AttachmentApiDto(id: $id, attachmentType: $attachmentType, file: $file, size: $size, name: $name, createdAt: $createdAt, postId: $postId)';
+    return 'AttachmentApiDto(id: $id, attachmentType: $attachmentType, file: $file, size: $size, name: $name, createdAt: $createdAt, postId: $postId)';
 }
 
 

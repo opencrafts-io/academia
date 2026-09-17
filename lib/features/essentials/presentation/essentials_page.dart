@@ -6,6 +6,7 @@ import 'package:academia/features/institution/institution.dart';
 import 'package:academia/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:settings/settings.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:academia/injection_container.dart';
 import '../widgets/essential_category_tile.dart';

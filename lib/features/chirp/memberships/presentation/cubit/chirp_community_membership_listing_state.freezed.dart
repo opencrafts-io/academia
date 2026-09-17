@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'chirp_community_membership_listing_state.dart';
@@ -9,6 +9,7 @@ part of 'chirp_community_membership_listing_state.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -20,7 +21,7 @@ mixin _$ChirpCommunityMembershipListingState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChirpCommunityMembershipListingState);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is ChirpCommunityMembershipListingState);
 }
 
 
@@ -29,7 +30,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'ChirpCommunityMembershipListingState()';
+    return 'ChirpCommunityMembershipListingState()';
 }
 
 
@@ -197,7 +198,7 @@ class ChirpCommunityMembershipListingInitialState implements ChirpCommunityMembe
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChirpCommunityMembershipListingInitialState);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is ChirpCommunityMembershipListingInitialState);
 }
 
 
@@ -206,7 +207,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'ChirpCommunityMembershipListingState.initial()';
+    return 'ChirpCommunityMembershipListingState.initial()';
 }
 
 
@@ -229,7 +230,7 @@ class ChirpCommunityMembershipListingLoadingState implements ChirpCommunityMembe
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChirpCommunityMembershipListingLoadingState);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is ChirpCommunityMembershipListingLoadingState);
 }
 
 
@@ -238,7 +239,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'ChirpCommunityMembershipListingState.loading()';
+    return 'ChirpCommunityMembershipListingState.loading()';
 }
 
 
@@ -266,16 +267,18 @@ $ChirpCommunityMembershipListingErrorStateCopyWith<ChirpCommunityMembershipListi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChirpCommunityMembershipListingErrorState&&(identical(other.error, error) || other.error == error));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is ChirpCommunityMembershipListingErrorState&&(identical(other.error, error) || other.error == error));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,error);
+int get hashCode {
+    return Object.hash(runtimeType,error);
+}
 
 @override
 String toString() {
-  return 'ChirpCommunityMembershipListingState.error(error: $error)';
+    return 'ChirpCommunityMembershipListingState.error(error: $error)';
 }
 
 
@@ -317,7 +320,7 @@ as String,
 
 
 class ChirpCommunityMembershipListingLoadedState implements ChirpCommunityMembershipListingState {
-  const ChirpCommunityMembershipListingLoadedState({required final  List<ChirpCommunityMembership> memberships, this.isLoading = false, this.hasReachedMax = true}): _memberships = memberships;
+  const ChirpCommunityMembershipListingLoadedState({required  List<ChirpCommunityMembership> memberships, this.isLoading = false, this.hasReachedMax = true}): _memberships = memberships;
   
 
  final  List<ChirpCommunityMembership> _memberships;
@@ -340,16 +343,18 @@ $ChirpCommunityMembershipListingLoadedStateCopyWith<ChirpCommunityMembershipList
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChirpCommunityMembershipListingLoadedState&&const DeepCollectionEquality().equals(other._memberships, _memberships)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.hasReachedMax, hasReachedMax) || other.hasReachedMax == hasReachedMax));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is ChirpCommunityMembershipListingLoadedState&&const DeepCollectionEquality().equals(other.memberships, _memberships)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.hasReachedMax, hasReachedMax) || other.hasReachedMax == hasReachedMax));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_memberships),isLoading,hasReachedMax);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_memberships),isLoading,hasReachedMax);
+}
 
 @override
 String toString() {
-  return 'ChirpCommunityMembershipListingState.loaded(memberships: $memberships, isLoading: $isLoading, hasReachedMax: $hasReachedMax)';
+    return 'ChirpCommunityMembershipListingState.loaded(memberships: $memberships, isLoading: $isLoading, hasReachedMax: $hasReachedMax)';
 }
 
 

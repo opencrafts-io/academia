@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'streak_activity.dart';
@@ -9,6 +9,7 @@ part of 'streak_activity.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $StreakActivityCopyWith<StreakActivity> get copyWith => _$StreakActivityCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StreakActivity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.category, category) || other.category == category)&&(identical(other.pointsAwarded, pointsAwarded) || other.pointsAwarded == pointsAwarded)&&(identical(other.maxDailyCompletions, maxDailyCompletions) || other.maxDailyCompletions == maxDailyCompletions)&&(identical(other.streakEligible, streakEligible) || other.streakEligible == streakEligible)&&(identical(other.isActive, isActive) || other.isActive == isActive)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.cachedAt, cachedAt) || other.cachedAt == cachedAt));
+  final _this = this as StreakActivity;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StreakActivity&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.category, _this.category) || other.category == _this.category)&&(identical(other.pointsAwarded, _this.pointsAwarded) || other.pointsAwarded == _this.pointsAwarded)&&(identical(other.maxDailyCompletions, _this.maxDailyCompletions) || other.maxDailyCompletions == _this.maxDailyCompletions)&&(identical(other.streakEligible, _this.streakEligible) || other.streakEligible == _this.streakEligible)&&(identical(other.isActive, _this.isActive) || other.isActive == _this.isActive)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt)&&(identical(other.cachedAt, _this.cachedAt) || other.cachedAt == _this.cachedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,category,pointsAwarded,maxDailyCompletions,streakEligible,isActive,createdAt,updatedAt,cachedAt);
+int get hashCode {
+  final _this = this as StreakActivity;
+  return Object.hash(runtimeType,_this.id,_this.name,_this.category,_this.pointsAwarded,_this.maxDailyCompletions,_this.streakEligible,_this.isActive,_this.createdAt,_this.updatedAt,_this.cachedAt);
+}
 
 @override
 String toString() {
-  return 'StreakActivity(id: $id, name: $name, category: $category, pointsAwarded: $pointsAwarded, maxDailyCompletions: $maxDailyCompletions, streakEligible: $streakEligible, isActive: $isActive, createdAt: $createdAt, updatedAt: $updatedAt, cachedAt: $cachedAt)';
+  final _this = this as StreakActivity;
+  return 'StreakActivity(id: ${_this.id}, name: ${_this.name}, category: ${_this.category}, pointsAwarded: ${_this.pointsAwarded}, maxDailyCompletions: ${_this.maxDailyCompletions}, streakEligible: ${_this.streakEligible}, isActive: ${_this.isActive}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt}, cachedAt: ${_this.cachedAt})';
 }
 
 
@@ -63,7 +69,7 @@ class _$StreakActivityCopyWithImpl<$Res>
 /// Create a copy of StreakActivity
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? category = null,Object? pointsAwarded = null,Object? maxDailyCompletions = null,Object? streakEligible = null,Object? isActive = null,Object? createdAt = null,Object? updatedAt = null,Object? cachedAt = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(StreakActivity(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
@@ -239,16 +245,18 @@ _$StreakActivityCopyWith<_StreakActivity> get copyWith => __$StreakActivityCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StreakActivity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.category, category) || other.category == category)&&(identical(other.pointsAwarded, pointsAwarded) || other.pointsAwarded == pointsAwarded)&&(identical(other.maxDailyCompletions, maxDailyCompletions) || other.maxDailyCompletions == maxDailyCompletions)&&(identical(other.streakEligible, streakEligible) || other.streakEligible == streakEligible)&&(identical(other.isActive, isActive) || other.isActive == isActive)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.cachedAt, cachedAt) || other.cachedAt == cachedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _StreakActivity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.category, category) || other.category == category)&&(identical(other.pointsAwarded, pointsAwarded) || other.pointsAwarded == pointsAwarded)&&(identical(other.maxDailyCompletions, maxDailyCompletions) || other.maxDailyCompletions == maxDailyCompletions)&&(identical(other.streakEligible, streakEligible) || other.streakEligible == streakEligible)&&(identical(other.isActive, isActive) || other.isActive == isActive)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.cachedAt, cachedAt) || other.cachedAt == cachedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,category,pointsAwarded,maxDailyCompletions,streakEligible,isActive,createdAt,updatedAt,cachedAt);
+int get hashCode {
+    return Object.hash(runtimeType,id,name,category,pointsAwarded,maxDailyCompletions,streakEligible,isActive,createdAt,updatedAt,cachedAt);
+}
 
 @override
 String toString() {
-  return 'StreakActivity(id: $id, name: $name, category: $category, pointsAwarded: $pointsAwarded, maxDailyCompletions: $maxDailyCompletions, streakEligible: $streakEligible, isActive: $isActive, createdAt: $createdAt, updatedAt: $updatedAt, cachedAt: $cachedAt)';
+    return 'StreakActivity(id: $id, name: $name, category: $category, pointsAwarded: $pointsAwarded, maxDailyCompletions: $maxDailyCompletions, streakEligible: $streakEligible, isActive: $isActive, createdAt: $createdAt, updatedAt: $updatedAt, cachedAt: $cachedAt)';
 }
 
 

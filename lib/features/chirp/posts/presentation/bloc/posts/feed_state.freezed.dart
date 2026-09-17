@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'feed_state.dart';
@@ -9,6 +9,7 @@ part of 'feed_state.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -20,7 +21,7 @@ mixin _$FeedState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedState);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedState);
 }
 
 
@@ -29,7 +30,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'FeedState()';
+    return 'FeedState()';
 }
 
 
@@ -251,7 +252,7 @@ class FeedInitial implements FeedState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedInitial);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedInitial);
 }
 
 
@@ -260,7 +261,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'FeedState.initial()';
+    return 'FeedState.initial()';
 }
 
 
@@ -283,7 +284,7 @@ class FeedLoading implements FeedState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedLoading);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedLoading);
 }
 
 
@@ -292,7 +293,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'FeedState.loading()';
+    return 'FeedState.loading()';
 }
 
 
@@ -305,7 +306,7 @@ String toString() {
 
 
 class FeedPaginationLoading implements FeedState {
-  const FeedPaginationLoading({required final  List<Post> existingPosts, required this.hasMore}): _existingPosts = existingPosts;
+  const FeedPaginationLoading({required  List<Post> existingPosts, required this.hasMore}): _existingPosts = existingPosts;
   
 
  final  List<Post> _existingPosts;
@@ -327,16 +328,18 @@ $FeedPaginationLoadingCopyWith<FeedPaginationLoading> get copyWith => _$FeedPagi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedPaginationLoading&&const DeepCollectionEquality().equals(other._existingPosts, _existingPosts)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedPaginationLoading&&const DeepCollectionEquality().equals(other.existingPosts, _existingPosts)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_existingPosts),hasMore);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_existingPosts),hasMore);
+}
 
 @override
 String toString() {
-  return 'FeedState.paginationLoading(existingPosts: $existingPosts, hasMore: $hasMore)';
+    return 'FeedState.paginationLoading(existingPosts: $existingPosts, hasMore: $hasMore)';
 }
 
 
@@ -379,7 +382,7 @@ as bool,
 
 
 class FeedLoaded implements FeedState {
-  const FeedLoaded({required final  List<Post> posts, this.next, this.previous, required this.count, this.hasMore = false}): _posts = posts;
+  const FeedLoaded({required  List<Post> posts, this.next, this.previous, required this.count, this.hasMore = false}): _posts = posts;
   
 
  final  List<Post> _posts;
@@ -404,16 +407,18 @@ $FeedLoadedCopyWith<FeedLoaded> get copyWith => _$FeedLoadedCopyWithImpl<FeedLoa
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedLoaded&&const DeepCollectionEquality().equals(other._posts, _posts)&&(identical(other.next, next) || other.next == next)&&(identical(other.previous, previous) || other.previous == previous)&&(identical(other.count, count) || other.count == count)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedLoaded&&const DeepCollectionEquality().equals(other.posts, _posts)&&(identical(other.next, next) || other.next == next)&&(identical(other.previous, previous) || other.previous == previous)&&(identical(other.count, count) || other.count == count)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_posts),next,previous,count,hasMore);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_posts),next,previous,count,hasMore);
+}
 
 @override
 String toString() {
-  return 'FeedState.loaded(posts: $posts, next: $next, previous: $previous, count: $count, hasMore: $hasMore)';
+    return 'FeedState.loaded(posts: $posts, next: $next, previous: $previous, count: $count, hasMore: $hasMore)';
 }
 
 
@@ -459,7 +464,7 @@ as bool,
 
 
 class FeedPaginationError implements FeedState {
-  const FeedPaginationError({required final  List<Post> existingPosts, required this.message, required this.hasMore}): _existingPosts = existingPosts;
+  const FeedPaginationError({required  List<Post> existingPosts, required this.message, required this.hasMore}): _existingPosts = existingPosts;
   
 
  final  List<Post> _existingPosts;
@@ -482,16 +487,18 @@ $FeedPaginationErrorCopyWith<FeedPaginationError> get copyWith => _$FeedPaginati
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedPaginationError&&const DeepCollectionEquality().equals(other._existingPosts, _existingPosts)&&(identical(other.message, message) || other.message == message)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedPaginationError&&const DeepCollectionEquality().equals(other.existingPosts, _existingPosts)&&(identical(other.message, message) || other.message == message)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_existingPosts),message,hasMore);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_existingPosts),message,hasMore);
+}
 
 @override
 String toString() {
-  return 'FeedState.paginationError(existingPosts: $existingPosts, message: $message, hasMore: $hasMore)';
+    return 'FeedState.paginationError(existingPosts: $existingPosts, message: $message, hasMore: $hasMore)';
 }
 
 
@@ -550,16 +557,18 @@ $FeedErrorCopyWith<FeedError> get copyWith => _$FeedErrorCopyWithImpl<FeedError>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedError&&(identical(other.message, message) || other.message == message));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedError&&(identical(other.message, message) || other.message == message));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,message);
+int get hashCode {
+    return Object.hash(runtimeType,message);
+}
 
 @override
 String toString() {
-  return 'FeedState.error(message: $message)';
+    return 'FeedState.error(message: $message)';
 }
 
 
@@ -611,7 +620,7 @@ class PostDetailLoading implements FeedState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PostDetailLoading);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is PostDetailLoading);
 }
 
 
@@ -620,7 +629,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'FeedState.postDetailLoading()';
+    return 'FeedState.postDetailLoading()';
 }
 
 
@@ -648,16 +657,18 @@ $PostDetailLoadedCopyWith<PostDetailLoaded> get copyWith => _$PostDetailLoadedCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PostDetailLoaded&&(identical(other.post, post) || other.post == post));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is PostDetailLoaded&&(identical(other.post, post) || other.post == post));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,post);
+int get hashCode {
+    return Object.hash(runtimeType,post);
+}
 
 @override
 String toString() {
-  return 'FeedState.postDetailLoaded(post: $post)';
+    return 'FeedState.postDetailLoaded(post: $post)';
 }
 
 
@@ -723,16 +734,18 @@ $PostDetailErrorCopyWith<PostDetailError> get copyWith => _$PostDetailErrorCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PostDetailError&&(identical(other.message, message) || other.message == message));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is PostDetailError&&(identical(other.message, message) || other.message == message));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,message);
+int get hashCode {
+    return Object.hash(runtimeType,message);
+}
 
 @override
 String toString() {
-  return 'FeedState.postDetailError(message: $message)';
+    return 'FeedState.postDetailError(message: $message)';
 }
 
 
@@ -784,7 +797,7 @@ class PostCreating implements FeedState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PostCreating);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is PostCreating);
 }
 
 
@@ -793,7 +806,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'FeedState.postCreating()';
+    return 'FeedState.postCreating()';
 }
 
 
@@ -806,7 +819,7 @@ String toString() {
 
 
 class PostCreated implements FeedState {
-  const PostCreated({required final  List<Post> posts}): _posts = posts;
+  const PostCreated({required  List<Post> posts}): _posts = posts;
   
 
  final  List<Post> _posts;
@@ -827,16 +840,18 @@ $PostCreatedCopyWith<PostCreated> get copyWith => _$PostCreatedCopyWithImpl<Post
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PostCreated&&const DeepCollectionEquality().equals(other._posts, _posts));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is PostCreated&&const DeepCollectionEquality().equals(other.posts, _posts));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_posts));
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_posts));
+}
 
 @override
 String toString() {
-  return 'FeedState.postCreated(posts: $posts)';
+    return 'FeedState.postCreated(posts: $posts)';
 }
 
 
@@ -893,16 +908,18 @@ $PostCreateErrorCopyWith<PostCreateError> get copyWith => _$PostCreateErrorCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PostCreateError&&(identical(other.message, message) || other.message == message));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is PostCreateError&&(identical(other.message, message) || other.message == message));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,message);
+int get hashCode {
+    return Object.hash(runtimeType,message);
+}
 
 @override
 String toString() {
-  return 'FeedState.postCreateError(message: $message)';
+    return 'FeedState.postCreateError(message: $message)';
 }
 
 
@@ -960,16 +977,18 @@ $PostLikeErrorCopyWith<PostLikeError> get copyWith => _$PostLikeErrorCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PostLikeError&&(identical(other.post, post) || other.post == post)&&(identical(other.message, message) || other.message == message));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is PostLikeError&&(identical(other.post, post) || other.post == post)&&(identical(other.message, message) || other.message == message));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,post,message);
+int get hashCode {
+    return Object.hash(runtimeType,post,message);
+}
 
 @override
 String toString() {
-  return 'FeedState.postLikeError(post: $post, message: $message)';
+    return 'FeedState.postLikeError(post: $post, message: $message)';
 }
 
 

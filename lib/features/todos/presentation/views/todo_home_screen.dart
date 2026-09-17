@@ -3,12 +3,11 @@ import 'dart:io' show Platform;
 import 'package:academia/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:academia/features/permissions/permissions.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:vibration/vibration.dart';
 import 'package:go_router/go_router.dart';
+import 'package:permissions/permissions.dart';
 
 class TodoHomeScreen extends StatefulWidget {
   const TodoHomeScreen({super.key});
@@ -32,14 +31,14 @@ class _TodoHomeScreenState extends State<TodoHomeScreen>
   @override
   void initState() {
     super.initState();
-    final permissions = [AppPermission.notification];
+    final permissions = [PermissionCapability.notifications];
 
     if (!kIsWeb) {
       if (Platform.isAndroid) {
-        permissions.add(AppPermission.preciseAlarm);
+        permissions.add(PermissionCapability.preciseAlarms);
       }
     }
-    context.read<PermissionCubit>().checkMultiplePermissions(permissions);
+    context.read<PermissionCubit>().checkAll(permissions);
   }
 
   Future<void> _showHelpDialog() {
@@ -76,8 +75,8 @@ class _TodoHomeScreenState extends State<TodoHomeScreen>
                   if (!context.mounted) return;
 
                   // Check both permissions
-                  await context.read<PermissionCubit>().checkPermission(
-                    AppPermission.notification,
+                  await context.read<PermissionCubit>().check(
+                    PermissionCapability.notifications,
                   );
 
                   if (!context.mounted) return;
@@ -95,9 +94,11 @@ class _TodoHomeScreenState extends State<TodoHomeScreen>
                         ),
                         actions: [
                           FilledButton.icon(
-                            onPressed: () {
-                              openAppSettings();
-                              context.pop();
+                            onPressed: () async {
+                              await context
+                                  .read<PermissionCubit>()
+                                  .openSystemSettings();
+                              if (context.mounted) context.pop();
                             },
                             label: const Text("Enable"),
                             icon: const Icon(Icons.notifications),
@@ -114,15 +115,15 @@ class _TodoHomeScreenState extends State<TodoHomeScreen>
                   }
 
                   // Request Notification permission
-                  await context.read<PermissionCubit>().requestPermission(
-                    AppPermission.notification,
+                  await context.read<PermissionCubit>().request(
+                    PermissionCapability.notifications,
                   );
 
                   // Also request Precise Alarm permission for timing accuracy
                   if (Platform.isAndroid) {
                     if (context.mounted) {
-                      await context.read<PermissionCubit>().requestPermission(
-                        AppPermission.preciseAlarm,
+                      await context.read<PermissionCubit>().request(
+                        PermissionCapability.preciseAlarms,
                       );
                     }
                   }

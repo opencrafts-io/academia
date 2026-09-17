@@ -1,9 +1,9 @@
-import 'package:core/config/flavor.dart';
+import 'dart:async';
+
 import 'package:academia/core/core.dart';
 import 'package:academia/features/auth/auth.dart';
+import 'package:analytics/analytics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:posthog_flutter/posthog_flutter.dart';
-import 'package:academia/injection_container.dart';
 import 'package:logger/logger.dart';
 
 import 'package:equatable/equatable.dart';
@@ -20,7 +20,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final SignInAsReviewUsecase signInAsReviewUsecase;
   final SignInWithProviderUsecase signInWithProviderUsecase;
   final SignOutUsecase signOutUsecase;
-  final Posthog posthog = Posthog();
+  final AnalyticsTracker analyticsTracker;
 
   AuthBloc({
     required this.signInWithGoogle,
@@ -31,6 +31,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required this.signInWithAppleUsecase,
     required this.signInWithProviderUsecase,
     required this.signOutUsecase,
+    required this.analyticsTracker,
   }) : super(const AuthInitial()) {
     // Register event handlers
     on<AuthSignInAsReviewerEvent>(_onSignInAsReviewer);
@@ -55,13 +56,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       (failure) =>
           emit(AuthError(message: (failure as AuthenticationFailure).message)),
       (token) {
-        // Log successfull login
-        if (sl<FlavorConfig>().isProduction) {
-          posthog.capture(
-            eventName: "user_login",
-            properties: {'login_type': 'Google', "successful": 1},
-          );
-        }
+        _recordSignIn(AnalyticsSignInMethod.provider);
         emit(AuthAuthenticated(token: token));
       },
     );
@@ -79,13 +74,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       (failure) =>
           emit(AuthError(message: (failure as AuthenticationFailure).message)),
       (token) {
-        // Log successfull login
-        if (sl<FlavorConfig>().isProduction) {
-          posthog.capture(
-            eventName: "user_login",
-            properties: {'login_type': 'Google', "successful": 1},
-          );
-        }
+        _recordSignIn(AnalyticsSignInMethod.spotify);
 
         emit(AuthAuthenticated(token: token));
       },
@@ -104,13 +93,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       (failure) =>
           emit(AuthError(message: (failure as AuthenticationFailure).message)),
       (token) {
-        // Log successfull login
-        if (sl<FlavorConfig>().isProduction) {
-          posthog.capture(
-            eventName: "user_login",
-            properties: {'login_type': 'Review Sign In', "successful": 1},
-          );
-        }
+        _recordSignIn(AnalyticsSignInMethod.reviewer);
 
         emit(AuthAuthenticated(token: token));
       },
@@ -129,13 +112,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       (failure) =>
           emit(AuthError(message: (failure as AuthenticationFailure).message)),
       (token) {
-        // Log successfull login
-        if (sl<FlavorConfig>().isProduction) {
-          posthog.capture(
-            eventName: "user_login",
-            properties: {'login_type': 'Google', "successful": 1},
-          );
-        }
+        _recordSignIn(AnalyticsSignInMethod.google);
 
         emit(AuthAuthenticated(token: token));
       },
@@ -154,13 +131,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       (failure) =>
           emit(AuthError(message: (failure as AuthenticationFailure).message)),
       (token) {
-        // Log successfull login
-        if (sl<FlavorConfig>().isProduction) {
-          posthog.capture(
-            eventName: "user_login",
-            properties: {'login_type': 'Apple', "successful": 1},
-          );
-        }
+        _recordSignIn(AnalyticsSignInMethod.apple);
 
         emit(AuthAuthenticated(token: token));
       },
@@ -234,9 +205,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(AuthError(message: failure.message));
       },
       (success) {
-        posthog.capture(eventName: "user_logout");
+        unawaited(analyticsTracker.track(AnalyticsEvent.signOutCompleted()));
+        unawaited(analyticsTracker.reset());
         emit(AuthUnauthenticated());
       },
     );
+  }
+
+  void _recordSignIn(AnalyticsSignInMethod method) {
+    unawaited(analyticsTracker.track(AnalyticsEvent.signInCompleted(method)));
   }
 }

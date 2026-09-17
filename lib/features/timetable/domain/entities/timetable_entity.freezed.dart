@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'timetable_entity.dart';
@@ -9,6 +9,7 @@ part of 'timetable_entity.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -27,16 +28,21 @@ $TimetableEntityCopyWith<TimetableEntity> get copyWith => _$TimetableEntityCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TimetableEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.serverId, serverId) || other.serverId == serverId)&&(identical(other.name, name) || other.name == name)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.institutionId, institutionId) || other.institutionId == institutionId)&&(identical(other.isSynced, isSynced) || other.isSynced == isSynced)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  final _this = this as TimetableEntity;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TimetableEntity&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.serverId, _this.serverId) || other.serverId == _this.serverId)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.userId, _this.userId) || other.userId == _this.userId)&&(identical(other.institutionId, _this.institutionId) || other.institutionId == _this.institutionId)&&(identical(other.isSynced, _this.isSynced) || other.isSynced == _this.isSynced)&&(identical(other.isDeleted, _this.isDeleted) || other.isDeleted == _this.isDeleted)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,serverId,name,userId,institutionId,isSynced,isDeleted,createdAt,updatedAt);
+int get hashCode {
+  final _this = this as TimetableEntity;
+  return Object.hash(runtimeType,_this.id,_this.serverId,_this.name,_this.userId,_this.institutionId,_this.isSynced,_this.isDeleted,_this.createdAt,_this.updatedAt);
+}
 
 @override
 String toString() {
-  return 'TimetableEntity(id: $id, serverId: $serverId, name: $name, userId: $userId, institutionId: $institutionId, isSynced: $isSynced, isDeleted: $isDeleted, createdAt: $createdAt, updatedAt: $updatedAt)';
+  final _this = this as TimetableEntity;
+  return 'TimetableEntity(id: ${_this.id}, serverId: ${_this.serverId}, name: ${_this.name}, userId: ${_this.userId}, institutionId: ${_this.institutionId}, isSynced: ${_this.isSynced}, isDeleted: ${_this.isDeleted}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt})';
 }
 
 
@@ -65,7 +71,7 @@ class _$TimetableEntityCopyWithImpl<$Res>
 /// Create a copy of TimetableEntity
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? serverId = freezed,Object? name = null,Object? userId = null,Object? institutionId = freezed,Object? isSynced = null,Object? isDeleted = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(TimetableEntity(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,serverId: freezed == serverId ? _self.serverId : serverId // ignore: cast_nullable_to_non_nullable
 as int?,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -241,16 +247,18 @@ _$TimetableEntityCopyWith<_TimetableEntity> get copyWith => __$TimetableEntityCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TimetableEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.serverId, serverId) || other.serverId == serverId)&&(identical(other.name, name) || other.name == name)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.institutionId, institutionId) || other.institutionId == institutionId)&&(identical(other.isSynced, isSynced) || other.isSynced == isSynced)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _TimetableEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.serverId, serverId) || other.serverId == serverId)&&(identical(other.name, name) || other.name == name)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.institutionId, institutionId) || other.institutionId == institutionId)&&(identical(other.isSynced, isSynced) || other.isSynced == isSynced)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,serverId,name,userId,institutionId,isSynced,isDeleted,createdAt,updatedAt);
+int get hashCode {
+    return Object.hash(runtimeType,id,serverId,name,userId,institutionId,isSynced,isDeleted,createdAt,updatedAt);
+}
 
 @override
 String toString() {
-  return 'TimetableEntity(id: $id, serverId: $serverId, name: $name, userId: $userId, institutionId: $institutionId, isSynced: $isSynced, isDeleted: $isDeleted, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'TimetableEntity(id: $id, serverId: $serverId, name: $name, userId: $userId, institutionId: $institutionId, isSynced: $isSynced, isDeleted: $isDeleted, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 

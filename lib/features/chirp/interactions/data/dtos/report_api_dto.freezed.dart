@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'report_api_dto.dart';
@@ -9,6 +9,7 @@ part of 'report_api_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $ReportApiDtoCopyWith<ReportApiDto> get copyWith => _$ReportApiDtoCopyWithImpl<R
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReportApiDto&&(identical(other.id, id) || other.id == id)&&(identical(other.reportType, reportType) || other.reportType == reportType)&&(identical(other.reportedUser, reportedUser) || other.reportedUser == reportedUser)&&(identical(other.reportedPost, reportedPost) || other.reportedPost == reportedPost)&&(identical(other.reportedComment, reportedComment) || other.reportedComment == reportedComment)&&(identical(other.reportedCommunity, reportedCommunity) || other.reportedCommunity == reportedCommunity)&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  final _this = this as ReportApiDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReportApiDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.reportType, _this.reportType) || other.reportType == _this.reportType)&&(identical(other.reportedUser, _this.reportedUser) || other.reportedUser == _this.reportedUser)&&(identical(other.reportedPost, _this.reportedPost) || other.reportedPost == _this.reportedPost)&&(identical(other.reportedComment, _this.reportedComment) || other.reportedComment == _this.reportedComment)&&(identical(other.reportedCommunity, _this.reportedCommunity) || other.reportedCommunity == _this.reportedCommunity)&&(identical(other.reason, _this.reason) || other.reason == _this.reason)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,reportType,reportedUser,reportedPost,reportedComment,reportedCommunity,reason,status,createdAt,updatedAt);
+int get hashCode {
+  final _this = this as ReportApiDto;
+  return Object.hash(runtimeType,_this.id,_this.reportType,_this.reportedUser,_this.reportedPost,_this.reportedComment,_this.reportedCommunity,_this.reason,_this.status,_this.createdAt,_this.updatedAt);
+}
 
 @override
 String toString() {
-  return 'ReportApiDto(id: $id, reportType: $reportType, reportedUser: $reportedUser, reportedPost: $reportedPost, reportedComment: $reportedComment, reportedCommunity: $reportedCommunity, reason: $reason, status: $status, createdAt: $createdAt, updatedAt: $updatedAt)';
+  final _this = this as ReportApiDto;
+  return 'ReportApiDto(id: ${_this.id}, reportType: ${_this.reportType}, reportedUser: ${_this.reportedUser}, reportedPost: ${_this.reportedPost}, reportedComment: ${_this.reportedComment}, reportedCommunity: ${_this.reportedCommunity}, reason: ${_this.reason}, status: ${_this.status}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt})';
 }
 
 
@@ -66,7 +72,7 @@ class _$ReportApiDtoCopyWithImpl<$Res>
 /// Create a copy of ReportApiDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? reportType = null,Object? reportedUser = freezed,Object? reportedPost = freezed,Object? reportedComment = freezed,Object? reportedCommunity = freezed,Object? reason = null,Object? status = null,Object? createdAt = null,Object? updatedAt = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(ReportApiDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,reportType: null == reportType ? _self.reportType : reportType // ignore: cast_nullable_to_non_nullable
 as String,reportedUser: freezed == reportedUser ? _self.reportedUser : reportedUser // ignore: cast_nullable_to_non_nullable
@@ -245,16 +251,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReportApiDto&&(identical(other.id, id) || other.id == id)&&(identical(other.reportType, reportType) || other.reportType == reportType)&&(identical(other.reportedUser, reportedUser) || other.reportedUser == reportedUser)&&(identical(other.reportedPost, reportedPost) || other.reportedPost == reportedPost)&&(identical(other.reportedComment, reportedComment) || other.reportedComment == reportedComment)&&(identical(other.reportedCommunity, reportedCommunity) || other.reportedCommunity == reportedCommunity)&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReportApiDto&&(identical(other.id, id) || other.id == id)&&(identical(other.reportType, reportType) || other.reportType == reportType)&&(identical(other.reportedUser, reportedUser) || other.reportedUser == reportedUser)&&(identical(other.reportedPost, reportedPost) || other.reportedPost == reportedPost)&&(identical(other.reportedComment, reportedComment) || other.reportedComment == reportedComment)&&(identical(other.reportedCommunity, reportedCommunity) || other.reportedCommunity == reportedCommunity)&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,reportType,reportedUser,reportedPost,reportedComment,reportedCommunity,reason,status,createdAt,updatedAt);
+int get hashCode {
+    return Object.hash(runtimeType,id,reportType,reportedUser,reportedPost,reportedComment,reportedCommunity,reason,status,createdAt,updatedAt);
+}
 
 @override
 String toString() {
-  return 'ReportApiDto(id: $id, reportType: $reportType, reportedUser: $reportedUser, reportedPost: $reportedPost, reportedComment: $reportedComment, reportedCommunity: $reportedCommunity, reason: $reason, status: $status, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'ReportApiDto(id: $id, reportType: $reportType, reportedUser: $reportedUser, reportedPost: $reportedPost, reportedComment: $reportedComment, reportedCommunity: $reportedCommunity, reason: $reason, status: $status, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 

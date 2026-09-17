@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'community_listing_state.dart';
@@ -9,6 +9,7 @@ part of 'community_listing_state.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -20,7 +21,7 @@ mixin _$CommunityListingState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommunityListingState);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is CommunityListingState);
 }
 
 
@@ -29,7 +30,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'CommunityListingState()';
+    return 'CommunityListingState()';
 }
 
 
@@ -197,7 +198,7 @@ class CommunityListingInitialState implements CommunityListingState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommunityListingInitialState);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is CommunityListingInitialState);
 }
 
 
@@ -206,7 +207,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'CommunityListingState.initial()';
+    return 'CommunityListingState.initial()';
 }
 
 
@@ -229,7 +230,7 @@ class CommunityListingLoadingState implements CommunityListingState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommunityListingLoadingState);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is CommunityListingLoadingState);
 }
 
 
@@ -238,7 +239,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'CommunityListingState.loading()';
+    return 'CommunityListingState.loading()';
 }
 
 
@@ -266,16 +267,18 @@ $CommunityListingErrorStateCopyWith<CommunityListingErrorState> get copyWith => 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommunityListingErrorState&&(identical(other.message, message) || other.message == message));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is CommunityListingErrorState&&(identical(other.message, message) || other.message == message));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,message);
+int get hashCode {
+    return Object.hash(runtimeType,message);
+}
 
 @override
 String toString() {
-  return 'CommunityListingState.error(message: $message)';
+    return 'CommunityListingState.error(message: $message)';
 }
 
 
@@ -317,7 +320,7 @@ as String,
 
 
 class CommunityListingLoadedState implements CommunityListingState {
-  const CommunityListingLoadedState({required final  List<Community> communities, this.hasReachedMax = false, this.isLoadingMore = false, this.searchTerm}): _communities = communities;
+  const CommunityListingLoadedState({required  List<Community> communities, this.hasReachedMax = false, this.isLoadingMore = false, this.searchTerm}): _communities = communities;
   
 
  final  List<Community> _communities;
@@ -341,16 +344,18 @@ $CommunityListingLoadedStateCopyWith<CommunityListingLoadedState> get copyWith =
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommunityListingLoadedState&&const DeepCollectionEquality().equals(other._communities, _communities)&&(identical(other.hasReachedMax, hasReachedMax) || other.hasReachedMax == hasReachedMax)&&(identical(other.isLoadingMore, isLoadingMore) || other.isLoadingMore == isLoadingMore)&&(identical(other.searchTerm, searchTerm) || other.searchTerm == searchTerm));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is CommunityListingLoadedState&&const DeepCollectionEquality().equals(other.communities, _communities)&&(identical(other.hasReachedMax, hasReachedMax) || other.hasReachedMax == hasReachedMax)&&(identical(other.isLoadingMore, isLoadingMore) || other.isLoadingMore == isLoadingMore)&&(identical(other.searchTerm, searchTerm) || other.searchTerm == searchTerm));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_communities),hasReachedMax,isLoadingMore,searchTerm);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_communities),hasReachedMax,isLoadingMore,searchTerm);
+}
 
 @override
 String toString() {
-  return 'CommunityListingState.loaded(communities: $communities, hasReachedMax: $hasReachedMax, isLoadingMore: $isLoadingMore, searchTerm: $searchTerm)';
+    return 'CommunityListingState.loaded(communities: $communities, hasReachedMax: $hasReachedMax, isLoadingMore: $isLoadingMore, searchTerm: $searchTerm)';
 }
 
 

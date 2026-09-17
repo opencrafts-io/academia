@@ -1,10 +1,10 @@
+import 'dart:async';
+
 import 'package:academia/config/router/router.dart';
 import 'package:academia/features/course/course.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
-import 'package:academia/features/permissions/permissions.dart';
 import 'package:academia/features/semester/semester.dart';
-import 'package:academia/features/settings/presentation/cubit/settings_state.dart';
 import 'package:academia/gen/fonts.gen.dart';
 import 'package:academia/injection_container.dart';
 import 'package:dynamic_color/dynamic_color.dart';
@@ -12,7 +12,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
-import 'package:logger/logger.dart';
+import 'package:in_app_update/in_app_update.dart';
+import 'package:permissions/permissions.dart';
+import 'package:settings/settings.dart';
 
 class Academia extends StatefulWidget {
   const Academia({super.key});
@@ -22,8 +24,6 @@ class Academia extends StatefulWidget {
 }
 
 class _AcademiaState extends State<Academia> {
-  final Logger _logger = Logger();
-
   @override
   void initState() {
     setOptimalDisplayMode();
@@ -199,22 +199,19 @@ class _AcademiaState extends State<Academia> {
                 builder: (context, child) {
                   return BlocListener<InAppUpdateBloc, InAppUpdateState>(
                     listener: (context, state) {
+                      final navigatorContext =
+                          AppRouter.globalNavigatorKey.currentContext;
+                      if (navigatorContext == null) return;
+
                       if (state is InAppUpdateRequired) {
-                        showModalBottomSheet(
-                          context: AppRouter.globalNavigatorKey.currentContext!,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(32),
-                          ),
-                          isDismissible: !state.isMandatory,
-                          enableDrag: false,
-                          useSafeArea: false,
-                          builder: (dialogContext) => AppUpdatePage(
-                            message: state.message,
-                            isMandatory: state.isMandatory,
-                            onUpdate: () => context
-                                .read<InAppUpdateBloc>()
-                                .redirectToStore(),
-                          ),
+                        unawaited(
+                          AppUpdateRequiredRoute($extra: state.campaign)
+                              .push(navigatorContext),
+                        );
+                      } else if (state is InAppUpdateOptional) {
+                        unawaited(
+                          AppUpdateOptionalRoute($extra: state.campaign)
+                              .push(navigatorContext),
                         );
                       }
                     },

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'chirp_user_api_dto.dart';
@@ -9,6 +9,7 @@ part of 'chirp_user_api_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $ChirpUserApiDtoCopyWith<ChirpUserApiDto> get copyWith => _$ChirpUserApiDtoCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChirpUserApiDto&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.email, email) || other.email == email)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.username, username) || other.username == username)&&(identical(other.vibePoints, vibePoints) || other.vibePoints == vibePoints)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  final _this = this as ChirpUserApiDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChirpUserApiDto&&(identical(other.userId, _this.userId) || other.userId == _this.userId)&&(identical(other.email, _this.email) || other.email == _this.email)&&(identical(other.phone, _this.phone) || other.phone == _this.phone)&&(identical(other.username, _this.username) || other.username == _this.username)&&(identical(other.vibePoints, _this.vibePoints) || other.vibePoints == _this.vibePoints)&&(identical(other.avatarUrl, _this.avatarUrl) || other.avatarUrl == _this.avatarUrl)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,userId,email,phone,username,vibePoints,avatarUrl,createdAt,updatedAt);
+int get hashCode {
+  final _this = this as ChirpUserApiDto;
+  return Object.hash(runtimeType,_this.userId,_this.email,_this.phone,_this.username,_this.vibePoints,_this.avatarUrl,_this.createdAt,_this.updatedAt);
+}
 
 @override
 String toString() {
-  return 'ChirpUserApiDto(userId: $userId, email: $email, phone: $phone, username: $username, vibePoints: $vibePoints, avatarUrl: $avatarUrl, createdAt: $createdAt, updatedAt: $updatedAt)';
+  final _this = this as ChirpUserApiDto;
+  return 'ChirpUserApiDto(userId: ${_this.userId}, email: ${_this.email}, phone: ${_this.phone}, username: ${_this.username}, vibePoints: ${_this.vibePoints}, avatarUrl: ${_this.avatarUrl}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt})';
 }
 
 
@@ -66,7 +72,7 @@ class _$ChirpUserApiDtoCopyWithImpl<$Res>
 /// Create a copy of ChirpUserApiDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? userId = null,Object? email = freezed,Object? phone = freezed,Object? username = freezed,Object? vibePoints = null,Object? avatarUrl = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
-  return _then(_self.copyWith(
+  return _then(ChirpUserApiDto(
 userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String?,phone: freezed == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
@@ -241,16 +247,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ChirpUserApiDto&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.email, email) || other.email == email)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.username, username) || other.username == username)&&(identical(other.vibePoints, vibePoints) || other.vibePoints == vibePoints)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ChirpUserApiDto&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.email, email) || other.email == email)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.username, username) || other.username == username)&&(identical(other.vibePoints, vibePoints) || other.vibePoints == vibePoints)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,userId,email,phone,username,vibePoints,avatarUrl,createdAt,updatedAt);
+int get hashCode {
+    return Object.hash(runtimeType,userId,email,phone,username,vibePoints,avatarUrl,createdAt,updatedAt);
+}
 
 @override
 String toString() {
-  return 'ChirpUserApiDto(userId: $userId, email: $email, phone: $phone, username: $username, vibePoints: $vibePoints, avatarUrl: $avatarUrl, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'ChirpUserApiDto(userId: $userId, email: $email, phone: $phone, username: $username, vibePoints: $vibePoints, avatarUrl: $avatarUrl, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 

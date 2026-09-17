@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:analytics/analytics.dart';
 import 'package:billing/src/domain/domain.dart';
 import 'package:core/core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,6 +18,7 @@ class SubscriptionManagementBloc
     this._createOrder,
     this._createOrderItem,
     this._createCheckoutSession,
+    this._analyticsTracker,
   ) : super(const SubscriptionManagementState()) {
     on<LoadSubscriptionManagement>(_load);
     on<RefreshSubscriptionManagement>(_load);
@@ -29,6 +33,7 @@ class SubscriptionManagementBloc
   final CreateOrder _createOrder;
   final CreateOrderItem _createOrderItem;
   final CreateCheckoutSession _createCheckoutSession;
+  final AnalyticsTracker _analyticsTracker;
 
   Future<void> _load(
     SubscriptionManagementEvent event,
@@ -240,13 +245,16 @@ class SubscriptionManagementBloc
           failure: failure,
         ),
       ),
-      (session) => emit(
-        state.copyWith(
-          status: SubscriptionManagementStatus.checkoutSessionReady,
-          checkoutSession: session,
-          clearFailure: true,
-        ),
-      ),
+      (session) {
+        unawaited(_analyticsTracker.track(AnalyticsEvent.checkoutStarted()));
+        emit(
+          state.copyWith(
+            status: SubscriptionManagementStatus.checkoutSessionReady,
+            checkoutSession: session,
+            clearFailure: true,
+          ),
+        );
+      },
     );
   }
 }

@@ -9,7 +9,6 @@ part of 'routes.dart';
 List<RouteBase> get $appRoutes => [
   $splashScreenRoute,
   $layoutShellRoute,
-  $notificationPermissionRoute,
   $lockInRoute,
   $feedRoute,
   $postDetailRoute,
@@ -35,14 +34,16 @@ List<RouteBase> get $appRoutes => [
   $achievementsHomePageRoute,
   $activitiesPageRoute,
   $examTimetableRoute,
-  $settingsPageRoute,
   $institutionShellRouteData,
   $semestersPageRoute,
   $coursesPageRoute,
 ];
 
-RouteBase get $splashScreenRoute =>
-    GoRouteData.$route(path: '/splash', factory: $SplashScreenRoute._fromState);
+RouteBase get $splashScreenRoute => GoRouteData.$route(
+  path: '/splash',
+  hasOverriddenOnExit: false,
+  factory: $SplashScreenRoute._fromState,
+);
 
 mixin $SplashScreenRoute on GoRouteData {
   static SplashScreenRoute _fromState(GoRouterState state) =>
@@ -69,20 +70,29 @@ RouteBase get $layoutShellRoute => StatefulShellRouteData.$route(
   factory: $LayoutShellRouteExtension._fromState,
   branches: [
     StatefulShellBranchData.$branch(
-      routes: [GoRouteData.$route(path: '/', factory: $HomeRoute._fromState)],
+      routes: [
+        GoRouteData.$route(
+          path: '/',
+          hasOverriddenOnExit: false,
+          factory: $HomeRoute._fromState,
+        ),
+      ],
     ),
     StatefulShellBranchData.$branch(
       routes: [
         GoRouteData.$route(
           path: '/calendar',
+          hasOverriddenOnExit: false,
           factory: $CalendarRoute._fromState,
           routes: [
             GoRouteData.$route(
               path: 'create',
+              hasOverriddenOnExit: false,
               factory: $CreateAgendaEventRoute._fromState,
             ),
             GoRouteData.$route(
               path: 'item/:id',
+              hasOverriddenOnExit: false,
               factory: $AgendaItemViewRoute._fromState,
             ),
           ],
@@ -93,6 +103,7 @@ RouteBase get $layoutShellRoute => StatefulShellRouteData.$route(
       routes: [
         GoRouteData.$route(
           path: '/essentials',
+          hasOverriddenOnExit: false,
           factory: $EssentialsRoute._fromState,
         ),
       ],
@@ -211,34 +222,11 @@ mixin $EssentialsRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-RouteBase get $notificationPermissionRoute => GoRouteData.$route(
-  path: '/notification-allow',
-  factory: $NotificationPermissionRoute._fromState,
+RouteBase get $lockInRoute => GoRouteData.$route(
+  path: '/lock-in',
+  hasOverriddenOnExit: false,
+  factory: $LockInRoute._fromState,
 );
-
-mixin $NotificationPermissionRoute on GoRouteData {
-  static NotificationPermissionRoute _fromState(GoRouterState state) =>
-      NotificationPermissionRoute();
-
-  @override
-  String get location => GoRouteData.$location('/notification-allow');
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-RouteBase get $lockInRoute =>
-    GoRouteData.$route(path: '/lock-in', factory: $LockInRoute._fromState);
 
 mixin $LockInRoute on GoRouteData {
   static LockInRoute _fromState(GoRouterState state) => LockInRoute();
@@ -260,8 +248,11 @@ mixin $LockInRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-RouteBase get $feedRoute =>
-    GoRouteData.$route(path: '/feed', factory: $FeedRoute._fromState);
+RouteBase get $feedRoute => GoRouteData.$route(
+  path: '/feed',
+  hasOverriddenOnExit: false,
+  factory: $FeedRoute._fromState,
+);
 
 mixin $FeedRoute on GoRouteData {
   static FeedRoute _fromState(GoRouterState state) => FeedRoute();
@@ -285,6 +276,7 @@ mixin $FeedRoute on GoRouteData {
 
 RouteBase get $postDetailRoute => GoRouteData.$route(
   path: '/post/:postId',
+  hasOverriddenOnExit: false,
   factory: $PostDetailRoute._fromState,
 );
 
@@ -313,8 +305,11 @@ mixin $PostDetailRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-RouteBase get $addPostRoute =>
-    GoRouteData.$route(path: '/add-post', factory: $AddPostRoute._fromState);
+RouteBase get $addPostRoute => GoRouteData.$route(
+  path: '/add-post',
+  hasOverriddenOnExit: false,
+  factory: $AddPostRoute._fromState,
+);
 
 mixin $AddPostRoute on GoRouteData {
   static AddPostRoute _fromState(GoRouterState state) => const AddPostRoute();
@@ -338,6 +333,7 @@ mixin $AddPostRoute on GoRouteData {
 
 RouteBase get $blockedItemsRoute => GoRouteData.$route(
   path: '/blocked-items',
+  hasOverriddenOnExit: false,
   factory: $BlockedItemsRoute._fromState,
 );
 
@@ -362,8 +358,11 @@ mixin $BlockedItemsRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-RouteBase get $authRoute =>
-    GoRouteData.$route(path: '/auth', factory: $AuthRoute._fromState);
+RouteBase get $authRoute => GoRouteData.$route(
+  path: '/auth',
+  hasOverriddenOnExit: false,
+  factory: $AuthRoute._fromState,
+);
 
 mixin $AuthRoute on GoRouteData {
   static AuthRoute _fromState(GoRouterState state) => AuthRoute();
@@ -387,10 +386,12 @@ mixin $AuthRoute on GoRouteData {
 
 RouteBase get $profileRoute => GoRouteData.$route(
   path: '/profile',
+  hasOverriddenOnExit: false,
   factory: $ProfileRoute._fromState,
   routes: [
     GoRouteData.$route(
       path: 'link-institution',
+      hasOverriddenOnExit: false,
       factory: $LinkInstitutionProfileRoute._fromState,
     ),
   ],
@@ -439,6 +440,7 @@ mixin $LinkInstitutionProfileRoute on GoRouteData {
 
 RouteBase get $completeProfileRoute => GoRouteData.$route(
   path: '/complete-profile',
+  hasOverriddenOnExit: false,
   factory: $CompleteProfileRoute._fromState,
 );
 
@@ -465,22 +467,27 @@ mixin $CompleteProfileRoute on GoRouteData {
 
 RouteBase get $shereheRoute => GoRouteData.$route(
   path: '/sherehe',
+  hasOverriddenOnExit: false,
   factory: $ShereheRoute._fromState,
   routes: [
     GoRouteData.$route(
       path: 'create',
+      hasOverriddenOnExit: false,
       factory: $CreateEventRoute._fromState,
       routes: [
         GoRouteData.$route(
           path: 'sherehe-select-institutions',
+          hasOverriddenOnExit: false,
           factory: $ShereheSelectInstitutionsRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'edit-added-ticket',
+          hasOverriddenOnExit: false,
           factory: $EditAddedTicketRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'add-ticket',
+          hasOverriddenOnExit: false,
           factory: $AddTicketRoute._fromState,
         ),
       ],
@@ -683,6 +690,7 @@ bool _$boolConverter(String value) {
 
 RouteBase get $shereheDetailsWithTokenRoute => GoRouteData.$route(
   path: '/sherehe/get-event-with-invite/:invite',
+  hasOverriddenOnExit: false,
   factory: $ShereheDetailsWithTokenRoute._fromState,
 );
 
@@ -714,50 +722,61 @@ mixin $ShereheDetailsWithTokenRoute on GoRouteData {
 
 RouteBase get $shereheDetailsRoute => GoRouteData.$route(
   path: '/sherehe/get-event/:eventId',
+  hasOverriddenOnExit: false,
   factory: $ShereheDetailsRoute._fromState,
   routes: [
     GoRouteData.$route(
       path: 'ticket-flow',
+      hasOverriddenOnExit: false,
       factory: $TicketFlowRoute._fromState,
     ),
     GoRouteData.$route(
       path: 'qr-code-scanner',
+      hasOverriddenOnExit: false,
       factory: $QrCodeScannerRoute._fromState,
     ),
     GoRouteData.$route(
       path: 'event-tickets',
+      hasOverriddenOnExit: false,
       factory: $EventTicketsRoute._fromState,
     ),
     GoRouteData.$route(
       path: 'organizer-dashboard',
+      hasOverriddenOnExit: false,
       factory: $OrganizerDashboardRoute._fromState,
       routes: [
         GoRouteData.$route(
           path: 'all-attendees',
+          hasOverriddenOnExit: false,
           factory: $AllAttendeesRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'all-scanners',
+          hasOverriddenOnExit: false,
           factory: $AllScannersRoute._fromState,
           routes: [
             GoRouteData.$route(
               path: 'add-event-scanner',
+              hasOverriddenOnExit: false,
               factory: $AddEventScannerRoute._fromState,
             ),
           ],
         ),
         GoRouteData.$route(
           path: 'all-event-tickets',
+          hasOverriddenOnExit: false,
           factory: $AllEventTicketsRoute._fromState,
           routes: [
             GoRouteData.$route(
               path: 'ticket-links',
+              hasOverriddenOnExit: false,
               factory: $TicketLinksRoute._fromState,
             ),
           ],
         ),
         GoRouteData.$route(
           path: 'event-links',
+          hasOverriddenOnExit: false,
           factory: $EventLinksRoute._fromState,
         ),
       ],
@@ -1167,6 +1186,7 @@ mixin $EventLinksRoute on GoRouteData {
 
 RouteBase get $ticketFlowWithInviteRoute => GoRouteData.$route(
   path: '/sherehe/ticket-flow-with-invite/:invite',
+  hasOverriddenOnExit: false,
   factory: $TicketFlowWithInviteRoute._fromState,
 );
 
@@ -1197,6 +1217,7 @@ mixin $TicketFlowWithInviteRoute on GoRouteData {
 
 RouteBase get $createTicketRoute => GoRouteData.$route(
   path: '/organizer-dashboard/create-ticket',
+  hasOverriddenOnExit: false,
   factory: $CreateTicketRoute._fromState,
 );
 
@@ -1243,6 +1264,7 @@ mixin $CreateTicketRoute on GoRouteData {
 
 RouteBase get $purchasedTicketsRoute => GoRouteData.$route(
   path: '/purchased-tickets/all',
+  hasOverriddenOnExit: false,
   factory: $PurchasedTicketsRoute._fromState,
 );
 
@@ -1269,6 +1291,7 @@ mixin $PurchasedTicketsRoute on GoRouteData {
 
 RouteBase get $organizedEventsRoute => GoRouteData.$route(
   path: '/organized-events/mine',
+  hasOverriddenOnExit: false,
   factory: $OrganizedEventsRoute._fromState,
 );
 
@@ -1295,6 +1318,7 @@ mixin $OrganizedEventsRoute on GoRouteData {
 
 RouteBase get $ticketReceiptRoute => GoRouteData.$route(
   path: '/ticket-receipt',
+  hasOverriddenOnExit: false,
   factory: $TicketReceiptRoute._fromState,
 );
 
@@ -1332,6 +1356,7 @@ mixin $TicketReceiptRoute on GoRouteData {
 
 RouteBase get $qrCodeRoute => GoRouteData.$route(
   path: '/qr-code/:eventId/:attendeeId',
+  hasOverriddenOnExit: false,
   factory: $QrCodeRoute._fromState,
 );
 
@@ -1375,28 +1400,34 @@ mixin $QrCodeRoute on GoRouteData {
 
 RouteBase get $todosRoute => GoRouteData.$route(
   path: '/todos',
+  hasOverriddenOnExit: false,
   factory: $TodosRoute._fromState,
   routes: [
     GoRouteData.$route(
       path: 'create-tasklist',
+      hasOverriddenOnExit: false,
       factory: $CreateTodoListRoute._fromState,
     ),
     GoRouteData.$route(
       path: 'tasklist',
+      hasOverriddenOnExit: false,
       factory: $ViewTaskListsRoute._fromState,
       routes: [
         GoRouteData.$route(
           path: ':taskListId',
+          hasOverriddenOnExit: false,
           factory: $ViewTaskListRoute._fromState,
         ),
       ],
     ),
     GoRouteData.$route(
       path: 'create-todo-item',
+      hasOverriddenOnExit: false,
       factory: $CreateTodoItemRoute._fromState,
     ),
     GoRouteData.$route(
       path: 'todo-item/:todoLocalID',
+      hasOverriddenOnExit: false,
       factory: $UpdateTodoItemRoute._fromState,
     ),
   ],
@@ -1554,15 +1585,22 @@ mixin $UpdateTodoItemRoute on GoRouteData {
 
 RouteBase get $communitiesRoute => GoRouteData.$route(
   path: '/communities/:communityId',
+  hasOverriddenOnExit: false,
   factory: $CommunitiesRoute._fromState,
   routes: [
-    GoRouteData.$route(path: 'info', factory: $CommunityInfoRoute._fromState),
+    GoRouteData.$route(
+      path: 'info',
+      hasOverriddenOnExit: false,
+      factory: $CommunityInfoRoute._fromState,
+    ),
     GoRouteData.$route(
       path: 'members/:role',
+      hasOverriddenOnExit: false,
       factory: $CommunityMembersRoute._fromState,
     ),
     GoRouteData.$route(
       path: 'edit',
+      hasOverriddenOnExit: false,
       factory: $EditCommunityInfoRoute._fromState,
     ),
   ],
@@ -1678,6 +1716,7 @@ mixin $EditCommunityInfoRoute on GoRouteData {
 
 RouteBase get $createCommunitiesRoute => GoRouteData.$route(
   path: '/create-community',
+  hasOverriddenOnExit: false,
   factory: $CreateCommunitiesRoute._fromState,
 );
 
@@ -1704,6 +1743,7 @@ mixin $CreateCommunitiesRoute on GoRouteData {
 
 RouteBase get $trimVideoRoute => GoRouteData.$route(
   path: '/video-trimmer',
+  hasOverriddenOnExit: false,
   factory: $TrimVideoRoute._fromState,
 );
 
@@ -1734,6 +1774,7 @@ mixin $TrimVideoRoute on GoRouteData {
 
 RouteBase get $communityMembershipsRoute => GoRouteData.$route(
   path: '/community/memberships/mine',
+  hasOverriddenOnExit: false,
   factory: $CommunityMembershipsRoute._fromState,
 );
 
@@ -1760,10 +1801,12 @@ mixin $CommunityMembershipsRoute on GoRouteData {
 
 RouteBase get $achievementsHomePageRoute => GoRouteData.$route(
   path: '/achievements',
+  hasOverriddenOnExit: false,
   factory: $AchievementsHomePageRoute._fromState,
   routes: [
     GoRouteData.$route(
       path: ':id',
+      hasOverriddenOnExit: false,
       factory: $AchievementDetailPageRoute._fromState,
     ),
   ],
@@ -1816,6 +1859,7 @@ mixin $AchievementDetailPageRoute on GoRouteData {
 
 RouteBase get $activitiesPageRoute => GoRouteData.$route(
   path: '/activities/:id',
+  hasOverriddenOnExit: false,
   factory: $ActivitiesPageRoute._fromState,
 );
 
@@ -1845,10 +1889,12 @@ mixin $ActivitiesPageRoute on GoRouteData {
 
 RouteBase get $examTimetableRoute => GoRouteData.$route(
   path: '/exam-timetable/:institutionId',
+  hasOverriddenOnExit: false,
   factory: $ExamTimetableRoute._fromState,
   routes: [
     GoRouteData.$route(
       path: 'search',
+      hasOverriddenOnExit: false,
       factory: $ExamTimetableSearchRoute._fromState,
     ),
   ],
@@ -1908,49 +1954,27 @@ mixin $ExamTimetableSearchRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-RouteBase get $settingsPageRoute => GoRouteData.$route(
-  path: '/settings',
-  factory: $SettingsPageRoute._fromState,
-);
-
-mixin $SettingsPageRoute on GoRouteData {
-  static SettingsPageRoute _fromState(GoRouterState state) =>
-      SettingsPageRoute();
-
-  @override
-  String get location => GoRouteData.$location('/settings');
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
 RouteBase get $institutionShellRouteData => ShellRouteData.$route(
   factory: $InstitutionShellRouteDataExtension._fromState,
   routes: [
     GoRouteData.$route(
       path: '/institution/:institutionID',
+      hasOverriddenOnExit: false,
       factory: $InstitutionHomePageRoute._fromState,
       routes: [
         GoRouteData.$route(
           path: 'keys',
+          hasOverriddenOnExit: false,
           factory: $InstitutionKeysViewRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'fees',
+          hasOverriddenOnExit: false,
           factory: $InstitutionFeesTransactionRoute._fromState,
         ),
         GoRouteData.$route(
           path: 'profile/:profileId',
+          hasOverriddenOnExit: false,
           factory: $EditStudentProfileRoute._fromState,
         ),
       ],
@@ -2075,11 +2099,17 @@ mixin $EditStudentProfileRoute on GoRouteData {
 
 RouteBase get $semestersPageRoute => GoRouteData.$route(
   path: '/semesters',
+  hasOverriddenOnExit: false,
   factory: $SemestersPageRoute._fromState,
   routes: [
-    GoRouteData.$route(path: 'add', factory: $AddSemesterRoute._fromState),
+    GoRouteData.$route(
+      path: 'add',
+      hasOverriddenOnExit: false,
+      factory: $AddSemesterRoute._fromState,
+    ),
     GoRouteData.$route(
       path: 'edit/:id',
+      hasOverriddenOnExit: false,
       factory: $EditSemesterRoute._fromState,
     ),
   ],
@@ -2153,11 +2183,17 @@ mixin $EditSemesterRoute on GoRouteData {
 
 RouteBase get $coursesPageRoute => GoRouteData.$route(
   path: '/courses',
+  hasOverriddenOnExit: false,
   factory: $CoursesPageRoute._fromState,
   routes: [
-    GoRouteData.$route(path: 'create', factory: $AddCoursesRoute._fromState),
+    GoRouteData.$route(
+      path: 'create',
+      hasOverriddenOnExit: false,
+      factory: $AddCoursesRoute._fromState,
+    ),
     GoRouteData.$route(
       path: 'view/:courseId',
+      hasOverriddenOnExit: false,
       factory: $ViewCourseRoute._fromState,
     ),
   ],

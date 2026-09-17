@@ -79,7 +79,6 @@ dependencies:
       ref: v2.0.0
   google_fonts: ^8.0.2
   rrule: ^0.2.17
-  permission_handler: ^12.0.1
   animated_emoji: ^3.2.1
   share_plus: ^10.1.4
   video_trimmer: ^5.0.0
@@ -129,6 +128,18 @@ dependencies:
   # application ads subsystem
   ads:
     path: packages/ads/
+  # application analytics infrastructure subsystem
+  analytics:
+    path: packages/analytics/
+  # application in-app update subsystem
+  in_app_update:
+    path: packages/in_app_update/
+  # application settings subsystem
+  settings:
+    path: packages/settings/
+  # application permissions subsystem
+  permissions:
+    path: packages/permissions/
   # local focus app-blocking subsystem
   lock_in:
     path: packages/lock-in/
@@ -148,7 +159,7 @@ dev_dependencies:
   build_runner: ^2.15.1
   drift_dev: ^2.31.0
   json_serializable: ^6.8.0
-  freezed: ^3.2.3
+  freezed: ^4.0.1
   flutter_gen_runner: ^5.12.0
   injectable_generator: ^3.0.2
 
