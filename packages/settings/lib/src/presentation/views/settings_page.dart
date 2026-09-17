@@ -75,6 +75,7 @@ class SettingsPage extends StatelessWidget {
                                 ),
                             ],
                           ),
+                          const SizedBox(height: 20),
                           _SettingsSection(
                             icon: Icons.notifications_active_rounded,
                             title: 'Notifications',
@@ -101,7 +102,6 @@ class SettingsPage extends StatelessWidget {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 20),
 
                           const SizedBox(height: 20),
                           _SettingsSection(
