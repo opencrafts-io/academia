@@ -1,109 +1,233 @@
-# Academia
+<p align="center">
+  <img src="assets/icons/academia-logo-variant-1.png" width="320" alt="Academia logo" />
+</p>
 
-The best student platform in the world
+<h1 align="center">Academia - For Campus Students</h1>
 
-# How to build the application
+<p align="center">
+  Your campus companion for planning, studying, connecting, and building the
+  student life you want.
+</p>
 
-## Dependencies
-Ensure the following dependencies are installed
-1. Flutter
-2. The will to compile
+<p align="center">
+  A Flutter app, proudly made in Kenya for campus students everywhere.
+</p>
 
+<p align="center">
+  <a href="https://play.google.com/store/apps/details?id=io.opencrafts.academia&amp;hl=en&amp;gl=KE">
+    <img src="https://img.shields.io/badge/Get_it_on-Google_Play-414141?style=for-the-badge&amp;logo=googleplay&amp;logoColor=white" alt="Get Academia on Google Play" />
+  </a>
+  <a href="https://apps.apple.com/us/app/academia-for-campus-students/id6753922995">
+    <img src="https://img.shields.io/badge/Download_on_the-App_Store-000000?style=for-the-badge&amp;logo=apple&amp;logoColor=white" alt="Download Academia on the App Store" />
+  </a>
+</p>
 
-1. Clone the project
+<p align="center">
+  <a href="https://github.com/opencrafts-io/academia/actions/workflows/security.yml">
+    <img src="https://github.com/opencrafts-io/academia/actions/workflows/security.yml/badge.svg?branch=staging" alt="Security and quality workflow" />
+  </a>
+  <a href="https://github.com/opencrafts-io/academia/actions/workflows/asset_consistency.yml">
+    <img src="https://github.com/opencrafts-io/academia/actions/workflows/asset_consistency.yml/badge.svg?branch=staging" alt="Asset consistency workflow" />
+  </a>
+  <img src="https://img.shields.io/badge/Flutter-3.47.4-02569B?logo=flutter&amp;logoColor=white" alt="Flutter 3.47.4" />
+  <img src="https://img.shields.io/badge/Dart-%5E3.13.2-0175C2?logo=dart&amp;logoColor=white" alt="Dart ^3.13.2" />
+</p>
 
-```
-git clone https://github.com/opencrafts-io/academia.git && cd academia
-```
+<p align="center">
+  <a href="https://github.com/opencrafts-io/academia">
+    <img src="https://img.shields.io/github/stars/opencrafts-io/academia?style=for-the-badge&amp;logo=github&amp;label=Star%20on%20GitHub" alt="Star Academia on GitHub" />
+  </a>
+  <img src="https://img.shields.io/badge/Proudly_made_in-Kenya-006600?style=for-the-badge" alt="Proudly made in Kenya" />
+</p>
 
-2. Install packages
+<p align="center">
+  <a href="#everything-for-campus-life">What is inside</a>
+  <span> | </span>
+  <a href="#contribute-to-academia">Contribute</a>
+  <span> | </span>
+  <a href="#quick-start">Quick start</a>
+  <span> | </span>
+  <a href="CONTRIBUTING.md">Contributor guide</a>
+  <span> | </span>
+  <a href="https://github.com/opencrafts-io/academia/issues/new/choose">Report an issue</a>
+  <span> | </span>
+  <a href="https://github.com/opencrafts-io/academia/pulls">Pull requests</a>
+</p>
 
-```
-flutter clean && flutter pub get
-```
+## Why Academia
 
-## Compilation steps
+Academic work, campus systems, events, communities, and personal focus often
+live in separate tools. Academia brings the parts of student life that belong
+together into one app.
 
-Academia utilizes [Android flavors](https://developer.android.com/build/build-variants) for certain build types and configurations
-The following flavors are currently configured
+It is a Flutter application for planning academic work, accessing institution
+information, studying with intention, participating in campus life, and keeping
+track of what matters.
 
-1. developement - For a development kind of environment
-2. staging - For a staging environment
-3. production - For the main production environment
+## Everything for campus life
 
-To run you can use the following command
+| Moment | Academia helps you |
+| --- | --- |
+| Start the day | Check schedules, course information, institutional portal access, and what is next. |
+| Stay on top | Organize todos, agenda items, timetables, exams, and important deadlines. |
+| Study smarter | Use a Pomodoro timer, GPA calculator, and AI features that support your academic workflow. |
+| Find your people | Join Chirp communities, share posts, and take part in campus conversations. |
+| Show up | Discover, organize, ticket, and check in to Sherehe events. |
+| Protect your focus | Use Lock In, app blocking, streaks, and progress tools to make time count. |
+| Make it yours | Link an institution, manage your profile, and control notification preferences. |
+
+## Built in Kenya, open to every campus
+
+Academia is proudly made in Kenya and shaped by the everyday realities of
+campus life. The project welcomes contributors, student communities, designers,
+and builders from around the world who want to make student life easier to
+navigate.
+
+Campuses have different systems, calendars, and communities. Contributions that
+represent those local contexts help make Academia more useful everywhere.
+
+## Contribute to Academia
+
+Academia is open source and welcomes contributions from students, developers,
+designers, and campus communities. You can improve a workflow, support a new
+campus context, or help maintain the project by starting here:
+
+- [Star the repository](https://github.com/opencrafts-io/academia) to help more
+  contributors discover it.
+- [Share a product idea](https://github.com/opencrafts-io/academia/issues/new?template=feature_request.md)
+  from your campus.
+- [Report a problem](https://github.com/opencrafts-io/academia/issues/new?template=bug_report.md)
+  so the experience gets stronger.
+- [Read the contribution guide](CONTRIBUTING.md) and build the next useful
+  student workflow with us.
+
+## Built with Flutter
+
+Academia is built with Flutter and Dart. Product features live in `lib/`, while
+reusable platform services live in `packages/`. This keeps student-facing work
+close to its feature and keeps shared concerns, such as billing, notifications,
+permissions, analytics, and persistence, behind clear package boundaries.
+
+## Quick start
+
+### Prerequisites
+
+- Flutter `3.47.4`, matching the GitHub workflows.
+- A Dart SDK compatible with `^3.13.2`.
+- Android Studio or Xcode when targeting a mobile simulator or device.
+
+### Get the app running
 
 ```bash
-flutter run --target=lib/main_<flavor>.dart --flavor=<flavor>
+git clone https://github.com/opencrafts-io/academia.git
+cd academia
+flutter pub get
+flutter run --flavor development --target lib/main_development.dart
 ```
 
-To build for a certain flavor you can use the following commands
+The entry point selects the environment. Use the target that matches the
+environment you intend to run:
+
+| Environment | Entry point | Android flavor |
+| --- | --- | --- |
+| Development | `lib/main_development.dart` | `development` |
+| Staging | `lib/main_staging.dart` | `staging` |
+| Production | `lib/main_production.dart` | `production` |
+
+For example, run staging with:
 
 ```bash
-flutter build apk --release  --target=lib/main_<flavor>.dart --flavor=<flavor>
+flutter run --flavor staging --target lib/main_staging.dart
 ```
 
-For both commands substitute `<flavor>` with the actual flavor you want to build which probably will be `development`
-in almost all scenarios
+Build a production Android App Bundle with:
 
-> Note that flavors are only supported for Android, ios and macos and will not work for Linux, Desktop and Web
-
-To counter that we have setup flavor configuration using the target entry point and will propagate the configuration
-to the application. 
-
- Running the above commands on unsupported platforms will raise a warnig that its unsupported but will just build correctly
-
-
-
-#  A Word About Code Structure
-
-This project follows the principles of **Clean Architecture**, which is designed to separate concerns and make the codebase more maintainable, testable, and scalable. Clean Architecture divides the system into layers that each handle a distinct responsibility, ensuring that changes in one layer don't negatively impact the others. Below, we will explore how the project is structured and some key concepts such as **error handling** and **dependency injection** that are central to maintaining clean and understandable code.
-
-## Clean Architecture Layers
-
-The project is organized into several key directories that represent different layers of the architecture:
-
-- **Core Layer**: Contains the foundational components such as data structures, error handling, and network logic. This layer is independent of any specific business logic or UI. The `core` directory houses essential utilities that can be reused across the entire project, like network interceptors, error classes, and mixins for common functionality.
-  
-- **Features Layer**: Each feature in the application (like authentication, user profile, etc.) is structured as its own domain, with its own data, domain, and presentation layers. These layers follow the core principles of Clean Architecture:
-    - **Data Layer**: Responsible for interacting with external systems like APIs or databases. It contains the data models and repositories to manage data retrieval and storage.
-    - **Domain Layer**: Contains business logic such as use cases and entities. This is where the core business rules reside.
-    - **Presentation Layer**: Responsible for the UI and state management. It contains the Bloc (for state management) and views that represent the user interface.
-
-- **Config Layer**: Houses configuration files and router-related components. These files control global settings, routes, and the app's navigation logic, keeping them isolated from the business logic to maintain separation of concerns.
-
-- **Database Layer**: Contains database-related components, including database initialization and database-specific models.
-
-## Error Handling
-
-One of the key philosophies of this codebase is **never throwing exceptions**. Instead of using traditional try-catch blocks, errors are handled in a more structured manner using **failures** and **either** type handling. This method leads to more predictable and testable code.
-
-- **Failures**: Custom failure classes are used to represent different types of errors that might occur in the system. These failures are part of the business logic and are passed along through the application's layers.
-
-- **Either**: Rather than throwing exceptions, the project utilizes the **Either** type (common in functional programming). This type is used to represent a result that can either be a success (`Right`) or a failure (`Left`). This approach forces the developer to handle both cases explicitly, improving reliability and reducing the chance of unhandled exceptions.
-
-For example, if an API request fails, it doesn't throw an error. Instead, the failure is encapsulated as a `Left` in the `Either` type, which is then passed along to the UI or business logic for appropriate handling, such as displaying an error message.
-
-### Example:
-```dart
-Either<Failure, UserProfile> result = await userProfileRepository.getUserProfile();
-
-result.fold(
-  (failure) => showError(failure),  // Handle failure
-  (profile) => showProfile(profile), // Handle success
-);
+```bash
+flutter build appbundle --release --flavor production \
+  --target lib/main_production.dart
 ```
 
-### Dependency injection
-The project leverages dependency injection to manage object creation and dependencies throughout the application. The injection_container.dart file is responsible for setting up and providing the required dependencies to various parts of the application.
+## Repository guide
 
-Instead of directly instantiating classes throughout the codebase, we use a centralized mechanism to "inject" the necessary dependencies. This ensures that the application components remain decoupled and easier to test, maintain, and scale.
+```text
+lib/
+  config/        application configuration, guards, and typed routes
+  core/          host composition and cross-cutting integrations
+  features/      student-facing product areas
+  main_*.dart    development, staging, and production entry points
+packages/
+  core/          shared networking, failures, and configuration
+  database/      Drift persistence and migrations
+  analytics/     typed product events and feature-flag access
+  billing/       plans, subscriptions, checkout, and paywall UI
+  notifications/ push and local notification delivery
+  permissions/   runtime-permission policy and UI
+  in_app_update/ remote update-policy evaluation
+  lock-in/       focus-app blocking orchestration
+  ads/           advertising integration boundary
+assets/          images, illustrations, fonts, and generated asset inputs
+```
 
-By using dependency injection, we ensure that:
+### Package documentation
 
-    Dependencies are easily swapped for testing purposes (mock services or repositories can be injected during tests).
+| Package | Responsibility |
+| --- | --- |
+| [`analytics`](packages/analytics/README.md) | Typed analytics events, PostHog integration, and feature flags. |
+| [`app-blocker`](packages/app-blocker/README.md) | Cross-platform app blocking, schedules, and focus profiles. |
+| [`billing`](packages/billing/README.md) | Plans, subscriptions, checkout handoff, and paywall UI. |
+| [`database`](packages/database/README.md) | Drift-backed persistence, schema ownership, and migrations. |
+| [`in_app_update`](packages/in_app_update/README.md) | Remote optional and required update campaigns. |
+| [`notifications`](packages/notifications/README.md) | Push and local notification delivery. |
+| [`permissions`](packages/permissions/README.md) | Runtime-permission policy and notification permission UI. |
 
-    Components don't have to worry about the lifecycle of their dependencies, which reduces the likelihood of errors like memory leaks or incorrect configurations.
+## Development workflow
 
-    The overall architecture remains modular and flexible, with each component focusing on its core responsibility.
+### Generated code and assets
 
+This project uses generated code for assets, routes, serializers, database
+artifacts, and dependency configuration. Do not edit generated files by hand.
+After changing an asset declaration or another generation input, run:
+
+```bash
+dart run build_runner build --delete-conflicting-outputs
+```
+
+The [asset consistency workflow](.github/workflows/asset_consistency.yml)
+regenerates outputs on pull requests and fails when generated files are missing
+from the change.
+
+### Quality checks
+
+Before opening a pull request, format, analyze, and test the code relevant to
+your change:
+
+```bash
+dart format .
+flutter analyze
+flutter test
+```
+
+The [security and quality workflow](.github/workflows/security.yml) runs static
+analysis and a filesystem vulnerability scan for pull requests to `main` and
+`staging`.
+
+## Contributing
+
+Contributions are welcome, whether you are improving a campus workflow,
+strengthening a shared package, refining an interface, or fixing a defect.
+Read [CONTRIBUTING.md](CONTRIBUTING.md) for setup, branches, generated assets,
+commit conventions, and pull-request expectations.
+
+Useful links:
+
+- [Open a bug report](https://github.com/opencrafts-io/academia/issues/new?template=bug_report.md)
+- [Request a feature](https://github.com/opencrafts-io/academia/issues/new?template=feature_request.md)
+- [Browse open issues](https://github.com/opencrafts-io/academia/issues)
+- [Review pull requests](https://github.com/opencrafts-io/academia/pulls)
+- [View Actions runs](https://github.com/opencrafts-io/academia/actions)
+
+## Project links
+
+- Repository: <https://github.com/opencrafts-io/academia>
+- Android package ID: `io.opencrafts.academia`
+- Current version: `3.5.1+50`
