@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'pomodoro_state.dart';
@@ -9,6 +9,7 @@ part of 'pomodoro_state.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -29,16 +30,21 @@ $PomodoroStateCopyWith<PomodoroState> get copyWith => _$PomodoroStateCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PomodoroState&&(identical(other.phase, phase) || other.phase == phase)&&(identical(other.remaining, remaining) || other.remaining == remaining)&&(identical(other.isRunning, isRunning) || other.isRunning == isRunning)&&(identical(other.completedFocusSessions, completedFocusSessions) || other.completedFocusSessions == completedFocusSessions)&&(identical(other.focusDuration, focusDuration) || other.focusDuration == focusDuration)&&(identical(other.shortBreakDuration, shortBreakDuration) || other.shortBreakDuration == shortBreakDuration)&&(identical(other.longBreakDuration, longBreakDuration) || other.longBreakDuration == longBreakDuration)&&(identical(other.sessionsBeforeLongBreak, sessionsBeforeLongBreak) || other.sessionsBeforeLongBreak == sessionsBeforeLongBreak)&&(identical(other.linkedTodoItemLocalId, linkedTodoItemLocalId) || other.linkedTodoItemLocalId == linkedTodoItemLocalId)&&(identical(other.linkedTodoItemTitle, linkedTodoItemTitle) || other.linkedTodoItemTitle == linkedTodoItemTitle));
+  final _this = this as PomodoroState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PomodoroState&&(identical(other.phase, _this.phase) || other.phase == _this.phase)&&(identical(other.remaining, _this.remaining) || other.remaining == _this.remaining)&&(identical(other.isRunning, _this.isRunning) || other.isRunning == _this.isRunning)&&(identical(other.completedFocusSessions, _this.completedFocusSessions) || other.completedFocusSessions == _this.completedFocusSessions)&&(identical(other.focusDuration, _this.focusDuration) || other.focusDuration == _this.focusDuration)&&(identical(other.shortBreakDuration, _this.shortBreakDuration) || other.shortBreakDuration == _this.shortBreakDuration)&&(identical(other.longBreakDuration, _this.longBreakDuration) || other.longBreakDuration == _this.longBreakDuration)&&(identical(other.sessionsBeforeLongBreak, _this.sessionsBeforeLongBreak) || other.sessionsBeforeLongBreak == _this.sessionsBeforeLongBreak)&&(identical(other.linkedTodoItemLocalId, _this.linkedTodoItemLocalId) || other.linkedTodoItemLocalId == _this.linkedTodoItemLocalId)&&(identical(other.linkedTodoItemTitle, _this.linkedTodoItemTitle) || other.linkedTodoItemTitle == _this.linkedTodoItemTitle));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,phase,remaining,isRunning,completedFocusSessions,focusDuration,shortBreakDuration,longBreakDuration,sessionsBeforeLongBreak,linkedTodoItemLocalId,linkedTodoItemTitle);
+int get hashCode {
+  final _this = this as PomodoroState;
+  return Object.hash(runtimeType,_this.phase,_this.remaining,_this.isRunning,_this.completedFocusSessions,_this.focusDuration,_this.shortBreakDuration,_this.longBreakDuration,_this.sessionsBeforeLongBreak,_this.linkedTodoItemLocalId,_this.linkedTodoItemTitle);
+}
 
 @override
 String toString() {
-  return 'PomodoroState(phase: $phase, remaining: $remaining, isRunning: $isRunning, completedFocusSessions: $completedFocusSessions, focusDuration: $focusDuration, shortBreakDuration: $shortBreakDuration, longBreakDuration: $longBreakDuration, sessionsBeforeLongBreak: $sessionsBeforeLongBreak, linkedTodoItemLocalId: $linkedTodoItemLocalId, linkedTodoItemTitle: $linkedTodoItemTitle)';
+  final _this = this as PomodoroState;
+  return 'PomodoroState(phase: ${_this.phase}, remaining: ${_this.remaining}, isRunning: ${_this.isRunning}, completedFocusSessions: ${_this.completedFocusSessions}, focusDuration: ${_this.focusDuration}, shortBreakDuration: ${_this.shortBreakDuration}, longBreakDuration: ${_this.longBreakDuration}, sessionsBeforeLongBreak: ${_this.sessionsBeforeLongBreak}, linkedTodoItemLocalId: ${_this.linkedTodoItemLocalId}, linkedTodoItemTitle: ${_this.linkedTodoItemTitle})';
 }
 
 
@@ -67,7 +73,7 @@ class _$PomodoroStateCopyWithImpl<$Res>
 /// Create a copy of PomodoroState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? phase = null,Object? remaining = null,Object? isRunning = null,Object? completedFocusSessions = null,Object? focusDuration = null,Object? shortBreakDuration = null,Object? longBreakDuration = null,Object? sessionsBeforeLongBreak = null,Object? linkedTodoItemLocalId = freezed,Object? linkedTodoItemTitle = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(PomodoroState(
 phase: null == phase ? _self.phase : phase // ignore: cast_nullable_to_non_nullable
 as PomodoroPhase,remaining: null == remaining ? _self.remaining : remaining // ignore: cast_nullable_to_non_nullable
 as Duration,isRunning: null == isRunning ? _self.isRunning : isRunning // ignore: cast_nullable_to_non_nullable
@@ -247,16 +253,18 @@ _$PomodoroStateCopyWith<_PomodoroState> get copyWith => __$PomodoroStateCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PomodoroState&&(identical(other.phase, phase) || other.phase == phase)&&(identical(other.remaining, remaining) || other.remaining == remaining)&&(identical(other.isRunning, isRunning) || other.isRunning == isRunning)&&(identical(other.completedFocusSessions, completedFocusSessions) || other.completedFocusSessions == completedFocusSessions)&&(identical(other.focusDuration, focusDuration) || other.focusDuration == focusDuration)&&(identical(other.shortBreakDuration, shortBreakDuration) || other.shortBreakDuration == shortBreakDuration)&&(identical(other.longBreakDuration, longBreakDuration) || other.longBreakDuration == longBreakDuration)&&(identical(other.sessionsBeforeLongBreak, sessionsBeforeLongBreak) || other.sessionsBeforeLongBreak == sessionsBeforeLongBreak)&&(identical(other.linkedTodoItemLocalId, linkedTodoItemLocalId) || other.linkedTodoItemLocalId == linkedTodoItemLocalId)&&(identical(other.linkedTodoItemTitle, linkedTodoItemTitle) || other.linkedTodoItemTitle == linkedTodoItemTitle));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PomodoroState&&(identical(other.phase, phase) || other.phase == phase)&&(identical(other.remaining, remaining) || other.remaining == remaining)&&(identical(other.isRunning, isRunning) || other.isRunning == isRunning)&&(identical(other.completedFocusSessions, completedFocusSessions) || other.completedFocusSessions == completedFocusSessions)&&(identical(other.focusDuration, focusDuration) || other.focusDuration == focusDuration)&&(identical(other.shortBreakDuration, shortBreakDuration) || other.shortBreakDuration == shortBreakDuration)&&(identical(other.longBreakDuration, longBreakDuration) || other.longBreakDuration == longBreakDuration)&&(identical(other.sessionsBeforeLongBreak, sessionsBeforeLongBreak) || other.sessionsBeforeLongBreak == sessionsBeforeLongBreak)&&(identical(other.linkedTodoItemLocalId, linkedTodoItemLocalId) || other.linkedTodoItemLocalId == linkedTodoItemLocalId)&&(identical(other.linkedTodoItemTitle, linkedTodoItemTitle) || other.linkedTodoItemTitle == linkedTodoItemTitle));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,phase,remaining,isRunning,completedFocusSessions,focusDuration,shortBreakDuration,longBreakDuration,sessionsBeforeLongBreak,linkedTodoItemLocalId,linkedTodoItemTitle);
+int get hashCode {
+    return Object.hash(runtimeType,phase,remaining,isRunning,completedFocusSessions,focusDuration,shortBreakDuration,longBreakDuration,sessionsBeforeLongBreak,linkedTodoItemLocalId,linkedTodoItemTitle);
+}
 
 @override
 String toString() {
-  return 'PomodoroState(phase: $phase, remaining: $remaining, isRunning: $isRunning, completedFocusSessions: $completedFocusSessions, focusDuration: $focusDuration, shortBreakDuration: $shortBreakDuration, longBreakDuration: $longBreakDuration, sessionsBeforeLongBreak: $sessionsBeforeLongBreak, linkedTodoItemLocalId: $linkedTodoItemLocalId, linkedTodoItemTitle: $linkedTodoItemTitle)';
+    return 'PomodoroState(phase: $phase, remaining: $remaining, isRunning: $isRunning, completedFocusSessions: $completedFocusSessions, focusDuration: $focusDuration, shortBreakDuration: $shortBreakDuration, longBreakDuration: $longBreakDuration, sessionsBeforeLongBreak: $sessionsBeforeLongBreak, linkedTodoItemLocalId: $linkedTodoItemLocalId, linkedTodoItemTitle: $linkedTodoItemTitle)';
 }
 
 

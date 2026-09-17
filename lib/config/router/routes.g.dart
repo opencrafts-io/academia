@@ -468,6 +468,7 @@ mixin $CompleteProfileRoute on GoRouteData {
 
 RouteBase get $linkInstitutionRequiredPageRoute => GoRouteData.$route(
   path: '/link-institution-required',
+  hasOverriddenOnExit: false,
   factory: $LinkInstitutionRequiredPageRoute._fromState,
 );
 
@@ -1459,6 +1460,7 @@ RouteBase get $todosRoute => GoRouteData.$route(
     ),
     GoRouteData.$route(
       path: 'pomodoro-timer',
+      hasOverriddenOnExit: false,
       factory: $PomodoroTimerRoute._fromState,
     ),
   ],
