@@ -1,4 +1,4 @@
-import 'package:academia/config/config.dart';
+import 'package:core/config/flavor.dart';
 import 'package:academia/core/data/paginated_result.dart';
 import 'package:academia/core/error/failures.dart';
 import 'package:academia/core/network/network.dart';

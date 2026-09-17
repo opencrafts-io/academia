@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'create_community_state.dart';
@@ -9,6 +9,7 @@ part of 'create_community_state.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -20,7 +21,7 @@ mixin _$CreateCommunityState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CreateCommunityState);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is CreateCommunityState);
 }
 
 
@@ -29,7 +30,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'CreateCommunityState()';
+    return 'CreateCommunityState()';
 }
 
 
@@ -197,7 +198,7 @@ class CreateCommunityInitial implements CreateCommunityState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CreateCommunityInitial);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is CreateCommunityInitial);
 }
 
 
@@ -206,7 +207,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'CreateCommunityState.initial()';
+    return 'CreateCommunityState.initial()';
 }
 
 
@@ -229,7 +230,7 @@ class CreateCommunityLoading implements CreateCommunityState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CreateCommunityLoading);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is CreateCommunityLoading);
 }
 
 
@@ -238,7 +239,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'CreateCommunityState.loading()';
+    return 'CreateCommunityState.loading()';
 }
 
 
@@ -266,16 +267,18 @@ $CreateCommunitySuccessCopyWith<CreateCommunitySuccess> get copyWith => _$Create
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CreateCommunitySuccess&&(identical(other.community, community) || other.community == community));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is CreateCommunitySuccess&&(identical(other.community, community) || other.community == community));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,community);
+int get hashCode {
+    return Object.hash(runtimeType,community);
+}
 
 @override
 String toString() {
-  return 'CreateCommunityState.success(community: $community)';
+    return 'CreateCommunityState.success(community: $community)';
 }
 
 
@@ -341,16 +344,18 @@ $CreateCommunityFailureCopyWith<CreateCommunityFailure> get copyWith => _$Create
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CreateCommunityFailure&&(identical(other.message, message) || other.message == message));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is CreateCommunityFailure&&(identical(other.message, message) || other.message == message));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,message);
+int get hashCode {
+    return Object.hash(runtimeType,message);
+}
 
 @override
 String toString() {
-  return 'CreateCommunityState.failure(message: $message)';
+    return 'CreateCommunityState.failure(message: $message)';
 }
 
 

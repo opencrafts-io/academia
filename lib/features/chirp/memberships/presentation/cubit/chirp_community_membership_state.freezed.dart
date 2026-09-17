@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'chirp_community_membership_state.dart';
@@ -9,6 +9,7 @@ part of 'chirp_community_membership_state.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -20,7 +21,7 @@ mixin _$ChirpCommunityMembershipState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChirpCommunityMembershipState);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is ChirpCommunityMembershipState);
 }
 
 
@@ -29,7 +30,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'ChirpCommunityMembershipState()';
+    return 'ChirpCommunityMembershipState()';
 }
 
 
@@ -203,7 +204,7 @@ class ChirpCommunityMembershipInitialState implements ChirpCommunityMembershipSt
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChirpCommunityMembershipInitialState);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is ChirpCommunityMembershipInitialState);
 }
 
 
@@ -212,7 +213,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'ChirpCommunityMembershipState.initial()';
+    return 'ChirpCommunityMembershipState.initial()';
 }
 
 
@@ -240,16 +241,18 @@ $ChirpCommunityMembershipCommunityLeftStateCopyWith<ChirpCommunityMembershipComm
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChirpCommunityMembershipCommunityLeftState&&(identical(other.communityID, communityID) || other.communityID == communityID));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is ChirpCommunityMembershipCommunityLeftState&&(identical(other.communityID, communityID) || other.communityID == communityID));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,communityID);
+int get hashCode {
+    return Object.hash(runtimeType,communityID);
+}
 
 @override
 String toString() {
-  return 'ChirpCommunityMembershipState.communityLeft(communityID: $communityID)';
+    return 'ChirpCommunityMembershipState.communityLeft(communityID: $communityID)';
 }
 
 
@@ -301,7 +304,7 @@ class ChirpCommunityMembershipStateLoadingState implements ChirpCommunityMembers
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChirpCommunityMembershipStateLoadingState);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is ChirpCommunityMembershipStateLoadingState);
 }
 
 
@@ -310,7 +313,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'ChirpCommunityMembershipState.loading()';
+    return 'ChirpCommunityMembershipState.loading()';
 }
 
 
@@ -338,16 +341,18 @@ $ChirpCommunityMembershipLoadedStateCopyWith<ChirpCommunityMembershipLoadedState
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChirpCommunityMembershipLoadedState&&(identical(other.membership, membership) || other.membership == membership));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is ChirpCommunityMembershipLoadedState&&(identical(other.membership, membership) || other.membership == membership));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,membership);
+int get hashCode {
+    return Object.hash(runtimeType,membership);
+}
 
 @override
 String toString() {
-  return 'ChirpCommunityMembershipState.loaded(membership: $membership)';
+    return 'ChirpCommunityMembershipState.loaded(membership: $membership)';
 }
 
 
@@ -413,16 +418,18 @@ $ChirpCommunityMembershipErrorStateCopyWith<ChirpCommunityMembershipErrorState> 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChirpCommunityMembershipErrorState&&(identical(other.error, error) || other.error == error));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is ChirpCommunityMembershipErrorState&&(identical(other.error, error) || other.error == error));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,error);
+int get hashCode {
+    return Object.hash(runtimeType,error);
+}
 
 @override
 String toString() {
-  return 'ChirpCommunityMembershipState.error(error: $error)';
+    return 'ChirpCommunityMembershipState.error(error: $error)';
 }
 
 

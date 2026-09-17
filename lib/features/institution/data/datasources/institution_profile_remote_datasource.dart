@@ -1,4 +1,4 @@
-import 'package:academia/config/config.dart';
+import 'package:core/config/flavor.dart';
 import 'package:academia/core/error/failures.dart';
 import 'package:academia/core/network/network.dart';
 import 'package:academia/features/institution/data/dtos/institution_profile_api_dto.dart';

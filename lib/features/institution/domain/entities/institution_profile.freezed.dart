@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'institution_profile.dart';
@@ -9,6 +9,7 @@ part of 'institution_profile.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $InstitutionProfileCopyWith<InstitutionProfile> get copyWith => _$InstitutionPro
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is InstitutionProfile&&(identical(other.id, id) || other.id == id)&&(identical(other.institution, institution) || other.institution == institution)&&(identical(other.userID, userID) || other.userID == userID)&&(identical(other.studentId, studentId) || other.studentId == studentId)&&(identical(other.studentName, studentName) || other.studentName == studentName)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.nationalId, nationalId) || other.nationalId == nationalId)&&(identical(other.nationality, nationality) || other.nationality == nationality)&&(identical(other.program, program) || other.program == program)&&(identical(other.major, major) || other.major == major)&&(identical(other.year, year) || other.year == year)&&(identical(other.gpa, gpa) || other.gpa == gpa)&&(identical(other.disabilityStatus, disabilityStatus) || other.disabilityStatus == disabilityStatus)&&(identical(other.school, school) || other.school == school)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.email, email) || other.email == email)&&(identical(other.address, address) || other.address == address)&&(identical(other.status, status) || other.status == status)&&(identical(other.profilePicture, profilePicture) || other.profilePicture == profilePicture)&&(identical(other.enrollmentDate, enrollmentDate) || other.enrollmentDate == enrollmentDate)&&(identical(other.expectedGraduation, expectedGraduation) || other.expectedGraduation == expectedGraduation)&&const DeepCollectionEquality().equals(other.rawData, rawData)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  final _this = this as InstitutionProfile;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is InstitutionProfile&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.institution, _this.institution) || other.institution == _this.institution)&&(identical(other.userID, _this.userID) || other.userID == _this.userID)&&(identical(other.studentId, _this.studentId) || other.studentId == _this.studentId)&&(identical(other.studentName, _this.studentName) || other.studentName == _this.studentName)&&(identical(other.gender, _this.gender) || other.gender == _this.gender)&&(identical(other.nationalId, _this.nationalId) || other.nationalId == _this.nationalId)&&(identical(other.nationality, _this.nationality) || other.nationality == _this.nationality)&&(identical(other.program, _this.program) || other.program == _this.program)&&(identical(other.major, _this.major) || other.major == _this.major)&&(identical(other.year, _this.year) || other.year == _this.year)&&(identical(other.gpa, _this.gpa) || other.gpa == _this.gpa)&&(identical(other.disabilityStatus, _this.disabilityStatus) || other.disabilityStatus == _this.disabilityStatus)&&(identical(other.school, _this.school) || other.school == _this.school)&&(identical(other.phone, _this.phone) || other.phone == _this.phone)&&(identical(other.email, _this.email) || other.email == _this.email)&&(identical(other.address, _this.address) || other.address == _this.address)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.profilePicture, _this.profilePicture) || other.profilePicture == _this.profilePicture)&&(identical(other.enrollmentDate, _this.enrollmentDate) || other.enrollmentDate == _this.enrollmentDate)&&(identical(other.expectedGraduation, _this.expectedGraduation) || other.expectedGraduation == _this.expectedGraduation)&&const DeepCollectionEquality().equals(other.rawData, _this.rawData)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
 }
 
 
 @override
-int get hashCode => Object.hashAll([runtimeType,id,institution,userID,studentId,studentName,gender,nationalId,nationality,program,major,year,gpa,disabilityStatus,school,phone,email,address,status,profilePicture,enrollmentDate,expectedGraduation,const DeepCollectionEquality().hash(rawData),createdAt,updatedAt]);
+int get hashCode {
+  final _this = this as InstitutionProfile;
+  return Object.hashAll([runtimeType,_this.id,_this.institution,_this.userID,_this.studentId,_this.studentName,_this.gender,_this.nationalId,_this.nationality,_this.program,_this.major,_this.year,_this.gpa,_this.disabilityStatus,_this.school,_this.phone,_this.email,_this.address,_this.status,_this.profilePicture,_this.enrollmentDate,_this.expectedGraduation,const DeepCollectionEquality().hash(_this.rawData),_this.createdAt,_this.updatedAt]);
+}
 
 @override
 String toString() {
-  return 'InstitutionProfile(id: $id, institution: $institution, userID: $userID, studentId: $studentId, studentName: $studentName, gender: $gender, nationalId: $nationalId, nationality: $nationality, program: $program, major: $major, year: $year, gpa: $gpa, disabilityStatus: $disabilityStatus, school: $school, phone: $phone, email: $email, address: $address, status: $status, profilePicture: $profilePicture, enrollmentDate: $enrollmentDate, expectedGraduation: $expectedGraduation, rawData: $rawData, createdAt: $createdAt, updatedAt: $updatedAt)';
+  final _this = this as InstitutionProfile;
+  return 'InstitutionProfile(id: ${_this.id}, institution: ${_this.institution}, userID: ${_this.userID}, studentId: ${_this.studentId}, studentName: ${_this.studentName}, gender: ${_this.gender}, nationalId: ${_this.nationalId}, nationality: ${_this.nationality}, program: ${_this.program}, major: ${_this.major}, year: ${_this.year}, gpa: ${_this.gpa}, disabilityStatus: ${_this.disabilityStatus}, school: ${_this.school}, phone: ${_this.phone}, email: ${_this.email}, address: ${_this.address}, status: ${_this.status}, profilePicture: ${_this.profilePicture}, enrollmentDate: ${_this.enrollmentDate}, expectedGraduation: ${_this.expectedGraduation}, rawData: ${_this.rawData}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt})';
 }
 
 
@@ -63,7 +69,7 @@ class _$InstitutionProfileCopyWithImpl<$Res>
 /// Create a copy of InstitutionProfile
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? institution = null,Object? userID = null,Object? studentId = null,Object? studentName = null,Object? gender = freezed,Object? nationalId = freezed,Object? nationality = freezed,Object? program = freezed,Object? major = freezed,Object? year = freezed,Object? gpa = freezed,Object? disabilityStatus = freezed,Object? school = freezed,Object? phone = freezed,Object? email = freezed,Object? address = freezed,Object? status = freezed,Object? profilePicture = freezed,Object? enrollmentDate = freezed,Object? expectedGraduation = freezed,Object? rawData = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(InstitutionProfile(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,institution: null == institution ? _self.institution : institution // ignore: cast_nullable_to_non_nullable
 as int,userID: null == userID ? _self.userID : userID // ignore: cast_nullable_to_non_nullable
@@ -229,7 +235,7 @@ return $default(_that.id,_that.institution,_that.userID,_that.studentId,_that.st
 
 
 class _InstitutionProfile implements InstitutionProfile {
-  const _InstitutionProfile({this.id, required this.institution, required this.userID, required this.studentId, required this.studentName, this.gender, this.nationalId, this.nationality, this.program, this.major, this.year, this.gpa, this.disabilityStatus, this.school, this.phone, this.email, this.address, this.status, this.profilePicture, this.enrollmentDate, this.expectedGraduation, final  Map<String, dynamic>? rawData, required this.createdAt, required this.updatedAt}): _rawData = rawData;
+  const _InstitutionProfile({this.id, required this.institution, required this.userID, required this.studentId, required this.studentName, this.gender, this.nationalId, this.nationality, this.program, this.major, this.year, this.gpa, this.disabilityStatus, this.school, this.phone, this.email, this.address, this.status, this.profilePicture, this.enrollmentDate, this.expectedGraduation,  Map<String, dynamic>? rawData, required this.createdAt, required this.updatedAt}): _rawData = rawData;
   
 
 @override final  int? id;
@@ -275,16 +281,18 @@ _$InstitutionProfileCopyWith<_InstitutionProfile> get copyWith => __$Institution
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InstitutionProfile&&(identical(other.id, id) || other.id == id)&&(identical(other.institution, institution) || other.institution == institution)&&(identical(other.userID, userID) || other.userID == userID)&&(identical(other.studentId, studentId) || other.studentId == studentId)&&(identical(other.studentName, studentName) || other.studentName == studentName)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.nationalId, nationalId) || other.nationalId == nationalId)&&(identical(other.nationality, nationality) || other.nationality == nationality)&&(identical(other.program, program) || other.program == program)&&(identical(other.major, major) || other.major == major)&&(identical(other.year, year) || other.year == year)&&(identical(other.gpa, gpa) || other.gpa == gpa)&&(identical(other.disabilityStatus, disabilityStatus) || other.disabilityStatus == disabilityStatus)&&(identical(other.school, school) || other.school == school)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.email, email) || other.email == email)&&(identical(other.address, address) || other.address == address)&&(identical(other.status, status) || other.status == status)&&(identical(other.profilePicture, profilePicture) || other.profilePicture == profilePicture)&&(identical(other.enrollmentDate, enrollmentDate) || other.enrollmentDate == enrollmentDate)&&(identical(other.expectedGraduation, expectedGraduation) || other.expectedGraduation == expectedGraduation)&&const DeepCollectionEquality().equals(other._rawData, _rawData)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _InstitutionProfile&&(identical(other.id, id) || other.id == id)&&(identical(other.institution, institution) || other.institution == institution)&&(identical(other.userID, userID) || other.userID == userID)&&(identical(other.studentId, studentId) || other.studentId == studentId)&&(identical(other.studentName, studentName) || other.studentName == studentName)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.nationalId, nationalId) || other.nationalId == nationalId)&&(identical(other.nationality, nationality) || other.nationality == nationality)&&(identical(other.program, program) || other.program == program)&&(identical(other.major, major) || other.major == major)&&(identical(other.year, year) || other.year == year)&&(identical(other.gpa, gpa) || other.gpa == gpa)&&(identical(other.disabilityStatus, disabilityStatus) || other.disabilityStatus == disabilityStatus)&&(identical(other.school, school) || other.school == school)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.email, email) || other.email == email)&&(identical(other.address, address) || other.address == address)&&(identical(other.status, status) || other.status == status)&&(identical(other.profilePicture, profilePicture) || other.profilePicture == profilePicture)&&(identical(other.enrollmentDate, enrollmentDate) || other.enrollmentDate == enrollmentDate)&&(identical(other.expectedGraduation, expectedGraduation) || other.expectedGraduation == expectedGraduation)&&const DeepCollectionEquality().equals(other.rawData, _rawData)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 
 @override
-int get hashCode => Object.hashAll([runtimeType,id,institution,userID,studentId,studentName,gender,nationalId,nationality,program,major,year,gpa,disabilityStatus,school,phone,email,address,status,profilePicture,enrollmentDate,expectedGraduation,const DeepCollectionEquality().hash(_rawData),createdAt,updatedAt]);
+int get hashCode {
+    return Object.hashAll([runtimeType,id,institution,userID,studentId,studentName,gender,nationalId,nationality,program,major,year,gpa,disabilityStatus,school,phone,email,address,status,profilePicture,enrollmentDate,expectedGraduation,const DeepCollectionEquality().hash(_rawData),createdAt,updatedAt]);
+}
 
 @override
 String toString() {
-  return 'InstitutionProfile(id: $id, institution: $institution, userID: $userID, studentId: $studentId, studentName: $studentName, gender: $gender, nationalId: $nationalId, nationality: $nationality, program: $program, major: $major, year: $year, gpa: $gpa, disabilityStatus: $disabilityStatus, school: $school, phone: $phone, email: $email, address: $address, status: $status, profilePicture: $profilePicture, enrollmentDate: $enrollmentDate, expectedGraduation: $expectedGraduation, rawData: $rawData, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'InstitutionProfile(id: $id, institution: $institution, userID: $userID, studentId: $studentId, studentName: $studentName, gender: $gender, nationalId: $nationalId, nationality: $nationality, program: $program, major: $major, year: $year, gpa: $gpa, disabilityStatus: $disabilityStatus, school: $school, phone: $phone, email: $email, address: $address, status: $status, profilePicture: $profilePicture, enrollmentDate: $enrollmentDate, expectedGraduation: $expectedGraduation, rawData: $rawData, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 

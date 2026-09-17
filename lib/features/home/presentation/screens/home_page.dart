@@ -1,12 +1,20 @@
-import 'dart:io';
+import 'dart:async';
+
 import 'package:academia/config/config.dart';
+
+import 'dart:io';
+
 import 'package:academia/features/features.dart';
-import 'package:academia/features/permissions/permissions.dart';
 import 'package:academia/gen/assets.gen.dart';
+import 'package:academia/injection_container.dart';
+import 'package:analytics/analytics.dart';
+import 'package:billing/billing.dart' as billing;
+import 'package:core/core.dart' as core;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:permissions/permissions.dart';
 
 class _HomeActionsSheet extends StatelessWidget {
   const _HomeActionsSheet();
@@ -86,9 +94,8 @@ class _SheetSectionLabel extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(24, 8, 24, 4),
       child: Text(
         label,
-        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-          color: Theme.of(context).colorScheme.onSurfaceVariant,
-        ),
+        style: Theme.of(context).textTheme.labelSmall
+            ?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
       ),
     );
   }
@@ -124,14 +131,24 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late Future<billing.SubscriptionStatus?> _subscriptionStatusFuture;
+
   @override
   void initState() {
     super.initState();
+    _subscriptionStatusFuture = _loadSubscriptionStatus();
     final permissions = [
-      AppPermission.notification,
-      if (Platform.isAndroid) AppPermission.preciseAlarm,
+      PermissionCapability.notifications,
+      if (Platform.isAndroid) PermissionCapability.preciseAlarms,
     ];
-    context.read<PermissionCubit>().checkMultiplePermissions(permissions);
+    context.read<PermissionCubit>().checkAll(permissions);
+  }
+
+  Future<billing.SubscriptionStatus?> _loadSubscriptionStatus() async {
+    final result = await sl<billing.GetCurrentSubscriptionStatus>()(
+      const core.NoUseCaseParams(),
+    );
+    return result.fold((_) => null, (status) => status);
   }
 
   void _showActionsSheet(BuildContext context) {
@@ -142,6 +159,22 @@ class _HomePageState extends State<HomePage> {
       isScrollControlled: true,
       builder: (_) => const _HomeActionsSheet(),
     );
+  }
+
+  Future<void> _openBilling() async {
+    unawaited(sl<AnalyticsTracker>().track(AnalyticsEvent.paywallViewed()));
+    await const billing.PaywallRoute(
+      featureName: 'Academia Premium',
+      accessMessage: 'Upgrade to unlock premium tools across Academia.',
+    ).push(context);
+    if (!mounted) return;
+    setState(() {
+      _subscriptionStatusFuture = _loadSubscriptionStatus();
+    });
+  }
+
+  bool _shouldShowPremiumUpgrade(billing.SubscriptionStatus? status) {
+    return status == null || !status.active || status.subscription == null;
   }
 
   @override
@@ -213,6 +246,20 @@ class _HomePageState extends State<HomePage> {
                   ),
                   centerTitle: false,
                   actions: [
+                    FutureBuilder(
+                      future: _subscriptionStatusFuture,
+                      builder: (context, snapshot) {
+                        if (!_shouldShowPremiumUpgrade(snapshot.data)) {
+                          return const SizedBox.shrink();
+                        }
+
+                        return IconButton(
+                          onPressed: _openBilling,
+                          icon: const Icon(Symbols.workspace_premium_rounded),
+                          tooltip: 'Upgrade',
+                        );
+                      },
+                    ),
                     IconButton(
                       onPressed: () => showSearch(
                         context: context,

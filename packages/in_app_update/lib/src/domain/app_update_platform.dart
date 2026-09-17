@@ -1,0 +1,1 @@
+enum AppUpdatePlatform { android, ios }

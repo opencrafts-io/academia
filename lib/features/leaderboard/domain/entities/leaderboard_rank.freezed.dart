@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'leaderboard_rank.dart';
@@ -9,6 +9,7 @@ part of 'leaderboard_rank.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -24,23 +25,29 @@ $LeaderboardRankCopyWith<LeaderboardRank> get copyWith => _$LeaderboardRankCopyW
 
 @override
 void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  final _this = this as LeaderboardRank;
   properties
     ..add(DiagnosticsProperty('type', 'LeaderboardRank'))
-    ..add(DiagnosticsProperty('id', id))..add(DiagnosticsProperty('avatarUrl', avatarUrl))..add(DiagnosticsProperty('email', email))..add(DiagnosticsProperty('name', name))..add(DiagnosticsProperty('username', username))..add(DiagnosticsProperty('vibePoints', vibePoints))..add(DiagnosticsProperty('vibeRank', vibeRank))..add(DiagnosticsProperty('createdAt', createdAt))..add(DiagnosticsProperty('updatedAt', updatedAt));
+    ..add(DiagnosticsProperty('id', _this.id))..add(DiagnosticsProperty('avatarUrl', _this.avatarUrl))..add(DiagnosticsProperty('email', _this.email))..add(DiagnosticsProperty('name', _this.name))..add(DiagnosticsProperty('username', _this.username))..add(DiagnosticsProperty('vibePoints', _this.vibePoints))..add(DiagnosticsProperty('vibeRank', _this.vibeRank))..add(DiagnosticsProperty('createdAt', _this.createdAt))..add(DiagnosticsProperty('updatedAt', _this.updatedAt));
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LeaderboardRank&&(identical(other.id, id) || other.id == id)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.email, email) || other.email == email)&&(identical(other.name, name) || other.name == name)&&(identical(other.username, username) || other.username == username)&&(identical(other.vibePoints, vibePoints) || other.vibePoints == vibePoints)&&(identical(other.vibeRank, vibeRank) || other.vibeRank == vibeRank)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  final _this = this as LeaderboardRank;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LeaderboardRank&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.avatarUrl, _this.avatarUrl) || other.avatarUrl == _this.avatarUrl)&&(identical(other.email, _this.email) || other.email == _this.email)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.username, _this.username) || other.username == _this.username)&&(identical(other.vibePoints, _this.vibePoints) || other.vibePoints == _this.vibePoints)&&(identical(other.vibeRank, _this.vibeRank) || other.vibeRank == _this.vibeRank)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,avatarUrl,email,name,username,vibePoints,vibeRank,createdAt,updatedAt);
+int get hashCode {
+  final _this = this as LeaderboardRank;
+  return Object.hash(runtimeType,_this.id,_this.avatarUrl,_this.email,_this.name,_this.username,_this.vibePoints,_this.vibeRank,_this.createdAt,_this.updatedAt);
+}
 
 @override
 String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-  return 'LeaderboardRank(id: $id, avatarUrl: $avatarUrl, email: $email, name: $name, username: $username, vibePoints: $vibePoints, vibeRank: $vibeRank, createdAt: $createdAt, updatedAt: $updatedAt)';
+  final _this = this as LeaderboardRank;
+  return 'LeaderboardRank(id: ${_this.id}, avatarUrl: ${_this.avatarUrl}, email: ${_this.email}, name: ${_this.name}, username: ${_this.username}, vibePoints: ${_this.vibePoints}, vibeRank: ${_this.vibeRank}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt})';
 }
 
 
@@ -69,7 +76,7 @@ class _$LeaderboardRankCopyWithImpl<$Res>
 /// Create a copy of LeaderboardRank
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? avatarUrl = freezed,Object? email = null,Object? name = null,Object? username = freezed,Object? vibePoints = null,Object? vibeRank = null,Object? createdAt = null,Object? updatedAt = null,}) {
-  return _then(_self.copyWith(
+  return _then(LeaderboardRank(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,avatarUrl: freezed == avatarUrl ? _self.avatarUrl : avatarUrl // ignore: cast_nullable_to_non_nullable
 as String?,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
@@ -242,23 +249,25 @@ _$LeaderboardRankCopyWith<_LeaderboardRank> get copyWith => __$LeaderboardRankCo
 
 @override
 void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-  properties
+    properties
     ..add(DiagnosticsProperty('type', 'LeaderboardRank'))
     ..add(DiagnosticsProperty('id', id))..add(DiagnosticsProperty('avatarUrl', avatarUrl))..add(DiagnosticsProperty('email', email))..add(DiagnosticsProperty('name', name))..add(DiagnosticsProperty('username', username))..add(DiagnosticsProperty('vibePoints', vibePoints))..add(DiagnosticsProperty('vibeRank', vibeRank))..add(DiagnosticsProperty('createdAt', createdAt))..add(DiagnosticsProperty('updatedAt', updatedAt));
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LeaderboardRank&&(identical(other.id, id) || other.id == id)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.email, email) || other.email == email)&&(identical(other.name, name) || other.name == name)&&(identical(other.username, username) || other.username == username)&&(identical(other.vibePoints, vibePoints) || other.vibePoints == vibePoints)&&(identical(other.vibeRank, vibeRank) || other.vibeRank == vibeRank)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LeaderboardRank&&(identical(other.id, id) || other.id == id)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.email, email) || other.email == email)&&(identical(other.name, name) || other.name == name)&&(identical(other.username, username) || other.username == username)&&(identical(other.vibePoints, vibePoints) || other.vibePoints == vibePoints)&&(identical(other.vibeRank, vibeRank) || other.vibeRank == vibeRank)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,avatarUrl,email,name,username,vibePoints,vibeRank,createdAt,updatedAt);
+int get hashCode {
+    return Object.hash(runtimeType,id,avatarUrl,email,name,username,vibePoints,vibeRank,createdAt,updatedAt);
+}
 
 @override
 String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-  return 'LeaderboardRank(id: $id, avatarUrl: $avatarUrl, email: $email, name: $name, username: $username, vibePoints: $vibePoints, vibeRank: $vibeRank, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'LeaderboardRank(id: $id, avatarUrl: $avatarUrl, email: $email, name: $name, username: $username, vibePoints: $vibePoints, vibeRank: $vibeRank, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 

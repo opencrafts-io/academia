@@ -1,9 +1,9 @@
+import 'dart:async';
+
 import 'package:academia/features/institution/domain/domain.dart';
+import 'package:analytics/analytics.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:posthog_flutter/posthog_flutter.dart';
-import 'package:academia/config/config.dart';
-import 'package:academia/injection_container.dart';
 
 import 'institution_state.dart';
 export 'institution_state.dart';
@@ -17,7 +17,7 @@ class InstitutionBloc extends Bloc<InstitutionEvent, InstitutionState> {
   final GetAllCachedInstitutionsUsecase getAllCachedInstitutionsUsecase;
   final GetAllUserAccountInstitutionsUsecase
   getAllUserAccountInstitutionsUsecase;
-  final Posthog posthog = Posthog();
+  final AnalyticsTracker analyticsTracker;
 
   InstitutionBloc({
     required this.searchForInstitutionByNameUsecase,
@@ -25,6 +25,7 @@ class InstitutionBloc extends Bloc<InstitutionEvent, InstitutionState> {
     required this.getAllCachedInstitutionsUsecase,
     required this.addAccountToInstitution,
     required this.removeAccountFromInstitutionUsecase,
+    required this.analyticsTracker,
   }) : super(const InstitutionState.initial()) {
     on<SearchInstitutionByNameEvent>(_onSearchInstitutionByName);
     on<LinkAccountToInstitutionEvent>(_onLinkAccountToInstitution);
@@ -44,12 +45,9 @@ class InstitutionBloc extends Bloc<InstitutionEvent, InstitutionState> {
     result.fold((error) => emit(InstitutionState.error(error.message)), (
       institutions,
     ) {
-      if (sl<FlavorConfig>().isProduction) {
-        posthog.capture(
-          eventName: "institution_search",
-          properties: {"institution": event.nameSearchTerm},
-        );
-      }
+      unawaited(
+        analyticsTracker.track(AnalyticsEvent.institutionSearchCompleted()),
+      );
 
       emit(InstitutionState.loaded(institutions));
     });
@@ -68,15 +66,7 @@ class InstitutionBloc extends Bloc<InstitutionEvent, InstitutionState> {
     );
 
     result.fold((error) => emit(InstitutionState.error(error.message)), (link) {
-      if (sl<FlavorConfig>().isProduction) {
-        posthog.capture(
-          eventName: "institution_link",
-          properties: {
-            "institution": event.institutionID,
-            "user": event.accountID,
-          },
-        );
-      }
+      unawaited(analyticsTracker.track(AnalyticsEvent.institutionLinked()));
       emit(const InstitutionState.linked());
     });
   }
@@ -94,15 +84,7 @@ class InstitutionBloc extends Bloc<InstitutionEvent, InstitutionState> {
     );
 
     result.fold((error) => emit(InstitutionState.error(error.message)), (link) {
-      if (sl<FlavorConfig>().isProduction) {
-        posthog.capture(
-          eventName: "institution_unlink",
-          properties: {
-            "institution": event.institutionID,
-            "user": event.accountID,
-          },
-        );
-      }
+      unawaited(analyticsTracker.track(AnalyticsEvent.institutionUnlinked()));
       emit(const InstitutionState.linked());
     });
   }

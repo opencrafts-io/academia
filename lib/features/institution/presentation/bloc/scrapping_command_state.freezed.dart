@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'scrapping_command_state.dart';
@@ -9,6 +9,7 @@ part of 'scrapping_command_state.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -20,7 +21,7 @@ mixin _$ScrappingCommandState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ScrappingCommandState);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is ScrappingCommandState);
 }
 
 
@@ -29,7 +30,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'ScrappingCommandState()';
+    return 'ScrappingCommandState()';
 }
 
 
@@ -197,7 +198,7 @@ class _Initial implements ScrappingCommandState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial);
 }
 
 
@@ -206,7 +207,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'ScrappingCommandState.initial()';
+    return 'ScrappingCommandState.initial()';
 }
 
 
@@ -229,7 +230,7 @@ class _Loading implements ScrappingCommandState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
 }
 
 
@@ -238,7 +239,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'ScrappingCommandState.loading()';
+    return 'ScrappingCommandState.loading()';
 }
 
 
@@ -266,16 +267,18 @@ _$LoadedCopyWith<_Loaded> get copyWith => __$LoadedCopyWithImpl<_Loaded>(this, _
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&(identical(other.command, command) || other.command == command));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&(identical(other.command, command) || other.command == command));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,command);
+int get hashCode {
+    return Object.hash(runtimeType,command);
+}
 
 @override
 String toString() {
-  return 'ScrappingCommandState.loaded(command: $command)';
+    return 'ScrappingCommandState.loaded(command: $command)';
 }
 
 
@@ -345,16 +348,18 @@ _$ErrorCopyWith<_Error> get copyWith => __$ErrorCopyWithImpl<_Error>(this, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.message, message) || other.message == message)&&(identical(other.command, command) || other.command == command));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.message, message) || other.message == message)&&(identical(other.command, command) || other.command == command));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,message,command);
+int get hashCode {
+    return Object.hash(runtimeType,message,command);
+}
 
 @override
 String toString() {
-  return 'ScrappingCommandState.error(message: $message, command: $command)';
+    return 'ScrappingCommandState.error(message: $message, command: $command)';
 }
 
 

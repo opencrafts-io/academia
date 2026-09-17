@@ -1,0 +1,23 @@
+name: ads
+description: "Academia ads subsystem."
+version: 0.0.1
+homepage:
+publish_to: none
+
+environment:
+  sdk: ^3.13.2
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  billing:
+    path: ../billing/
+  get_it: ^9.2.1
+  google_mobile_ads: ^8.0.0
+  injectable: ^3.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0

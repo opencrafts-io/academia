@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:academia/config/config.dart';
+import 'package:core/config/flavor.dart';
 import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
 import 'package:academia/features/sherehe/data/data.dart';

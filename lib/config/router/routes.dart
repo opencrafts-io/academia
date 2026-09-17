@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:academia/features/features.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
+import 'package:lock_in/lock_in.dart';
 
 part 'routes.g.dart';
 
@@ -60,19 +61,18 @@ class HomeRoute extends GoRouteData with $HomeRoute {
   }
 }
 
-@TypedGoRoute<NotificationPermissionRoute>(path: '/notification-allow')
-class NotificationPermissionRoute extends GoRouteData
-    with $NotificationPermissionRoute {
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return NotificationPermissionScreen();
-  }
-}
-
 class EssentialsRoute extends GoRouteData with $EssentialsRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return EssentialsPage();
+  }
+}
+
+@TypedGoRoute<LockInRoute>(path: '/lock-in')
+class LockInRoute extends GoRouteData with $LockInRoute {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return LockInPage(service: sl<LockInService>());
   }
 }
 
@@ -1198,36 +1198,6 @@ class ExamTimetableSearchRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return ExamTimetableSearchScreen(institutionId: institutionId);
-  }
-}
-
-@TypedGoRoute<SettingsPageRoute>(path: "/settings")
-class SettingsPageRoute extends GoRouteData with $SettingsPageRoute {
-  @override
-  CustomTransitionPage<void> buildPage(
-    BuildContext context,
-    GoRouterState state,
-  ) {
-    return CustomTransitionPage<void>(
-      key: state.pageKey,
-      child: SettingsPage(),
-      transitionDuration: Duration(milliseconds: 300),
-      transitionsBuilder:
-          (
-            BuildContext context,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-            Widget child,
-          ) {
-            var tween = Tween(
-              begin: Offset(0.0, 1.0),
-              end: Offset.zero,
-            ).chain(CurveTween(curve: Curves.easeInOutQuad));
-            var offsetAnimation = animation.drive(tween);
-
-            return SlideTransition(position: offsetAnimation, child: child);
-          },
-    );
   }
 }
 

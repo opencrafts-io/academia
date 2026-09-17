@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'timetable_entry_entity.dart';
@@ -9,6 +9,7 @@ part of 'timetable_entry_entity.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -32,16 +33,21 @@ $TimetableEntryEntityCopyWith<TimetableEntryEntity> get copyWith => _$TimetableE
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TimetableEntryEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.serverId, serverId) || other.serverId == serverId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.institutionId, institutionId) || other.institutionId == institutionId)&&(identical(other.courseId, courseId) || other.courseId == courseId)&&(identical(other.timetableId, timetableId) || other.timetableId == timetableId)&&(identical(other.rrule, rrule) || other.rrule == rrule)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.durationMinutes, durationMinutes) || other.durationMinutes == durationMinutes)&&(identical(other.location, location) || other.location == location)&&(identical(other.room, room) || other.room == room)&&(identical(other.building, building) || other.building == building)&&(identical(other.isSynced, isSynced) || other.isSynced == isSynced)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted)&&(identical(other.lastUpdated, lastUpdated) || other.lastUpdated == lastUpdated));
+  final _this = this as TimetableEntryEntity;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TimetableEntryEntity&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.serverId, _this.serverId) || other.serverId == _this.serverId)&&(identical(other.userId, _this.userId) || other.userId == _this.userId)&&(identical(other.institutionId, _this.institutionId) || other.institutionId == _this.institutionId)&&(identical(other.courseId, _this.courseId) || other.courseId == _this.courseId)&&(identical(other.timetableId, _this.timetableId) || other.timetableId == _this.timetableId)&&(identical(other.rrule, _this.rrule) || other.rrule == _this.rrule)&&(identical(other.startDate, _this.startDate) || other.startDate == _this.startDate)&&(identical(other.durationMinutes, _this.durationMinutes) || other.durationMinutes == _this.durationMinutes)&&(identical(other.location, _this.location) || other.location == _this.location)&&(identical(other.room, _this.room) || other.room == _this.room)&&(identical(other.building, _this.building) || other.building == _this.building)&&(identical(other.isSynced, _this.isSynced) || other.isSynced == _this.isSynced)&&(identical(other.isDeleted, _this.isDeleted) || other.isDeleted == _this.isDeleted)&&(identical(other.lastUpdated, _this.lastUpdated) || other.lastUpdated == _this.lastUpdated));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,serverId,userId,institutionId,courseId,timetableId,rrule,startDate,durationMinutes,location,room,building,isSynced,isDeleted,lastUpdated);
+int get hashCode {
+  final _this = this as TimetableEntryEntity;
+  return Object.hash(runtimeType,_this.id,_this.serverId,_this.userId,_this.institutionId,_this.courseId,_this.timetableId,_this.rrule,_this.startDate,_this.durationMinutes,_this.location,_this.room,_this.building,_this.isSynced,_this.isDeleted,_this.lastUpdated);
+}
 
 @override
 String toString() {
-  return 'TimetableEntryEntity(id: $id, serverId: $serverId, userId: $userId, institutionId: $institutionId, courseId: $courseId, timetableId: $timetableId, rrule: $rrule, startDate: $startDate, durationMinutes: $durationMinutes, location: $location, room: $room, building: $building, isSynced: $isSynced, isDeleted: $isDeleted, lastUpdated: $lastUpdated)';
+  final _this = this as TimetableEntryEntity;
+  return 'TimetableEntryEntity(id: ${_this.id}, serverId: ${_this.serverId}, userId: ${_this.userId}, institutionId: ${_this.institutionId}, courseId: ${_this.courseId}, timetableId: ${_this.timetableId}, rrule: ${_this.rrule}, startDate: ${_this.startDate}, durationMinutes: ${_this.durationMinutes}, location: ${_this.location}, room: ${_this.room}, building: ${_this.building}, isSynced: ${_this.isSynced}, isDeleted: ${_this.isDeleted}, lastUpdated: ${_this.lastUpdated})';
 }
 
 
@@ -70,7 +76,7 @@ class _$TimetableEntryEntityCopyWithImpl<$Res>
 /// Create a copy of TimetableEntryEntity
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? serverId = freezed,Object? userId = null,Object? institutionId = null,Object? courseId = null,Object? timetableId = null,Object? rrule = freezed,Object? startDate = null,Object? durationMinutes = null,Object? location = freezed,Object? room = freezed,Object? building = freezed,Object? isSynced = null,Object? isDeleted = null,Object? lastUpdated = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(TimetableEntryEntity(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,serverId: freezed == serverId ? _self.serverId : serverId // ignore: cast_nullable_to_non_nullable
 as int?,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
@@ -263,16 +269,18 @@ _$TimetableEntryEntityCopyWith<_TimetableEntryEntity> get copyWith => __$Timetab
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TimetableEntryEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.serverId, serverId) || other.serverId == serverId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.institutionId, institutionId) || other.institutionId == institutionId)&&(identical(other.courseId, courseId) || other.courseId == courseId)&&(identical(other.timetableId, timetableId) || other.timetableId == timetableId)&&(identical(other.rrule, rrule) || other.rrule == rrule)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.durationMinutes, durationMinutes) || other.durationMinutes == durationMinutes)&&(identical(other.location, location) || other.location == location)&&(identical(other.room, room) || other.room == room)&&(identical(other.building, building) || other.building == building)&&(identical(other.isSynced, isSynced) || other.isSynced == isSynced)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted)&&(identical(other.lastUpdated, lastUpdated) || other.lastUpdated == lastUpdated));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _TimetableEntryEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.serverId, serverId) || other.serverId == serverId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.institutionId, institutionId) || other.institutionId == institutionId)&&(identical(other.courseId, courseId) || other.courseId == courseId)&&(identical(other.timetableId, timetableId) || other.timetableId == timetableId)&&(identical(other.rrule, rrule) || other.rrule == rrule)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.durationMinutes, durationMinutes) || other.durationMinutes == durationMinutes)&&(identical(other.location, location) || other.location == location)&&(identical(other.room, room) || other.room == room)&&(identical(other.building, building) || other.building == building)&&(identical(other.isSynced, isSynced) || other.isSynced == isSynced)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted)&&(identical(other.lastUpdated, lastUpdated) || other.lastUpdated == lastUpdated));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,serverId,userId,institutionId,courseId,timetableId,rrule,startDate,durationMinutes,location,room,building,isSynced,isDeleted,lastUpdated);
+int get hashCode {
+    return Object.hash(runtimeType,id,serverId,userId,institutionId,courseId,timetableId,rrule,startDate,durationMinutes,location,room,building,isSynced,isDeleted,lastUpdated);
+}
 
 @override
 String toString() {
-  return 'TimetableEntryEntity(id: $id, serverId: $serverId, userId: $userId, institutionId: $institutionId, courseId: $courseId, timetableId: $timetableId, rrule: $rrule, startDate: $startDate, durationMinutes: $durationMinutes, location: $location, room: $room, building: $building, isSynced: $isSynced, isDeleted: $isDeleted, lastUpdated: $lastUpdated)';
+    return 'TimetableEntryEntity(id: $id, serverId: $serverId, userId: $userId, institutionId: $institutionId, courseId: $courseId, timetableId: $timetableId, rrule: $rrule, startDate: $startDate, durationMinutes: $durationMinutes, location: $location, room: $room, building: $building, isSynced: $isSynced, isDeleted: $isDeleted, lastUpdated: $lastUpdated)';
 }
 
 

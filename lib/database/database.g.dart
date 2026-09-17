@@ -23810,7 +23810,16 @@ class $$UserProfileTableTableManager
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$UserProfileTable, UserProfileData>(table),
+                  BaseReferences<
+                    _$AppDataBase,
+                    $UserProfileTable,
+                    UserProfileData
+                  >(db, table, e),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),
@@ -24044,7 +24053,16 @@ class $$AttachmentsTableTableManager
                 postId: postId,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$AttachmentsTable, Attachment>(table),
+                  BaseReferences<_$AppDataBase, $AttachmentsTable, Attachment>(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),
@@ -24068,40 +24086,38 @@ typedef $$AttachmentsTableProcessedTableManager =
       Attachment,
       PrefetchHooks Function()
     >;
-typedef $$PostsTableCreateCompanionBuilder =
-    PostsCompanion Function({
-      Value<int> id,
-      required Map<String, dynamic> community,
-      required String authorId,
-      required String title,
-      required String content,
-      Value<int> upvotes,
-      Value<int> downvotes,
-      required List<dynamic> attachments,
-      Value<int> viewsCount,
-      Value<int> commentCount,
-      required List<dynamic> comments,
-      required DateTime createdAt,
-      required DateTime updatedAt,
-      Value<DateTime?> cachedAt,
-    });
-typedef $$PostsTableUpdateCompanionBuilder =
-    PostsCompanion Function({
-      Value<int> id,
-      Value<Map<String, dynamic>> community,
-      Value<String> authorId,
-      Value<String> title,
-      Value<String> content,
-      Value<int> upvotes,
-      Value<int> downvotes,
-      Value<List<dynamic>> attachments,
-      Value<int> viewsCount,
-      Value<int> commentCount,
-      Value<List<dynamic>> comments,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
-      Value<DateTime?> cachedAt,
-    });
+typedef $$PostsTableCreateCompanionBuilder = PostsCompanion Function({
+  Value<int> id,
+  required Map<String, dynamic> community,
+  required String authorId,
+  required String title,
+  required String content,
+  Value<int> upvotes,
+  Value<int> downvotes,
+  required List<dynamic> attachments,
+  Value<int> viewsCount,
+  Value<int> commentCount,
+  required List<dynamic> comments,
+  required DateTime createdAt,
+  required DateTime updatedAt,
+  Value<DateTime?> cachedAt,
+});
+typedef $$PostsTableUpdateCompanionBuilder = PostsCompanion Function({
+  Value<int> id,
+  Value<Map<String, dynamic>> community,
+  Value<String> authorId,
+  Value<String> title,
+  Value<String> content,
+  Value<int> upvotes,
+  Value<int> downvotes,
+  Value<List<dynamic>> attachments,
+  Value<int> viewsCount,
+  Value<int> commentCount,
+  Value<List<dynamic>> comments,
+  Value<DateTime> createdAt,
+  Value<DateTime> updatedAt,
+  Value<DateTime?> cachedAt,
+});
 
 class $$PostsTableFilterComposer extends Composer<_$AppDataBase, $PostsTable> {
   $$PostsTableFilterComposer({
@@ -24420,7 +24436,16 @@ class $$PostsTableTableManager
                 cachedAt: cachedAt,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$PostsTable, Post>(table),
+                  BaseReferences<_$AppDataBase, $PostsTable, Post>(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),
@@ -24441,34 +24466,32 @@ typedef $$PostsTableProcessedTableManager =
       Post,
       PrefetchHooks Function()
     >;
-typedef $$CommentsTableCreateCompanionBuilder =
-    CommentsCompanion Function({
-      required int id,
-      required int post,
-      required String authorId,
-      required String content,
-      required DateTime createdAt,
-      required DateTime updatedAt,
-      Value<int> upvotes,
-      Value<int> downvotes,
-      required List<dynamic> replies,
-      Value<int?> parent,
-      Value<int> rowid,
-    });
-typedef $$CommentsTableUpdateCompanionBuilder =
-    CommentsCompanion Function({
-      Value<int> id,
-      Value<int> post,
-      Value<String> authorId,
-      Value<String> content,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
-      Value<int> upvotes,
-      Value<int> downvotes,
-      Value<List<dynamic>> replies,
-      Value<int?> parent,
-      Value<int> rowid,
-    });
+typedef $$CommentsTableCreateCompanionBuilder = CommentsCompanion Function({
+  required int id,
+  required int post,
+  required String authorId,
+  required String content,
+  required DateTime createdAt,
+  required DateTime updatedAt,
+  Value<int> upvotes,
+  Value<int> downvotes,
+  required List<dynamic> replies,
+  Value<int?> parent,
+  Value<int> rowid,
+});
+typedef $$CommentsTableUpdateCompanionBuilder = CommentsCompanion Function({
+  Value<int> id,
+  Value<int> post,
+  Value<String> authorId,
+  Value<String> content,
+  Value<DateTime> createdAt,
+  Value<DateTime> updatedAt,
+  Value<int> upvotes,
+  Value<int> downvotes,
+  Value<List<dynamic>> replies,
+  Value<int?> parent,
+  Value<int> rowid,
+});
 
 class $$CommentsTableFilterComposer
     extends Composer<_$AppDataBase, $CommentsTable> {
@@ -24710,7 +24733,16 @@ class $$CommentsTableTableManager
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$CommentsTable, Comment>(table),
+                  BaseReferences<_$AppDataBase, $CommentsTable, Comment>(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),
@@ -24731,52 +24763,50 @@ typedef $$CommentsTableProcessedTableManager =
       Comment,
       PrefetchHooks Function()
     >;
-typedef $$EventTableTableCreateCompanionBuilder =
-    EventTableCompanion Function({
-      required String id,
-      required String eventName,
-      required String eventDescription,
-      required String eventLocation,
-      required String startDate,
-      required String endDate,
-      required int attendeeCount,
-      required String organizerId,
-      Value<String?> eventCardImage,
-      Value<String?> eventPosterImage,
-      Value<String?> eventBannerImage,
-      Value<String?> eventUrl,
-      Value<List<dynamic>?> eventGenre,
-      required String createdAt,
-      required String updatedAt,
-      Value<String?> deletedAt,
-      required String scope,
-      Value<List<dynamic>?> institutions,
-      Value<Map<String, dynamic>?> paymentInfo,
-      Value<int> rowid,
-    });
-typedef $$EventTableTableUpdateCompanionBuilder =
-    EventTableCompanion Function({
-      Value<String> id,
-      Value<String> eventName,
-      Value<String> eventDescription,
-      Value<String> eventLocation,
-      Value<String> startDate,
-      Value<String> endDate,
-      Value<int> attendeeCount,
-      Value<String> organizerId,
-      Value<String?> eventCardImage,
-      Value<String?> eventPosterImage,
-      Value<String?> eventBannerImage,
-      Value<String?> eventUrl,
-      Value<List<dynamic>?> eventGenre,
-      Value<String> createdAt,
-      Value<String> updatedAt,
-      Value<String?> deletedAt,
-      Value<String> scope,
-      Value<List<dynamic>?> institutions,
-      Value<Map<String, dynamic>?> paymentInfo,
-      Value<int> rowid,
-    });
+typedef $$EventTableTableCreateCompanionBuilder = EventTableCompanion Function({
+  required String id,
+  required String eventName,
+  required String eventDescription,
+  required String eventLocation,
+  required String startDate,
+  required String endDate,
+  required int attendeeCount,
+  required String organizerId,
+  Value<String?> eventCardImage,
+  Value<String?> eventPosterImage,
+  Value<String?> eventBannerImage,
+  Value<String?> eventUrl,
+  Value<List<dynamic>?> eventGenre,
+  required String createdAt,
+  required String updatedAt,
+  Value<String?> deletedAt,
+  required String scope,
+  Value<List<dynamic>?> institutions,
+  Value<Map<String, dynamic>?> paymentInfo,
+  Value<int> rowid,
+});
+typedef $$EventTableTableUpdateCompanionBuilder = EventTableCompanion Function({
+  Value<String> id,
+  Value<String> eventName,
+  Value<String> eventDescription,
+  Value<String> eventLocation,
+  Value<String> startDate,
+  Value<String> endDate,
+  Value<int> attendeeCount,
+  Value<String> organizerId,
+  Value<String?> eventCardImage,
+  Value<String?> eventPosterImage,
+  Value<String?> eventBannerImage,
+  Value<String?> eventUrl,
+  Value<List<dynamic>?> eventGenre,
+  Value<String> createdAt,
+  Value<String> updatedAt,
+  Value<String?> deletedAt,
+  Value<String> scope,
+  Value<List<dynamic>?> institutions,
+  Value<Map<String, dynamic>?> paymentInfo,
+  Value<int> rowid,
+});
 
 class $$EventTableTableFilterComposer
     extends Composer<_$AppDataBase, $EventTableTable> {
@@ -25203,7 +25233,16 @@ class $$EventTableTableTableManager
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$EventTableTable, EventData>(table),
+                  BaseReferences<_$AppDataBase, $EventTableTable, EventData>(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),
@@ -25474,7 +25513,16 @@ class $$AttendeeTableTableTableManager
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$AttendeeTableTable, AttendeeData>(table),
+                  BaseReferences<
+                    _$AppDataBase,
+                    $AttendeeTableTable,
+                    AttendeeData
+                  >(db, table, e),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),
@@ -25779,7 +25827,16 @@ class $$TicketTableTableTableManager
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$TicketTableTable, TicketData>(table),
+                  BaseReferences<_$AppDataBase, $TicketTableTable, TicketData>(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),
@@ -26071,7 +26128,16 @@ class $$PaymentInfoTableTableTableManager
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$PaymentInfoTableTable, PaymentInfoData>(table),
+                  BaseReferences<
+                    _$AppDataBase,
+                    $PaymentInfoTableTable,
+                    PaymentInfoData
+                  >(db, table, e),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),
@@ -26277,7 +26343,16 @@ class $$ShereheUserTableTableTableManager
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$ShereheUserTableTable, ShereheUserData>(table),
+                  BaseReferences<
+                    _$AppDataBase,
+                    $ShereheUserTableTable,
+                    ShereheUserData
+                  >(db, table, e),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),
@@ -26432,7 +26507,18 @@ class $$DashboardStatsTableTableTableManager
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$DashboardStatsTableTable, DashboardStatsData>(
+                    table,
+                  ),
+                  BaseReferences<
+                    _$AppDataBase,
+                    $DashboardStatsTableTable,
+                    DashboardStatsData
+                  >(db, table, e),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),
@@ -26669,7 +26755,16 @@ class $$TicketStatsTableTableTableManager
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$TicketStatsTableTable, TicketStatsData>(table),
+                  BaseReferences<
+                    _$AppDataBase,
+                    $TicketStatsTableTable,
+                    TicketStatsData
+                  >(db, table, e),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),
@@ -26950,7 +27045,16 @@ class $$ScannerTableTableTableManager
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$ScannerTableTable, ScannerData>(table),
+                  BaseReferences<
+                    _$AppDataBase,
+                    $ScannerTableTable,
+                    ScannerData
+                  >(db, table, e),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),
@@ -27226,7 +27330,16 @@ class $$InviteTableTableTableManager
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$InviteTableTable, InviteData>(table),
+                  BaseReferences<_$AppDataBase, $InviteTableTable, InviteData>(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),
@@ -27250,28 +27363,26 @@ typedef $$InviteTableTableProcessedTableManager =
       InviteData,
       PrefetchHooks Function()
     >;
-typedef $$BlocksTableCreateCompanionBuilder =
-    BlocksCompanion Function({
-      Value<int> id,
-      required String blockType,
-      Value<String?> blockedUser,
-      Value<int?> blockedCommunity,
-      Value<String?> blockedName,
-      Value<String?> blockedImage,
-      required DateTime createdAt,
-      Value<DateTime?> cachedAt,
-    });
-typedef $$BlocksTableUpdateCompanionBuilder =
-    BlocksCompanion Function({
-      Value<int> id,
-      Value<String> blockType,
-      Value<String?> blockedUser,
-      Value<int?> blockedCommunity,
-      Value<String?> blockedName,
-      Value<String?> blockedImage,
-      Value<DateTime> createdAt,
-      Value<DateTime?> cachedAt,
-    });
+typedef $$BlocksTableCreateCompanionBuilder = BlocksCompanion Function({
+  Value<int> id,
+  required String blockType,
+  Value<String?> blockedUser,
+  Value<int?> blockedCommunity,
+  Value<String?> blockedName,
+  Value<String?> blockedImage,
+  required DateTime createdAt,
+  Value<DateTime?> cachedAt,
+});
+typedef $$BlocksTableUpdateCompanionBuilder = BlocksCompanion Function({
+  Value<int> id,
+  Value<String> blockType,
+  Value<String?> blockedUser,
+  Value<int?> blockedCommunity,
+  Value<String?> blockedName,
+  Value<String?> blockedImage,
+  Value<DateTime> createdAt,
+  Value<DateTime?> cachedAt,
+});
 
 class $$BlocksTableFilterComposer
     extends Composer<_$AppDataBase, $BlocksTable> {
@@ -27482,7 +27593,16 @@ class $$BlocksTableTableManager
                 cachedAt: cachedAt,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$BlocksTable, Block>(table),
+                  BaseReferences<_$AppDataBase, $BlocksTable, Block>(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),
@@ -27503,34 +27623,32 @@ typedef $$BlocksTableProcessedTableManager =
       Block,
       PrefetchHooks Function()
     >;
-typedef $$ReportsTableCreateCompanionBuilder =
-    ReportsCompanion Function({
-      Value<int> id,
-      required String reportType,
-      Value<String?> reportedUser,
-      Value<int?> reportedPost,
-      Value<int?> reportedComment,
-      Value<int?> reportedCommunity,
-      required String reason,
-      Value<String> status,
-      required DateTime createdAt,
-      Value<DateTime?> updatedAt,
-      Value<DateTime?> cachedAt,
-    });
-typedef $$ReportsTableUpdateCompanionBuilder =
-    ReportsCompanion Function({
-      Value<int> id,
-      Value<String> reportType,
-      Value<String?> reportedUser,
-      Value<int?> reportedPost,
-      Value<int?> reportedComment,
-      Value<int?> reportedCommunity,
-      Value<String> reason,
-      Value<String> status,
-      Value<DateTime> createdAt,
-      Value<DateTime?> updatedAt,
-      Value<DateTime?> cachedAt,
-    });
+typedef $$ReportsTableCreateCompanionBuilder = ReportsCompanion Function({
+  Value<int> id,
+  required String reportType,
+  Value<String?> reportedUser,
+  Value<int?> reportedPost,
+  Value<int?> reportedComment,
+  Value<int?> reportedCommunity,
+  required String reason,
+  Value<String> status,
+  required DateTime createdAt,
+  Value<DateTime?> updatedAt,
+  Value<DateTime?> cachedAt,
+});
+typedef $$ReportsTableUpdateCompanionBuilder = ReportsCompanion Function({
+  Value<int> id,
+  Value<String> reportType,
+  Value<String?> reportedUser,
+  Value<int?> reportedPost,
+  Value<int?> reportedComment,
+  Value<int?> reportedCommunity,
+  Value<String> reason,
+  Value<String> status,
+  Value<DateTime> createdAt,
+  Value<DateTime?> updatedAt,
+  Value<DateTime?> cachedAt,
+});
 
 class $$ReportsTableFilterComposer
     extends Composer<_$AppDataBase, $ReportsTable> {
@@ -27794,7 +27912,16 @@ class $$ReportsTableTableManager
                 cachedAt: cachedAt,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$ReportsTable, Report>(table),
+                  BaseReferences<_$AppDataBase, $ReportsTable, Report>(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),
@@ -28274,7 +28401,16 @@ class $$AgendaEventTableTableManager
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$AgendaEventTable, AgendaEventData>(table),
+                  BaseReferences<
+                    _$AppDataBase,
+                    $AgendaEventTable,
+                    AgendaEventData
+                  >(db, table, e),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),
@@ -28326,10 +28462,7 @@ final class $$InstitutionsTableReferences
   static MultiTypedResultKey<$InstitutionKeysTable, List<InstitutionKey>>
   _institutionKeysRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
     db.institutionKeys,
-    aliasName: $_aliasNameGenerator(
-      db.institutions.institutionId,
-      db.institutionKeys.institutionID,
-    ),
+    aliasName: 'institution__institution_id__institution_key__institution_id',
   );
 
   $$InstitutionKeysTableProcessedTableManager get institutionKeysRefs {
@@ -28352,14 +28485,13 @@ final class $$InstitutionsTableReferences
     $InstitutionFeeTransactionsTable,
     List<InstitutionFeeTransaction>
   >
-  _institutionFeeTransactionsRefsTable(_$AppDataBase db) =>
-      MultiTypedResultKey.fromTable(
-        db.institutionFeeTransactions,
-        aliasName: $_aliasNameGenerator(
-          db.institutions.institutionId,
-          db.institutionFeeTransactions.institution,
-        ),
-      );
+  _institutionFeeTransactionsRefsTable(
+    _$AppDataBase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.institutionFeeTransactions,
+    aliasName:
+        'institution__institution_id__institution_fee_transaction__institution',
+  );
 
   $$InstitutionFeeTransactionsTableProcessedTableManager
   get institutionFeeTransactionsRefs {
@@ -28384,10 +28516,7 @@ final class $$InstitutionsTableReferences
   static MultiTypedResultKey<$SemesterTable, List<SemesterData>>
   _semesterRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
     db.semester,
-    aliasName: $_aliasNameGenerator(
-      db.institutions.institutionId,
-      db.semester.institutionId,
-    ),
+    aliasName: 'institution__institution_id__semester__institution_id',
   );
 
   $$SemesterTableProcessedTableManager get semesterRefs {
@@ -28407,10 +28536,7 @@ final class $$InstitutionsTableReferences
     _$AppDataBase db,
   ) => MultiTypedResultKey.fromTable(
     db.course,
-    aliasName: $_aliasNameGenerator(
-      db.institutions.institutionId,
-      db.course.institution,
-    ),
+    aliasName: 'institution__institution_id__course__institution',
   );
 
   $$CourseTableProcessedTableManager get courseRefs {
@@ -28429,10 +28555,7 @@ final class $$InstitutionsTableReferences
   static MultiTypedResultKey<$TimetableTable, List<TimetableData>>
   _timetableRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
     db.timetable,
-    aliasName: $_aliasNameGenerator(
-      db.institutions.institutionId,
-      db.timetable.institution,
-    ),
+    aliasName: 'institution__institution_id__timetable__institution',
   );
 
   $$TimetableTableProcessedTableManager get timetableRefs {
@@ -28451,10 +28574,7 @@ final class $$InstitutionsTableReferences
   static MultiTypedResultKey<$ExamTimetablesTable, List<ExamTimetable>>
   _examTimetablesRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
     db.examTimetables,
-    aliasName: $_aliasNameGenerator(
-      db.institutions.institutionId,
-      db.examTimetables.institutionId,
-    ),
+    aliasName: 'institution__institution_id__exam_timetable__institution_id',
   );
 
   $$ExamTimetablesTableProcessedTableManager get examTimetablesRefs {
@@ -28979,7 +29099,7 @@ class $$InstitutionsTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
-                  e.readTable(table),
+                  e.readTable<$InstitutionsTable, Institution>(table),
                   $$InstitutionsTableReferences(db, table, e),
                 ),
               )
@@ -29203,10 +29323,7 @@ final class $$InstitutionScrappingCommandsTableReferences
   static MultiTypedResultKey<$InstitutionKeysTable, List<InstitutionKey>>
   _institutionKeysRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
     db.institutionKeys,
-    aliasName: $_aliasNameGenerator(
-      db.institutionScrappingCommands.commandID,
-      db.institutionKeys.commandID,
-    ),
+    aliasName: 'institution_scrapping_command__command_i_d__institution_key__command_i_d',
   );
 
   $$InstitutionKeysTableProcessedTableManager get institutionKeysRefs {
@@ -29507,7 +29624,10 @@ class $$InstitutionScrappingCommandsTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
-                  e.readTable(table),
+                  e.readTable<
+                    $InstitutionScrappingCommandsTable,
+                    InstitutionScrappingCommand
+                  >(table),
                   $$InstitutionScrappingCommandsTableReferences(db, table, e),
                 ),
               )
@@ -29596,10 +29716,7 @@ final class $$InstitutionKeysTableReferences
 
   static $InstitutionsTable _institutionIDTable(_$AppDataBase db) =>
       db.institutions.createAlias(
-        $_aliasNameGenerator(
-          db.institutionKeys.institutionID,
-          db.institutions.institutionId,
-        ),
+        'institution_key__institution_id__institution__institution_id',
       );
 
   $$InstitutionsTableProcessedTableManager get institutionID {
@@ -29616,13 +29733,11 @@ final class $$InstitutionKeysTableReferences
     );
   }
 
-  static $InstitutionScrappingCommandsTable _commandIDTable(_$AppDataBase db) =>
-      db.institutionScrappingCommands.createAlias(
-        $_aliasNameGenerator(
-          db.institutionKeys.commandID,
-          db.institutionScrappingCommands.commandID,
-        ),
-      );
+  static $InstitutionScrappingCommandsTable _commandIDTable(
+    _$AppDataBase db,
+  ) => db.institutionScrappingCommands.createAlias(
+    'institution_key__command_i_d__institution_scrapping_command__command_i_d',
+  );
 
   $$InstitutionScrappingCommandsTableProcessedTableManager get commandID {
     final $_column = $_itemColumn<String>('command_i_d')!;
@@ -29900,7 +30015,7 @@ class $$InstitutionKeysTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
-                  e.readTable(table),
+                  e.readTable<$InstitutionKeysTable, InstitutionKey>(table),
                   $$InstitutionKeysTableReferences(db, table, e),
                 ),
               )
@@ -29926,34 +30041,26 @@ class $$InstitutionKeysTableTableManager
                     >
                   >(state) {
                     if (institutionID) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.institutionID,
-                                referencedTable:
-                                    $$InstitutionKeysTableReferences
-                                        ._institutionIDTable(db),
-                                referencedColumn:
-                                    $$InstitutionKeysTableReferences
-                                        ._institutionIDTable(db)
-                                        .institutionId,
-                              )
-                              as T;
+                      state = state.withJoin(
+                        currentTable: table,
+                        currentColumn: table.institutionID,
+                        referencedTable: $$InstitutionKeysTableReferences
+                            ._institutionIDTable(db),
+                        referencedColumn: $$InstitutionKeysTableReferences
+                            ._institutionIDTable(db)
+                            .institutionId,
+                      ) as T;
                     }
                     if (commandID) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.commandID,
-                                referencedTable:
-                                    $$InstitutionKeysTableReferences
-                                        ._commandIDTable(db),
-                                referencedColumn:
-                                    $$InstitutionKeysTableReferences
-                                        ._commandIDTable(db)
-                                        .commandID,
-                              )
-                              as T;
+                      state = state.withJoin(
+                        currentTable: table,
+                        currentColumn: table.commandID,
+                        referencedTable: $$InstitutionKeysTableReferences
+                            ._commandIDTable(db),
+                        referencedColumn: $$InstitutionKeysTableReferences
+                            ._commandIDTable(db)
+                            .commandID,
+                      ) as T;
                     }
 
                     return state;
@@ -30553,7 +30660,18 @@ class $$InstitutionProfilesTableTableManager
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$InstitutionProfilesTable, InstitutionProfile>(
+                    table,
+                  ),
+                  BaseReferences<
+                    _$AppDataBase,
+                    $InstitutionProfilesTable,
+                    InstitutionProfile
+                  >(db, table, e),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),
@@ -30625,10 +30743,7 @@ final class $$InstitutionFeeTransactionsTableReferences
 
   static $InstitutionsTable _institutionTable(_$AppDataBase db) =>
       db.institutions.createAlias(
-        $_aliasNameGenerator(
-          db.institutionFeeTransactions.institution,
-          db.institutions.institutionId,
-        ),
+        'institution_fee_transaction__institution__institution__institution_id',
       );
 
   $$InstitutionsTableProcessedTableManager get institution {
@@ -30965,7 +31080,10 @@ class $$InstitutionFeeTransactionsTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
-                  e.readTable(table),
+                  e.readTable<
+                    $InstitutionFeeTransactionsTable,
+                    InstitutionFeeTransaction
+                  >(table),
                   $$InstitutionFeeTransactionsTableReferences(db, table, e),
                 ),
               )
@@ -30991,19 +31109,17 @@ class $$InstitutionFeeTransactionsTableTableManager
                     >
                   >(state) {
                     if (institution) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.institution,
-                                referencedTable:
-                                    $$InstitutionFeeTransactionsTableReferences
-                                        ._institutionTable(db),
-                                referencedColumn:
-                                    $$InstitutionFeeTransactionsTableReferences
-                                        ._institutionTable(db)
-                                        .institutionId,
-                              )
-                              as T;
+                      state = state.withJoin(
+                        currentTable: table,
+                        currentColumn: table.institution,
+                        referencedTable:
+                            $$InstitutionFeeTransactionsTableReferences
+                                ._institutionTable(db),
+                        referencedColumn:
+                            $$InstitutionFeeTransactionsTableReferences
+                                ._institutionTable(db)
+                                .institutionId,
+                      ) as T;
                     }
 
                     return state;
@@ -31031,36 +31147,30 @@ typedef $$InstitutionFeeTransactionsTableProcessedTableManager =
       InstitutionFeeTransaction,
       PrefetchHooks Function({bool institution})
     >;
-typedef $$SemesterTableCreateCompanionBuilder =
-    SemesterCompanion Function({
-      Value<int> id,
-      required String name,
-      Value<String?> description,
-      Value<int?> institutionId,
-      Value<DateTime> startDate,
-      Value<DateTime> endDate,
-    });
-typedef $$SemesterTableUpdateCompanionBuilder =
-    SemesterCompanion Function({
-      Value<int> id,
-      Value<String> name,
-      Value<String?> description,
-      Value<int?> institutionId,
-      Value<DateTime> startDate,
-      Value<DateTime> endDate,
-    });
+typedef $$SemesterTableCreateCompanionBuilder = SemesterCompanion Function({
+  Value<int> id,
+  required String name,
+  Value<String?> description,
+  Value<int?> institutionId,
+  Value<DateTime> startDate,
+  Value<DateTime> endDate,
+});
+typedef $$SemesterTableUpdateCompanionBuilder = SemesterCompanion Function({
+  Value<int> id,
+  Value<String> name,
+  Value<String?> description,
+  Value<int?> institutionId,
+  Value<DateTime> startDate,
+  Value<DateTime> endDate,
+});
 
 final class $$SemesterTableReferences
     extends BaseReferences<_$AppDataBase, $SemesterTable, SemesterData> {
   $$SemesterTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $InstitutionsTable _institutionIdTable(_$AppDataBase db) =>
-      db.institutions.createAlias(
-        $_aliasNameGenerator(
-          db.semester.institutionId,
-          db.institutions.institutionId,
-        ),
-      );
+  static $InstitutionsTable _institutionIdTable(_$AppDataBase db) => db
+      .institutions
+      .createAlias('semester__institution_id__institution__institution_id');
 
   $$InstitutionsTableProcessedTableManager? get institutionId {
     final $_column = $_itemColumn<int>('institution_id');
@@ -31080,7 +31190,7 @@ final class $$SemesterTableReferences
     _$AppDataBase db,
   ) => MultiTypedResultKey.fromTable(
     db.course,
-    aliasName: $_aliasNameGenerator(db.semester.id, db.course.semester),
+    aliasName: 'semester__id__course__semester',
   );
 
   $$CourseTableProcessedTableManager get courseRefs {
@@ -31373,7 +31483,7 @@ class $$SemesterTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
-                  e.readTable(table),
+                  e.readTable<$SemesterTable, SemesterData>(table),
                   $$SemesterTableReferences(db, table, e),
                 ),
               )
@@ -31399,17 +31509,15 @@ class $$SemesterTableTableManager
                     >
                   >(state) {
                     if (institutionId) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.institutionId,
-                                referencedTable: $$SemesterTableReferences
-                                    ._institutionIdTable(db),
-                                referencedColumn: $$SemesterTableReferences
-                                    ._institutionIdTable(db)
-                                    .institutionId,
-                              )
-                              as T;
+                      state = state.withJoin(
+                        currentTable: table,
+                        currentColumn: table.institutionId,
+                        referencedTable: $$SemesterTableReferences
+                            ._institutionIdTable(db),
+                        referencedColumn: $$SemesterTableReferences
+                            ._institutionIdTable(db)
+                            .institutionId,
+                      ) as T;
                     }
 
                     return state;
@@ -31453,50 +31561,44 @@ typedef $$SemesterTableProcessedTableManager =
       SemesterData,
       PrefetchHooks Function({bool institutionId, bool courseRefs})
     >;
-typedef $$CourseTableCreateCompanionBuilder =
-    CourseCompanion Function({
-      Value<String> id,
-      Value<int?> serverId,
-      Value<int?> institution,
-      Value<int?> semester,
-      required String courseCode,
-      required String courseName,
-      required String instructor,
-      Value<Color?> color,
-      Value<bool> isSynced,
-      Value<bool> isDeleted,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
-      Value<int> rowid,
-    });
-typedef $$CourseTableUpdateCompanionBuilder =
-    CourseCompanion Function({
-      Value<String> id,
-      Value<int?> serverId,
-      Value<int?> institution,
-      Value<int?> semester,
-      Value<String> courseCode,
-      Value<String> courseName,
-      Value<String> instructor,
-      Value<Color?> color,
-      Value<bool> isSynced,
-      Value<bool> isDeleted,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
-      Value<int> rowid,
-    });
+typedef $$CourseTableCreateCompanionBuilder = CourseCompanion Function({
+  Value<String> id,
+  Value<int?> serverId,
+  Value<int?> institution,
+  Value<int?> semester,
+  required String courseCode,
+  required String courseName,
+  required String instructor,
+  Value<Color?> color,
+  Value<bool> isSynced,
+  Value<bool> isDeleted,
+  Value<DateTime> createdAt,
+  Value<DateTime> updatedAt,
+  Value<int> rowid,
+});
+typedef $$CourseTableUpdateCompanionBuilder = CourseCompanion Function({
+  Value<String> id,
+  Value<int?> serverId,
+  Value<int?> institution,
+  Value<int?> semester,
+  Value<String> courseCode,
+  Value<String> courseName,
+  Value<String> instructor,
+  Value<Color?> color,
+  Value<bool> isSynced,
+  Value<bool> isDeleted,
+  Value<DateTime> createdAt,
+  Value<DateTime> updatedAt,
+  Value<int> rowid,
+});
 
 final class $$CourseTableReferences
     extends BaseReferences<_$AppDataBase, $CourseTable, CourseData> {
   $$CourseTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $InstitutionsTable _institutionTable(_$AppDataBase db) =>
-      db.institutions.createAlias(
-        $_aliasNameGenerator(
-          db.course.institution,
-          db.institutions.institutionId,
-        ),
-      );
+  static $InstitutionsTable _institutionTable(_$AppDataBase db) => db
+      .institutions
+      .createAlias('course__institution__institution__institution_id');
 
   $$InstitutionsTableProcessedTableManager? get institution {
     final $_column = $_itemColumn<int>('institution');
@@ -31512,8 +31614,8 @@ final class $$CourseTableReferences
     );
   }
 
-  static $SemesterTable _semesterTable(_$AppDataBase db) => db.semester
-      .createAlias($_aliasNameGenerator(db.course.semester, db.semester.id));
+  static $SemesterTable _semesterTable(_$AppDataBase db) =>
+      db.semester.createAlias('course__semester__semester__id');
 
   $$SemesterTableProcessedTableManager? get semester {
     final $_column = $_itemColumn<int>('semester');
@@ -31532,7 +31634,7 @@ final class $$CourseTableReferences
   static MultiTypedResultKey<$TimetableEntryTable, List<TimetableEntryData>>
   _timetableEntryRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
     db.timetableEntry,
-    aliasName: $_aliasNameGenerator(db.course.id, db.timetableEntry.courseId),
+    aliasName: 'course__id__timetable_entry__course_id',
   );
 
   $$TimetableEntryTableProcessedTableManager get timetableEntryRefs {
@@ -31995,8 +32097,10 @@ class $$CourseTableTableManager
               ),
           withReferenceMapper: (p0) => p0
               .map(
-                (e) =>
-                    (e.readTable(table), $$CourseTableReferences(db, table, e)),
+                (e) => (
+                  e.readTable<$CourseTable, CourseData>(table),
+                  $$CourseTableReferences(db, table, e),
+                ),
               )
               .toList(),
           prefetchHooksCallback:
@@ -32027,30 +32131,26 @@ class $$CourseTableTableManager
                         >
                       >(state) {
                         if (institution) {
-                          state =
-                              state.withJoin(
-                                    currentTable: table,
-                                    currentColumn: table.institution,
-                                    referencedTable: $$CourseTableReferences
-                                        ._institutionTable(db),
-                                    referencedColumn: $$CourseTableReferences
-                                        ._institutionTable(db)
-                                        .institutionId,
-                                  )
-                                  as T;
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.institution,
+                            referencedTable: $$CourseTableReferences
+                                ._institutionTable(db),
+                            referencedColumn: $$CourseTableReferences
+                                ._institutionTable(db)
+                                .institutionId,
+                          ) as T;
                         }
                         if (semester) {
-                          state =
-                              state.withJoin(
-                                    currentTable: table,
-                                    currentColumn: table.semester,
-                                    referencedTable: $$CourseTableReferences
-                                        ._semesterTable(db),
-                                    referencedColumn: $$CourseTableReferences
-                                        ._semesterTable(db)
-                                        .id,
-                                  )
-                                  as T;
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.semester,
+                            referencedTable: $$CourseTableReferences
+                                ._semesterTable(db),
+                            referencedColumn: $$CourseTableReferences
+                                ._semesterTable(db)
+                                .id,
+                          ) as T;
                         }
 
                         return state;
@@ -32104,44 +32204,38 @@ typedef $$CourseTableProcessedTableManager =
         bool timetableEntryRefs,
       })
     >;
-typedef $$TimetableTableCreateCompanionBuilder =
-    TimetableCompanion Function({
-      Value<String> id,
-      Value<int?> serverId,
-      required String name,
-      required String userId,
-      Value<int?> institution,
-      Value<bool> isSynced,
-      Value<bool> isDeleted,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
-      Value<int> rowid,
-    });
-typedef $$TimetableTableUpdateCompanionBuilder =
-    TimetableCompanion Function({
-      Value<String> id,
-      Value<int?> serverId,
-      Value<String> name,
-      Value<String> userId,
-      Value<int?> institution,
-      Value<bool> isSynced,
-      Value<bool> isDeleted,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
-      Value<int> rowid,
-    });
+typedef $$TimetableTableCreateCompanionBuilder = TimetableCompanion Function({
+  Value<String> id,
+  Value<int?> serverId,
+  required String name,
+  required String userId,
+  Value<int?> institution,
+  Value<bool> isSynced,
+  Value<bool> isDeleted,
+  Value<DateTime> createdAt,
+  Value<DateTime> updatedAt,
+  Value<int> rowid,
+});
+typedef $$TimetableTableUpdateCompanionBuilder = TimetableCompanion Function({
+  Value<String> id,
+  Value<int?> serverId,
+  Value<String> name,
+  Value<String> userId,
+  Value<int?> institution,
+  Value<bool> isSynced,
+  Value<bool> isDeleted,
+  Value<DateTime> createdAt,
+  Value<DateTime> updatedAt,
+  Value<int> rowid,
+});
 
 final class $$TimetableTableReferences
     extends BaseReferences<_$AppDataBase, $TimetableTable, TimetableData> {
   $$TimetableTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $InstitutionsTable _institutionTable(_$AppDataBase db) =>
-      db.institutions.createAlias(
-        $_aliasNameGenerator(
-          db.timetable.institution,
-          db.institutions.institutionId,
-        ),
-      );
+  static $InstitutionsTable _institutionTable(_$AppDataBase db) => db
+      .institutions
+      .createAlias('timetable__institution__institution__institution_id');
 
   $$InstitutionsTableProcessedTableManager? get institution {
     final $_column = $_itemColumn<int>('institution');
@@ -32160,10 +32254,7 @@ final class $$TimetableTableReferences
   static MultiTypedResultKey<$TimetableEntryTable, List<TimetableEntryData>>
   _timetableEntryRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
     db.timetableEntry,
-    aliasName: $_aliasNameGenerator(
-      db.timetable.id,
-      db.timetableEntry.timetableId,
-    ),
+    aliasName: 'timetable__id__timetable_entry__timetable_id',
   );
 
   $$TimetableEntryTableProcessedTableManager get timetableEntryRefs {
@@ -32509,7 +32600,7 @@ class $$TimetableTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
-                  e.readTable(table),
+                  e.readTable<$TimetableTable, TimetableData>(table),
                   $$TimetableTableReferences(db, table, e),
                 ),
               )
@@ -32538,17 +32629,15 @@ class $$TimetableTableTableManager
                         >
                       >(state) {
                         if (institution) {
-                          state =
-                              state.withJoin(
-                                    currentTable: table,
-                                    currentColumn: table.institution,
-                                    referencedTable: $$TimetableTableReferences
-                                        ._institutionTable(db),
-                                    referencedColumn: $$TimetableTableReferences
-                                        ._institutionTable(db)
-                                        .institutionId,
-                                  )
-                                  as T;
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.institution,
+                            referencedTable: $$TimetableTableReferences
+                                ._institutionTable(db),
+                            referencedColumn: $$TimetableTableReferences
+                                ._institutionTable(db)
+                                .institutionId,
+                          ) as T;
                         }
 
                         return state;
@@ -32650,9 +32739,8 @@ final class $$TimetableEntryTableReferences
     super.$_typedResult,
   );
 
-  static $CourseTable _courseIdTable(_$AppDataBase db) => db.course.createAlias(
-    $_aliasNameGenerator(db.timetableEntry.courseId, db.course.id),
-  );
+  static $CourseTable _courseIdTable(_$AppDataBase db) =>
+      db.course.createAlias('timetable_entry__course_id__course__id');
 
   $$CourseTableProcessedTableManager get courseId {
     final $_column = $_itemColumn<String>('course_id')!;
@@ -32669,9 +32757,7 @@ final class $$TimetableEntryTableReferences
   }
 
   static $TimetableTable _timetableIdTable(_$AppDataBase db) =>
-      db.timetable.createAlias(
-        $_aliasNameGenerator(db.timetableEntry.timetableId, db.timetable.id),
-      );
+      db.timetable.createAlias('timetable_entry__timetable_id__timetable__id');
 
   $$TimetableTableProcessedTableManager get timetableId {
     final $_column = $_itemColumn<String>('timetable_id')!;
@@ -33134,7 +33220,7 @@ class $$TimetableEntryTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
-                  e.readTable(table),
+                  e.readTable<$TimetableEntryTable, TimetableEntryData>(table),
                   $$TimetableEntryTableReferences(db, table, e),
                 ),
               )
@@ -33160,32 +33246,26 @@ class $$TimetableEntryTableTableManager
                     >
                   >(state) {
                     if (courseId) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.courseId,
-                                referencedTable: $$TimetableEntryTableReferences
-                                    ._courseIdTable(db),
-                                referencedColumn:
-                                    $$TimetableEntryTableReferences
-                                        ._courseIdTable(db)
-                                        .id,
-                              )
-                              as T;
+                      state = state.withJoin(
+                        currentTable: table,
+                        currentColumn: table.courseId,
+                        referencedTable: $$TimetableEntryTableReferences
+                            ._courseIdTable(db),
+                        referencedColumn: $$TimetableEntryTableReferences
+                            ._courseIdTable(db)
+                            .id,
+                      ) as T;
                     }
                     if (timetableId) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.timetableId,
-                                referencedTable: $$TimetableEntryTableReferences
-                                    ._timetableIdTable(db),
-                                referencedColumn:
-                                    $$TimetableEntryTableReferences
-                                        ._timetableIdTable(db)
-                                        .id,
-                              )
-                              as T;
+                      state = state.withJoin(
+                        currentTable: table,
+                        currentColumn: table.timetableId,
+                        referencedTable: $$TimetableEntryTableReferences
+                            ._timetableIdTable(db),
+                        referencedColumn: $$TimetableEntryTableReferences
+                            ._timetableIdTable(db)
+                            .id,
+                      ) as T;
                     }
 
                     return state;
@@ -33250,10 +33330,7 @@ final class $$ExamTimetablesTableReferences
 
   static $InstitutionsTable _institutionIdTable(_$AppDataBase db) =>
       db.institutions.createAlias(
-        $_aliasNameGenerator(
-          db.examTimetables.institutionId,
-          db.institutions.institutionId,
-        ),
+        'exam_timetable__institution_id__institution__institution_id',
       );
 
   $$InstitutionsTableProcessedTableManager get institutionId {
@@ -33559,7 +33636,7 @@ class $$ExamTimetablesTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
-                  e.readTable(table),
+                  e.readTable<$ExamTimetablesTable, ExamTimetable>(table),
                   $$ExamTimetablesTableReferences(db, table, e),
                 ),
               )
@@ -33585,18 +33662,15 @@ class $$ExamTimetablesTableTableManager
                     >
                   >(state) {
                     if (institutionId) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.institutionId,
-                                referencedTable: $$ExamTimetablesTableReferences
-                                    ._institutionIdTable(db),
-                                referencedColumn:
-                                    $$ExamTimetablesTableReferences
-                                        ._institutionIdTable(db)
-                                        .institutionId,
-                              )
-                              as T;
+                      state = state.withJoin(
+                        currentTable: table,
+                        currentColumn: table.institutionId,
+                        referencedTable: $$ExamTimetablesTableReferences
+                            ._institutionIdTable(db),
+                        referencedColumn: $$ExamTimetablesTableReferences
+                            ._institutionIdTable(db)
+                            .institutionId,
+                      ) as T;
                     }
 
                     return state;
@@ -33624,32 +33698,30 @@ typedef $$ExamTimetablesTableProcessedTableManager =
       ExamTimetable,
       PrefetchHooks Function({bool institutionId})
     >;
-typedef $$ChirpUsersTableCreateCompanionBuilder =
-    ChirpUsersCompanion Function({
-      required String userID,
-      Value<String?> email,
-      Value<String?> phone,
-      Value<String?> username,
-      Value<int> vibePoints,
-      Value<String?> avatarUrl,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
-      Value<DateTime?> cachedAt,
-      Value<int> rowid,
-    });
-typedef $$ChirpUsersTableUpdateCompanionBuilder =
-    ChirpUsersCompanion Function({
-      Value<String> userID,
-      Value<String?> email,
-      Value<String?> phone,
-      Value<String?> username,
-      Value<int> vibePoints,
-      Value<String?> avatarUrl,
-      Value<DateTime> createdAt,
-      Value<DateTime> updatedAt,
-      Value<DateTime?> cachedAt,
-      Value<int> rowid,
-    });
+typedef $$ChirpUsersTableCreateCompanionBuilder = ChirpUsersCompanion Function({
+  required String userID,
+  Value<String?> email,
+  Value<String?> phone,
+  Value<String?> username,
+  Value<int> vibePoints,
+  Value<String?> avatarUrl,
+  Value<DateTime> createdAt,
+  Value<DateTime> updatedAt,
+  Value<DateTime?> cachedAt,
+  Value<int> rowid,
+});
+typedef $$ChirpUsersTableUpdateCompanionBuilder = ChirpUsersCompanion Function({
+  Value<String> userID,
+  Value<String?> email,
+  Value<String?> phone,
+  Value<String?> username,
+  Value<int> vibePoints,
+  Value<String?> avatarUrl,
+  Value<DateTime> createdAt,
+  Value<DateTime> updatedAt,
+  Value<DateTime?> cachedAt,
+  Value<int> rowid,
+});
 
 final class $$ChirpUsersTableReferences
     extends BaseReferences<_$AppDataBase, $ChirpUsersTable, ChirpUser> {
@@ -33662,10 +33734,7 @@ final class $$ChirpUsersTableReferences
   _chirpCommunityMembershipsRefsTable(_$AppDataBase db) =>
       MultiTypedResultKey.fromTable(
         db.chirpCommunityMemberships,
-        aliasName: $_aliasNameGenerator(
-          db.chirpUsers.userID,
-          db.chirpCommunityMemberships.userID,
-        ),
+        aliasName: 'chirp_user__user_i_d__chirp_community_membership__user_i_d',
       );
 
   $$ChirpCommunityMembershipsTableProcessedTableManager
@@ -33967,7 +34036,7 @@ class $$ChirpUsersTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
-                  e.readTable(table),
+                  e.readTable<$ChirpUsersTable, ChirpUser>(table),
                   $$ChirpUsersTableReferences(db, table, e),
                 ),
               )
@@ -34602,7 +34671,16 @@ class $$CommunitiesTableTableManager
                 cachedAt: cachedAt,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$CommunitiesTable, Community>(table),
+                  BaseReferences<_$AppDataBase, $CommunitiesTable, Community>(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),
@@ -34665,10 +34743,7 @@ final class $$ChirpCommunityMembershipsTableReferences
 
   static $ChirpUsersTable _userIDTable(_$AppDataBase db) =>
       db.chirpUsers.createAlias(
-        $_aliasNameGenerator(
-          db.chirpCommunityMemberships.userID,
-          db.chirpUsers.userID,
-        ),
+        'chirp_community_membership__user_i_d__chirp_user__user_i_d',
       );
 
   $$ChirpUsersTableProcessedTableManager get userID {
@@ -34999,7 +35074,10 @@ class $$ChirpCommunityMembershipsTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
-                  e.readTable(table),
+                  e.readTable<
+                    $ChirpCommunityMembershipsTable,
+                    ChirpCommunityMembership
+                  >(table),
                   $$ChirpCommunityMembershipsTableReferences(db, table, e),
                 ),
               )
@@ -35025,19 +35103,17 @@ class $$ChirpCommunityMembershipsTableTableManager
                     >
                   >(state) {
                     if (userID) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.userID,
-                                referencedTable:
-                                    $$ChirpCommunityMembershipsTableReferences
-                                        ._userIDTable(db),
-                                referencedColumn:
-                                    $$ChirpCommunityMembershipsTableReferences
-                                        ._userIDTable(db)
-                                        .userID,
-                              )
-                              as T;
+                      state = state.withJoin(
+                        currentTable: table,
+                        currentColumn: table.userID,
+                        referencedTable:
+                            $$ChirpCommunityMembershipsTableReferences
+                                ._userIDTable(db),
+                        referencedColumn:
+                            $$ChirpCommunityMembershipsTableReferences
+                                ._userIDTable(db)
+                                .userID,
+                      ) as T;
                     }
 
                     return state;
@@ -35344,7 +35420,18 @@ class $$LeaderboardRankTableTableManager
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$LeaderboardRankTable, LeaderboardRankData>(
+                    table,
+                  ),
+                  BaseReferences<
+                    _$AppDataBase,
+                    $LeaderboardRankTable,
+                    LeaderboardRankData
+                  >(db, table, e),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),
@@ -35419,10 +35506,7 @@ final class $$StreakActivityTableReferences
   static MultiTypedResultKey<$StreakMilestoneTable, List<StreakMilestoneData>>
   _streakMilestoneRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
     db.streakMilestone,
-    aliasName: $_aliasNameGenerator(
-      db.streakActivity.id,
-      db.streakMilestone.activityID,
-    ),
+    aliasName: 'streak_activity__id__streak_milestone__activity_i_d',
   );
 
   $$StreakMilestoneTableProcessedTableManager get streakMilestoneRefs {
@@ -35758,7 +35842,7 @@ class $$StreakActivityTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
-                  e.readTable(table),
+                  e.readTable<$StreakActivityTable, StreakActivityData>(table),
                   $$StreakActivityTableReferences(db, table, e),
                 ),
               )
@@ -35851,13 +35935,9 @@ final class $$StreakMilestoneTableReferences
     super.$_typedResult,
   );
 
-  static $StreakActivityTable _activityIDTable(_$AppDataBase db) =>
-      db.streakActivity.createAlias(
-        $_aliasNameGenerator(
-          db.streakMilestone.activityID,
-          db.streakActivity.id,
-        ),
-      );
+  static $StreakActivityTable _activityIDTable(_$AppDataBase db) => db
+      .streakActivity
+      .createAlias('streak_milestone__activity_i_d__streak_activity__id');
 
   $$StreakActivityTableProcessedTableManager get activityID {
     final $_column = $_itemColumn<String>('activity_i_d')!;
@@ -36145,7 +36225,9 @@ class $$StreakMilestoneTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
-                  e.readTable(table),
+                  e.readTable<$StreakMilestoneTable, StreakMilestoneData>(
+                    table,
+                  ),
                   $$StreakMilestoneTableReferences(db, table, e),
                 ),
               )
@@ -36171,19 +36253,15 @@ class $$StreakMilestoneTableTableManager
                     >
                   >(state) {
                     if (activityID) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.activityID,
-                                referencedTable:
-                                    $$StreakMilestoneTableReferences
-                                        ._activityIDTable(db),
-                                referencedColumn:
-                                    $$StreakMilestoneTableReferences
-                                        ._activityIDTable(db)
-                                        .id,
-                              )
-                              as T;
+                      state = state.withJoin(
+                        currentTable: table,
+                        currentColumn: table.activityID,
+                        referencedTable: $$StreakMilestoneTableReferences
+                            ._activityIDTable(db),
+                        referencedColumn: $$StreakMilestoneTableReferences
+                            ._activityIDTable(db)
+                            .id,
+                      ) as T;
                     }
 
                     return state;
@@ -36211,36 +36289,34 @@ typedef $$StreakMilestoneTableProcessedTableManager =
       StreakMilestoneData,
       PrefetchHooks Function({bool activityID})
     >;
-typedef $$TodoListsTableCreateCompanionBuilder =
-    TodoListsCompanion Function({
-      Value<int> localId,
-      Value<String?> id,
-      required String title,
-      Value<int?> color,
-      Value<bool> isDefault,
-      Value<SyncStatus> syncStatus,
-      Value<int> taskCount,
-      Value<DateTime?> lastSyncedAt,
-      Value<DateTime?> createdAt,
-      Value<DateTime?> updatedAt,
-      Value<bool> isPendingDeletion,
-      Value<bool> isDirty,
-    });
-typedef $$TodoListsTableUpdateCompanionBuilder =
-    TodoListsCompanion Function({
-      Value<int> localId,
-      Value<String?> id,
-      Value<String> title,
-      Value<int?> color,
-      Value<bool> isDefault,
-      Value<SyncStatus> syncStatus,
-      Value<int> taskCount,
-      Value<DateTime?> lastSyncedAt,
-      Value<DateTime?> createdAt,
-      Value<DateTime?> updatedAt,
-      Value<bool> isPendingDeletion,
-      Value<bool> isDirty,
-    });
+typedef $$TodoListsTableCreateCompanionBuilder = TodoListsCompanion Function({
+  Value<int> localId,
+  Value<String?> id,
+  required String title,
+  Value<int?> color,
+  Value<bool> isDefault,
+  Value<SyncStatus> syncStatus,
+  Value<int> taskCount,
+  Value<DateTime?> lastSyncedAt,
+  Value<DateTime?> createdAt,
+  Value<DateTime?> updatedAt,
+  Value<bool> isPendingDeletion,
+  Value<bool> isDirty,
+});
+typedef $$TodoListsTableUpdateCompanionBuilder = TodoListsCompanion Function({
+  Value<int> localId,
+  Value<String?> id,
+  Value<String> title,
+  Value<int?> color,
+  Value<bool> isDefault,
+  Value<SyncStatus> syncStatus,
+  Value<int> taskCount,
+  Value<DateTime?> lastSyncedAt,
+  Value<DateTime?> createdAt,
+  Value<DateTime?> updatedAt,
+  Value<bool> isPendingDeletion,
+  Value<bool> isDirty,
+});
 
 final class $$TodoListsTableReferences
     extends BaseReferences<_$AppDataBase, $TodoListsTable, TodoList> {
@@ -36249,10 +36325,7 @@ final class $$TodoListsTableReferences
   static MultiTypedResultKey<$TodoItemsTable, List<TodoItem>>
   _todoItemsRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
     db.todoItems,
-    aliasName: $_aliasNameGenerator(
-      db.todoLists.localId,
-      db.todoItems.taskListLocalId,
-    ),
+    aliasName: 'todo_lists__local_id__todo_items__task_list_local_id',
   );
 
   $$TodoItemsTableProcessedTableManager get todoItemsRefs {
@@ -36597,7 +36670,7 @@ class $$TodoListsTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
-                  e.readTable(table),
+                  e.readTable<$TodoListsTable, TodoList>(table),
                   $$TodoListsTableReferences(db, table, e),
                 ),
               )
@@ -36682,10 +36755,7 @@ final class $$TodoTagItemsTableReferences
   static MultiTypedResultKey<$TodoItemTagsTable, List<TodoItemTag>>
   _todoItemTagsRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
     db.todoItemTags,
-    aliasName: $_aliasNameGenerator(
-      db.todoTagItems.localId,
-      db.todoItemTags.tagLocalId,
-    ),
+    aliasName: 'todo_tag_items__local_id__todo_item_tags__tag_local_id',
   );
 
   $$TodoItemTagsTableProcessedTableManager get todoItemTagsRefs {
@@ -36960,7 +37030,7 @@ class $$TodoTagItemsTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
-                  e.readTable(table),
+                  e.readTable<$TodoTagItemsTable, TodoTagItem>(table),
                   $$TodoTagItemsTableReferences(db, table, e),
                 ),
               )
@@ -37015,62 +37085,55 @@ typedef $$TodoTagItemsTableProcessedTableManager =
       TodoTagItem,
       PrefetchHooks Function({bool todoItemTagsRefs})
     >;
-typedef $$TodoItemsTableCreateCompanionBuilder =
-    TodoItemsCompanion Function({
-      Value<int> localId,
-      Value<String?> id,
-      required int taskListLocalId,
-      required String title,
-      Value<String?> notes,
-      Value<TodoStatus> status,
-      Value<TodoPriority> priority,
-      Value<DateTime?> due,
-      Value<DateTime?> completed,
-      Value<int> subtaskCount,
-      Value<String?> position,
-      Value<bool> hidden,
-      Value<SyncStatus> syncStatus,
-      Value<DateTime?> lastSyncedAt,
-      Value<DateTime?> createdAt,
-      Value<DateTime?> updatedAt,
-      Value<bool> isPendingDeletion,
-      Value<bool> isDirty,
-      Value<int> focusedSeconds,
-    });
-typedef $$TodoItemsTableUpdateCompanionBuilder =
-    TodoItemsCompanion Function({
-      Value<int> localId,
-      Value<String?> id,
-      Value<int> taskListLocalId,
-      Value<String> title,
-      Value<String?> notes,
-      Value<TodoStatus> status,
-      Value<TodoPriority> priority,
-      Value<DateTime?> due,
-      Value<DateTime?> completed,
-      Value<int> subtaskCount,
-      Value<String?> position,
-      Value<bool> hidden,
-      Value<SyncStatus> syncStatus,
-      Value<DateTime?> lastSyncedAt,
-      Value<DateTime?> createdAt,
-      Value<DateTime?> updatedAt,
-      Value<bool> isPendingDeletion,
-      Value<bool> isDirty,
-      Value<int> focusedSeconds,
-    });
+typedef $$TodoItemsTableCreateCompanionBuilder = TodoItemsCompanion Function({
+  Value<int> localId,
+  Value<String?> id,
+  required int taskListLocalId,
+  required String title,
+  Value<String?> notes,
+  Value<TodoStatus> status,
+  Value<TodoPriority> priority,
+  Value<DateTime?> due,
+  Value<DateTime?> completed,
+  Value<int> subtaskCount,
+  Value<String?> position,
+  Value<bool> hidden,
+  Value<SyncStatus> syncStatus,
+  Value<DateTime?> lastSyncedAt,
+  Value<DateTime?> createdAt,
+  Value<DateTime?> updatedAt,
+  Value<bool> isPendingDeletion,
+  Value<bool> isDirty,
+  Value<int> focusedSeconds,
+});
+typedef $$TodoItemsTableUpdateCompanionBuilder = TodoItemsCompanion Function({
+  Value<int> localId,
+  Value<String?> id,
+  Value<int> taskListLocalId,
+  Value<String> title,
+  Value<String?> notes,
+  Value<TodoStatus> status,
+  Value<TodoPriority> priority,
+  Value<DateTime?> due,
+  Value<DateTime?> completed,
+  Value<int> subtaskCount,
+  Value<String?> position,
+  Value<bool> hidden,
+  Value<SyncStatus> syncStatus,
+  Value<DateTime?> lastSyncedAt,
+  Value<DateTime?> createdAt,
+  Value<DateTime?> updatedAt,
+  Value<bool> isPendingDeletion,
+  Value<bool> isDirty,
+  Value<int> focusedSeconds,
+});
 
 final class $$TodoItemsTableReferences
     extends BaseReferences<_$AppDataBase, $TodoItemsTable, TodoItem> {
   $$TodoItemsTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $TodoListsTable _taskListLocalIdTable(_$AppDataBase db) =>
-      db.todoLists.createAlias(
-        $_aliasNameGenerator(
-          db.todoItems.taskListLocalId,
-          db.todoLists.localId,
-        ),
-      );
+  static $TodoListsTable _taskListLocalIdTable(_$AppDataBase db) => db.todoLists
+      .createAlias('todo_items__task_list_local_id__todo_lists__local_id');
 
   $$TodoListsTableProcessedTableManager get taskListLocalId {
     final $_column = $_itemColumn<int>('task_list_local_id')!;
@@ -37089,10 +37152,7 @@ final class $$TodoItemsTableReferences
   static MultiTypedResultKey<$TodoItemTagsTable, List<TodoItemTag>>
   _todoItemTagsRefsTable(_$AppDataBase db) => MultiTypedResultKey.fromTable(
     db.todoItemTags,
-    aliasName: $_aliasNameGenerator(
-      db.todoItems.localId,
-      db.todoItemTags.todoLocalId,
-    ),
+    aliasName: 'todo_items__local_id__todo_item_tags__todo_local_id',
   );
 
   $$TodoItemTagsTableProcessedTableManager get todoItemTagsRefs {
@@ -37619,7 +37679,7 @@ class $$TodoItemsTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
-                  e.readTable(table),
+                  e.readTable<$TodoItemsTable, TodoItem>(table),
                   $$TodoItemsTableReferences(db, table, e),
                 ),
               )
@@ -37648,17 +37708,15 @@ class $$TodoItemsTableTableManager
                         >
                       >(state) {
                         if (taskListLocalId) {
-                          state =
-                              state.withJoin(
-                                    currentTable: table,
-                                    currentColumn: table.taskListLocalId,
-                                    referencedTable: $$TodoItemsTableReferences
-                                        ._taskListLocalIdTable(db),
-                                    referencedColumn: $$TodoItemsTableReferences
-                                        ._taskListLocalIdTable(db)
-                                        .localId,
-                                  )
-                                  as T;
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.taskListLocalId,
+                            referencedTable: $$TodoItemsTableReferences
+                                ._taskListLocalIdTable(db),
+                            referencedColumn: $$TodoItemsTableReferences
+                                ._taskListLocalIdTable(db)
+                                .localId,
+                          ) as T;
                         }
 
                         return state;
@@ -37725,10 +37783,8 @@ final class $$TodoItemTagsTableReferences
     extends BaseReferences<_$AppDataBase, $TodoItemTagsTable, TodoItemTag> {
   $$TodoItemTagsTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $TodoItemsTable _todoLocalIdTable(_$AppDataBase db) =>
-      db.todoItems.createAlias(
-        $_aliasNameGenerator(db.todoItemTags.todoLocalId, db.todoItems.localId),
-      );
+  static $TodoItemsTable _todoLocalIdTable(_$AppDataBase db) => db.todoItems
+      .createAlias('todo_item_tags__todo_local_id__todo_items__local_id');
 
   $$TodoItemsTableProcessedTableManager get todoLocalId {
     final $_column = $_itemColumn<int>('todo_local_id')!;
@@ -37744,13 +37800,9 @@ final class $$TodoItemTagsTableReferences
     );
   }
 
-  static $TodoTagItemsTable _tagLocalIdTable(_$AppDataBase db) =>
-      db.todoTagItems.createAlias(
-        $_aliasNameGenerator(
-          db.todoItemTags.tagLocalId,
-          db.todoTagItems.localId,
-        ),
-      );
+  static $TodoTagItemsTable _tagLocalIdTable(_$AppDataBase db) => db
+      .todoTagItems
+      .createAlias('todo_item_tags__tag_local_id__todo_tag_items__local_id');
 
   $$TodoTagItemsTableProcessedTableManager get tagLocalId {
     final $_column = $_itemColumn<int>('tag_local_id')!;
@@ -37984,7 +38036,7 @@ class $$TodoItemTagsTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
-                  e.readTable(table),
+                  e.readTable<$TodoItemTagsTable, TodoItemTag>(table),
                   $$TodoItemTagsTableReferences(db, table, e),
                 ),
               )
@@ -38010,30 +38062,26 @@ class $$TodoItemTagsTableTableManager
                     >
                   >(state) {
                     if (todoLocalId) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.todoLocalId,
-                                referencedTable: $$TodoItemTagsTableReferences
-                                    ._todoLocalIdTable(db),
-                                referencedColumn: $$TodoItemTagsTableReferences
-                                    ._todoLocalIdTable(db)
-                                    .localId,
-                              )
-                              as T;
+                      state = state.withJoin(
+                        currentTable: table,
+                        currentColumn: table.todoLocalId,
+                        referencedTable: $$TodoItemTagsTableReferences
+                            ._todoLocalIdTable(db),
+                        referencedColumn: $$TodoItemTagsTableReferences
+                            ._todoLocalIdTable(db)
+                            .localId,
+                      ) as T;
                     }
                     if (tagLocalId) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.tagLocalId,
-                                referencedTable: $$TodoItemTagsTableReferences
-                                    ._tagLocalIdTable(db),
-                                referencedColumn: $$TodoItemTagsTableReferences
-                                    ._tagLocalIdTable(db)
-                                    .localId,
-                              )
-                              as T;
+                      state = state.withJoin(
+                        currentTable: table,
+                        currentColumn: table.tagLocalId,
+                        referencedTable: $$TodoItemTagsTableReferences
+                            ._tagLocalIdTable(db),
+                        referencedColumn: $$TodoItemTagsTableReferences
+                            ._tagLocalIdTable(db)
+                            .localId,
+                      ) as T;
                     }
 
                     return state;
