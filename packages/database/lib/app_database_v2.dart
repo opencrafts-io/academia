@@ -19,8 +19,17 @@ part 'app_database_v2.g.dart';
     BillingEntitlements,
     LockInRuleRecords,
     LockInAttempts,
+    Courses,
+    Lecturers,
   ],
-  daos: [PlanDao, OrderDao, SubscriptionDao, EntitlementDao, LockInDao],
+  daos: [
+    PlanDao,
+    OrderDao,
+    SubscriptionDao,
+    EntitlementDao,
+    LockInDao,
+    CourseDao,
+  ],
 )
 class AppDatabaseV2 extends _$AppDatabaseV2 {
   // After generating code, this class needs to define a `schemaVersion` getter
@@ -30,7 +39,7 @@ class AppDatabaseV2 extends _$AppDatabaseV2 {
     : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 6;
 
   static QueryExecutor _openConnection() {
     driftRuntimeOptions.defaultSerializer = const ValueSerializer.defaults(
@@ -133,6 +142,10 @@ extension Migrations on GeneratedDatabase {
     if (from < 5) {
       await m.createTable(db.lockInRuleRecords);
       await m.createTable(db.lockInAttempts);
+    }
+    if (from < 6) {
+      await m.createTable(db.courses);
+      await m.createTable(db.lecturers);
     }
   };
 }
