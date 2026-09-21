@@ -2250,7 +2250,7 @@ mixin $EditSemesterRoute on GoRouteData {
 }
 
 RouteBase get $coursesPageRoute => GoRouteData.$route(
-  path: '/courses',
+  path: '/local-courses',
   hasOverriddenOnExit: false,
   factory: $CoursesPageRoute._fromState,
   routes: [
@@ -2271,7 +2271,7 @@ mixin $CoursesPageRoute on GoRouteData {
   static CoursesPageRoute _fromState(GoRouterState state) => CoursesPageRoute();
 
   @override
-  String get location => GoRouteData.$location('/courses');
+  String get location => GoRouteData.$location('/local-courses');
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -2291,7 +2291,7 @@ mixin $AddCoursesRoute on GoRouteData {
   static AddCoursesRoute _fromState(GoRouterState state) => AddCoursesRoute();
 
   @override
-  String get location => GoRouteData.$location('/courses/create');
+  String get location => GoRouteData.$location('/local-courses/create');
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -2315,7 +2315,7 @@ mixin $ViewCourseRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location(
-    '/courses/view/${Uri.encodeComponent(_self.courseId)}',
+    '/local-courses/view/${Uri.encodeComponent(_self.courseId)}',
   );
 
   @override

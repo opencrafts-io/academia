@@ -1,110 +1,112 @@
-import 'package:academia/config/router/router.dart';
-import 'package:academia/features/course/course.dart';
-import 'package:academia/features/features.dart';
 import 'package:academia/gen/assets.gen.dart';
+import 'package:courses/courses.dart' as courses;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:loading_indicator_m3e/loading_indicator_m3e.dart';
 
-class InstitutionCoursesSectionCard extends StatelessWidget {
+class InstitutionCoursesSectionCard extends StatefulWidget {
   const InstitutionCoursesSectionCard({super.key, required this.institutionId});
 
   final int institutionId;
 
   @override
+  State<InstitutionCoursesSectionCard> createState() =>
+      _InstitutionCoursesSectionCardState();
+}
+
+class _InstitutionCoursesSectionCardState
+    extends State<InstitutionCoursesSectionCard> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<courses.CourseCubit>().loadActiveForInstitution(
+      widget.institutionId,
+    );
+  }
+
+  @override
+  void didUpdateWidget(InstitutionCoursesSectionCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.institutionId != widget.institutionId) {
+      context.read<courses.CourseCubit>().loadActiveForInstitution(
+        widget.institutionId,
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    context.read<CourseCubit>().watchByInstitution(institutionId);
-    return BlocBuilder<CourseCubit, CourseState>(
+    return BlocBuilder<courses.CourseCubit, courses.CourseState>(
       builder: (context, state) {
-        return state.when(
-          initial: () => Center(child: LoadingIndicatorM3E()),
-          loading: () => Center(child: LoadingIndicatorM3E()),
-          success: (courses) {
-            if (courses.isEmpty) {
-              return Card.filled(
-                margin: EdgeInsets.zero,
-                color: Theme.of(context).colorScheme.surfaceContainerHigh,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(28),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 28,
-                  ),
-                  child: Column(
-                    children: [
-                      Assets.icons.notificationIconAlert.image(width: 140),
-                      const SizedBox(height: 12),
-                      Text(
-                        "No courses yet",
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        "We couldn't find any courses for this institution yet",
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }
-            return ListView.builder(
-              padding: EdgeInsets.zero,
-              itemCount: courses.length,
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                final course = courses[index];
-                return CourseCard(
-                  course: course,
-                  onTap: () async {
-                    await ViewCourseRoute(courseId: course.id!).push(context);
-                    if (context.mounted) {
-                      context.read<CourseCubit>().watchByInstitution(
-                        institutionId,
-                      );
-                      context.read<TimetableEntryBloc>().add(
-                        WatchAllTimetableEntriesEvent(),
-                      );
-                    }
-                  },
-                );
-              },
+        if (state.isLoading) return Center(child: LoadingIndicatorM3E());
+        if (state.error != null) return _Error(message: state.error!);
+        if (state.courses.isEmpty) return const _EmptyCourses();
+        return ListView.builder(
+          padding: EdgeInsets.zero,
+          itemCount: state.courses.length,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (context, index) {
+            final course = state.courses[index];
+            return Card(
+              child: ListTile(
+                title: Text(course.title),
+                subtitle: Text(course.code ?? 'No course code'),
+                onTap: () => context.push('/courses/${course.id}'),
+              ),
             );
           },
-          error: (message) => Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.errorContainer,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.error_outline_rounded,
-                  color: Theme.of(context).colorScheme.onErrorContainer,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    message,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onErrorContainer,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
         );
       },
+    );
+  }
+}
+
+class _EmptyCourses extends StatelessWidget {
+  const _EmptyCourses();
+
+  @override
+  Widget build(BuildContext context) {
+    return Card.filled(
+      margin: EdgeInsets.zero,
+      color: Theme.of(context).colorScheme.surfaceContainerHigh,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
+        child: Column(
+          children: [
+            Assets.icons.notificationIconAlert.image(width: 140),
+            const SizedBox(height: 12),
+            Text(
+              'No courses yet',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 4),
+            const Text(
+              "We couldn't find any courses for this institution yet",
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _Error extends StatelessWidget {
+  const _Error({required this.message});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Text(
+        message,
+        style: TextStyle(color: Theme.of(context).colorScheme.error),
+      ),
     );
   }
 }

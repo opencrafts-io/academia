@@ -15,6 +15,7 @@ import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:permissions/permissions.dart';
 import 'package:settings/settings.dart';
+import 'package:courses/courses.dart' as courses;
 
 class Academia extends StatefulWidget {
   const Academia({super.key});
@@ -112,6 +113,7 @@ class _AcademiaState extends State<Academia> {
         ),
         BlocProvider(create: (context) => sl<SemesterCubit>()),
         BlocProvider(create: (context) => sl<CourseCubit>()),
+        BlocProvider(create: (context) => sl<courses.CourseCubit>()),
         BlocProvider(create: (context) => sl<InstitutionBloc>()),
         BlocProvider(create: (context) => sl<PermissionCubit>()),
         BlocProvider(create: (context) => sl<LeaderboardBloc>()),

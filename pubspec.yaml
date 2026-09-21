@@ -116,6 +116,8 @@ dependencies:
   # application core subsystem
   core:
     path: packages/core/
+  courses:
+    path: packages/courses/
   # database v2
   database:
     path: packages/database/

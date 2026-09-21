@@ -259,7 +259,6 @@ class LinkInstitutionRequiredPageRoute extends GoRouteData
   }
 }
 
-
 @TypedGoRoute<ShereheRoute>(
   path: "/sherehe",
   routes: [
@@ -1400,7 +1399,7 @@ class EditSemesterRoute extends GoRouteData with $EditSemesterRoute {
 }
 
 @TypedGoRoute<CoursesPageRoute>(
-  path: "/courses",
+  path: "/local-courses",
   routes: [
     TypedGoRoute<AddCoursesRoute>(path: "create"),
     TypedGoRoute<ViewCourseRoute>(path: "view/:courseId"),
