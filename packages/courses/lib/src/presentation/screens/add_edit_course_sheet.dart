@@ -111,6 +111,23 @@ class _AddEditCourseSheetState extends State<AddEditCourseSheet> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
+                            Text(
+                              editing
+                                  ? 'The essentials'
+                                  : 'What are you studying?',
+                              style: Theme.of(context).textTheme.headlineSmall
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.w700,
+                                    letterSpacing: -0.5,
+                                  ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              'Name the course and connect it to your institution.',
+                              style: Theme.of(context).textTheme.bodyLarge
+                                  ?.copyWith(color: colors.onSurfaceVariant),
+                            ),
+                            const SizedBox(height: 24),
                             TextFormField(
                               controller: _institutionController,
                               enabled: !editing && !state.isLoading,
@@ -150,9 +167,13 @@ class _AddEditCourseSheetState extends State<AddEditCourseSheet> {
                                   ? const SizedBox.shrink()
                                   : Padding(
                                       padding: const EdgeInsets.only(top: 8),
-                                      child: Card.filled(
-                                        color: colors.secondaryContainer,
-                                        margin: EdgeInsets.zero,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: colors.secondaryContainer,
+                                          borderRadius: BorderRadius.circular(
+                                            16,
+                                          ),
+                                        ),
                                         clipBehavior: Clip.antiAlias,
                                         child: _institutionError != null
                                             ? ListTile(
@@ -244,6 +265,21 @@ class _AddEditCourseSheetState extends State<AddEditCourseSheet> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
+                            Text(
+                              'Make it useful later',
+                              style: Theme.of(context).textTheme.headlineSmall
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.w700,
+                                    letterSpacing: -0.5,
+                                  ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              'Term information is optional, but makes this course easier to find and understand.',
+                              style: Theme.of(context).textTheme.bodyLarge
+                                  ?.copyWith(color: colors.onSurfaceVariant),
+                            ),
+                            const SizedBox(height: 24),
                             _ResponsiveFields(
                               first: _field(
                                 controller: _termLabelController,
@@ -721,9 +757,11 @@ class _FormError extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    return Card.filled(
-      color: colors.errorContainer,
-      margin: EdgeInsets.zero,
+    return Container(
+      decoration: BoxDecoration(
+        color: colors.errorContainer,
+        borderRadius: BorderRadius.circular(16),
+      ),
       child: ListTile(
         leading: Icon(
           Icons.error_outline_rounded,
@@ -772,15 +810,16 @@ class _EditorFailure extends StatelessWidget {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24),
-          child: Card.filled(
-            color: colors.errorContainer,
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Text(
-                message,
-                textAlign: TextAlign.center,
-                style: TextStyle(color: colors.onErrorContainer),
-              ),
+          child: Container(
+            decoration: BoxDecoration(
+              color: colors.errorContainer,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            padding: const EdgeInsets.all(24),
+            child: Text(
+              message,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: colors.onErrorContainer),
             ),
           ),
         ),

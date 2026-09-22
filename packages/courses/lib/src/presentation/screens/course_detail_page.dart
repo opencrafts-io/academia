@@ -5,6 +5,7 @@ import 'package:courses/src/presentation/screens/lecturer_list_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:material3_indicators/material3_indicators.dart';
 
 class CourseDetailPage extends StatefulWidget {
   const CourseDetailPage({super.key, required this.courseId});
@@ -146,16 +147,6 @@ class _CourseDetailsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final details = <_CourseDetail>[
-      if (course.code != null)
-        _CourseDetail(Icons.tag_outlined, 'Course code', course.code!),
-      if (course.termLabel != null)
-        _CourseDetail(Icons.calendar_month_outlined, 'Term', course.termLabel!),
-      if (course.academicYear != null)
-        _CourseDetail(
-          Icons.date_range_outlined,
-          'Academic year',
-          course.academicYear!,
-        ),
       if (course.termStartDate != null)
         _CourseDetail(
           Icons.event_available_outlined,
@@ -169,41 +160,60 @@ class _CourseDetailsSection extends StatelessWidget {
           _date(context, course.termEndDate!),
         ),
     ];
+    final studyPeriod = [
+      course.termLabel,
+      course.academicYear,
+    ].whereType<String>().join(' · ');
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+      padding: const EdgeInsets.fromLTRB(24, 12, 24, 8),
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 760),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              if (course.code != null)
+                Text(
+                  course.code!,
+                  style: theme.textTheme.labelLarge?.copyWith(
+                    color: theme.colorScheme.primary,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.4,
+                  ),
+                ),
+              if (studyPeriod.isNotEmpty) ...[
+                const SizedBox(height: 6),
+                Text(
+                  studyPeriod,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+              if (course.code != null || studyPeriod.isNotEmpty)
+                const SizedBox(height: 28),
               Text(
                 'Course details',
-                style: theme.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w600,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -0.1,
                 ),
               ),
-              const SizedBox(height: 8),
-              Card.outlined(
-                margin: EdgeInsets.zero,
-                clipBehavior: Clip.antiAlias,
-                child: details.isEmpty
-                    ? const _NoCourseDetails()
-                    : Column(
-                        children: [
-                          for (
-                            var index = 0;
-                            index < details.length;
-                            index++
-                          ) ...[
-                            _CourseDetailTile(detail: details[index]),
-                            if (index < details.length - 1)
-                              const Divider(height: 1, indent: 72),
-                          ],
-                        ],
-                      ),
-              ),
+              const SizedBox(height: 4),
+              if (details.isEmpty)
+                const _NoCourseDetails()
+              else
+                Column(
+                  children: [
+                    for (var index = 0; index < details.length; index++) ...[
+                      _CourseDetailTile(detail: details[index]),
+                      if (index < details.length - 1)
+                        const Divider(height: 1, indent: 56),
+                    ],
+                  ],
+                ),
             ],
           ),
         ),
@@ -236,8 +246,17 @@ class _CourseDetailTile extends StatelessWidget {
     return Semantics(
       label: '${detail.label}: ${detail.value}',
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        leading: Icon(detail.icon, color: colors.primary),
+        contentPadding: const EdgeInsets.symmetric(vertical: 4),
+        leading: Container(
+          width: 40,
+          height: 40,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: colors.secondaryContainer,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(detail.icon, color: colors.onSecondaryContainer),
+        ),
         title: Text(
           detail.label,
           style: theme.textTheme.bodyMedium?.copyWith(
@@ -262,9 +281,9 @@ class _NoCourseDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.symmetric(vertical: 12),
       child: Text(
-        'Add a course code, term, or dates to keep this course organized.',
+        'Add term dates to make this course easier to plan around.',
         style: Theme.of(context).textTheme.bodyMedium
             ?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
       ),
@@ -280,9 +299,10 @@ class _DetailLoadingState extends StatelessWidget {
     return Center(
       child: Semantics(
         label: 'Loading course',
-        child: const SizedBox.square(
-          dimension: 32,
-          child: CircularProgressIndicator.adaptive(),
+        child: WavyCircularProgressIndicator(
+          size: 40,
+          amplitude: 2,
+          frequency: 8,
         ),
       ),
     );
@@ -349,8 +369,11 @@ class _DetailError extends StatelessWidget {
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 760),
-          child: Card.outlined(
-            color: colors.errorContainer,
+          child: Container(
+            decoration: BoxDecoration(
+              color: colors.errorContainer,
+              borderRadius: BorderRadius.circular(16),
+            ),
             child: ListTile(
               leading: Icon(
                 Icons.error_outline_rounded,

@@ -129,6 +129,23 @@ class _LecturerFormState extends State<_LecturerForm> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
+                        Text(
+                          editing
+                              ? 'Keep in touch'
+                              : 'Who teaches this course?',
+                          style: Theme.of(context).textTheme.headlineSmall
+                              ?.copyWith(
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: -0.5,
+                              ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          'A name is all that is required. Add contact details only when they are useful.',
+                          style: Theme.of(context).textTheme.bodyLarge
+                              ?.copyWith(color: colors.onSurfaceVariant),
+                        ),
+                        const SizedBox(height: 24),
                         TextFormField(
                           controller: _name,
                           enabled: !state.isLoading,
@@ -198,9 +215,11 @@ class _LecturerFormState extends State<_LecturerForm> {
                               ? const SizedBox.shrink()
                               : Padding(
                                   padding: const EdgeInsets.only(top: 16),
-                                  child: Card.filled(
-                                    color: colors.errorContainer,
-                                    margin: EdgeInsets.zero,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: colors.errorContainer,
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
                                     child: ListTile(
                                       leading: Icon(
                                         Icons.error_outline_rounded,
@@ -290,7 +309,7 @@ class _LecturerFormState extends State<_LecturerForm> {
   }) {
     final colors = Theme.of(context).colorScheme;
     final border = OutlineInputBorder(
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(12),
       borderSide: BorderSide(color: colors.outline),
     );
     return InputDecoration(
@@ -388,15 +407,16 @@ class _LecturerEditorFailure extends StatelessWidget {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24),
-          child: Card.filled(
-            color: colors.errorContainer,
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Text(
-                message,
-                textAlign: TextAlign.center,
-                style: TextStyle(color: colors.onErrorContainer),
-              ),
+          child: Container(
+            decoration: BoxDecoration(
+              color: colors.errorContainer,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            padding: const EdgeInsets.all(24),
+            child: Text(
+              message,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: colors.onErrorContainer),
             ),
           ),
         ),

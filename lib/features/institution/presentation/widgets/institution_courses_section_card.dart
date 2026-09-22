@@ -1,4 +1,3 @@
-import 'package:academia/gen/assets.gen.dart';
 import 'package:courses/courses.dart' as courses;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,21 +41,68 @@ class _InstitutionCoursesSectionCardState
         if (state.isLoading) return Center(child: LoadingIndicatorM3E());
         if (state.error != null) return _Error(message: state.error!);
         if (state.courses.isEmpty) return const _EmptyCourses();
-        return ListView.builder(
+        return ListView.separated(
           padding: EdgeInsets.zero,
           itemCount: state.courses.length,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
             final course = state.courses[index];
-            return Card(
-              child: ListTile(
-                title: Text(course.title),
-                subtitle: Text(course.code ?? 'No course code'),
-                onTap: () => context.push('/courses/${course.id}'),
+            final details = [
+              course.code,
+              course.termLabel,
+              course.academicYear,
+            ].whereType<String>().join(' · ');
+            final theme = Theme.of(context);
+            final colors = theme.colorScheme;
+            return ListTile(
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 8,
+                vertical: 6,
               ),
+              minVerticalPadding: 8,
+              leading: Container(
+                width: 44,
+                height: 44,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: colors.primaryContainer,
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Icon(
+                  Icons.menu_book_outlined,
+                  color: colors.onPrimaryContainer,
+                ),
+              ),
+              title: Text(
+                course.title,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              subtitle: details.isEmpty
+                  ? null
+                  : Text(
+                      details,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: colors.onSurfaceVariant,
+                      ),
+                    ),
+              trailing: Icon(
+                Icons.chevron_right_rounded,
+                color: colors.onSurfaceVariant,
+              ),
+              onTap: () => context.push('/courses/${course.id}'),
             );
           },
+          separatorBuilder: (_, _) => const Padding(
+            padding: EdgeInsets.only(left: 64),
+            child: Divider(height: 1),
+          ),
         );
       },
     );
@@ -68,26 +114,27 @@ class _EmptyCourses extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card.filled(
-      margin: EdgeInsets.zero,
-      color: Theme.of(context).colorScheme.surfaceContainerHigh,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
-        child: Column(
-          children: [
-            Assets.icons.notificationIconAlert.image(width: 140),
-            const SizedBox(height: 12),
-            Text(
-              'No courses yet',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 4),
-            const Text(
-              "We couldn't find any courses for this institution yet",
-              textAlign: TextAlign.center,
-            ),
-          ],
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+    return Container(
+      decoration: BoxDecoration(
+        color: colors.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        leading: Icon(Icons.menu_book_outlined, color: colors.onSurfaceVariant),
+        title: Text(
+          'No courses yet',
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        subtitle: Text(
+          "We couldn't find any courses for this institution yet.",
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: colors.onSurfaceVariant,
+          ),
         ),
       ),
     );

@@ -6,6 +6,7 @@ import 'package:courses/src/presentation/routes/course_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material3_indicators/material3_indicators.dart';
 
 class CourseListPage extends StatefulWidget {
   const CourseListPage({super.key});
@@ -148,13 +149,29 @@ class CourseListBody extends StatelessWidget {
                       112,
                     ),
                     sliver: SliverList.builder(
-                      itemCount: courses.length,
-                      itemBuilder: (context, index) => Padding(
-                        padding: EdgeInsets.only(
-                          bottom: index == courses.length - 1 ? 0 : 8,
-                        ),
-                        child: _CourseCard(course: courses[index]),
-                      ),
+                      itemCount: courses.length + 1,
+                      itemBuilder: (context, index) {
+                        if (index == 0) {
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: _CourseListSummary(
+                              count: courses.length,
+                              archived: archived,
+                            ),
+                          );
+                        }
+                        final course = courses[index - 1];
+                        return Column(
+                          children: [
+                            _CourseCard(course: course),
+                            if (index < courses.length)
+                              const Padding(
+                                padding: EdgeInsets.only(left: 64),
+                                child: Divider(height: 1),
+                              ),
+                          ],
+                        );
+                      },
                     ),
                   );
                 },
@@ -184,13 +201,13 @@ class _CourseCard extends StatelessWidget {
     return Semantics(
       button: true,
       label: _semanticsLabel(metadata),
-      child: Card.outlined(
-        margin: EdgeInsets.zero,
-        clipBehavior: Clip.antiAlias,
+      child: Material(
+        color: Colors.transparent,
         child: InkWell(
           onTap: () => context.push('/courses/${course.id}'),
+          borderRadius: BorderRadius.circular(20),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
             child: Row(
               children: [
                 Container(
@@ -199,7 +216,7 @@ class _CourseCard extends StatelessWidget {
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: colors.primaryContainer,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(16),
                   ),
                   child: Icon(
                     Icons.menu_book_outlined,
@@ -211,32 +228,35 @@ class _CourseCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        course.title,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
                       if (course.code != null) ...[
-                        const SizedBox(height: 2),
                         Text(
                           course.code!,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: theme.textTheme.bodyMedium?.copyWith(
+                          style: theme.textTheme.labelLarge?.copyWith(
                             color: colors.primary,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.3,
                           ),
                         ),
+                        const SizedBox(height: 2),
                       ],
+                      Text(
+                        course.title,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: -0.2,
+                        ),
+                      ),
                       if (metadata.isNotEmpty) ...[
                         const SizedBox(height: 4),
                         Text(
                           metadata,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: theme.textTheme.bodySmall?.copyWith(
+                          style: theme.textTheme.bodyMedium?.copyWith(
                             color: colors.onSurfaceVariant,
                           ),
                         ),
@@ -265,6 +285,32 @@ class _CourseCard extends StatelessWidget {
   }
 }
 
+class _CourseListSummary extends StatelessWidget {
+  const _CourseListSummary({required this.count, required this.archived});
+
+  final int count;
+  final bool archived;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    final label = '$count ${count == 1 ? 'course' : 'courses'}';
+    return Semantics(
+      label: archived ? '$label in your course history' : '$label in progress',
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        child: Text(
+          archived ? '$label in your history' : '$label in progress',
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            color: colors.onSurfaceVariant,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _CourseLoadingState extends StatelessWidget {
   const _CourseLoadingState();
 
@@ -275,9 +321,10 @@ class _CourseLoadingState extends StatelessWidget {
       child: Center(
         child: Semantics(
           label: 'Loading courses',
-          child: const SizedBox.square(
-            dimension: 32,
-            child: CircularProgressIndicator.adaptive(),
+          child: WavyCircularProgressIndicator(
+            size: 40,
+            amplitude: 2,
+            frequency: 8,
           ),
         ),
       ),
@@ -308,9 +355,11 @@ class _CourseListMessage extends StatelessWidget {
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 760),
-          child: Card.outlined(
-            color: error ? colors.errorContainer : colors.surfaceContainerLow,
-            margin: EdgeInsets.zero,
+          child: Container(
+            decoration: BoxDecoration(
+              color: error ? colors.errorContainer : colors.surfaceContainerLow,
+              borderRadius: BorderRadius.circular(16),
+            ),
             child: ListTile(
               contentPadding: EdgeInsets.symmetric(
                 horizontal: 16,
@@ -375,14 +424,16 @@ class _CourseEmptyState extends StatelessWidget {
               const Spacer(),
               Semantics(
                 label: title,
-                child: Icon(icon, size: 40, color: color),
+                child: Icon(icon, size: 32, color: color),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
               Text(
                 title,
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headlineSmall
-                    ?.copyWith(fontWeight: FontWeight.w600),
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -0.4,
+                ),
               ),
               const SizedBox(height: 8),
               Text(

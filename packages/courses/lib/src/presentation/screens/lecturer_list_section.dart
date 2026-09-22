@@ -19,7 +19,7 @@ class LecturerListSection extends StatelessWidget {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 24, 16, 32),
+      padding: const EdgeInsets.fromLTRB(24, 28, 24, 40),
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 760),
@@ -32,7 +32,8 @@ class LecturerListSection extends StatelessWidget {
                     child: Text(
                       'Lecturers',
                       style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: -0.2,
                       ),
                     ),
                   ),
@@ -53,39 +54,31 @@ class LecturerListSection extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              Card.outlined(
-                margin: EdgeInsets.zero,
-                clipBehavior: Clip.antiAlias,
-                child: lecturers.isEmpty
-                    ? Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Text(
-                          'No lecturers have been added yet.',
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: colors.onSurfaceVariant,
-                          ),
-                        ),
-                      )
-                    : Column(
-                        children: [
-                          for (
-                            var index = 0;
-                            index < lecturers.length;
-                            index++
-                          ) ...[
-                            _LecturerTile(
-                              lecturer: lecturers[index],
-                              onTap: () =>
-                                  _openEditor(context, lecturers[index]),
-                              onDelete: () =>
-                                  _deleteLecturer(context, lecturers[index]),
-                            ),
-                            if (index < lecturers.length - 1)
-                              const Divider(height: 1, indent: 72),
-                          ],
-                        ],
+              if (lecturers.isEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  child: Text(
+                    'No lecturers have been added yet.',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: colors.onSurfaceVariant,
+                    ),
+                  ),
+                )
+              else
+                Column(
+                  children: [
+                    for (var index = 0; index < lecturers.length; index++) ...[
+                      _LecturerTile(
+                        lecturer: lecturers[index],
+                        onTap: () => _openEditor(context, lecturers[index]),
+                        onDelete: () =>
+                            _deleteLecturer(context, lecturers[index]),
                       ),
-              ),
+                      if (index < lecturers.length - 1)
+                        const Divider(height: 1, indent: 64),
+                    ],
+                  ],
+                ),
             ],
           ),
         ),
@@ -162,10 +155,10 @@ class _LecturerTile extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         child: ListTile(
-          contentPadding: const EdgeInsets.fromLTRB(16, 6, 8, 6),
+          contentPadding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
           leading: CircleAvatar(
-            backgroundColor: colors.surfaceContainerHigh,
-            foregroundColor: colors.onSurfaceVariant,
+            backgroundColor: colors.secondaryContainer,
+            foregroundColor: colors.onSecondaryContainer,
             child: Text(
               initial,
               style: theme.textTheme.labelLarge?.copyWith(
@@ -176,7 +169,7 @@ class _LecturerTile extends StatelessWidget {
           title: Text(
             lecturer.name,
             style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w600,
             ),
           ),
           subtitle: details.isEmpty
