@@ -214,7 +214,7 @@ return $default(_that.id,_that.name);case _:
 
 class _InstitutionSummary implements InstitutionSummary {
   const _InstitutionSummary({required this.id, required this.name});
-  
+
 
 @override final  int id;
 @override final  String name;

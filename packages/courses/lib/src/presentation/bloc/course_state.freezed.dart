@@ -228,7 +228,7 @@ return $default(_that.courses,_that.selectedCourse,_that.isLoading,_that.error);
 
 class _CourseState implements CourseState {
   const _CourseState({ List<CourseEntity> courses = const [], this.selectedCourse, this.isLoading = false, this.error}): _courses = courses;
-  
+
 
  final  List<CourseEntity> _courses;
 @override@JsonKey() List<CourseEntity> get courses {

@@ -218,7 +218,7 @@ return $default(_that.id,_that.courseId,_that.name,_that.email,_that.phone,_that
 
 class _LecturerEntity implements LecturerEntity {
   const _LecturerEntity({required this.id, required this.courseId, required this.name, this.email, this.phone, this.office});
-  
+
 
 @override final  String id;
 @override final  String courseId;

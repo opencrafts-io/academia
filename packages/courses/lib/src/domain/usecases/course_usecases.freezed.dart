@@ -220,7 +220,7 @@ return $default(_that.institutionId,_that.title,_that.code,_that.termLabel,_that
 
 class _CreateCourseParams implements CreateCourseParams {
   const _CreateCourseParams({required this.institutionId, required this.title, this.code, this.termLabel, this.academicYear, this.termStartDate, this.termEndDate, this.previousCourseId});
-  
+
 
 @override final  int institutionId;
 @override final  String title;
@@ -502,7 +502,7 @@ return $default(_that.courseId,_that.name,_that.email,_that.phone,_that.office);
 
 class _AddLecturerParams implements AddLecturerParams {
   const _AddLecturerParams({required this.courseId, required this.name, this.email, this.phone, this.office});
-  
+
 
 @override final  String courseId;
 @override final  String name;

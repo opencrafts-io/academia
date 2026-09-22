@@ -225,7 +225,7 @@ return $default(_that.id,_that.institutionId,_that.title,_that.code,_that.termLa
 
 class _CourseEntity implements CourseEntity {
   const _CourseEntity({required this.id, required this.institutionId, required this.title, this.code, this.termLabel, this.academicYear, this.termStartDate, this.termEndDate, this.previousCourseId, this.archivedAt, required this.createdAt, required this.updatedAt,  List<LecturerEntity> lecturers = const []}): _lecturers = lecturers;
-  
+
 
 @override final  String id;
 @override final  int institutionId;
