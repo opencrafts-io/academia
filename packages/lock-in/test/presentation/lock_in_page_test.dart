@@ -35,6 +35,8 @@ void main() {
 
     await tester.tap(find.text('Allow app blocking'));
     await tester.pumpAndSettle();
+    await tester.tap(find.text('I understand, continue'));
+    await tester.pumpAndSettle();
 
     expect(tester.takeException(), isNull);
     expect(find.text('New rule'), findsOneWidget);
@@ -61,6 +63,8 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('Allow app blocking'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('I understand, continue'));
     await tester.pumpAndSettle();
 
     expect(find.text('Continue setup'), findsOneWidget);
