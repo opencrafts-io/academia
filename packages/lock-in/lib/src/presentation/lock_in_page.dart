@@ -68,11 +68,44 @@ class _LockInPageState extends State<LockInPage> with WidgetsBindingObserver {
   }
 
   Future<void> _requestPermission() async {
+    final consent = await _requestAccessibilityConsent();
+    if (consent != true || !mounted) return;
+
     setState(() {
       _permissionSetupStarted = true;
     });
     await widget.service.requestPermission();
     if (mounted) await _refresh();
+  }
+
+  Future<bool?> _requestAccessibilityConsent() {
+    return showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: const Text('Enable app blocking?'),
+        content: const Text(
+          'To enforce the Lock In rules you create, Academia uses Android\'s '
+          'AccessibilityService API to detect the app currently open. When it '
+          'matches one of your rules, Academia shows a block screen.\n\n'
+          'The app name and blocked-open events are used only to apply your '
+          'rules and show your local focus statistics. This information stays '
+          'on your device and is not shared with Academia or third parties.\n\n'
+          'After you continue, Android Settings will ask you to enable the '
+          'Accessibility Service. Choose Not now to keep app blocking off.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Not now'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('I understand, continue'),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> _editRule([LockRule? rule]) async {
