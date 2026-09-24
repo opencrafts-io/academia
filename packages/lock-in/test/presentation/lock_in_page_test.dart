@@ -35,7 +35,7 @@ void main() {
 
     await tester.tap(find.text('Allow app blocking'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('I understand, continue'));
+    await tester.tap(find.text('Allow Accessibility Service'));
     await tester.pumpAndSettle();
 
     expect(tester.takeException(), isNull);
@@ -64,7 +64,7 @@ void main() {
 
     await tester.tap(find.text('Allow app blocking'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('I understand, continue'));
+    await tester.tap(find.text('Allow Accessibility Service'));
     await tester.pumpAndSettle();
 
     expect(find.text('Continue setup'), findsOneWidget);

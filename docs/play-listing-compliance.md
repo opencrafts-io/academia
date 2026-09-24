@@ -12,5 +12,5 @@ before resubmitting:
 In Play Console, keep the AccessibilityService declaration accurate: Academia
 is not an accessibility tool, and Lock In accesses app activity solely to apply
 the user-configured focus rules. Record a reviewer video showing the disclosure,
-the **Not now** path, the **I understand, continue** path, enabling the service
-in Android Settings, and a selected app being blocked.
+the **Decline** path, the **Allow Accessibility Service** path, enabling the
+service in Android Settings, and a selected app being blocked.
