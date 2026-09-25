@@ -15,6 +15,8 @@ import 'package:dio_request_inspector/dio_request_inspector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:lock_in/lock_in.dart';
+import 'package:courses/courses.dart' as courses;
+import 'package:academia/core/institution/verisafe_institution_lookup.dart';
 
 final sl = GetIt.instance;
 
@@ -743,6 +745,12 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   );
   sl.registerFactory<InstitutionRemoteDatasource>(
     () => InstitutionRemoteDatasource(dioClient: sl(), flavor: flavor),
+  );
+  courses.configureCoursesDependencies(
+    sl,
+    institutionLookup: VerisafeInstitutionLookup(
+      sl<InstitutionRemoteDatasource>(),
+    ),
   );
 
   sl.registerFactory<InstitutionCommandLocalDatasource>(

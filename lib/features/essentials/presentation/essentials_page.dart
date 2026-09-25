@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:settings/settings.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:academia/injection_container.dart';
+import 'package:courses/courses.dart' as courses;
 
 import '../widgets/essential_category_tile.dart';
 
@@ -41,7 +42,7 @@ class _EssentialsPageState extends State<EssentialsPage> {
     ),
     _EssentialItem(
       title: "Courses",
-      ontap: () => CoursesPageRoute().push(context),
+      ontap: () => const courses.CourseListRoute().push(context),
       iconPath: Assets.icons.book.keyName,
     ),
     _EssentialItem(

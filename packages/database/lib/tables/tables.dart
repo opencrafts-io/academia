@@ -6,3 +6,5 @@ export 'billing_subscription_statuses.dart';
 export 'billing_entitlements.dart';
 export 'lock_in_rules.dart';
 export 'lock_in_attempts.dart';
+export 'courses.dart';
+export 'lecturers.dart';
