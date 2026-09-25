@@ -82,28 +82,63 @@ class _LockInPageState extends State<LockInPage> with WidgetsBindingObserver {
     return showDialog<bool>(
       context: context,
       barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        title: const Text('Enable app blocking?'),
-        content: const Text(
-          'To enforce the Lock In rules you create, Academia uses Android\'s '
-          'AccessibilityService API to detect the app currently open. When it '
-          'matches one of your rules, Academia shows a block screen.\n\n'
-          'The app name and blocked-open events are used only to apply your '
-          'rules and show your local focus statistics. This information stays '
-          'on your device and is not shared with Academia or third parties.\n\n'
-          'After you continue, Android Settings will ask you to enable the '
-          'Accessibility Service. Choose Not now to keep app blocking off.',
+      builder: (dialogContext) => Dialog(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: 560,
+            maxHeight: MediaQuery.sizeOf(dialogContext).height * .8,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Semantics(
+                  header: true,
+                  child: Text(
+                    'Allow Accessibility Service?',
+                    style: Theme.of(dialogContext).textTheme.headlineSmall,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Flexible(
+                  child: SingleChildScrollView(
+                    child: Text(
+                      'Academia needs your explicit permission to use '
+                      'Android\'s Accessibility Service for Lock In. With your '
+                      'permission, Lock In receives the name of the app '
+                      'currently open and uses it only to apply the app-blocking '
+                      'rules and schedules you create.\n\n'
+                      'App names and blocked-open events stay on your device '
+                      'for Lock In and local focus statistics. They are not '
+                      'shared with Academia or third parties.\n\n'
+                      'Select Allow Accessibility Service to open Android '
+                      'Settings. Select Decline to leave app blocking off.',
+                      style: Theme.of(dialogContext).textTheme.bodyLarge,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                SizedBox(
+                  height: 48,
+                  child: OutlinedButton(
+                    onPressed: () => Navigator.of(dialogContext).pop(false),
+                    child: const Text('Decline'),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                SizedBox(
+                  height: 48,
+                  child: FilledButton(
+                    onPressed: () => Navigator.of(dialogContext).pop(true),
+                    child: const Text('Allow Accessibility Service'),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Not now'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('I understand, continue'),
-          ),
-        ],
       ),
     );
   }
@@ -400,7 +435,7 @@ class _PermissionCard extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Text(
-              'Set up Lock In',
+              'App blocking is off',
               style: Theme.of(
                 context,
               ).textTheme.headlineSmall?.copyWith(fontWeight: .w800),
@@ -410,8 +445,8 @@ class _PermissionCard extends StatelessWidget {
               restricted
                   ? 'Android has restricted the required app-blocking permission.'
                   : setupStarted
-                  ? 'Android grants Accessibility and Alarms & reminders separately. Continue setup until the New rule button appears.'
-                  : 'Allow Accessibility and alarm permissions so Android can enforce your schedules.',
+                  ? 'One or more required Android permissions are still off. Enable Accessibility Service and Alarms & reminders, then return here to finish setup.'
+                  : 'You have not enabled the required Android permissions yet. Lock In needs Accessibility Service to detect selected apps and Alarms & reminders to enforce your schedules.',
             ),
             const SizedBox(height: 12),
             FilledButton(
