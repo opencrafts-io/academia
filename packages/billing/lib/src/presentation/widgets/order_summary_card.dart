@@ -20,11 +20,7 @@ class OrderSummaryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final calculatedTotal = items.fold<int>(
-      0,
-      (total, item) => total + item.unitPrice * item.quantity,
-    );
-    final total = order.total > 0 ? order.total : calculatedTotal;
+    final total = order.total;
 
     return Card(
       color: colorScheme.surfaceContainerHigh,

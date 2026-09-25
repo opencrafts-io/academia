@@ -24,6 +24,7 @@ dependencies:
   dartz: ^0.10.1
   flutter_bloc: ^9.1.1
   material3_indicators: ^2026.7.12+2
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:
