@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
+import 'package:academia/config/config.dart';
 import 'package:academia/features/todos/todos.dart';
 
 class UpdateTodoItemScreen extends StatefulWidget {
@@ -251,6 +252,13 @@ class _UpdateTodoItemScreenState extends State<UpdateTodoItemScreen> {
   }
 
   void _showMoreSheet() {
+    final item = context
+        .read<TodoItemCubit>()
+        .state
+        .currentItems
+        .where((i) => i.localId == widget.todoLocalId)
+        .firstOrNull;
+
     showModalBottomSheet(
       context: context,
       showDragHandle: true,
@@ -260,6 +268,9 @@ class _UpdateTodoItemScreenState extends State<UpdateTodoItemScreen> {
         onDueDateChanged: (d) => setState(() => _dueDate = d),
         onPriorityChanged: (p) => setState(() => _priority = p),
         onClearDueDate: () => setState(() => _dueDate = null),
+        focusedSeconds: item?.focusedSeconds ?? 0,
+        onStartFocusTimer: () =>
+            PomodoroTimerRoute(todoLocalID: widget.todoLocalId).push(context),
       ),
     );
   }
@@ -516,6 +527,9 @@ class _UpdateTodoItemScreenState extends State<UpdateTodoItemScreen> {
                             onTagTap: _showTagsSheet,
                             onPriorityTap: _showPrioritySheet,
                             onMoreTap: _showMoreSheet,
+                            onFocusTimerTap: () => PomodoroTimerRoute(
+                              todoLocalID: widget.todoLocalId,
+                            ).push(context),
                           ),
                         ],
                       ),

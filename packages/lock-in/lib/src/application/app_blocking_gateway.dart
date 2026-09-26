@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:app_blocker/app_blocker.dart';
 import 'package:flutter/material.dart';
+import 'package:injectable/injectable.dart';
 
 import '../domain/lock_rule.dart';
 
@@ -30,9 +31,9 @@ abstract class AppBlockingGateway {
   Stream<BlockedAttemptEvent> get attemptedAccesses;
 }
 
+@LazySingleton(as: AppBlockingGateway)
 class AppBlockerGateway implements AppBlockingGateway {
-  AppBlockerGateway({AppBlocker? blocker})
-    : _blocker = blocker ?? AppBlocker.instance;
+  AppBlockerGateway() : _blocker = AppBlocker.instance;
 
   final AppBlocker _blocker;
 
@@ -50,7 +51,6 @@ class AppBlockerGateway implements AppBlockingGateway {
   Future<List<BlockedApp>> getInstalledApps() async {
     final apps = await _blocker.getApps();
     return apps
-        .where((app) => !app.isSystemApp)
         .map(
           (app) => BlockedApp(
             identifier: app.packageName,

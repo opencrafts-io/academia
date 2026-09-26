@@ -14,14 +14,18 @@ abstract interface class PlanRemoteDataSource {
 
 @LazySingleton(as: PlanRemoteDataSource)
 class PlanRemoteDatasourceImpl implements PlanRemoteDataSource {
-  PlanRemoteDatasourceImpl({required this._apiClient});
+  PlanRemoteDatasourceImpl({
+    required this._apiClient,
+    required this._billingApiPaths,
+  });
 
   final ApiClient _apiClient;
+  final BillingApiPaths _billingApiPaths;
 
   @override
   Future<Either<Failure, List<PlanDto>>> getPlans({bool visible = true}) {
     return _apiClient.get(
-      BillingApiPaths.plans,
+      _billingApiPaths.plans,
       queryParameters: {'visible': visible},
       decoder: (json) => (json as List<dynamic>)
           .map((e) => PlanDto.fromJson(e as Map<String, dynamic>))
@@ -32,7 +36,7 @@ class PlanRemoteDatasourceImpl implements PlanRemoteDataSource {
   @override
   Future<Either<Failure, PlanDto>> getPlan(String code) {
     return _apiClient.get(
-      '${BillingApiPaths.plans}/$code',
+      '${_billingApiPaths.plans}/$code',
       decoder: (json) => PlanDto.fromJson(json as Map<String, dynamic>),
     );
   }

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'todo_list_entity.dart';
@@ -9,6 +9,7 @@ part of 'todo_list_entity.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $TodoListEntityCopyWith<TodoListEntity> get copyWith => _$TodoListEntityCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TodoListEntity&&(identical(other.localId, localId) || other.localId == localId)&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.color, color) || other.color == color)&&(identical(other.isDefault, isDefault) || other.isDefault == isDefault)&&(identical(other.syncStatus, syncStatus) || other.syncStatus == syncStatus)&&(identical(other.taskCount, taskCount) || other.taskCount == taskCount)&&(identical(other.lastSyncedAt, lastSyncedAt) || other.lastSyncedAt == lastSyncedAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.isPendingDeletion, isPendingDeletion) || other.isPendingDeletion == isPendingDeletion));
+  final _this = this as TodoListEntity;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TodoListEntity&&(identical(other.localId, _this.localId) || other.localId == _this.localId)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.color, _this.color) || other.color == _this.color)&&(identical(other.isDefault, _this.isDefault) || other.isDefault == _this.isDefault)&&(identical(other.syncStatus, _this.syncStatus) || other.syncStatus == _this.syncStatus)&&(identical(other.taskCount, _this.taskCount) || other.taskCount == _this.taskCount)&&(identical(other.lastSyncedAt, _this.lastSyncedAt) || other.lastSyncedAt == _this.lastSyncedAt)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt)&&(identical(other.isPendingDeletion, _this.isPendingDeletion) || other.isPendingDeletion == _this.isPendingDeletion));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,localId,id,title,color,isDefault,syncStatus,taskCount,lastSyncedAt,createdAt,updatedAt,isPendingDeletion);
+int get hashCode {
+  final _this = this as TodoListEntity;
+  return Object.hash(runtimeType,_this.localId,_this.id,_this.title,_this.color,_this.isDefault,_this.syncStatus,_this.taskCount,_this.lastSyncedAt,_this.createdAt,_this.updatedAt,_this.isPendingDeletion);
+}
 
 @override
 String toString() {
-  return 'TodoListEntity(localId: $localId, id: $id, title: $title, color: $color, isDefault: $isDefault, syncStatus: $syncStatus, taskCount: $taskCount, lastSyncedAt: $lastSyncedAt, createdAt: $createdAt, updatedAt: $updatedAt, isPendingDeletion: $isPendingDeletion)';
+  final _this = this as TodoListEntity;
+  return 'TodoListEntity(localId: ${_this.localId}, id: ${_this.id}, title: ${_this.title}, color: ${_this.color}, isDefault: ${_this.isDefault}, syncStatus: ${_this.syncStatus}, taskCount: ${_this.taskCount}, lastSyncedAt: ${_this.lastSyncedAt}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt}, isPendingDeletion: ${_this.isPendingDeletion})';
 }
 
 
@@ -63,7 +69,7 @@ class _$TodoListEntityCopyWithImpl<$Res>
 /// Create a copy of TodoListEntity
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? localId = null,Object? id = freezed,Object? title = null,Object? color = freezed,Object? isDefault = null,Object? syncStatus = null,Object? taskCount = null,Object? lastSyncedAt = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? isPendingDeletion = null,}) {
-  return _then(_self.copyWith(
+  return _then(TodoListEntity(
 localId: null == localId ? _self.localId : localId // ignore: cast_nullable_to_non_nullable
 as int,id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -241,16 +247,18 @@ _$TodoListEntityCopyWith<_TodoListEntity> get copyWith => __$TodoListEntityCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TodoListEntity&&(identical(other.localId, localId) || other.localId == localId)&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.color, color) || other.color == color)&&(identical(other.isDefault, isDefault) || other.isDefault == isDefault)&&(identical(other.syncStatus, syncStatus) || other.syncStatus == syncStatus)&&(identical(other.taskCount, taskCount) || other.taskCount == taskCount)&&(identical(other.lastSyncedAt, lastSyncedAt) || other.lastSyncedAt == lastSyncedAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.isPendingDeletion, isPendingDeletion) || other.isPendingDeletion == isPendingDeletion));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _TodoListEntity&&(identical(other.localId, localId) || other.localId == localId)&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.color, color) || other.color == color)&&(identical(other.isDefault, isDefault) || other.isDefault == isDefault)&&(identical(other.syncStatus, syncStatus) || other.syncStatus == syncStatus)&&(identical(other.taskCount, taskCount) || other.taskCount == taskCount)&&(identical(other.lastSyncedAt, lastSyncedAt) || other.lastSyncedAt == lastSyncedAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.isPendingDeletion, isPendingDeletion) || other.isPendingDeletion == isPendingDeletion));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,localId,id,title,color,isDefault,syncStatus,taskCount,lastSyncedAt,createdAt,updatedAt,isPendingDeletion);
+int get hashCode {
+    return Object.hash(runtimeType,localId,id,title,color,isDefault,syncStatus,taskCount,lastSyncedAt,createdAt,updatedAt,isPendingDeletion);
+}
 
 @override
 String toString() {
-  return 'TodoListEntity(localId: $localId, id: $id, title: $title, color: $color, isDefault: $isDefault, syncStatus: $syncStatus, taskCount: $taskCount, lastSyncedAt: $lastSyncedAt, createdAt: $createdAt, updatedAt: $updatedAt, isPendingDeletion: $isPendingDeletion)';
+    return 'TodoListEntity(localId: $localId, id: $id, title: $title, color: $color, isDefault: $isDefault, syncStatus: $syncStatus, taskCount: $taskCount, lastSyncedAt: $lastSyncedAt, createdAt: $createdAt, updatedAt: $updatedAt, isPendingDeletion: $isPendingDeletion)';
 }
 
 

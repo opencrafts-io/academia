@@ -3,3 +3,4 @@ export 'order_dao.dart';
 export 'subscription_dao.dart';
 export 'entitlement_dao.dart';
 export 'lock_in_dao.dart';
+export 'course_dao.dart';

@@ -1,10 +1,13 @@
 import 'dart:async';
 
+import 'package:injectable/injectable.dart';
+
 import '../data/lock_in_repository.dart';
 import '../domain/lock_rule.dart';
 import 'app_blocking_gateway.dart';
 
 /// Coordinates local Lock In data with the platform blocking service.
+@LazySingleton()
 class LockInService {
   LockInService(this._repository, this._gateway);
 

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'paginated_user_response.dart';
@@ -9,6 +9,7 @@ part of 'paginated_user_response.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $PaginatedUserResponseCopyWith<PaginatedUserResponse> get copyWith => _$Paginate
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PaginatedUserResponse&&(identical(other.count, count) || other.count == count)&&(identical(other.next, next) || other.next == next)&&(identical(other.previous, previous) || other.previous == previous)&&const DeepCollectionEquality().equals(other.users, users));
+  final _this = this as PaginatedUserResponse;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PaginatedUserResponse&&(identical(other.count, _this.count) || other.count == _this.count)&&(identical(other.next, _this.next) || other.next == _this.next)&&(identical(other.previous, _this.previous) || other.previous == _this.previous)&&const DeepCollectionEquality().equals(other.users, _this.users));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,count,next,previous,const DeepCollectionEquality().hash(users));
+int get hashCode {
+  final _this = this as PaginatedUserResponse;
+  return Object.hash(runtimeType,_this.count,_this.next,_this.previous,const DeepCollectionEquality().hash(_this.users));
+}
 
 @override
 String toString() {
-  return 'PaginatedUserResponse(count: $count, next: $next, previous: $previous, users: $users)';
+  final _this = this as PaginatedUserResponse;
+  return 'PaginatedUserResponse(count: ${_this.count}, next: ${_this.next}, previous: ${_this.previous}, users: ${_this.users})';
 }
 
 
@@ -63,7 +69,7 @@ class _$PaginatedUserResponseCopyWithImpl<$Res>
 /// Create a copy of PaginatedUserResponse
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? count = null,Object? next = freezed,Object? previous = freezed,Object? users = null,}) {
-  return _then(_self.copyWith(
+  return _then(PaginatedUserResponse(
 count: null == count ? _self.count : count // ignore: cast_nullable_to_non_nullable
 as int,next: freezed == next ? _self.next : next // ignore: cast_nullable_to_non_nullable
 as String?,previous: freezed == previous ? _self.previous : previous // ignore: cast_nullable_to_non_nullable
@@ -209,7 +215,7 @@ return $default(_that.count,_that.next,_that.previous,_that.users);case _:
 
 
 class _PaginatedUserResponse implements PaginatedUserResponse {
-  const _PaginatedUserResponse({required this.count, this.next, this.previous, required final  List<CommunityUserApiDto> users}): _users = users;
+  const _PaginatedUserResponse({required this.count, this.next, this.previous, required  List<CommunityUserApiDto> users}): _users = users;
   
 
 @override final  int count;
@@ -233,16 +239,18 @@ _$PaginatedUserResponseCopyWith<_PaginatedUserResponse> get copyWith => __$Pagin
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PaginatedUserResponse&&(identical(other.count, count) || other.count == count)&&(identical(other.next, next) || other.next == next)&&(identical(other.previous, previous) || other.previous == previous)&&const DeepCollectionEquality().equals(other._users, _users));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PaginatedUserResponse&&(identical(other.count, count) || other.count == count)&&(identical(other.next, next) || other.next == next)&&(identical(other.previous, previous) || other.previous == previous)&&const DeepCollectionEquality().equals(other.users, _users));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,count,next,previous,const DeepCollectionEquality().hash(_users));
+int get hashCode {
+    return Object.hash(runtimeType,count,next,previous,const DeepCollectionEquality().hash(_users));
+}
 
 @override
 String toString() {
-  return 'PaginatedUserResponse(count: $count, next: $next, previous: $previous, users: $users)';
+    return 'PaginatedUserResponse(count: $count, next: $next, previous: $previous, users: $users)';
 }
 
 

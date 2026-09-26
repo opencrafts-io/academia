@@ -1,7 +1,7 @@
 import 'package:academia/features/auth/data/datasources/auth_local_datasource.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
-import 'package:academia/config/config.dart';
+import 'package:core/config/flavor.dart';
 import 'package:logger/logger.dart';
 
 class DioClient {

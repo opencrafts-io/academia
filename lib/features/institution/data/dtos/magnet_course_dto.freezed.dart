@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'magnet_course_dto.dart';
@@ -9,6 +9,7 @@ part of 'magnet_course_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -27,23 +28,29 @@ $MagnetCourseScheduleDtoCopyWith<MagnetCourseScheduleDto> get copyWith => _$Magn
 
 @override
 void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  final _this = this as MagnetCourseScheduleDto;
   properties
     ..add(DiagnosticsProperty('type', 'MagnetCourseScheduleDto'))
-    ..add(DiagnosticsProperty('id', id))..add(DiagnosticsProperty('serverId', serverId))..add(DiagnosticsProperty('userId', userId))..add(DiagnosticsProperty('institutionId', institutionId))..add(DiagnosticsProperty('timetableId', timetableId))..add(DiagnosticsProperty('rrule', rrule))..add(DiagnosticsProperty('startDate', startDate))..add(DiagnosticsProperty('durationMinutes', durationMinutes))..add(DiagnosticsProperty('location', location))..add(DiagnosticsProperty('room', room))..add(DiagnosticsProperty('building', building))..add(DiagnosticsProperty('isSynced', isSynced))..add(DiagnosticsProperty('isDeleted', isDeleted))..add(DiagnosticsProperty('lastUpdated', lastUpdated));
+    ..add(DiagnosticsProperty('id', _this.id))..add(DiagnosticsProperty('serverId', _this.serverId))..add(DiagnosticsProperty('userId', _this.userId))..add(DiagnosticsProperty('institutionId', _this.institutionId))..add(DiagnosticsProperty('timetableId', _this.timetableId))..add(DiagnosticsProperty('rrule', _this.rrule))..add(DiagnosticsProperty('startDate', _this.startDate))..add(DiagnosticsProperty('durationMinutes', _this.durationMinutes))..add(DiagnosticsProperty('location', _this.location))..add(DiagnosticsProperty('room', _this.room))..add(DiagnosticsProperty('building', _this.building))..add(DiagnosticsProperty('isSynced', _this.isSynced))..add(DiagnosticsProperty('isDeleted', _this.isDeleted))..add(DiagnosticsProperty('lastUpdated', _this.lastUpdated));
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MagnetCourseScheduleDto&&const DeepCollectionEquality().equals(other.id, id)&&const DeepCollectionEquality().equals(other.serverId, serverId)&&const DeepCollectionEquality().equals(other.userId, userId)&&const DeepCollectionEquality().equals(other.institutionId, institutionId)&&const DeepCollectionEquality().equals(other.timetableId, timetableId)&&const DeepCollectionEquality().equals(other.rrule, rrule)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&const DeepCollectionEquality().equals(other.durationMinutes, durationMinutes)&&const DeepCollectionEquality().equals(other.location, location)&&const DeepCollectionEquality().equals(other.room, room)&&const DeepCollectionEquality().equals(other.building, building)&&(identical(other.isSynced, isSynced) || other.isSynced == isSynced)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted)&&(identical(other.lastUpdated, lastUpdated) || other.lastUpdated == lastUpdated));
+  final _this = this as MagnetCourseScheduleDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MagnetCourseScheduleDto&&const DeepCollectionEquality().equals(other.id, _this.id)&&const DeepCollectionEquality().equals(other.serverId, _this.serverId)&&const DeepCollectionEquality().equals(other.userId, _this.userId)&&const DeepCollectionEquality().equals(other.institutionId, _this.institutionId)&&const DeepCollectionEquality().equals(other.timetableId, _this.timetableId)&&const DeepCollectionEquality().equals(other.rrule, _this.rrule)&&(identical(other.startDate, _this.startDate) || other.startDate == _this.startDate)&&const DeepCollectionEquality().equals(other.durationMinutes, _this.durationMinutes)&&const DeepCollectionEquality().equals(other.location, _this.location)&&const DeepCollectionEquality().equals(other.room, _this.room)&&const DeepCollectionEquality().equals(other.building, _this.building)&&(identical(other.isSynced, _this.isSynced) || other.isSynced == _this.isSynced)&&(identical(other.isDeleted, _this.isDeleted) || other.isDeleted == _this.isDeleted)&&(identical(other.lastUpdated, _this.lastUpdated) || other.lastUpdated == _this.lastUpdated));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(id),const DeepCollectionEquality().hash(serverId),const DeepCollectionEquality().hash(userId),const DeepCollectionEquality().hash(institutionId),const DeepCollectionEquality().hash(timetableId),const DeepCollectionEquality().hash(rrule),startDate,const DeepCollectionEquality().hash(durationMinutes),const DeepCollectionEquality().hash(location),const DeepCollectionEquality().hash(room),const DeepCollectionEquality().hash(building),isSynced,isDeleted,lastUpdated);
+int get hashCode {
+  final _this = this as MagnetCourseScheduleDto;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.id),const DeepCollectionEquality().hash(_this.serverId),const DeepCollectionEquality().hash(_this.userId),const DeepCollectionEquality().hash(_this.institutionId),const DeepCollectionEquality().hash(_this.timetableId),const DeepCollectionEquality().hash(_this.rrule),_this.startDate,const DeepCollectionEquality().hash(_this.durationMinutes),const DeepCollectionEquality().hash(_this.location),const DeepCollectionEquality().hash(_this.room),const DeepCollectionEquality().hash(_this.building),_this.isSynced,_this.isDeleted,_this.lastUpdated);
+}
 
 @override
 String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-  return 'MagnetCourseScheduleDto(id: $id, serverId: $serverId, userId: $userId, institutionId: $institutionId, timetableId: $timetableId, rrule: $rrule, startDate: $startDate, durationMinutes: $durationMinutes, location: $location, room: $room, building: $building, isSynced: $isSynced, isDeleted: $isDeleted, lastUpdated: $lastUpdated)';
+  final _this = this as MagnetCourseScheduleDto;
+  return 'MagnetCourseScheduleDto(id: ${_this.id}, serverId: ${_this.serverId}, userId: ${_this.userId}, institutionId: ${_this.institutionId}, timetableId: ${_this.timetableId}, rrule: ${_this.rrule}, startDate: ${_this.startDate}, durationMinutes: ${_this.durationMinutes}, location: ${_this.location}, room: ${_this.room}, building: ${_this.building}, isSynced: ${_this.isSynced}, isDeleted: ${_this.isDeleted}, lastUpdated: ${_this.lastUpdated})';
 }
 
 
@@ -72,7 +79,7 @@ class _$MagnetCourseScheduleDtoCopyWithImpl<$Res>
 /// Create a copy of MagnetCourseScheduleDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? serverId = freezed,Object? userId = freezed,Object? institutionId = freezed,Object? timetableId = freezed,Object? rrule = freezed,Object? startDate = freezed,Object? durationMinutes = freezed,Object? location = freezed,Object? room = freezed,Object? building = freezed,Object? isSynced = freezed,Object? isDeleted = freezed,Object? lastUpdated = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(MagnetCourseScheduleDto(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as dynamic,serverId: freezed == serverId ? _self.serverId : serverId // ignore: cast_nullable_to_non_nullable
 as dynamic,userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
@@ -258,23 +265,25 @@ Map<String, dynamic> toJson() {
 }
 @override
 void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-  properties
+    properties
     ..add(DiagnosticsProperty('type', 'MagnetCourseScheduleDto'))
     ..add(DiagnosticsProperty('id', id))..add(DiagnosticsProperty('serverId', serverId))..add(DiagnosticsProperty('userId', userId))..add(DiagnosticsProperty('institutionId', institutionId))..add(DiagnosticsProperty('timetableId', timetableId))..add(DiagnosticsProperty('rrule', rrule))..add(DiagnosticsProperty('startDate', startDate))..add(DiagnosticsProperty('durationMinutes', durationMinutes))..add(DiagnosticsProperty('location', location))..add(DiagnosticsProperty('room', room))..add(DiagnosticsProperty('building', building))..add(DiagnosticsProperty('isSynced', isSynced))..add(DiagnosticsProperty('isDeleted', isDeleted))..add(DiagnosticsProperty('lastUpdated', lastUpdated));
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MagnetCourseScheduleDto&&const DeepCollectionEquality().equals(other.id, id)&&const DeepCollectionEquality().equals(other.serverId, serverId)&&const DeepCollectionEquality().equals(other.userId, userId)&&const DeepCollectionEquality().equals(other.institutionId, institutionId)&&const DeepCollectionEquality().equals(other.timetableId, timetableId)&&const DeepCollectionEquality().equals(other.rrule, rrule)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&const DeepCollectionEquality().equals(other.durationMinutes, durationMinutes)&&const DeepCollectionEquality().equals(other.location, location)&&const DeepCollectionEquality().equals(other.room, room)&&const DeepCollectionEquality().equals(other.building, building)&&(identical(other.isSynced, isSynced) || other.isSynced == isSynced)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted)&&(identical(other.lastUpdated, lastUpdated) || other.lastUpdated == lastUpdated));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MagnetCourseScheduleDto&&const DeepCollectionEquality().equals(other.id, id)&&const DeepCollectionEquality().equals(other.serverId, serverId)&&const DeepCollectionEquality().equals(other.userId, userId)&&const DeepCollectionEquality().equals(other.institutionId, institutionId)&&const DeepCollectionEquality().equals(other.timetableId, timetableId)&&const DeepCollectionEquality().equals(other.rrule, rrule)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&const DeepCollectionEquality().equals(other.durationMinutes, durationMinutes)&&const DeepCollectionEquality().equals(other.location, location)&&const DeepCollectionEquality().equals(other.room, room)&&const DeepCollectionEquality().equals(other.building, building)&&(identical(other.isSynced, isSynced) || other.isSynced == isSynced)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted)&&(identical(other.lastUpdated, lastUpdated) || other.lastUpdated == lastUpdated));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(id),const DeepCollectionEquality().hash(serverId),const DeepCollectionEquality().hash(userId),const DeepCollectionEquality().hash(institutionId),const DeepCollectionEquality().hash(timetableId),const DeepCollectionEquality().hash(rrule),startDate,const DeepCollectionEquality().hash(durationMinutes),const DeepCollectionEquality().hash(location),const DeepCollectionEquality().hash(room),const DeepCollectionEquality().hash(building),isSynced,isDeleted,lastUpdated);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(id),const DeepCollectionEquality().hash(serverId),const DeepCollectionEquality().hash(userId),const DeepCollectionEquality().hash(institutionId),const DeepCollectionEquality().hash(timetableId),const DeepCollectionEquality().hash(rrule),startDate,const DeepCollectionEquality().hash(durationMinutes),const DeepCollectionEquality().hash(location),const DeepCollectionEquality().hash(room),const DeepCollectionEquality().hash(building),isSynced,isDeleted,lastUpdated);
+}
 
 @override
 String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-  return 'MagnetCourseScheduleDto(id: $id, serverId: $serverId, userId: $userId, institutionId: $institutionId, timetableId: $timetableId, rrule: $rrule, startDate: $startDate, durationMinutes: $durationMinutes, location: $location, room: $room, building: $building, isSynced: $isSynced, isDeleted: $isDeleted, lastUpdated: $lastUpdated)';
+    return 'MagnetCourseScheduleDto(id: $id, serverId: $serverId, userId: $userId, institutionId: $institutionId, timetableId: $timetableId, rrule: $rrule, startDate: $startDate, durationMinutes: $durationMinutes, location: $location, room: $room, building: $building, isSynced: $isSynced, isDeleted: $isDeleted, lastUpdated: $lastUpdated)';
 }
 
 
@@ -341,23 +350,29 @@ $MagnetCourseDtoCopyWith<MagnetCourseDto> get copyWith => _$MagnetCourseDtoCopyW
 
 @override
 void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  final _this = this as MagnetCourseDto;
   properties
     ..add(DiagnosticsProperty('type', 'MagnetCourseDto'))
-    ..add(DiagnosticsProperty('id', id))..add(DiagnosticsProperty('courseCode', courseCode))..add(DiagnosticsProperty('courseName', courseName))..add(DiagnosticsProperty('instructor', instructor))..add(DiagnosticsProperty('isSynced', isSynced))..add(DiagnosticsProperty('color', color))..add(DiagnosticsProperty('isDeleted', isDeleted))..add(DiagnosticsProperty('createdAt', createdAt))..add(DiagnosticsProperty('updatedAt', updatedAt))..add(DiagnosticsProperty('institutionId', institutionId))..add(DiagnosticsProperty('serverId', serverId))..add(DiagnosticsProperty('semesterId', semesterId))..add(DiagnosticsProperty('courseSchedules', courseSchedules));
+    ..add(DiagnosticsProperty('id', _this.id))..add(DiagnosticsProperty('courseCode', _this.courseCode))..add(DiagnosticsProperty('courseName', _this.courseName))..add(DiagnosticsProperty('instructor', _this.instructor))..add(DiagnosticsProperty('isSynced', _this.isSynced))..add(DiagnosticsProperty('color', _this.color))..add(DiagnosticsProperty('isDeleted', _this.isDeleted))..add(DiagnosticsProperty('createdAt', _this.createdAt))..add(DiagnosticsProperty('updatedAt', _this.updatedAt))..add(DiagnosticsProperty('institutionId', _this.institutionId))..add(DiagnosticsProperty('serverId', _this.serverId))..add(DiagnosticsProperty('semesterId', _this.semesterId))..add(DiagnosticsProperty('courseSchedules', _this.courseSchedules));
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MagnetCourseDto&&const DeepCollectionEquality().equals(other.id, id)&&(identical(other.courseCode, courseCode) || other.courseCode == courseCode)&&(identical(other.courseName, courseName) || other.courseName == courseName)&&(identical(other.instructor, instructor) || other.instructor == instructor)&&(identical(other.isSynced, isSynced) || other.isSynced == isSynced)&&const DeepCollectionEquality().equals(other.color, color)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&const DeepCollectionEquality().equals(other.institutionId, institutionId)&&const DeepCollectionEquality().equals(other.serverId, serverId)&&const DeepCollectionEquality().equals(other.semesterId, semesterId)&&const DeepCollectionEquality().equals(other.courseSchedules, courseSchedules));
+  final _this = this as MagnetCourseDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MagnetCourseDto&&const DeepCollectionEquality().equals(other.id, _this.id)&&(identical(other.courseCode, _this.courseCode) || other.courseCode == _this.courseCode)&&(identical(other.courseName, _this.courseName) || other.courseName == _this.courseName)&&(identical(other.instructor, _this.instructor) || other.instructor == _this.instructor)&&(identical(other.isSynced, _this.isSynced) || other.isSynced == _this.isSynced)&&const DeepCollectionEquality().equals(other.color, _this.color)&&(identical(other.isDeleted, _this.isDeleted) || other.isDeleted == _this.isDeleted)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt)&&const DeepCollectionEquality().equals(other.institutionId, _this.institutionId)&&const DeepCollectionEquality().equals(other.serverId, _this.serverId)&&const DeepCollectionEquality().equals(other.semesterId, _this.semesterId)&&const DeepCollectionEquality().equals(other.courseSchedules, _this.courseSchedules));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(id),courseCode,courseName,instructor,isSynced,const DeepCollectionEquality().hash(color),isDeleted,createdAt,updatedAt,const DeepCollectionEquality().hash(institutionId),const DeepCollectionEquality().hash(serverId),const DeepCollectionEquality().hash(semesterId),const DeepCollectionEquality().hash(courseSchedules));
+int get hashCode {
+  final _this = this as MagnetCourseDto;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.id),_this.courseCode,_this.courseName,_this.instructor,_this.isSynced,const DeepCollectionEquality().hash(_this.color),_this.isDeleted,_this.createdAt,_this.updatedAt,const DeepCollectionEquality().hash(_this.institutionId),const DeepCollectionEquality().hash(_this.serverId),const DeepCollectionEquality().hash(_this.semesterId),const DeepCollectionEquality().hash(_this.courseSchedules));
+}
 
 @override
 String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-  return 'MagnetCourseDto(id: $id, courseCode: $courseCode, courseName: $courseName, instructor: $instructor, isSynced: $isSynced, color: $color, isDeleted: $isDeleted, createdAt: $createdAt, updatedAt: $updatedAt, institutionId: $institutionId, serverId: $serverId, semesterId: $semesterId, courseSchedules: $courseSchedules)';
+  final _this = this as MagnetCourseDto;
+  return 'MagnetCourseDto(id: ${_this.id}, courseCode: ${_this.courseCode}, courseName: ${_this.courseName}, instructor: ${_this.instructor}, isSynced: ${_this.isSynced}, color: ${_this.color}, isDeleted: ${_this.isDeleted}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt}, institutionId: ${_this.institutionId}, serverId: ${_this.serverId}, semesterId: ${_this.semesterId}, courseSchedules: ${_this.courseSchedules})';
 }
 
 
@@ -386,7 +401,7 @@ class _$MagnetCourseDtoCopyWithImpl<$Res>
 /// Create a copy of MagnetCourseDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? courseCode = freezed,Object? courseName = freezed,Object? instructor = freezed,Object? isSynced = freezed,Object? color = freezed,Object? isDeleted = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? institutionId = freezed,Object? serverId = freezed,Object? semesterId = freezed,Object? courseSchedules = null,}) {
-  return _then(_self.copyWith(
+  return _then(MagnetCourseDto(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as dynamic,courseCode: freezed == courseCode ? _self.courseCode : courseCode // ignore: cast_nullable_to_non_nullable
 as String?,courseName: freezed == courseName ? _self.courseName : courseName // ignore: cast_nullable_to_non_nullable
@@ -541,7 +556,7 @@ return $default(_that.id,_that.courseCode,_that.courseName,_that.instructor,_tha
 @JsonSerializable()
 
 class _MagnetCourseDto with DiagnosticableTreeMixin implements MagnetCourseDto {
-  const _MagnetCourseDto({this.id, @JsonKey(name: 'course_code') this.courseCode, @JsonKey(name: 'course_name') this.courseName, this.instructor, @JsonKey(name: 'is_synced') this.isSynced, this.color, @JsonKey(name: 'is_deleted') this.isDeleted, @JsonKey(name: 'created_at') this.createdAt, @JsonKey(name: 'updated_at') this.updatedAt, @JsonKey(name: 'institution_id') this.institutionId, @JsonKey(name: 'server_id') this.serverId, @JsonKey(name: 'semester_id') this.semesterId, @JsonKey(name: 'course_schedules') final  List<MagnetCourseScheduleDto> courseSchedules = const []}): _courseSchedules = courseSchedules;
+  const _MagnetCourseDto({this.id, @JsonKey(name: 'course_code') this.courseCode, @JsonKey(name: 'course_name') this.courseName, this.instructor, @JsonKey(name: 'is_synced') this.isSynced, this.color, @JsonKey(name: 'is_deleted') this.isDeleted, @JsonKey(name: 'created_at') this.createdAt, @JsonKey(name: 'updated_at') this.updatedAt, @JsonKey(name: 'institution_id') this.institutionId, @JsonKey(name: 'server_id') this.serverId, @JsonKey(name: 'semester_id') this.semesterId, @JsonKey(name: 'course_schedules')  List<MagnetCourseScheduleDto> courseSchedules = const []}): _courseSchedules = courseSchedules;
   factory _MagnetCourseDto.fromJson(Map<String, dynamic> json) => _$MagnetCourseDtoFromJson(json);
 
 @override final  dynamic id;
@@ -576,23 +591,25 @@ Map<String, dynamic> toJson() {
 }
 @override
 void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-  properties
+    properties
     ..add(DiagnosticsProperty('type', 'MagnetCourseDto'))
     ..add(DiagnosticsProperty('id', id))..add(DiagnosticsProperty('courseCode', courseCode))..add(DiagnosticsProperty('courseName', courseName))..add(DiagnosticsProperty('instructor', instructor))..add(DiagnosticsProperty('isSynced', isSynced))..add(DiagnosticsProperty('color', color))..add(DiagnosticsProperty('isDeleted', isDeleted))..add(DiagnosticsProperty('createdAt', createdAt))..add(DiagnosticsProperty('updatedAt', updatedAt))..add(DiagnosticsProperty('institutionId', institutionId))..add(DiagnosticsProperty('serverId', serverId))..add(DiagnosticsProperty('semesterId', semesterId))..add(DiagnosticsProperty('courseSchedules', courseSchedules));
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MagnetCourseDto&&const DeepCollectionEquality().equals(other.id, id)&&(identical(other.courseCode, courseCode) || other.courseCode == courseCode)&&(identical(other.courseName, courseName) || other.courseName == courseName)&&(identical(other.instructor, instructor) || other.instructor == instructor)&&(identical(other.isSynced, isSynced) || other.isSynced == isSynced)&&const DeepCollectionEquality().equals(other.color, color)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&const DeepCollectionEquality().equals(other.institutionId, institutionId)&&const DeepCollectionEquality().equals(other.serverId, serverId)&&const DeepCollectionEquality().equals(other.semesterId, semesterId)&&const DeepCollectionEquality().equals(other._courseSchedules, _courseSchedules));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MagnetCourseDto&&const DeepCollectionEquality().equals(other.id, id)&&(identical(other.courseCode, courseCode) || other.courseCode == courseCode)&&(identical(other.courseName, courseName) || other.courseName == courseName)&&(identical(other.instructor, instructor) || other.instructor == instructor)&&(identical(other.isSynced, isSynced) || other.isSynced == isSynced)&&const DeepCollectionEquality().equals(other.color, color)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&const DeepCollectionEquality().equals(other.institutionId, institutionId)&&const DeepCollectionEquality().equals(other.serverId, serverId)&&const DeepCollectionEquality().equals(other.semesterId, semesterId)&&const DeepCollectionEquality().equals(other.courseSchedules, _courseSchedules));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(id),courseCode,courseName,instructor,isSynced,const DeepCollectionEquality().hash(color),isDeleted,createdAt,updatedAt,const DeepCollectionEquality().hash(institutionId),const DeepCollectionEquality().hash(serverId),const DeepCollectionEquality().hash(semesterId),const DeepCollectionEquality().hash(_courseSchedules));
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(id),courseCode,courseName,instructor,isSynced,const DeepCollectionEquality().hash(color),isDeleted,createdAt,updatedAt,const DeepCollectionEquality().hash(institutionId),const DeepCollectionEquality().hash(serverId),const DeepCollectionEquality().hash(semesterId),const DeepCollectionEquality().hash(_courseSchedules));
+}
 
 @override
 String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-  return 'MagnetCourseDto(id: $id, courseCode: $courseCode, courseName: $courseName, instructor: $instructor, isSynced: $isSynced, color: $color, isDeleted: $isDeleted, createdAt: $createdAt, updatedAt: $updatedAt, institutionId: $institutionId, serverId: $serverId, semesterId: $semesterId, courseSchedules: $courseSchedules)';
+    return 'MagnetCourseDto(id: $id, courseCode: $courseCode, courseName: $courseName, instructor: $instructor, isSynced: $isSynced, color: $color, isDeleted: $isDeleted, createdAt: $createdAt, updatedAt: $updatedAt, institutionId: $institutionId, serverId: $serverId, semesterId: $semesterId, courseSchedules: $courseSchedules)';
 }
 
 

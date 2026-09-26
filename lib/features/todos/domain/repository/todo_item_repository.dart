@@ -37,4 +37,11 @@ abstract class TodoItemRepository {
 
   /// Pushes all dirty/pending-deletion items to remote.
   Future<Either<Failure, Unit>> syncTodoItems();
+
+  /// Adds [duration] to the cumulative focus time tracked against a task,
+  /// e.g. from a completed Pomodoro session. Local-only — never synced.
+  Future<Either<Failure, TodoItemEntity>> addFocusedTime({
+    required int todoLocalId,
+    required Duration duration,
+  });
 }

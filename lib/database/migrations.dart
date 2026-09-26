@@ -147,4 +147,8 @@ extension AppDatabaseExtension on AppDataBase {
     // safe to drop outright.
     await m.deleteTable('group_table');
   }
+
+  Future<void> migrate37To38(Migrator m) async {
+    await m.addColumn(todoItems, todoItems.focusedSeconds);
+  }
 }

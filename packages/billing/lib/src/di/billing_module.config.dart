@@ -10,12 +10,15 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 
+import 'package:analytics/analytics.dart' as _i548;
+import 'package:core/config/flavor.dart' as _i666;
 import 'package:core/core.dart' as _i494;
 import 'package:database/database.dart' as _i252;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 
 import '../data/data.dart' as _i433;
+import '../data/datasources/billing_api_paths.dart' as _i414;
 import '../data/datasources/checkout_remote_datasource.dart' as _i585;
 import '../data/datasources/entitlement_local_datasource.dart' as _i763;
 import '../data/datasources/entitlement_remote_datasource.dart' as _i368;
@@ -52,6 +55,9 @@ _i174.GetIt initBilling(
   _i526.EnvironmentFilter? environmentFilter,
 }) {
   final gh = _i526.GetItHelper(getIt, environment, environmentFilter);
+  gh.lazySingleton<_i414.BillingApiPaths>(
+    () => _i414.BillingApiPaths(gh<_i666.FlavorConfig>()),
+  );
   gh.lazySingleton<_i692.SubscriptionAccessPolicy>(
     () => const _i692.DefaultSubscriptionAccessPolicy(),
   );
@@ -59,20 +65,39 @@ _i174.GetIt initBilling(
     () => _i942.OrderLocalDatasource(orderDao: gh<_i252.OrderDao>()),
   );
   gh.lazySingleton<_i692.BillingClock>(() => const _i692.SystemBillingClock());
-  gh.lazySingleton<_i585.CheckoutRemoteDataSource>(
-    () => _i585.CheckoutRemoteDatasourceImpl(apiClient: gh<_i494.ApiClient>()),
+  gh.lazySingleton<_i215.SubscriptionRemoteDataSource>(
+    () => _i215.SubscriptionRemoteDatasourceImpl(
+      apiClient: gh<_i494.ApiClient>(),
+      billingApiPaths: gh<_i433.BillingApiPaths>(),
+    ),
   );
-  gh.lazySingleton<_i908.OrderRemoteDataSource>(
-    () => _i908.OrderRemoteDatasourceImpl(apiClient: gh<_i494.ApiClient>()),
+  gh.lazySingleton<_i745.PlanRemoteDataSource>(
+    () => _i745.PlanRemoteDatasourceImpl(
+      apiClient: gh<_i494.ApiClient>(),
+      billingApiPaths: gh<_i433.BillingApiPaths>(),
+    ),
+  );
+  gh.lazySingleton<_i368.EntitlementRemoteDataSource>(
+    () => _i368.EntitlementRemoteDatasourceImpl(
+      apiClient: gh<_i494.ApiClient>(),
+      billingApiPaths: gh<_i433.BillingApiPaths>(),
+    ),
   );
   gh.factory<_i763.EntitlementLocalDatasource>(
     () => _i763.EntitlementLocalDatasource(
       entitlementDao: gh<_i252.EntitlementDao>(),
     ),
   );
-  gh.lazySingleton<_i215.SubscriptionRemoteDataSource>(
-    () => _i215.SubscriptionRemoteDatasourceImpl(
+  gh.lazySingleton<_i585.CheckoutRemoteDataSource>(
+    () => _i585.CheckoutRemoteDatasourceImpl(
       apiClient: gh<_i494.ApiClient>(),
+      billingApiPaths: gh<_i433.BillingApiPaths>(),
+    ),
+  );
+  gh.lazySingleton<_i908.OrderRemoteDataSource>(
+    () => _i908.OrderRemoteDatasourceImpl(
+      apiClient: gh<_i494.ApiClient>(),
+      billingApiPaths: gh<_i433.BillingApiPaths>(),
     ),
   );
   gh.factory<_i376.SubscriptionLocalDatasource>(
@@ -82,13 +107,6 @@ _i174.GetIt initBilling(
   );
   gh.factory<_i774.PlanLocalDatasource>(
     () => _i774.PlanLocalDatasource(planDao: gh<_i252.PlanDao>()),
-  );
-  gh.lazySingleton<_i368.EntitlementRemoteDataSource>(
-    () =>
-        _i368.EntitlementRemoteDatasourceImpl(apiClient: gh<_i494.ApiClient>()),
-  );
-  gh.lazySingleton<_i745.PlanRemoteDataSource>(
-    () => _i745.PlanRemoteDatasourceImpl(apiClient: gh<_i494.ApiClient>()),
   );
   gh.lazySingleton<_i515.EntitlementRepository>(
     () => _i973.EntitlementRepositoryImpl(
@@ -164,6 +182,7 @@ _i174.GetIt initBilling(
       gh<_i515.CreateOrder>(),
       gh<_i515.CreateOrderItem>(),
       gh<_i515.CreateCheckoutSession>(),
+      gh<_i548.AnalyticsTracker>(),
     ),
   );
   return getIt;

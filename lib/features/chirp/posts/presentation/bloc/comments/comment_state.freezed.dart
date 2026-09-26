@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'comment_state.dart';
@@ -9,6 +9,7 @@ part of 'comment_state.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -20,7 +21,7 @@ mixin _$CommentState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommentState);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is CommentState);
 }
 
 
@@ -29,7 +30,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'CommentState()';
+    return 'CommentState()';
 }
 
 
@@ -227,7 +228,7 @@ class CommentInitial implements CommentState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommentInitial);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is CommentInitial);
 }
 
 
@@ -236,7 +237,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'CommentState.initial()';
+    return 'CommentState.initial()';
 }
 
 
@@ -259,7 +260,7 @@ class CommentAdding implements CommentState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommentAdding);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is CommentAdding);
 }
 
 
@@ -268,7 +269,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'CommentState.adding()';
+    return 'CommentState.adding()';
 }
 
 
@@ -296,16 +297,18 @@ $CommentAddedCopyWith<CommentAdded> get copyWith => _$CommentAddedCopyWithImpl<C
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommentAdded&&(identical(other.comment, comment) || other.comment == comment));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is CommentAdded&&(identical(other.comment, comment) || other.comment == comment));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,comment);
+int get hashCode {
+    return Object.hash(runtimeType,comment);
+}
 
 @override
 String toString() {
-  return 'CommentState.added(comment: $comment)';
+    return 'CommentState.added(comment: $comment)';
 }
 
 
@@ -371,16 +374,18 @@ $CommentAddErrorCopyWith<CommentAddError> get copyWith => _$CommentAddErrorCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommentAddError&&(identical(other.message, message) || other.message == message));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is CommentAddError&&(identical(other.message, message) || other.message == message));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,message);
+int get hashCode {
+    return Object.hash(runtimeType,message);
+}
 
 @override
 String toString() {
-  return 'CommentState.addError(message: $message)';
+    return 'CommentState.addError(message: $message)';
 }
 
 
@@ -432,7 +437,7 @@ class CommentsLoading implements CommentState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommentsLoading);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is CommentsLoading);
 }
 
 
@@ -441,7 +446,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'CommentState.commentsLoading()';
+    return 'CommentState.commentsLoading()';
 }
 
 
@@ -454,7 +459,7 @@ String toString() {
 
 
 class CommentsPaginationLoading implements CommentState {
-  const CommentsPaginationLoading({required final  List<Comment> existingComments, required this.hasMore}): _existingComments = existingComments;
+  const CommentsPaginationLoading({required  List<Comment> existingComments, required this.hasMore}): _existingComments = existingComments;
   
 
  final  List<Comment> _existingComments;
@@ -476,16 +481,18 @@ $CommentsPaginationLoadingCopyWith<CommentsPaginationLoading> get copyWith => _$
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommentsPaginationLoading&&const DeepCollectionEquality().equals(other._existingComments, _existingComments)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is CommentsPaginationLoading&&const DeepCollectionEquality().equals(other.existingComments, _existingComments)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_existingComments),hasMore);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_existingComments),hasMore);
+}
 
 @override
 String toString() {
-  return 'CommentState.commentsPaginationLoading(existingComments: $existingComments, hasMore: $hasMore)';
+    return 'CommentState.commentsPaginationLoading(existingComments: $existingComments, hasMore: $hasMore)';
 }
 
 
@@ -528,7 +535,7 @@ as bool,
 
 
 class CommentsLoaded implements CommentState {
-  const CommentsLoaded({required final  List<Comment> comments, this.next, this.previous, required this.count, this.hasMore = false}): _comments = comments;
+  const CommentsLoaded({required  List<Comment> comments, this.next, this.previous, required this.count, this.hasMore = false}): _comments = comments;
   
 
  final  List<Comment> _comments;
@@ -553,16 +560,18 @@ $CommentsLoadedCopyWith<CommentsLoaded> get copyWith => _$CommentsLoadedCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommentsLoaded&&const DeepCollectionEquality().equals(other._comments, _comments)&&(identical(other.next, next) || other.next == next)&&(identical(other.previous, previous) || other.previous == previous)&&(identical(other.count, count) || other.count == count)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is CommentsLoaded&&const DeepCollectionEquality().equals(other.comments, _comments)&&(identical(other.next, next) || other.next == next)&&(identical(other.previous, previous) || other.previous == previous)&&(identical(other.count, count) || other.count == count)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_comments),next,previous,count,hasMore);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_comments),next,previous,count,hasMore);
+}
 
 @override
 String toString() {
-  return 'CommentState.commentsLoaded(comments: $comments, next: $next, previous: $previous, count: $count, hasMore: $hasMore)';
+    return 'CommentState.commentsLoaded(comments: $comments, next: $next, previous: $previous, count: $count, hasMore: $hasMore)';
 }
 
 
@@ -608,7 +617,7 @@ as bool,
 
 
 class CommentsPaginationError implements CommentState {
-  const CommentsPaginationError({required final  List<Comment> existingComments, required this.message, required this.hasMore}): _existingComments = existingComments;
+  const CommentsPaginationError({required  List<Comment> existingComments, required this.message, required this.hasMore}): _existingComments = existingComments;
   
 
  final  List<Comment> _existingComments;
@@ -631,16 +640,18 @@ $CommentsPaginationErrorCopyWith<CommentsPaginationError> get copyWith => _$Comm
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommentsPaginationError&&const DeepCollectionEquality().equals(other._existingComments, _existingComments)&&(identical(other.message, message) || other.message == message)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is CommentsPaginationError&&const DeepCollectionEquality().equals(other.existingComments, _existingComments)&&(identical(other.message, message) || other.message == message)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_existingComments),message,hasMore);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_existingComments),message,hasMore);
+}
 
 @override
 String toString() {
-  return 'CommentState.commentsPaginationError(existingComments: $existingComments, message: $message, hasMore: $hasMore)';
+    return 'CommentState.commentsPaginationError(existingComments: $existingComments, message: $message, hasMore: $hasMore)';
 }
 
 
@@ -699,16 +710,18 @@ $CommentsErrorCopyWith<CommentsError> get copyWith => _$CommentsErrorCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommentsError&&(identical(other.message, message) || other.message == message));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is CommentsError&&(identical(other.message, message) || other.message == message));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,message);
+int get hashCode {
+    return Object.hash(runtimeType,message);
+}
 
 @override
 String toString() {
-  return 'CommentState.commentsError(message: $message)';
+    return 'CommentState.commentsError(message: $message)';
 }
 
 

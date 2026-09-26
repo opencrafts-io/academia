@@ -35,5 +35,9 @@ abstract class TodoItemEntity with _$TodoItemEntity {
     DateTime? updatedAt,
     required bool isPendingDeletion,
     required bool isDirty,
+
+    /// Cumulative seconds spent focusing on this task via linked Pomodoro
+    /// sessions. Local-only — not part of the remote API.
+    @Default(0) int focusedSeconds,
   }) = _TodoItemEntity;
 }

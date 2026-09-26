@@ -33,8 +33,10 @@ dependencies:
 No additional setup required. The plugin automatically adds these permissions:
 
 - `SCHEDULE_EXACT_ALARM` — Time-based blocking (requires `requestPermission()`, might get auto-granted on Android 12 & 13 ([source](https://developer.android.com/about/versions/14/changes/schedule-exact-alarms)))
-- `QUERY_ALL_PACKAGES` — List installed apps
 - `RECEIVE_BOOT_COMPLETED` — Restore schedules after reboot
+
+The app picker uses Android package-visibility queries for launchable apps; it
+does not request `QUERY_ALL_PACKAGES`.
 
 During runtime, by calling `requestPermission()`, the user will be prompted to grant:
 - SCHEDULE_EXACT_ALARM (if not auto-granted)

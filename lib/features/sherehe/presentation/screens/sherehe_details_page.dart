@@ -1,3 +1,4 @@
+import 'package:academia/config/config.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/injection_container.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -6,7 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:academia/features/profile/profile.dart';
 import 'package:academia/features/sherehe/sherehe.dart';
 import 'package:academia/constants/constants.dart';
-import 'package:academia/config/config.dart';
 import 'package:go_router/go_router.dart';
 import 'package:share_plus/share_plus.dart';
 

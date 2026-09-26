@@ -1,4 +1,4 @@
-import 'package:academia/config/flavor.dart';
+import 'package:core/config/flavor.dart';
 import 'package:academia/core/error/failures.dart';
 import 'package:academia/core/network/network.dart';
 import 'package:academia/features/chirp/common/data/dtos/chirp_user_api_dto.dart';

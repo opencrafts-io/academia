@@ -22,4 +22,5 @@ export 'presentation/widgets/linkified_text.dart';
 export 'presentation/safe_cubit.dart';
 
 export 'notifications/notification_namespace.dart';
+export 'notifications/academia_notification_action_handler.dart';
 export 'di/injection.dart';

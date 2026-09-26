@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'todo_item_state.dart';
@@ -9,6 +9,7 @@ part of 'todo_item_state.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -20,7 +21,7 @@ mixin _$TodoItemState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TodoItemState);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is TodoItemState);
 }
 
 
@@ -29,7 +30,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'TodoItemState()';
+    return 'TodoItemState()';
 }
 
 
@@ -203,7 +204,7 @@ class _TodoItemInitial implements TodoItemState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TodoItemInitial);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _TodoItemInitial);
 }
 
 
@@ -212,7 +213,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'TodoItemState.initial()';
+    return 'TodoItemState.initial()';
 }
 
 
@@ -225,7 +226,7 @@ String toString() {
 
 
 class _TodoItemLoading implements TodoItemState {
-  const _TodoItemLoading({final  List<TodoItemEntity> items = const []}): _items = items;
+  const _TodoItemLoading({ List<TodoItemEntity> items = const []}): _items = items;
   
 
 /// Items retained from the previous success state so the UI
@@ -250,16 +251,18 @@ _$TodoItemLoadingCopyWith<_TodoItemLoading> get copyWith => __$TodoItemLoadingCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TodoItemLoading&&const DeepCollectionEquality().equals(other._items, _items));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _TodoItemLoading&&const DeepCollectionEquality().equals(other.items, _items));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_items));
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_items));
+}
 
 @override
 String toString() {
-  return 'TodoItemState.loading(items: $items)';
+    return 'TodoItemState.loading(items: $items)';
 }
 
 
@@ -301,7 +304,7 @@ as List<TodoItemEntity>,
 
 
 class TodoItemSuccess implements TodoItemState {
-  const TodoItemSuccess({required final  List<TodoItemEntity> items, this.nextUrl, this.isPaginating = false, this.isSyncing = false}): _items = items;
+  const TodoItemSuccess({required  List<TodoItemEntity> items, this.nextUrl, this.isPaginating = false, this.isSyncing = false}): _items = items;
   
 
  final  List<TodoItemEntity> _items;
@@ -325,16 +328,18 @@ $TodoItemSuccessCopyWith<TodoItemSuccess> get copyWith => _$TodoItemSuccessCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TodoItemSuccess&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.nextUrl, nextUrl) || other.nextUrl == nextUrl)&&(identical(other.isPaginating, isPaginating) || other.isPaginating == isPaginating)&&(identical(other.isSyncing, isSyncing) || other.isSyncing == isSyncing));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is TodoItemSuccess&&const DeepCollectionEquality().equals(other.items, _items)&&(identical(other.nextUrl, nextUrl) || other.nextUrl == nextUrl)&&(identical(other.isPaginating, isPaginating) || other.isPaginating == isPaginating)&&(identical(other.isSyncing, isSyncing) || other.isSyncing == isSyncing));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_items),nextUrl,isPaginating,isSyncing);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_items),nextUrl,isPaginating,isSyncing);
+}
 
 @override
 String toString() {
-  return 'TodoItemState.success(items: $items, nextUrl: $nextUrl, isPaginating: $isPaginating, isSyncing: $isSyncing)';
+    return 'TodoItemState.success(items: $items, nextUrl: $nextUrl, isPaginating: $isPaginating, isSyncing: $isSyncing)';
 }
 
 
@@ -379,7 +384,7 @@ as bool,
 
 
 class _TodoItemFailure implements TodoItemState {
-  const _TodoItemFailure({required this.failure, final  List<TodoItemEntity> items = const []}): _items = items;
+  const _TodoItemFailure({required this.failure,  List<TodoItemEntity> items = const []}): _items = items;
   
 
  final  Failure failure;
@@ -403,16 +408,18 @@ _$TodoItemFailureCopyWith<_TodoItemFailure> get copyWith => __$TodoItemFailureCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TodoItemFailure&&(identical(other.failure, failure) || other.failure == failure)&&const DeepCollectionEquality().equals(other._items, _items));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _TodoItemFailure&&(identical(other.failure, failure) || other.failure == failure)&&const DeepCollectionEquality().equals(other.items, _items));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,failure,const DeepCollectionEquality().hash(_items));
+int get hashCode {
+    return Object.hash(runtimeType,failure,const DeepCollectionEquality().hash(_items));
+}
 
 @override
 String toString() {
-  return 'TodoItemState.failure(failure: $failure, items: $items)';
+    return 'TodoItemState.failure(failure: $failure, items: $items)';
 }
 
 

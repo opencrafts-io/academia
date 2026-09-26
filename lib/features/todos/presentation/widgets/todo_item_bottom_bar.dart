@@ -10,6 +10,11 @@ class TodoItemBottomBar extends StatelessWidget {
   final VoidCallback onPriorityTap;
   final VoidCallback onMoreTap;
 
+  /// Opens the Pomodoro focus timer linked to this task. Omitted for
+  /// todos that haven't been saved yet, since there's nothing to attach
+  /// a session to.
+  final VoidCallback? onFocusTimerTap;
+
   const TodoItemBottomBar({
     super.key,
     required this.dueDate,
@@ -19,6 +24,7 @@ class TodoItemBottomBar extends StatelessWidget {
     required this.onTagTap,
     required this.onPriorityTap,
     required this.onMoreTap,
+    this.onFocusTimerTap,
   });
 
   @override
@@ -64,10 +70,12 @@ class TodoItemBottomBar extends StatelessWidget {
             onTap: onTagTap,
           ),
           const Spacer(),
-          // IconButton.filledTonal(
-          //   onPressed: onMoreTap,
-          //   icon: const Icon(Icons.more_horiz_rounded),
-          // ),
+          if (onFocusTimerTap != null)
+            IconButton.filledTonal(
+              onPressed: onFocusTimerTap,
+              icon: const Icon(Icons.timer_outlined),
+              tooltip: "Focus timer",
+            ),
         ],
       ),
     );

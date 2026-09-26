@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'todo_tag_entity.dart';
@@ -9,6 +9,7 @@ part of 'todo_tag_entity.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $TodoTagEntityCopyWith<TodoTagEntity> get copyWith => _$TodoTagEntityCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TodoTagEntity&&(identical(other.localId, localId) || other.localId == localId)&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.color, color) || other.color == color)&&(identical(other.syncStatus, syncStatus) || other.syncStatus == syncStatus)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.isPendingDeletion, isPendingDeletion) || other.isPendingDeletion == isPendingDeletion)&&(identical(other.isDirty, isDirty) || other.isDirty == isDirty));
+  final _this = this as TodoTagEntity;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TodoTagEntity&&(identical(other.localId, _this.localId) || other.localId == _this.localId)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.color, _this.color) || other.color == _this.color)&&(identical(other.syncStatus, _this.syncStatus) || other.syncStatus == _this.syncStatus)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.isPendingDeletion, _this.isPendingDeletion) || other.isPendingDeletion == _this.isPendingDeletion)&&(identical(other.isDirty, _this.isDirty) || other.isDirty == _this.isDirty));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,localId,id,name,color,syncStatus,createdAt,isPendingDeletion,isDirty);
+int get hashCode {
+  final _this = this as TodoTagEntity;
+  return Object.hash(runtimeType,_this.localId,_this.id,_this.name,_this.color,_this.syncStatus,_this.createdAt,_this.isPendingDeletion,_this.isDirty);
+}
 
 @override
 String toString() {
-  return 'TodoTagEntity(localId: $localId, id: $id, name: $name, color: $color, syncStatus: $syncStatus, createdAt: $createdAt, isPendingDeletion: $isPendingDeletion, isDirty: $isDirty)';
+  final _this = this as TodoTagEntity;
+  return 'TodoTagEntity(localId: ${_this.localId}, id: ${_this.id}, name: ${_this.name}, color: ${_this.color}, syncStatus: ${_this.syncStatus}, createdAt: ${_this.createdAt}, isPendingDeletion: ${_this.isPendingDeletion}, isDirty: ${_this.isDirty})';
 }
 
 
@@ -63,7 +69,7 @@ class _$TodoTagEntityCopyWithImpl<$Res>
 /// Create a copy of TodoTagEntity
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? localId = null,Object? id = freezed,Object? name = null,Object? color = freezed,Object? syncStatus = null,Object? createdAt = freezed,Object? isPendingDeletion = null,Object? isDirty = null,}) {
-  return _then(_self.copyWith(
+  return _then(TodoTagEntity(
 localId: null == localId ? _self.localId : localId // ignore: cast_nullable_to_non_nullable
 as int,id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -235,16 +241,18 @@ _$TodoTagEntityCopyWith<_TodoTagEntity> get copyWith => __$TodoTagEntityCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TodoTagEntity&&(identical(other.localId, localId) || other.localId == localId)&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.color, color) || other.color == color)&&(identical(other.syncStatus, syncStatus) || other.syncStatus == syncStatus)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.isPendingDeletion, isPendingDeletion) || other.isPendingDeletion == isPendingDeletion)&&(identical(other.isDirty, isDirty) || other.isDirty == isDirty));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _TodoTagEntity&&(identical(other.localId, localId) || other.localId == localId)&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.color, color) || other.color == color)&&(identical(other.syncStatus, syncStatus) || other.syncStatus == syncStatus)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.isPendingDeletion, isPendingDeletion) || other.isPendingDeletion == isPendingDeletion)&&(identical(other.isDirty, isDirty) || other.isDirty == isDirty));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,localId,id,name,color,syncStatus,createdAt,isPendingDeletion,isDirty);
+int get hashCode {
+    return Object.hash(runtimeType,localId,id,name,color,syncStatus,createdAt,isPendingDeletion,isDirty);
+}
 
 @override
 String toString() {
-  return 'TodoTagEntity(localId: $localId, id: $id, name: $name, color: $color, syncStatus: $syncStatus, createdAt: $createdAt, isPendingDeletion: $isPendingDeletion, isDirty: $isDirty)';
+    return 'TodoTagEntity(localId: $localId, id: $id, name: $name, color: $color, syncStatus: $syncStatus, createdAt: $createdAt, isPendingDeletion: $isPendingDeletion, isDirty: $isDirty)';
 }
 
 

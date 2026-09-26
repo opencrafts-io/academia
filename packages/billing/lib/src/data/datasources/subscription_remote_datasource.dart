@@ -10,14 +10,18 @@ abstract interface class SubscriptionRemoteDataSource {
 @LazySingleton(as: SubscriptionRemoteDataSource)
 class SubscriptionRemoteDatasourceImpl
     implements SubscriptionRemoteDataSource {
-  SubscriptionRemoteDatasourceImpl({required this._apiClient});
+  SubscriptionRemoteDatasourceImpl({
+    required this._apiClient,
+    required this._billingApiPaths,
+  });
 
   final ApiClient _apiClient;
+  final BillingApiPaths _billingApiPaths;
 
   @override
   Future<Either<Failure, SubscriptionStatusDto>> getCurrentStatus() {
     return _apiClient.get(
-      BillingApiPaths.subscription,
+      _billingApiPaths.subscription,
       decoder: (json) => SubscriptionStatusDto.fromJson(
         json as Map<String, dynamic>,
       ),

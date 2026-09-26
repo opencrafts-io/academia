@@ -61,15 +61,6 @@ class HomeRoute extends GoRouteData with $HomeRoute {
   }
 }
 
-@TypedGoRoute<NotificationPermissionRoute>(path: '/notification-allow')
-class NotificationPermissionRoute extends GoRouteData
-    with $NotificationPermissionRoute {
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return NotificationPermissionScreen();
-  }
-}
-
 class EssentialsRoute extends GoRouteData with $EssentialsRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
@@ -252,6 +243,19 @@ class CompleteProfileRoute extends GoRouteData with $CompleteProfileRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return CompleteProfileScreen();
+  }
+}
+
+@TypedGoRoute<LinkInstitutionRequiredPageRoute>(
+  path: "/link-institution-required",
+)
+class LinkInstitutionRequiredPageRoute extends GoRouteData
+    with $LinkInstitutionRequiredPageRoute {
+  const LinkInstitutionRequiredPageRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const LinkInstitutionRequiredPage();
   }
 }
 
@@ -852,6 +856,7 @@ class QrCodeScannerRoute extends GoRouteData with $QrCodeScannerRoute {
 
     TypedGoRoute<CreateTodoItemRoute>(path: "create-todo-item"),
     TypedGoRoute<UpdateTodoItemRoute>(path: "todo-item/:todoLocalID"),
+    TypedGoRoute<PomodoroTimerRoute>(path: "pomodoro-timer"),
   ],
 )
 class TodosRoute extends GoRouteData with $TodosRoute {
@@ -999,6 +1004,17 @@ class CreateTodoItemRoute extends GoRouteData with $CreateTodoItemRoute {
         ),
       ),
     );
+  }
+}
+
+class PomodoroTimerRoute extends GoRouteData with $PomodoroTimerRoute {
+  final int? todoLocalID;
+
+  const PomodoroTimerRoute({this.todoLocalID});
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return PomodoroTimerScreen(todoLocalId: todoLocalID);
   }
 }
 
@@ -1181,36 +1197,6 @@ class ExamTimetableSearchRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return ExamTimetableSearchScreen(institutionId: institutionId);
-  }
-}
-
-@TypedGoRoute<SettingsPageRoute>(path: "/settings")
-class SettingsPageRoute extends GoRouteData with $SettingsPageRoute {
-  @override
-  CustomTransitionPage<void> buildPage(
-    BuildContext context,
-    GoRouterState state,
-  ) {
-    return CustomTransitionPage<void>(
-      key: state.pageKey,
-      child: SettingsPage(),
-      transitionDuration: Duration(milliseconds: 300),
-      transitionsBuilder:
-          (
-            BuildContext context,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-            Widget child,
-          ) {
-            var tween = Tween(
-              begin: Offset(0.0, 1.0),
-              end: Offset.zero,
-            ).chain(CurveTween(curve: Curves.easeInOutQuad));
-            var offsetAnimation = animation.drive(tween);
-
-            return SlideTransition(position: offsetAnimation, child: child);
-          },
-    );
   }
 }
 
@@ -1413,7 +1399,7 @@ class EditSemesterRoute extends GoRouteData with $EditSemesterRoute {
 }
 
 @TypedGoRoute<CoursesPageRoute>(
-  path: "/courses",
+  path: "/local-courses",
   routes: [
     TypedGoRoute<AddCoursesRoute>(path: "create"),
     TypedGoRoute<ViewCourseRoute>(path: "view/:courseId"),

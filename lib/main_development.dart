@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:academia/app.dart';
-import 'package:academia/config/flavor.dart';
+import 'package:core/config/flavor.dart';
 import 'package:academia/injection_container.dart' as di;
 import 'package:dio_request_inspector/dio_request_inspector.dart';
 import 'package:flutter/foundation.dart';

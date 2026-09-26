@@ -26,6 +26,7 @@ extension TodoItemDataMapper on TodoItem {
         updatedAt: updatedAt,
         isPendingDeletion: isPendingDeletion,
         isDirty: isDirty,
+        focusedSeconds: focusedSeconds,
       );
 
   TodoItemDto toDto() => TodoItemDto(
@@ -71,6 +72,7 @@ extension TodoItemEntityMapper on TodoItemEntity {
     updatedAt: updatedAt,
     isPendingDeletion: isPendingDeletion,
     isDirty: isDirty,
+    focusedSeconds: focusedSeconds,
   );
 }
 
@@ -81,6 +83,10 @@ extension TodoItemDtoMapper on TodoItemDto {
     int localId = 0,
     required int taskListLocalId,
     List<TodoTagEntity> tags = const [],
+
+    /// Preserves locally-tracked focus time — the remote API doesn't
+    /// carry this field, so it must come from the existing local row.
+    int focusedSeconds = 0,
   }) => TodoItemEntity(
     localId: localId,
     id: id,
@@ -103,15 +109,21 @@ extension TodoItemDtoMapper on TodoItemDto {
     updatedAt: updatedAt != null ? DateTime.tryParse(updatedAt!) : null,
     isPendingDeletion: false,
     isDirty: false,
+    focusedSeconds: focusedSeconds,
   );
 
   /// Converts directly to a Drift data class, resolving
   /// [taskListLocalId] at the repo layer.
+  ///
+  /// [focusedSeconds] must be passed in from the existing local row — the
+  /// remote API doesn't carry this field, so omitting it would silently
+  /// reset a task's tracked focus time on every sync.
   TodoItem toDataModel({
     int localId = 0,
     required int taskListLocalId,
     bool isDirty = false,
     bool isPendingDeletion = false,
+    int focusedSeconds = 0,
   }) => TodoItem(
     localId: localId,
     id: id,
@@ -133,6 +145,7 @@ extension TodoItemDtoMapper on TodoItemDto {
     updatedAt: updatedAt != null ? DateTime.tryParse(updatedAt!) : null,
     isPendingDeletion: isPendingDeletion,
     isDirty: isDirty,
+    focusedSeconds: focusedSeconds,
   );
 
   TodoStatus _parseStatus(String? value) => TodoStatus.values.firstWhere(

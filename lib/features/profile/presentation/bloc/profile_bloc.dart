@@ -1,12 +1,12 @@
-import 'package:academia/config/config.dart';
+import 'dart:async';
+
 import 'package:academia/core/usecase/usecase.dart';
 import 'package:academia/features/features.dart';
+import 'package:analytics/analytics.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
-import 'package:posthog_flutter/posthog_flutter.dart';
-import 'package:academia/injection_container.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:notifications/notifications.dart';
 
 part 'profile_event.dart';
 part 'profile_state.dart';
@@ -18,8 +18,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final GetCachedProfileUsecase getCachedProfileUsecase;
   final RequestAccountDeletionUsecase requestAccountDeletionUsecase;
   final RequestAccountRecoveryUsecase requestAccountRecoveryUsecase;
+  final AnalyticsTracker analyticsTracker;
+  final NotificationIdentityService notificationIdentityService;
   final Logger _logger = Logger();
-  final Posthog posthog = Posthog();
 
   ProfileBloc({
     required this.refreshCurrentUserProfileUsecase,
@@ -28,6 +29,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     required this.updateUserPhone,
     required this.requestAccountDeletionUsecase,
     required this.requestAccountRecoveryUsecase,
+    required this.analyticsTracker,
+    required this.notificationIdentityService,
   }) : super(ProfileInitialState()) {
     on<RefreshProfileEvent>((event, emit) async {
       final result = await refreshCurrentUserProfileUsecase(NoParams());
@@ -50,25 +53,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           emit(ProfileErrorState(message: failure.message));
         },
         (userProfile) {
-          if (sl<FlavorConfig>().isProduction) {
-            posthog.identify(
-              userId: userProfile.id,
-              userProperties: {
-                "email": userProfile.email,
-                "name": userProfile.name,
-                "onboarded": userProfile.onboarded,
-                "terms_accepted": userProfile.termsAccepted,
-                "phone": userProfile.phone ?? "not yet set",
-              },
-              userPropertiesSetOnce: {
-                "joined_at": userProfile.createdAt.toString(),
-              },
-            );
-          }
-          OneSignal.login(userProfile.id);
-          OneSignal.User.addEmail(userProfile.email);
-          OneSignal.User.addAliases({"name": userProfile.name});
-          OneSignal.User.addSms(userProfile.phone ?? "NA");
+          _identifyProfile(userProfile);
 
           emit(ProfileLoadedState(profile: userProfile));
         },
@@ -83,25 +68,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           emit(ProfileErrorState(message: failure.message));
         },
         (userProfile) {
-          if (sl<FlavorConfig>().isProduction) {
-            posthog.identify(
-              userId: userProfile.id,
-              userProperties: {
-                "email": userProfile.email,
-                "name": userProfile.name,
-                "onboarded": userProfile.onboarded,
-                "terms_accepted": userProfile.termsAccepted,
-              },
-              userPropertiesSetOnce: {
-                "joined_at": userProfile.createdAt.toString(),
-                "phone": userProfile.phone ?? "not yet set",
-              },
-            );
-          }
-          OneSignal.login(userProfile.id);
-          OneSignal.User.addEmail(userProfile.email);
-          OneSignal.User.addAliases({"name": userProfile.name});
-          OneSignal.User.addSms(userProfile.phone ?? "NA");
+          _identifyProfile(userProfile);
 
           emit(ProfileLoadedState(profile: userProfile));
         },
@@ -116,25 +83,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           emit(ProfileErrorState(message: failure.message));
         },
         (userProfile) {
-          if (sl<FlavorConfig>().isProduction) {
-            posthog.identify(
-              userId: userProfile.id,
-              userProperties: {
-                "email": userProfile.email,
-                "name": userProfile.name,
-                "onboarded": userProfile.onboarded,
-                "terms_accepted": userProfile.termsAccepted,
-                "phone": userProfile.phone ?? "not yet set",
-              },
-              userPropertiesSetOnce: {
-                "joined_at": userProfile.createdAt.toString(),
-              },
-            );
-          }
-          OneSignal.login(userProfile.id);
-          OneSignal.User.addEmail(userProfile.email);
-          OneSignal.User.addAliases({"name": userProfile.name});
-          OneSignal.User.addSms(userProfile.phone ?? "NA");
+          _identifyProfile(userProfile);
 
           emit(ProfileLoadedState(profile: userProfile));
         },
@@ -170,5 +119,26 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         },
       );
     });
+  }
+
+  void _identifyProfile(UserProfile userProfile) {
+    unawaited(
+      analyticsTracker.identify(
+        AnalyticsIdentity(
+          userId: userProfile.id,
+          hasCompletedOnboarding: userProfile.onboarded,
+        ),
+      ),
+    );
+    unawaited(
+      notificationIdentityService.identify(
+        NotificationIdentity(
+          userId: userProfile.id,
+          email: userProfile.email,
+          displayName: userProfile.name,
+          phoneNumber: userProfile.phone,
+        ),
+      ),
+    );
   }
 }

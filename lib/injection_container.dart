@@ -1,4 +1,4 @@
-import 'package:academia/config/flavor.dart';
+import 'package:core/config/flavor.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
@@ -10,12 +10,13 @@ import 'package:academia/features/semester/semester.dart';
 import 'package:academia/features/todos/data/repository/todo_item_repository_impl.dart';
 import 'package:academia/features/todos/data/repository/todo_tag_repository_impl.dart';
 import 'package:ads/ads.dart';
-import 'package:database/daos/lock_in_dao.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:lock_in/lock_in.dart';
+import 'package:courses/courses.dart' as courses;
+import 'package:academia/core/institution/verisafe_institution_lookup.dart';
 
 final sl = GetIt.instance;
 
@@ -27,9 +28,6 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     );
     sl.registerSingleton<DioRequestInspector>(inspector);
   }
-
-  // Register the flavor
-  sl.registerSingleton<FlavorConfig>(flavor);
 
   final cacheDB = sl.registerSingleton<AppDataBase>(AppDataBase());
 
@@ -45,11 +43,8 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
 
   sl.registerSingleton<Dio>(dioClient.dio);
 
-  configureDependencies(sl);
+  configureDependencies(sl, flavor);
 
-  sl.registerLazySingleton<LockInService>(
-    () => LockInService(LockInRepository(sl<LockInDao>()), AppBlockerGateway()),
-  );
   if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
     await sl<LockInService>().start();
   }
@@ -58,8 +53,6 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     final adService = sl<AdService>();
     await adService.initialize();
     await adService.loadInterstitialAd();
-
-    sl.registerLazySingleton<InAppUpdateBloc>(() => InAppUpdateBloc());
   }
 
   sl.registerFactory(
@@ -113,6 +106,8 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
       signInWithSpotifyUsecase: sl.get<SignInWithSpotifyUsecase>(),
       getPreviousAuthState: sl.get<GetPreviousAuthState>(),
       signInWithGoogle: sl.get<SignInWithGoogleUsecase>(),
+      analyticsTracker: sl(),
+      notificationIdentityService: sl(),
     ),
   );
 
@@ -298,12 +293,14 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
       updateUserPhone: sl.get<UpdateUserPhone>(),
       requestAccountDeletionUsecase: sl.get<RequestAccountDeletionUsecase>(),
       requestAccountRecoveryUsecase: sl.get<RequestAccountRecoveryUsecase>(),
+      analyticsTracker: sl(),
+      notificationIdentityService: sl(),
     ),
   );
 
   // Todos
   sl.registerLazySingleton<TodoNotificationService>(
-    () => TodoNotificationServiceImpl(),
+    () => TodoNotificationServiceImpl(sl()),
   );
   sl.registerFactory<TodoListLocalDatasource>(
     () => TodoListLocalDatasource(cacheDB: sl()),
@@ -365,6 +362,9 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   sl.registerFactory<ReopenTodoItem>(() => ReopenTodoItem(sl()));
   sl.registerFactory<MoveTodoItem>(() => MoveTodoItem(sl()));
   sl.registerFactory<SyncTodoItems>(() => SyncTodoItems(sl()));
+  sl.registerFactory<AddFocusedTimeToTodoItem>(
+    () => AddFocusedTimeToTodoItem(sl()),
+  );
 
   sl.registerLazySingleton<TodoListCubit>(
     () => TodoListCubit(
@@ -399,7 +399,15 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
       reopenItemUseCase: sl(),
       moveItemUseCase: sl(),
       syncItemsUseCase: sl(),
+      addFocusedTimeUseCase: sl(),
     ),
+  );
+
+  // Registered as a lazy singleton so a running Pomodoro session — and the
+  // focus time it attributes to a linked todo — survives navigating away
+  // from the timer screen.
+  sl.registerLazySingleton<PomodoroCubit>(
+    () => PomodoroCubit(todoItemCubit: sl<TodoItemCubit>()),
   );
 
   // Agenda
@@ -731,22 +739,18 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     () => InteractionsLocalDataSource(db: sl()),
   );
 
-  /*************************************************************************
-      // NOTIFICATIONS
-   *************************************************************************/
-  sl.registerSingletonAsync<NotificationService>(() async {
-    await NotificationChannelMigration.run();
-    final svc = NotificationServiceImpl();
-    await svc.init();
-    return svc;
-  });
-
   // --- Institutions ---
   sl.registerFactory<InstitutionLocalDatasource>(
     () => InstitutionLocalDatasource(localDB: sl<AppDataBase>()),
   );
   sl.registerFactory<InstitutionRemoteDatasource>(
     () => InstitutionRemoteDatasource(dioClient: sl(), flavor: flavor),
+  );
+  courses.configureCoursesDependencies(
+    sl,
+    institutionLookup: VerisafeInstitutionLookup(
+      sl<InstitutionRemoteDatasource>(),
+    ),
   );
 
   sl.registerFactory<InstitutionCommandLocalDatasource>(
@@ -973,6 +977,7 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
       getAllCachedInstitutionsUsecase: sl(),
       searchForInstitutionByNameUsecase: sl(),
       getAllUserAccountInstitutionsUsecase: sl(),
+      analyticsTracker: sl(),
     ),
   );
 
@@ -982,7 +987,7 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
 
   // Exam Timetable
   sl.registerLazySingleton<ExamNotificationService>(
-    () => ExamNotificationServiceImpl(),
+    () => ExamNotificationServiceImpl(sl()),
   );
 
   // Data sources
@@ -1199,24 +1204,6 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     ),
   );
 
-  // Permissions
-  sl.registerFactory<PermissionDatasource>(() => PermissionDatasourceImpl());
-  sl.registerFactory<PermissionRepository>(
-    () => PermissionRepositoryImpl(permissionDatasource: sl()),
-  );
-  sl.registerFactory<RequestPermissionUsecase>(
-    () => RequestPermissionUsecase(permissionRepository: sl()),
-  );
-  sl.registerFactory<CheckPermissionUsecase>(
-    () => CheckPermissionUsecase(permissionRepository: sl()),
-  );
-  sl.registerFactory<PermissionCubit>(
-    () => PermissionCubit(
-      checkPermissionUsecase: sl(),
-      requestPermissionUsecase: sl(),
-    ),
-  );
-
   /**********************************************************************
    *                               LEADERBOARD
    **********************************************************************/
@@ -1290,6 +1277,4 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   sl.registerFactory<ActivityDetailBloc>(
     () => ActivityDetailBloc(getActivityById: sl<GetActivityById>()),
   );
-
-  sl.registerFactory(() => SettingsCubit());
 }

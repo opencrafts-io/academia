@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'todo_tag_state.dart';
@@ -9,6 +9,7 @@ part of 'todo_tag_state.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -20,7 +21,7 @@ mixin _$TodoTagState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TodoTagState);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is TodoTagState);
 }
 
 
@@ -29,7 +30,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'TodoTagState()';
+    return 'TodoTagState()';
 }
 
 
@@ -203,7 +204,7 @@ class _TodoTagInitial implements TodoTagState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TodoTagInitial);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _TodoTagInitial);
 }
 
 
@@ -212,7 +213,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'TodoTagState.initial()';
+    return 'TodoTagState.initial()';
 }
 
 
@@ -225,7 +226,7 @@ String toString() {
 
 
 class _TodoTagLoading implements TodoTagState {
-  const _TodoTagLoading({final  List<TodoTagEntity> tags = const []}): _tags = tags;
+  const _TodoTagLoading({ List<TodoTagEntity> tags = const []}): _tags = tags;
   
 
 /// Tags retained from the previous success state so the UI
@@ -250,16 +251,18 @@ _$TodoTagLoadingCopyWith<_TodoTagLoading> get copyWith => __$TodoTagLoadingCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TodoTagLoading&&const DeepCollectionEquality().equals(other._tags, _tags));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _TodoTagLoading&&const DeepCollectionEquality().equals(other.tags, _tags));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_tags));
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_tags));
+}
 
 @override
 String toString() {
-  return 'TodoTagState.loading(tags: $tags)';
+    return 'TodoTagState.loading(tags: $tags)';
 }
 
 
@@ -301,7 +304,7 @@ as List<TodoTagEntity>,
 
 
 class TodoTagSuccess implements TodoTagState {
-  const TodoTagSuccess({required final  List<TodoTagEntity> tags, this.nextUrl, this.isPaginating = false, this.isSyncing = false}): _tags = tags;
+  const TodoTagSuccess({required  List<TodoTagEntity> tags, this.nextUrl, this.isPaginating = false, this.isSyncing = false}): _tags = tags;
   
 
  final  List<TodoTagEntity> _tags;
@@ -325,16 +328,18 @@ $TodoTagSuccessCopyWith<TodoTagSuccess> get copyWith => _$TodoTagSuccessCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TodoTagSuccess&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.nextUrl, nextUrl) || other.nextUrl == nextUrl)&&(identical(other.isPaginating, isPaginating) || other.isPaginating == isPaginating)&&(identical(other.isSyncing, isSyncing) || other.isSyncing == isSyncing));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is TodoTagSuccess&&const DeepCollectionEquality().equals(other.tags, _tags)&&(identical(other.nextUrl, nextUrl) || other.nextUrl == nextUrl)&&(identical(other.isPaginating, isPaginating) || other.isPaginating == isPaginating)&&(identical(other.isSyncing, isSyncing) || other.isSyncing == isSyncing));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_tags),nextUrl,isPaginating,isSyncing);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_tags),nextUrl,isPaginating,isSyncing);
+}
 
 @override
 String toString() {
-  return 'TodoTagState.success(tags: $tags, nextUrl: $nextUrl, isPaginating: $isPaginating, isSyncing: $isSyncing)';
+    return 'TodoTagState.success(tags: $tags, nextUrl: $nextUrl, isPaginating: $isPaginating, isSyncing: $isSyncing)';
 }
 
 
@@ -379,7 +384,7 @@ as bool,
 
 
 class _TodoTagFailure implements TodoTagState {
-  const _TodoTagFailure({required this.failure, final  List<TodoTagEntity> tags = const []}): _tags = tags;
+  const _TodoTagFailure({required this.failure,  List<TodoTagEntity> tags = const []}): _tags = tags;
   
 
  final  Failure failure;
@@ -403,16 +408,18 @@ _$TodoTagFailureCopyWith<_TodoTagFailure> get copyWith => __$TodoTagFailureCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TodoTagFailure&&(identical(other.failure, failure) || other.failure == failure)&&const DeepCollectionEquality().equals(other._tags, _tags));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _TodoTagFailure&&(identical(other.failure, failure) || other.failure == failure)&&const DeepCollectionEquality().equals(other.tags, _tags));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,failure,const DeepCollectionEquality().hash(_tags));
+int get hashCode {
+    return Object.hash(runtimeType,failure,const DeepCollectionEquality().hash(_tags));
+}
 
 @override
 String toString() {
-  return 'TodoTagState.failure(failure: $failure, tags: $tags)';
+    return 'TodoTagState.failure(failure: $failure, tags: $tags)';
 }
 
 

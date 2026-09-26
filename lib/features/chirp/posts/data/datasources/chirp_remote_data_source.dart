@@ -1,4 +1,4 @@
-import 'package:academia/config/config.dart';
+import 'package:core/config/flavor.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/core/network/network.dart';
 import 'package:academia/features/chirp/posts/posts.dart';

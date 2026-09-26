@@ -138,6 +138,50 @@ class TodoItemLocalDatasource {
     }
   }
 
+  /// Adds [duration] to the cumulative focus time tracked against a todo
+  /// item. Local-only — doesn't touch `isDirty`/sync state, since the
+  /// remote API has no concept of tracked focus time.
+  ///
+  /// Uses a single atomic `UPDATE ... SET focused_seconds = focused_seconds
+  /// + ?` rather than a read-then-write, so two concurrent calls for the
+  /// same item (e.g. rapid skips) both land instead of one clobbering the
+  /// other.
+  Future<Either<Failure, TodoItem>> addFocusedTime(
+    int localId,
+    Duration duration,
+  ) async {
+    try {
+      final rowsAffected = await cacheDB.customUpdate(
+        'UPDATE todo_items SET focused_seconds = focused_seconds + ?1 '
+        'WHERE local_id = ?2',
+        variables: [
+          Variable<int>(duration.inSeconds),
+          Variable<int>(localId),
+        ],
+        updates: {cacheDB.todoItems},
+        updateKind: UpdateKind.update,
+      );
+
+      if (rowsAffected == 0) {
+        return left(
+          CacheFailure(
+            message: "No todo item found with ID $localId",
+            error: Exception("Item not found"),
+          ),
+        );
+      }
+
+      final updated = await (cacheDB.select(
+        cacheDB.todoItems,
+      )..where((t) => t.localId.equals(localId))).getSingle();
+      return right(updated);
+    } catch (e) {
+      return left(
+        CacheFailure(message: "Couldn't save your focus time", error: e),
+      );
+    }
+  }
+
   Future<Either<Failure, TodoItem>> softDeleteTodoItem(TodoItem item) async {
     try {
       final companion = item

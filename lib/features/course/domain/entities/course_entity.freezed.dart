@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'course_entity.dart';
@@ -9,6 +9,7 @@ part of 'course_entity.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -30,16 +31,21 @@ $CourseEntityCopyWith<CourseEntity> get copyWith => _$CourseEntityCopyWithImpl<C
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CourseEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.serverId, serverId) || other.serverId == serverId)&&(identical(other.institutionId, institutionId) || other.institutionId == institutionId)&&(identical(other.semesterId, semesterId) || other.semesterId == semesterId)&&(identical(other.courseCode, courseCode) || other.courseCode == courseCode)&&(identical(other.courseName, courseName) || other.courseName == courseName)&&(identical(other.instructor, instructor) || other.instructor == instructor)&&(identical(other.color, color) || other.color == color)&&(identical(other.isSynced, isSynced) || other.isSynced == isSynced)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  final _this = this as CourseEntity;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CourseEntity&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.serverId, _this.serverId) || other.serverId == _this.serverId)&&(identical(other.institutionId, _this.institutionId) || other.institutionId == _this.institutionId)&&(identical(other.semesterId, _this.semesterId) || other.semesterId == _this.semesterId)&&(identical(other.courseCode, _this.courseCode) || other.courseCode == _this.courseCode)&&(identical(other.courseName, _this.courseName) || other.courseName == _this.courseName)&&(identical(other.instructor, _this.instructor) || other.instructor == _this.instructor)&&(identical(other.color, _this.color) || other.color == _this.color)&&(identical(other.isSynced, _this.isSynced) || other.isSynced == _this.isSynced)&&(identical(other.isDeleted, _this.isDeleted) || other.isDeleted == _this.isDeleted)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,serverId,institutionId,semesterId,courseCode,courseName,instructor,color,isSynced,isDeleted,createdAt,updatedAt);
+int get hashCode {
+  final _this = this as CourseEntity;
+  return Object.hash(runtimeType,_this.id,_this.serverId,_this.institutionId,_this.semesterId,_this.courseCode,_this.courseName,_this.instructor,_this.color,_this.isSynced,_this.isDeleted,_this.createdAt,_this.updatedAt);
+}
 
 @override
 String toString() {
-  return 'CourseEntity(id: $id, serverId: $serverId, institutionId: $institutionId, semesterId: $semesterId, courseCode: $courseCode, courseName: $courseName, instructor: $instructor, color: $color, isSynced: $isSynced, isDeleted: $isDeleted, createdAt: $createdAt, updatedAt: $updatedAt)';
+  final _this = this as CourseEntity;
+  return 'CourseEntity(id: ${_this.id}, serverId: ${_this.serverId}, institutionId: ${_this.institutionId}, semesterId: ${_this.semesterId}, courseCode: ${_this.courseCode}, courseName: ${_this.courseName}, instructor: ${_this.instructor}, color: ${_this.color}, isSynced: ${_this.isSynced}, isDeleted: ${_this.isDeleted}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt})';
 }
 
 
@@ -68,7 +74,7 @@ class _$CourseEntityCopyWithImpl<$Res>
 /// Create a copy of CourseEntity
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? serverId = freezed,Object? institutionId = freezed,Object? semesterId = freezed,Object? courseCode = null,Object? courseName = null,Object? instructor = null,Object? color = freezed,Object? isSynced = null,Object? isDeleted = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(CourseEntity(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,serverId: freezed == serverId ? _self.serverId : serverId // ignore: cast_nullable_to_non_nullable
 as int?,institutionId: freezed == institutionId ? _self.institutionId : institutionId // ignore: cast_nullable_to_non_nullable
@@ -253,16 +259,18 @@ _$CourseEntityCopyWith<_CourseEntity> get copyWith => __$CourseEntityCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CourseEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.serverId, serverId) || other.serverId == serverId)&&(identical(other.institutionId, institutionId) || other.institutionId == institutionId)&&(identical(other.semesterId, semesterId) || other.semesterId == semesterId)&&(identical(other.courseCode, courseCode) || other.courseCode == courseCode)&&(identical(other.courseName, courseName) || other.courseName == courseName)&&(identical(other.instructor, instructor) || other.instructor == instructor)&&(identical(other.color, color) || other.color == color)&&(identical(other.isSynced, isSynced) || other.isSynced == isSynced)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CourseEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.serverId, serverId) || other.serverId == serverId)&&(identical(other.institutionId, institutionId) || other.institutionId == institutionId)&&(identical(other.semesterId, semesterId) || other.semesterId == semesterId)&&(identical(other.courseCode, courseCode) || other.courseCode == courseCode)&&(identical(other.courseName, courseName) || other.courseName == courseName)&&(identical(other.instructor, instructor) || other.instructor == instructor)&&(identical(other.color, color) || other.color == color)&&(identical(other.isSynced, isSynced) || other.isSynced == isSynced)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,serverId,institutionId,semesterId,courseCode,courseName,instructor,color,isSynced,isDeleted,createdAt,updatedAt);
+int get hashCode {
+    return Object.hash(runtimeType,id,serverId,institutionId,semesterId,courseCode,courseName,instructor,color,isSynced,isDeleted,createdAt,updatedAt);
+}
 
 @override
 String toString() {
-  return 'CourseEntity(id: $id, serverId: $serverId, institutionId: $institutionId, semesterId: $semesterId, courseCode: $courseCode, courseName: $courseName, instructor: $instructor, color: $color, isSynced: $isSynced, isDeleted: $isDeleted, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'CourseEntity(id: $id, serverId: $serverId, institutionId: $institutionId, semesterId: $semesterId, courseCode: $courseCode, courseName: $courseName, instructor: $instructor, color: $color, isSynced: $isSynced, isDeleted: $isDeleted, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 

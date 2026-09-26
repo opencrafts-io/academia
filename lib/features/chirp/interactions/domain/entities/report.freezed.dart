@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'report.dart';
@@ -9,6 +9,7 @@ part of 'report.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $ReportCopyWith<Report> get copyWith => _$ReportCopyWithImpl<Report>(this as Rep
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Report&&(identical(other.id, id) || other.id == id)&&(identical(other.reportType, reportType) || other.reportType == reportType)&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  final _this = this as Report;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Report&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.reportType, _this.reportType) || other.reportType == _this.reportType)&&(identical(other.reason, _this.reason) || other.reason == _this.reason)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,reportType,reason,status,createdAt,updatedAt);
+int get hashCode {
+  final _this = this as Report;
+  return Object.hash(runtimeType,_this.id,_this.reportType,_this.reason,_this.status,_this.createdAt,_this.updatedAt);
+}
 
 @override
 String toString() {
-  return 'Report(id: $id, reportType: $reportType, reason: $reason, status: $status, createdAt: $createdAt, updatedAt: $updatedAt)';
+  final _this = this as Report;
+  return 'Report(id: ${_this.id}, reportType: ${_this.reportType}, reason: ${_this.reason}, status: ${_this.status}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt})';
 }
 
 
@@ -63,7 +69,7 @@ class _$ReportCopyWithImpl<$Res>
 /// Create a copy of Report
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? reportType = null,Object? reason = null,Object? status = null,Object? createdAt = null,Object? updatedAt = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(Report(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,reportType: null == reportType ? _self.reportType : reportType // ignore: cast_nullable_to_non_nullable
 as String,reason: null == reason ? _self.reason : reason // ignore: cast_nullable_to_non_nullable
@@ -231,16 +237,18 @@ _$ReportCopyWith<_Report> get copyWith => __$ReportCopyWithImpl<_Report>(this, _
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Report&&(identical(other.id, id) || other.id == id)&&(identical(other.reportType, reportType) || other.reportType == reportType)&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Report&&(identical(other.id, id) || other.id == id)&&(identical(other.reportType, reportType) || other.reportType == reportType)&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,reportType,reason,status,createdAt,updatedAt);
+int get hashCode {
+    return Object.hash(runtimeType,id,reportType,reason,status,createdAt,updatedAt);
+}
 
 @override
 String toString() {
-  return 'Report(id: $id, reportType: $reportType, reason: $reason, status: $status, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Report(id: $id, reportType: $reportType, reason: $reason, status: $status, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 

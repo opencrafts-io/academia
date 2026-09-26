@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'todo_list_dto.dart';
@@ -9,6 +9,7 @@ part of 'todo_list_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $TodoListDtoCopyWith<TodoListDto> get copyWith => _$TodoListDtoCopyWithImpl<Todo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TodoListDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.color, color) || other.color == color)&&(identical(other.isDefault, isDefault) || other.isDefault == isDefault)&&(identical(other.syncStatus, syncStatus) || other.syncStatus == syncStatus)&&(identical(other.syncStatusDisplay, syncStatusDisplay) || other.syncStatusDisplay == syncStatusDisplay)&&(identical(other.lastSyncedAt, lastSyncedAt) || other.lastSyncedAt == lastSyncedAt)&&(identical(other.taskCount, taskCount) || other.taskCount == taskCount)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  final _this = this as TodoListDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TodoListDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.color, _this.color) || other.color == _this.color)&&(identical(other.isDefault, _this.isDefault) || other.isDefault == _this.isDefault)&&(identical(other.syncStatus, _this.syncStatus) || other.syncStatus == _this.syncStatus)&&(identical(other.syncStatusDisplay, _this.syncStatusDisplay) || other.syncStatusDisplay == _this.syncStatusDisplay)&&(identical(other.lastSyncedAt, _this.lastSyncedAt) || other.lastSyncedAt == _this.lastSyncedAt)&&(identical(other.taskCount, _this.taskCount) || other.taskCount == _this.taskCount)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,color,isDefault,syncStatus,syncStatusDisplay,lastSyncedAt,taskCount,createdAt,updatedAt);
+int get hashCode {
+  final _this = this as TodoListDto;
+  return Object.hash(runtimeType,_this.id,_this.title,_this.color,_this.isDefault,_this.syncStatus,_this.syncStatusDisplay,_this.lastSyncedAt,_this.taskCount,_this.createdAt,_this.updatedAt);
+}
 
 @override
 String toString() {
-  return 'TodoListDto(id: $id, title: $title, color: $color, isDefault: $isDefault, syncStatus: $syncStatus, syncStatusDisplay: $syncStatusDisplay, lastSyncedAt: $lastSyncedAt, taskCount: $taskCount, createdAt: $createdAt, updatedAt: $updatedAt)';
+  final _this = this as TodoListDto;
+  return 'TodoListDto(id: ${_this.id}, title: ${_this.title}, color: ${_this.color}, isDefault: ${_this.isDefault}, syncStatus: ${_this.syncStatus}, syncStatusDisplay: ${_this.syncStatusDisplay}, lastSyncedAt: ${_this.lastSyncedAt}, taskCount: ${_this.taskCount}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt})';
 }
 
 
@@ -66,7 +72,7 @@ class _$TodoListDtoCopyWithImpl<$Res>
 /// Create a copy of TodoListDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? title = null,Object? color = freezed,Object? isDefault = null,Object? syncStatus = null,Object? syncStatusDisplay = freezed,Object? lastSyncedAt = freezed,Object? taskCount = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(TodoListDto(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,color: freezed == color ? _self.color : color // ignore: cast_nullable_to_non_nullable
@@ -245,16 +251,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TodoListDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.color, color) || other.color == color)&&(identical(other.isDefault, isDefault) || other.isDefault == isDefault)&&(identical(other.syncStatus, syncStatus) || other.syncStatus == syncStatus)&&(identical(other.syncStatusDisplay, syncStatusDisplay) || other.syncStatusDisplay == syncStatusDisplay)&&(identical(other.lastSyncedAt, lastSyncedAt) || other.lastSyncedAt == lastSyncedAt)&&(identical(other.taskCount, taskCount) || other.taskCount == taskCount)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _TodoListDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.color, color) || other.color == color)&&(identical(other.isDefault, isDefault) || other.isDefault == isDefault)&&(identical(other.syncStatus, syncStatus) || other.syncStatus == syncStatus)&&(identical(other.syncStatusDisplay, syncStatusDisplay) || other.syncStatusDisplay == syncStatusDisplay)&&(identical(other.lastSyncedAt, lastSyncedAt) || other.lastSyncedAt == lastSyncedAt)&&(identical(other.taskCount, taskCount) || other.taskCount == taskCount)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,color,isDefault,syncStatus,syncStatusDisplay,lastSyncedAt,taskCount,createdAt,updatedAt);
+int get hashCode {
+    return Object.hash(runtimeType,id,title,color,isDefault,syncStatus,syncStatusDisplay,lastSyncedAt,taskCount,createdAt,updatedAt);
+}
 
 @override
 String toString() {
-  return 'TodoListDto(id: $id, title: $title, color: $color, isDefault: $isDefault, syncStatus: $syncStatus, syncStatusDisplay: $syncStatusDisplay, lastSyncedAt: $lastSyncedAt, taskCount: $taskCount, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'TodoListDto(id: $id, title: $title, color: $color, isDefault: $isDefault, syncStatus: $syncStatus, syncStatusDisplay: $syncStatusDisplay, lastSyncedAt: $lastSyncedAt, taskCount: $taskCount, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
