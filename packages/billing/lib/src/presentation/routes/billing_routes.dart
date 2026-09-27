@@ -11,6 +11,11 @@ import '../presentation.dart';
 
 part 'billing_routes.g.dart';
 
+const _developmentFrontendUrl = String.fromEnvironment(
+  'BILLING_DEV_FRONTEND_URL',
+  defaultValue: 'http://127.0.0.1:3000',
+);
+
 @TypedGoRoute<PaywallRoute>(path: '/billing')
 class PaywallRoute extends GoRouteData with $PaywallRoute {
   const PaywallRoute({this.featureName = 'this feature', this.accessMessage});
@@ -48,11 +53,25 @@ class PaywallRoute extends GoRouteData with $PaywallRoute {
             late final Uri checkoutUri;
             if (kDebugMode) {
               final code = sessionUri.queryParameters['code'];
-              if (code == null || code.isEmpty) {
+              final developmentFrontendUri = Uri.tryParse(
+                _developmentFrontendUrl,
+              );
+              if (code == null ||
+                  code.isEmpty ||
+                  developmentFrontendUri == null ||
+                  developmentFrontendUri.host.isEmpty ||
+                  developmentFrontendUri.userInfo.isNotEmpty ||
+                  !(developmentFrontendUri.scheme == 'https' ||
+                      (developmentFrontendUri.scheme == 'http' &&
+                          const {
+                            'localhost',
+                            '127.0.0.1',
+                            '::1',
+                          }.contains(developmentFrontendUri.host)))) {
                 _showCheckoutError(context);
                 return;
               }
-              checkoutUri = Uri.parse('http://192.168.100.21:3000').replace(
+              checkoutUri = developmentFrontendUri.replace(
                 path: '/checkout/start',
                 queryParameters: {'code': code},
               );
