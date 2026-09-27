@@ -212,7 +212,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       },
       (success) {
         sl<billing.BillingService>().invalidate();
-        posthog.capture(eventName: "user_logout");
+        unawaited(Posthog().capture(eventName: "user_logout"));
         unawaited(analyticsTracker.track(AnalyticsEvent.signOutCompleted()));
         unawaited(analyticsTracker.reset());
         unawaited(notificationIdentityService.clear());
