@@ -1,10 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:academia/core/core.dart';
 import 'package:academia/features/auth/data/models/token.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'dart:async';
 
 /// Local datasource responsible for persisting and retrieving authentication
 /// tokens using [FlutterSecureStorage].
@@ -12,6 +12,8 @@ class AuthLocalDatasource {
   static const _tokenPrefix = 'token_';
 
   final FlutterSecureStorage _storage;
+  final StreamController<void> _sessionInvalidated =
+      StreamController<void>.broadcast(sync: true);
 
   AuthLocalDatasource({FlutterSecureStorage? storage})
     : _storage =
@@ -24,6 +26,9 @@ class AuthLocalDatasource {
           );
 
   String _keyFor(String provider) => '$_tokenPrefix$provider';
+
+  /// Emits when a refresh rejection invalidates the saved Verisafe session.
+  Stream<void> get sessionInvalidated => _sessionInvalidated.stream;
 
   Future<void> _write(String provider, TokenData token) =>
       _storage.write(key: _keyFor(provider), value: jsonEncode(token.toJson()));
@@ -107,11 +112,10 @@ class AuthLocalDatasource {
   Future<Either<Failure, void>> deleteAllTokens() async {
     try {
       final all = await _storage.readAll();
-      await Future.wait(
-        all.keys
-            .where((k) => k.startsWith(_tokenPrefix))
-            .map((k) => _storage.delete(key: k)),
-      );
+      final tokenKeys = all.keys
+          .where((key) => key.startsWith(_tokenPrefix))
+          .toList(growable: false);
+      await Future.wait(tokenKeys.map((key) => _storage.delete(key: key)));
       return right(null);
     } catch (e) {
       return left(
@@ -138,5 +142,12 @@ class AuthLocalDatasource {
         ),
       );
     }
+  }
+
+  /// Clears credentials after the server rejects or rotates away the saved
+  /// refresh token, then tells the auth state owner to return to sign-in.
+  Future<void> invalidateVerisafeSession() async {
+    await deleteAllTokens();
+    _sessionInvalidated.add(null);
   }
 }

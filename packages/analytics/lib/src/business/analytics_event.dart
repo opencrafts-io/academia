@@ -32,7 +32,14 @@ enum AnalyticsEventName {
   final String wireName;
 }
 
-enum AnalyticsSignInMethod { apple, google, provider, reviewer, spotify }
+enum AnalyticsSignInMethod {
+  apple,
+  google,
+  provider,
+  reviewer,
+  spotify,
+  password,
+}
 
 enum AnalyticsPermissionCapability {
   location,

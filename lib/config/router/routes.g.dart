@@ -395,6 +395,11 @@ RouteBase get $profileRoute => GoRouteData.$route(
       hasOverriddenOnExit: false,
       factory: $LinkInstitutionProfileRoute._fromState,
     ),
+    GoRouteData.$route(
+      path: 'password-settings',
+      hasOverriddenOnExit: false,
+      factory: $PasswordSettingsRoute._fromState,
+    ),
   ],
 );
 
@@ -424,6 +429,27 @@ mixin $LinkInstitutionProfileRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/profile/link-institution');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $PasswordSettingsRoute on GoRouteData {
+  static PasswordSettingsRoute _fromState(GoRouterState state) =>
+      PasswordSettingsRoute();
+
+  @override
+  String get location => GoRouteData.$location('/profile/password-settings');
 
   @override
   void go(BuildContext context) => context.go(location);

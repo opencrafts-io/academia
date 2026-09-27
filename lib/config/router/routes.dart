@@ -190,7 +190,10 @@ class AuthRoute extends GoRouteData with $AuthRoute {
 
 @TypedGoRoute<ProfileRoute>(
   path: "/profile",
-  routes: [TypedGoRoute<LinkInstitutionProfileRoute>(path: "link-institution")],
+  routes: [
+    TypedGoRoute<LinkInstitutionProfileRoute>(path: "link-institution"),
+    TypedGoRoute<PasswordSettingsRoute>(path: "password-settings"),
+  ],
 )
 class ProfileRoute extends GoRouteData with $ProfileRoute {
   @override
@@ -234,6 +237,39 @@ class LinkInstitutionProfileRoute extends GoRouteData
       ),
 
       child: Sheet(child: InstitutionLinkingPage()),
+    );
+  }
+}
+
+class PasswordSettingsRoute extends GoRouteData with $PasswordSettingsRoute {
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return ModalSheetPage(
+      fullscreenDialog: true,
+      barrierDismissible: false,
+      swipeDismissible: true,
+      viewportBuilder: (context, child) =>
+          SheetViewport(padding: EdgeInsets.zero, child: child),
+      child: SheetKeyboardDismissible(
+        dismissBehavior: SheetKeyboardDismissBehavior.onDragDown(
+          isContentScrollAware: true,
+        ),
+        child: Sheet(
+          scrollConfiguration: const SheetScrollConfiguration(),
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.viewInsetsOf(context).bottom,
+          ),
+          decoration: MaterialSheetDecoration(
+            size: SheetSize.fit,
+            clipBehavior: Clip.antiAlias,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            ),
+          ),
+          physics: BouncingSheetPhysics(),
+          child: PasswordSettingsSheet(setPassword: sl<SetPasswordUsecase>()),
+        ),
+      ),
     );
   }
 }
