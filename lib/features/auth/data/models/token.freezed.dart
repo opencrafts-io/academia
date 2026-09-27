@@ -40,11 +40,6 @@ int get hashCode {
   return Object.hash(runtimeType,_this.provider,_this.accessToken,_this.refreshToken,_this.accessExpiresAt,_this.refreshExpiresAt);
 }
 
-@override
-String toString() {
-  final _this = this as TokenData;
-  return 'TokenData(provider: ${_this.provider}, accessToken: ${_this.accessToken}, refreshToken: ${_this.refreshToken}, accessExpiresAt: ${_this.accessExpiresAt}, refreshExpiresAt: ${_this.refreshExpiresAt})';
-}
 
 
 }
@@ -250,10 +245,6 @@ int get hashCode {
     return Object.hash(runtimeType,provider,accessToken,refreshToken,accessExpiresAt,refreshExpiresAt);
 }
 
-@override
-String toString() {
-    return 'TokenData(provider: $provider, accessToken: $accessToken, refreshToken: $refreshToken, accessExpiresAt: $accessExpiresAt, refreshExpiresAt: $refreshExpiresAt)';
-}
 
 
 }

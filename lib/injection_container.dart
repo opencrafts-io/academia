@@ -73,6 +73,14 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     () => SignInWithProviderUsecase(repository: sl.get<AuthRepositoryImpl>()),
   );
 
+  sl.registerFactory<SignInWithPasswordUsecase>(
+    () => SignInWithPasswordUsecase(repository: sl.get<AuthRepositoryImpl>()),
+  );
+
+  sl.registerFactory<SetPasswordUsecase>(
+    () => SetPasswordUsecase(repository: sl.get<AuthRepositoryImpl>()),
+  );
+
   sl.registerFactory<SignInWithAppleUsecase>(
     () => SignInWithAppleUsecase(sl.get<AuthRepositoryImpl>()),
   );
@@ -102,10 +110,12 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
       signInWithProviderUsecase: sl(),
       signInWithAppleUsecase: sl(),
       signInAsReviewUsecase: sl(),
+      signInWithPasswordUsecase: sl(),
       refreshVerisafeTokenUsecase: sl(),
       signInWithSpotifyUsecase: sl.get<SignInWithSpotifyUsecase>(),
       getPreviousAuthState: sl.get<GetPreviousAuthState>(),
       signInWithGoogle: sl.get<SignInWithGoogleUsecase>(),
+      authLocalDatasource: sl<AuthLocalDatasource>(),
       analyticsTracker: sl(),
       notificationIdentityService: sl(),
     ),
