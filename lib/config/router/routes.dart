@@ -246,6 +246,7 @@ class PasswordSettingsRoute extends GoRouteData with $PasswordSettingsRoute {
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return ModalSheetPage(
       fullscreenDialog: true,
+      barrierDismissible: false,
       swipeDismissible: true,
       viewportBuilder: (context, child) =>
           SheetViewport(padding: EdgeInsets.zero, child: child),

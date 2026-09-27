@@ -47,7 +47,12 @@ class _PasswordSettingsSheetState extends State<PasswordSettingsSheet> {
         _saving = false;
         _error = failure.message;
       }),
-      (_) => context.pop(true),
+      (_) {
+        setState(() => _saving = false);
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) context.pop(true);
+        });
+      },
     );
   }
 
@@ -59,7 +64,7 @@ class _PasswordSettingsSheetState extends State<PasswordSettingsSheet> {
         ? profileState.profile.email.trim()
         : '';
 
-    return SheetContentScaffold(
+    final sheetContent = SheetContentScaffold(
       extendBodyBehindBottomBar: false,
       topBar: AppBar(
         title: const Text('Set or change password'),
@@ -184,5 +189,6 @@ class _PasswordSettingsSheetState extends State<PasswordSettingsSheet> {
         ),
       ),
     );
+    return SheetPopScope<bool>(canPop: !_saving, child: sheetContent);
   }
 }
