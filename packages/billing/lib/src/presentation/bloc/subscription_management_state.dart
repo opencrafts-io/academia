@@ -40,6 +40,7 @@ class SubscriptionManagementState {
     SubscriptionManagementStatus? status,
     List<Plan>? plans,
     SubscriptionStatus? subscriptionStatus,
+    bool clearSubscriptionStatus = false,
     Plan? selectedPlan,
     bool clearSelectedPlan = false,
     Order? order,
@@ -53,7 +54,9 @@ class SubscriptionManagementState {
     return SubscriptionManagementState(
       status: status ?? this.status,
       plans: plans ?? this.plans,
-      subscriptionStatus: subscriptionStatus ?? this.subscriptionStatus,
+      subscriptionStatus: clearSubscriptionStatus
+          ? null
+          : subscriptionStatus ?? this.subscriptionStatus,
       selectedPlan: clearSelectedPlan
           ? null
           : selectedPlan ?? this.selectedPlan,

@@ -5,6 +5,9 @@ import 'package:academia/features/auth/auth.dart';
 import 'package:academia/features/auth/data/datasources/auth_local_datasource.dart';
 import 'package:analytics/analytics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:posthog_flutter/posthog_flutter.dart';
+import 'package:academia/injection_container.dart';
+import 'package:billing/billing.dart' as billing;
 import 'package:logger/logger.dart';
 import 'package:notifications/notifications.dart';
 
@@ -231,6 +234,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(AuthError(message: failure.message));
       },
       (success) {
+        sl<billing.BillingService>().invalidate();
+        unawaited(Posthog().capture(eventName: "user_logout"));
         unawaited(analyticsTracker.track(AnalyticsEvent.signOutCompleted()));
         unawaited(analyticsTracker.reset());
         unawaited(notificationIdentityService.clear());
