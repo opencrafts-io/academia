@@ -17,6 +17,7 @@ class SubscriptionManagementBloc
     this._getCurrentSubscriptionStatus,
     this._createOrder,
     this._createOrderItem,
+    this._getOrderById,
     this._createCheckoutSession,
     this._analyticsTracker,
   ) : super(const SubscriptionManagementState()) {
@@ -32,6 +33,7 @@ class SubscriptionManagementBloc
   final GetCurrentSubscriptionStatus _getCurrentSubscriptionStatus;
   final CreateOrder _createOrder;
   final CreateOrderItem _createOrderItem;
+  final GetOrderById _getOrderById;
   final CreateCheckoutSession _createCheckoutSession;
   final AnalyticsTracker _analyticsTracker;
 
@@ -203,18 +205,35 @@ class SubscriptionManagementBloc
     );
     if (isClosed) return;
 
-    itemResult.fold(
+    final itemFailure = itemResult.fold((failure) => failure, (_) => null);
+    final item = itemResult.toOption().toNullable();
+    if (itemFailure != null || item == null) {
+      emit(
+        state.copyWith(
+          status: SubscriptionManagementStatus.failure,
+          order: order,
+          failure: itemFailure,
+        ),
+      );
+      return;
+    }
+
+    final refreshedOrderResult = await _getOrderById(order.id);
+    if (isClosed) return;
+
+    refreshedOrderResult.fold(
       (failure) => emit(
         state.copyWith(
           status: SubscriptionManagementStatus.failure,
           order: order,
+          orderItems: [item],
           failure: failure,
         ),
       ),
-      (item) => emit(
+      (refreshedOrder) => emit(
         state.copyWith(
           status: SubscriptionManagementStatus.orderReady,
-          order: order,
+          order: refreshedOrder,
           orderItems: [item],
           clearFailure: true,
         ),
