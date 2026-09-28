@@ -24,6 +24,37 @@ class PostCard extends StatefulWidget {
 enum Vote { up, down, none }
 
 class _PostCardState extends State<PostCard> {
+  final Set<(int, String)> _recordedViewPairs = {};
+  double _latestVisibleFraction = 0;
+
+  @override
+  void didUpdateWidget(covariant PostCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.post.id != oldWidget.post.id) {
+      _recordedViewPairs.clear();
+      _latestVisibleFraction = 0;
+    }
+  }
+
+  void _handleVisibilityChanged(double visibleFraction) {
+    _latestVisibleFraction = visibleFraction;
+    if (visibleFraction <= 0.5) return;
+
+    final profileState = context.read<ProfileBloc>().state;
+    if (profileState is ProfileLoadedState) {
+      _markPostAsViewed(profileState.profile.id);
+    }
+  }
+
+  void _markPostAsViewed(String viewerId) {
+    final viewPair = (widget.post.id, viewerId);
+    if (!_recordedViewPairs.add(viewPair)) return;
+
+    context.read<FeedBloc>().add(
+      MarkPostAsViewed(postId: widget.post.id, viewerId: viewerId),
+    );
+  }
+
   /// Downloads the file at [url] to a temp path and returns an [XFile].
   /// Returns null if the download fails.
   Future<XFile?> _downloadAttachment(String url) async {
@@ -435,113 +466,109 @@ class _PostCardState extends State<PostCard> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: widget.onTap,
-      child: VisibilityDetector(
-        key: Key(widget.post.id.toString()),
-        onVisibilityChanged: (info) {
-          if (info.visibleFraction > 0.5) {
-            final profileState = context.read<ProfileBloc>().state;
-            if (profileState is ProfileLoadedState) {
-              context.read<FeedBloc>().add(
-                MarkPostAsViewed(
-                  postId: widget.post.id,
-                  viewerId: profileState.profile.id,
-                ),
-              );
-            }
+      child: BlocListener<ProfileBloc, ProfileState>(
+        listener: (context, state) {
+          if (state is ProfileLoadedState && _latestVisibleFraction > 0.5) {
+            _markPostAsViewed(state.profile.id);
           }
         },
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                width: 1,
-                color: Theme.of(context).colorScheme.outlineVariant,
+        child: VisibilityDetector(
+          key: Key(widget.post.id.toString()),
+          onVisibilityChanged: (info) =>
+              _handleVisibilityChanged(info.visibleFraction),
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  width: 1,
+                  color: Theme.of(context).colorScheme.outlineVariant,
+                ),
               ),
             ),
-          ),
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: BlocBuilder<ChirpUserCubit, ChirpUserState>(
-                  builder: (context, state) {
-                    String avatarUrl =
-                        'https://i.pinimg.com/736x/18/b5/b5/18b5b599bb873285bd4def283c0d3c09.jpg';
-                    String username = 'Unknown User';
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: BlocBuilder<ChirpUserCubit, ChirpUserState>(
+                    builder: (context, state) {
+                      String avatarUrl =
+                          'https://i.pinimg.com/736x/18/b5/b5/18b5b599bb873285bd4def283c0d3c09.jpg';
+                      String username = 'Unknown User';
 
-                    if (state is ChirpUserLoadedState) {
-                      avatarUrl = state.user.avatarUrl ?? avatarUrl;
-                      username = state.user.username ?? 'Unknown User';
-                    }
+                      if (state is ChirpUserLoadedState) {
+                        avatarUrl = state.user.avatarUrl ?? avatarUrl;
+                        username = state.user.username ?? 'Unknown User';
+                      }
 
-                    return Row(
-                      children: [
-                        ChirpUserAvatar(
-                          avatarUrl: avatarUrl,
-                          numberOfScallops: 6,
-                        ),
-                        const SizedBox(width: 8),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'a/${widget.post.community.name}',
-                              style: Theme.of(context).textTheme.bodySmall
-                                  ?.copyWith(fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              "$username • ${timeSince(widget.post.createdAt)}",
-                              style: Theme.of(context).textTheme.bodySmall
-                                  ?.copyWith(overflow: TextOverflow.ellipsis),
-                            ),
-                          ],
-                        ),
-                        const Spacer(),
-                        IconButton(
-                          icon: const Icon(Icons.more_vert),
-                          onPressed: () => _showPostOptions(username),
-                        ),
-                      ],
-                    );
-                  },
+                      return Row(
+                        children: [
+                          ChirpUserAvatar(
+                            avatarUrl: avatarUrl,
+                            numberOfScallops: 6,
+                          ),
+                          const SizedBox(width: 8),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'a/${widget.post.community.name}',
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "$username • ${timeSince(widget.post.createdAt)}",
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(overflow: TextOverflow.ellipsis),
+                              ),
+                            ],
+                          ),
+                          const Spacer(),
+                          IconButton(
+                            icon: const Icon(Icons.more_vert),
+                            onPressed: () => _showPostOptions(username),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
                 ),
-              ),
-              const SizedBox(height: 8),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: LinkifiedText(
-                  text: widget.post.title,
-                  style: Theme.of(context).textTheme.titleSmall
-                      ?.copyWith(fontWeight: FontWeight.bold),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: LinkifiedText(
-                  text: widget.post.content,
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              if (widget.post.attachments.isNotEmpty) ...[
                 const SizedBox(height: 8),
-                FeedAttachmentCarousel(attachments: widget.post.attachments),
-              ],
-              const SizedBox(height: 8),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: BlocProvider(
-                  // Scope PostCubit for optimistic like state
-                  create: (_) => PostCubit(widget.post),
-                  child: PostActionRow(onCommentTap: widget.onTap),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: LinkifiedText(
+                    text: widget.post.title,
+                    style: Theme.of(context).textTheme.titleSmall
+                        ?.copyWith(fontWeight: FontWeight.bold),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 8),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: LinkifiedText(
+                    text: widget.post.content,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                if (widget.post.attachments.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  FeedAttachmentCarousel(attachments: widget.post.attachments),
+                ],
+                const SizedBox(height: 8),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: BlocProvider(
+                    // Scope PostCubit for optimistic like state
+                    create: (_) => PostCubit(widget.post),
+                    child: PostActionRow(onCommentTap: widget.onTap),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
