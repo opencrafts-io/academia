@@ -230,4 +230,4 @@ Useful links:
 
 - Repository: <https://github.com/opencrafts-io/academia>
 - Android package ID: `io.opencrafts.academia`
-- Current version: `3.5.4+53`
+- Current version: `3.6.0+54`
