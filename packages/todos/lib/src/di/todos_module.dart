@@ -5,7 +5,6 @@ import 'package:todos/src/data/datasource/drift_todo_local_store.dart';
 import 'package:todos/src/data/datasource/todo_local_store.dart';
 import 'package:todos/src/domain/domain.dart';
 import 'package:todos/src/presentation/cubit/todo_item_cubit.dart';
-import 'package:todos/src/presentation/cubit/pomodoro_cubit.dart';
 
 import 'package:todos/src/di/todos_module.config.dart';
 
@@ -36,8 +35,5 @@ void configureTodosDependencies(GetIt getIt) {
       syncItemsUseCase: getIt<SyncTodoItems>(),
       addFocusedTimeUseCase: getIt<AddFocusedTimeToTodoItem>(),
     ),
-  );
-  getIt.registerLazySingleton<PomodoroCubit>(
-    () => PomodoroCubit(todoItemCubit: getIt<TodoItemCubit>()),
   );
 }

@@ -1,4 +1,5 @@
 import 'package:todos/todos.dart';
+import 'package:pomodoro/pomodoro.dart' as pomodoro;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -180,7 +181,8 @@ class _TodoHomeScreenState extends State<TodoHomeScreen>
                     actions: [
                       _buildNotificationRequestButton(),
                       IconButton(
-                        onPressed: () => PomodoroTimerRoute().push(context),
+                        onPressed: () =>
+                            pomodoro.PomodoroTimerRoute().push(context),
                         icon: const Icon(Icons.timer_outlined),
                         tooltip: "Focus timer",
                       ),

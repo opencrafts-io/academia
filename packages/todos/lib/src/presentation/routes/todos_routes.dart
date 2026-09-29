@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 import 'package:todos/src/presentation/views/create_todo_item_screen.dart';
 import 'package:todos/src/presentation/views/create_todo_list_screen.dart';
-import 'package:todos/src/presentation/views/pomodoro_timer_screen.dart';
 import 'package:todos/src/presentation/views/todo_home_screen.dart';
 import 'package:todos/src/presentation/views/update_todo_item_screen.dart';
 import 'package:todos/src/presentation/views/view_todo_list_screen.dart';
@@ -21,7 +20,6 @@ part 'todos_routes.g.dart';
 
     TypedGoRoute<CreateTodoItemRoute>(path: "create-todo-item"),
     TypedGoRoute<UpdateTodoItemRoute>(path: "todo-item/:todoLocalID"),
-    TypedGoRoute<PomodoroTimerRoute>(path: "pomodoro-timer"),
   ],
 )
 class TodosRoute extends GoRouteData with $TodosRoute {
@@ -169,17 +167,6 @@ class CreateTodoItemRoute extends GoRouteData with $CreateTodoItemRoute {
         ),
       ),
     );
-  }
-}
-
-class PomodoroTimerRoute extends GoRouteData with $PomodoroTimerRoute {
-  final int? todoLocalID;
-
-  const PomodoroTimerRoute({this.todoLocalID});
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return PomodoroTimerScreen(todoLocalId: todoLocalID);
   }
 }
 

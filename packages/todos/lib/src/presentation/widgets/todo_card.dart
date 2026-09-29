@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:todos/src/domain/domain.dart';
-import 'package:todos/src/presentation/utils/focused_duration_format.dart';
+import 'package:pomodoro/pomodoro.dart' show formatFocusedDuration;
 import 'package:intl/intl.dart';
 import 'package:time_since/time_since.dart';
 

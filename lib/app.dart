@@ -17,6 +17,7 @@ import 'package:permissions/permissions.dart';
 import 'package:settings/settings.dart';
 import 'package:courses/courses.dart' as courses;
 import 'package:todos/todos.dart' as todos;
+import 'package:pomodoro/pomodoro.dart' as pomodoro;
 
 class Academia extends StatefulWidget {
   const Academia({super.key});
@@ -99,7 +100,7 @@ class _AcademiaState extends State<Academia> {
         BlocProvider(create: (context) => sl<todos.TodoListCubit>()),
         BlocProvider(create: (context) => sl<todos.TodoTagCubit>()),
         BlocProvider(create: (context) => sl<todos.TodoItemCubit>()),
-        BlocProvider(create: (context) => sl<todos.PomodoroCubit>()),
+        BlocProvider(create: (context) => sl<pomodoro.PomodoroCubit>()),
         BlocProvider(create: (context) => sl<CommunityListingCubit>()),
         BlocProvider(
           create: (context) => CreateCommunityBloc(

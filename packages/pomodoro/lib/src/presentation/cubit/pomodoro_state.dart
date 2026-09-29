@@ -1,5 +1,5 @@
-import 'package:todos/todos.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:pomodoro/src/domain/enums/pomodoro_phase.dart';
 part 'pomodoro_state.freezed.dart';
 
 @freezed
@@ -25,6 +25,7 @@ abstract class PomodoroState with _$PomodoroState {
     /// The todo item this session is tracking time against, if any.
     int? linkedTodoItemLocalId,
     String? linkedTodoItemTitle,
+    @Default(0) int trackedFocusedSeconds,
   }) = _PomodoroState;
 
   factory PomodoroState.initial() => const PomodoroState(

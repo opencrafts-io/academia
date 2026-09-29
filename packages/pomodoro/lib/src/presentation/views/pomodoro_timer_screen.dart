@@ -1,7 +1,11 @@
-import 'package:todos/todos.dart';
 import 'package:material3_indicators/material3_indicators.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pomodoro/src/domain/enums/pomodoro_phase.dart';
+import 'package:pomodoro/src/presentation/cubit/pomodoro_cubit.dart';
+import 'package:pomodoro/src/presentation/cubit/pomodoro_state.dart';
+import 'package:pomodoro/src/presentation/utils/focused_duration_format.dart';
+import 'package:pomodoro/src/presentation/widgets/pomodoro_settings_sheet.dart';
 
 /// Full-screen Pomodoro focus timer. When [todoLocalId] is given, the
 /// running session is attributed to that todo item; otherwise it's a
@@ -25,15 +29,7 @@ class _PomodoroTimerScreenState extends State<PomodoroTimerScreen> {
       // PomodoroCubit is a singleton, so without this a freestanding
       // session (todoLocalId == null) would silently inherit whatever
       // todo item a previous session left linked.
-      final item = widget.todoLocalId == null
-          ? null
-          : context
-                .read<TodoItemCubit>()
-                .state
-                .currentItems
-                .where((i) => i.localId == widget.todoLocalId)
-                .firstOrNull;
-      context.read<PomodoroCubit>().linkTodoItem(item);
+      context.read<PomodoroCubit>().linkTodoItem(widget.todoLocalId);
     });
   }
 
@@ -130,21 +126,14 @@ class _PomodoroTimerScreenState extends State<PomodoroTimerScreen> {
   }
 
   Widget _buildTrackedTime(BuildContext context, PomodoroState state) {
-    return BlocBuilder<TodoItemCubit, TodoItemState>(
-      builder: (context, todoState) {
-        final item = todoState.currentItems
-            .where((i) => i.localId == state.linkedTodoItemLocalId)
-            .firstOrNull;
-        if (item == null || item.focusedSeconds == 0) {
-          return const SizedBox.shrink();
-        }
-        return Text(
-          "Total tracked: "
-          "${formatFocusedDuration(Duration(seconds: item.focusedSeconds))}",
-          style: Theme.of(context).textTheme.bodySmall
-              ?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
-        );
-      },
+    if (state.trackedFocusedSeconds == 0) {
+      return const SizedBox.shrink();
+    }
+    return Text(
+      "Total tracked: "
+      "${formatFocusedDuration(Duration(seconds: state.trackedFocusedSeconds))}",
+      style: Theme.of(context).textTheme.bodySmall
+          ?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
     );
   }
 

@@ -126,6 +126,8 @@ dependencies:
     path: packages/billing/
   todos:
     path: packages/todos/
+  pomodoro:
+    path: packages/pomodoro/
   # application ads subsystem
   ads:
     path: packages/ads/

@@ -14,6 +14,8 @@ import 'package:permissions/permissions.dart';
 import 'package:notifications/notifications.dart';
 import 'package:settings/settings.dart';
 import 'package:todos/todos.dart';
+import 'package:pomodoro/pomodoro.dart';
+import 'package:academia/core/integration/todos_pomodoro_todo_gateway.dart';
 
 import 'package:injectable/injectable.dart';
 
@@ -52,6 +54,10 @@ void configureDependencies(GetIt getIt, FlavorConfig flavorConfig) {
     actionHandler: const AcademiaNotificationActionHandler(),
   );
   configureTodosDependencies(getIt);
+  configurePomodoroDependencies(
+    getIt,
+    todoGateway: TodosPomodoroTodoGateway(getIt<TodoItemCubit>()),
+  );
   configureInAppUpdateDependencies(
     getIt,
     configurationSource: flavorConfig.isProduction

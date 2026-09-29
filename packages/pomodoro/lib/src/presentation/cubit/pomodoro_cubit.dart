@@ -1,21 +1,26 @@
 import 'dart:async';
 
 import 'package:core/core.dart';
-import 'package:todos/todos.dart';
+import 'package:injectable/injectable.dart';
+import 'package:pomodoro/src/domain/enums/pomodoro_phase.dart';
+import 'package:pomodoro/src/domain/gateway/pomodoro_todo_gateway.dart';
+import 'package:pomodoro/src/presentation/cubit/pomodoro_state.dart';
 import 'package:vibration/vibration.dart';
 
 /// Drives an in-app Pomodoro focus timer: alternating focus sessions and
-/// breaks, optionally tracked against a [TodoItemEntity].
+/// breaks, optionally tracked against a linked todo item.
 ///
 /// Registered as a lazy singleton so a running session survives navigation
 /// away from the timer screen.
+@lazySingleton
 class PomodoroCubit extends SafeCubit<PomodoroState> {
-  PomodoroCubit({required this.todoItemCubit}) : super(PomodoroState.initial());
+  PomodoroCubit({required this.todoGateway}) : super(PomodoroState.initial());
 
   /// Used to attribute completed focus time to the linked todo item.
-  final TodoItemCubit todoItemCubit;
+  final PomodoroTodoGateway todoGateway;
 
   Timer? _ticker;
+  StreamSubscription<PomodoroTodoItem?>? _linkedTodoSubscription;
 
   void start() {
     if (state.isRunning) return;
@@ -38,13 +43,29 @@ class PomodoroCubit extends SafeCubit<PomodoroState> {
 
   /// Associates the running session with a todo item so progress is
   /// attributed to it. Pass `null` to detach.
-  void linkTodoItem(TodoItemEntity? item) {
+  void linkTodoItem(int? localId) {
+    final previousSubscription = _linkedTodoSubscription;
+    _linkedTodoSubscription = null;
+    if (previousSubscription != null) {
+      unawaited(previousSubscription.cancel());
+    }
+
+    final item = localId == null ? null : todoGateway.findTodoItem(localId);
     emit(
       state.copyWith(
         linkedTodoItemLocalId: item?.localId,
         linkedTodoItemTitle: item?.title,
+        trackedFocusedSeconds: item?.focusedSeconds ?? 0,
       ),
     );
+
+    if (item != null) {
+      _linkedTodoSubscription = todoGateway
+          .watchTodoItem(item.localId)
+          .listen(
+            (updatedItem) => _updateLinkedTodoItem(item.localId, updatedItem),
+          );
+    }
   }
 
   void updateSettings({
@@ -94,9 +115,11 @@ class PomodoroCubit extends SafeCubit<PomodoroState> {
     if (wasFocus && state.linkedTodoItemLocalId != null) {
       final elapsed = state.totalDuration - effectiveRemaining;
       if (elapsed > Duration.zero) {
-        todoItemCubit.addFocusedTime(
-          localId: state.linkedTodoItemLocalId!,
-          duration: elapsed,
+        unawaited(
+          _recordFocusedTime(
+            todoLocalId: state.linkedTodoItemLocalId!,
+            duration: elapsed,
+          ),
         );
       }
     }
@@ -122,6 +145,34 @@ class PomodoroCubit extends SafeCubit<PomodoroState> {
     emit(updated.copyWith(remaining: updated.totalDuration));
   }
 
+  Future<void> _recordFocusedTime({
+    required int todoLocalId,
+    required Duration duration,
+  }) async {
+    await todoGateway.addFocusedTime(
+      todoLocalId: todoLocalId,
+      duration: duration,
+    );
+  }
+
+  void _updateLinkedTodoItem(int localId, PomodoroTodoItem? item) {
+    if (isClosed || state.linkedTodoItemLocalId != localId) {
+      return;
+    }
+    final trackedFocusedSeconds = item?.focusedSeconds ?? 0;
+    final title = item?.title ?? state.linkedTodoItemTitle;
+    if (state.trackedFocusedSeconds == trackedFocusedSeconds &&
+        state.linkedTodoItemTitle == title) {
+      return;
+    }
+    emit(
+      state.copyWith(
+        trackedFocusedSeconds: trackedFocusedSeconds,
+        linkedTodoItemTitle: title,
+      ),
+    );
+  }
+
   Future<void> _vibrate() async {
     if (await Vibration.hasVibrator()) {
       Vibration.vibrate(pattern: const [0, 200, 100, 200]);
@@ -129,8 +180,9 @@ class PomodoroCubit extends SafeCubit<PomodoroState> {
   }
 
   @override
-  Future<void> close() {
+  Future<void> close() async {
     _ticker?.cancel();
+    await _linkedTodoSubscription?.cancel();
     return super.close();
   }
 }

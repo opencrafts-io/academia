@@ -11,6 +11,5 @@ export 'package:todos/src/domain/usecases/usecases.dart';
 export 'package:todos/src/domain/enums/sync_status.dart';
 export 'package:todos/src/domain/enums/todo_status.dart';
 export 'package:todos/src/domain/enums/todo_priority.dart';
-export 'package:todos/src/domain/enums/pomodoro_phase.dart';
 export 'package:todos/src/domain/repository/todo_list_repository.dart';
 export 'package:todos/src/domain/services/todo_notification_service.dart';

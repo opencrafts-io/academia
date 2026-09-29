@@ -9,7 +9,6 @@ export 'package:todos/src/presentation/routes/todos_routes.dart'
         ViewTaskListsRoute,
         ViewTaskListRoute,
         CreateTodoItemRoute,
-        PomodoroTimerRoute,
         UpdateTodoItemRoute;
 
 final List<RouteBase> routes = $appRoutes;

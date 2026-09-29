@@ -1,4 +1,5 @@
 import 'package:material3_indicators/material3_indicators.dart';
+import 'package:pomodoro/pomodoro.dart' as pomodoro;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
@@ -269,7 +270,8 @@ class _UpdateTodoItemScreenState extends State<UpdateTodoItemScreen> {
         onClearDueDate: () => setState(() => _dueDate = null),
         focusedSeconds: item?.focusedSeconds ?? 0,
         onStartFocusTimer: () =>
-            PomodoroTimerRoute(todoLocalID: widget.todoLocalId).push(context),
+            pomodoro.PomodoroTimerRoute(todoLocalID: widget.todoLocalId)
+                .push(context),
       ),
     );
   }
@@ -531,7 +533,7 @@ class _UpdateTodoItemScreenState extends State<UpdateTodoItemScreen> {
                             onTagTap: _showTagsSheet,
                             onPriorityTap: _showPrioritySheet,
                             onMoreTap: _showMoreSheet,
-                            onFocusTimerTap: () => PomodoroTimerRoute(
+                            onFocusTimerTap: () => pomodoro.PomodoroTimerRoute(
                               todoLocalID: widget.todoLocalId,
                             ).push(context),
                           ),

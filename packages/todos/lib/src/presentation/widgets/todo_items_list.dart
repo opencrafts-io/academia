@@ -1,4 +1,5 @@
 import 'package:material3_indicators/material3_indicators.dart';
+import 'package:pomodoro/pomodoro.dart' as pomodoro;
 import 'package:todos/src/domain/domain.dart';
 import 'package:todos/src/presentation/cubit/todo_item_cubit.dart';
 import 'package:todos/src/presentation/cubit/todo_item_state.dart';
@@ -50,7 +51,7 @@ class _TodoItemsListState extends State<TodoItemsList> {
       onEdit: () =>
           UpdateTodoItemRoute(todoLocalID: item.localId).push(context),
       onFocusTimer: () =>
-          PomodoroTimerRoute(todoLocalID: item.localId).push(context),
+          pomodoro.PomodoroTimerRoute(todoLocalID: item.localId).push(context),
       onComplete: () =>
           context.read<TodoItemCubit>().completeItem(item.localId),
       onReopen: () => context.read<TodoItemCubit>().reopenItem(item.localId),

@@ -1,5 +1,5 @@
 name: todos
-description: Academia todo lists, tasks, reminders, and focus timer.
+description: Academia todo lists, tasks, and reminders.
 publish_to: none
 
 environment:
@@ -30,6 +30,8 @@ dependencies:
     path: ../notifications/
   permissions:
     path: ../permissions/
+  pomodoro:
+    path: ../pomodoro/
   smooth_sheets: ^1.0.0
   time_since: ^1.0.1
   vibration: ^3.1.3
