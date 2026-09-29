@@ -1463,7 +1463,7 @@ packages:
     source: hosted
     version: "0.12.20"
   material3_indicators:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: material3_indicators
       sha256: a18c59abc9c3617300619869275ba3f1dc25b0296c12428796ae85edab69bbb7

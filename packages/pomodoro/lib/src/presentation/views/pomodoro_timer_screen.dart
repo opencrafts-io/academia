@@ -1,11 +1,16 @@
+import 'dart:async';
+
 import 'package:material3_indicators/material3_indicators.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pomodoro/src/domain/enums/pomodoro_phase.dart';
 import 'package:pomodoro/src/presentation/cubit/pomodoro_cubit.dart';
 import 'package:pomodoro/src/presentation/cubit/pomodoro_state.dart';
-import 'package:pomodoro/src/presentation/utils/focused_duration_format.dart';
+import 'package:pomodoro/src/presentation/routes/pomodoro_routes.dart';
+import 'package:pomodoro/src/presentation/utils/duration_format.dart';
+import 'package:pomodoro/src/presentation/views/pomodoro_todo_picker_screen.dart';
 import 'package:pomodoro/src/presentation/widgets/pomodoro_settings_sheet.dart';
+import 'package:smooth_sheets/smooth_sheets.dart';
 
 /// Full-screen Pomodoro focus timer. When [todoLocalId] is given, the
 /// running session is attributed to that todo item; otherwise it's a
@@ -25,12 +30,15 @@ class _PomodoroTimerScreenState extends State<PomodoroTimerScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      // Always resolve the link from this screen's own todoLocalId —
-      // PomodoroCubit is a singleton, so without this a freestanding
-      // session (todoLocalId == null) would silently inherit whatever
-      // todo item a previous session left linked.
-      context.read<PomodoroCubit>().linkTodoItem(widget.todoLocalId);
+      final cubit = context.read<PomodoroCubit>();
+      unawaited(_linkRoutedTodo(cubit));
     });
+  }
+
+  Future<void> _linkRoutedTodo(PomodoroCubit cubit) async {
+    await cubit.ready;
+    if (!mounted) return;
+    await cubit.linkTodoItem(widget.todoLocalId);
   }
 
   Color _phaseColor(ColorScheme scheme, PomodoroPhase phase) => switch (phase) {
@@ -39,37 +47,67 @@ class _PomodoroTimerScreenState extends State<PomodoroTimerScreen> {
     PomodoroPhase.longBreak => scheme.secondary,
   };
 
-  String _formatDuration(Duration d) {
-    final minutes = d.inMinutes.remainder(60).toString().padLeft(2, '0');
-    final seconds = d.inSeconds.remainder(60).toString().padLeft(2, '0');
-    return "$minutes:$seconds";
-  }
-
   void _openSettings(BuildContext context, PomodoroState state) {
-    showModalBottomSheet(
-      context: context,
-      showDragHandle: true,
-      builder: (_) => PomodoroSettingsSheet(
-        focusDuration: state.focusDuration,
-        shortBreakDuration: state.shortBreakDuration,
-        longBreakDuration: state.longBreakDuration,
-        sessionsBeforeLongBreak: state.sessionsBeforeLongBreak,
-        onSave:
-            ({
-              required focusDuration,
-              required shortBreakDuration,
-              required longBreakDuration,
-              required sessionsBeforeLongBreak,
-            }) {
-              context.read<PomodoroCubit>().updateSettings(
-                focusDuration: focusDuration,
-                shortBreakDuration: shortBreakDuration,
-                longBreakDuration: longBreakDuration,
-                sessionsBeforeLongBreak: sessionsBeforeLongBreak,
-              );
-            },
+    unawaited(
+      showModalSheet<void>(
+        context: context,
+        swipeDismissible: true,
+        transitionCurve: Curves.easeOutCubic,
+        builder: (sheetContext) => SheetKeyboardDismissible(
+          dismissBehavior: SheetKeyboardDismissBehavior.onDragDown(
+            isContentScrollAware: true,
+          ),
+          child: Sheet(
+            scrollConfiguration: const SheetScrollConfiguration(),
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.viewInsetsOf(sheetContext).bottom,
+            ),
+            decoration: MaterialSheetDecoration(
+              size: SheetSize.fit,
+              clipBehavior: Clip.antiAlias,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+              ),
+            ),
+            physics: BouncingSheetPhysics(),
+            child: PomodoroSettingsSheet(
+              focusDuration: state.focusDuration,
+              shortBreakDuration: state.shortBreakDuration,
+              longBreakDuration: state.longBreakDuration,
+              sessionsBeforeLongBreak: state.sessionsBeforeLongBreak,
+              onSave:
+                  ({
+                    required focusDuration,
+                    required shortBreakDuration,
+                    required longBreakDuration,
+                    required sessionsBeforeLongBreak,
+                  }) {
+                    unawaited(
+                      context.read<PomodoroCubit>().updateSettings(
+                        focusDuration: focusDuration,
+                        shortBreakDuration: shortBreakDuration,
+                        longBreakDuration: longBreakDuration,
+                        sessionsBeforeLongBreak: sessionsBeforeLongBreak,
+                      ),
+                    );
+                  },
+            ),
+          ),
+        ),
       ),
     );
+  }
+
+  Future<void> _openTodoPicker(
+    BuildContext context,
+    PomodoroState state,
+  ) async {
+    final selection = await PomodoroTodoPickerRoute(
+      selectedTodoLocalID: state.linkedTodoItemLocalId,
+    ).push<PomodoroTodoSelection>(context);
+
+    if (!context.mounted || selection == null) return;
+    context.read<PomodoroCubit>().linkTodoItem(selection.localId);
   }
 
   @override
@@ -83,8 +121,16 @@ class _PomodoroTimerScreenState extends State<PomodoroTimerScreen> {
 
         return Scaffold(
           appBar: AppBar(
-            title: Text(state.phase.label),
+            title: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 220),
+              child: Text(state.phase.label, key: ValueKey(state.phase)),
+            ),
             actions: [
+              IconButton(
+                icon: const Icon(Icons.checklist_rounded),
+                tooltip: "Choose Todo",
+                onPressed: () => _openTodoPicker(context, state),
+              ),
               IconButton(
                 icon: const Icon(Icons.tune),
                 onPressed: () => _openSettings(context, state),
@@ -94,22 +140,30 @@ class _PomodoroTimerScreenState extends State<PomodoroTimerScreen> {
           body: SafeArea(
             child: Column(
               children: [
-                if (state.linkedTodoItemTitle != null)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 12),
-                    child: Column(
-                      children: [
-                        Chip(
-                          avatar: const Icon(Icons.checklist_rounded, size: 16),
-                          label: Text(
-                            "Focusing on: ${state.linkedTodoItemTitle}",
+                AnimatedSize(
+                  duration: const Duration(milliseconds: 220),
+                  curve: Curves.easeOutCubic,
+                  child: state.linkedTodoItemTitle == null
+                      ? const SizedBox.shrink()
+                      : Padding(
+                          padding: const EdgeInsets.only(top: 12),
+                          child: Column(
+                            children: [
+                              Chip(
+                                avatar: const Icon(
+                                  Icons.checklist_rounded,
+                                  size: 16,
+                                ),
+                                label: Text(
+                                  'Focusing on: ${state.linkedTodoItemTitle}',
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              _buildTrackedTime(context, state),
+                            ],
                           ),
                         ),
-                        const SizedBox(height: 4),
-                        _buildTrackedTime(context, state),
-                      ],
-                    ),
-                  ),
+                ),
                 const Spacer(),
                 _buildRing(context, state, color),
                 const SizedBox(height: 24),
@@ -147,29 +201,44 @@ class _PomodoroTimerScreenState extends State<PomodoroTimerScreen> {
           SizedBox(
             width: 260,
             height: 260,
-            child: WavyCircularProgressIndicator(
-              value: state.progress.clamp(0, 1),
-              size: 260,
-              amplitude: 2,
-              frequency: 8,
-              strokeWidth: 10,
-              backgroundColor: color.withAlpha(30),
-              color: color,
+            child: TweenAnimationBuilder<double>(
+              tween: Tween<double>(
+                end: state.progress.clamp(0.0, 1.0).toDouble(),
+              ),
+              duration: const Duration(milliseconds: 800),
+              curve: Curves.easeOutCubic,
+              builder: (context, value, _) => WavyCircularProgressIndicator(
+                value: value,
+                size: 260,
+                amplitude: 2,
+                frequency: 8,
+                strokeWidth: 10,
+                backgroundColor: color.withAlpha(30),
+                color: color,
+              ),
             ),
           ),
           Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                _formatDuration(state.remaining),
-                style: Theme.of(context).textTheme.displayMedium
-                    ?.copyWith(fontWeight: FontWeight.bold, color: color),
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 180),
+                child: Text(
+                  formatPomodoroCountdown(state.remaining),
+                  key: ValueKey(state.remaining.inSeconds),
+                  style: Theme.of(context).textTheme.displayMedium
+                      ?.copyWith(fontWeight: FontWeight.bold, color: color),
+                ),
               ),
               const SizedBox(height: 4),
-              Text(
-                state.isRunning ? "Running" : "Paused",
-                style: Theme.of(context).textTheme.bodySmall
-                    ?.copyWith(color: color.withAlpha(180)),
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 180),
+                child: Text(
+                  state.isRunning ? 'Running' : 'Paused',
+                  key: ValueKey(state.isRunning),
+                  style: Theme.of(context).textTheme.bodySmall
+                      ?.copyWith(color: color.withAlpha(180)),
+                ),
               ),
             ],
           ),

@@ -11,8 +11,29 @@ class PomodoroTodoItem {
   final int focusedSeconds;
 }
 
+/// The available Todo items and pagination status shown by the picker.
+class PomodoroTodoItemsSnapshot {
+  const PomodoroTodoItemsSnapshot({
+    required this.items,
+    required this.isLoading,
+    required this.isLoadingMore,
+    required this.hasMore,
+  });
+
+  final List<PomodoroTodoItem> items;
+  final bool isLoading;
+  final bool isLoadingMore;
+  final bool hasMore;
+}
+
 /// Lets the host application connect Pomodoro sessions to its todo storage.
 abstract interface class PomodoroTodoGateway {
+  PomodoroTodoItemsSnapshot getAvailableTodoItems();
+
+  Stream<PomodoroTodoItemsSnapshot> watchAvailableTodoItems();
+
+  Future<void> loadMoreAvailableTodoItems();
+
   PomodoroTodoItem? findTodoItem(int localId);
 
   Stream<PomodoroTodoItem?> watchTodoItem(int localId);

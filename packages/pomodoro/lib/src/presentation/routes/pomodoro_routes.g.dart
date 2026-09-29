@@ -6,7 +6,10 @@ part of 'pomodoro_routes.dart';
 // GoRouterGenerator
 // **************************************************************************
 
-List<RouteBase> get $appRoutes => [$pomodoroTimerRoute];
+List<RouteBase> get $appRoutes => [
+  $pomodoroTimerRoute,
+  $pomodoroTodoPickerRoute,
+];
 
 RouteBase get $pomodoroTimerRoute => GoRouteData.$route(
   path: '/todos/pomodoro-timer',
@@ -32,6 +35,47 @@ mixin $PomodoroTimerRoute on GoRouteData {
     queryParams: {
       if (_self.todoLocalID != null)
         'todo-local-i-d': _self.todoLocalID!.toString(),
+    },
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $pomodoroTodoPickerRoute => GoRouteData.$route(
+  path: '/todos/pomodoro-todo-picker',
+  hasOverriddenOnExit: false,
+  factory: $PomodoroTodoPickerRoute._fromState,
+);
+
+mixin $PomodoroTodoPickerRoute on GoRouteData {
+  static PomodoroTodoPickerRoute _fromState(GoRouterState state) =>
+      PomodoroTodoPickerRoute(
+        selectedTodoLocalID: _$convertMapValue(
+          'selected-todo-local-i-d',
+          state.uri.queryParameters,
+          int.tryParse,
+        ),
+      );
+
+  PomodoroTodoPickerRoute get _self => this as PomodoroTodoPickerRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/todos/pomodoro-todo-picker',
+    queryParams: {
+      if (_self.selectedTodoLocalID != null)
+        'selected-todo-local-i-d': _self.selectedTodoLocalID!.toString(),
     },
   );
 

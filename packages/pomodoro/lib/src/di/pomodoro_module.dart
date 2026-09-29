@@ -1,7 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pomodoro/src/di/pomodoro_module.config.dart';
-import 'package:pomodoro/src/domain/gateway/pomodoro_todo_gateway.dart';
+import 'package:pomodoro/src/domain/domain.dart';
 
 @InjectableInit(
   initializerName: 'initPomodoro',
@@ -11,7 +11,11 @@ import 'package:pomodoro/src/domain/gateway/pomodoro_todo_gateway.dart';
 void configurePomodoroDependencies(
   GetIt getIt, {
   required PomodoroTodoGateway todoGateway,
+  required PomodoroSessionStore sessionStore,
+  required PomodoroStatusSurface statusSurface,
 }) {
   getIt.registerSingleton<PomodoroTodoGateway>(todoGateway);
+  getIt.registerSingleton<PomodoroSessionStore>(sessionStore);
+  getIt.registerSingleton<PomodoroStatusSurface>(statusSurface);
   initPomodoro(getIt);
 }

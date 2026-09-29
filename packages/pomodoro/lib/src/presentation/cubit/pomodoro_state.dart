@@ -39,6 +39,14 @@ abstract class PomodoroState with _$PomodoroState {
     PomodoroPhase.longBreak => longBreakDuration,
   };
 
+  bool get hasSession =>
+      isRunning ||
+      remaining < totalDuration ||
+      phase != PomodoroPhase.focus ||
+      completedFocusSessions > 0 ||
+      linkedTodoItemLocalId != null ||
+      linkedTodoItemTitle != null;
+
   double get progress => totalDuration.inSeconds == 0
       ? 0
       : 1 - (remaining.inSeconds / totalDuration.inSeconds);
