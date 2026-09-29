@@ -52,9 +52,6 @@ class _PostListSliverState extends State<PostListSliver> {
   List<Post>? _lastPosts;
 
   static Future<void> _openPost(BuildContext context, Post post) async {
-    context.read<FeedBloc>().add(
-      MarkPostAsViewed(postId: post.id, viewerId: post.authorId),
-    );
     final updatedPost = await context.push(
       PostDetailRoute(postId: post.id).location,
       extra: post,
