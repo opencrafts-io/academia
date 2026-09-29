@@ -9,8 +9,10 @@ import 'package:settings/settings.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:academia/injection_container.dart';
 import 'package:courses/courses.dart' as courses;
+import 'package:todos/todos.dart' as todos;
 
-import '../widgets/essential_category_tile.dart';
+import 'package:academia/features/essentials/widgets/essential_category_tile.dart';
+import 'package:academia/features/essentials/widgets/pomodoro_essentials_card.dart';
 
 class EssentialsPage extends StatefulWidget {
   const EssentialsPage({super.key});
@@ -32,7 +34,7 @@ class _EssentialItem {
 }
 
 class _EssentialsPageState extends State<EssentialsPage> {
-  late List<_EssentialItem> essentialItems = <_EssentialItem>[
+  late final List<_EssentialItem> essentialItems = <_EssentialItem>[
     _EssentialItem(
       title: "Semesters",
       ontap: () {
@@ -47,7 +49,7 @@ class _EssentialsPageState extends State<EssentialsPage> {
     ),
     _EssentialItem(
       title: "To-Dos",
-      ontap: () => TodosRoute().push(context),
+      ontap: () => todos.TodosRoute().push(context),
       iconPath: Assets.icons.notificationIconBell.keyName,
     ),
 
@@ -252,6 +254,8 @@ class _EssentialsPageState extends State<EssentialsPage> {
                     onTap: () => LockInRoute().push(context),
                   ),
                 ),
+                const SizedBox(height: 12),
+                const PomodoroEssentialsCard(),
                 SizedBox(height: 22),
                 Text(
                   "Explore tools",

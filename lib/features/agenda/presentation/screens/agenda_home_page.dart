@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:todos/todos.dart' as todos;
 
 import '../widgets/agenda_timeline_widget.dart';
 
@@ -81,9 +82,8 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
             SliverAppBar.medium(
               title: Text(
                 "Agenda",
-                style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: Theme.of(context).textTheme.headlineLarge
+                    ?.copyWith(fontWeight: FontWeight.bold),
               ),
               pinned: true,
               snap: true,
@@ -131,9 +131,8 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                       isSameDay(_selectedDay, DateTime.now())
                           ? "Today's Schedule"
                           : DateFormat('EEEE, MMMM d').format(_selectedDay),
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Theme.of(context).textTheme.titleLarge
+                          ?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     const Spacer(),
                     if (!isSameDay(_selectedDay, DateTime.now()))
@@ -220,7 +219,7 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
             icon: Icons.task_alt,
             iconColor: Theme.of(context).colorScheme.onSecondaryContainer,
             backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-            onPressed: () => CreateTodoItemRoute().push(context),
+            onPressed: () => todos.CreateTodoItemRoute().push(context),
           ),
           FabAction(
             icon: Symbols.calendar_add_on,

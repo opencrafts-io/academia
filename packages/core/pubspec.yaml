@@ -8,6 +8,9 @@ environment:
 
 # Add regular dependencies here.
 dependencies:
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^9.1.1
   connectivity_plus: ^7.3.1
   dartz: ^0.10.1
   dio: ^5.11.0

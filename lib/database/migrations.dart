@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+
 import 'database.dart';
 
 extension AppDatabaseExtension on AppDataBase {
@@ -105,13 +106,12 @@ extension AppDatabaseExtension on AppDataBase {
   }
 
   Future<void> migrate31To32(Migrator m) async {
-    m.createTable(todoLists);
+    // Todos now use AppDatabaseV2. Existing v1 todo tables are left in place
+    // for older installations but are no longer part of this database API.
   }
 
   Future<void> migrate32To33(Migrator m) async {
-    await m.createTable(todoTagItems);
-    await m.createTable(todoItems);
-    await m.createTable(todoItemTags);
+    // Todo schema creation is handled by the shared database package.
   }
 
   Future<void> migrate33To34(Migrator m) async {
@@ -149,6 +149,6 @@ extension AppDatabaseExtension on AppDataBase {
   }
 
   Future<void> migrate37To38(Migrator m) async {
-    await m.addColumn(todoItems, todoItems.focusedSeconds);
+    // Focus tracking is stored in the shared database package.
   }
 }
