@@ -7,8 +7,6 @@ import 'package:academia/features/course/course.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/semester/semester.dart';
-import 'package:academia/features/todos/data/repository/todo_item_repository_impl.dart';
-import 'package:academia/features/todos/data/repository/todo_tag_repository_impl.dart';
 import 'package:ads/ads.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
@@ -306,118 +304,6 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
       analyticsTracker: sl(),
       notificationIdentityService: sl(),
     ),
-  );
-
-  // Todos
-  sl.registerLazySingleton<TodoNotificationService>(
-    () => TodoNotificationServiceImpl(sl()),
-  );
-  sl.registerFactory<TodoListLocalDatasource>(
-    () => TodoListLocalDatasource(cacheDB: sl()),
-  );
-  sl.registerFactory<TodoListRemoteDatasource>(
-    () => TodoListRemoteDatasource(dioClient: sl(), flavor: flavor),
-  );
-  sl.registerFactory<TodoTagRemoteDatasource>(
-    () => TodoTagRemoteDatasource(dioClient: sl(), flavor: flavor),
-  );
-  sl.registerFactory<TodoTagLocalDatasource>(
-    () => TodoTagLocalDatasource(cacheDB: sl()),
-  );
-  sl.registerFactory<TodoItemRemoteDatasource>(
-    () => TodoItemRemoteDatasource(dioClient: sl(), flavor: flavor),
-  );
-  sl.registerFactory<TodoItemLocalDatasource>(
-    () => TodoItemLocalDatasource(cacheDB: sl()),
-  );
-  sl.registerFactory<TodoListRepository>(
-    () => TodoListRepositoryImpl(localDataSource: sl(), remoteDataSource: sl()),
-  );
-  sl.registerFactory<TodoItemRepository>(
-    () => TodoItemRepositoryImpl(
-      listLocalDataSource: sl(),
-      localDataSource: sl(),
-      remoteDataSource: sl(),
-      tagLocalDataSource: sl(),
-      todoNotificationService: sl(),
-    ),
-  );
-
-  sl.registerFactory<TodoTagRepository>(
-    () => TodoTagRepositoryImpl(localDataSource: sl(), remoteDataSource: sl()),
-  );
-
-  sl.registerFactory<GetTodoLists>(() => GetTodoLists(sl()));
-  sl.registerFactory<CreateTodoList>(() => CreateTodoList(sl()));
-  sl.registerFactory<UpdateTodoList>(() => UpdateTodoList(sl()));
-  sl.registerFactory<DeleteTodoList>(() => DeleteTodoList(sl()));
-  sl.registerFactory<SyncTodoLists>(() => SyncTodoLists(sl()));
-  sl.registerFactory(() => GetDefaultTodoListUsecase(sl()));
-  sl.registerFactory<MarkTodoListModified>(() => MarkTodoListModified(sl()));
-
-  // TodoTag usecases
-  sl.registerFactory<GetTodoTags>(() => GetTodoTags(sl()));
-  sl.registerFactory<CreateTodoTag>(() => CreateTodoTag(sl()));
-  sl.registerFactory<UpdateTodoTag>(() => UpdateTodoTag(sl()));
-  sl.registerFactory<DeleteTodoTag>(() => DeleteTodoTag(sl()));
-  sl.registerFactory<SyncTodoTags>(() => SyncTodoTags(sl()));
-
-  // TodoItem usecases
-  sl.registerFactory<GetTodoItems>(() => GetTodoItems(sl()));
-  sl.registerFactory<GetTodoItemById>(() => GetTodoItemById(sl()));
-  sl.registerFactory<CreateTodoItem>(() => CreateTodoItem(sl()));
-  sl.registerFactory<UpdateTodoItem>(() => UpdateTodoItem(sl()));
-  sl.registerFactory<DeleteTodoItem>(() => DeleteTodoItem(sl()));
-  sl.registerFactory<CompleteTodoItem>(() => CompleteTodoItem(sl()));
-  sl.registerFactory<ReopenTodoItem>(() => ReopenTodoItem(sl()));
-  sl.registerFactory<MoveTodoItem>(() => MoveTodoItem(sl()));
-  sl.registerFactory<SyncTodoItems>(() => SyncTodoItems(sl()));
-  sl.registerFactory<AddFocusedTimeToTodoItem>(
-    () => AddFocusedTimeToTodoItem(sl()),
-  );
-
-  sl.registerLazySingleton<TodoListCubit>(
-    () => TodoListCubit(
-      getTodoListsUseCase: sl(),
-      createTodoListUseCase: sl(),
-      updateTodoListUseCase: sl(),
-      deleteTodoListUseCase: sl(),
-      syncTodoListsUseCase: sl(),
-      getDefaultTodoListUsecase: sl(),
-      markTodoListModifiedUseCase: sl(),
-    ),
-  );
-
-  sl.registerLazySingleton<TodoTagCubit>(
-    () => TodoTagCubit(
-      getTagsUseCase: sl(),
-      createTagUseCase: sl(),
-      updateTagUseCase: sl(),
-      deleteTagUseCase: sl(),
-      syncTagsUseCase: sl(),
-    ),
-  );
-
-  sl.registerLazySingleton<TodoItemCubit>(
-    () => TodoItemCubit(
-      getItemsUseCase: sl(),
-      getItemByIdUseCase: sl(),
-      createItemUseCase: sl(),
-      updateItemUseCase: sl(),
-      deleteItemUseCase: sl(),
-      completeItemUseCase: sl(),
-      reopenItemUseCase: sl(),
-      moveItemUseCase: sl(),
-      syncItemsUseCase: sl(),
-      addFocusedTimeUseCase: sl(),
-    ),
-  );
-
-  // Registered as a lazy singleton so a running Pomodoro session — and the
-  // focus time it attributes to a linked todo — survives navigating away
-  // from the timer screen.
-  sl.registerLazySingleton<PomodoroCubit>(
-    () => PomodoroCubit(todoItemCubit: sl<TodoItemCubit>()),
   );
 
   // Agenda

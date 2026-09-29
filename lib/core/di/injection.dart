@@ -13,6 +13,7 @@ import 'package:lock_in/lock_in.dart';
 import 'package:permissions/permissions.dart';
 import 'package:notifications/notifications.dart';
 import 'package:settings/settings.dart';
+import 'package:todos/todos.dart';
 
 import 'package:injectable/injectable.dart';
 
@@ -50,6 +51,7 @@ void configureDependencies(GetIt getIt, FlavorConfig flavorConfig) {
         : const NotificationConfiguration.disabled(),
     actionHandler: const AcademiaNotificationActionHandler(),
   );
+  configureTodosDependencies(getIt);
   configureInAppUpdateDependencies(
     getIt,
     configurationSource: flavorConfig.isProduction

@@ -1,8 +1,8 @@
 import 'package:drift/drift.dart';
 import 'package:injectable/injectable.dart';
 
-import '../app_database_v2.dart';
-import '../tables/tables.dart';
+import 'package:database/app_database_v2.dart';
+import 'package:database/tables/tables.dart';
 
 part 'course_dao.g.dart';
 

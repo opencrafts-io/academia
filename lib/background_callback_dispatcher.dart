@@ -1,6 +1,8 @@
 import 'package:academia/background_task/background_task.dart';
 import 'package:academia/background_task/course_alert_background_task.dart';
 import 'package:academia/background_task/daily_login_background_task.dart';
+import 'package:academia/background_task/todo_item_sync_background_task.dart';
+import 'package:academia/background_task/todo_list_sync_background_task.dart';
 import 'package:core/config/flavor.dart';
 import 'package:academia/features/course/course.dart';
 import 'package:academia/features/features.dart';

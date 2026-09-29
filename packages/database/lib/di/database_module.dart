@@ -1,8 +1,8 @@
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 
-import '../app_database_v2.dart';
-import 'database_module.config.dart';
+import 'package:database/app_database_v2.dart';
+import 'package:database/di/database_module.config.dart';
 
 @module
 abstract class DatabaseModule {
@@ -12,7 +12,7 @@ abstract class DatabaseModule {
 
 @InjectableInit(
   initializerName: 'initAppDatabaseV2',
-  preferRelativeImports: true,
+  preferRelativeImports: false,
   asExtension: false,
 )
 void configureLocalDatabaseDependencies(GetIt getIt) {

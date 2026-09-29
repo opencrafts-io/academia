@@ -9,6 +9,7 @@ import 'package:settings/settings.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:academia/injection_container.dart';
 import 'package:courses/courses.dart' as courses;
+import 'package:todos/todos.dart' as todos;
 
 import '../widgets/essential_category_tile.dart';
 
@@ -47,7 +48,7 @@ class _EssentialsPageState extends State<EssentialsPage> {
     ),
     _EssentialItem(
       title: "To-Dos",
-      ontap: () => TodosRoute().push(context),
+      ontap: () => todos.TodosRoute().push(context),
       iconPath: Assets.icons.notificationIconBell.keyName,
     ),
 

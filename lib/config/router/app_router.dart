@@ -15,6 +15,7 @@ import 'package:lock_in/lock_in.dart';
 import 'package:permissions/permissions.dart' as permissions;
 import 'package:settings/settings.dart' as settings;
 import 'package:courses/courses.dart' as courses;
+import 'package:todos/todos.dart' as todos;
 
 class AppRouter {
   static final GlobalKey<NavigatorState> globalNavigatorKey =
@@ -43,6 +44,7 @@ class AppRouter {
       ...settings.routes,
       ...permissions.routes,
       ...courses.routes,
+      ...todos.routes,
     ],
     initialLocation: SplashScreenRoute().location,
     observers: [

@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
 
-import 'courses.dart';
+import 'package:database/tables/courses.dart';
 
 class Lecturers extends Table {
   TextColumn get id => text()();

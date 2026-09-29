@@ -9,20 +9,16 @@ import 'package:academia/features/streaks/data/streak_activity.dart';
 import 'package:academia/features/streaks/data/streak_milestone.dart';
 import 'package:academia/features/timetable/data/models/timetable.dart';
 import 'package:academia/features/timetable/data/models/timetable_entry.dart';
-import 'package:academia/features/todos/data/models/todo_lists.dart';
-import 'package:academia/features/todos/data/models/todo_items.dart';
-import 'package:academia/features/todos/data/models/todo_tag_items.dart';
-import 'package:academia/features/todos/data/models/todo_item_tags.dart';
-import 'package:academia/features/todos/domain/enums/sync_status.dart';
-import 'package:academia/features/todos/domain/enums/todo_status.dart';
-import 'package:academia/features/todos/domain/enums/todo_priority.dart';
 import 'package:academia/features/sherehe/data/data.dart';
+
 import 'dart:ui' show Color;
+
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:academia/core/core.dart';
+
 import 'migrations.dart';
 
 part 'database.g.dart';
@@ -95,12 +91,6 @@ part 'database.g.dart';
     // ---------------------- STREAKS -----------------------------
     StreakActivity,
     StreakMilestone,
-
-    // ----------------------- TODOS -------------------------------
-    TodoLists,
-    TodoTagItems,
-    TodoItems,
-    TodoItemTags,
   ],
 )
 class AppDataBase extends _$AppDataBase {

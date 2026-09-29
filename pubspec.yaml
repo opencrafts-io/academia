@@ -124,6 +124,8 @@ dependencies:
   # application billing subsystem
   billing:
     path: packages/billing/
+  todos:
+    path: packages/todos/
   # application ads subsystem
   ads:
     path: packages/ads/
