@@ -1,8 +1,6 @@
-import 'package:academia/config/config.dart';
 import 'package:academia/core/core.dart';
-import 'package:academia/features/course/course.dart';
-import 'package:academia/features/features.dart';
 import 'package:agenda/agenda.dart';
+import 'package:courses/courses.dart' as courses;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,7 +13,7 @@ import 'package:todos/todos.dart' as todos;
 
 import 'agenda_day_grid_widget.dart';
 import 'calendar_home_widget.dart';
-import 'timetable_occurrence.dart';
+import 'schedule_entry_occurrence.dart';
 
 enum _AgendaViewMode { day, month }
 
@@ -29,12 +27,12 @@ class AgendaHomePage extends StatefulWidget {
 class _AgendaHomePageState extends State<AgendaHomePage> {
   DateTime _selectedDay = DateUtils.dateOnly(DateTime.now());
   DateTime _focusedDay = DateUtils.dateOnly(DateTime.now());
-  _AgendaViewMode _viewMode = _AgendaViewMode.month;
+  _AgendaViewMode _viewMode = _AgendaViewMode.day;
 
   @override
   void initState() {
     super.initState();
-    context.read<CourseCubit>().watchCourses();
+    context.read<courses.CourseCubit>().loadWeeklySchedule();
     _loadAgendaMonth(_selectedDay);
   }
 
@@ -55,6 +53,7 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
   Future<void> _refresh() async {
     await Future.wait([
       context.read<AgendaCubit>().reload(),
+      context.read<courses.CourseCubit>().loadWeeklySchedule(),
       context.read<todos.TodoItemCubit>().loadItems(),
     ]);
   }
@@ -88,7 +87,7 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
   }
 
   void _createCourse() {
-    AddCoursesRoute().push(context);
+    const courses.CreateCourseRoute().push(context);
   }
 
   void _createTodo() {
@@ -321,17 +320,13 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                 ),
               ),
             ),
-            BlocBuilder<TimetableEntryBloc, TimetableEntryState>(
-              builder: (context, timetableState) {
-                final classes = timetableState is TimetableEntriesLoaded
-                    ? timetableState.entries
-                          .where(
-                            (entry) =>
-                                timetableEntryOccursOnDay(entry, _selectedDay),
-                          )
-                          .toList()
-                    : <TimetableEntryEntity>[];
-
+            BlocBuilder<courses.CourseCubit, courses.CourseState>(
+              builder: (context, courseState) {
+                final classes = courseState.weeklySchedule
+                    .where(
+                      (entry) => scheduleEntryOccursOnDay(entry, _selectedDay),
+                    )
+                    .toList();
                 return BlocBuilder<AgendaCubit, AgendaState>(
                   builder: (context, state) {
                     final dayEvents = state.events
@@ -422,6 +417,8 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                                     events: dayEvents,
                                     classes: classes,
                                     isAgendaLoading: state.isLoading,
+                                    isScheduleLoading:
+                                        courseState.isScheduleLoading,
                                     onCreateEvent: _createEvent,
                                   ),
                                 ),

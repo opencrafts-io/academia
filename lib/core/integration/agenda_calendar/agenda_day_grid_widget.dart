@@ -1,13 +1,14 @@
 import 'package:academia/config/config.dart';
-import 'package:academia/features/course/course.dart';
-import 'package:academia/features/features.dart';
 import 'package:agenda/agenda.dart';
+import 'package:courses/courses.dart' as courses;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:todos/todos.dart' as todos;
+
+import 'schedule_entry_occurrence.dart';
 
 class AgendaDayGridWidget extends StatelessWidget {
   const AgendaDayGridWidget({
@@ -16,13 +17,15 @@ class AgendaDayGridWidget extends StatelessWidget {
     required this.events,
     required this.classes,
     required this.isAgendaLoading,
+    required this.isScheduleLoading,
     required this.onCreateEvent,
   });
 
   final DateTime day;
   final List<AgendaEvent> events;
-  final List<TimetableEntryEntity> classes;
+  final List<courses.ScheduleEntryEntity> classes;
   final bool isAgendaLoading;
+  final bool isScheduleLoading;
   final VoidCallback onCreateEvent;
 
   @override
@@ -41,21 +44,19 @@ class AgendaDayGridWidget extends StatelessWidget {
                 .toList()
               ..sort((a, b) => a.due!.compareTo(b.due!));
 
+        final classItems = <_AgendaGridItem>[];
+        for (final entry in classes) {
+          if (!scheduleEntryOccursOnDay(entry, day)) continue;
+          final start = scheduleEntryTimeOnDay(entry.startTime, day);
+          if (start == null) continue;
+          classItems.add(_AgendaGridItem(start: start, value: entry));
+        }
+
         final agendaItems = <_AgendaGridItem>[
           for (final event in events)
             if (event.startTime != null)
               _AgendaGridItem(start: event.startTime!.toLocal(), value: event),
-          for (final entry in classes)
-            _AgendaGridItem(
-              start: DateTime(
-                day.year,
-                day.month,
-                day.day,
-                entry.startDate.hour,
-                entry.startDate.minute,
-              ),
-              value: entry,
-            ),
+          ...classItems,
           for (final todo in dueTodos)
             _AgendaGridItem(start: todo.due!.toLocal(), value: todo),
         ]..sort((a, b) => a.start.compareTo(b.start));
@@ -78,7 +79,8 @@ class AgendaDayGridWidget extends StatelessWidget {
           orElse: () => null,
         );
 
-        if (agendaItems.isEmpty && (isAgendaLoading || todoLoading)) {
+        if (agendaItems.isEmpty &&
+            (isAgendaLoading || isScheduleLoading || todoLoading)) {
           return const Padding(
             padding: EdgeInsets.symmetric(vertical: 36),
             child: Center(child: CircularProgressIndicator()),
@@ -176,23 +178,9 @@ class _AgendaGridCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return switch (item.value) {
       AgendaEvent event => _EventGridCard(event: event),
-      TimetableEntryEntity entry => BlocBuilder<CourseCubit, CourseState>(
-        builder: (context, state) {
-          final course = state.maybeWhen(
-            success: (courses) {
-              for (final course in courses) {
-                if (course.id == entry.courseId) return course;
-              }
-              return null;
-            },
-            orElse: () => null,
-          );
-          return _CourseGridCard(
-            entry: entry,
-            start: item.start,
-            courseName: course?.courseName,
-          );
-        },
+      courses.ScheduleEntryEntity entry => _CourseGridCard(
+        entry: entry,
+        start: item.start,
       ),
       todos.TodoItemEntity todo => _TodoGridCard(todo: todo),
       _ => const SizedBox.shrink(),
@@ -229,35 +217,48 @@ class _EventGridCard extends StatelessWidget {
 }
 
 class _CourseGridCard extends StatelessWidget {
-  const _CourseGridCard({
-    required this.entry,
-    required this.start,
-    required this.courseName,
-  });
+  const _CourseGridCard({required this.entry, required this.start});
 
-  final TimetableEntryEntity entry;
+  final courses.ScheduleEntryEntity entry;
   final DateTime start;
-  final String? courseName;
 
   @override
   Widget build(BuildContext context) {
-    final end = start.add(Duration(minutes: entry.durationMinutes));
+    final end = scheduleEntryTimeOnDay(entry.endTime, start);
     final location = [
-      if (entry.building?.trim().isNotEmpty == true) entry.building!.trim(),
-      if (entry.room?.trim().isNotEmpty == true) 'Room ${entry.room!.trim()}',
+      entry.venue,
+      entry.campus,
+      entry.section,
+    ].whereType<String>().where((value) => value.trim().isNotEmpty).join(' · ');
+    final title = entry.label?.trim().isNotEmpty == true
+        ? entry.label!.trim()
+        : entry.courseTitle?.trim().isNotEmpty == true
+        ? entry.courseTitle!.trim()
+        : entry.courseCode?.trim().isNotEmpty == true
+        ? entry.courseCode!.trim()
+        : 'Class session';
+
+    final time = end == null
+        ? DateFormat.jm().format(start)
+        : '${DateFormat.jm().format(start)} – ${DateFormat.jm().format(end)}';
+    final detail = [
+      time,
+      if (entry.courseCode?.trim().isNotEmpty == true &&
+          entry.courseCode!.trim() != title)
+        entry.courseCode!.trim(),
+      if (location.isNotEmpty) location,
     ].join(' · ');
 
     return _AgendaTile(
       label: 'Course',
-      title: courseName ?? 'Class session',
-      detail: [
-        '${DateFormat.jm().format(start)} – ${DateFormat.jm().format(end)}',
-        if (location.isNotEmpty) location,
-      ].join(' · '),
+      title: title,
+      detail: detail,
       icon: Symbols.menu_book_rounded,
       color: Theme.of(context).colorScheme.secondaryContainer,
       foreground: Theme.of(context).colorScheme.onSecondaryContainer,
-      onTap: () => ViewCourseRoute(courseId: entry.courseId).push(context),
+      onTap: () =>
+          courses.CourseDetailRoute(courseId: entry.studentCourseId)
+              .push(context),
     );
   }
 }

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:academia/config/router/router.dart';
-import 'package:academia/features/course/course.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/semester/semester.dart';
@@ -135,16 +134,10 @@ class _AcademiaState extends State<Academia> with WidgetsBindingObserver {
         BlocProvider(create: (context) => sl<CommunityUsersBloc>()),
         BlocProvider(create: (context) => sl<agenda.AgendaCubit>()),
         BlocProvider(create: (context) => sl<SemesterCubit>()),
-        BlocProvider(create: (context) => sl<CourseCubit>()),
         BlocProvider(create: (context) => sl<courses.CourseCubit>()),
         BlocProvider(create: (context) => sl<InstitutionBloc>()),
         BlocProvider(create: (context) => sl<PermissionCubit>()),
         BlocProvider(create: (context) => sl<LeaderboardBloc>()),
-        BlocProvider(create: (context) => sl<TimetableBloc>()),
-        BlocProvider(
-          create: (context) =>
-              sl<TimetableEntryBloc>()..add(WatchAllTimetableEntriesEvent()),
-        ),
       ],
       child: DynamicColorBuilder(
         builder: (lightScheme, darkScheme) => MultiBlocListener(

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:core/core.dart';
 import 'package:courses/src/domain/domain.dart';
-import 'package:courses/src/domain/usecases/course_usecases.dart';
 import 'package:injectable/injectable.dart';
 
 import 'course_state.dart';

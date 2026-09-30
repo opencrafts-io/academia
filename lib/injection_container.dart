@@ -3,7 +3,6 @@ import 'package:academia/core/core.dart';
 import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
 import 'package:academia/features/auth/data/data.dart';
-import 'package:academia/features/course/course.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/semester/semester.dart';
@@ -913,140 +912,10 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     ),
   );
 
-  /**********************************************************************
-   *                               Courses
-   **********************************************************************/
-
-  sl.registerFactory<CourseLocalDatasource>(
-    () => CourseLocalDatasourceImpl(appDataBase: sl()),
-  );
-
-  sl.registerFactory<CourseRepository>(
-    () => CourseRepositoryImpl(localDatasource: sl()),
-  );
-
-  sl.registerFactory<WatchAllCoursesUsecase>(
-    () => WatchAllCoursesUsecase(sl()),
-  );
-  sl.registerFactory<SaveCourseUsecase>(() => SaveCourseUsecase(sl()));
-  sl.registerFactory<DeleteCourseUsecase>(() => DeleteCourseUsecase(sl()));
-  sl.registerFactory<WatchInstitutionCoursesUsecase>(
-    () => WatchInstitutionCoursesUsecase(sl()),
-  );
-  sl.registerFactory<GetCourseUsecase>(() => GetCourseUsecase(sl()));
-
-  sl.registerFactory<CourseCubit>(
-    () => CourseCubit(
-      getCourse: sl(),
-      watchInstitutionCourses: sl(),
-      watchAllCourses: sl(),
-      saveCourse: sl(),
-      deleteCourse: sl(),
-    ),
-  );
-
-  /***************************************************************
-   *                       Timetable
-   ***************************************************************/
-
-  sl.registerFactory<TimetableEntryLocalDatasource>(
-    () => TimetableEntryLocalDatasourceImpl(appDataBase: sl()),
-  );
-
-  sl.registerFactory<TimetableLocalDatasource>(
-    () => TimetableLocalDatasourceImpl(appDataBase: sl()),
-  );
-
-  sl.registerFactory<TimetableRepository>(
-    () => TimetableRepositoryImpl(localDatasource: sl()),
-  );
-
-  sl.registerFactory<TimetableEntryRepository>(
-    () => TimetableEntryRepositoryImpl(localDatasource: sl()),
-  );
-
-  sl.registerFactory<CreateOrUpdateTimetableEntry>(
-    () => CreateOrUpdateTimetableEntry(sl()),
-  );
-  sl.registerFactory<CreateOrUpdateTimetableEntries>(
-    () => CreateOrUpdateTimetableEntries(sl()),
-  );
-  sl.registerFactory<GetTimetableEntryById>(() => GetTimetableEntryById(sl()));
-  sl.registerFactory<WatchAllTimetableEntries>(
-    () => WatchAllTimetableEntries(sl()),
-  );
-  sl.registerFactory<WatchTimetableEntriesByTimetableId>(
-    () => WatchTimetableEntriesByTimetableId(sl()),
-  );
-  sl.registerFactory<WatchTimetableEntriesByCourseId>(
-    () => WatchTimetableEntriesByCourseId(sl()),
-  );
-  sl.registerFactory<WatchTimetableEntriesByUserId>(
-    () => WatchTimetableEntriesByUserId(sl()),
-  );
-  sl.registerFactory<WatchTimetableEntriesByInstitutionId>(
-    () => WatchTimetableEntriesByInstitutionId(sl()),
-  );
-  sl.registerFactory<DeleteTimetableEntry>(() => DeleteTimetableEntry(sl()));
-  sl.registerFactory<DeleteTimetableEntries>(
-    () => DeleteTimetableEntries(sl()),
-  );
-  sl.registerFactory<SyncTimetableEntries>(() => SyncTimetableEntries(sl()));
-  sl.registerFactory<FetchTimetableEntriesFromRemote>(
-    () => FetchTimetableEntriesFromRemote(sl()),
-  );
-
-  sl.registerFactory<CreateOrUpdateTimetable>(
-    () => CreateOrUpdateTimetable(sl()),
-  );
-  sl.registerFactory<GetTimetableById>(() => GetTimetableById(sl()));
-  sl.registerFactory<WatchAllTimetables>(() => WatchAllTimetables(sl()));
-  sl.registerFactory<WatchTimetablesByUserId>(
-    () => WatchTimetablesByUserId(sl()),
-  );
-  sl.registerFactory<WatchTimetablesByInstitutionId>(
-    () => WatchTimetablesByInstitutionId(sl()),
-  );
-  sl.registerFactory<DeleteTimetable>(() => DeleteTimetable(sl()));
-  sl.registerFactory<SyncTimetables>(() => SyncTimetables(sl()));
-  sl.registerFactory<FetchTimetablesFromRemote>(
-    () => FetchTimetablesFromRemote(sl()),
-  );
-
-  sl.registerFactory<TimetableBloc>(
-    () => TimetableBloc(
-      watchAllTimetables: sl(),
-      watchTimetablesByUserId: sl(),
-      watchTimetablesByInstitutionId: sl(),
-      createOrUpdateTimetable: sl(),
-      getTimetableById: sl(),
-      deleteTimetable: sl(),
-      syncTimetables: sl(),
-      fetchTimetablesFromRemote: sl(),
-    ),
-  );
-
-  sl.registerFactory<TimetableEntryBloc>(
-    () => TimetableEntryBloc(
-      watchAllTimetableEntries: sl(),
-      watchTimetableEntriesByTimetableId: sl(),
-      watchTimetableEntriesByCourseId: sl(),
-      watchTimetableEntriesByUserId: sl(),
-      watchTimetableEntriesByInstitutionId: sl(),
-      createOrUpdateTimetableEntry: sl(),
-      createOrUpdateTimetableEntries: sl(),
-      getTimetableEntryById: sl(),
-      deleteTimetableEntry: sl(),
-      deleteTimetableEntries: sl(),
-      syncTimetableEntries: sl(),
-      fetchTimetableEntriesFromRemote: sl(),
-    ),
-  );
-
   sl.registerFactory<MagnetBloc>(
     () => MagnetBloc(
-      createOrUpdateTimetableEntries: sl(),
-      saveCourseUsecase: sl(),
+      createScheduleEntry: sl<courses.CreateScheduleEntry>(),
+      createCourse: sl<courses.CreateCourse>(),
       syncInstitutionProfileUsecase: sl(),
       saveFeeTransaction: sl(),
     ),
