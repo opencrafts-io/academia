@@ -2,6 +2,10 @@ import 'package:courses/courses.dart' as courses;
 import 'package:flutter/material.dart';
 
 bool scheduleEntryOccursOnDay(courses.ScheduleEntryEntity entry, DateTime day) {
+  if (courses.courseTermHasEndedOn(entry.courseTermEndDate, day)) {
+    return false;
+  }
+
   final specificDate = entry.specificDate;
   if (specificDate != null) {
     return DateUtils.isSameDay(specificDate, day);

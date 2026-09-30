@@ -4,6 +4,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:core/core.dart';
 import 'package:courses/src/data/datasources/course_remote_datasource.dart';
 import 'package:courses/src/data/dtos/dtos.dart';
+import 'package:courses/src/domain/entities/course_term.dart';
 import 'package:courses/src/domain/entities/sync_status_update.dart';
 import 'package:database/database.dart';
 import 'package:flutter/widgets.dart';
@@ -17,6 +18,8 @@ class CourseSyncService with WidgetsBindingObserver {
   final CourseDao courseDao;
   final _changes = StreamController<SyncStatusUpdate>.broadcast();
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
+  final _expiredCourseIds = <String>{};
+  Timer? _termExpiryTimer;
   bool _started = false;
   bool _syncing = false;
   bool _syncAgain = false;
@@ -26,6 +29,7 @@ class CourseSyncService with WidgetsBindingObserver {
   void startListening() {
     if (_started) return;
     _started = true;
+    _scheduleTermExpirySync();
     WidgetsBinding.instance.addObserver(this);
     _connectivitySubscription = Connectivity().onConnectivityChanged.listen((
       results,
@@ -38,6 +42,7 @@ class CourseSyncService with WidgetsBindingObserver {
 
   Future<void> dispose() async {
     await _connectivitySubscription?.cancel();
+    _termExpiryTimer?.cancel();
     if (_started) WidgetsBinding.instance.removeObserver(this);
     _started = false;
   }
@@ -45,6 +50,17 @@ class CourseSyncService with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) unawaited(syncPending());
+  }
+
+  void _scheduleTermExpirySync() {
+    _termExpiryTimer?.cancel();
+    final now = DateTime.now();
+    final nextLocalMidnight = DateTime(now.year, now.month, now.day + 1);
+    _termExpiryTimer = Timer(nextLocalMidnight.difference(now), () {
+      if (!_started) return;
+      unawaited(syncPending());
+      _scheduleTermExpirySync();
+    });
   }
 
   Future<void> syncPending() async {
@@ -57,6 +73,7 @@ class CourseSyncService with WidgetsBindingObserver {
       do {
         _syncAgain = false;
         await _syncCourses();
+        await _archiveExpiredCourses();
         await _syncScheduleEntries();
       } while (_syncAgain);
     } finally {
@@ -110,6 +127,52 @@ class CourseSyncService with WidgetsBindingObserver {
     }
   }
 
+  Future<void> _archiveExpiredCourses() async {
+    final activeCourses = await courseDao.activeCourses();
+    for (final course in activeCourses) {
+      if (!hasCourseTermEnded(course.termEndDate)) {
+        _expiredCourseIds.remove(course.id);
+        continue;
+      }
+
+      if (_expiredCourseIds.add(course.id)) {
+        _changes.add(
+          SyncStatusUpdate(
+            id: course.id,
+            serverId: course.serverId,
+            status: 'expired',
+          ),
+        );
+      }
+
+      final serverId = course.serverId;
+      if (serverId == null) continue;
+
+      try {
+        final result = await remote.archiveCourse(serverId);
+        await result.fold((_) async {}, (archived) async {
+          final now = DateTime.now();
+          final archivedAt = archived.archivedAt ?? now;
+          await courseDao.markCourseArchived(
+            course.id,
+            archivedAt: archivedAt,
+            updatedAt: archived.updatedAt,
+          );
+          _changes.add(
+            SyncStatusUpdate(
+              id: course.id,
+              serverId: serverId,
+              status: 'archived',
+              archivedAt: archivedAt,
+            ),
+          );
+        });
+      } catch (_) {
+        // Retry expired courses on the next sync trigger.
+      }
+    }
+  }
+
   Future<void> _handleCourseFailure(String id, Failure failure) async {
     if (failure is ServerFailure && failure.statusCode == 400) {
       await courseDao.setCourseSyncFailed(id, failure.message);
@@ -126,7 +189,9 @@ class CourseSyncService with WidgetsBindingObserver {
       final parentServerId = parent?.serverId;
       if (parent == null ||
           parent.syncStatus != 'synced' ||
-          parentServerId == null) {
+          parentServerId == null ||
+          parent.archivedAt != null ||
+          hasCourseTermEnded(parent.termEndDate)) {
         continue;
       }
 

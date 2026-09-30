@@ -349,7 +349,7 @@ $ScheduleCourseDtoCopyWith<$Res>? get course {
 /// @nodoc
 mixin _$ScheduleCourseDto {
 
- String get id; String get title; String? get code; String? get color;
+ String get id; String get title; String? get code; String? get color;@JsonKey(name: 'term_end_date') DateTime? get termEndDate;
 /// Create a copy of ScheduleCourseDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -363,20 +363,20 @@ $ScheduleCourseDtoCopyWith<ScheduleCourseDto> get copyWith => _$ScheduleCourseDt
 @override
 bool operator ==(Object other) {
   final _this = this as ScheduleCourseDto;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ScheduleCourseDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.code, _this.code) || other.code == _this.code)&&(identical(other.color, _this.color) || other.color == _this.color));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ScheduleCourseDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.code, _this.code) || other.code == _this.code)&&(identical(other.color, _this.color) || other.color == _this.color)&&(identical(other.termEndDate, _this.termEndDate) || other.termEndDate == _this.termEndDate));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as ScheduleCourseDto;
-  return Object.hash(runtimeType,_this.id,_this.title,_this.code,_this.color);
+  return Object.hash(runtimeType,_this.id,_this.title,_this.code,_this.color,_this.termEndDate);
 }
 
 @override
 String toString() {
   final _this = this as ScheduleCourseDto;
-  return 'ScheduleCourseDto(id: ${_this.id}, title: ${_this.title}, code: ${_this.code}, color: ${_this.color})';
+  return 'ScheduleCourseDto(id: ${_this.id}, title: ${_this.title}, code: ${_this.code}, color: ${_this.color}, termEndDate: ${_this.termEndDate})';
 }
 
 
@@ -387,7 +387,7 @@ abstract mixin class $ScheduleCourseDtoCopyWith<$Res>  {
   factory $ScheduleCourseDtoCopyWith(ScheduleCourseDto value, $Res Function(ScheduleCourseDto) _then) = _$ScheduleCourseDtoCopyWithImpl;
 @useResult
 $Res call({
- String id, String title, String? code, String? color
+ String id, String title, String? code, String? color,@JsonKey(name: 'term_end_date') DateTime? termEndDate
 });
 
 
@@ -404,13 +404,14 @@ class _$ScheduleCourseDtoCopyWithImpl<$Res>
 
 /// Create a copy of ScheduleCourseDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? code = freezed,Object? color = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? code = freezed,Object? color = freezed,Object? termEndDate = freezed,}) {
   return _then(ScheduleCourseDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,code: freezed == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String?,color: freezed == color ? _self.color : color // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,termEndDate: freezed == termEndDate ? _self.termEndDate : termEndDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 
@@ -495,10 +496,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String? code,  String? color)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String? code,  String? color, @JsonKey(name: 'term_end_date')  DateTime? termEndDate)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ScheduleCourseDto() when $default != null:
-return $default(_that.id,_that.title,_that.code,_that.color);case _:
+return $default(_that.id,_that.title,_that.code,_that.color,_that.termEndDate);case _:
   return orElse();
 
 }
@@ -516,10 +517,10 @@ return $default(_that.id,_that.title,_that.code,_that.color);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String? code,  String? color)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String? code,  String? color, @JsonKey(name: 'term_end_date')  DateTime? termEndDate)  $default,) {final _that = this;
 switch (_that) {
 case _ScheduleCourseDto():
-return $default(_that.id,_that.title,_that.code,_that.color);case _:
+return $default(_that.id,_that.title,_that.code,_that.color,_that.termEndDate);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -536,10 +537,10 @@ return $default(_that.id,_that.title,_that.code,_that.color);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String? code,  String? color)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String? code,  String? color, @JsonKey(name: 'term_end_date')  DateTime? termEndDate)?  $default,) {final _that = this;
 switch (_that) {
 case _ScheduleCourseDto() when $default != null:
-return $default(_that.id,_that.title,_that.code,_that.color);case _:
+return $default(_that.id,_that.title,_that.code,_that.color,_that.termEndDate);case _:
   return null;
 
 }
@@ -551,13 +552,14 @@ return $default(_that.id,_that.title,_that.code,_that.color);case _:
 @JsonSerializable()
 
 class _ScheduleCourseDto implements ScheduleCourseDto {
-  const _ScheduleCourseDto({required this.id, required this.title, this.code, this.color});
+  const _ScheduleCourseDto({required this.id, required this.title, this.code, this.color, @JsonKey(name: 'term_end_date') this.termEndDate});
   factory _ScheduleCourseDto.fromJson(Map<String, dynamic> json) => _$ScheduleCourseDtoFromJson(json);
 
 @override final  String id;
 @override final  String title;
 @override final  String? code;
 @override final  String? color;
+@override@JsonKey(name: 'term_end_date') final  DateTime? termEndDate;
 
 /// Create a copy of ScheduleCourseDto
 /// with the given fields replaced by the non-null parameter values.
@@ -572,18 +574,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ScheduleCourseDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.code, code) || other.code == code)&&(identical(other.color, color) || other.color == color));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ScheduleCourseDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.code, code) || other.code == code)&&(identical(other.color, color) || other.color == color)&&(identical(other.termEndDate, termEndDate) || other.termEndDate == termEndDate));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,title,code,color);
+    return Object.hash(runtimeType,id,title,code,color,termEndDate);
 }
 
 @override
 String toString() {
-    return 'ScheduleCourseDto(id: $id, title: $title, code: $code, color: $color)';
+    return 'ScheduleCourseDto(id: $id, title: $title, code: $code, color: $color, termEndDate: $termEndDate)';
 }
 
 
@@ -594,7 +596,7 @@ abstract mixin class _$ScheduleCourseDtoCopyWith<$Res> implements $ScheduleCours
   factory _$ScheduleCourseDtoCopyWith(_ScheduleCourseDto value, $Res Function(_ScheduleCourseDto) _then) = __$ScheduleCourseDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String title, String? code, String? color
+ String id, String title, String? code, String? color,@JsonKey(name: 'term_end_date') DateTime? termEndDate
 });
 
 
@@ -611,13 +613,14 @@ class __$ScheduleCourseDtoCopyWithImpl<$Res>
 
 /// Create a copy of ScheduleCourseDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? code = freezed,Object? color = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? code = freezed,Object? color = freezed,Object? termEndDate = freezed,}) {
   return _then(_ScheduleCourseDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,code: freezed == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String?,color: freezed == color ? _self.color : color // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,termEndDate: freezed == termEndDate ? _self.termEndDate : termEndDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 

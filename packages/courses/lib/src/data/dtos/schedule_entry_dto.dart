@@ -33,6 +33,7 @@ abstract class ScheduleCourseDto with _$ScheduleCourseDto {
     required String title,
     String? code,
     String? color,
+    @JsonKey(name: 'term_end_date') DateTime? termEndDate,
   }) = _ScheduleCourseDto;
 
   factory ScheduleCourseDto.fromJson(Map<String, dynamic> json) =>

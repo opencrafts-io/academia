@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ScheduleEntryEntity {
 
- String get id; String? get serverId; String get idempotencyKey; String get syncStatus; String? get lastSyncError; String get studentCourseId; String get dayOfWeek; String get startTime; String get endTime; String? get venue; String? get campus; String? get section; String? get label; String? get color; bool get isRecurring; DateTime? get specificDate; DateTime get createdAt; DateTime get updatedAt; String? get courseTitle; String? get courseCode; String? get courseColor;
+ String get id; String? get serverId; String get idempotencyKey; String get syncStatus; String? get lastSyncError; String get studentCourseId; String get dayOfWeek; String get startTime; String get endTime; String? get venue; String? get campus; String? get section; String? get label; String? get color; bool get isRecurring; DateTime? get specificDate; DateTime get createdAt; DateTime get updatedAt; String? get courseTitle; String? get courseCode; String? get courseColor; DateTime? get courseTermEndDate;
 /// Create a copy of ScheduleEntryEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -27,20 +27,20 @@ $ScheduleEntryEntityCopyWith<ScheduleEntryEntity> get copyWith => _$ScheduleEntr
 @override
 bool operator ==(Object other) {
   final _this = this as ScheduleEntryEntity;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ScheduleEntryEntity&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.serverId, _this.serverId) || other.serverId == _this.serverId)&&(identical(other.idempotencyKey, _this.idempotencyKey) || other.idempotencyKey == _this.idempotencyKey)&&(identical(other.syncStatus, _this.syncStatus) || other.syncStatus == _this.syncStatus)&&(identical(other.lastSyncError, _this.lastSyncError) || other.lastSyncError == _this.lastSyncError)&&(identical(other.studentCourseId, _this.studentCourseId) || other.studentCourseId == _this.studentCourseId)&&(identical(other.dayOfWeek, _this.dayOfWeek) || other.dayOfWeek == _this.dayOfWeek)&&(identical(other.startTime, _this.startTime) || other.startTime == _this.startTime)&&(identical(other.endTime, _this.endTime) || other.endTime == _this.endTime)&&(identical(other.venue, _this.venue) || other.venue == _this.venue)&&(identical(other.campus, _this.campus) || other.campus == _this.campus)&&(identical(other.section, _this.section) || other.section == _this.section)&&(identical(other.label, _this.label) || other.label == _this.label)&&(identical(other.color, _this.color) || other.color == _this.color)&&(identical(other.isRecurring, _this.isRecurring) || other.isRecurring == _this.isRecurring)&&(identical(other.specificDate, _this.specificDate) || other.specificDate == _this.specificDate)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt)&&(identical(other.courseTitle, _this.courseTitle) || other.courseTitle == _this.courseTitle)&&(identical(other.courseCode, _this.courseCode) || other.courseCode == _this.courseCode)&&(identical(other.courseColor, _this.courseColor) || other.courseColor == _this.courseColor));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ScheduleEntryEntity&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.serverId, _this.serverId) || other.serverId == _this.serverId)&&(identical(other.idempotencyKey, _this.idempotencyKey) || other.idempotencyKey == _this.idempotencyKey)&&(identical(other.syncStatus, _this.syncStatus) || other.syncStatus == _this.syncStatus)&&(identical(other.lastSyncError, _this.lastSyncError) || other.lastSyncError == _this.lastSyncError)&&(identical(other.studentCourseId, _this.studentCourseId) || other.studentCourseId == _this.studentCourseId)&&(identical(other.dayOfWeek, _this.dayOfWeek) || other.dayOfWeek == _this.dayOfWeek)&&(identical(other.startTime, _this.startTime) || other.startTime == _this.startTime)&&(identical(other.endTime, _this.endTime) || other.endTime == _this.endTime)&&(identical(other.venue, _this.venue) || other.venue == _this.venue)&&(identical(other.campus, _this.campus) || other.campus == _this.campus)&&(identical(other.section, _this.section) || other.section == _this.section)&&(identical(other.label, _this.label) || other.label == _this.label)&&(identical(other.color, _this.color) || other.color == _this.color)&&(identical(other.isRecurring, _this.isRecurring) || other.isRecurring == _this.isRecurring)&&(identical(other.specificDate, _this.specificDate) || other.specificDate == _this.specificDate)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt)&&(identical(other.courseTitle, _this.courseTitle) || other.courseTitle == _this.courseTitle)&&(identical(other.courseCode, _this.courseCode) || other.courseCode == _this.courseCode)&&(identical(other.courseColor, _this.courseColor) || other.courseColor == _this.courseColor)&&(identical(other.courseTermEndDate, _this.courseTermEndDate) || other.courseTermEndDate == _this.courseTermEndDate));
 }
 
 
 @override
 int get hashCode {
   final _this = this as ScheduleEntryEntity;
-  return Object.hashAll([runtimeType,_this.id,_this.serverId,_this.idempotencyKey,_this.syncStatus,_this.lastSyncError,_this.studentCourseId,_this.dayOfWeek,_this.startTime,_this.endTime,_this.venue,_this.campus,_this.section,_this.label,_this.color,_this.isRecurring,_this.specificDate,_this.createdAt,_this.updatedAt,_this.courseTitle,_this.courseCode,_this.courseColor]);
+  return Object.hashAll([runtimeType,_this.id,_this.serverId,_this.idempotencyKey,_this.syncStatus,_this.lastSyncError,_this.studentCourseId,_this.dayOfWeek,_this.startTime,_this.endTime,_this.venue,_this.campus,_this.section,_this.label,_this.color,_this.isRecurring,_this.specificDate,_this.createdAt,_this.updatedAt,_this.courseTitle,_this.courseCode,_this.courseColor,_this.courseTermEndDate]);
 }
 
 @override
 String toString() {
   final _this = this as ScheduleEntryEntity;
-  return 'ScheduleEntryEntity(id: ${_this.id}, serverId: ${_this.serverId}, idempotencyKey: ${_this.idempotencyKey}, syncStatus: ${_this.syncStatus}, lastSyncError: ${_this.lastSyncError}, studentCourseId: ${_this.studentCourseId}, dayOfWeek: ${_this.dayOfWeek}, startTime: ${_this.startTime}, endTime: ${_this.endTime}, venue: ${_this.venue}, campus: ${_this.campus}, section: ${_this.section}, label: ${_this.label}, color: ${_this.color}, isRecurring: ${_this.isRecurring}, specificDate: ${_this.specificDate}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt}, courseTitle: ${_this.courseTitle}, courseCode: ${_this.courseCode}, courseColor: ${_this.courseColor})';
+  return 'ScheduleEntryEntity(id: ${_this.id}, serverId: ${_this.serverId}, idempotencyKey: ${_this.idempotencyKey}, syncStatus: ${_this.syncStatus}, lastSyncError: ${_this.lastSyncError}, studentCourseId: ${_this.studentCourseId}, dayOfWeek: ${_this.dayOfWeek}, startTime: ${_this.startTime}, endTime: ${_this.endTime}, venue: ${_this.venue}, campus: ${_this.campus}, section: ${_this.section}, label: ${_this.label}, color: ${_this.color}, isRecurring: ${_this.isRecurring}, specificDate: ${_this.specificDate}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt}, courseTitle: ${_this.courseTitle}, courseCode: ${_this.courseCode}, courseColor: ${_this.courseColor}, courseTermEndDate: ${_this.courseTermEndDate})';
 }
 
 
@@ -51,7 +51,7 @@ abstract mixin class $ScheduleEntryEntityCopyWith<$Res>  {
   factory $ScheduleEntryEntityCopyWith(ScheduleEntryEntity value, $Res Function(ScheduleEntryEntity) _then) = _$ScheduleEntryEntityCopyWithImpl;
 @useResult
 $Res call({
- String id, String? serverId, String idempotencyKey, String syncStatus, String? lastSyncError, String studentCourseId, String dayOfWeek, String startTime, String endTime, String? venue, String? campus, String? section, String? label, String? color, bool isRecurring, DateTime? specificDate, DateTime createdAt, DateTime updatedAt, String? courseTitle, String? courseCode, String? courseColor
+ String id, String? serverId, String idempotencyKey, String syncStatus, String? lastSyncError, String studentCourseId, String dayOfWeek, String startTime, String endTime, String? venue, String? campus, String? section, String? label, String? color, bool isRecurring, DateTime? specificDate, DateTime createdAt, DateTime updatedAt, String? courseTitle, String? courseCode, String? courseColor, DateTime? courseTermEndDate
 });
 
 
@@ -68,7 +68,7 @@ class _$ScheduleEntryEntityCopyWithImpl<$Res>
 
 /// Create a copy of ScheduleEntryEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? serverId = freezed,Object? idempotencyKey = null,Object? syncStatus = null,Object? lastSyncError = freezed,Object? studentCourseId = null,Object? dayOfWeek = null,Object? startTime = null,Object? endTime = null,Object? venue = freezed,Object? campus = freezed,Object? section = freezed,Object? label = freezed,Object? color = freezed,Object? isRecurring = null,Object? specificDate = freezed,Object? createdAt = null,Object? updatedAt = null,Object? courseTitle = freezed,Object? courseCode = freezed,Object? courseColor = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? serverId = freezed,Object? idempotencyKey = null,Object? syncStatus = null,Object? lastSyncError = freezed,Object? studentCourseId = null,Object? dayOfWeek = null,Object? startTime = null,Object? endTime = null,Object? venue = freezed,Object? campus = freezed,Object? section = freezed,Object? label = freezed,Object? color = freezed,Object? isRecurring = null,Object? specificDate = freezed,Object? createdAt = null,Object? updatedAt = null,Object? courseTitle = freezed,Object? courseCode = freezed,Object? courseColor = freezed,Object? courseTermEndDate = freezed,}) {
   return _then(ScheduleEntryEntity(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,serverId: freezed == serverId ? _self.serverId : serverId // ignore: cast_nullable_to_non_nullable
@@ -91,7 +91,8 @@ as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore
 as DateTime,courseTitle: freezed == courseTitle ? _self.courseTitle : courseTitle // ignore: cast_nullable_to_non_nullable
 as String?,courseCode: freezed == courseCode ? _self.courseCode : courseCode // ignore: cast_nullable_to_non_nullable
 as String?,courseColor: freezed == courseColor ? _self.courseColor : courseColor // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,courseTermEndDate: freezed == courseTermEndDate ? _self.courseTermEndDate : courseTermEndDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 
@@ -176,10 +177,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String? serverId,  String idempotencyKey,  String syncStatus,  String? lastSyncError,  String studentCourseId,  String dayOfWeek,  String startTime,  String endTime,  String? venue,  String? campus,  String? section,  String? label,  String? color,  bool isRecurring,  DateTime? specificDate,  DateTime createdAt,  DateTime updatedAt,  String? courseTitle,  String? courseCode,  String? courseColor)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String? serverId,  String idempotencyKey,  String syncStatus,  String? lastSyncError,  String studentCourseId,  String dayOfWeek,  String startTime,  String endTime,  String? venue,  String? campus,  String? section,  String? label,  String? color,  bool isRecurring,  DateTime? specificDate,  DateTime createdAt,  DateTime updatedAt,  String? courseTitle,  String? courseCode,  String? courseColor,  DateTime? courseTermEndDate)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ScheduleEntryEntity() when $default != null:
-return $default(_that.id,_that.serverId,_that.idempotencyKey,_that.syncStatus,_that.lastSyncError,_that.studentCourseId,_that.dayOfWeek,_that.startTime,_that.endTime,_that.venue,_that.campus,_that.section,_that.label,_that.color,_that.isRecurring,_that.specificDate,_that.createdAt,_that.updatedAt,_that.courseTitle,_that.courseCode,_that.courseColor);case _:
+return $default(_that.id,_that.serverId,_that.idempotencyKey,_that.syncStatus,_that.lastSyncError,_that.studentCourseId,_that.dayOfWeek,_that.startTime,_that.endTime,_that.venue,_that.campus,_that.section,_that.label,_that.color,_that.isRecurring,_that.specificDate,_that.createdAt,_that.updatedAt,_that.courseTitle,_that.courseCode,_that.courseColor,_that.courseTermEndDate);case _:
   return orElse();
 
 }
@@ -197,10 +198,10 @@ return $default(_that.id,_that.serverId,_that.idempotencyKey,_that.syncStatus,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String? serverId,  String idempotencyKey,  String syncStatus,  String? lastSyncError,  String studentCourseId,  String dayOfWeek,  String startTime,  String endTime,  String? venue,  String? campus,  String? section,  String? label,  String? color,  bool isRecurring,  DateTime? specificDate,  DateTime createdAt,  DateTime updatedAt,  String? courseTitle,  String? courseCode,  String? courseColor)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String? serverId,  String idempotencyKey,  String syncStatus,  String? lastSyncError,  String studentCourseId,  String dayOfWeek,  String startTime,  String endTime,  String? venue,  String? campus,  String? section,  String? label,  String? color,  bool isRecurring,  DateTime? specificDate,  DateTime createdAt,  DateTime updatedAt,  String? courseTitle,  String? courseCode,  String? courseColor,  DateTime? courseTermEndDate)  $default,) {final _that = this;
 switch (_that) {
 case _ScheduleEntryEntity():
-return $default(_that.id,_that.serverId,_that.idempotencyKey,_that.syncStatus,_that.lastSyncError,_that.studentCourseId,_that.dayOfWeek,_that.startTime,_that.endTime,_that.venue,_that.campus,_that.section,_that.label,_that.color,_that.isRecurring,_that.specificDate,_that.createdAt,_that.updatedAt,_that.courseTitle,_that.courseCode,_that.courseColor);case _:
+return $default(_that.id,_that.serverId,_that.idempotencyKey,_that.syncStatus,_that.lastSyncError,_that.studentCourseId,_that.dayOfWeek,_that.startTime,_that.endTime,_that.venue,_that.campus,_that.section,_that.label,_that.color,_that.isRecurring,_that.specificDate,_that.createdAt,_that.updatedAt,_that.courseTitle,_that.courseCode,_that.courseColor,_that.courseTermEndDate);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -217,10 +218,10 @@ return $default(_that.id,_that.serverId,_that.idempotencyKey,_that.syncStatus,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String? serverId,  String idempotencyKey,  String syncStatus,  String? lastSyncError,  String studentCourseId,  String dayOfWeek,  String startTime,  String endTime,  String? venue,  String? campus,  String? section,  String? label,  String? color,  bool isRecurring,  DateTime? specificDate,  DateTime createdAt,  DateTime updatedAt,  String? courseTitle,  String? courseCode,  String? courseColor)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String? serverId,  String idempotencyKey,  String syncStatus,  String? lastSyncError,  String studentCourseId,  String dayOfWeek,  String startTime,  String endTime,  String? venue,  String? campus,  String? section,  String? label,  String? color,  bool isRecurring,  DateTime? specificDate,  DateTime createdAt,  DateTime updatedAt,  String? courseTitle,  String? courseCode,  String? courseColor,  DateTime? courseTermEndDate)?  $default,) {final _that = this;
 switch (_that) {
 case _ScheduleEntryEntity() when $default != null:
-return $default(_that.id,_that.serverId,_that.idempotencyKey,_that.syncStatus,_that.lastSyncError,_that.studentCourseId,_that.dayOfWeek,_that.startTime,_that.endTime,_that.venue,_that.campus,_that.section,_that.label,_that.color,_that.isRecurring,_that.specificDate,_that.createdAt,_that.updatedAt,_that.courseTitle,_that.courseCode,_that.courseColor);case _:
+return $default(_that.id,_that.serverId,_that.idempotencyKey,_that.syncStatus,_that.lastSyncError,_that.studentCourseId,_that.dayOfWeek,_that.startTime,_that.endTime,_that.venue,_that.campus,_that.section,_that.label,_that.color,_that.isRecurring,_that.specificDate,_that.createdAt,_that.updatedAt,_that.courseTitle,_that.courseCode,_that.courseColor,_that.courseTermEndDate);case _:
   return null;
 
 }
@@ -232,7 +233,7 @@ return $default(_that.id,_that.serverId,_that.idempotencyKey,_that.syncStatus,_t
 
 
 class _ScheduleEntryEntity implements ScheduleEntryEntity {
-  const _ScheduleEntryEntity({required this.id, this.serverId, this.idempotencyKey = '', this.syncStatus = 'synced', this.lastSyncError, required this.studentCourseId, required this.dayOfWeek, required this.startTime, required this.endTime, this.venue, this.campus, this.section, this.label, this.color, this.isRecurring = true, this.specificDate, required this.createdAt, required this.updatedAt, this.courseTitle, this.courseCode, this.courseColor});
+  const _ScheduleEntryEntity({required this.id, this.serverId, this.idempotencyKey = '', this.syncStatus = 'synced', this.lastSyncError, required this.studentCourseId, required this.dayOfWeek, required this.startTime, required this.endTime, this.venue, this.campus, this.section, this.label, this.color, this.isRecurring = true, this.specificDate, required this.createdAt, required this.updatedAt, this.courseTitle, this.courseCode, this.courseColor, this.courseTermEndDate});
 
 
 @override final  String id;
@@ -256,6 +257,7 @@ class _ScheduleEntryEntity implements ScheduleEntryEntity {
 @override final  String? courseTitle;
 @override final  String? courseCode;
 @override final  String? courseColor;
+@override final  DateTime? courseTermEndDate;
 
 /// Create a copy of ScheduleEntryEntity
 /// with the given fields replaced by the non-null parameter values.
@@ -267,18 +269,18 @@ _$ScheduleEntryEntityCopyWith<_ScheduleEntryEntity> get copyWith => __$ScheduleE
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ScheduleEntryEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.serverId, serverId) || other.serverId == serverId)&&(identical(other.idempotencyKey, idempotencyKey) || other.idempotencyKey == idempotencyKey)&&(identical(other.syncStatus, syncStatus) || other.syncStatus == syncStatus)&&(identical(other.lastSyncError, lastSyncError) || other.lastSyncError == lastSyncError)&&(identical(other.studentCourseId, studentCourseId) || other.studentCourseId == studentCourseId)&&(identical(other.dayOfWeek, dayOfWeek) || other.dayOfWeek == dayOfWeek)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.endTime, endTime) || other.endTime == endTime)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.campus, campus) || other.campus == campus)&&(identical(other.section, section) || other.section == section)&&(identical(other.label, label) || other.label == label)&&(identical(other.color, color) || other.color == color)&&(identical(other.isRecurring, isRecurring) || other.isRecurring == isRecurring)&&(identical(other.specificDate, specificDate) || other.specificDate == specificDate)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.courseTitle, courseTitle) || other.courseTitle == courseTitle)&&(identical(other.courseCode, courseCode) || other.courseCode == courseCode)&&(identical(other.courseColor, courseColor) || other.courseColor == courseColor));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ScheduleEntryEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.serverId, serverId) || other.serverId == serverId)&&(identical(other.idempotencyKey, idempotencyKey) || other.idempotencyKey == idempotencyKey)&&(identical(other.syncStatus, syncStatus) || other.syncStatus == syncStatus)&&(identical(other.lastSyncError, lastSyncError) || other.lastSyncError == lastSyncError)&&(identical(other.studentCourseId, studentCourseId) || other.studentCourseId == studentCourseId)&&(identical(other.dayOfWeek, dayOfWeek) || other.dayOfWeek == dayOfWeek)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.endTime, endTime) || other.endTime == endTime)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.campus, campus) || other.campus == campus)&&(identical(other.section, section) || other.section == section)&&(identical(other.label, label) || other.label == label)&&(identical(other.color, color) || other.color == color)&&(identical(other.isRecurring, isRecurring) || other.isRecurring == isRecurring)&&(identical(other.specificDate, specificDate) || other.specificDate == specificDate)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.courseTitle, courseTitle) || other.courseTitle == courseTitle)&&(identical(other.courseCode, courseCode) || other.courseCode == courseCode)&&(identical(other.courseColor, courseColor) || other.courseColor == courseColor)&&(identical(other.courseTermEndDate, courseTermEndDate) || other.courseTermEndDate == courseTermEndDate));
 }
 
 
 @override
 int get hashCode {
-    return Object.hashAll([runtimeType,id,serverId,idempotencyKey,syncStatus,lastSyncError,studentCourseId,dayOfWeek,startTime,endTime,venue,campus,section,label,color,isRecurring,specificDate,createdAt,updatedAt,courseTitle,courseCode,courseColor]);
+    return Object.hashAll([runtimeType,id,serverId,idempotencyKey,syncStatus,lastSyncError,studentCourseId,dayOfWeek,startTime,endTime,venue,campus,section,label,color,isRecurring,specificDate,createdAt,updatedAt,courseTitle,courseCode,courseColor,courseTermEndDate]);
 }
 
 @override
 String toString() {
-    return 'ScheduleEntryEntity(id: $id, serverId: $serverId, idempotencyKey: $idempotencyKey, syncStatus: $syncStatus, lastSyncError: $lastSyncError, studentCourseId: $studentCourseId, dayOfWeek: $dayOfWeek, startTime: $startTime, endTime: $endTime, venue: $venue, campus: $campus, section: $section, label: $label, color: $color, isRecurring: $isRecurring, specificDate: $specificDate, createdAt: $createdAt, updatedAt: $updatedAt, courseTitle: $courseTitle, courseCode: $courseCode, courseColor: $courseColor)';
+    return 'ScheduleEntryEntity(id: $id, serverId: $serverId, idempotencyKey: $idempotencyKey, syncStatus: $syncStatus, lastSyncError: $lastSyncError, studentCourseId: $studentCourseId, dayOfWeek: $dayOfWeek, startTime: $startTime, endTime: $endTime, venue: $venue, campus: $campus, section: $section, label: $label, color: $color, isRecurring: $isRecurring, specificDate: $specificDate, createdAt: $createdAt, updatedAt: $updatedAt, courseTitle: $courseTitle, courseCode: $courseCode, courseColor: $courseColor, courseTermEndDate: $courseTermEndDate)';
 }
 
 
@@ -289,7 +291,7 @@ abstract mixin class _$ScheduleEntryEntityCopyWith<$Res> implements $ScheduleEnt
   factory _$ScheduleEntryEntityCopyWith(_ScheduleEntryEntity value, $Res Function(_ScheduleEntryEntity) _then) = __$ScheduleEntryEntityCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String? serverId, String idempotencyKey, String syncStatus, String? lastSyncError, String studentCourseId, String dayOfWeek, String startTime, String endTime, String? venue, String? campus, String? section, String? label, String? color, bool isRecurring, DateTime? specificDate, DateTime createdAt, DateTime updatedAt, String? courseTitle, String? courseCode, String? courseColor
+ String id, String? serverId, String idempotencyKey, String syncStatus, String? lastSyncError, String studentCourseId, String dayOfWeek, String startTime, String endTime, String? venue, String? campus, String? section, String? label, String? color, bool isRecurring, DateTime? specificDate, DateTime createdAt, DateTime updatedAt, String? courseTitle, String? courseCode, String? courseColor, DateTime? courseTermEndDate
 });
 
 
@@ -306,7 +308,7 @@ class __$ScheduleEntryEntityCopyWithImpl<$Res>
 
 /// Create a copy of ScheduleEntryEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? serverId = freezed,Object? idempotencyKey = null,Object? syncStatus = null,Object? lastSyncError = freezed,Object? studentCourseId = null,Object? dayOfWeek = null,Object? startTime = null,Object? endTime = null,Object? venue = freezed,Object? campus = freezed,Object? section = freezed,Object? label = freezed,Object? color = freezed,Object? isRecurring = null,Object? specificDate = freezed,Object? createdAt = null,Object? updatedAt = null,Object? courseTitle = freezed,Object? courseCode = freezed,Object? courseColor = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? serverId = freezed,Object? idempotencyKey = null,Object? syncStatus = null,Object? lastSyncError = freezed,Object? studentCourseId = null,Object? dayOfWeek = null,Object? startTime = null,Object? endTime = null,Object? venue = freezed,Object? campus = freezed,Object? section = freezed,Object? label = freezed,Object? color = freezed,Object? isRecurring = null,Object? specificDate = freezed,Object? createdAt = null,Object? updatedAt = null,Object? courseTitle = freezed,Object? courseCode = freezed,Object? courseColor = freezed,Object? courseTermEndDate = freezed,}) {
   return _then(_ScheduleEntryEntity(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,serverId: freezed == serverId ? _self.serverId : serverId // ignore: cast_nullable_to_non_nullable
@@ -329,7 +331,8 @@ as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore
 as DateTime,courseTitle: freezed == courseTitle ? _self.courseTitle : courseTitle // ignore: cast_nullable_to_non_nullable
 as String?,courseCode: freezed == courseCode ? _self.courseCode : courseCode // ignore: cast_nullable_to_non_nullable
 as String?,courseColor: freezed == courseColor ? _self.courseColor : courseColor // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,courseTermEndDate: freezed == courseTermEndDate ? _self.courseTermEndDate : courseTermEndDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 

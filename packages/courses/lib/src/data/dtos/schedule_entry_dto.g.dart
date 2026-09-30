@@ -56,6 +56,9 @@ _ScheduleCourseDto _$ScheduleCourseDtoFromJson(Map<String, dynamic> json) =>
       title: json['title'] as String,
       code: json['code'] as String?,
       color: json['color'] as String?,
+      termEndDate: json['term_end_date'] == null
+          ? null
+          : DateTime.parse(json['term_end_date'] as String),
     );
 
 Map<String, dynamic> _$ScheduleCourseDtoToJson(_ScheduleCourseDto instance) =>
@@ -64,4 +67,5 @@ Map<String, dynamic> _$ScheduleCourseDtoToJson(_ScheduleCourseDto instance) =>
       'title': instance.title,
       'code': instance.code,
       'color': instance.color,
+      'term_end_date': instance.termEndDate?.toIso8601String(),
     };

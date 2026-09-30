@@ -23,7 +23,12 @@ extension CourseDtoMapper on CourseDto {
           .map((lecturer) => lecturer.toDomain(courseId: localId ?? id))
           .toList(),
       scheduleEntries: scheduleEntries
-          .map((entry) => entry.toDomain(courseId: localId ?? id))
+          .map(
+            (entry) => entry.toDomain(
+              courseId: localId ?? id,
+              courseTermEndDate: termEndDate,
+            ),
+          )
           .toList(),
     );
   }
@@ -53,7 +58,11 @@ extension CourseDtoMapper on CourseDto {
 }
 
 extension ScheduleEntryDtoMapper on ScheduleEntryDto {
-  ScheduleEntryEntity toDomain({required String courseId, String? localId}) {
+  ScheduleEntryEntity toDomain({
+    required String courseId,
+    String? localId,
+    DateTime? courseTermEndDate,
+  }) {
     return ScheduleEntryEntity(
       id: localId ?? id,
       serverId: id.isEmpty ? null : id,
@@ -73,6 +82,7 @@ extension ScheduleEntryDtoMapper on ScheduleEntryDto {
       courseTitle: course?.title,
       courseCode: course?.code,
       courseColor: course?.color,
+      courseTermEndDate: courseTermEndDate ?? course?.termEndDate,
     );
   }
 
@@ -182,6 +192,7 @@ extension CachedScheduleEntryMapper on database.ScheduleEntry {
     String? courseTitle,
     String? courseCode,
     String? courseColor,
+    DateTime? courseTermEndDate,
   }) {
     return ScheduleEntryEntity(
       id: id,
@@ -205,6 +216,7 @@ extension CachedScheduleEntryMapper on database.ScheduleEntry {
       courseTitle: courseTitle,
       courseCode: courseCode,
       courseColor: courseColor,
+      courseTermEndDate: courseTermEndDate,
     );
   }
 }

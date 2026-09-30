@@ -363,16 +363,39 @@ class CourseCubit extends SafeCubit<CourseState> {
       return;
     }
 
+    if (update.status == 'expired') {
+      emit(
+        state.copyWith(
+          courses: state.courses
+              .where((course) => course.id != update.id)
+              .toList(),
+          weeklySchedule: state.weeklySchedule
+              .where((entry) => entry.studentCourseId != update.id)
+              .toList(),
+        ),
+      );
+      unawaited(_courseReminderRefresher.refresh());
+      return;
+    }
+
     CourseEntity apply(CourseEntity course) => course.id == update.id
         ? course.copyWith(
             serverId: update.serverId ?? course.serverId,
             syncStatus: update.status,
             lastSyncError: update.error,
+            archivedAt: update.archivedAt ?? course.archivedAt,
           )
         : course;
     emit(
       state.copyWith(
-        courses: state.courses.map(apply).toList(),
+        courses: update.status == 'archived'
+            ? state.courses.where((course) => course.id != update.id).toList()
+            : state.courses.map(apply).toList(),
+        weeklySchedule: update.status == 'archived'
+            ? state.weeklySchedule
+                  .where((entry) => entry.studentCourseId != update.id)
+                  .toList()
+            : state.weeklySchedule,
         selectedCourse: state.selectedCourse == null
             ? null
             : apply(state.selectedCourse!),

@@ -1,6 +1,7 @@
 import 'package:academia/constants/responsive_break_points.dart';
 import 'package:agenda/agenda.dart';
 import 'package:courses/courses.dart' as courses;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,21 +30,23 @@ class CalendarHomeWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final todoItems = context
+    final currentTodoItems = context
         .select<todos.TodoItemCubit, List<todos.TodoItemEntity>>(
-          (cubit) => cubit.state.currentItems
-              .where(
-                (item) =>
-                    item.due != null && !item.hidden && !item.isPendingDeletion,
-              )
-              .toList(),
+          (cubit) => cubit.state.currentItems,
         );
+    final todoItems = currentTodoItems
+        .where(
+          (item) => item.due != null && !item.hidden && !item.isPendingDeletion,
+        )
+        .toList();
     final classes = context
         .select<courses.CourseCubit, List<courses.ScheduleEntryEntity>>(
           (cubit) => cubit.state.weeklySchedule,
         );
 
     return BlocBuilder<AgendaCubit, AgendaState>(
+      buildWhen: (previous, current) =>
+          !listEquals(previous.events, current.events),
       builder: (context, agendaState) {
         final events = agendaState.events;
 

@@ -73,6 +73,20 @@ class CourseDao extends DatabaseAccessor<AppDatabaseV2> with _$CourseDaoMixin {
     );
   }
 
+  Future<void> markCourseArchived(
+    String id, {
+    required DateTime archivedAt,
+    required DateTime updatedAt,
+  }) async {
+    await (update(courses)..where((course) => course.id.equals(id))).write(
+      CoursesCompanion(
+        archivedAt: Value(archivedAt),
+        updatedAt: Value(updatedAt),
+        cachedAt: Value(DateTime.now()),
+      ),
+    );
+  }
+
   Future<List<Lecturer>> lecturersForCourse(String courseId) {
     return (select(
       lecturers,

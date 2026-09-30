@@ -26,8 +26,11 @@ class CourseRepositoryImpl implements CourseRepository {
   Stream<SyncStatusUpdate> get syncStatusUpdates => _sync.changes;
 
   @override
-  Future<Either<Failure, List<CourseEntity>>> listActiveCourses() =>
-      _list(_remote.activeCourses, _courseDao.activeCourses);
+  Future<Either<Failure, List<CourseEntity>>> listActiveCourses() => _list(
+    _remote.activeCourses,
+    _courseDao.activeCourses,
+    archiveExpiredCourses: true,
+  );
 
   @override
   Future<Either<Failure, List<CourseEntity>>> listArchivedCourses() =>
@@ -185,13 +188,13 @@ class CourseRepositoryImpl implements CourseRepository {
   listStudentSchedule() async {
     // The timetable endpoint includes only a compact nested course summary.
     // Cache active courses first so every schedule FK can use the local ID.
-    await _remote.activeCourses().then((result) async {
-      await result.fold((_) async {}, (page) async {
-        for (final course in page.results) {
-          await _cache(course);
-        }
-      });
+    final activeCourses = await _remote.activeCourses();
+    await activeCourses.fold((_) async {}, (page) async {
+      for (final course in page.results) {
+        await _cache(course);
+      }
     });
+    await _sync.syncPending();
 
     final result = await _remote.studentSchedule();
     return result.fold(
@@ -216,6 +219,11 @@ class CourseRepositoryImpl implements CourseRepository {
           final course =
               await _courseDao.courseByServerId(courseServerId) ??
               await _courseDao.courseById(courseServerId);
+          if (course != null &&
+              (course.archivedAt != null ||
+                  hasCourseTermEnded(course.termEndDate))) {
+            continue;
+          }
           if (course == null) {
             local.add(entry.toDomain(courseId: courseServerId));
             continue;
@@ -228,6 +236,7 @@ class CourseRepositoryImpl implements CourseRepository {
                 courseTitle: entry.course?.title,
                 courseCode: entry.course?.code,
                 courseColor: entry.course?.color,
+                courseTermEndDate: course.termEndDate,
               ),
             );
           }
@@ -350,14 +359,17 @@ class CourseRepositoryImpl implements CourseRepository {
 
   Future<Either<Failure, List<CourseEntity>>> _list(
     Future<Either<Failure, PaginatedResponse<CourseDto>>> Function() remote,
-    Future<List<Course>> Function() cached,
-  ) async {
+    Future<List<Course>> Function() cached, {
+    bool archiveExpiredCourses = false,
+  }) async {
     final result = await remote();
     return result.fold(
       (failure) async {
         try {
-          final courses = await cached();
-          return right(await Future.wait(courses.map(_cachedCourse)));
+          if (archiveExpiredCourses) await _sync.syncPending();
+          return right(
+            await _cachedCourses(cached, activeOnly: archiveExpiredCourses),
+          );
         } catch (error, stackTrace) {
           return left(
             Failure.cache(
@@ -372,10 +384,23 @@ class CourseRepositoryImpl implements CourseRepository {
         for (final course in page.results) {
           await _cache(course);
         }
-        final courses = await cached();
-        return right(await Future.wait(courses.map(_cachedCourse)));
+        if (archiveExpiredCourses) await _sync.syncPending();
+        return right(
+          await _cachedCourses(cached, activeOnly: archiveExpiredCourses),
+        );
       },
     );
+  }
+
+  Future<List<CourseEntity>> _cachedCourses(
+    Future<List<Course>> Function() load, {
+    required bool activeOnly,
+  }) async {
+    final courses = await load();
+    final visibleCourses = activeOnly
+        ? courses.where((course) => !hasCourseTermEnded(course.termEndDate))
+        : courses;
+    return Future.wait(visibleCourses.map(_cachedCourse));
   }
 
   Future<Either<Failure, CourseEntity>> _cacheResult(
@@ -458,6 +483,7 @@ class CourseRepositoryImpl implements CourseRepository {
             courseTitle: course?.title,
             courseCode: course?.code,
             courseColor: course?.color,
+            courseTermEndDate: course?.termEndDate,
           ),
         )
         .toList();
@@ -473,6 +499,7 @@ class CourseRepositoryImpl implements CourseRepository {
       courseTitle: course?.title,
       courseCode: course?.code,
       courseColor: course?.color,
+      courseTermEndDate: course?.termEndDate,
     );
   }
 
@@ -481,12 +508,17 @@ class CourseRepositoryImpl implements CourseRepository {
     final entries = <ScheduleEntryEntity>[];
     for (final entry in rows) {
       final course = await _courseDao.courseById(entry.studentCourseId);
-      if (course == null || course.archivedAt != null) continue;
+      if (course == null ||
+          course.archivedAt != null ||
+          hasCourseTermEnded(course.termEndDate)) {
+        continue;
+      }
       entries.add(
         entry.toDomain(
           courseTitle: course.title,
           courseCode: course.code,
           courseColor: course.color,
+          courseTermEndDate: course.termEndDate,
         ),
       );
     }

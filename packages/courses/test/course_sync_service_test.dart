@@ -72,18 +72,64 @@ void main() {
 
     expect(remote.courseIdempotencyKeys, ['course-key', 'course-key']);
   });
+
+  test('archives synced courses after their term end date', () async {
+    final today = DateTime.now();
+    final yesterday = DateTime(today.year, today.month, today.day - 1);
+    await _insertCourse(
+      database,
+      now,
+      serverId: 'course-server',
+      termEndDate: yesterday,
+    );
+    remote.archiveResults.add(
+      Right(_courseDto('course-server').copyWith(archivedAt: today)),
+    );
+
+    await syncService.syncPending();
+
+    expect(remote.archiveCalls, ['course-server']);
+    final archivedAt = (await courseDao.archivedCourses()).single.archivedAt;
+    expect(archivedAt, isNotNull);
+    expect(archivedAt!.year, today.year);
+    expect(archivedAt.month, today.month);
+    expect(archivedAt.day, today.day);
+  });
+
+  test('keeps a course active through its term end date', () async {
+    final today = DateTime.now();
+    final endOfToday = DateTime(today.year, today.month, today.day);
+    await _insertCourse(
+      database,
+      now,
+      serverId: 'course-server',
+      termEndDate: endOfToday,
+    );
+
+    await syncService.syncPending();
+
+    expect(remote.archiveCalls, isEmpty);
+    expect((await courseDao.activeCourses()).single.archivedAt, isNull);
+  });
 }
 
-Future<void> _insertCourse(AppDatabaseV2 database, DateTime now) {
+Future<void> _insertCourse(
+  AppDatabaseV2 database,
+  DateTime now, {
+  String? serverId,
+  DateTime? termEndDate,
+}) {
   return database
       .into(database.courses)
       .insert(
         CoursesCompanion.insert(
           id: 'course-local',
+          serverId: Value(serverId),
           institutionId: 1,
           title: 'Algorithms',
           idempotencyKey: const Value('course-key'),
-          syncStatus: const Value('pending'),
+          syncStatus: Value(serverId == null ? 'pending' : 'synced'),
+          termEndDate: Value(termEndDate),
           createdAt: now,
           updatedAt: now,
           cachedAt: now,
@@ -102,7 +148,9 @@ CourseDto _courseDto(String id) => CourseDto(
 class _RecordingCourseRemote implements CourseRemoteDatasource {
   final calls = <String>[];
   final courseIdempotencyKeys = <String?>[];
+  final archiveCalls = <String>[];
   final courseResults = <Either<Failure, CourseDto>>[];
+  final archiveResults = <Either<Failure, CourseDto>>[];
 
   @override
   Future<Either<Failure, CourseDto>> createCourse({
@@ -149,8 +197,10 @@ class _RecordingCourseRemote implements CourseRemoteDatasource {
       throw UnimplementedError();
 
   @override
-  Future<Either<Failure, CourseDto>> archiveCourse(String id) =>
-      throw UnimplementedError();
+  Future<Either<Failure, CourseDto>> archiveCourse(String id) async {
+    archiveCalls.add(id);
+    return archiveResults.removeAt(0);
+  }
 
   @override
   Future<Either<Failure, Unit>> deleteCourse(String id) =>

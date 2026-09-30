@@ -321,6 +321,12 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
               ),
             ),
             BlocBuilder<courses.CourseCubit, courses.CourseState>(
+              buildWhen: (previous, current) =>
+                  !listEquals(
+                    previous.weeklySchedule,
+                    current.weeklySchedule,
+                  ) ||
+                  previous.isScheduleLoading != current.isScheduleLoading,
               builder: (context, courseState) {
                 final classes = courseState.weeklySchedule
                     .where(
@@ -328,6 +334,14 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                     )
                     .toList();
                 return BlocBuilder<AgendaCubit, AgendaState>(
+                  buildWhen: (previous, current) =>
+                      !listEquals(previous.events, current.events) ||
+                      previous.error != current.error ||
+                      previous.isLoading != current.isLoading ||
+                      previous.isLoadingPage != current.isLoadingPage ||
+                      previous.page != current.page ||
+                      previous.next != current.next ||
+                      previous.previous != current.previous,
                   builder: (context, state) {
                     final dayEvents = state.events
                         .where(

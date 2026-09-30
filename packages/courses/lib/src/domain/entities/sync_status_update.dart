@@ -4,6 +4,7 @@ class SyncStatusUpdate {
     required this.status,
     this.serverId,
     this.error,
+    this.archivedAt,
     this.isScheduleEntry = false,
   });
 
@@ -11,5 +12,6 @@ class SyncStatusUpdate {
   final String status;
   final String? serverId;
   final String? error;
+  final DateTime? archivedAt;
   final bool isScheduleEntry;
 }

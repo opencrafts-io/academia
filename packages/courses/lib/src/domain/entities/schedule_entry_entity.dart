@@ -26,5 +26,6 @@ abstract class ScheduleEntryEntity with _$ScheduleEntryEntity {
     String? courseTitle,
     String? courseCode,
     String? courseColor,
+    DateTime? courseTermEndDate,
   }) = _ScheduleEntryEntity;
 }
