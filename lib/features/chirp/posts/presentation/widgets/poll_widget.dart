@@ -404,6 +404,7 @@ class PollOptionBar extends StatelessWidget {
             ),
             clipBehavior: Clip.antiAlias,
             child: Stack(
+              alignment: Alignment.centerLeft,
               children: [
                 // Animated fill. Tween end is the target so successive updates
                 // animate from wherever the bar currently is.

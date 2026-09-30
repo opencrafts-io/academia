@@ -67,6 +67,7 @@ FeedBloc _feedBloc(ChirpRepository repo) => FeedBloc(
   likePost: LikePostUsecase(chirpRepository: repo),
   voteOnPoll: VoteOnPollUsecase(chirpRepository: repo),
   retractPollVote: RetractPollVoteUsecase(chirpRepository: repo),
+  checkPostLiked: CheckPostLikedUsecase(chirpRepository: repo),
 );
 
 UserProfile _profile(String id) => UserProfile(
@@ -318,14 +319,14 @@ void _regressions() {
 
     // A like lands after the poll widget was built (poll unchanged, so
     // PollWidget's builder does not rerun).
-    cubit.updatePost(cubit.state.copyWith(isLikedByMe: true, upvotes: 1));
+    cubit.updatePost(cubit.state.copyWith(myVote: 1, upvotes: 1));
     await tester.pump();
 
     await tester.tap(find.text('Beta'));
     await tester.pumpAndSettle();
 
     // The like survived the vote round-trip.
-    expect(cubit.state.isLikedByMe, isTrue);
+    expect(cubit.state.myVote, 1);
     expect(cubit.state.upvotes, 1);
     expect(cubit.state.poll!.myVotes, [2]);
   });

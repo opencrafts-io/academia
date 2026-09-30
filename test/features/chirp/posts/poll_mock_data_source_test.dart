@@ -1,4 +1,4 @@
-import 'package:academia/database/database.dart';
+import 'package:academia/database/database.dart' as db;
 import 'package:academia/features/chirp/posts/posts.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -10,7 +10,7 @@ void main() {
         failEveryNth: failEveryNth,
       );
 
-  PostData post(int id) => PostData(
+  db.Post post(int id) => db.Post(
     id: id,
     community: const {},
     authorId: 'a',

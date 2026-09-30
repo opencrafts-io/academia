@@ -1,9 +1,9 @@
-import 'package:academia/database/database.dart';
+import 'package:academia/database/database.dart' as db;
 import 'package:academia/features/chirp/posts/posts.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  final community = CommunityData(
+  final community = db.Community(
     id: 1,
     name: 'c',
     nsfw: false,
@@ -25,7 +25,7 @@ void main() {
     updatedAt: DateTime(2026),
   ).toJson();
 
-  PostData post(Map<String, dynamic>? poll) => PostData(
+  db.Post post(Map<String, dynamic>? poll) => db.Post(
     id: 1,
     community: community,
     authorId: 'a',

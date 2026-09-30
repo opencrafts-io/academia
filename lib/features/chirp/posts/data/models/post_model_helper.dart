@@ -14,6 +14,7 @@ extension PostApiDtoMapper on PostApiDto {
     viewsCount: viewsCount,
     commentCount: commentCount,
     comments: comments.map((c) => c.toData().toJson()).toList(),
+    poll: poll,
     createdAt: createdAt,
     updatedAt: updatedAt,
   );

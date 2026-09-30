@@ -413,27 +413,32 @@ class _CreatePollSheetState extends State<CreatePollSheet> {
                   ],
                 ),
               ),
-              Container(
-                padding: EdgeInsets.fromLTRB(
-                  20,
-                  12,
-                  20,
-                  12 + MediaQuery.viewInsetsOf(context).bottom,
-                ),
-                decoration: BoxDecoration(
-                  color: theme.scaffoldBackgroundColor,
-                  border: Border(top: BorderSide(color: theme.dividerColor)),
-                ),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: FilledButton.icon(
-                    style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                    ),
-                    onPressed: _submit,
-                    icon: const Icon(Icons.check),
-                    label: Text(
-                      widget.initial == null ? 'Add poll to post' : 'Save poll',
+              SafeArea(
+                top: false,
+                child: Container(
+                  padding: EdgeInsets.fromLTRB(
+                    20,
+                    12,
+                    20,
+                    12 + MediaQuery.viewInsetsOf(context).bottom,
+                  ),
+                  decoration: BoxDecoration(
+                    color: theme.scaffoldBackgroundColor,
+                    border: Border(top: BorderSide(color: theme.dividerColor)),
+                  ),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: FilledButton.icon(
+                      style: FilledButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                      ),
+                      onPressed: _submit,
+                      icon: const Icon(Icons.check),
+                      label: Text(
+                        widget.initial == null
+                            ? 'Add poll to post'
+                            : 'Save poll',
+                      ),
                     ),
                   ),
                 ),

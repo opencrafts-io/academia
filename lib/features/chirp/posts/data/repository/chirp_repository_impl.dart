@@ -15,13 +15,6 @@ class ChirpRepositoryImpl implements ChirpRepository {
     required this.pollRemoteDataSource,
   });
 
-  /// While polls are mocked, feed posts get demo polls attached here so the
-  /// UI is exercisable. A no-op once the real datasource is wired in DI.
-  db.Post _decoratePoll(db.Post post) {
-    final ds = pollRemoteDataSource;
-    return ds is MockPollRemoteDataSource ? ds.decorate(post) : post;
-  }
-
   @override
   Future<Either<Failure, PaginatedData<Post>>> getFeedPosts({
     required int page,
@@ -55,7 +48,7 @@ class ChirpRepositoryImpl implements ChirpRepository {
       (posts) async {
         final postEntities = <Post>[];
         for (final postDto in posts.results) {
-          final post = _decoratePoll(postDto.toData());
+          final post = postDto.toData();
           await localDataSource.createOrUpdatePost(post);
           postEntities.add(post.toEntity());
         }
@@ -79,7 +72,7 @@ class ChirpRepositoryImpl implements ChirpRepository {
     return localRes.fold((failure) async {
       final result = await remoteDataSource.getPostDetails(postId: postId);
       return result.fold((failure) => left(failure), (postDto) async {
-        final post = _decoratePoll(postDto.toData());
+        final post = postDto.toData();
         await localDataSource.createOrUpdatePost(post);
         return right(post.toEntity());
       });
@@ -110,12 +103,9 @@ class ChirpRepositoryImpl implements ChirpRepository {
       poll: poll,
     );
     return result.fold((failure) => left(failure), (createdDto) async {
-      var created = createdDto.toData();
-      // The mock backend can't create polls server-side, so mint one here.
-      final ds = pollRemoteDataSource;
-      if (poll != null && ds is MockPollRemoteDataSource) {
-        created = ds.attachDraft(created, poll);
-      }
+      // The server echoes back the created poll, so `created` already carries
+      // it — nothing extra to attach here.
+      final created = createdDto.toData();
       await localDataSource.createOrUpdatePost(created);
       return right(created.toEntity());
     });
@@ -215,9 +205,7 @@ class ChirpRepositoryImpl implements ChirpRepository {
       (failure) => left(failure),
       (posts) => right(
         PaginatedData(
-          results: posts.results
-              .map((e) => _decoratePoll(e.toData()).toEntity())
-              .toList(),
+          results: posts.results.map((e) => e.toData().toEntity()).toList(),
           count: posts.count,
           next: posts.next,
           previous: posts.previous,
@@ -237,21 +225,18 @@ class ChirpRepositoryImpl implements ChirpRepository {
       voteValue: voteValue,
       voterId: voterId,
     );
-    return result.fold(
-      (failure) => left(failure),
-      (data) {
-        final newVote = (data['my_vote'] as int?) ?? voteValue;
-        final oldVote = post.myVote;
-        final int upvotesDelta = newVote - oldVote;
-        final updatedPost = post.copyWith(
-          upvotes: (data['upvotes'] as int?) ?? (post.upvotes + upvotesDelta),
-          myVote: newVote,
-        );
-        // Best-effort local cache update
-        localDataSource.createOrUpdatePost(updatedPost.toData());
-        return right(updatedPost);
-      },
-    );
+    return result.fold((failure) => left(failure), (data) {
+      final newVote = (data['my_vote'] as int?) ?? voteValue;
+      final oldVote = post.myVote;
+      final int upvotesDelta = newVote - oldVote;
+      final updatedPost = post.copyWith(
+        upvotes: (data['upvotes'] as int?) ?? (post.upvotes + upvotesDelta),
+        myVote: newVote,
+      );
+      // Best-effort local cache update
+      localDataSource.createOrUpdatePost(updatedPost.toData());
+      return right(updatedPost);
+    });
   }
 
   @override
@@ -270,20 +255,16 @@ class ChirpRepositoryImpl implements ChirpRepository {
       voteValue: voteValue,
       voterId: voterId,
     );
-    return result.fold(
-      (failure) => left(failure),
-      (data) {
-        final newVote = (data['my_vote'] as int?) ?? voteValue;
-        final oldVote = comment.myVote;
-        final int upvotesDelta = newVote - oldVote;
-        final updatedComment = comment.copyWith(
-          upvotes:
-              (data['upvotes'] as int?) ?? (comment.upvotes + upvotesDelta),
-          myVote: newVote,
-        );
-        return right(updatedComment);
-      },
-    );
+    return result.fold((failure) => left(failure), (data) {
+      final newVote = (data['my_vote'] as int?) ?? voteValue;
+      final oldVote = comment.myVote;
+      final int upvotesDelta = newVote - oldVote;
+      final updatedComment = comment.copyWith(
+        upvotes: (data['upvotes'] as int?) ?? (comment.upvotes + upvotesDelta),
+        myVote: newVote,
+      );
+      return right(updatedComment);
+    });
   }
 
   @override
