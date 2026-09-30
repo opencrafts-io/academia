@@ -4,8 +4,8 @@ import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 
-import 'tables/tables.dart';
-import 'daos/daos.dart';
+import 'package:database/tables/tables.dart';
+import 'package:database/daos/daos.dart';
 
 part 'app_database_v2.g.dart';
 
@@ -19,8 +19,24 @@ part 'app_database_v2.g.dart';
     BillingEntitlements,
     LockInRuleRecords,
     LockInAttempts,
+    Courses,
+    Lecturers,
+    TodoLists,
+    TodoTagItems,
+    TodoItems,
+    TodoItemTags,
   ],
-  daos: [PlanDao, OrderDao, SubscriptionDao, EntitlementDao, LockInDao],
+  daos: [
+    PlanDao,
+    OrderDao,
+    SubscriptionDao,
+    EntitlementDao,
+    LockInDao,
+    CourseDao,
+    TodoListDao,
+    TodoTagDao,
+    TodoItemDao,
+  ],
 )
 class AppDatabaseV2 extends _$AppDatabaseV2 {
   // After generating code, this class needs to define a `schemaVersion` getter
@@ -30,7 +46,7 @@ class AppDatabaseV2 extends _$AppDatabaseV2 {
     : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 7;
 
   static QueryExecutor _openConnection() {
     driftRuntimeOptions.defaultSerializer = const ValueSerializer.defaults(
@@ -133,6 +149,16 @@ extension Migrations on GeneratedDatabase {
     if (from < 5) {
       await m.createTable(db.lockInRuleRecords);
       await m.createTable(db.lockInAttempts);
+    }
+    if (from < 6) {
+      await m.createTable(db.courses);
+      await m.createTable(db.lecturers);
+    }
+    if (from < 7) {
+      await m.createTable(db.todoLists);
+      await m.createTable(db.todoTagItems);
+      await m.createTable(db.todoItems);
+      await m.createTable(db.todoItemTags);
     }
   };
 }

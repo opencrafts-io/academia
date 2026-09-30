@@ -7,7 +7,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
-import 'package:logger/logger.dart';
 
 /// Represents the raw response from POST /auth/token/exchange
 /// and POST /auth/token/refresh
@@ -36,20 +35,16 @@ class _TokenExchangeResponse {
 class AuthRemoteDatasource with DioErrorHandler {
   final FlavorConfig flavor;
   final DioClient dioClient;
-  final Logger _logger = Logger();
-
-  late final String servicePrefix;
+  late final VerisafeApiPaths _apiPaths;
   late final String _authBaseUrl;
 
   AuthRemoteDatasource({required this.flavor, required this.dioClient}) {
+    _apiPaths = VerisafeApiPaths(flavor);
     if (flavor.isProduction) {
-      servicePrefix = "verisafe";
       _authBaseUrl = "https://verisafe.opencrafts.io";
     } else if (flavor.isStaging) {
-      servicePrefix = "qa-verisafe";
       _authBaseUrl = "https://qaverisafe.opencrafts.io";
     } else {
-      servicePrefix = "dev-verisafe";
       _authBaseUrl = "http://127.0.0.1:8080";
     }
   }
@@ -84,30 +79,87 @@ class AuthRemoteDatasource with DioErrorHandler {
         deviceName: deviceName,
       );
 
-      _logger.d("Starting OAuth flow: $authUri");
-
       final callbackResult = await _launchAuthSession(authUri);
-      _logger.d(callbackResult);
 
       final code = _extractCode(callbackResult);
 
       final tokenResponse = await _exchangeCode(code);
 
       return right(_toTokenData(tokenResponse));
-    } on PlatformException catch (pe) {
-      _logger.e("Auth session cancelled or failed", error: pe);
+    } on PlatformException catch (_) {
       return left(
         AuthenticationFailure(
           message: "You cancelled the authentication flow",
-          error: pe,
+          error: Exception('OAuth authentication was cancelled or failed.'),
         ),
       );
-    } catch (e) {
-      _logger.e("Failed to authenticate with $provider", error: e);
+    } catch (_) {
       return left(
         AuthenticationFailure(
           message: "Something went wrong while trying to authenticate you",
-          error: e,
+          error: Exception('OAuth authentication failed.'),
+        ),
+      );
+    }
+  }
+
+  /// Signs in an existing Verisafe account with its email and password.
+  Future<Either<Failure, TokenData>> signInWithPassword({
+    required String email,
+    required String password,
+    String? deviceName,
+    String? deviceToken,
+  }) async {
+    final request = <String, dynamic>{
+      'email': email.trim().toLowerCase(),
+      'password': password,
+    };
+    if (deviceName != null && deviceName.isNotEmpty) {
+      request['device_name'] = deviceName;
+    }
+    if (deviceToken != null && deviceToken.isNotEmpty) {
+      request['device_token'] = deviceToken;
+    }
+
+    try {
+      final response = await dioClient.dio.post<dynamic>(
+        _apiPaths.auth('password/login'),
+        data: request,
+        options: Options(extra: const {'skipAuth': true, 'sensitive': true}),
+      );
+      if (response.statusCode == 200) {
+        return right(_tokenFromResponse(response.data));
+      }
+      return left(_passwordResponseFailure(response, isLogin: true));
+    } on DioException catch (error) {
+      return left(_safeNetworkFailure(error, isLogin: true));
+    } catch (_) {
+      return left(
+        AuthenticationFailure(
+          message: 'Unable to sign in right now. Please try again.',
+          error: Exception('Password sign-in failed.'),
+        ),
+      );
+    }
+  }
+
+  /// Sets or replaces the password for the currently authenticated account.
+  Future<Either<Failure, void>> setPassword(String password) async {
+    try {
+      final response = await dioClient.dio.put<dynamic>(
+        _apiPaths.auth('password'),
+        data: {'password': password},
+        options: Options(extra: const {'sensitive': true}),
+      );
+      if (response.statusCode == 204) return right(null);
+      return left(_passwordResponseFailure(response, isLogin: false));
+    } on DioException catch (error) {
+      return left(_safeNetworkFailure(error));
+    } catch (_) {
+      return left(
+        ServerFailure(
+          message: 'Unable to save your password. Please try again.',
+          error: Exception('Password update failed.'),
         ),
       );
     }
@@ -117,65 +169,159 @@ class AuthRemoteDatasource with DioErrorHandler {
     TokenData token,
   ) async {
     try {
-      final response = await dioClient.dio.post(
-        "/$servicePrefix/auth/token/refresh",
-        data: {"refresh_token": token.refreshToken},
-        options: Options(extra: {'skipAuth': true}),
-      );
-
-      if (response.statusCode == 200) {
-        final tokenResponse = _TokenExchangeResponse.fromJson(
-          response.data as Map<String, dynamic>,
+      return right(await dioClient.refreshTokenPair(token));
+    } on AuthTokenRefreshException catch (error) {
+      if (error.rejected) {
+        return left(
+          AuthenticationFailure(
+            message: 'Your sign-in session has expired. Please sign in again.',
+            error: error,
+          ),
         );
-        return right(_toTokenData(tokenResponse));
       }
-
-      throw (AuthenticationFailure(
-        message: "Unexpected status code: ${response.statusCode}",
-        error: response,
-      ));
-    } on DioException catch (de) {
-      return handleDioError(de);
-    } catch (e) {
-      _logger.e("Failed to refresh token", error: e);
+      if (error.networkFailure) {
+        return left(
+          NetworkFailure(
+            message: 'Unable to refresh your sign-in session right now.',
+            error: error,
+          ),
+        );
+      }
       return left(
         AuthenticationFailure(
-          message: "Something went wrong while trying to authenticate you",
-          error: e,
+          message: 'Unable to refresh your sign-in session.',
+          error: error,
+        ),
+      );
+    } catch (_) {
+      return left(
+        AuthenticationFailure(
+          message: 'Unable to refresh your sign-in session.',
+          error: Exception('Token refresh failed.'),
         ),
       );
     }
   }
 
-  Future<Either<Failure, TokenData>> revokeToken(TokenData token) async {
+  Future<Either<Failure, void>> revokeToken(TokenData token) async {
     try {
-      final response = await dioClient.dio.post(
-        "/$servicePrefix/auth/token/revoke",
-        data: {"refresh_token": token.refreshToken},
+      final response = await dioClient.dio.post<dynamic>(
+        _apiPaths.auth('token/revoke'),
+        data: {'refresh_token': token.refreshToken},
+        options: Options(extra: const {'sensitive': true}),
       );
 
-      if (response.statusCode == 200) {
-        final tokenResponse = _TokenExchangeResponse.fromJson(
-          response.data as Map<String, dynamic>,
-        );
-        return right(_toTokenData(tokenResponse));
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        return right(null);
       }
-
-      throw (AuthenticationFailure(
-        message: "Unexpected status code: ${response.statusCode}",
-        error: response,
-      ));
-    } on DioException catch (de) {
-      return handleDioError(de);
-    } catch (e) {
-      _logger.e("Failed to revoke token pair", error: e);
+      return left(_passwordResponseFailure(response, isLogin: false));
+    } on DioException catch (error) {
+      return left(_safeNetworkFailure(error));
+    } catch (_) {
       return left(
         AuthenticationFailure(
-          message: "Something went wrong while trying to sign you out",
-          error: e,
+          message: 'Unable to revoke this sign-in session.',
+          error: Exception('Token revocation failed.'),
         ),
       );
     }
+  }
+
+  Failure _passwordResponseFailure(
+    Response<dynamic> response, {
+    required bool isLogin,
+  }) {
+    switch (response.statusCode) {
+      case 401:
+        return AuthenticationFailure(
+          message: isLogin
+              ? 'Invalid email or password.'
+              : 'Your sign-in session has expired. Please sign in again.',
+          error: Exception('Authentication request was rejected.'),
+        );
+      case 429:
+        return RateLimitFailure(
+          message: 'Too many sign-in attempts. Please wait and try again.',
+          error: Exception('Authentication rate limit reached.'),
+        );
+      case 503:
+        return ServerFailure(
+          message:
+              'Sign-in is temporarily unavailable. Please try again shortly.',
+          error: Exception('Authentication rate limiter is unavailable.'),
+        );
+      case 400:
+        return ValidationFailure(
+          message: _errorMessage(
+            response.data,
+            'Please check the password and try again.',
+          ),
+          error: Exception('Authentication request was rejected.'),
+        );
+      default:
+        final status = response.statusCode;
+        return ServerFailure(
+          message: status == null
+              ? 'Authentication response did not include an HTTP status.'
+              : 'Authentication service returned an unexpected response '
+                    '(HTTP $status).',
+          error: Exception('Unexpected authentication status.'),
+        );
+    }
+  }
+
+  Failure _safeNetworkFailure(DioException error, {bool isLogin = false}) {
+    if (isLogin && error.response?.statusCode == 503) {
+      return ServerFailure(
+        message:
+            'Sign-in is temporarily unavailable. Please try again shortly.',
+        error: Exception('Authentication rate limiter is unavailable.'),
+      );
+    }
+    final isConnectivityFailure = switch (error.type) {
+      DioExceptionType.connectionError ||
+      DioExceptionType.connectionTimeout ||
+      DioExceptionType.receiveTimeout ||
+      DioExceptionType.sendTimeout => true,
+      _ => false,
+    };
+    if (isConnectivityFailure) {
+      return NetworkFailure(
+        message: 'Check your connection and try again.',
+        error: Exception('Authentication network request failed.'),
+      );
+    }
+    final statusCode = error.response?.statusCode;
+    return ServerFailure(
+      message: statusCode == null
+          ? 'Authentication request failed before receiving a response '
+                '(${error.type.name}).'
+          : 'Authentication service returned an unexpected response '
+                '(HTTP $statusCode).',
+      error: Exception('Authentication server request failed.'),
+    );
+  }
+
+  String _errorMessage(Object? data, String fallback) {
+    if (data is Map && data['error'] is String) {
+      final message = (data['error'] as String).trim();
+      if (message.isNotEmpty) return message;
+    }
+    return fallback;
+  }
+
+  TokenData _tokenFromResponse(Object? data) {
+    if (data is! Map) {
+      throw const FormatException('Invalid token response.');
+    }
+    final json = data.cast<String, dynamic>();
+    return TokenData(
+      provider: 'verisafe',
+      accessToken: json['access_token'] as String,
+      refreshToken: json['refresh_token'] as String,
+      accessExpiresAt: DateTime.parse(json['access_expires_at'] as String),
+      refreshExpiresAt: DateTime.parse(json['refresh_expires_at'] as String),
+    );
   }
 
   /// Builds the backend OAuth initiation URL with all required query params.
@@ -235,9 +381,9 @@ class AuthRemoteDatasource with DioErrorHandler {
   /// The code is deleted server-side on first use (60s TTL).
   Future<_TokenExchangeResponse> _exchangeCode(String code) async {
     final response = await dioClient.dio.post(
-      "/$servicePrefix/auth/token/exchange",
+      _apiPaths.auth('token/exchange'),
       data: {"code": code},
-      options: Options(extra: {'skipAuth': true}),
+      options: Options(extra: const {'skipAuth': true, 'sensitive': true}),
     );
 
     if (response.statusCode != 200) {

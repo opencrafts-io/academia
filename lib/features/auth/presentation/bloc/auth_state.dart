@@ -26,6 +26,9 @@ class AuthAuthenticated extends AuthState {
 
   @override
   List<Object> get props => [token];
+
+  @override
+  bool? get stringify => false;
 }
 
 /// State indicating that no user is currently authenticated.
@@ -36,9 +39,10 @@ class AuthUnauthenticated extends AuthState {
 /// State indicating that an authentication operation failed.
 class AuthError extends AuthState {
   final String message; // User-friendly error message
+  final bool inline;
 
-  const AuthError({required this.message});
+  const AuthError({required this.message, this.inline = false});
 
   @override
-  List<Object> get props => [message];
+  List<Object> get props => [message, inline];
 }

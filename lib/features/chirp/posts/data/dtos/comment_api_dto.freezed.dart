@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'comment_api_dto.dart';
@@ -9,6 +9,7 @@ part of 'comment_api_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $CommentApiDtoCopyWith<CommentApiDto> get copyWith => _$CommentApiDtoCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommentApiDto&&(identical(other.id, id) || other.id == id)&&(identical(other.post, post) || other.post == post)&&(identical(other.authorId, authorId) || other.authorId == authorId)&&(identical(other.content, content) || other.content == content)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.upvotes, upvotes) || other.upvotes == upvotes)&&(identical(other.downvotes, downvotes) || other.downvotes == downvotes)&&const DeepCollectionEquality().equals(other.replies, replies)&&(identical(other.parent, parent) || other.parent == parent));
+  final _this = this as CommentApiDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommentApiDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.post, _this.post) || other.post == _this.post)&&(identical(other.authorId, _this.authorId) || other.authorId == _this.authorId)&&(identical(other.content, _this.content) || other.content == _this.content)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt)&&(identical(other.upvotes, _this.upvotes) || other.upvotes == _this.upvotes)&&(identical(other.downvotes, _this.downvotes) || other.downvotes == _this.downvotes)&&const DeepCollectionEquality().equals(other.replies, _this.replies)&&(identical(other.parent, _this.parent) || other.parent == _this.parent));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,post,authorId,content,createdAt,updatedAt,upvotes,downvotes,const DeepCollectionEquality().hash(replies),parent);
+int get hashCode {
+  final _this = this as CommentApiDto;
+  return Object.hash(runtimeType,_this.id,_this.post,_this.authorId,_this.content,_this.createdAt,_this.updatedAt,_this.upvotes,_this.downvotes,const DeepCollectionEquality().hash(_this.replies),_this.parent);
+}
 
 @override
 String toString() {
-  return 'CommentApiDto(id: $id, post: $post, authorId: $authorId, content: $content, createdAt: $createdAt, updatedAt: $updatedAt, upvotes: $upvotes, downvotes: $downvotes, replies: $replies, parent: $parent)';
+  final _this = this as CommentApiDto;
+  return 'CommentApiDto(id: ${_this.id}, post: ${_this.post}, authorId: ${_this.authorId}, content: ${_this.content}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt}, upvotes: ${_this.upvotes}, downvotes: ${_this.downvotes}, replies: ${_this.replies}, parent: ${_this.parent})';
 }
 
 
@@ -66,7 +72,7 @@ class _$CommentApiDtoCopyWithImpl<$Res>
 /// Create a copy of CommentApiDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? post = null,Object? authorId = null,Object? content = null,Object? createdAt = null,Object? updatedAt = null,Object? upvotes = null,Object? downvotes = null,Object? replies = null,Object? parent = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(CommentApiDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,post: null == post ? _self.post : post // ignore: cast_nullable_to_non_nullable
 as int,authorId: null == authorId ? _self.authorId : authorId // ignore: cast_nullable_to_non_nullable
@@ -218,7 +224,7 @@ return $default(_that.id,_that.post,_that.authorId,_that.content,_that.createdAt
 @JsonSerializable()
 
 class _CommentApiDto implements CommentApiDto {
-  const _CommentApiDto({required this.id, required this.post, @JsonKey(name: 'author_id') required this.authorId, required this.content, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt, this.upvotes = 0, this.downvotes = 0, final  List<CommentApiDto> replies = const [], this.parent}): _replies = replies;
+  const _CommentApiDto({required this.id, required this.post, @JsonKey(name: 'author_id') required this.authorId, required this.content, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt, this.upvotes = 0, this.downvotes = 0,  List<CommentApiDto> replies = const [], this.parent}): _replies = replies;
   factory _CommentApiDto.fromJson(Map<String, dynamic> json) => _$CommentApiDtoFromJson(json);
 
 @override final  int id;
@@ -251,16 +257,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CommentApiDto&&(identical(other.id, id) || other.id == id)&&(identical(other.post, post) || other.post == post)&&(identical(other.authorId, authorId) || other.authorId == authorId)&&(identical(other.content, content) || other.content == content)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.upvotes, upvotes) || other.upvotes == upvotes)&&(identical(other.downvotes, downvotes) || other.downvotes == downvotes)&&const DeepCollectionEquality().equals(other._replies, _replies)&&(identical(other.parent, parent) || other.parent == parent));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CommentApiDto&&(identical(other.id, id) || other.id == id)&&(identical(other.post, post) || other.post == post)&&(identical(other.authorId, authorId) || other.authorId == authorId)&&(identical(other.content, content) || other.content == content)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.upvotes, upvotes) || other.upvotes == upvotes)&&(identical(other.downvotes, downvotes) || other.downvotes == downvotes)&&const DeepCollectionEquality().equals(other.replies, _replies)&&(identical(other.parent, parent) || other.parent == parent));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,post,authorId,content,createdAt,updatedAt,upvotes,downvotes,const DeepCollectionEquality().hash(_replies),parent);
+int get hashCode {
+    return Object.hash(runtimeType,id,post,authorId,content,createdAt,updatedAt,upvotes,downvotes,const DeepCollectionEquality().hash(_replies),parent);
+}
 
 @override
 String toString() {
-  return 'CommentApiDto(id: $id, post: $post, authorId: $authorId, content: $content, createdAt: $createdAt, updatedAt: $updatedAt, upvotes: $upvotes, downvotes: $downvotes, replies: $replies, parent: $parent)';
+    return 'CommentApiDto(id: $id, post: $post, authorId: $authorId, content: $content, createdAt: $createdAt, updatedAt: $updatedAt, upvotes: $upvotes, downvotes: $downvotes, replies: $replies, parent: $parent)';
 }
 
 

@@ -19,7 +19,8 @@ export 'presentation/widgets/expanding_fab.dart';
 export 'presentation/widgets/rrule_editor_widget.dart';
 export 'presentation/widgets/linkified_text.dart';
 
-export 'presentation/safe_cubit.dart';
+export 'package:core/core.dart' show SafeCubit;
 
 export 'notifications/notification_namespace.dart';
+export 'notifications/academia_notification_action_handler.dart';
 export 'di/injection.dart';

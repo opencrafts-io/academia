@@ -12,9 +12,9 @@ class EntitlementDao extends DatabaseAccessor<AppDatabaseV2>
   EntitlementDao(super.db);
 
   Future<List<BillingEntitlement>> getByPlanCode(String planCode) {
-    return (select(billingEntitlements)
-          ..where((entitlement) => entitlement.planCode.equals(planCode)))
-        .get();
+    return (select(
+      billingEntitlements,
+    )..where((entitlement) => entitlement.planCode.equals(planCode))).get();
   }
 
   Future<void> replaceForPlan(
@@ -22,9 +22,9 @@ class EntitlementDao extends DatabaseAccessor<AppDatabaseV2>
     List<BillingEntitlementsCompanion> entitlements,
   ) async {
     await transaction(() async {
-      await (delete(billingEntitlements)
-            ..where((entitlement) => entitlement.planCode.equals(planCode)))
-          .go();
+      await (delete(
+        billingEntitlements,
+      )..where((entitlement) => entitlement.planCode.equals(planCode))).go();
       await batch((batch) {
         batch.insertAll(billingEntitlements, entitlements);
       });

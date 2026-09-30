@@ -69,6 +69,32 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<Either<Failure, Token>> signInWithPassword({
+    required String email,
+    required String password,
+    String? deviceName,
+    String? deviceToken,
+  }) async {
+    final result = await authRemoteDatasource.signInWithPassword(
+      email: email,
+      password: password,
+      deviceName: deviceName,
+      deviceToken: deviceToken,
+    );
+    return result.fold((failure) => left(failure), (token) async {
+      final cacheResult = await authLocalDatasource.cacheOrUpdateToken(token);
+      return cacheResult.fold(
+        (failure) => left(failure),
+        (savedToken) => right(savedToken.toEntity()),
+      );
+    });
+  }
+
+  @override
+  Future<Either<Failure, void>> setPassword(String password) =>
+      authRemoteDatasource.setPassword(password);
+
+  @override
   Future<Either<Failure, List<Token>>> getPreviousAuthState() async {
     final result = await authLocalDatasource.getAllCachedTokens();
     return result.fold(
@@ -82,14 +108,10 @@ class AuthRepositoryImpl implements AuthRepository {
     final result = await authRemoteDatasource.refreshVerisafeToken(
       token.toData(),
     );
-
-    return result.fold((error) => left(error), (token) async {
-      final cacheRes = await authLocalDatasource.cacheOrUpdateToken(token);
-      return cacheRes.fold(
-        (error) => left(error),
-        (token) => right(token.toEntity()),
-      );
-    });
+    return result.fold(
+      (failure) => left(failure),
+      (token) => right(token.toEntity()),
+    );
   }
 
   @override
@@ -104,17 +126,11 @@ class AuthRepositoryImpl implements AuthRepository {
     final tokenResult = await authLocalDatasource.getTokenByProvider(
       "verisafe",
     );
+    final token = tokenResult.fold((_) => null, (token) => token);
 
-    return await tokenResult.fold(
-      (failure) async {
-        await authLocalDatasource.deleteAllTokens();
-        return right(null);
-      },
-      (token) async {
-        authRemoteDatasource.revokeToken(token);
-        await authLocalDatasource.deleteAllTokens();
-        return right(null);
-      },
-    );
+    // Revocation is best effort: even if the network is unavailable, complete
+    // local logout so the user is not left in an authenticated UI state.
+    if (token != null) await authRemoteDatasource.revokeToken(token);
+    return authLocalDatasource.deleteAllTokens();
   }
 }

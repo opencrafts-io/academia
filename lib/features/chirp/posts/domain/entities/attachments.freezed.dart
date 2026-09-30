@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'attachments.dart';
@@ -9,6 +9,7 @@ part of 'attachments.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $AttachmentsCopyWith<Attachments> get copyWith => _$AttachmentsCopyWithImpl<Atta
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Attachments&&(identical(other.id, id) || other.id == id)&&(identical(other.postId, postId) || other.postId == postId)&&(identical(other.attachmentType, attachmentType) || other.attachmentType == attachmentType)&&(identical(other.file, file) || other.file == file)&&(identical(other.name, name) || other.name == name)&&(identical(other.size, size) || other.size == size)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  final _this = this as Attachments;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Attachments&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.postId, _this.postId) || other.postId == _this.postId)&&(identical(other.attachmentType, _this.attachmentType) || other.attachmentType == _this.attachmentType)&&(identical(other.file, _this.file) || other.file == _this.file)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.size, _this.size) || other.size == _this.size)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,postId,attachmentType,file,name,size,createdAt);
+int get hashCode {
+  final _this = this as Attachments;
+  return Object.hash(runtimeType,_this.id,_this.postId,_this.attachmentType,_this.file,_this.name,_this.size,_this.createdAt);
+}
 
 @override
 String toString() {
-  return 'Attachments(id: $id, postId: $postId, attachmentType: $attachmentType, file: $file, name: $name, size: $size, createdAt: $createdAt)';
+  final _this = this as Attachments;
+  return 'Attachments(id: ${_this.id}, postId: ${_this.postId}, attachmentType: ${_this.attachmentType}, file: ${_this.file}, name: ${_this.name}, size: ${_this.size}, createdAt: ${_this.createdAt})';
 }
 
 
@@ -63,7 +69,7 @@ class _$AttachmentsCopyWithImpl<$Res>
 /// Create a copy of Attachments
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? postId = null,Object? attachmentType = null,Object? file = null,Object? name = null,Object? size = null,Object? createdAt = null,}) {
-  return _then(_self.copyWith(
+  return _then(Attachments(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,postId: null == postId ? _self.postId : postId // ignore: cast_nullable_to_non_nullable
 as int,attachmentType: null == attachmentType ? _self.attachmentType : attachmentType // ignore: cast_nullable_to_non_nullable
@@ -233,16 +239,18 @@ _$AttachmentsCopyWith<_Attachments> get copyWith => __$AttachmentsCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Attachments&&(identical(other.id, id) || other.id == id)&&(identical(other.postId, postId) || other.postId == postId)&&(identical(other.attachmentType, attachmentType) || other.attachmentType == attachmentType)&&(identical(other.file, file) || other.file == file)&&(identical(other.name, name) || other.name == name)&&(identical(other.size, size) || other.size == size)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Attachments&&(identical(other.id, id) || other.id == id)&&(identical(other.postId, postId) || other.postId == postId)&&(identical(other.attachmentType, attachmentType) || other.attachmentType == attachmentType)&&(identical(other.file, file) || other.file == file)&&(identical(other.name, name) || other.name == name)&&(identical(other.size, size) || other.size == size)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,postId,attachmentType,file,name,size,createdAt);
+int get hashCode {
+    return Object.hash(runtimeType,id,postId,attachmentType,file,name,size,createdAt);
+}
 
 @override
 String toString() {
-  return 'Attachments(id: $id, postId: $postId, attachmentType: $attachmentType, file: $file, name: $name, size: $size, createdAt: $createdAt)';
+    return 'Attachments(id: $id, postId: $postId, attachmentType: $attachmentType, file: $file, name: $name, size: $size, createdAt: $createdAt)';
 }
 
 

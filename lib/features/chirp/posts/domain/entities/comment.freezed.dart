@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'comment.dart';
@@ -9,13 +9,13 @@ part of 'comment.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Comment {
 
- int get id; int get post; String get authorId; String get content; DateTime get createdAt; DateTime get updatedAt; int get upvotes; int get downvotes;// 1 = upvoted, -1 = downvoted, 0 = no vote
- int get myVote; int? get parent; List<Comment> get replies;
+ int get id; int get post; String get authorId; String get content; DateTime get createdAt; DateTime get updatedAt; int get upvotes; int get downvotes; int get myVote; int? get parent; List<Comment> get replies;
 /// Create a copy of Comment
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26,16 +26,21 @@ $CommentCopyWith<Comment> get copyWith => _$CommentCopyWithImpl<Comment>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Comment&&(identical(other.id, id) || other.id == id)&&(identical(other.post, post) || other.post == post)&&(identical(other.authorId, authorId) || other.authorId == authorId)&&(identical(other.content, content) || other.content == content)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.upvotes, upvotes) || other.upvotes == upvotes)&&(identical(other.downvotes, downvotes) || other.downvotes == downvotes)&&(identical(other.myVote, myVote) || other.myVote == myVote)&&(identical(other.parent, parent) || other.parent == parent)&&const DeepCollectionEquality().equals(other.replies, replies));
+  final _this = this as Comment;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Comment&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.post, _this.post) || other.post == _this.post)&&(identical(other.authorId, _this.authorId) || other.authorId == _this.authorId)&&(identical(other.content, _this.content) || other.content == _this.content)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt)&&(identical(other.upvotes, _this.upvotes) || other.upvotes == _this.upvotes)&&(identical(other.downvotes, _this.downvotes) || other.downvotes == _this.downvotes)&&(identical(other.myVote, _this.myVote) || other.myVote == _this.myVote)&&(identical(other.parent, _this.parent) || other.parent == _this.parent)&&const DeepCollectionEquality().equals(other.replies, _this.replies));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,post,authorId,content,createdAt,updatedAt,upvotes,downvotes,myVote,parent,const DeepCollectionEquality().hash(replies));
+int get hashCode {
+  final _this = this as Comment;
+  return Object.hash(runtimeType,_this.id,_this.post,_this.authorId,_this.content,_this.createdAt,_this.updatedAt,_this.upvotes,_this.downvotes,_this.myVote,_this.parent,const DeepCollectionEquality().hash(_this.replies));
+}
 
 @override
 String toString() {
-  return 'Comment(id: $id, post: $post, authorId: $authorId, content: $content, createdAt: $createdAt, updatedAt: $updatedAt, upvotes: $upvotes, downvotes: $downvotes, myVote: $myVote, parent: $parent, replies: $replies)';
+  final _this = this as Comment;
+  return 'Comment(id: ${_this.id}, post: ${_this.post}, authorId: ${_this.authorId}, content: ${_this.content}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt}, upvotes: ${_this.upvotes}, downvotes: ${_this.downvotes}, myVote: ${_this.myVote}, parent: ${_this.parent}, replies: ${_this.replies})';
 }
 
 
@@ -64,7 +69,7 @@ class _$CommentCopyWithImpl<$Res>
 /// Create a copy of Comment
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? post = null,Object? authorId = null,Object? content = null,Object? createdAt = null,Object? updatedAt = null,Object? upvotes = null,Object? downvotes = null,Object? myVote = null,Object? parent = freezed,Object? replies = null,}) {
-  return _then(_self.copyWith(
+  return _then(Comment(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,post: null == post ? _self.post : post // ignore: cast_nullable_to_non_nullable
 as int,authorId: null == authorId ? _self.authorId : authorId // ignore: cast_nullable_to_non_nullable
@@ -217,7 +222,7 @@ return $default(_that.id,_that.post,_that.authorId,_that.content,_that.createdAt
 
 
 class _Comment implements Comment {
-  const _Comment({required this.id, required this.post, required this.authorId, required this.content, required this.createdAt, required this.updatedAt, this.upvotes = 0, this.downvotes = 0, this.myVote = 0, this.parent, final  List<Comment> replies = const []}): _replies = replies;
+  const _Comment({required this.id, required this.post, required this.authorId, required this.content, required this.createdAt, required this.updatedAt, this.upvotes = 0, this.downvotes = 0, this.myVote = 0, this.parent,  List<Comment> replies = const []}): _replies = replies;
   
 
 @override final  int id;
@@ -228,7 +233,6 @@ class _Comment implements Comment {
 @override final  DateTime updatedAt;
 @override@JsonKey() final  int upvotes;
 @override@JsonKey() final  int downvotes;
-// 1 = upvoted, -1 = downvoted, 0 = no vote
 @override@JsonKey() final  int myVote;
 @override final  int? parent;
  final  List<Comment> _replies;
@@ -249,16 +253,18 @@ _$CommentCopyWith<_Comment> get copyWith => __$CommentCopyWithImpl<_Comment>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Comment&&(identical(other.id, id) || other.id == id)&&(identical(other.post, post) || other.post == post)&&(identical(other.authorId, authorId) || other.authorId == authorId)&&(identical(other.content, content) || other.content == content)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.upvotes, upvotes) || other.upvotes == upvotes)&&(identical(other.downvotes, downvotes) || other.downvotes == downvotes)&&(identical(other.myVote, myVote) || other.myVote == myVote)&&(identical(other.parent, parent) || other.parent == parent)&&const DeepCollectionEquality().equals(other._replies, _replies));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Comment&&(identical(other.id, id) || other.id == id)&&(identical(other.post, post) || other.post == post)&&(identical(other.authorId, authorId) || other.authorId == authorId)&&(identical(other.content, content) || other.content == content)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.upvotes, upvotes) || other.upvotes == upvotes)&&(identical(other.downvotes, downvotes) || other.downvotes == downvotes)&&(identical(other.myVote, myVote) || other.myVote == myVote)&&(identical(other.parent, parent) || other.parent == parent)&&const DeepCollectionEquality().equals(other.replies, _replies));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,post,authorId,content,createdAt,updatedAt,upvotes,downvotes,myVote,parent,const DeepCollectionEquality().hash(_replies));
+int get hashCode {
+    return Object.hash(runtimeType,id,post,authorId,content,createdAt,updatedAt,upvotes,downvotes,myVote,parent,const DeepCollectionEquality().hash(_replies));
+}
 
 @override
 String toString() {
-  return 'Comment(id: $id, post: $post, authorId: $authorId, content: $content, createdAt: $createdAt, updatedAt: $updatedAt, upvotes: $upvotes, downvotes: $downvotes, myVote: $myVote, parent: $parent, replies: $replies)';
+    return 'Comment(id: $id, post: $post, authorId: $authorId, content: $content, createdAt: $createdAt, updatedAt: $updatedAt, upvotes: $upvotes, downvotes: $downvotes, myVote: $myVote, parent: $parent, replies: $replies)';
 }
 
 

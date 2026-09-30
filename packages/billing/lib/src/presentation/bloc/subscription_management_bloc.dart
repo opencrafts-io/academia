@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:analytics/analytics.dart';
 import 'package:billing/src/domain/domain.dart';
 import 'package:core/core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,7 +17,9 @@ class SubscriptionManagementBloc
     this._getCurrentSubscriptionStatus,
     this._createOrder,
     this._createOrderItem,
+    this._getOrderById,
     this._createCheckoutSession,
+    this._analyticsTracker,
   ) : super(const SubscriptionManagementState()) {
     on<LoadSubscriptionManagement>(_load);
     on<RefreshSubscriptionManagement>(_load);
@@ -28,12 +33,16 @@ class SubscriptionManagementBloc
   final GetCurrentSubscriptionStatus _getCurrentSubscriptionStatus;
   final CreateOrder _createOrder;
   final CreateOrderItem _createOrderItem;
+  final GetOrderById _getOrderById;
   final CreateCheckoutSession _createCheckoutSession;
+  final AnalyticsTracker _analyticsTracker;
 
   Future<void> _load(
     SubscriptionManagementEvent event,
     Emitter<SubscriptionManagementState> emit,
   ) async {
+    if (_isBillingOperationInProgress) return;
+
     emit(
       state.copyWith(
         status: SubscriptionManagementStatus.loading,
@@ -47,35 +56,47 @@ class SubscriptionManagementBloc
     );
     if (isClosed) return;
 
-    final plans = plansResult.getOrElse(() => const <Plan>[]);
+    final plans = plansResult.fold(
+      (_) => state.plans,
+      (fetchedPlans) => fetchedPlans
+          .where((plan) => plan.active && plan.visible)
+          .toList(),
+    );
     final subscriptionStatus = subscriptionResult.toOption().toNullable();
+    final subscriptionFailure = subscriptionResult.fold(
+      (failure) => failure,
+      (_) => null,
+    );
     final failure =
-        plansResult.fold((value) => value, (_) => null) ??
-        subscriptionResult.fold((value) => value, (_) => null);
+        plansResult.fold((value) => value, (_) => null) ?? subscriptionFailure;
+    final selectedPlan = state.selectedPlan == null
+        ? null
+        : plans
+              .where((plan) => plan.code == state.selectedPlan!.code)
+              .firstOrNull;
 
     if (failure != null) {
       emit(
         state.copyWith(
           status: SubscriptionManagementStatus.failure,
-          plans: plans.isEmpty ? state.plans : plans,
+          plans: plans,
           subscriptionStatus: subscriptionStatus,
+          clearSubscriptionStatus: subscriptionFailure != null,
+          selectedPlan: selectedPlan,
+          clearSelectedPlan: selectedPlan == null,
           failure: failure,
         ),
       );
       return;
     }
 
-    final selectedPlan = state.selectedPlan == null
-        ? null
-        : plans
-              .where((plan) => plan.code == state.selectedPlan!.code)
-              .firstOrNull;
     emit(
       state.copyWith(
         status: SubscriptionManagementStatus.ready,
         plans: plans,
         subscriptionStatus: subscriptionStatus,
         selectedPlan: selectedPlan,
+        clearSelectedPlan: selectedPlan == null,
         clearOrder: true,
         orderItems: const [],
         clearCheckoutSession: true,
@@ -88,6 +109,7 @@ class SubscriptionManagementBloc
     SelectSubscriptionPlan event,
     Emitter<SubscriptionManagementState> emit,
   ) {
+    if (_isBillingOperationInProgress) return;
     if (!event.plan.active || !event.plan.visible) return;
     emit(
       state.copyWith(
@@ -105,6 +127,8 @@ class SubscriptionManagementBloc
     CreateSubscriptionOrder event,
     Emitter<SubscriptionManagementState> emit,
   ) async {
+    if (_isBillingOperationInProgress) return;
+
     final plan = state.selectedPlan;
     if (plan == null) {
       emit(
@@ -113,6 +137,18 @@ class SubscriptionManagementBloc
           failure: const Failure.validation(
             message: 'Select a plan before continuing',
             code: 'BILLING_PLAN_REQUIRED',
+          ),
+        ),
+      );
+      return;
+    }
+    if (!plan.active || !plan.visible) {
+      emit(
+        state.copyWith(
+          status: SubscriptionManagementStatus.failure,
+          failure: const Failure.validation(
+            message: 'This plan is not available for purchase',
+            code: 'BILLING_PLAN_UNAVAILABLE',
           ),
         ),
       );
@@ -169,18 +205,35 @@ class SubscriptionManagementBloc
     );
     if (isClosed) return;
 
-    itemResult.fold(
+    final itemFailure = itemResult.fold((failure) => failure, (_) => null);
+    final item = itemResult.toOption().toNullable();
+    if (itemFailure != null || item == null) {
+      emit(
+        state.copyWith(
+          status: SubscriptionManagementStatus.failure,
+          order: order,
+          failure: itemFailure,
+        ),
+      );
+      return;
+    }
+
+    final refreshedOrderResult = await _getOrderById(order.id);
+    if (isClosed) return;
+
+    refreshedOrderResult.fold(
       (failure) => emit(
         state.copyWith(
           status: SubscriptionManagementStatus.failure,
           order: order,
+          orderItems: [item],
           failure: failure,
         ),
       ),
-      (item) => emit(
+      (refreshedOrder) => emit(
         state.copyWith(
           status: SubscriptionManagementStatus.orderReady,
-          order: order,
+          order: refreshedOrder,
           orderItems: [item],
           clearFailure: true,
         ),
@@ -192,6 +245,8 @@ class SubscriptionManagementBloc
     ClearSubscriptionOrder event,
     Emitter<SubscriptionManagementState> emit,
   ) {
+    if (_isBillingOperationInProgress) return;
+
     emit(
       state.copyWith(
         status: SubscriptionManagementStatus.ready,
@@ -207,6 +262,8 @@ class SubscriptionManagementBloc
     RequestCheckoutSession event,
     Emitter<SubscriptionManagementState> emit,
   ) async {
+    if (_isBillingOperationInProgress) return;
+
     final order = state.order;
     if (order == null) {
       emit(
@@ -240,13 +297,21 @@ class SubscriptionManagementBloc
           failure: failure,
         ),
       ),
-      (session) => emit(
-        state.copyWith(
-          status: SubscriptionManagementStatus.checkoutSessionReady,
-          checkoutSession: session,
-          clearFailure: true,
-        ),
-      ),
+      (session) {
+        unawaited(_analyticsTracker.track(AnalyticsEvent.checkoutStarted()));
+        emit(
+          state.copyWith(
+            status: SubscriptionManagementStatus.checkoutSessionReady,
+            checkoutSession: session,
+            clearFailure: true,
+          ),
+        );
+      },
     );
   }
+
+  bool get _isBillingOperationInProgress =>
+      state.status == SubscriptionManagementStatus.loading ||
+      state.status == SubscriptionManagementStatus.creatingOrder ||
+      state.status == SubscriptionManagementStatus.creatingCheckoutSession;
 }

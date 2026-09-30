@@ -1,10 +1,15 @@
-import 'package:core/config/flavor.dart';
+import 'dart:async';
+
 import 'package:academia/core/core.dart';
 import 'package:academia/features/auth/auth.dart';
+import 'package:academia/features/auth/data/datasources/auth_local_datasource.dart';
+import 'package:analytics/analytics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:posthog_flutter/posthog_flutter.dart';
 import 'package:academia/injection_container.dart';
+import 'package:billing/billing.dart' as billing;
 import 'package:logger/logger.dart';
+import 'package:notifications/notifications.dart';
 
 import 'package:equatable/equatable.dart';
 
@@ -19,8 +24,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final RefreshVerisafeTokenUsecase refreshVerisafeTokenUsecase;
   final SignInAsReviewUsecase signInAsReviewUsecase;
   final SignInWithProviderUsecase signInWithProviderUsecase;
+  final SignInWithPasswordUsecase signInWithPasswordUsecase;
   final SignOutUsecase signOutUsecase;
-  final Posthog posthog = Posthog();
+  final AuthLocalDatasource authLocalDatasource;
+  final AnalyticsTracker analyticsTracker;
+  final NotificationIdentityService notificationIdentityService;
+  late final StreamSubscription<void> _sessionInvalidationSubscription;
 
   AuthBloc({
     required this.signInWithGoogle,
@@ -30,7 +39,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required this.signInAsReviewUsecase,
     required this.signInWithAppleUsecase,
     required this.signInWithProviderUsecase,
+    required this.signInWithPasswordUsecase,
     required this.signOutUsecase,
+    required this.authLocalDatasource,
+    required this.analyticsTracker,
+    required this.notificationIdentityService,
   }) : super(const AuthInitial()) {
     // Register event handlers
     on<AuthSignInAsReviewerEvent>(_onSignInAsReviewer);
@@ -38,8 +51,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthSignInWithProviderEvent>(_onSignInWithProvider);
     on<AuthSignInWithAppleEvent>(_onSignInWithApple);
     on<AuthSignInWithSpotifyEvent>(_onSignInWithSpotify);
+    on<AuthSignInWithPasswordEvent>(_onSignInWithPassword);
     on<AuthCheckStatusEvent>(_onAppLaunched);
     on<AuthSignOutEvent>(_onSignOut);
+    on<AuthSessionExpiredEvent>(
+      (event, emit) => emit(const AuthUnauthenticated()),
+    );
+
+    _sessionInvalidationSubscription = authLocalDatasource.sessionInvalidated
+        .listen((_) {
+          if (!isClosed) add(const AuthSessionExpiredEvent());
+        });
   }
 
   // --- Event Handlers ---
@@ -51,20 +73,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     final result = await signInWithProviderUsecase(event.authProvider);
 
-    result.fold(
-      (failure) =>
-          emit(AuthError(message: (failure as AuthenticationFailure).message)),
-      (token) {
-        // Log successfull login
-        if (sl<FlavorConfig>().isProduction) {
-          posthog.capture(
-            eventName: "user_login",
-            properties: {'login_type': 'Google', "successful": 1},
-          );
-        }
-        emit(AuthAuthenticated(token: token));
-      },
-    );
+    result.fold((failure) => emit(AuthError(message: failure.message)), (
+      token,
+    ) {
+      _recordSignIn(AnalyticsSignInMethod.provider);
+      emit(AuthAuthenticated(token: token));
+    });
   }
 
   Future<void> _onSignInWithSpotify(
@@ -75,21 +89,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     final result = await signInWithSpotifyUsecase(NoParams());
 
-    result.fold(
-      (failure) =>
-          emit(AuthError(message: (failure as AuthenticationFailure).message)),
-      (token) {
-        // Log successfull login
-        if (sl<FlavorConfig>().isProduction) {
-          posthog.capture(
-            eventName: "user_login",
-            properties: {'login_type': 'Google', "successful": 1},
-          );
-        }
+    result.fold((failure) => emit(AuthError(message: failure.message)), (
+      token,
+    ) {
+      _recordSignIn(AnalyticsSignInMethod.spotify);
 
-        emit(AuthAuthenticated(token: token));
-      },
-    );
+      emit(AuthAuthenticated(token: token));
+    });
   }
 
   Future<void> _onSignInAsReviewer(
@@ -100,21 +106,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     final result = await signInAsReviewUsecase(NoParams());
 
-    result.fold(
-      (failure) =>
-          emit(AuthError(message: (failure as AuthenticationFailure).message)),
-      (token) {
-        // Log successfull login
-        if (sl<FlavorConfig>().isProduction) {
-          posthog.capture(
-            eventName: "user_login",
-            properties: {'login_type': 'Review Sign In', "successful": 1},
-          );
-        }
+    result.fold((failure) => emit(AuthError(message: failure.message)), (
+      token,
+    ) {
+      _recordSignIn(AnalyticsSignInMethod.reviewer);
 
-        emit(AuthAuthenticated(token: token));
-      },
-    );
+      emit(AuthAuthenticated(token: token));
+    });
   }
 
   Future<void> _onSignInWithGoogle(
@@ -125,21 +123,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     final result = await signInWithGoogle(NoParams());
 
-    result.fold(
-      (failure) =>
-          emit(AuthError(message: (failure as AuthenticationFailure).message)),
-      (token) {
-        // Log successfull login
-        if (sl<FlavorConfig>().isProduction) {
-          posthog.capture(
-            eventName: "user_login",
-            properties: {'login_type': 'Google', "successful": 1},
-          );
-        }
+    result.fold((failure) => emit(AuthError(message: failure.message)), (
+      token,
+    ) {
+      _recordSignIn(AnalyticsSignInMethod.google);
 
-        emit(AuthAuthenticated(token: token));
-      },
-    );
+      emit(AuthAuthenticated(token: token));
+    });
   }
 
   Future<void> _onSignInWithApple(
@@ -150,18 +140,28 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     final result = await signInWithAppleUsecase(NoParams());
 
-    result.fold(
-      (failure) =>
-          emit(AuthError(message: (failure as AuthenticationFailure).message)),
-      (token) {
-        // Log successfull login
-        if (sl<FlavorConfig>().isProduction) {
-          posthog.capture(
-            eventName: "user_login",
-            properties: {'login_type': 'Apple', "successful": 1},
-          );
-        }
+    result.fold((failure) => emit(AuthError(message: failure.message)), (
+      token,
+    ) {
+      _recordSignIn(AnalyticsSignInMethod.apple);
 
+      emit(AuthAuthenticated(token: token));
+    });
+  }
+
+  Future<void> _onSignInWithPassword(
+    AuthSignInWithPasswordEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(const AuthLoading());
+    final result = await signInWithPasswordUsecase(
+      email: event.email,
+      password: event.password,
+    );
+    result.fold(
+      (failure) => emit(AuthError(message: failure.message, inline: true)),
+      (token) {
+        _recordSignIn(AnalyticsSignInMethod.password);
         emit(AuthAuthenticated(token: token));
       },
     );
@@ -176,8 +176,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final result = await getPreviousAuthState(NoParams());
 
     await result.fold(
-      (failure) async =>
-          emit(AuthError(message: (failure as AuthenticationFailure).message)),
+      (failure) async => emit(AuthError(message: failure.message)),
       (tokens) async {
         if (tokens.isEmpty) {
           Logger().i("No tokens found. New user or cleared session.");
@@ -217,6 +216,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           );
         }
 
+        await authLocalDatasource.invalidateVerisafeSession();
         return emit(AuthUnauthenticated());
       },
     );
@@ -234,9 +234,23 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(AuthError(message: failure.message));
       },
       (success) {
-        posthog.capture(eventName: "user_logout");
+        sl<billing.BillingService>().invalidate();
+        unawaited(Posthog().capture(eventName: "user_logout"));
+        unawaited(analyticsTracker.track(AnalyticsEvent.signOutCompleted()));
+        unawaited(analyticsTracker.reset());
+        unawaited(notificationIdentityService.clear());
         emit(AuthUnauthenticated());
       },
     );
+  }
+
+  void _recordSignIn(AnalyticsSignInMethod method) {
+    unawaited(analyticsTracker.track(AnalyticsEvent.signInCompleted(method)));
+  }
+
+  @override
+  Future<void> close() async {
+    await _sessionInvalidationSubscription.cancel();
+    await super.close();
   }
 }

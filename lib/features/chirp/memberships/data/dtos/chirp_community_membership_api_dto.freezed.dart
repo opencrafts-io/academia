@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'chirp_community_membership_api_dto.dart';
@@ -9,6 +9,7 @@ part of 'chirp_community_membership_api_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $ChirpCommunityMembershipApiDtoCopyWith<ChirpCommunityMembershipApiDto> get copy
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChirpCommunityMembershipApiDto&&(identical(other.id, id) || other.id == id)&&(identical(other.communityID, communityID) || other.communityID == communityID)&&(identical(other.userID, userID) || other.userID == userID)&&(identical(other.role, role) || other.role == role)&&(identical(other.banned, banned) || other.banned == banned)&&(identical(other.bannedByID, bannedByID) || other.bannedByID == bannedByID)&&(identical(other.bannedReason, bannedReason) || other.bannedReason == bannedReason)&&(identical(other.bannedAt, bannedAt) || other.bannedAt == bannedAt)&&(identical(other.joinedAt, joinedAt) || other.joinedAt == joinedAt));
+  final _this = this as ChirpCommunityMembershipApiDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChirpCommunityMembershipApiDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.communityID, _this.communityID) || other.communityID == _this.communityID)&&(identical(other.userID, _this.userID) || other.userID == _this.userID)&&(identical(other.role, _this.role) || other.role == _this.role)&&(identical(other.banned, _this.banned) || other.banned == _this.banned)&&(identical(other.bannedByID, _this.bannedByID) || other.bannedByID == _this.bannedByID)&&(identical(other.bannedReason, _this.bannedReason) || other.bannedReason == _this.bannedReason)&&(identical(other.bannedAt, _this.bannedAt) || other.bannedAt == _this.bannedAt)&&(identical(other.joinedAt, _this.joinedAt) || other.joinedAt == _this.joinedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,communityID,userID,role,banned,bannedByID,bannedReason,bannedAt,joinedAt);
+int get hashCode {
+  final _this = this as ChirpCommunityMembershipApiDto;
+  return Object.hash(runtimeType,_this.id,_this.communityID,_this.userID,_this.role,_this.banned,_this.bannedByID,_this.bannedReason,_this.bannedAt,_this.joinedAt);
+}
 
 @override
 String toString() {
-  return 'ChirpCommunityMembershipApiDto(id: $id, communityID: $communityID, userID: $userID, role: $role, banned: $banned, bannedByID: $bannedByID, bannedReason: $bannedReason, bannedAt: $bannedAt, joinedAt: $joinedAt)';
+  final _this = this as ChirpCommunityMembershipApiDto;
+  return 'ChirpCommunityMembershipApiDto(id: ${_this.id}, communityID: ${_this.communityID}, userID: ${_this.userID}, role: ${_this.role}, banned: ${_this.banned}, bannedByID: ${_this.bannedByID}, bannedReason: ${_this.bannedReason}, bannedAt: ${_this.bannedAt}, joinedAt: ${_this.joinedAt})';
 }
 
 
@@ -66,7 +72,7 @@ class _$ChirpCommunityMembershipApiDtoCopyWithImpl<$Res>
 /// Create a copy of ChirpCommunityMembershipApiDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? communityID = null,Object? userID = null,Object? role = null,Object? banned = null,Object? bannedByID = freezed,Object? bannedReason = freezed,Object? bannedAt = freezed,Object? joinedAt = null,}) {
-  return _then(_self.copyWith(
+  return _then(ChirpCommunityMembershipApiDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,communityID: null == communityID ? _self.communityID : communityID // ignore: cast_nullable_to_non_nullable
 as int,userID: null == userID ? _self.userID : userID // ignore: cast_nullable_to_non_nullable
@@ -243,16 +249,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ChirpCommunityMembershipApiDto&&(identical(other.id, id) || other.id == id)&&(identical(other.communityID, communityID) || other.communityID == communityID)&&(identical(other.userID, userID) || other.userID == userID)&&(identical(other.role, role) || other.role == role)&&(identical(other.banned, banned) || other.banned == banned)&&(identical(other.bannedByID, bannedByID) || other.bannedByID == bannedByID)&&(identical(other.bannedReason, bannedReason) || other.bannedReason == bannedReason)&&(identical(other.bannedAt, bannedAt) || other.bannedAt == bannedAt)&&(identical(other.joinedAt, joinedAt) || other.joinedAt == joinedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ChirpCommunityMembershipApiDto&&(identical(other.id, id) || other.id == id)&&(identical(other.communityID, communityID) || other.communityID == communityID)&&(identical(other.userID, userID) || other.userID == userID)&&(identical(other.role, role) || other.role == role)&&(identical(other.banned, banned) || other.banned == banned)&&(identical(other.bannedByID, bannedByID) || other.bannedByID == bannedByID)&&(identical(other.bannedReason, bannedReason) || other.bannedReason == bannedReason)&&(identical(other.bannedAt, bannedAt) || other.bannedAt == bannedAt)&&(identical(other.joinedAt, joinedAt) || other.joinedAt == joinedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,communityID,userID,role,banned,bannedByID,bannedReason,bannedAt,joinedAt);
+int get hashCode {
+    return Object.hash(runtimeType,id,communityID,userID,role,banned,bannedByID,bannedReason,bannedAt,joinedAt);
+}
 
 @override
 String toString() {
-  return 'ChirpCommunityMembershipApiDto(id: $id, communityID: $communityID, userID: $userID, role: $role, banned: $banned, bannedByID: $bannedByID, bannedReason: $bannedReason, bannedAt: $bannedAt, joinedAt: $joinedAt)';
+    return 'ChirpCommunityMembershipApiDto(id: $id, communityID: $communityID, userID: $userID, role: $role, banned: $banned, bannedByID: $bannedByID, bannedReason: $bannedReason, bannedAt: $bannedAt, joinedAt: $joinedAt)';
 }
 
 

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'institution.dart';
@@ -9,6 +9,7 @@ part of 'institution.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $InstitutionCopyWith<Institution> get copyWith => _$InstitutionCopyWithImpl<Inst
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Institution&&(identical(other.institutionId, institutionId) || other.institutionId == institutionId)&&(identical(other.name, name) || other.name == name)&&const DeepCollectionEquality().equals(other.webPages, webPages)&&const DeepCollectionEquality().equals(other.domains, domains)&&(identical(other.alphaTwoCode, alphaTwoCode) || other.alphaTwoCode == alphaTwoCode)&&(identical(other.country, country) || other.country == country)&&(identical(other.stateProvince, stateProvince) || other.stateProvince == stateProvince));
+  final _this = this as Institution;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Institution&&(identical(other.institutionId, _this.institutionId) || other.institutionId == _this.institutionId)&&(identical(other.name, _this.name) || other.name == _this.name)&&const DeepCollectionEquality().equals(other.webPages, _this.webPages)&&const DeepCollectionEquality().equals(other.domains, _this.domains)&&(identical(other.alphaTwoCode, _this.alphaTwoCode) || other.alphaTwoCode == _this.alphaTwoCode)&&(identical(other.country, _this.country) || other.country == _this.country)&&(identical(other.stateProvince, _this.stateProvince) || other.stateProvince == _this.stateProvince));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,institutionId,name,const DeepCollectionEquality().hash(webPages),const DeepCollectionEquality().hash(domains),alphaTwoCode,country,stateProvince);
+int get hashCode {
+  final _this = this as Institution;
+  return Object.hash(runtimeType,_this.institutionId,_this.name,const DeepCollectionEquality().hash(_this.webPages),const DeepCollectionEquality().hash(_this.domains),_this.alphaTwoCode,_this.country,_this.stateProvince);
+}
 
 @override
 String toString() {
-  return 'Institution(institutionId: $institutionId, name: $name, webPages: $webPages, domains: $domains, alphaTwoCode: $alphaTwoCode, country: $country, stateProvince: $stateProvince)';
+  final _this = this as Institution;
+  return 'Institution(institutionId: ${_this.institutionId}, name: ${_this.name}, webPages: ${_this.webPages}, domains: ${_this.domains}, alphaTwoCode: ${_this.alphaTwoCode}, country: ${_this.country}, stateProvince: ${_this.stateProvince})';
 }
 
 
@@ -63,7 +69,7 @@ class _$InstitutionCopyWithImpl<$Res>
 /// Create a copy of Institution
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? institutionId = null,Object? name = null,Object? webPages = freezed,Object? domains = freezed,Object? alphaTwoCode = freezed,Object? country = freezed,Object? stateProvince = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(Institution(
 institutionId: null == institutionId ? _self.institutionId : institutionId // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,webPages: freezed == webPages ? _self.webPages : webPages // ignore: cast_nullable_to_non_nullable
@@ -212,7 +218,7 @@ return $default(_that.institutionId,_that.name,_that.webPages,_that.domains,_tha
 
 
 class _Institution implements Institution {
-  const _Institution({required this.institutionId, required this.name, required final  List<String>? webPages, required final  List<String>? domains, required this.alphaTwoCode, required this.country, this.stateProvince}): _webPages = webPages,_domains = domains;
+  const _Institution({required this.institutionId, required this.name, required  List<String>? webPages, required  List<String>? domains, required this.alphaTwoCode, required this.country, this.stateProvince}): _webPages = webPages,_domains = domains;
   
 
 @override final  int institutionId;
@@ -249,16 +255,18 @@ _$InstitutionCopyWith<_Institution> get copyWith => __$InstitutionCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Institution&&(identical(other.institutionId, institutionId) || other.institutionId == institutionId)&&(identical(other.name, name) || other.name == name)&&const DeepCollectionEquality().equals(other._webPages, _webPages)&&const DeepCollectionEquality().equals(other._domains, _domains)&&(identical(other.alphaTwoCode, alphaTwoCode) || other.alphaTwoCode == alphaTwoCode)&&(identical(other.country, country) || other.country == country)&&(identical(other.stateProvince, stateProvince) || other.stateProvince == stateProvince));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Institution&&(identical(other.institutionId, institutionId) || other.institutionId == institutionId)&&(identical(other.name, name) || other.name == name)&&const DeepCollectionEquality().equals(other.webPages, _webPages)&&const DeepCollectionEquality().equals(other.domains, _domains)&&(identical(other.alphaTwoCode, alphaTwoCode) || other.alphaTwoCode == alphaTwoCode)&&(identical(other.country, country) || other.country == country)&&(identical(other.stateProvince, stateProvince) || other.stateProvince == stateProvince));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,institutionId,name,const DeepCollectionEquality().hash(_webPages),const DeepCollectionEquality().hash(_domains),alphaTwoCode,country,stateProvince);
+int get hashCode {
+    return Object.hash(runtimeType,institutionId,name,const DeepCollectionEquality().hash(_webPages),const DeepCollectionEquality().hash(_domains),alphaTwoCode,country,stateProvince);
+}
 
 @override
 String toString() {
-  return 'Institution(institutionId: $institutionId, name: $name, webPages: $webPages, domains: $domains, alphaTwoCode: $alphaTwoCode, country: $country, stateProvince: $stateProvince)';
+    return 'Institution(institutionId: $institutionId, name: $name, webPages: $webPages, domains: $domains, alphaTwoCode: $alphaTwoCode, country: $country, stateProvince: $stateProvince)';
 }
 
 

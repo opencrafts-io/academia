@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'token.freezed.dart';
 part 'token.g.dart';
 
-@freezed
+@Freezed(toStringOverride: false)
 abstract class TokenData with _$TokenData {
   const factory TokenData({
     @JsonKey(name: "verisafe") required String provider,

@@ -117,10 +117,10 @@ Use `SubscriptionManagementBloc` for the package paywall flow. It can:
 - clear the pending order state.
 
 Creating an order or checkout session does not complete payment by itself.
-The paywall exposes the returned `CheckoutSession` through
-`onWebHandoffRequested`; the host app decides how and where to open its
-`checkoutUrl`. Checkout/payment is handled outside this package by the web
-billing flow.
+The typed paywall route opens the returned checkout URL in an external browser.
+Debug builds send its handoff code to the local checkout frontend; other builds
+open the URL returned by the billing API. Checkout/payment is handled by the
+web billing flow.
 
 ### Call Use Cases Directly
 

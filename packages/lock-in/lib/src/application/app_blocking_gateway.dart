@@ -51,7 +51,6 @@ class AppBlockerGateway implements AppBlockingGateway {
   Future<List<BlockedApp>> getInstalledApps() async {
     final apps = await _blocker.getApps();
     return apps
-        .where((app) => !app.isSystemApp)
         .map(
           (app) => BlockedApp(
             identifier: app.packageName,

@@ -1,5 +1,6 @@
 import 'dart:async';
-import 'package:academia/features/course/course.dart';
+
+import 'package:courses/courses.dart' as courses;
 import 'package:academia/features/exam_timetable/domain/entity/exam_timetable.dart';
 import 'package:academia/features/exam_timetable/presentation/bloc/exam_timetable_bloc.dart';
 import 'package:academia/features/exam_timetable/presentation/screens/exam_timetable_search_screen.dart';
@@ -49,8 +50,10 @@ class _ExamTimetableHomeScreenState extends State<ExamTimetableHomeScreen> {
     );
   }
 
-  void _loadCoursesFromLocal() {
-    context.read<CourseCubit>().watchByInstitution(_institutionId);
+  void _loadCoursesForInstitution() {
+    context.read<courses.CourseCubit>().loadActiveForInstitution(
+      _institutionId,
+    );
   }
 
   void _navigateToSearch() {
@@ -144,26 +147,25 @@ class _ExamTimetableHomeScreenState extends State<ExamTimetableHomeScreen> {
             onSwitch: _switchInstitution,
           ),
           Expanded(
-            child: BlocListener<CourseCubit, CourseState>(
+            child: BlocListener<courses.CourseCubit, courses.CourseState>(
               listener: (context, courseState) {
                 // Only active during the one-time auto-import flow (timetable was empty on open).
                 if (!_hasAttemptedAutoImport || _autoImportDispatched) return;
-                courseState.whenOrNull(
-                  success: (courses) {
-                    if (courses.isNotEmpty && mounted) {
-                      _autoImportDispatched = true;
-                      _autoImportResultPending = true;
-                      final courseCodes = courses
-                          .map((e) => e.courseCode)
-                          .toList();
-                      context.read<ExamTimetableBloc>().add(
-                        RefreshExamTimetable(
-                          institutionId: _institutionId,
-                          courseCodes: courseCodes,
-                        ),
-                      );
-                    }
-                  },
+                if (courseState.isLoading ||
+                    courseState.courses.isEmpty ||
+                    !mounted) {
+                  return;
+                }
+                _autoImportDispatched = true;
+                _autoImportResultPending = true;
+                context.read<ExamTimetableBloc>().add(
+                  RefreshExamTimetable(
+                    institutionId: _institutionId,
+                    courseCodes: courseState.courses
+                        .map((course) => course.code)
+                        .whereType<String>()
+                        .toList(),
+                  ),
                 );
               },
               child: BlocConsumer<ExamTimetableBloc, ExamTimetableState>(
@@ -181,7 +183,7 @@ class _ExamTimetableHomeScreenState extends State<ExamTimetableHomeScreen> {
                   // Only auto-import once, and only when the timetable is truly empty.
                   if (state is ExamTimetableEmpty && !_hasAttemptedAutoImport) {
                     _hasAttemptedAutoImport = true;
-                    _loadCoursesFromLocal();
+                    _loadCoursesForInstitution();
                   }
 
                   // Auto-import silently adds exams from every enrolled course

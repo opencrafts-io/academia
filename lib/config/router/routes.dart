@@ -61,15 +61,6 @@ class HomeRoute extends GoRouteData with $HomeRoute {
   }
 }
 
-@TypedGoRoute<NotificationPermissionRoute>(path: '/notification-allow')
-class NotificationPermissionRoute extends GoRouteData
-    with $NotificationPermissionRoute {
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return NotificationPermissionScreen();
-  }
-}
-
 class EssentialsRoute extends GoRouteData with $EssentialsRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
@@ -199,7 +190,10 @@ class AuthRoute extends GoRouteData with $AuthRoute {
 
 @TypedGoRoute<ProfileRoute>(
   path: "/profile",
-  routes: [TypedGoRoute<LinkInstitutionProfileRoute>(path: "link-institution")],
+  routes: [
+    TypedGoRoute<LinkInstitutionProfileRoute>(path: "link-institution"),
+    TypedGoRoute<PasswordSettingsRoute>(path: "password-settings"),
+  ],
 )
 class ProfileRoute extends GoRouteData with $ProfileRoute {
   @override
@@ -247,11 +241,57 @@ class LinkInstitutionProfileRoute extends GoRouteData
   }
 }
 
+class PasswordSettingsRoute extends GoRouteData with $PasswordSettingsRoute {
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return ModalSheetPage(
+      fullscreenDialog: true,
+      barrierDismissible: false,
+      swipeDismissible: true,
+      viewportBuilder: (context, child) =>
+          SheetViewport(padding: EdgeInsets.zero, child: child),
+      child: SheetKeyboardDismissible(
+        dismissBehavior: SheetKeyboardDismissBehavior.onDragDown(
+          isContentScrollAware: true,
+        ),
+        child: Sheet(
+          scrollConfiguration: const SheetScrollConfiguration(),
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.viewInsetsOf(context).bottom,
+          ),
+          decoration: MaterialSheetDecoration(
+            size: SheetSize.fit,
+            clipBehavior: Clip.antiAlias,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            ),
+          ),
+          physics: BouncingSheetPhysics(),
+          child: PasswordSettingsSheet(setPassword: sl<SetPasswordUsecase>()),
+        ),
+      ),
+    );
+  }
+}
+
 @TypedGoRoute<CompleteProfileRoute>(path: "/complete-profile")
 class CompleteProfileRoute extends GoRouteData with $CompleteProfileRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return CompleteProfileScreen();
+  }
+}
+
+@TypedGoRoute<LinkInstitutionRequiredPageRoute>(
+  path: "/link-institution-required",
+)
+class LinkInstitutionRequiredPageRoute extends GoRouteData
+    with $LinkInstitutionRequiredPageRoute {
+  const LinkInstitutionRequiredPageRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const LinkInstitutionRequiredPage();
   }
 }
 
@@ -841,204 +881,6 @@ class QrCodeScannerRoute extends GoRouteData with $QrCodeScannerRoute {
   }
 }
 
-@TypedGoRoute<TodosRoute>(
-  path: "/todos",
-  routes: [
-    TypedGoRoute<CreateTodoListRoute>(path: "create-tasklist"),
-    TypedGoRoute<ViewTaskListsRoute>(
-      path: "tasklist",
-      routes: [TypedGoRoute<ViewTaskListRoute>(path: ":taskListId")],
-    ),
-
-    TypedGoRoute<CreateTodoItemRoute>(path: "create-todo-item"),
-    TypedGoRoute<UpdateTodoItemRoute>(path: "todo-item/:todoLocalID"),
-  ],
-)
-class TodosRoute extends GoRouteData with $TodosRoute {
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return TodoHomeScreen();
-  }
-}
-
-class CreateTodoListRoute extends GoRouteData with $CreateTodoListRoute {
-  @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return ModalSheetPage(
-      fullscreenDialog: true,
-      swipeDismissible: true,
-      transitionCurve: Curves.bounceIn,
-      viewportBuilder: (context, child) =>
-          SheetViewport(padding: EdgeInsets.zero, child: child),
-      child: SheetKeyboardDismissible(
-        dismissBehavior: SheetKeyboardDismissBehavior.onDragDown(
-          isContentScrollAware: true,
-        ),
-        child: Sheet(
-          scrollConfiguration: const SheetScrollConfiguration(),
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.viewInsetsOf(context).bottom,
-          ),
-          decoration: MaterialSheetDecoration(
-            size: SheetSize.stretch,
-            clipBehavior: Clip.antiAlias,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-            ),
-          ),
-          physics: BouncingSheetPhysics(),
-          child: CreateTodoListScreen(),
-        ),
-      ),
-    );
-  }
-}
-
-class ViewTaskListRoute extends GoRouteData with $ViewTaskListRoute {
-  final int taskListId;
-  ViewTaskListRoute({required this.taskListId});
-  @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return ModalSheetPage(
-      fullscreenDialog: true,
-      swipeDismissible: true,
-      viewportBuilder: (context, child) =>
-          SheetViewport(padding: EdgeInsets.zero, child: child),
-      child: SheetKeyboardDismissible(
-        dismissBehavior: SheetKeyboardDismissBehavior.onDragDown(
-          isContentScrollAware: true,
-        ),
-        child: Sheet(
-          scrollConfiguration: const SheetScrollConfiguration(),
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.viewInsetsOf(context).bottom,
-          ),
-          decoration: MaterialSheetDecoration(
-            size: SheetSize.fit,
-            clipBehavior: Clip.antiAlias,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-            ),
-          ),
-          physics: BouncingSheetPhysics(),
-
-          child: ViewTodoListScreen(todoListId: taskListId),
-        ),
-      ),
-    );
-  }
-}
-
-class ViewTaskListsRoute extends GoRouteData with $ViewTaskListsRoute {
-  @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return ModalSheetPage(
-      fullscreenDialog: true,
-      swipeDismissible: true,
-      viewportBuilder: (context, child) => SheetViewport(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.viewInsetsOf(context).bottom,
-        ),
-        child: child,
-      ),
-      child: SheetKeyboardDismissible(
-        dismissBehavior: SheetKeyboardDismissBehavior.onDragDown(
-          isContentScrollAware: true,
-        ),
-        child: Sheet(
-          scrollConfiguration: const SheetScrollConfiguration(),
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.viewInsetsOf(context).bottom,
-          ),
-          decoration: MaterialSheetDecoration(
-            size: SheetSize.fit,
-            clipBehavior: Clip.antiAlias,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-            ),
-          ),
-          physics: BouncingSheetPhysics(),
-
-          child: CreateTodoListScreen(),
-        ),
-      ),
-    );
-  }
-}
-
-class CreateTodoItemRoute extends GoRouteData with $CreateTodoItemRoute {
-  final int? taskListLocalID;
-  CreateTodoItemRoute({this.taskListLocalID});
-
-  @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return ModalSheetPage(
-      fullscreenDialog: false,
-      swipeDismissible: true,
-      transitionCurve: Curves.easeIn,
-      viewportBuilder: (context, child) =>
-          SheetViewport(padding: EdgeInsets.zero, child: child),
-      child: SheetKeyboardDismissible(
-        dismissBehavior: SheetKeyboardDismissBehavior.onDragDown(
-          isContentScrollAware: true,
-        ),
-        child: Sheet(
-          scrollConfiguration: const SheetScrollConfiguration(),
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.viewInsetsOf(context).bottom,
-          ),
-          decoration: MaterialSheetDecoration(
-            size: SheetSize.fit,
-            clipBehavior: Clip.antiAlias,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-            ),
-          ),
-          physics: BouncingSheetPhysics(),
-          child: CreateTodoItemScreen(taskListLocalID: taskListLocalID),
-        ),
-      ),
-    );
-  }
-}
-
-class UpdateTodoItemRoute extends GoRouteData with $UpdateTodoItemRoute {
-  final int todoLocalID;
-
-  const UpdateTodoItemRoute({required this.todoLocalID});
-
-  @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return ModalSheetPage(
-      fullscreenDialog: false,
-      swipeDismissible: true,
-      transitionCurve: Curves.easeIn,
-      viewportBuilder: (context, child) =>
-          SheetViewport(padding: EdgeInsets.zero, child: child),
-      child: SheetKeyboardDismissible(
-        dismissBehavior: SheetKeyboardDismissBehavior.onDragDown(
-          isContentScrollAware: true,
-        ),
-        child: Sheet(
-          scrollConfiguration: const SheetScrollConfiguration(),
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.viewInsetsOf(context).bottom,
-          ),
-          decoration: MaterialSheetDecoration(
-            size: SheetSize.fit,
-            clipBehavior: Clip.antiAlias,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-            ),
-          ),
-          physics: BouncingSheetPhysics(),
-          child: UpdateTodoItemScreen(todoLocalId: todoLocalID),
-        ),
-      ),
-    );
-  }
-}
-
 @TypedGoRoute<CommunitiesRoute>(
   path: "/communities/:communityId",
   routes: [
@@ -1181,36 +1023,6 @@ class ExamTimetableSearchRoute extends GoRouteData
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return ExamTimetableSearchScreen(institutionId: institutionId);
-  }
-}
-
-@TypedGoRoute<SettingsPageRoute>(path: "/settings")
-class SettingsPageRoute extends GoRouteData with $SettingsPageRoute {
-  @override
-  CustomTransitionPage<void> buildPage(
-    BuildContext context,
-    GoRouterState state,
-  ) {
-    return CustomTransitionPage<void>(
-      key: state.pageKey,
-      child: SettingsPage(),
-      transitionDuration: Duration(milliseconds: 300),
-      transitionsBuilder:
-          (
-            BuildContext context,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-            Widget child,
-          ) {
-            var tween = Tween(
-              begin: Offset(0.0, 1.0),
-              end: Offset.zero,
-            ).chain(CurveTween(curve: Curves.easeInOutQuad));
-            var offsetAnimation = animation.drive(tween);
-
-            return SlideTransition(position: offsetAnimation, child: child);
-          },
-    );
   }
 }
 
@@ -1413,7 +1225,7 @@ class EditSemesterRoute extends GoRouteData with $EditSemesterRoute {
 }
 
 @TypedGoRoute<CoursesPageRoute>(
-  path: "/courses",
+  path: "/local-courses",
   routes: [
     TypedGoRoute<AddCoursesRoute>(path: "create"),
     TypedGoRoute<ViewCourseRoute>(path: "view/:courseId"),

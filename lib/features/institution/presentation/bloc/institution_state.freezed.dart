@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'institution_state.dart';
@@ -9,6 +9,7 @@ part of 'institution_state.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -20,7 +21,7 @@ mixin _$InstitutionState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is InstitutionState);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is InstitutionState);
 }
 
 
@@ -29,7 +30,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'InstitutionState()';
+    return 'InstitutionState()';
 }
 
 
@@ -203,7 +204,7 @@ class _Initial implements InstitutionState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial);
 }
 
 
@@ -212,7 +213,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'InstitutionState.initial()';
+    return 'InstitutionState.initial()';
 }
 
 
@@ -235,7 +236,7 @@ class _Loading implements InstitutionState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
 }
 
 
@@ -244,7 +245,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'InstitutionState.loading()';
+    return 'InstitutionState.loading()';
 }
 
 
@@ -267,7 +268,7 @@ class _Linked implements InstitutionState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Linked);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Linked);
 }
 
 
@@ -276,7 +277,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'InstitutionState.linked()';
+    return 'InstitutionState.linked()';
 }
 
 
@@ -304,16 +305,18 @@ _$ErrorCopyWith<_Error> get copyWith => __$ErrorCopyWithImpl<_Error>(this, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.error, error) || other.error == error));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.error, error) || other.error == error));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,error);
+int get hashCode {
+    return Object.hash(runtimeType,error);
+}
 
 @override
 String toString() {
-  return 'InstitutionState.error(error: $error)';
+    return 'InstitutionState.error(error: $error)';
 }
 
 
@@ -355,7 +358,7 @@ as String,
 
 
 class _Loaded implements InstitutionState {
-  const _Loaded(final  List<Institution> institutions): _institutions = institutions;
+  const _Loaded( List<Institution> institutions): _institutions = institutions;
   
 
  final  List<Institution> _institutions;
@@ -376,16 +379,18 @@ _$LoadedCopyWith<_Loaded> get copyWith => __$LoadedCopyWithImpl<_Loaded>(this, _
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&const DeepCollectionEquality().equals(other._institutions, _institutions));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&const DeepCollectionEquality().equals(other.institutions, _institutions));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_institutions));
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_institutions));
+}
 
 @override
 String toString() {
-  return 'InstitutionState.loaded(institutions: $institutions)';
+    return 'InstitutionState.loaded(institutions: $institutions)';
 }
 
 

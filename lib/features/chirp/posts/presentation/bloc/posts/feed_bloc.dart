@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:academia/core/core.dart';
 import 'package:academia/features/features.dart';
 import 'package:dartz/dartz.dart';
@@ -547,7 +549,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     MarkPostAsViewed event,
     Emitter<FeedState> emit,
   ) async {
-    await markPostAsViewed(postId: event.postId, viewerId: event.viewerId);
+    unawaited(markPostAsViewed(postId: event.postId, viewerId: event.viewerId));
   }
 
   Future<void> _onUpdatePostInFeed(

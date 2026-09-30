@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-/// A colorful, mood-tile-style card for the essentials "Explore tools" grid.
-/// Each tile carries its own tonal color and a large, faded decorative icon
-/// bleeding off one corner, with the title anchored in the opposite corner.
+/// A compact, rounded card for an essentials tool in the "Explore tools" grid.
 class EssentialCategoryTile extends StatelessWidget {
   const EssentialCategoryTile({
     required this.title,
     required this.iconPath,
     required this.color,
     required this.onColor,
+    required this.borderRadius,
     this.onTap,
-    this.featured = false,
     super.key,
   });
 
@@ -19,18 +17,14 @@ class EssentialCategoryTile extends StatelessWidget {
   final String iconPath;
   final Color color;
   final Color onColor;
+  final BorderRadius borderRadius;
   final VoidCallback? onTap;
-
-  /// Featured tiles get a larger title and a bigger decorative icon.
-  final bool featured;
 
   @override
   Widget build(BuildContext context) {
-    final iconSize = featured ? 108.0 : 76.0;
-
     return Material(
       color: color,
-      borderRadius: BorderRadius.circular(24),
+      borderRadius: borderRadius,
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap:
@@ -53,34 +47,23 @@ class EssentialCategoryTile extends StatelessWidget {
                 ),
               );
             },
-        child: Stack(
-          children: [
-            Positioned(
-              right: -iconSize * 0.18,
-              bottom: -iconSize * 0.18,
-              child: Opacity(
-                opacity: 0.5,
-                child: Image.asset(iconPath, height: iconSize),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Align(
-                alignment: Alignment.bottomLeft,
+        child: Padding(
+          padding: const EdgeInsetsDirectional.only(start: 12, end: 8),
+          child: Row(
+            children: [
+              Expanded(
                 child: Text(
                   title,
-                  style:
-                      (featured
-                              ? Theme.of(context).textTheme.titleLarge
-                              : Theme.of(context).textTheme.titleMedium)
-                          ?.copyWith(
-                            color: onColor,
-                            fontWeight: FontWeight.bold,
-                          ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.bodyMedium
+                      ?.copyWith(color: onColor, fontWeight: FontWeight.w600),
                 ),
               ),
-            ),
-          ],
+              const SizedBox(width: 8),
+              Image.asset(iconPath, width: 36, height: 36),
+            ],
+          ),
         ),
       ),
     );

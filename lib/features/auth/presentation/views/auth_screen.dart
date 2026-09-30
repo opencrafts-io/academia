@@ -28,25 +28,26 @@ class _AuthScreenState extends State<AuthScreen> {
           BlocListener<AuthBloc, AuthState>(
             listener: (context, state) {
               if (state is AuthError) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text("Oops! ${state.message}"),
-                    behavior: SnackBarBehavior.floating,
-                    width: MediaQuery.of(context).size.width * 0.75,
-                    showCloseIcon: true,
-                  ),
-                  snackBarAnimationStyle: AnimationStyle(
-                    curve: Curves.bounceIn,
-                  ),
-                );
+                if (!state.inline) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Oops! ${state.message}"),
+                      behavior: SnackBarBehavior.floating,
+                      width: MediaQuery.of(context).size.width * 0.75,
+                      showCloseIcon: true,
+                    ),
+                    snackBarAnimationStyle: AnimationStyle(
+                      curve: Curves.bounceIn,
+                    ),
+                  );
+                }
                 return;
               }
 
               if (state is AuthAuthenticated) {
                 // Trigger profile refresh and let router handle navigation
-                BlocProvider.of<ProfileBloc>(
-                  context,
-                ).add(RefreshProfileEvent());
+                BlocProvider.of<ProfileBloc>(context)
+                    .add(RefreshProfileEvent());
 
                 // Add a timeout fallback in case profile loading takes too long
                 Future.delayed(Duration(seconds: 5), () {
@@ -125,46 +126,70 @@ class _AuthScreenState extends State<AuthScreen> {
                           "Continue to your Academia account.",
                           style: Theme.of(context).textTheme.titleMedium
                               ?.copyWith(
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.outlineVariant,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .outlineVariant,
                               ),
                         ),
 
                         SizedBox(height: 16),
-                        FilledButton.icon(
-                          onPressed: () {
-                            BlocProvider.of<AuthBloc>(
-                              context,
-                            ).add(AuthSignInWithAppleEvent());
-                          },
-                          label: Text("Continue with Apple"),
-                          icon: FaIcon(FontAwesomeIcons.apple),
+                        PasswordSignInForm(),
+                        SizedBox(height: 18),
+                        Row(
+                          children: [
+                            Expanded(child: Divider()),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 12),
+                              child: Text("or continue with"),
+                            ),
+                            Expanded(child: Divider()),
+                          ],
                         ),
-
-                        FilledButton.icon(
-                          iconAlignment: IconAlignment.start,
-                          onPressed: () async {
-                            BlocProvider.of<AuthBloc>(
-                              context,
-                            ).add(AuthSignInWithGoogleEvent());
+                        SizedBox(height: 12),
+                        BlocBuilder<AuthBloc, AuthState>(
+                          builder: (context, state) {
+                            final loading = state is AuthLoading;
+                            return Row(
+                              mainAxisAlignment: .center,
+                              spacing: 12,
+                              children: [
+                                OutlinedButton.icon(
+                                  onPressed: loading
+                                      ? null
+                                      : () => context.read<AuthBloc>().add(
+                                          AuthSignInWithAppleEvent(),
+                                        ),
+                                  label: Text("Apple"),
+                                  icon: FaIcon(FontAwesomeIcons.apple),
+                                ),
+                                OutlinedButton.icon(
+                                  iconAlignment: IconAlignment.start,
+                                  onPressed: loading
+                                      ? null
+                                      : () => context.read<AuthBloc>().add(
+                                          AuthSignInWithGoogleEvent(),
+                                        ),
+                                  label: Text("Google"),
+                                  icon: FaIcon(FontAwesomeIcons.google),
+                                ),
+                              ],
+                            );
                           },
-                          label: Text("Continue with Google"),
-                          icon: FaIcon(FontAwesomeIcons.google),
                         ),
                         SizedBox(height: 22),
                         Text.rich(
                           TextSpan(
                             text:
-                                "By continuing, you acknowledge that you understand and agree to Academia's ",
+                                "By continuing, you acknowledge that you"
+                                " understand and agree to Academia's ",
                             children: [
                               TextSpan(
                                 text: "Terms & conditions",
                                 style: Theme.of(context).textTheme.bodyMedium
                                     ?.copyWith(
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.primary,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary,
                                       decoration: TextDecoration.underline,
                                     ),
                                 recognizer: TapGestureRecognizer()
@@ -194,9 +219,9 @@ class _AuthScreenState extends State<AuthScreen> {
                                 text: "Privacy Policy",
                                 style: Theme.of(context).textTheme.bodyMedium
                                     ?.copyWith(
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.primary,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary,
                                       decoration: TextDecoration.underline,
                                     ),
                                 recognizer: TapGestureRecognizer()
