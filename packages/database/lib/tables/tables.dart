@@ -8,6 +8,7 @@ export 'package:database/tables/lock_in_rules.dart';
 export 'package:database/tables/lock_in_attempts.dart';
 export 'package:database/tables/courses.dart';
 export 'package:database/tables/lecturers.dart';
+export 'package:database/tables/schedule_entries.dart';
 export 'package:database/tables/todo_item_tags.dart';
 export 'package:database/tables/todo_items.dart';
 export 'package:database/tables/todo_lists.dart';

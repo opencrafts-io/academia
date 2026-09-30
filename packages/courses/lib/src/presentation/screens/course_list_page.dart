@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:courses/src/domain/entities/course_entity.dart';
 import 'package:courses/src/presentation/bloc/course_cubit.dart';
 import 'package:courses/src/presentation/routes/course_routes.dart';
+import 'package:courses/src/presentation/screens/sync_status_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -32,6 +33,7 @@ class _CourseListPageState extends State<CourseListPage> {
       onRefresh: () => context.read<CourseCubit>().loadActive(),
       onCreate: _openCreateCourse,
       onShowHistory: () => const CourseHistoryRoute().push(context),
+      onShowTimetable: () => const WeeklyTimetableRoute().push(context),
     );
   }
 
@@ -50,6 +52,7 @@ class CourseListBody extends StatelessWidget {
     this.error,
     this.onCreate,
     this.onShowHistory,
+    this.onShowTimetable,
     this.archived = false,
   });
 
@@ -59,6 +62,7 @@ class CourseListBody extends StatelessWidget {
   final String? error;
   final Future<void> Function()? onCreate;
   final VoidCallback? onShowHistory;
+  final VoidCallback? onShowTimetable;
   final bool archived;
 
   @override
@@ -89,6 +93,12 @@ class CourseListBody extends StatelessWidget {
                     tooltip: 'Course history',
                     onPressed: onShowHistory,
                     icon: const Icon(Icons.history_rounded),
+                  ),
+                if (onShowTimetable != null)
+                  IconButton(
+                    tooltip: 'Weekly timetable',
+                    onPressed: onShowTimetable,
+                    icon: const Icon(Icons.calendar_view_week_outlined),
                   ),
                 const SizedBox(width: 8),
               ],
@@ -265,6 +275,19 @@ class _CourseCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
+                SyncStatusIndicator(
+                  status: course.syncStatus,
+                  recordLabel: 'Course',
+                  error: course.lastSyncError,
+                  onEdit: () async {
+                    await EditCourseRoute(courseId: course.id)
+                        .push<bool>(context);
+                    if (context.mounted) {
+                      await context.read<CourseCubit>().loadActive();
+                    }
+                  },
+                ),
+                const SizedBox(width: 4),
                 Icon(
                   Icons.chevron_right_rounded,
                   color: colors.onSurfaceVariant,

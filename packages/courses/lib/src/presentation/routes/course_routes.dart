@@ -4,6 +4,7 @@ import 'package:courses/src/presentation/screens/course_detail_page.dart';
 import 'package:courses/src/presentation/screens/course_history_page.dart';
 import 'package:courses/src/presentation/screens/course_list_page.dart';
 import 'package:courses/src/presentation/screens/lecturer_editor_sheet.dart';
+import 'package:courses/src/presentation/screens/weekly_timetable_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -17,6 +18,7 @@ part 'course_routes.g.dart';
   routes: [
     TypedGoRoute<CreateCourseRoute>(path: 'create'),
     TypedGoRoute<CourseHistoryRoute>(path: 'history'),
+    TypedGoRoute<WeeklyTimetableRoute>(path: 'timetable'),
     TypedGoRoute<CourseDetailRoute>(
       path: ':courseId',
       routes: [
@@ -63,6 +65,18 @@ class CourseHistoryRoute extends GoRouteData with $CourseHistoryRoute {
     return BlocProvider(
       create: (_) => GetIt.instance<CourseCubit>(),
       child: const CourseHistoryPage(),
+    );
+  }
+}
+
+class WeeklyTimetableRoute extends GoRouteData with $WeeklyTimetableRoute {
+  const WeeklyTimetableRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return BlocProvider(
+      create: (_) => GetIt.instance<CourseCubit>(),
+      child: const WeeklyTimetablePage(),
     );
   }
 }

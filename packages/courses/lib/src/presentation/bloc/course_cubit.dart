@@ -1,13 +1,14 @@
+import 'dart:async';
+
 import 'package:core/core.dart';
 import 'package:courses/src/domain/domain.dart';
 import 'package:courses/src/domain/usecases/course_usecases.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import 'course_state.dart';
 
 @injectable
-class CourseCubit extends Cubit<CourseState> {
+class CourseCubit extends SafeCubit<CourseState> {
   CourseCubit(
     this._createCourse,
     this._listActiveCourses,
@@ -20,7 +21,14 @@ class CourseCubit extends Cubit<CourseState> {
     this._updateLecturer,
     this._deleteLecturer,
     this._institutionLookup,
-  ) : super(const CourseState());
+    this._listStudentSchedule,
+    this._createScheduleEntry,
+    this._updateScheduleEntry,
+    this._deleteScheduleEntry,
+    this._watchSyncStatusUpdates,
+  ) : super(const CourseState()) {
+    _syncSubscription = _watchSyncStatusUpdates().listen(_applySyncUpdate);
+  }
 
   final CreateCourse _createCourse;
   final ListActiveCourses _listActiveCourses;
@@ -33,6 +41,18 @@ class CourseCubit extends Cubit<CourseState> {
   final UpdateLecturer _updateLecturer;
   final DeleteLecturer _deleteLecturer;
   final InstitutionLookup _institutionLookup;
+  final ListStudentSchedule _listStudentSchedule;
+  final CreateScheduleEntry _createScheduleEntry;
+  final UpdateScheduleEntry _updateScheduleEntry;
+  final DeleteScheduleEntry _deleteScheduleEntry;
+  final WatchSyncStatusUpdates _watchSyncStatusUpdates;
+  StreamSubscription<SyncStatusUpdate>? _syncSubscription;
+
+  @override
+  Future<void> close() async {
+    await _syncSubscription?.cancel();
+    await super.close();
+  }
 
   Future<void> loadActive() =>
       _load(_listActiveCourses(const NoUseCaseParams()));
@@ -47,6 +67,31 @@ class CourseCubit extends Cubit<CourseState> {
         courses: state.courses
             .where((course) => course.institutionId == institutionId)
             .toList(),
+      ),
+    );
+  }
+
+  Future<void> loadRetakeChoices() async {
+    emit(state.copyWith(isLoading: true, error: null));
+    final results = await Future.wait([
+      _listActiveCourses(const NoUseCaseParams()),
+      _listArchivedCourses(const NoUseCaseParams()),
+    ]);
+    final courses = <String, CourseEntity>{};
+    String? error;
+    for (final result in results) {
+      result.fold(
+        (failure) => error ??= failure.message,
+        (items) => courses.addEntries(
+          items.map((course) => MapEntry(course.id, course)),
+        ),
+      );
+    }
+    emit(
+      state.copyWith(
+        isLoading: false,
+        error: courses.isEmpty ? error : null,
+        courses: courses.values.toList(),
       ),
     );
   }
@@ -157,6 +202,69 @@ class CourseCubit extends Cubit<CourseState> {
     );
   }
 
+  Future<void> loadWeeklySchedule() async {
+    emit(state.copyWith(isScheduleLoading: true, error: null));
+    final result = await _listStudentSchedule(const NoUseCaseParams());
+    result.fold(
+      (failure) => emit(
+        state.copyWith(isScheduleLoading: false, error: failure.message),
+      ),
+      (entries) => emit(
+        state.copyWith(isScheduleLoading: false, weeklySchedule: entries),
+      ),
+    );
+  }
+
+  Future<void> createScheduleEntry(ScheduleEntryEntity entry) async {
+    emit(state.copyWith(isScheduleLoading: true, error: null));
+    final result = await _createScheduleEntry(entry);
+    result.fold(
+      (failure) => emit(
+        state.copyWith(isScheduleLoading: false, error: failure.message),
+      ),
+      (created) => _replaceScheduleEntry(created, addIfMissing: true),
+    );
+  }
+
+  Future<void> updateScheduleEntry(ScheduleEntryEntity entry) async {
+    emit(state.copyWith(isScheduleLoading: true, error: null));
+    final result = await _updateScheduleEntry(entry);
+    result.fold(
+      (failure) => emit(
+        state.copyWith(isScheduleLoading: false, error: failure.message),
+      ),
+      (updated) => _replaceScheduleEntry(updated),
+    );
+  }
+
+  Future<void> deleteScheduleEntry(String id) async {
+    emit(state.copyWith(isScheduleLoading: true, error: null));
+    final result = await _deleteScheduleEntry(id);
+    result.fold(
+      (failure) => emit(
+        state.copyWith(isScheduleLoading: false, error: failure.message),
+      ),
+      (_) {
+        final weekly = state.weeklySchedule
+            .where((entry) => entry.id != id)
+            .toList();
+        final selected = state.selectedCourse;
+        final selectedEntries = selected?.scheduleEntries
+            .where((entry) => entry.id != id)
+            .toList();
+        emit(
+          state.copyWith(
+            isScheduleLoading: false,
+            weeklySchedule: weekly,
+            selectedCourse: selected == null
+                ? null
+                : selected.copyWith(scheduleEntries: selectedEntries!),
+          ),
+        );
+      },
+    );
+  }
+
   Future<List<InstitutionSummary>> searchInstitutions(String query) {
     return _institutionLookup.search(query);
   }
@@ -183,4 +291,90 @@ class CourseCubit extends Cubit<CourseState> {
       ),
     );
   }
+
+  void _replaceScheduleEntry(
+    ScheduleEntryEntity entry, {
+    bool addIfMissing = false,
+  }) {
+    List<ScheduleEntryEntity> replace(List<ScheduleEntryEntity> entries) {
+      final exists = entries.any((item) => item.id == entry.id);
+      if (!exists && !addIfMissing) return entries;
+      final next = [
+        for (final item in entries)
+          if (item.id == entry.id) entry else item,
+        if (!exists && addIfMissing) entry,
+      ];
+      next.sort((a, b) {
+        final day = _weekdays
+            .indexOf(a.dayOfWeek)
+            .compareTo(_weekdays.indexOf(b.dayOfWeek));
+        return day == 0 ? a.startTime.compareTo(b.startTime) : day;
+      });
+      return next;
+    }
+
+    final weekly = replace(state.weeklySchedule);
+    final selected = state.selectedCourse;
+    final updatedSelected =
+        selected == null || selected.id != entry.studentCourseId
+        ? selected
+        : selected.copyWith(scheduleEntries: replace(selected.scheduleEntries));
+    emit(
+      state.copyWith(
+        isScheduleLoading: false,
+        weeklySchedule: weekly,
+        selectedCourse: updatedSelected,
+      ),
+    );
+  }
+
+  void _applySyncUpdate(SyncStatusUpdate update) {
+    if (update.isScheduleEntry) {
+      ScheduleEntryEntity apply(ScheduleEntryEntity entry) =>
+          entry.id == update.id
+          ? entry.copyWith(
+              serverId: update.serverId ?? entry.serverId,
+              syncStatus: update.status,
+              lastSyncError: update.error,
+            )
+          : entry;
+      final weekly = state.weeklySchedule.map(apply).toList();
+      final selected = state.selectedCourse;
+      emit(
+        state.copyWith(
+          weeklySchedule: weekly,
+          selectedCourse: selected?.copyWith(
+            scheduleEntries: selected.scheduleEntries.map(apply).toList(),
+          ),
+        ),
+      );
+      return;
+    }
+
+    CourseEntity apply(CourseEntity course) => course.id == update.id
+        ? course.copyWith(
+            serverId: update.serverId ?? course.serverId,
+            syncStatus: update.status,
+            lastSyncError: update.error,
+          )
+        : course;
+    emit(
+      state.copyWith(
+        courses: state.courses.map(apply).toList(),
+        selectedCourse: state.selectedCourse == null
+            ? null
+            : apply(state.selectedCourse!),
+      ),
+    );
+  }
+
+  static const _weekdays = [
+    'monday',
+    'tuesday',
+    'wednesday',
+    'thursday',
+    'friday',
+    'saturday',
+    'sunday',
+  ];
 }

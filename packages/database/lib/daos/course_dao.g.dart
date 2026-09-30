@@ -6,6 +6,7 @@ part of 'course_dao.dart';
 mixin _$CourseDaoMixin on DatabaseAccessor<AppDatabaseV2> {
   $CoursesTable get courses => attachedDatabase.courses;
   $LecturersTable get lecturers => attachedDatabase.lecturers;
+  $ScheduleEntriesTable get scheduleEntries => attachedDatabase.scheduleEntries;
   CourseDaoManager get managers => CourseDaoManager(this);
 }
 
@@ -16,4 +17,9 @@ class CourseDaoManager {
       $$CoursesTableTableManager(_db.attachedDatabase, _db.courses);
   $$LecturersTableTableManager get lecturers =>
       $$LecturersTableTableManager(_db.attachedDatabase, _db.lecturers);
+  $$ScheduleEntriesTableTableManager get scheduleEntries =>
+      $$ScheduleEntriesTableTableManager(
+        _db.attachedDatabase,
+        _db.scheduleEntries,
+      );
 }

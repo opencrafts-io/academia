@@ -14,7 +14,10 @@ class CourseApiPaths {
   String get create => '$_courses/create/';
   String get active => '$_courses/student/';
   String get archived => '$_courses/student/history/';
+  String get studentSchedule => '$_courses/schedule/student/';
   String course(String id) => '$_courses/$id/';
+  String schedule(String courseId) => '${course(courseId)}schedule/';
+  String scheduleEntry(String id) => '$_courses/schedule/$id/';
   String archive(String id) => '${course(id)}archive/';
   String lecturers(String courseId) => '${course(courseId)}lecturers/';
   String lecturer(String id) => '$_courses/lecturers/$id/';

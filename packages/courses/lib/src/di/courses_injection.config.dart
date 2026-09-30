@@ -19,6 +19,7 @@ import 'package:injectable/injectable.dart' as _i526;
 import '../data/datasources/course_api_paths.dart' as _i888;
 import '../data/datasources/course_remote_datasource.dart' as _i33;
 import '../data/repositories/course_repository_impl.dart' as _i1039;
+import '../data/services/course_sync_service.dart' as _i553;
 import '../domain/domain.dart' as _i515;
 import '../domain/repositories/course_repository.dart' as _i720;
 import '../domain/usecases/course_usecases.dart' as _i433;
@@ -40,14 +41,36 @@ _i174.GetIt initCourses(
       gh<_i888.CourseApiPaths>(),
     ),
   );
+  gh.lazySingleton<_i553.CourseSyncService>(
+    () => _i553.CourseSyncService(
+      remote: gh<_i33.CourseRemoteDatasource>(),
+      courseDao: gh<_i252.CourseDao>(),
+    ),
+  );
   gh.lazySingleton<_i515.CourseRepository>(
     () => _i1039.CourseRepositoryImpl(
       gh<_i33.CourseRemoteDatasource>(),
       gh<_i252.CourseDao>(),
+      gh<_i553.CourseSyncService>(),
     ),
+  );
+  gh.factory<_i433.WatchSyncStatusUpdates>(
+    () => _i433.WatchSyncStatusUpdates(gh<_i720.CourseRepository>()),
   );
   gh.factory<_i433.CreateCourse>(
     () => _i433.CreateCourse(gh<_i720.CourseRepository>()),
+  );
+  gh.factory<_i433.ListStudentSchedule>(
+    () => _i433.ListStudentSchedule(gh<_i720.CourseRepository>()),
+  );
+  gh.factory<_i433.CreateScheduleEntry>(
+    () => _i433.CreateScheduleEntry(gh<_i720.CourseRepository>()),
+  );
+  gh.factory<_i433.UpdateScheduleEntry>(
+    () => _i433.UpdateScheduleEntry(gh<_i720.CourseRepository>()),
+  );
+  gh.factory<_i433.DeleteScheduleEntry>(
+    () => _i433.DeleteScheduleEntry(gh<_i720.CourseRepository>()),
   );
   gh.factory<_i433.ListActiveCourses>(
     () => _i433.ListActiveCourses(gh<_i720.CourseRepository>()),
@@ -89,6 +112,11 @@ _i174.GetIt initCourses(
       gh<_i433.UpdateLecturer>(),
       gh<_i433.DeleteLecturer>(),
       gh<_i515.InstitutionLookup>(),
+      gh<_i433.ListStudentSchedule>(),
+      gh<_i433.CreateScheduleEntry>(),
+      gh<_i433.UpdateScheduleEntry>(),
+      gh<_i433.DeleteScheduleEntry>(),
+      gh<_i433.WatchSyncStatusUpdates>(),
     ),
   );
   return getIt;
