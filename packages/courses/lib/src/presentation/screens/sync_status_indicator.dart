@@ -16,25 +16,45 @@ class SyncStatusIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (status == 'synced') return const SizedBox.shrink();
     final colors = Theme.of(context).colorScheme;
+    final synced = status == 'synced';
     final failed = status == 'failed';
     final icon = Icon(
       failed ? Icons.error_outline_rounded : Icons.cloud_upload_outlined,
       size: 19,
       color: failed ? colors.error : colors.onSurfaceVariant,
     );
-    if (!failed) {
-      return Tooltip(
+    final Widget indicator;
+    if (synced) {
+      indicator = const SizedBox.shrink();
+    } else if (failed) {
+      indicator = IconButton(
+        tooltip: '$recordLabel sync failed. View details',
+        visualDensity: VisualDensity.compact,
+        onPressed: () => _showError(context),
+        icon: icon,
+      );
+    } else {
+      indicator = Tooltip(
         message: 'Waiting to sync',
         child: Semantics(label: '$recordLabel waiting to sync', child: icon),
       );
     }
-    return IconButton(
-      tooltip: '$recordLabel sync failed. View details',
-      visualDensity: VisualDensity.compact,
-      onPressed: () => _showError(context),
-      icon: icon,
+    final stateKey = synced
+        ? 'synced'
+        : failed
+        ? 'failed'
+        : 'pending';
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 180),
+      switchInCurve: Curves.easeOutCubic,
+      switchOutCurve: Curves.easeInCubic,
+      transitionBuilder: (child, animation) => SizeTransition(
+        axis: Axis.horizontal,
+        sizeFactor: animation,
+        child: FadeTransition(opacity: animation, child: child),
+      ),
+      child: KeyedSubtree(key: ValueKey(stateKey), child: indicator),
     );
   }
 

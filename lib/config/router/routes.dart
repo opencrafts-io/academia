@@ -9,6 +9,7 @@ import 'package:go_router/go_router.dart';
 import 'package:academia/features/features.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 import 'package:lock_in/lock_in.dart';
+import 'package:courses/courses.dart' as courses_package;
 
 part 'routes.g.dart';
 
@@ -1233,65 +1234,18 @@ class EditSemesterRoute extends GoRouteData with $EditSemesterRoute {
 )
 class CoursesPageRoute extends GoRouteData with $CoursesPageRoute {
   @override
-  CustomTransitionPage<void> buildPage(
-    BuildContext context,
-    GoRouterState state,
-  ) {
-    return CustomTransitionPage<void>(
-      key: state.pageKey,
-      child: CourseListPage(),
-      transitionDuration: Duration(milliseconds: 300),
-      transitionsBuilder:
-          (
-            BuildContext context,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-            Widget child,
-          ) {
-            var tween = Tween(
-              begin: Offset(0.0, 1.0),
-              end: Offset.zero,
-            ).chain(CurveTween(curve: Curves.easeInOutQuad));
-            var offsetAnimation = animation.drive(tween);
-
-            return SlideTransition(position: offsetAnimation, child: child);
-          },
-    );
+  String? redirect(BuildContext context, GoRouterState state) {
+    if (state.uri.path == '/local-courses') {
+      return const courses_package.CourseListRoute().location;
+    }
+    return null;
   }
 }
 
 class AddCoursesRoute extends GoRouteData with $AddCoursesRoute {
   @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return ModalSheetPage(
-      fullscreenDialog: false,
-      swipeDismissible: true,
-      transitionCurve: Curves.bounceIn,
-      viewportBuilder: (context, child) =>
-          SheetViewport(padding: EdgeInsets.zero, child: child),
-      child: SheetKeyboardDismissible(
-        dismissBehavior: SheetKeyboardDismissBehavior.onDragDown(
-          isContentScrollAware: true,
-        ),
-        child: Sheet(
-          scrollConfiguration: const SheetScrollConfiguration(),
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.viewInsetsOf(context).bottom,
-          ),
-          decoration: MaterialSheetDecoration(
-            size: SheetSize.fit,
-            clipBehavior: Clip.antiAlias,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-            ),
-          ),
-          physics: BouncingSheetPhysics(),
-
-          child: const AddCourseSheet(),
-        ),
-      ),
-    );
-  }
+  String? redirect(BuildContext context, GoRouterState state) =>
+      const courses_package.CreateCourseRoute().location;
 }
 
 class ViewCourseRoute extends GoRouteData with $ViewCourseRoute {

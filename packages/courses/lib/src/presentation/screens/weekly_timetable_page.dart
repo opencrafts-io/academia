@@ -33,13 +33,16 @@ class _WeeklyTimetablePageState extends State<WeeklyTimetablePage> {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<CourseCubit>().state;
-    final entries = [...state.weeklySchedule]
-      ..sort((a, b) {
-        final day = _days
-            .indexOf(a.dayOfWeek)
-            .compareTo(_days.indexOf(b.dayOfWeek));
-        return day == 0 ? a.startTime.compareTo(b.startTime) : day;
-      });
+    final entriesByDay = <String, List<ScheduleEntryEntity>>{
+      for (final day in _days) day: <ScheduleEntryEntity>[],
+    };
+    for (final entry in state.weeklySchedule) {
+      entriesByDay.putIfAbsent(entry.dayOfWeek, () => []).add(entry);
+    }
+    for (final entries in entriesByDay.values) {
+      entries.sort((a, b) => a.startTime.compareTo(b.startTime));
+    }
+    final hasEntries = entriesByDay.values.any((entries) => entries.isNotEmpty);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Weekly timetable'),
@@ -57,7 +60,7 @@ class _WeeklyTimetablePageState extends State<WeeklyTimetablePage> {
           physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
           children: [
-            if (state.isScheduleLoading && entries.isEmpty)
+            if (state.isScheduleLoading && !hasEntries)
               const LinearProgressIndicator(),
             if (state.error != null)
               Padding(
@@ -67,18 +70,14 @@ class _WeeklyTimetablePageState extends State<WeeklyTimetablePage> {
                   style: TextStyle(color: Theme.of(context).colorScheme.error),
                 ),
               ),
-            if (entries.isEmpty && !state.isScheduleLoading)
+            if (!hasEntries && !state.isScheduleLoading)
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 80),
                 child: Center(child: Text('No classes in your timetable yet.')),
               ),
             for (final day in _days) ...[
-              if (entries.any((entry) => entry.dayOfWeek == day))
-                _daySection(
-                  context,
-                  day,
-                  entries.where((entry) => entry.dayOfWeek == day).toList(),
-                ),
+              if (entriesByDay[day]!.isNotEmpty)
+                _daySection(context, day, entriesByDay[day]!),
             ],
           ],
         ),

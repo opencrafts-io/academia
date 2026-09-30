@@ -1,11 +1,12 @@
 import 'dart:async';
+
 import 'package:academia/core/core.dart';
 import 'package:academia/features/course/domain/domain.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dartz/dartz.dart';
+
 import 'course_state.dart';
 
-class CourseCubit extends Cubit<CourseState> {
+class CourseCubit extends SafeCubit<CourseState> {
   final WatchAllCoursesUsecase _watchAllCourses;
   final SaveCourseUsecase _saveCourse;
   final DeleteCourseUsecase _deleteCourse;
@@ -16,17 +17,12 @@ class CourseCubit extends Cubit<CourseState> {
   StreamSubscription? _coursesSubscription;
 
   CourseCubit({
-    required WatchAllCoursesUsecase watchAllCourses,
-    required WatchInstitutionCoursesUsecase watchInstitutionCourses,
-    required SaveCourseUsecase saveCourse,
-    required DeleteCourseUsecase deleteCourse,
-    required GetCourseUsecase getCourse,
-  }) : _watchAllCourses = watchAllCourses,
-       _saveCourse = saveCourse,
-       _deleteCourse = deleteCourse,
-       _watchInstitutionCourses = watchInstitutionCourses,
-       _getCourse = getCourse,
-       super(const CourseState.initial());
+    required this._watchAllCourses,
+    required this._watchInstitutionCourses,
+    required this._saveCourse,
+    required this._deleteCourse,
+    required this._getCourse,
+  }) : super(const CourseState.initial());
 
   /// Fetches a specific course by ID.
   /// Usually used for navigating to a detail page or initializing an edit form.

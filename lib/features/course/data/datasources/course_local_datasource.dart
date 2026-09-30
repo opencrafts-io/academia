@@ -133,7 +133,7 @@ class CourseLocalDatasourceImpl extends CourseLocalDatasource {
     try {
       final wasMarked = await _markForDeletion(course);
 
-      return wasMarked.fold(
+      return await wasMarked.fold(
         (failure) => Left(failure),
         (_) => const Right(unit),
       );
