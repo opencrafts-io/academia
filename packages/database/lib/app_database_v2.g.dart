@@ -4362,6 +4362,52 @@ class $CoursesTable extends Courses with TableInfo<$CoursesTable, Course> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _serverIdMeta = const VerificationMeta(
+    'serverId',
+  );
+  @override
+  late final GeneratedColumn<String> serverId = GeneratedColumn<String>(
+    'server_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('synced'),
+  );
+  static const VerificationMeta _lastSyncErrorMeta = const VerificationMeta(
+    'lastSyncError',
+  );
+  @override
+  late final GeneratedColumn<String> lastSyncError = GeneratedColumn<String>(
+    'last_sync_error',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _institutionIdMeta = const VerificationMeta(
     'institutionId',
   );
@@ -4386,6 +4432,15 @@ class $CoursesTable extends Courses with TableInfo<$CoursesTable, Course> {
   @override
   late final GeneratedColumn<String> code = GeneratedColumn<String>(
     'code',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _colorMeta = const VerificationMeta('color');
+  @override
+  late final GeneratedColumn<String> color = GeneratedColumn<String>(
+    'color',
     aliasedName,
     true,
     type: DriftSqlType.string,
@@ -4494,9 +4549,14 @@ class $CoursesTable extends Courses with TableInfo<$CoursesTable, Course> {
   @override
   List<GeneratedColumn> get $columns => [
     id,
+    serverId,
+    idempotencyKey,
+    syncStatus,
+    lastSyncError,
     institutionId,
     title,
     code,
+    color,
     termLabel,
     academicYear,
     termStartDate,
@@ -4524,6 +4584,36 @@ class $CoursesTable extends Courses with TableInfo<$CoursesTable, Course> {
     } else if (isInserting) {
       context.missing(_idMeta);
     }
+    if (data.containsKey('server_id')) {
+      context.handle(
+        _serverIdMeta,
+        serverId.isAcceptableOrUnknown(data['server_id']!, _serverIdMeta),
+      );
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    }
+    if (data.containsKey('last_sync_error')) {
+      context.handle(
+        _lastSyncErrorMeta,
+        lastSyncError.isAcceptableOrUnknown(
+          data['last_sync_error']!,
+          _lastSyncErrorMeta,
+        ),
+      );
+    }
     if (data.containsKey('institution_id')) {
       context.handle(
         _institutionIdMeta,
@@ -4547,6 +4637,12 @@ class $CoursesTable extends Courses with TableInfo<$CoursesTable, Course> {
       context.handle(
         _codeMeta,
         code.isAcceptableOrUnknown(data['code']!, _codeMeta),
+      );
+    }
+    if (data.containsKey('color')) {
+      context.handle(
+        _colorMeta,
+        color.isAcceptableOrUnknown(data['color']!, _colorMeta),
       );
     }
     if (data.containsKey('term_label')) {
@@ -4634,6 +4730,22 @@ class $CoursesTable extends Courses with TableInfo<$CoursesTable, Course> {
         DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
+      serverId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}server_id'],
+      ),
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+      lastSyncError: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}last_sync_error'],
+      ),
       institutionId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}institution_id'],
@@ -4645,6 +4757,10 @@ class $CoursesTable extends Courses with TableInfo<$CoursesTable, Course> {
       code: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}code'],
+      ),
+      color: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}color'],
       ),
       termLabel: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
@@ -4693,9 +4809,14 @@ class $CoursesTable extends Courses with TableInfo<$CoursesTable, Course> {
 
 class Course extends DataClass implements Insertable<Course> {
   final String id;
+  final String? serverId;
+  final String idempotencyKey;
+  final String syncStatus;
+  final String? lastSyncError;
   final int institutionId;
   final String title;
   final String? code;
+  final String? color;
   final String? termLabel;
   final String? academicYear;
   final DateTime? termStartDate;
@@ -4707,9 +4828,14 @@ class Course extends DataClass implements Insertable<Course> {
   final DateTime cachedAt;
   const Course({
     required this.id,
+    this.serverId,
+    required this.idempotencyKey,
+    required this.syncStatus,
+    this.lastSyncError,
     required this.institutionId,
     required this.title,
     this.code,
+    this.color,
     this.termLabel,
     this.academicYear,
     this.termStartDate,
@@ -4724,10 +4850,21 @@ class Course extends DataClass implements Insertable<Course> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
+    if (!nullToAbsent || serverId != null) {
+      map['server_id'] = Variable<String>(serverId);
+    }
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    map['sync_status'] = Variable<String>(syncStatus);
+    if (!nullToAbsent || lastSyncError != null) {
+      map['last_sync_error'] = Variable<String>(lastSyncError);
+    }
     map['institution_id'] = Variable<int>(institutionId);
     map['title'] = Variable<String>(title);
     if (!nullToAbsent || code != null) {
       map['code'] = Variable<String>(code);
+    }
+    if (!nullToAbsent || color != null) {
+      map['color'] = Variable<String>(color);
     }
     if (!nullToAbsent || termLabel != null) {
       map['term_label'] = Variable<String>(termLabel);
@@ -4756,9 +4893,20 @@ class Course extends DataClass implements Insertable<Course> {
   CoursesCompanion toCompanion(bool nullToAbsent) {
     return CoursesCompanion(
       id: Value(id),
+      serverId: serverId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(serverId),
+      idempotencyKey: Value(idempotencyKey),
+      syncStatus: Value(syncStatus),
+      lastSyncError: lastSyncError == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastSyncError),
       institutionId: Value(institutionId),
       title: Value(title),
       code: code == null && nullToAbsent ? const Value.absent() : Value(code),
+      color: color == null && nullToAbsent
+          ? const Value.absent()
+          : Value(color),
       termLabel: termLabel == null && nullToAbsent
           ? const Value.absent()
           : Value(termLabel),
@@ -4790,9 +4938,14 @@ class Course extends DataClass implements Insertable<Course> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Course(
       id: serializer.fromJson<String>(json['id']),
+      serverId: serializer.fromJson<String?>(json['serverId']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+      lastSyncError: serializer.fromJson<String?>(json['lastSyncError']),
       institutionId: serializer.fromJson<int>(json['institutionId']),
       title: serializer.fromJson<String>(json['title']),
       code: serializer.fromJson<String?>(json['code']),
+      color: serializer.fromJson<String?>(json['color']),
       termLabel: serializer.fromJson<String?>(json['termLabel']),
       academicYear: serializer.fromJson<String?>(json['academicYear']),
       termStartDate: serializer.fromJson<DateTime?>(json['termStartDate']),
@@ -4809,9 +4962,14 @@ class Course extends DataClass implements Insertable<Course> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
+      'serverId': serializer.toJson<String?>(serverId),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+      'lastSyncError': serializer.toJson<String?>(lastSyncError),
       'institutionId': serializer.toJson<int>(institutionId),
       'title': serializer.toJson<String>(title),
       'code': serializer.toJson<String?>(code),
+      'color': serializer.toJson<String?>(color),
       'termLabel': serializer.toJson<String?>(termLabel),
       'academicYear': serializer.toJson<String?>(academicYear),
       'termStartDate': serializer.toJson<DateTime?>(termStartDate),
@@ -4826,9 +4984,14 @@ class Course extends DataClass implements Insertable<Course> {
 
   Course copyWith({
     String? id,
+    Value<String?> serverId = const Value.absent(),
+    String? idempotencyKey,
+    String? syncStatus,
+    Value<String?> lastSyncError = const Value.absent(),
     int? institutionId,
     String? title,
     Value<String?> code = const Value.absent(),
+    Value<String?> color = const Value.absent(),
     Value<String?> termLabel = const Value.absent(),
     Value<String?> academicYear = const Value.absent(),
     Value<DateTime?> termStartDate = const Value.absent(),
@@ -4840,9 +5003,16 @@ class Course extends DataClass implements Insertable<Course> {
     DateTime? cachedAt,
   }) => Course(
     id: id ?? this.id,
+    serverId: serverId.present ? serverId.value : this.serverId,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    syncStatus: syncStatus ?? this.syncStatus,
+    lastSyncError: lastSyncError.present
+        ? lastSyncError.value
+        : this.lastSyncError,
     institutionId: institutionId ?? this.institutionId,
     title: title ?? this.title,
     code: code.present ? code.value : this.code,
+    color: color.present ? color.value : this.color,
     termLabel: termLabel.present ? termLabel.value : this.termLabel,
     academicYear: academicYear.present ? academicYear.value : this.academicYear,
     termStartDate: termStartDate.present
@@ -4860,11 +5030,22 @@ class Course extends DataClass implements Insertable<Course> {
   Course copyWithCompanion(CoursesCompanion data) {
     return Course(
       id: data.id.present ? data.id.value : this.id,
+      serverId: data.serverId.present ? data.serverId.value : this.serverId,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+      lastSyncError: data.lastSyncError.present
+          ? data.lastSyncError.value
+          : this.lastSyncError,
       institutionId: data.institutionId.present
           ? data.institutionId.value
           : this.institutionId,
       title: data.title.present ? data.title.value : this.title,
       code: data.code.present ? data.code.value : this.code,
+      color: data.color.present ? data.color.value : this.color,
       termLabel: data.termLabel.present ? data.termLabel.value : this.termLabel,
       academicYear: data.academicYear.present
           ? data.academicYear.value
@@ -4891,9 +5072,14 @@ class Course extends DataClass implements Insertable<Course> {
   String toString() {
     return (StringBuffer('Course(')
           ..write('id: $id, ')
+          ..write('serverId: $serverId, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('lastSyncError: $lastSyncError, ')
           ..write('institutionId: $institutionId, ')
           ..write('title: $title, ')
           ..write('code: $code, ')
+          ..write('color: $color, ')
           ..write('termLabel: $termLabel, ')
           ..write('academicYear: $academicYear, ')
           ..write('termStartDate: $termStartDate, ')
@@ -4910,9 +5096,14 @@ class Course extends DataClass implements Insertable<Course> {
   @override
   int get hashCode => Object.hash(
     id,
+    serverId,
+    idempotencyKey,
+    syncStatus,
+    lastSyncError,
     institutionId,
     title,
     code,
+    color,
     termLabel,
     academicYear,
     termStartDate,
@@ -4928,9 +5119,14 @@ class Course extends DataClass implements Insertable<Course> {
       identical(this, other) ||
       (other is Course &&
           other.id == this.id &&
+          other.serverId == this.serverId &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.syncStatus == this.syncStatus &&
+          other.lastSyncError == this.lastSyncError &&
           other.institutionId == this.institutionId &&
           other.title == this.title &&
           other.code == this.code &&
+          other.color == this.color &&
           other.termLabel == this.termLabel &&
           other.academicYear == this.academicYear &&
           other.termStartDate == this.termStartDate &&
@@ -4944,9 +5140,14 @@ class Course extends DataClass implements Insertable<Course> {
 
 class CoursesCompanion extends UpdateCompanion<Course> {
   final Value<String> id;
+  final Value<String?> serverId;
+  final Value<String> idempotencyKey;
+  final Value<String> syncStatus;
+  final Value<String?> lastSyncError;
   final Value<int> institutionId;
   final Value<String> title;
   final Value<String?> code;
+  final Value<String?> color;
   final Value<String?> termLabel;
   final Value<String?> academicYear;
   final Value<DateTime?> termStartDate;
@@ -4959,9 +5160,14 @@ class CoursesCompanion extends UpdateCompanion<Course> {
   final Value<int> rowid;
   const CoursesCompanion({
     this.id = const Value.absent(),
+    this.serverId = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.lastSyncError = const Value.absent(),
     this.institutionId = const Value.absent(),
     this.title = const Value.absent(),
     this.code = const Value.absent(),
+    this.color = const Value.absent(),
     this.termLabel = const Value.absent(),
     this.academicYear = const Value.absent(),
     this.termStartDate = const Value.absent(),
@@ -4975,9 +5181,14 @@ class CoursesCompanion extends UpdateCompanion<Course> {
   });
   CoursesCompanion.insert({
     required String id,
+    this.serverId = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.lastSyncError = const Value.absent(),
     required int institutionId,
     required String title,
     this.code = const Value.absent(),
+    this.color = const Value.absent(),
     this.termLabel = const Value.absent(),
     this.academicYear = const Value.absent(),
     this.termStartDate = const Value.absent(),
@@ -4996,9 +5207,14 @@ class CoursesCompanion extends UpdateCompanion<Course> {
        cachedAt = Value(cachedAt);
   static Insertable<Course> custom({
     Expression<String>? id,
+    Expression<String>? serverId,
+    Expression<String>? idempotencyKey,
+    Expression<String>? syncStatus,
+    Expression<String>? lastSyncError,
     Expression<int>? institutionId,
     Expression<String>? title,
     Expression<String>? code,
+    Expression<String>? color,
     Expression<String>? termLabel,
     Expression<String>? academicYear,
     Expression<DateTime>? termStartDate,
@@ -5012,9 +5228,14 @@ class CoursesCompanion extends UpdateCompanion<Course> {
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (serverId != null) 'server_id': serverId,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (lastSyncError != null) 'last_sync_error': lastSyncError,
       if (institutionId != null) 'institution_id': institutionId,
       if (title != null) 'title': title,
       if (code != null) 'code': code,
+      if (color != null) 'color': color,
       if (termLabel != null) 'term_label': termLabel,
       if (academicYear != null) 'academic_year': academicYear,
       if (termStartDate != null) 'term_start_date': termStartDate,
@@ -5030,9 +5251,14 @@ class CoursesCompanion extends UpdateCompanion<Course> {
 
   CoursesCompanion copyWith({
     Value<String>? id,
+    Value<String?>? serverId,
+    Value<String>? idempotencyKey,
+    Value<String>? syncStatus,
+    Value<String?>? lastSyncError,
     Value<int>? institutionId,
     Value<String>? title,
     Value<String?>? code,
+    Value<String?>? color,
     Value<String?>? termLabel,
     Value<String?>? academicYear,
     Value<DateTime?>? termStartDate,
@@ -5046,9 +5272,14 @@ class CoursesCompanion extends UpdateCompanion<Course> {
   }) {
     return CoursesCompanion(
       id: id ?? this.id,
+      serverId: serverId ?? this.serverId,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      syncStatus: syncStatus ?? this.syncStatus,
+      lastSyncError: lastSyncError ?? this.lastSyncError,
       institutionId: institutionId ?? this.institutionId,
       title: title ?? this.title,
       code: code ?? this.code,
+      color: color ?? this.color,
       termLabel: termLabel ?? this.termLabel,
       academicYear: academicYear ?? this.academicYear,
       termStartDate: termStartDate ?? this.termStartDate,
@@ -5068,6 +5299,18 @@ class CoursesCompanion extends UpdateCompanion<Course> {
     if (id.present) {
       map['id'] = Variable<String>(id.value);
     }
+    if (serverId.present) {
+      map['server_id'] = Variable<String>(serverId.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (lastSyncError.present) {
+      map['last_sync_error'] = Variable<String>(lastSyncError.value);
+    }
     if (institutionId.present) {
       map['institution_id'] = Variable<int>(institutionId.value);
     }
@@ -5076,6 +5319,9 @@ class CoursesCompanion extends UpdateCompanion<Course> {
     }
     if (code.present) {
       map['code'] = Variable<String>(code.value);
+    }
+    if (color.present) {
+      map['color'] = Variable<String>(color.value);
     }
     if (termLabel.present) {
       map['term_label'] = Variable<String>(termLabel.value);
@@ -5114,9 +5360,14 @@ class CoursesCompanion extends UpdateCompanion<Course> {
   String toString() {
     return (StringBuffer('CoursesCompanion(')
           ..write('id: $id, ')
+          ..write('serverId: $serverId, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('lastSyncError: $lastSyncError, ')
           ..write('institutionId: $institutionId, ')
           ..write('title: $title, ')
           ..write('code: $code, ')
+          ..write('color: $color, ')
           ..write('termLabel: $termLabel, ')
           ..write('academicYear: $academicYear, ')
           ..write('termStartDate: $termStartDate, ')
@@ -5539,6 +5790,1075 @@ class LecturersCompanion extends UpdateCompanion<Lecturer> {
           ..write('email: $email, ')
           ..write('phone: $phone, ')
           ..write('office: $office, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $ScheduleEntriesTable extends ScheduleEntries
+    with TableInfo<$ScheduleEntriesTable, ScheduleEntry> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ScheduleEntriesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _serverIdMeta = const VerificationMeta(
+    'serverId',
+  );
+  @override
+  late final GeneratedColumn<String> serverId = GeneratedColumn<String>(
+    'server_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _idempotencyKeyMeta = const VerificationMeta(
+    'idempotencyKey',
+  );
+  @override
+  late final GeneratedColumn<String> idempotencyKey = GeneratedColumn<String>(
+    'idempotency_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('synced'),
+  );
+  static const VerificationMeta _lastSyncErrorMeta = const VerificationMeta(
+    'lastSyncError',
+  );
+  @override
+  late final GeneratedColumn<String> lastSyncError = GeneratedColumn<String>(
+    'last_sync_error',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _studentCourseIdMeta = const VerificationMeta(
+    'studentCourseId',
+  );
+  @override
+  late final GeneratedColumn<String> studentCourseId = GeneratedColumn<String>(
+    'student_course_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES courses (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _dayOfWeekMeta = const VerificationMeta(
+    'dayOfWeek',
+  );
+  @override
+  late final GeneratedColumn<String> dayOfWeek = GeneratedColumn<String>(
+    'day_of_week',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _startTimeMeta = const VerificationMeta(
+    'startTime',
+  );
+  @override
+  late final GeneratedColumn<String> startTime = GeneratedColumn<String>(
+    'start_time',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _endTimeMeta = const VerificationMeta(
+    'endTime',
+  );
+  @override
+  late final GeneratedColumn<String> endTime = GeneratedColumn<String>(
+    'end_time',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _venueMeta = const VerificationMeta('venue');
+  @override
+  late final GeneratedColumn<String> venue = GeneratedColumn<String>(
+    'venue',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _campusMeta = const VerificationMeta('campus');
+  @override
+  late final GeneratedColumn<String> campus = GeneratedColumn<String>(
+    'campus',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _sectionMeta = const VerificationMeta(
+    'section',
+  );
+  @override
+  late final GeneratedColumn<String> section = GeneratedColumn<String>(
+    'section',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _labelMeta = const VerificationMeta('label');
+  @override
+  late final GeneratedColumn<String> label = GeneratedColumn<String>(
+    'label',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _colorMeta = const VerificationMeta('color');
+  @override
+  late final GeneratedColumn<String> color = GeneratedColumn<String>(
+    'color',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _isRecurringMeta = const VerificationMeta(
+    'isRecurring',
+  );
+  @override
+  late final GeneratedColumn<bool> isRecurring = GeneratedColumn<bool>(
+    'is_recurring',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_recurring" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  static const VerificationMeta _specificDateMeta = const VerificationMeta(
+    'specificDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> specificDate = GeneratedColumn<DateTime>(
+    'specific_date',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _cachedAtMeta = const VerificationMeta(
+    'cachedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> cachedAt = GeneratedColumn<DateTime>(
+    'cached_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    serverId,
+    idempotencyKey,
+    syncStatus,
+    lastSyncError,
+    studentCourseId,
+    dayOfWeek,
+    startTime,
+    endTime,
+    venue,
+    campus,
+    section,
+    label,
+    color,
+    isRecurring,
+    specificDate,
+    createdAt,
+    updatedAt,
+    cachedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'schedule_entries';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ScheduleEntry> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('server_id')) {
+      context.handle(
+        _serverIdMeta,
+        serverId.isAcceptableOrUnknown(data['server_id']!, _serverIdMeta),
+      );
+    }
+    if (data.containsKey('idempotency_key')) {
+      context.handle(
+        _idempotencyKeyMeta,
+        idempotencyKey.isAcceptableOrUnknown(
+          data['idempotency_key']!,
+          _idempotencyKeyMeta,
+        ),
+      );
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    }
+    if (data.containsKey('last_sync_error')) {
+      context.handle(
+        _lastSyncErrorMeta,
+        lastSyncError.isAcceptableOrUnknown(
+          data['last_sync_error']!,
+          _lastSyncErrorMeta,
+        ),
+      );
+    }
+    if (data.containsKey('student_course_id')) {
+      context.handle(
+        _studentCourseIdMeta,
+        studentCourseId.isAcceptableOrUnknown(
+          data['student_course_id']!,
+          _studentCourseIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_studentCourseIdMeta);
+    }
+    if (data.containsKey('day_of_week')) {
+      context.handle(
+        _dayOfWeekMeta,
+        dayOfWeek.isAcceptableOrUnknown(data['day_of_week']!, _dayOfWeekMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dayOfWeekMeta);
+    }
+    if (data.containsKey('start_time')) {
+      context.handle(
+        _startTimeMeta,
+        startTime.isAcceptableOrUnknown(data['start_time']!, _startTimeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_startTimeMeta);
+    }
+    if (data.containsKey('end_time')) {
+      context.handle(
+        _endTimeMeta,
+        endTime.isAcceptableOrUnknown(data['end_time']!, _endTimeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_endTimeMeta);
+    }
+    if (data.containsKey('venue')) {
+      context.handle(
+        _venueMeta,
+        venue.isAcceptableOrUnknown(data['venue']!, _venueMeta),
+      );
+    }
+    if (data.containsKey('campus')) {
+      context.handle(
+        _campusMeta,
+        campus.isAcceptableOrUnknown(data['campus']!, _campusMeta),
+      );
+    }
+    if (data.containsKey('section')) {
+      context.handle(
+        _sectionMeta,
+        section.isAcceptableOrUnknown(data['section']!, _sectionMeta),
+      );
+    }
+    if (data.containsKey('label')) {
+      context.handle(
+        _labelMeta,
+        label.isAcceptableOrUnknown(data['label']!, _labelMeta),
+      );
+    }
+    if (data.containsKey('color')) {
+      context.handle(
+        _colorMeta,
+        color.isAcceptableOrUnknown(data['color']!, _colorMeta),
+      );
+    }
+    if (data.containsKey('is_recurring')) {
+      context.handle(
+        _isRecurringMeta,
+        isRecurring.isAcceptableOrUnknown(
+          data['is_recurring']!,
+          _isRecurringMeta,
+        ),
+      );
+    }
+    if (data.containsKey('specific_date')) {
+      context.handle(
+        _specificDateMeta,
+        specificDate.isAcceptableOrUnknown(
+          data['specific_date']!,
+          _specificDateMeta,
+        ),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    if (data.containsKey('cached_at')) {
+      context.handle(
+        _cachedAtMeta,
+        cachedAt.isAcceptableOrUnknown(data['cached_at']!, _cachedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_cachedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  ScheduleEntry map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ScheduleEntry(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      serverId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}server_id'],
+      ),
+      idempotencyKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}idempotency_key'],
+      )!,
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+      lastSyncError: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}last_sync_error'],
+      ),
+      studentCourseId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}student_course_id'],
+      )!,
+      dayOfWeek: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}day_of_week'],
+      )!,
+      startTime: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}start_time'],
+      )!,
+      endTime: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}end_time'],
+      )!,
+      venue: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}venue'],
+      ),
+      campus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}campus'],
+      ),
+      section: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}section'],
+      ),
+      label: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}label'],
+      ),
+      color: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}color'],
+      ),
+      isRecurring: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_recurring'],
+      )!,
+      specificDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}specific_date'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      cachedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}cached_at'],
+      )!,
+    );
+  }
+
+  @override
+  $ScheduleEntriesTable createAlias(String alias) {
+    return $ScheduleEntriesTable(attachedDatabase, alias);
+  }
+}
+
+class ScheduleEntry extends DataClass implements Insertable<ScheduleEntry> {
+  final String id;
+  final String? serverId;
+  final String idempotencyKey;
+  final String syncStatus;
+  final String? lastSyncError;
+  final String studentCourseId;
+  final String dayOfWeek;
+  final String startTime;
+  final String endTime;
+  final String? venue;
+  final String? campus;
+  final String? section;
+  final String? label;
+  final String? color;
+  final bool isRecurring;
+  final DateTime? specificDate;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final DateTime cachedAt;
+  const ScheduleEntry({
+    required this.id,
+    this.serverId,
+    required this.idempotencyKey,
+    required this.syncStatus,
+    this.lastSyncError,
+    required this.studentCourseId,
+    required this.dayOfWeek,
+    required this.startTime,
+    required this.endTime,
+    this.venue,
+    this.campus,
+    this.section,
+    this.label,
+    this.color,
+    required this.isRecurring,
+    this.specificDate,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.cachedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    if (!nullToAbsent || serverId != null) {
+      map['server_id'] = Variable<String>(serverId);
+    }
+    map['idempotency_key'] = Variable<String>(idempotencyKey);
+    map['sync_status'] = Variable<String>(syncStatus);
+    if (!nullToAbsent || lastSyncError != null) {
+      map['last_sync_error'] = Variable<String>(lastSyncError);
+    }
+    map['student_course_id'] = Variable<String>(studentCourseId);
+    map['day_of_week'] = Variable<String>(dayOfWeek);
+    map['start_time'] = Variable<String>(startTime);
+    map['end_time'] = Variable<String>(endTime);
+    if (!nullToAbsent || venue != null) {
+      map['venue'] = Variable<String>(venue);
+    }
+    if (!nullToAbsent || campus != null) {
+      map['campus'] = Variable<String>(campus);
+    }
+    if (!nullToAbsent || section != null) {
+      map['section'] = Variable<String>(section);
+    }
+    if (!nullToAbsent || label != null) {
+      map['label'] = Variable<String>(label);
+    }
+    if (!nullToAbsent || color != null) {
+      map['color'] = Variable<String>(color);
+    }
+    map['is_recurring'] = Variable<bool>(isRecurring);
+    if (!nullToAbsent || specificDate != null) {
+      map['specific_date'] = Variable<DateTime>(specificDate);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['cached_at'] = Variable<DateTime>(cachedAt);
+    return map;
+  }
+
+  ScheduleEntriesCompanion toCompanion(bool nullToAbsent) {
+    return ScheduleEntriesCompanion(
+      id: Value(id),
+      serverId: serverId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(serverId),
+      idempotencyKey: Value(idempotencyKey),
+      syncStatus: Value(syncStatus),
+      lastSyncError: lastSyncError == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastSyncError),
+      studentCourseId: Value(studentCourseId),
+      dayOfWeek: Value(dayOfWeek),
+      startTime: Value(startTime),
+      endTime: Value(endTime),
+      venue: venue == null && nullToAbsent
+          ? const Value.absent()
+          : Value(venue),
+      campus: campus == null && nullToAbsent
+          ? const Value.absent()
+          : Value(campus),
+      section: section == null && nullToAbsent
+          ? const Value.absent()
+          : Value(section),
+      label: label == null && nullToAbsent
+          ? const Value.absent()
+          : Value(label),
+      color: color == null && nullToAbsent
+          ? const Value.absent()
+          : Value(color),
+      isRecurring: Value(isRecurring),
+      specificDate: specificDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(specificDate),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      cachedAt: Value(cachedAt),
+    );
+  }
+
+  factory ScheduleEntry.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ScheduleEntry(
+      id: serializer.fromJson<String>(json['id']),
+      serverId: serializer.fromJson<String?>(json['serverId']),
+      idempotencyKey: serializer.fromJson<String>(json['idempotencyKey']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+      lastSyncError: serializer.fromJson<String?>(json['lastSyncError']),
+      studentCourseId: serializer.fromJson<String>(json['studentCourseId']),
+      dayOfWeek: serializer.fromJson<String>(json['dayOfWeek']),
+      startTime: serializer.fromJson<String>(json['startTime']),
+      endTime: serializer.fromJson<String>(json['endTime']),
+      venue: serializer.fromJson<String?>(json['venue']),
+      campus: serializer.fromJson<String?>(json['campus']),
+      section: serializer.fromJson<String?>(json['section']),
+      label: serializer.fromJson<String?>(json['label']),
+      color: serializer.fromJson<String?>(json['color']),
+      isRecurring: serializer.fromJson<bool>(json['isRecurring']),
+      specificDate: serializer.fromJson<DateTime?>(json['specificDate']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      cachedAt: serializer.fromJson<DateTime>(json['cachedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'serverId': serializer.toJson<String?>(serverId),
+      'idempotencyKey': serializer.toJson<String>(idempotencyKey),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+      'lastSyncError': serializer.toJson<String?>(lastSyncError),
+      'studentCourseId': serializer.toJson<String>(studentCourseId),
+      'dayOfWeek': serializer.toJson<String>(dayOfWeek),
+      'startTime': serializer.toJson<String>(startTime),
+      'endTime': serializer.toJson<String>(endTime),
+      'venue': serializer.toJson<String?>(venue),
+      'campus': serializer.toJson<String?>(campus),
+      'section': serializer.toJson<String?>(section),
+      'label': serializer.toJson<String?>(label),
+      'color': serializer.toJson<String?>(color),
+      'isRecurring': serializer.toJson<bool>(isRecurring),
+      'specificDate': serializer.toJson<DateTime?>(specificDate),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'cachedAt': serializer.toJson<DateTime>(cachedAt),
+    };
+  }
+
+  ScheduleEntry copyWith({
+    String? id,
+    Value<String?> serverId = const Value.absent(),
+    String? idempotencyKey,
+    String? syncStatus,
+    Value<String?> lastSyncError = const Value.absent(),
+    String? studentCourseId,
+    String? dayOfWeek,
+    String? startTime,
+    String? endTime,
+    Value<String?> venue = const Value.absent(),
+    Value<String?> campus = const Value.absent(),
+    Value<String?> section = const Value.absent(),
+    Value<String?> label = const Value.absent(),
+    Value<String?> color = const Value.absent(),
+    bool? isRecurring,
+    Value<DateTime?> specificDate = const Value.absent(),
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    DateTime? cachedAt,
+  }) => ScheduleEntry(
+    id: id ?? this.id,
+    serverId: serverId.present ? serverId.value : this.serverId,
+    idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    syncStatus: syncStatus ?? this.syncStatus,
+    lastSyncError: lastSyncError.present
+        ? lastSyncError.value
+        : this.lastSyncError,
+    studentCourseId: studentCourseId ?? this.studentCourseId,
+    dayOfWeek: dayOfWeek ?? this.dayOfWeek,
+    startTime: startTime ?? this.startTime,
+    endTime: endTime ?? this.endTime,
+    venue: venue.present ? venue.value : this.venue,
+    campus: campus.present ? campus.value : this.campus,
+    section: section.present ? section.value : this.section,
+    label: label.present ? label.value : this.label,
+    color: color.present ? color.value : this.color,
+    isRecurring: isRecurring ?? this.isRecurring,
+    specificDate: specificDate.present ? specificDate.value : this.specificDate,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    cachedAt: cachedAt ?? this.cachedAt,
+  );
+  ScheduleEntry copyWithCompanion(ScheduleEntriesCompanion data) {
+    return ScheduleEntry(
+      id: data.id.present ? data.id.value : this.id,
+      serverId: data.serverId.present ? data.serverId.value : this.serverId,
+      idempotencyKey: data.idempotencyKey.present
+          ? data.idempotencyKey.value
+          : this.idempotencyKey,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+      lastSyncError: data.lastSyncError.present
+          ? data.lastSyncError.value
+          : this.lastSyncError,
+      studentCourseId: data.studentCourseId.present
+          ? data.studentCourseId.value
+          : this.studentCourseId,
+      dayOfWeek: data.dayOfWeek.present ? data.dayOfWeek.value : this.dayOfWeek,
+      startTime: data.startTime.present ? data.startTime.value : this.startTime,
+      endTime: data.endTime.present ? data.endTime.value : this.endTime,
+      venue: data.venue.present ? data.venue.value : this.venue,
+      campus: data.campus.present ? data.campus.value : this.campus,
+      section: data.section.present ? data.section.value : this.section,
+      label: data.label.present ? data.label.value : this.label,
+      color: data.color.present ? data.color.value : this.color,
+      isRecurring: data.isRecurring.present
+          ? data.isRecurring.value
+          : this.isRecurring,
+      specificDate: data.specificDate.present
+          ? data.specificDate.value
+          : this.specificDate,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      cachedAt: data.cachedAt.present ? data.cachedAt.value : this.cachedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ScheduleEntry(')
+          ..write('id: $id, ')
+          ..write('serverId: $serverId, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('lastSyncError: $lastSyncError, ')
+          ..write('studentCourseId: $studentCourseId, ')
+          ..write('dayOfWeek: $dayOfWeek, ')
+          ..write('startTime: $startTime, ')
+          ..write('endTime: $endTime, ')
+          ..write('venue: $venue, ')
+          ..write('campus: $campus, ')
+          ..write('section: $section, ')
+          ..write('label: $label, ')
+          ..write('color: $color, ')
+          ..write('isRecurring: $isRecurring, ')
+          ..write('specificDate: $specificDate, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('cachedAt: $cachedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    serverId,
+    idempotencyKey,
+    syncStatus,
+    lastSyncError,
+    studentCourseId,
+    dayOfWeek,
+    startTime,
+    endTime,
+    venue,
+    campus,
+    section,
+    label,
+    color,
+    isRecurring,
+    specificDate,
+    createdAt,
+    updatedAt,
+    cachedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ScheduleEntry &&
+          other.id == this.id &&
+          other.serverId == this.serverId &&
+          other.idempotencyKey == this.idempotencyKey &&
+          other.syncStatus == this.syncStatus &&
+          other.lastSyncError == this.lastSyncError &&
+          other.studentCourseId == this.studentCourseId &&
+          other.dayOfWeek == this.dayOfWeek &&
+          other.startTime == this.startTime &&
+          other.endTime == this.endTime &&
+          other.venue == this.venue &&
+          other.campus == this.campus &&
+          other.section == this.section &&
+          other.label == this.label &&
+          other.color == this.color &&
+          other.isRecurring == this.isRecurring &&
+          other.specificDate == this.specificDate &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.cachedAt == this.cachedAt);
+}
+
+class ScheduleEntriesCompanion extends UpdateCompanion<ScheduleEntry> {
+  final Value<String> id;
+  final Value<String?> serverId;
+  final Value<String> idempotencyKey;
+  final Value<String> syncStatus;
+  final Value<String?> lastSyncError;
+  final Value<String> studentCourseId;
+  final Value<String> dayOfWeek;
+  final Value<String> startTime;
+  final Value<String> endTime;
+  final Value<String?> venue;
+  final Value<String?> campus;
+  final Value<String?> section;
+  final Value<String?> label;
+  final Value<String?> color;
+  final Value<bool> isRecurring;
+  final Value<DateTime?> specificDate;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<DateTime> cachedAt;
+  final Value<int> rowid;
+  const ScheduleEntriesCompanion({
+    this.id = const Value.absent(),
+    this.serverId = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.lastSyncError = const Value.absent(),
+    this.studentCourseId = const Value.absent(),
+    this.dayOfWeek = const Value.absent(),
+    this.startTime = const Value.absent(),
+    this.endTime = const Value.absent(),
+    this.venue = const Value.absent(),
+    this.campus = const Value.absent(),
+    this.section = const Value.absent(),
+    this.label = const Value.absent(),
+    this.color = const Value.absent(),
+    this.isRecurring = const Value.absent(),
+    this.specificDate = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.cachedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ScheduleEntriesCompanion.insert({
+    required String id,
+    this.serverId = const Value.absent(),
+    this.idempotencyKey = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.lastSyncError = const Value.absent(),
+    required String studentCourseId,
+    required String dayOfWeek,
+    required String startTime,
+    required String endTime,
+    this.venue = const Value.absent(),
+    this.campus = const Value.absent(),
+    this.section = const Value.absent(),
+    this.label = const Value.absent(),
+    this.color = const Value.absent(),
+    this.isRecurring = const Value.absent(),
+    this.specificDate = const Value.absent(),
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    required DateTime cachedAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       studentCourseId = Value(studentCourseId),
+       dayOfWeek = Value(dayOfWeek),
+       startTime = Value(startTime),
+       endTime = Value(endTime),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt),
+       cachedAt = Value(cachedAt);
+  static Insertable<ScheduleEntry> custom({
+    Expression<String>? id,
+    Expression<String>? serverId,
+    Expression<String>? idempotencyKey,
+    Expression<String>? syncStatus,
+    Expression<String>? lastSyncError,
+    Expression<String>? studentCourseId,
+    Expression<String>? dayOfWeek,
+    Expression<String>? startTime,
+    Expression<String>? endTime,
+    Expression<String>? venue,
+    Expression<String>? campus,
+    Expression<String>? section,
+    Expression<String>? label,
+    Expression<String>? color,
+    Expression<bool>? isRecurring,
+    Expression<DateTime>? specificDate,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? cachedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (serverId != null) 'server_id': serverId,
+      if (idempotencyKey != null) 'idempotency_key': idempotencyKey,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (lastSyncError != null) 'last_sync_error': lastSyncError,
+      if (studentCourseId != null) 'student_course_id': studentCourseId,
+      if (dayOfWeek != null) 'day_of_week': dayOfWeek,
+      if (startTime != null) 'start_time': startTime,
+      if (endTime != null) 'end_time': endTime,
+      if (venue != null) 'venue': venue,
+      if (campus != null) 'campus': campus,
+      if (section != null) 'section': section,
+      if (label != null) 'label': label,
+      if (color != null) 'color': color,
+      if (isRecurring != null) 'is_recurring': isRecurring,
+      if (specificDate != null) 'specific_date': specificDate,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (cachedAt != null) 'cached_at': cachedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ScheduleEntriesCompanion copyWith({
+    Value<String>? id,
+    Value<String?>? serverId,
+    Value<String>? idempotencyKey,
+    Value<String>? syncStatus,
+    Value<String?>? lastSyncError,
+    Value<String>? studentCourseId,
+    Value<String>? dayOfWeek,
+    Value<String>? startTime,
+    Value<String>? endTime,
+    Value<String?>? venue,
+    Value<String?>? campus,
+    Value<String?>? section,
+    Value<String?>? label,
+    Value<String?>? color,
+    Value<bool>? isRecurring,
+    Value<DateTime?>? specificDate,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<DateTime>? cachedAt,
+    Value<int>? rowid,
+  }) {
+    return ScheduleEntriesCompanion(
+      id: id ?? this.id,
+      serverId: serverId ?? this.serverId,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+      syncStatus: syncStatus ?? this.syncStatus,
+      lastSyncError: lastSyncError ?? this.lastSyncError,
+      studentCourseId: studentCourseId ?? this.studentCourseId,
+      dayOfWeek: dayOfWeek ?? this.dayOfWeek,
+      startTime: startTime ?? this.startTime,
+      endTime: endTime ?? this.endTime,
+      venue: venue ?? this.venue,
+      campus: campus ?? this.campus,
+      section: section ?? this.section,
+      label: label ?? this.label,
+      color: color ?? this.color,
+      isRecurring: isRecurring ?? this.isRecurring,
+      specificDate: specificDate ?? this.specificDate,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      cachedAt: cachedAt ?? this.cachedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (serverId.present) {
+      map['server_id'] = Variable<String>(serverId.value);
+    }
+    if (idempotencyKey.present) {
+      map['idempotency_key'] = Variable<String>(idempotencyKey.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (lastSyncError.present) {
+      map['last_sync_error'] = Variable<String>(lastSyncError.value);
+    }
+    if (studentCourseId.present) {
+      map['student_course_id'] = Variable<String>(studentCourseId.value);
+    }
+    if (dayOfWeek.present) {
+      map['day_of_week'] = Variable<String>(dayOfWeek.value);
+    }
+    if (startTime.present) {
+      map['start_time'] = Variable<String>(startTime.value);
+    }
+    if (endTime.present) {
+      map['end_time'] = Variable<String>(endTime.value);
+    }
+    if (venue.present) {
+      map['venue'] = Variable<String>(venue.value);
+    }
+    if (campus.present) {
+      map['campus'] = Variable<String>(campus.value);
+    }
+    if (section.present) {
+      map['section'] = Variable<String>(section.value);
+    }
+    if (label.present) {
+      map['label'] = Variable<String>(label.value);
+    }
+    if (color.present) {
+      map['color'] = Variable<String>(color.value);
+    }
+    if (isRecurring.present) {
+      map['is_recurring'] = Variable<bool>(isRecurring.value);
+    }
+    if (specificDate.present) {
+      map['specific_date'] = Variable<DateTime>(specificDate.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (cachedAt.present) {
+      map['cached_at'] = Variable<DateTime>(cachedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ScheduleEntriesCompanion(')
+          ..write('id: $id, ')
+          ..write('serverId: $serverId, ')
+          ..write('idempotencyKey: $idempotencyKey, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('lastSyncError: $lastSyncError, ')
+          ..write('studentCourseId: $studentCourseId, ')
+          ..write('dayOfWeek: $dayOfWeek, ')
+          ..write('startTime: $startTime, ')
+          ..write('endTime: $endTime, ')
+          ..write('venue: $venue, ')
+          ..write('campus: $campus, ')
+          ..write('section: $section, ')
+          ..write('label: $label, ')
+          ..write('color: $color, ')
+          ..write('isRecurring: $isRecurring, ')
+          ..write('specificDate: $specificDate, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('cachedAt: $cachedAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -8071,6 +9391,9 @@ abstract class _$AppDatabaseV2 extends GeneratedDatabase {
   late final $LockInAttemptsTable lockInAttempts = $LockInAttemptsTable(this);
   late final $CoursesTable courses = $CoursesTable(this);
   late final $LecturersTable lecturers = $LecturersTable(this);
+  late final $ScheduleEntriesTable scheduleEntries = $ScheduleEntriesTable(
+    this,
+  );
   late final $TodoListsTable todoLists = $TodoListsTable(this);
   late final $TodoTagItemsTable todoTagItems = $TodoTagItemsTable(this);
   late final $TodoItemsTable todoItems = $TodoItemsTable(this);
@@ -8103,11 +9426,22 @@ abstract class _$AppDatabaseV2 extends GeneratedDatabase {
     lockInAttempts,
     courses,
     lecturers,
+    scheduleEntries,
     todoLists,
     todoTagItems,
     todoItems,
     todoItemTags,
   ];
+  @override
+  StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'courses',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('schedule_entries', kind: UpdateKind.delete)],
+    ),
+  ]);
 }
 
 typedef $$PlansTableCreateCompanionBuilder = PlansCompanion Function({
@@ -10423,9 +11757,14 @@ typedef $$LockInAttemptsTableProcessedTableManager =
     >;
 typedef $$CoursesTableCreateCompanionBuilder = CoursesCompanion Function({
   required String id,
+  Value<String?> serverId,
+  Value<String> idempotencyKey,
+  Value<String> syncStatus,
+  Value<String?> lastSyncError,
   required int institutionId,
   required String title,
   Value<String?> code,
+  Value<String?> color,
   Value<String?> termLabel,
   Value<String?> academicYear,
   Value<DateTime?> termStartDate,
@@ -10439,9 +11778,14 @@ typedef $$CoursesTableCreateCompanionBuilder = CoursesCompanion Function({
 });
 typedef $$CoursesTableUpdateCompanionBuilder = CoursesCompanion Function({
   Value<String> id,
+  Value<String?> serverId,
+  Value<String> idempotencyKey,
+  Value<String> syncStatus,
+  Value<String?> lastSyncError,
   Value<int> institutionId,
   Value<String> title,
   Value<String?> code,
+  Value<String?> color,
   Value<String?> termLabel,
   Value<String?> academicYear,
   Value<DateTime?> termStartDate,
@@ -10474,6 +11818,27 @@ final class $$CoursesTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<$ScheduleEntriesTable, List<ScheduleEntry>>
+  _scheduleEntriesRefsTable(_$AppDatabaseV2 db) =>
+      MultiTypedResultKey.fromTable(
+        db.scheduleEntries,
+        aliasName: 'courses__id__schedule_entries__student_course_id',
+      );
+
+  $$ScheduleEntriesTableProcessedTableManager get scheduleEntriesRefs {
+    final manager =
+        $$ScheduleEntriesTableTableManager($_db, $_db.scheduleEntries).filter(
+          (f) => f.studentCourseId.id.sqlEquals($_itemColumn<String>('id')!),
+        );
+
+    final cache = $_typedResult.readTableOrNull(
+      _scheduleEntriesRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$CoursesTableFilterComposer
@@ -10490,6 +11855,26 @@ class $$CoursesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get serverId => $composableBuilder(
+    column: $table.serverId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get lastSyncError => $composableBuilder(
+    column: $table.lastSyncError,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<int> get institutionId => $composableBuilder(
     column: $table.institutionId,
     builder: (column) => ColumnFilters(column),
@@ -10502,6 +11887,11 @@ class $$CoursesTableFilterComposer
 
   ColumnFilters<String> get code => $composableBuilder(
     column: $table.code,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get color => $composableBuilder(
+    column: $table.color,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -10574,6 +11964,31 @@ class $$CoursesTableFilterComposer
     );
     return f(composer);
   }
+
+  Expression<bool> scheduleEntriesRefs(
+    Expression<bool> Function($$ScheduleEntriesTableFilterComposer f) f,
+  ) {
+    final $$ScheduleEntriesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.scheduleEntries,
+      getReferencedColumn: (t) => t.studentCourseId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ScheduleEntriesTableFilterComposer(
+            $db: $db,
+            $table: $db.scheduleEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$CoursesTableOrderingComposer
@@ -10590,6 +12005,26 @@ class $$CoursesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get serverId => $composableBuilder(
+    column: $table.serverId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get lastSyncError => $composableBuilder(
+    column: $table.lastSyncError,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get institutionId => $composableBuilder(
     column: $table.institutionId,
     builder: (column) => ColumnOrderings(column),
@@ -10602,6 +12037,11 @@ class $$CoursesTableOrderingComposer
 
   ColumnOrderings<String> get code => $composableBuilder(
     column: $table.code,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get color => $composableBuilder(
+    column: $table.color,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -10663,6 +12103,24 @@ class $$CoursesTableAnnotationComposer
   GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
+  GeneratedColumn<String> get serverId =>
+      $composableBuilder(column: $table.serverId, builder: (column) => column);
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get lastSyncError => $composableBuilder(
+    column: $table.lastSyncError,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<int> get institutionId => $composableBuilder(
     column: $table.institutionId,
     builder: (column) => column,
@@ -10673,6 +12131,9 @@ class $$CoursesTableAnnotationComposer
 
   GeneratedColumn<String> get code =>
       $composableBuilder(column: $table.code, builder: (column) => column);
+
+  GeneratedColumn<String> get color =>
+      $composableBuilder(column: $table.color, builder: (column) => column);
 
   GeneratedColumn<String> get termLabel =>
       $composableBuilder(column: $table.termLabel, builder: (column) => column);
@@ -10735,6 +12196,31 @@ class $$CoursesTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> scheduleEntriesRefs<T extends Object>(
+    Expression<T> Function($$ScheduleEntriesTableAnnotationComposer a) f,
+  ) {
+    final $$ScheduleEntriesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.scheduleEntries,
+      getReferencedColumn: (t) => t.studentCourseId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ScheduleEntriesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.scheduleEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$CoursesTableTableManager
@@ -10750,7 +12236,7 @@ class $$CoursesTableTableManager
           $$CoursesTableUpdateCompanionBuilder,
           (Course, $$CoursesTableReferences),
           Course,
-          PrefetchHooks Function({bool lecturersRefs})
+          PrefetchHooks Function({bool lecturersRefs, bool scheduleEntriesRefs})
         > {
   $$CoursesTableTableManager(_$AppDatabaseV2 db, $CoursesTable table)
     : super(
@@ -10766,9 +12252,14 @@ class $$CoursesTableTableManager
           updateCompanionCallback:
               ({
                 Value<String> id = const Value.absent(),
+                Value<String?> serverId = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<String?> lastSyncError = const Value.absent(),
                 Value<int> institutionId = const Value.absent(),
                 Value<String> title = const Value.absent(),
                 Value<String?> code = const Value.absent(),
+                Value<String?> color = const Value.absent(),
                 Value<String?> termLabel = const Value.absent(),
                 Value<String?> academicYear = const Value.absent(),
                 Value<DateTime?> termStartDate = const Value.absent(),
@@ -10781,9 +12272,14 @@ class $$CoursesTableTableManager
                 Value<int> rowid = const Value.absent(),
               }) => CoursesCompanion(
                 id: id,
+                serverId: serverId,
+                idempotencyKey: idempotencyKey,
+                syncStatus: syncStatus,
+                lastSyncError: lastSyncError,
                 institutionId: institutionId,
                 title: title,
                 code: code,
+                color: color,
                 termLabel: termLabel,
                 academicYear: academicYear,
                 termStartDate: termStartDate,
@@ -10798,9 +12294,14 @@ class $$CoursesTableTableManager
           createCompanionCallback:
               ({
                 required String id,
+                Value<String?> serverId = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<String?> lastSyncError = const Value.absent(),
                 required int institutionId,
                 required String title,
                 Value<String?> code = const Value.absent(),
+                Value<String?> color = const Value.absent(),
                 Value<String?> termLabel = const Value.absent(),
                 Value<String?> academicYear = const Value.absent(),
                 Value<DateTime?> termStartDate = const Value.absent(),
@@ -10813,9 +12314,14 @@ class $$CoursesTableTableManager
                 Value<int> rowid = const Value.absent(),
               }) => CoursesCompanion.insert(
                 id: id,
+                serverId: serverId,
+                idempotencyKey: idempotencyKey,
+                syncStatus: syncStatus,
+                lastSyncError: lastSyncError,
                 institutionId: institutionId,
                 title: title,
                 code: code,
+                color: color,
                 termLabel: termLabel,
                 academicYear: academicYear,
                 termStartDate: termStartDate,
@@ -10835,30 +12341,63 @@ class $$CoursesTableTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({lecturersRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [if (lecturersRefs) db.lecturers],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (lecturersRefs)
-                    await $_getPrefetchedData<Course, $CoursesTable, Lecturer>(
-                      currentTable: table,
-                      referencedTable: $$CoursesTableReferences
-                          ._lecturersRefsTable(db),
-                      managerFromTypedResult: (p0) =>
-                          $$CoursesTableReferences(db, table, p0).lecturersRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where(
-                            (e) => e.studentCourseId == item.id,
-                          ),
-                      typedResults: items,
-                    ),
-                ];
+          prefetchHooksCallback:
+              ({lecturersRefs = false, scheduleEntriesRefs = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (lecturersRefs) db.lecturers,
+                    if (scheduleEntriesRefs) db.scheduleEntries,
+                  ],
+                  addJoins: null,
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (lecturersRefs)
+                        await $_getPrefetchedData<
+                          Course,
+                          $CoursesTable,
+                          Lecturer
+                        >(
+                          currentTable: table,
+                          referencedTable: $$CoursesTableReferences
+                              ._lecturersRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$CoursesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).lecturersRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.studentCourseId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (scheduleEntriesRefs)
+                        await $_getPrefetchedData<
+                          Course,
+                          $CoursesTable,
+                          ScheduleEntry
+                        >(
+                          currentTable: table,
+                          referencedTable: $$CoursesTableReferences
+                              ._scheduleEntriesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$CoursesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).scheduleEntriesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.studentCourseId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
               },
-            );
-          },
         ),
       );
 }
@@ -10875,7 +12414,7 @@ typedef $$CoursesTableProcessedTableManager =
       $$CoursesTableUpdateCompanionBuilder,
       (Course, $$CoursesTableReferences),
       Course,
-      PrefetchHooks Function({bool lecturersRefs})
+      PrefetchHooks Function({bool lecturersRefs, bool scheduleEntriesRefs})
     >;
 typedef $$LecturersTableCreateCompanionBuilder = LecturersCompanion Function({
   required String id,
@@ -11207,6 +12746,604 @@ typedef $$LecturersTableProcessedTableManager =
       $$LecturersTableUpdateCompanionBuilder,
       (Lecturer, $$LecturersTableReferences),
       Lecturer,
+      PrefetchHooks Function({bool studentCourseId})
+    >;
+typedef $$ScheduleEntriesTableCreateCompanionBuilder =
+    ScheduleEntriesCompanion Function({
+      required String id,
+      Value<String?> serverId,
+      Value<String> idempotencyKey,
+      Value<String> syncStatus,
+      Value<String?> lastSyncError,
+      required String studentCourseId,
+      required String dayOfWeek,
+      required String startTime,
+      required String endTime,
+      Value<String?> venue,
+      Value<String?> campus,
+      Value<String?> section,
+      Value<String?> label,
+      Value<String?> color,
+      Value<bool> isRecurring,
+      Value<DateTime?> specificDate,
+      required DateTime createdAt,
+      required DateTime updatedAt,
+      required DateTime cachedAt,
+      Value<int> rowid,
+    });
+typedef $$ScheduleEntriesTableUpdateCompanionBuilder =
+    ScheduleEntriesCompanion Function({
+      Value<String> id,
+      Value<String?> serverId,
+      Value<String> idempotencyKey,
+      Value<String> syncStatus,
+      Value<String?> lastSyncError,
+      Value<String> studentCourseId,
+      Value<String> dayOfWeek,
+      Value<String> startTime,
+      Value<String> endTime,
+      Value<String?> venue,
+      Value<String?> campus,
+      Value<String?> section,
+      Value<String?> label,
+      Value<String?> color,
+      Value<bool> isRecurring,
+      Value<DateTime?> specificDate,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<DateTime> cachedAt,
+      Value<int> rowid,
+    });
+
+final class $$ScheduleEntriesTableReferences
+    extends
+        BaseReferences<_$AppDatabaseV2, $ScheduleEntriesTable, ScheduleEntry> {
+  $$ScheduleEntriesTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $CoursesTable _studentCourseIdTable(_$AppDatabaseV2 db) => db.courses
+      .createAlias('schedule_entries__student_course_id__courses__id');
+
+  $$CoursesTableProcessedTableManager get studentCourseId {
+    final $_column = $_itemColumn<String>('student_course_id')!;
+
+    final manager = $$CoursesTableTableManager(
+      $_db,
+      $_db.courses,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_studentCourseIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$ScheduleEntriesTableFilterComposer
+    extends Composer<_$AppDatabaseV2, $ScheduleEntriesTable> {
+  $$ScheduleEntriesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get serverId => $composableBuilder(
+    column: $table.serverId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get lastSyncError => $composableBuilder(
+    column: $table.lastSyncError,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get dayOfWeek => $composableBuilder(
+    column: $table.dayOfWeek,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get startTime => $composableBuilder(
+    column: $table.startTime,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get endTime => $composableBuilder(
+    column: $table.endTime,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get venue => $composableBuilder(
+    column: $table.venue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get campus => $composableBuilder(
+    column: $table.campus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get section => $composableBuilder(
+    column: $table.section,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get label => $composableBuilder(
+    column: $table.label,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get color => $composableBuilder(
+    column: $table.color,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isRecurring => $composableBuilder(
+    column: $table.isRecurring,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get specificDate => $composableBuilder(
+    column: $table.specificDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get cachedAt => $composableBuilder(
+    column: $table.cachedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$CoursesTableFilterComposer get studentCourseId {
+    final $$CoursesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.studentCourseId,
+      referencedTable: $db.courses,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CoursesTableFilterComposer(
+            $db: $db,
+            $table: $db.courses,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$ScheduleEntriesTableOrderingComposer
+    extends Composer<_$AppDatabaseV2, $ScheduleEntriesTable> {
+  $$ScheduleEntriesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get serverId => $composableBuilder(
+    column: $table.serverId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get lastSyncError => $composableBuilder(
+    column: $table.lastSyncError,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get dayOfWeek => $composableBuilder(
+    column: $table.dayOfWeek,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get startTime => $composableBuilder(
+    column: $table.startTime,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get endTime => $composableBuilder(
+    column: $table.endTime,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get venue => $composableBuilder(
+    column: $table.venue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get campus => $composableBuilder(
+    column: $table.campus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get section => $composableBuilder(
+    column: $table.section,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get label => $composableBuilder(
+    column: $table.label,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get color => $composableBuilder(
+    column: $table.color,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isRecurring => $composableBuilder(
+    column: $table.isRecurring,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get specificDate => $composableBuilder(
+    column: $table.specificDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get cachedAt => $composableBuilder(
+    column: $table.cachedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$CoursesTableOrderingComposer get studentCourseId {
+    final $$CoursesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.studentCourseId,
+      referencedTable: $db.courses,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CoursesTableOrderingComposer(
+            $db: $db,
+            $table: $db.courses,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$ScheduleEntriesTableAnnotationComposer
+    extends Composer<_$AppDatabaseV2, $ScheduleEntriesTable> {
+  $$ScheduleEntriesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get serverId =>
+      $composableBuilder(column: $table.serverId, builder: (column) => column);
+
+  GeneratedColumn<String> get idempotencyKey => $composableBuilder(
+    column: $table.idempotencyKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get lastSyncError => $composableBuilder(
+    column: $table.lastSyncError,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get dayOfWeek =>
+      $composableBuilder(column: $table.dayOfWeek, builder: (column) => column);
+
+  GeneratedColumn<String> get startTime =>
+      $composableBuilder(column: $table.startTime, builder: (column) => column);
+
+  GeneratedColumn<String> get endTime =>
+      $composableBuilder(column: $table.endTime, builder: (column) => column);
+
+  GeneratedColumn<String> get venue =>
+      $composableBuilder(column: $table.venue, builder: (column) => column);
+
+  GeneratedColumn<String> get campus =>
+      $composableBuilder(column: $table.campus, builder: (column) => column);
+
+  GeneratedColumn<String> get section =>
+      $composableBuilder(column: $table.section, builder: (column) => column);
+
+  GeneratedColumn<String> get label =>
+      $composableBuilder(column: $table.label, builder: (column) => column);
+
+  GeneratedColumn<String> get color =>
+      $composableBuilder(column: $table.color, builder: (column) => column);
+
+  GeneratedColumn<bool> get isRecurring => $composableBuilder(
+    column: $table.isRecurring,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get specificDate => $composableBuilder(
+    column: $table.specificDate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get cachedAt =>
+      $composableBuilder(column: $table.cachedAt, builder: (column) => column);
+
+  $$CoursesTableAnnotationComposer get studentCourseId {
+    final $$CoursesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.studentCourseId,
+      referencedTable: $db.courses,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CoursesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.courses,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$ScheduleEntriesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabaseV2,
+          $ScheduleEntriesTable,
+          ScheduleEntry,
+          $$ScheduleEntriesTableFilterComposer,
+          $$ScheduleEntriesTableOrderingComposer,
+          $$ScheduleEntriesTableAnnotationComposer,
+          $$ScheduleEntriesTableCreateCompanionBuilder,
+          $$ScheduleEntriesTableUpdateCompanionBuilder,
+          (ScheduleEntry, $$ScheduleEntriesTableReferences),
+          ScheduleEntry,
+          PrefetchHooks Function({bool studentCourseId})
+        > {
+  $$ScheduleEntriesTableTableManager(
+    _$AppDatabaseV2 db,
+    $ScheduleEntriesTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ScheduleEntriesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ScheduleEntriesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ScheduleEntriesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String?> serverId = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<String?> lastSyncError = const Value.absent(),
+                Value<String> studentCourseId = const Value.absent(),
+                Value<String> dayOfWeek = const Value.absent(),
+                Value<String> startTime = const Value.absent(),
+                Value<String> endTime = const Value.absent(),
+                Value<String?> venue = const Value.absent(),
+                Value<String?> campus = const Value.absent(),
+                Value<String?> section = const Value.absent(),
+                Value<String?> label = const Value.absent(),
+                Value<String?> color = const Value.absent(),
+                Value<bool> isRecurring = const Value.absent(),
+                Value<DateTime?> specificDate = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<DateTime> cachedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ScheduleEntriesCompanion(
+                id: id,
+                serverId: serverId,
+                idempotencyKey: idempotencyKey,
+                syncStatus: syncStatus,
+                lastSyncError: lastSyncError,
+                studentCourseId: studentCourseId,
+                dayOfWeek: dayOfWeek,
+                startTime: startTime,
+                endTime: endTime,
+                venue: venue,
+                campus: campus,
+                section: section,
+                label: label,
+                color: color,
+                isRecurring: isRecurring,
+                specificDate: specificDate,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                cachedAt: cachedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                Value<String?> serverId = const Value.absent(),
+                Value<String> idempotencyKey = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<String?> lastSyncError = const Value.absent(),
+                required String studentCourseId,
+                required String dayOfWeek,
+                required String startTime,
+                required String endTime,
+                Value<String?> venue = const Value.absent(),
+                Value<String?> campus = const Value.absent(),
+                Value<String?> section = const Value.absent(),
+                Value<String?> label = const Value.absent(),
+                Value<String?> color = const Value.absent(),
+                Value<bool> isRecurring = const Value.absent(),
+                Value<DateTime?> specificDate = const Value.absent(),
+                required DateTime createdAt,
+                required DateTime updatedAt,
+                required DateTime cachedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => ScheduleEntriesCompanion.insert(
+                id: id,
+                serverId: serverId,
+                idempotencyKey: idempotencyKey,
+                syncStatus: syncStatus,
+                lastSyncError: lastSyncError,
+                studentCourseId: studentCourseId,
+                dayOfWeek: dayOfWeek,
+                startTime: startTime,
+                endTime: endTime,
+                venue: venue,
+                campus: campus,
+                section: section,
+                label: label,
+                color: color,
+                isRecurring: isRecurring,
+                specificDate: specificDate,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                cachedAt: cachedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$ScheduleEntriesTable, ScheduleEntry>(table),
+                  $$ScheduleEntriesTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({studentCourseId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (studentCourseId) {
+                      state = state.withJoin(
+                        currentTable: table,
+                        currentColumn: table.studentCourseId,
+                        referencedTable: $$ScheduleEntriesTableReferences
+                            ._studentCourseIdTable(db),
+                        referencedColumn: $$ScheduleEntriesTableReferences
+                            ._studentCourseIdTable(db)
+                            .id,
+                      ) as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$ScheduleEntriesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabaseV2,
+      $ScheduleEntriesTable,
+      ScheduleEntry,
+      $$ScheduleEntriesTableFilterComposer,
+      $$ScheduleEntriesTableOrderingComposer,
+      $$ScheduleEntriesTableAnnotationComposer,
+      $$ScheduleEntriesTableCreateCompanionBuilder,
+      $$ScheduleEntriesTableUpdateCompanionBuilder,
+      (ScheduleEntry, $$ScheduleEntriesTableReferences),
+      ScheduleEntry,
       PrefetchHooks Function({bool studentCourseId})
     >;
 typedef $$TodoListsTableCreateCompanionBuilder = TodoListsCompanion Function({
@@ -13050,6 +15187,8 @@ class $AppDatabaseV2Manager {
       $$CoursesTableTableManager(_db, _db.courses);
   $$LecturersTableTableManager get lecturers =>
       $$LecturersTableTableManager(_db, _db.lecturers);
+  $$ScheduleEntriesTableTableManager get scheduleEntries =>
+      $$ScheduleEntriesTableTableManager(_db, _db.scheduleEntries);
   $$TodoListsTableTableManager get todoLists =>
       $$TodoListsTableTableManager(_db, _db.todoLists);
   $$TodoTagItemsTableTableManager get todoTagItems =>

@@ -16,6 +16,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  agenda:
+    dependency: "direct main"
+    description:
+      path: "packages/agenda"
+      relative: true
+    source: path
+    version: "0.0.0"
   analytics:
     dependency: "direct main"
     description:

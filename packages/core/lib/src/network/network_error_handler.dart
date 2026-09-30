@@ -35,6 +35,7 @@ mixin DioErrorHandler {
                 serverMessage?.toString() ??
                 "Server error ($statusCode). Please try again.",
             error: de,
+            statusCode: statusCode,
           ),
         );
 

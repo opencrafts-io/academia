@@ -1,5 +1,9 @@
 export 'course_routes.dart'
-    show CourseDetailRoute, CourseHistoryRoute, CourseListRoute;
+    show
+        CourseDetailRoute,
+        CourseHistoryRoute,
+        CourseListRoute,
+        CreateCourseRoute;
 
 import 'package:go_router/go_router.dart';
 

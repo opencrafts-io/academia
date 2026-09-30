@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CreateCourseParams {
 
- int get institutionId; String get title; String? get code; String? get termLabel; String? get academicYear; DateTime? get termStartDate; DateTime? get termEndDate; String? get previousCourseId;
+ int get institutionId; String get title; String? get code; String? get color; String? get termLabel; String? get academicYear; DateTime? get termStartDate; DateTime? get termEndDate; String? get previousCourseId;
 /// Create a copy of CreateCourseParams
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -27,20 +27,20 @@ $CreateCourseParamsCopyWith<CreateCourseParams> get copyWith => _$CreateCoursePa
 @override
 bool operator ==(Object other) {
   final _this = this as CreateCourseParams;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CreateCourseParams&&(identical(other.institutionId, _this.institutionId) || other.institutionId == _this.institutionId)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.code, _this.code) || other.code == _this.code)&&(identical(other.termLabel, _this.termLabel) || other.termLabel == _this.termLabel)&&(identical(other.academicYear, _this.academicYear) || other.academicYear == _this.academicYear)&&(identical(other.termStartDate, _this.termStartDate) || other.termStartDate == _this.termStartDate)&&(identical(other.termEndDate, _this.termEndDate) || other.termEndDate == _this.termEndDate)&&(identical(other.previousCourseId, _this.previousCourseId) || other.previousCourseId == _this.previousCourseId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CreateCourseParams&&(identical(other.institutionId, _this.institutionId) || other.institutionId == _this.institutionId)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.code, _this.code) || other.code == _this.code)&&(identical(other.color, _this.color) || other.color == _this.color)&&(identical(other.termLabel, _this.termLabel) || other.termLabel == _this.termLabel)&&(identical(other.academicYear, _this.academicYear) || other.academicYear == _this.academicYear)&&(identical(other.termStartDate, _this.termStartDate) || other.termStartDate == _this.termStartDate)&&(identical(other.termEndDate, _this.termEndDate) || other.termEndDate == _this.termEndDate)&&(identical(other.previousCourseId, _this.previousCourseId) || other.previousCourseId == _this.previousCourseId));
 }
 
 
 @override
 int get hashCode {
   final _this = this as CreateCourseParams;
-  return Object.hash(runtimeType,_this.institutionId,_this.title,_this.code,_this.termLabel,_this.academicYear,_this.termStartDate,_this.termEndDate,_this.previousCourseId);
+  return Object.hash(runtimeType,_this.institutionId,_this.title,_this.code,_this.color,_this.termLabel,_this.academicYear,_this.termStartDate,_this.termEndDate,_this.previousCourseId);
 }
 
 @override
 String toString() {
   final _this = this as CreateCourseParams;
-  return 'CreateCourseParams(institutionId: ${_this.institutionId}, title: ${_this.title}, code: ${_this.code}, termLabel: ${_this.termLabel}, academicYear: ${_this.academicYear}, termStartDate: ${_this.termStartDate}, termEndDate: ${_this.termEndDate}, previousCourseId: ${_this.previousCourseId})';
+  return 'CreateCourseParams(institutionId: ${_this.institutionId}, title: ${_this.title}, code: ${_this.code}, color: ${_this.color}, termLabel: ${_this.termLabel}, academicYear: ${_this.academicYear}, termStartDate: ${_this.termStartDate}, termEndDate: ${_this.termEndDate}, previousCourseId: ${_this.previousCourseId})';
 }
 
 
@@ -51,7 +51,7 @@ abstract mixin class $CreateCourseParamsCopyWith<$Res>  {
   factory $CreateCourseParamsCopyWith(CreateCourseParams value, $Res Function(CreateCourseParams) _then) = _$CreateCourseParamsCopyWithImpl;
 @useResult
 $Res call({
- int institutionId, String title, String? code, String? termLabel, String? academicYear, DateTime? termStartDate, DateTime? termEndDate, String? previousCourseId
+ int institutionId, String title, String? code, String? color, String? termLabel, String? academicYear, DateTime? termStartDate, DateTime? termEndDate, String? previousCourseId
 });
 
 
@@ -68,11 +68,12 @@ class _$CreateCourseParamsCopyWithImpl<$Res>
 
 /// Create a copy of CreateCourseParams
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? institutionId = null,Object? title = null,Object? code = freezed,Object? termLabel = freezed,Object? academicYear = freezed,Object? termStartDate = freezed,Object? termEndDate = freezed,Object? previousCourseId = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? institutionId = null,Object? title = null,Object? code = freezed,Object? color = freezed,Object? termLabel = freezed,Object? academicYear = freezed,Object? termStartDate = freezed,Object? termEndDate = freezed,Object? previousCourseId = freezed,}) {
   return _then(CreateCourseParams(
 institutionId: null == institutionId ? _self.institutionId : institutionId // ignore: cast_nullable_to_non_nullable
 as int,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,code: freezed == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String?,color: freezed == color ? _self.color : color // ignore: cast_nullable_to_non_nullable
 as String?,termLabel: freezed == termLabel ? _self.termLabel : termLabel // ignore: cast_nullable_to_non_nullable
 as String?,academicYear: freezed == academicYear ? _self.academicYear : academicYear // ignore: cast_nullable_to_non_nullable
 as String?,termStartDate: freezed == termStartDate ? _self.termStartDate : termStartDate // ignore: cast_nullable_to_non_nullable
@@ -163,10 +164,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int institutionId,  String title,  String? code,  String? termLabel,  String? academicYear,  DateTime? termStartDate,  DateTime? termEndDate,  String? previousCourseId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int institutionId,  String title,  String? code,  String? color,  String? termLabel,  String? academicYear,  DateTime? termStartDate,  DateTime? termEndDate,  String? previousCourseId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CreateCourseParams() when $default != null:
-return $default(_that.institutionId,_that.title,_that.code,_that.termLabel,_that.academicYear,_that.termStartDate,_that.termEndDate,_that.previousCourseId);case _:
+return $default(_that.institutionId,_that.title,_that.code,_that.color,_that.termLabel,_that.academicYear,_that.termStartDate,_that.termEndDate,_that.previousCourseId);case _:
   return orElse();
 
 }
@@ -184,10 +185,10 @@ return $default(_that.institutionId,_that.title,_that.code,_that.termLabel,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int institutionId,  String title,  String? code,  String? termLabel,  String? academicYear,  DateTime? termStartDate,  DateTime? termEndDate,  String? previousCourseId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int institutionId,  String title,  String? code,  String? color,  String? termLabel,  String? academicYear,  DateTime? termStartDate,  DateTime? termEndDate,  String? previousCourseId)  $default,) {final _that = this;
 switch (_that) {
 case _CreateCourseParams():
-return $default(_that.institutionId,_that.title,_that.code,_that.termLabel,_that.academicYear,_that.termStartDate,_that.termEndDate,_that.previousCourseId);case _:
+return $default(_that.institutionId,_that.title,_that.code,_that.color,_that.termLabel,_that.academicYear,_that.termStartDate,_that.termEndDate,_that.previousCourseId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -204,10 +205,10 @@ return $default(_that.institutionId,_that.title,_that.code,_that.termLabel,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int institutionId,  String title,  String? code,  String? termLabel,  String? academicYear,  DateTime? termStartDate,  DateTime? termEndDate,  String? previousCourseId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int institutionId,  String title,  String? code,  String? color,  String? termLabel,  String? academicYear,  DateTime? termStartDate,  DateTime? termEndDate,  String? previousCourseId)?  $default,) {final _that = this;
 switch (_that) {
 case _CreateCourseParams() when $default != null:
-return $default(_that.institutionId,_that.title,_that.code,_that.termLabel,_that.academicYear,_that.termStartDate,_that.termEndDate,_that.previousCourseId);case _:
+return $default(_that.institutionId,_that.title,_that.code,_that.color,_that.termLabel,_that.academicYear,_that.termStartDate,_that.termEndDate,_that.previousCourseId);case _:
   return null;
 
 }
@@ -219,12 +220,13 @@ return $default(_that.institutionId,_that.title,_that.code,_that.termLabel,_that
 
 
 class _CreateCourseParams implements CreateCourseParams {
-  const _CreateCourseParams({required this.institutionId, required this.title, this.code, this.termLabel, this.academicYear, this.termStartDate, this.termEndDate, this.previousCourseId});
+  const _CreateCourseParams({required this.institutionId, required this.title, this.code, this.color, this.termLabel, this.academicYear, this.termStartDate, this.termEndDate, this.previousCourseId});
 
 
 @override final  int institutionId;
 @override final  String title;
 @override final  String? code;
+@override final  String? color;
 @override final  String? termLabel;
 @override final  String? academicYear;
 @override final  DateTime? termStartDate;
@@ -241,18 +243,18 @@ _$CreateCourseParamsCopyWith<_CreateCourseParams> get copyWith => __$CreateCours
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CreateCourseParams&&(identical(other.institutionId, institutionId) || other.institutionId == institutionId)&&(identical(other.title, title) || other.title == title)&&(identical(other.code, code) || other.code == code)&&(identical(other.termLabel, termLabel) || other.termLabel == termLabel)&&(identical(other.academicYear, academicYear) || other.academicYear == academicYear)&&(identical(other.termStartDate, termStartDate) || other.termStartDate == termStartDate)&&(identical(other.termEndDate, termEndDate) || other.termEndDate == termEndDate)&&(identical(other.previousCourseId, previousCourseId) || other.previousCourseId == previousCourseId));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CreateCourseParams&&(identical(other.institutionId, institutionId) || other.institutionId == institutionId)&&(identical(other.title, title) || other.title == title)&&(identical(other.code, code) || other.code == code)&&(identical(other.color, color) || other.color == color)&&(identical(other.termLabel, termLabel) || other.termLabel == termLabel)&&(identical(other.academicYear, academicYear) || other.academicYear == academicYear)&&(identical(other.termStartDate, termStartDate) || other.termStartDate == termStartDate)&&(identical(other.termEndDate, termEndDate) || other.termEndDate == termEndDate)&&(identical(other.previousCourseId, previousCourseId) || other.previousCourseId == previousCourseId));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,institutionId,title,code,termLabel,academicYear,termStartDate,termEndDate,previousCourseId);
+    return Object.hash(runtimeType,institutionId,title,code,color,termLabel,academicYear,termStartDate,termEndDate,previousCourseId);
 }
 
 @override
 String toString() {
-    return 'CreateCourseParams(institutionId: $institutionId, title: $title, code: $code, termLabel: $termLabel, academicYear: $academicYear, termStartDate: $termStartDate, termEndDate: $termEndDate, previousCourseId: $previousCourseId)';
+    return 'CreateCourseParams(institutionId: $institutionId, title: $title, code: $code, color: $color, termLabel: $termLabel, academicYear: $academicYear, termStartDate: $termStartDate, termEndDate: $termEndDate, previousCourseId: $previousCourseId)';
 }
 
 
@@ -263,7 +265,7 @@ abstract mixin class _$CreateCourseParamsCopyWith<$Res> implements $CreateCourse
   factory _$CreateCourseParamsCopyWith(_CreateCourseParams value, $Res Function(_CreateCourseParams) _then) = __$CreateCourseParamsCopyWithImpl;
 @override @useResult
 $Res call({
- int institutionId, String title, String? code, String? termLabel, String? academicYear, DateTime? termStartDate, DateTime? termEndDate, String? previousCourseId
+ int institutionId, String title, String? code, String? color, String? termLabel, String? academicYear, DateTime? termStartDate, DateTime? termEndDate, String? previousCourseId
 });
 
 
@@ -280,11 +282,12 @@ class __$CreateCourseParamsCopyWithImpl<$Res>
 
 /// Create a copy of CreateCourseParams
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? institutionId = null,Object? title = null,Object? code = freezed,Object? termLabel = freezed,Object? academicYear = freezed,Object? termStartDate = freezed,Object? termEndDate = freezed,Object? previousCourseId = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? institutionId = null,Object? title = null,Object? code = freezed,Object? color = freezed,Object? termLabel = freezed,Object? academicYear = freezed,Object? termStartDate = freezed,Object? termEndDate = freezed,Object? previousCourseId = freezed,}) {
   return _then(_CreateCourseParams(
 institutionId: null == institutionId ? _self.institutionId : institutionId // ignore: cast_nullable_to_non_nullable
 as int,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,code: freezed == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String?,color: freezed == color ? _self.color : color // ignore: cast_nullable_to_non_nullable
 as String?,termLabel: freezed == termLabel ? _self.termLabel : termLabel // ignore: cast_nullable_to_non_nullable
 as String?,academicYear: freezed == academicYear ? _self.academicYear : academicYear // ignore: cast_nullable_to_non_nullable
 as String?,termStartDate: freezed == termStartDate ? _self.termStartDate : termStartDate // ignore: cast_nullable_to_non_nullable

@@ -8,12 +8,21 @@ import '../repositories/course_repository.dart';
 
 part 'course_usecases.freezed.dart';
 
+@injectable
+class WatchSyncStatusUpdates {
+  WatchSyncStatusUpdates(this._repository);
+  final CourseRepository _repository;
+
+  Stream<SyncStatusUpdate> call() => _repository.syncStatusUpdates;
+}
+
 @freezed
 abstract class CreateCourseParams with _$CreateCourseParams {
   const factory CreateCourseParams({
     required int institutionId,
     required String title,
     String? code,
+    String? color,
     String? termLabel,
     String? academicYear,
     DateTime? termStartDate,
@@ -44,6 +53,7 @@ class CreateCourse implements UseCase<CourseEntity, CreateCourseParams> {
       institutionId: params.institutionId,
       title: params.title,
       code: params.code,
+      color: params.color,
       termLabel: params.termLabel,
       academicYear: params.academicYear,
       termStartDate: params.termStartDate,
@@ -51,6 +61,52 @@ class CreateCourse implements UseCase<CourseEntity, CreateCourseParams> {
       previousCourseId: params.previousCourseId,
     );
   }
+}
+
+@injectable
+class ListStudentSchedule
+    implements UseCase<List<ScheduleEntryEntity>, NoUseCaseParams> {
+  ListStudentSchedule(this._repository);
+  final CourseRepository _repository;
+
+  @override
+  Future<Either<Failure, List<ScheduleEntryEntity>>> call(
+    NoUseCaseParams params,
+  ) => _repository.listStudentSchedule();
+}
+
+@injectable
+class CreateScheduleEntry
+    implements UseCase<ScheduleEntryEntity, ScheduleEntryEntity> {
+  CreateScheduleEntry(this._repository);
+  final CourseRepository _repository;
+
+  @override
+  Future<Either<Failure, ScheduleEntryEntity>> call(
+    ScheduleEntryEntity entry,
+  ) => _repository.createScheduleEntry(entry);
+}
+
+@injectable
+class UpdateScheduleEntry
+    implements UseCase<ScheduleEntryEntity, ScheduleEntryEntity> {
+  UpdateScheduleEntry(this._repository);
+  final CourseRepository _repository;
+
+  @override
+  Future<Either<Failure, ScheduleEntryEntity>> call(
+    ScheduleEntryEntity entry,
+  ) => _repository.updateScheduleEntry(entry);
+}
+
+@injectable
+class DeleteScheduleEntry implements UseCase<Unit, String> {
+  DeleteScheduleEntry(this._repository);
+  final CourseRepository _repository;
+
+  @override
+  Future<Either<Failure, Unit>> call(String id) =>
+      _repository.deleteScheduleEntry(id);
 }
 
 @injectable
