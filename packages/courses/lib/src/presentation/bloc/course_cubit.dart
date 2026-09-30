@@ -26,6 +26,7 @@ class CourseCubit extends SafeCubit<CourseState> {
     this._updateScheduleEntry,
     this._deleteScheduleEntry,
     this._watchSyncStatusUpdates,
+    this._courseReminderRefresher,
   ) : super(const CourseState()) {
     _syncSubscription = _watchSyncStatusUpdates().listen(_applySyncUpdate);
   }
@@ -46,6 +47,7 @@ class CourseCubit extends SafeCubit<CourseState> {
   final UpdateScheduleEntry _updateScheduleEntry;
   final DeleteScheduleEntry _deleteScheduleEntry;
   final WatchSyncStatusUpdates _watchSyncStatusUpdates;
+  final CourseReminderRefresher _courseReminderRefresher;
   StreamSubscription<SyncStatusUpdate>? _syncSubscription;
 
   @override
@@ -54,8 +56,10 @@ class CourseCubit extends SafeCubit<CourseState> {
     await super.close();
   }
 
-  Future<void> loadActive() =>
-      _load(_listActiveCourses(const NoUseCaseParams()));
+  Future<void> loadActive() async {
+    await _load(_listActiveCourses(const NoUseCaseParams()));
+    await _courseReminderRefresher.refresh();
+  }
 
   Future<void> loadArchived() =>
       _load(_listArchivedCourses(const NoUseCaseParams()));
@@ -69,6 +73,7 @@ class CourseCubit extends SafeCubit<CourseState> {
             .toList(),
       ),
     );
+    await _courseReminderRefresher.refresh();
   }
 
   Future<void> loadRetakeChoices() async {
@@ -110,6 +115,7 @@ class CourseCubit extends SafeCubit<CourseState> {
         ),
       ),
     );
+    await _courseReminderRefresher.refresh();
   }
 
   Future<void> create(CreateCourseParams params) async {
@@ -136,6 +142,7 @@ class CourseCubit extends SafeCubit<CourseState> {
           emit(state.copyWith(isLoading: false, error: failure.message)),
       _replaceSelected,
     );
+    if (result.isRight()) await _courseReminderRefresher.refresh();
   }
 
   Future<void> archive(String id) async {
@@ -152,6 +159,7 @@ class CourseCubit extends SafeCubit<CourseState> {
         ),
       ),
     );
+    if (result.isRight()) await _courseReminderRefresher.refresh();
   }
 
   Future<void> delete(String id) async {
@@ -170,6 +178,7 @@ class CourseCubit extends SafeCubit<CourseState> {
         ),
       ),
     );
+    if (result.isRight()) await _courseReminderRefresher.refresh();
   }
 
   Future<void> addLecturer(AddLecturerParams params) async {
@@ -213,6 +222,7 @@ class CourseCubit extends SafeCubit<CourseState> {
         state.copyWith(isScheduleLoading: false, weeklySchedule: entries),
       ),
     );
+    await _courseReminderRefresher.refresh();
   }
 
   Future<void> createScheduleEntry(ScheduleEntryEntity entry) async {
@@ -224,6 +234,7 @@ class CourseCubit extends SafeCubit<CourseState> {
       ),
       (created) => _replaceScheduleEntry(created, addIfMissing: true),
     );
+    if (result.isRight()) await _courseReminderRefresher.refresh();
   }
 
   Future<void> updateScheduleEntry(ScheduleEntryEntity entry) async {
@@ -235,6 +246,7 @@ class CourseCubit extends SafeCubit<CourseState> {
       ),
       (updated) => _replaceScheduleEntry(updated),
     );
+    if (result.isRight()) await _courseReminderRefresher.refresh();
   }
 
   Future<void> deleteScheduleEntry(String id) async {
@@ -263,6 +275,7 @@ class CourseCubit extends SafeCubit<CourseState> {
         );
       },
     );
+    if (result.isRight()) await _courseReminderRefresher.refresh();
   }
 
   Future<List<InstitutionSummary>> searchInstitutions(String query) {

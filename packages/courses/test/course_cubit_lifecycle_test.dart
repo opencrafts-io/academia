@@ -29,6 +29,7 @@ void main() {
         UpdateScheduleEntry(repository),
         DeleteScheduleEntry(repository),
         WatchSyncStatusUpdates(repository),
+        _CourseReminderRefresher(),
       );
 
       await cubit.addLecturer(
@@ -76,4 +77,15 @@ class _DeferredCourseRepository implements CourseRepository {
 class _InstitutionLookup implements InstitutionLookup {
   @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
+
+class _CourseReminderRefresher implements CourseReminderRefresher {
+  @override
+  Future<void> refresh() async {}
+
+  @override
+  void updatePreferences({
+    required bool enabled,
+    required List<int?> reminderMinutes,
+  }) {}
 }

@@ -34,6 +34,8 @@ abstract interface class CourseRepository {
   );
   Future<Either<Failure, Unit>> deleteLecturer(LecturerEntity lecturer);
   Future<Either<Failure, List<ScheduleEntryEntity>>> listStudentSchedule();
+  Future<Either<Failure, List<ScheduleEntryEntity>>>
+  listCachedStudentSchedule();
   Future<Either<Failure, ScheduleEntryEntity>> createScheduleEntry(
     ScheduleEntryEntity entry,
   );

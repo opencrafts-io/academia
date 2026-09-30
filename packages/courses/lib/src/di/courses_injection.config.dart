@@ -117,6 +117,7 @@ _i174.GetIt initCourses(
       gh<_i433.UpdateScheduleEntry>(),
       gh<_i433.DeleteScheduleEntry>(),
       gh<_i433.WatchSyncStatusUpdates>(),
+      gh<_i515.CourseReminderRefresher>(),
     ),
   );
   return getIt;

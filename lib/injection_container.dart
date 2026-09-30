@@ -15,6 +15,9 @@ import 'package:get_it/get_it.dart';
 import 'package:lock_in/lock_in.dart';
 import 'package:courses/courses.dart' as courses;
 import 'package:academia/core/institution/verisafe_institution_lookup.dart';
+import 'package:academia/core/notifications/course_schedule_reminder_service.dart';
+import 'package:notifications/notifications.dart';
+import 'package:permissions/permissions.dart';
 
 final sl = GetIt.instance;
 
@@ -646,6 +649,13 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     sl,
     institutionLookup: VerisafeInstitutionLookup(
       sl<InstitutionRemoteDatasource>(),
+    ),
+  );
+  sl.registerLazySingleton<courses.CourseReminderRefresher>(
+    () => CourseScheduleReminderService(
+      repository: sl<courses.CourseRepository>(),
+      scheduler: sl<LocalNotificationScheduler>(),
+      permissions: sl<PermissionGateway>(),
     ),
   );
 

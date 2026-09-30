@@ -232,10 +232,35 @@ class CourseRepositoryImpl implements CourseRepository {
             );
           }
         }
-        _sortSchedule(local);
-        return right(local);
+        final cached = await _cachedStudentSchedule();
+        final cachedIds = cached
+            .map((entry) => entry.serverId ?? entry.id)
+            .toSet();
+        cached.addAll(
+          local.where(
+            (entry) => !cachedIds.contains(entry.serverId ?? entry.id),
+          ),
+        );
+        _sortSchedule(cached);
+        return right(cached);
       },
     );
+  }
+
+  @override
+  Future<Either<Failure, List<ScheduleEntryEntity>>>
+  listCachedStudentSchedule() async {
+    try {
+      return right(await _cachedStudentSchedule());
+    } catch (error, stackTrace) {
+      return left(
+        Failure.cache(
+          message: 'Failed to read the saved timetable.',
+          error: error,
+          stackTrace: stackTrace,
+        ),
+      );
+    }
   }
 
   @override
