@@ -7,6 +7,7 @@ import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/semester/semester.dart';
 import 'package:academia/gen/fonts.gen.dart';
 import 'package:academia/injection_container.dart';
+import 'package:agenda/agenda.dart' as agenda;
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -132,10 +133,7 @@ class _AcademiaState extends State<Academia> with WidgetsBindingObserver {
         ),
         BlocProvider(create: (context) => sl<CommunityHomeBloc>()),
         BlocProvider(create: (context) => sl<CommunityUsersBloc>()),
-        BlocProvider(
-          create: (context) =>
-              sl<AgendaEventBloc>()..add(FetchCachedAgendaEventsEvent()),
-        ),
+        BlocProvider(create: (context) => sl<agenda.AgendaCubit>()),
         BlocProvider(create: (context) => sl<SemesterCubit>()),
         BlocProvider(create: (context) => sl<CourseCubit>()),
         BlocProvider(create: (context) => sl<courses.CourseCubit>()),

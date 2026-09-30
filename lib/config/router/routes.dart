@@ -3,6 +3,8 @@ import 'package:academia/features/course/course.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/semester/semester.dart';
 import 'package:academia/injection_container.dart';
+import 'package:academia/core/integration/agenda_calendar/agenda_home_page.dart';
+import 'package:agenda/agenda.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -80,7 +82,7 @@ class LockInRoute extends GoRouteData with $LockInRoute {
 class CalendarRoute extends GoRouteData with $CalendarRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return AgendaHomePage();
+    return const AgendaHomePage();
   }
 }
 
@@ -89,48 +91,73 @@ class AgendaItemViewRoute extends GoRouteData with $AgendaItemViewRoute {
   String? id;
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return CustomTransitionPage(
-      key: state.pageKey,
-      child: AgendaItemViewPage(agendaEventID: id),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        var tween = Tween(
-          begin: Offset(0.0, 1.0),
-          end: Offset.zero,
-        ).chain(CurveTween(curve: Curves.easeInOut));
-        var offsetAnimation = animation.drive(tween);
-
-        return SlideTransition(position: offsetAnimation, child: child);
-      },
+    return _agendaSheetPage(
+      context,
+      state,
+      AgendaItemViewPage(agendaEventID: id),
     );
   }
 }
 
 class CreateAgendaEventRoute extends GoRouteData with $CreateAgendaEventRoute {
   @override
-  CustomTransitionPage<void> buildPage(
-    BuildContext context,
-    GoRouterState state,
-  ) {
-    return CustomTransitionPage<void>(
-      key: state.pageKey,
-      child: const CreateAgendaEventPage(),
-      transitionsBuilder:
-          (
-            BuildContext context,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-            Widget child,
-          ) {
-            var tween = Tween(
-              begin: Offset(0.0, 1.0),
-              end: Offset.zero,
-            ).chain(CurveTween(curve: Curves.easeInOut));
-            var offsetAnimation = animation.drive(tween);
-
-            return SlideTransition(position: offsetAnimation, child: child);
-          },
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    final extra = state.extra;
+    return _agendaSheetPage(
+      context,
+      state,
+      CreateAgendaEventPage(
+        event: extra is AgendaEvent ? extra : null,
+        initialDate: extra is DateTime ? extra : null,
+      ),
     );
   }
+}
+
+Page<void> _agendaSheetPage(
+  BuildContext context,
+  GoRouterState state,
+  Widget child,
+) {
+  return ModalSheetPage(
+    key: state.pageKey,
+    swipeDismissible: true,
+    transitionCurve: Curves.easeOutCubic,
+    viewportBuilder: (context, child) => SheetViewport(
+      padding: EdgeInsets.only(
+        top: MediaQuery.viewPaddingOf(context).top,
+        bottom: MediaQuery.viewPaddingOf(context).bottom,
+      ),
+      child: child,
+    ),
+    child: SheetKeyboardDismissible(
+      dismissBehavior: SheetKeyboardDismissBehavior.onDragDown(
+        isContentScrollAware: true,
+      ),
+      child: Sheet(
+        scrollConfiguration: const SheetScrollConfiguration(),
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.viewInsetsOf(context).bottom,
+        ),
+        decoration: const MaterialSheetDecoration(
+          size: SheetSize.fit,
+          clipBehavior: Clip.antiAlias,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+          ),
+        ),
+        physics: BouncingSheetPhysics(),
+        child: LayoutBuilder(
+          builder: (context, constraints) => ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: constraints.maxHeight * 0.94,
+            ),
+            child: child,
+          ),
+        ),
+      ),
+    ),
+  );
 }
 
 // class MeteorRoute extends GoRouteData with $MeteorRoute {

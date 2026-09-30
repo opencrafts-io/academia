@@ -1,4 +1,4 @@
-import 'package:academia/features/agenda/data/models/agenda_event.dart';
+import 'package:academia/database/tables/agenda_event.dart';
 import 'package:academia/features/course/data/models/course.dart';
 import 'package:academia/database/tables/tables.dart';
 export 'package:academia/database/tables/tables.dart';

@@ -1,5 +1,6 @@
 import 'package:core/core.dart';
 import 'package:core/config/flavor.dart';
+import 'package:agenda/agenda.dart';
 import 'package:database/database.dart';
 import 'package:billing/billing.dart';
 import 'package:ads/ads.dart';
@@ -26,6 +27,7 @@ import 'package:get_it/get_it.dart';
 @InjectableInit()
 void configureDependencies(GetIt getIt, FlavorConfig flavorConfig) {
   configureCoreDependencies(getIt, flavorConfig);
+  configureAgendaDependencies(getIt);
   configureLocalDatabaseDependencies(getIt);
   configureLockInDependencies(getIt);
   configureAnalyticsDependencies(

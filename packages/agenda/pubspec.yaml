@@ -1,0 +1,28 @@
+name: agenda
+description: Academia agenda feature.
+publish_to: none
+
+environment:
+  sdk: ^3.13.2
+  flutter: '>=1.17.0'
+
+dependencies:
+  core:
+    path: ../core/
+  dartz: ^0.10.1
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^9.1.1
+  get_it: ^9.2.1
+  go_router: ^18.0.1
+  intl: ^0.20.2
+  smooth_sheets: ^1.0.0
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  assets:
+    - assets/icons/calendar.png

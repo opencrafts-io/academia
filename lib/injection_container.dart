@@ -309,64 +309,6 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     ),
   );
 
-  // Agenda
-  sl.registerFactory<AgendaEventLocalDataSource>(
-    () => AgendaEventLocalDataSource(localDB: cacheDB),
-  );
-  sl.registerFactory<AgendaEventRemoteDatasource>(
-    () => AgendaEventRemoteDatasource(
-      dioClient: sl.get<DioClient>(),
-      flavor: flavor,
-    ),
-  );
-
-  sl.registerFactory<AgendaEventRepository>(
-    () => AgendaEventRepositoryImpl(
-      agendaEventRemoteDatasource: sl.get<AgendaEventRemoteDatasource>(),
-      agendaEventLocalDataSource: sl.get<AgendaEventLocalDataSource>(),
-    ),
-  );
-
-  sl.registerFactory<GetCachedAgendaEventsUsecase>(
-    () => GetCachedAgendaEventsUsecase(
-      agendaEventRepository: sl.get<AgendaEventRepository>(),
-    ),
-  );
-
-  sl.registerFactory<RefreshAgendaEventsUsecase>(
-    () => RefreshAgendaEventsUsecase(
-      agendaEventRepository: sl.get<AgendaEventRepository>(),
-    ),
-  );
-
-  sl.registerFactory<CreateAgendaEventUsecase>(
-    () => CreateAgendaEventUsecase(
-      agendaEventRepository: sl.get<AgendaEventRepository>(),
-    ),
-  );
-
-  sl.registerFactory<UpdateAgendaEventUsecase>(
-    () => UpdateAgendaEventUsecase(
-      agendaEventRepository: sl.get<AgendaEventRepository>(),
-    ),
-  );
-
-  sl.registerFactory<DeleteAgendaEventUsecase>(
-    () => DeleteAgendaEventUsecase(
-      agendaEventRepository: sl.get<AgendaEventRepository>(),
-    ),
-  );
-
-  sl.registerFactory<AgendaEventBloc>(
-    () => AgendaEventBloc(
-      getCachedAgendaEventsUsecase: sl.get<GetCachedAgendaEventsUsecase>(),
-      refreshAgendaEventsUsecase: sl.get<RefreshAgendaEventsUsecase>(),
-      createAgendaEventUsecase: sl.get<CreateAgendaEventUsecase>(),
-      updateAgendaEventUsecase: sl.get<UpdateAgendaEventUsecase>(),
-      deleteAgendaEventUsecase: sl.get<DeleteAgendaEventUsecase>(),
-    ),
-  );
-
   // Communities
   sl.registerFactory<CommunityRemoteDatasource>(
     () => CommunityRemoteDatasource(

@@ -119,6 +119,8 @@ dependencies:
     path: packages/core/
   courses:
     path: packages/courses/
+  agenda:
+    path: packages/agenda/
   # database v2
   database:
     path: packages/database/
