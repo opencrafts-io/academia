@@ -2,6 +2,7 @@ import 'package:courses/src/domain/entities/course_entity.dart';
 import 'package:courses/src/domain/institution_lookup.dart';
 import 'package:courses/src/domain/usecases/course_usecases.dart';
 import 'package:courses/src/presentation/bloc/course_cubit.dart';
+import 'package:courses/src/presentation/screens/course_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -26,6 +27,8 @@ class _AddEditCourseSheetState extends State<AddEditCourseSheet> {
   late final TextEditingController _academicYearController;
   DateTime? _termStartDate;
   DateTime? _termEndDate;
+  String? _color;
+  String? _previousCourseId;
   List<InstitutionSummary> _institutions = [];
   InstitutionSummary? _institution;
   bool _searching = false;
@@ -49,6 +52,13 @@ class _AddEditCourseSheetState extends State<AddEditCourseSheet> {
     _academicYearController = TextEditingController(text: course?.academicYear);
     _termStartDate = course?.termStartDate;
     _termEndDate = course?.termEndDate;
+    _color = course?.color;
+    _previousCourseId = course?.previousCourseId;
+    if (course == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) context.read<CourseCubit>().loadRetakeChoices();
+      });
+    }
   }
 
   @override
@@ -253,6 +263,18 @@ class _AddEditCourseSheetState extends State<AddEditCourseSheet> {
                               icon: Icons.tag_rounded,
                               enabled: !state.isLoading,
                             ),
+                            const SizedBox(height: 16),
+                            Text(
+                              'Course color',
+                              style: Theme.of(context).textTheme.titleSmall,
+                            ),
+                            const SizedBox(height: 8),
+                            CourseColorPicker(
+                              value: _color,
+                              defaultLabel: 'Default',
+                              onChanged: (value) =>
+                                  setState(() => _color = value),
+                            ),
                           ],
                         ),
                       ),
@@ -307,6 +329,52 @@ class _AddEditCourseSheetState extends State<AddEditCourseSheet> {
                                   _termStartDate == null && _termEndDate == null
                                   ? null
                                   : _clearDates,
+                            ),
+                            const SizedBox(height: 20),
+                            Text(
+                              'Retake link',
+                              style: Theme.of(context).textTheme.titleMedium
+                                  ?.copyWith(fontWeight: FontWeight.w700),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Optionally link this course to a completed course.',
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(color: colors.onSurfaceVariant),
+                            ),
+                            const SizedBox(height: 8),
+                            DropdownButtonFormField<String?>(
+                              initialValue: _previousCourseId,
+                              decoration: const InputDecoration(
+                                labelText: 'Previous course',
+                                border: OutlineInputBorder(),
+                              ),
+                              items: [
+                                const DropdownMenuItem<String?>(
+                                  value: null,
+                                  child: Text('None'),
+                                ),
+                                for (final previous in state.courses.where(
+                                  (item) =>
+                                      item.id != widget.course?.id &&
+                                      item.serverId != null,
+                                ))
+                                  DropdownMenuItem<String?>(
+                                    value: previous.id,
+                                    child: Text(
+                                      previous.code == null
+                                          ? previous.title
+                                          : '${previous.code} · ${previous.title}',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                              ],
+                              onChanged: state.isLoading
+                                  ? null
+                                  : (value) => setState(
+                                      () => _previousCourseId = value,
+                                    ),
                             ),
                             AnimatedSize(
                               duration: const Duration(milliseconds: 180),
@@ -552,10 +620,12 @@ class _AddEditCourseSheetState extends State<AddEditCourseSheet> {
           institutionId: _institution!.id,
           title: _titleController.text.trim(),
           code: _optional(_codeController),
+          color: _color,
           termLabel: _optional(_termLabelController),
           academicYear: _optional(_academicYearController),
           termStartDate: _termStartDate,
           termEndDate: _termEndDate,
+          previousCourseId: _previousCourseId,
         ),
       );
     } else {
@@ -563,10 +633,12 @@ class _AddEditCourseSheetState extends State<AddEditCourseSheet> {
         course.copyWith(
           title: _titleController.text.trim(),
           code: _optional(_codeController),
+          color: _color,
           termLabel: _optional(_termLabelController),
           academicYear: _optional(_academicYearController),
           termStartDate: _termStartDate,
           termEndDate: _termEndDate,
+          previousCourseId: _previousCourseId,
         ),
       );
     }

@@ -4,6 +4,8 @@ import 'package:flutter/physics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:permissions/permissions.dart';
 import 'package:settings/src/presentation/cubit/notification_preferences_cubit.dart';
+import 'package:settings/src/presentation/cubit/settings_cubit.dart';
+import 'package:settings/src/presentation/cubit/settings_state.dart';
 
 class NotificationSettingsPage extends StatefulWidget {
   const NotificationSettingsPage({super.key});
@@ -103,6 +105,21 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage>
                             ),
                           if (_supportsPreciseAlarms)
                             const SizedBox(height: 20),
+                          BlocBuilder<SettingsCubit, SettingsState>(
+                            builder: (context, settings) =>
+                                _CourseReminderSettings(
+                                  enabled: settings.courseRemindersEnabled,
+                                  reminderMinutes:
+                                      settings.courseReminderMinutes,
+                                  onEnabledChanged: (_) => context
+                                      .read<SettingsCubit>()
+                                      .toggleCourseReminders(),
+                                  onReminderChanged: context
+                                      .read<SettingsCubit>()
+                                      .updateCourseReminderMinutes,
+                                ),
+                          ),
+                          const SizedBox(height: 20),
                           Text(
                             'You decide which alerts reach you. We only ask for '
                             'the device access needed to deliver reminders you use.',
@@ -121,6 +138,121 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage>
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _CourseReminderSettings extends StatelessWidget {
+  const _CourseReminderSettings({
+    required this.enabled,
+    required this.reminderMinutes,
+    required this.onEnabledChanged,
+    required this.onReminderChanged,
+  });
+
+  final bool enabled;
+  final List<int?> reminderMinutes;
+  final ValueChanged<bool> onEnabledChanged;
+  final void Function(int index, int? minutes) onReminderChanged;
+
+  static const _choices = <int, String>{
+    0: 'At class start',
+    5: '5 minutes before',
+    10: '10 minutes before',
+    15: '15 minutes before',
+    30: '30 minutes before',
+    45: '45 minutes before',
+    60: '1 hour before',
+    90: '1 hour 30 minutes before',
+    120: '2 hours before',
+    180: '3 hours before',
+    360: '6 hours before',
+    720: '12 hours before',
+    1440: '1 day before',
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              title: const Text('Class reminders'),
+              subtitle: const Text('Scheduled on this device'),
+              value: enabled,
+              onChanged: onEnabledChanged,
+            ),
+            if (enabled) ...[
+              const Divider(),
+              for (var index = 0; index < 3; index++)
+                _ReminderTimeField(
+                  index: index,
+                  value: index < reminderMinutes.length
+                      ? reminderMinutes[index]
+                      : null,
+                  reminderMinutes: reminderMinutes,
+                  choices: _choices,
+                  onChanged: (minutes) => onReminderChanged(index, minutes),
+                ),
+              const SizedBox(height: 8),
+              Text(
+                'Reminders work offline. Android may need exact-alarm access '
+                'for precise delivery; iOS limits pending alerts to 64 per app.',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ReminderTimeField extends StatelessWidget {
+  const _ReminderTimeField({
+    required this.index,
+    required this.value,
+    required this.reminderMinutes,
+    required this.choices,
+    required this.onChanged,
+  });
+
+  final int index;
+  final int? value;
+  final List<int?> reminderMinutes;
+  final Map<int, String> choices;
+  final ValueChanged<int?> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final otherValues = reminderMinutes
+        .asMap()
+        .entries
+        .where((entry) => entry.key != index)
+        .map((entry) => entry.value)
+        .toSet();
+    final selected = value ?? -1;
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      title: Text('Reminder ${index + 1}'),
+      trailing: DropdownButton<int>(
+        value: selected,
+        underline: const SizedBox.shrink(),
+        items: [
+          const DropdownMenuItem(value: -1, child: Text('Off')),
+          for (final choice in choices.entries)
+            if (!otherValues.contains(choice.key) || choice.key == value)
+              DropdownMenuItem(value: choice.key, child: Text(choice.value)),
+        ],
+        onChanged: (minutes) => onChanged(minutes == -1 ? null : minutes),
       ),
     );
   }

@@ -427,10 +427,6 @@ class $AssetsIconsGen {
   AssetGenImage get calculator =>
       const AssetGenImage('assets/icons/calculator.png');
 
-  /// File path: assets/icons/calendar.png
-  AssetGenImage get calendar =>
-      const AssetGenImage('assets/icons/calendar.png');
-
   /// File path: assets/icons/camera.png
   AssetGenImage get camera => const AssetGenImage('assets/icons/camera.png');
 
@@ -824,7 +820,6 @@ class $AssetsIconsGen {
     bulb,
     burger,
     calculator,
-    calendar,
     camera,
     car,
     card,

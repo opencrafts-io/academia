@@ -11,6 +11,7 @@ _CourseDto _$CourseDtoFromJson(Map<String, dynamic> json) => _CourseDto(
   institution: (json['institution'] as num).toInt(),
   title: json['title'] as String,
   code: json['code'] as String?,
+  color: json['color'] as String?,
   termLabel: json['term_label'] as String?,
   academicYear: json['academic_year'] as String?,
   termStartDate: json['term_start_date'] == null
@@ -30,6 +31,11 @@ _CourseDto _$CourseDtoFromJson(Map<String, dynamic> json) => _CourseDto(
           ?.map((e) => LecturerDto.fromJson(e as Map<String, dynamic>))
           .toList() ??
       const [],
+  scheduleEntries:
+      (json['schedule_entries'] as List<dynamic>?)
+          ?.map((e) => ScheduleEntryDto.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const [],
 );
 
 Map<String, dynamic> _$CourseDtoToJson(_CourseDto instance) =>
@@ -38,6 +44,7 @@ Map<String, dynamic> _$CourseDtoToJson(_CourseDto instance) =>
       'institution': instance.institution,
       'title': instance.title,
       'code': instance.code,
+      'color': instance.color,
       'term_label': instance.termLabel,
       'academic_year': instance.academicYear,
       'term_start_date': instance.termStartDate?.toIso8601String(),
@@ -47,4 +54,5 @@ Map<String, dynamic> _$CourseDtoToJson(_CourseDto instance) =>
       'created_at': instance.createdAt.toIso8601String(),
       'updated_at': instance.updatedAt.toIso8601String(),
       'lecturers': instance.lecturers,
+      'schedule_entries': instance.scheduleEntries,
     };

@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SettingsState {
 
-@ThemeModeConverter() ThemeMode get themeMode; int get colorSeedValue; bool get compactMode; bool get extraDarkMode; bool get enableMaterialYou; bool get automaticallyPickAccentColor; String get language; bool get showDailyScheduleOnFeed; bool get chirpMuteVideos;
+@ThemeModeConverter() ThemeMode get themeMode; int get colorSeedValue; bool get compactMode; bool get extraDarkMode; bool get enableMaterialYou; bool get automaticallyPickAccentColor; String get language; bool get showDailyScheduleOnFeed; bool get chirpMuteVideos; bool get courseRemindersEnabled; List<int?> get courseReminderMinutes;
 /// Create a copy of SettingsState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $SettingsStateCopyWith<SettingsState> get copyWith => _$SettingsStateCopyWithImp
 @override
 bool operator ==(Object other) {
   final _this = this as SettingsState;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SettingsState&&(identical(other.themeMode, _this.themeMode) || other.themeMode == _this.themeMode)&&(identical(other.colorSeedValue, _this.colorSeedValue) || other.colorSeedValue == _this.colorSeedValue)&&(identical(other.compactMode, _this.compactMode) || other.compactMode == _this.compactMode)&&(identical(other.extraDarkMode, _this.extraDarkMode) || other.extraDarkMode == _this.extraDarkMode)&&(identical(other.enableMaterialYou, _this.enableMaterialYou) || other.enableMaterialYou == _this.enableMaterialYou)&&(identical(other.automaticallyPickAccentColor, _this.automaticallyPickAccentColor) || other.automaticallyPickAccentColor == _this.automaticallyPickAccentColor)&&(identical(other.language, _this.language) || other.language == _this.language)&&(identical(other.showDailyScheduleOnFeed, _this.showDailyScheduleOnFeed) || other.showDailyScheduleOnFeed == _this.showDailyScheduleOnFeed)&&(identical(other.chirpMuteVideos, _this.chirpMuteVideos) || other.chirpMuteVideos == _this.chirpMuteVideos));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SettingsState&&(identical(other.themeMode, _this.themeMode) || other.themeMode == _this.themeMode)&&(identical(other.colorSeedValue, _this.colorSeedValue) || other.colorSeedValue == _this.colorSeedValue)&&(identical(other.compactMode, _this.compactMode) || other.compactMode == _this.compactMode)&&(identical(other.extraDarkMode, _this.extraDarkMode) || other.extraDarkMode == _this.extraDarkMode)&&(identical(other.enableMaterialYou, _this.enableMaterialYou) || other.enableMaterialYou == _this.enableMaterialYou)&&(identical(other.automaticallyPickAccentColor, _this.automaticallyPickAccentColor) || other.automaticallyPickAccentColor == _this.automaticallyPickAccentColor)&&(identical(other.language, _this.language) || other.language == _this.language)&&(identical(other.showDailyScheduleOnFeed, _this.showDailyScheduleOnFeed) || other.showDailyScheduleOnFeed == _this.showDailyScheduleOnFeed)&&(identical(other.chirpMuteVideos, _this.chirpMuteVideos) || other.chirpMuteVideos == _this.chirpMuteVideos)&&(identical(other.courseRemindersEnabled, _this.courseRemindersEnabled) || other.courseRemindersEnabled == _this.courseRemindersEnabled)&&const DeepCollectionEquality().equals(other.courseReminderMinutes, _this.courseReminderMinutes));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as SettingsState;
-  return Object.hash(runtimeType,_this.themeMode,_this.colorSeedValue,_this.compactMode,_this.extraDarkMode,_this.enableMaterialYou,_this.automaticallyPickAccentColor,_this.language,_this.showDailyScheduleOnFeed,_this.chirpMuteVideos);
+  return Object.hash(runtimeType,_this.themeMode,_this.colorSeedValue,_this.compactMode,_this.extraDarkMode,_this.enableMaterialYou,_this.automaticallyPickAccentColor,_this.language,_this.showDailyScheduleOnFeed,_this.chirpMuteVideos,_this.courseRemindersEnabled,const DeepCollectionEquality().hash(_this.courseReminderMinutes));
 }
 
 @override
 String toString() {
   final _this = this as SettingsState;
-  return 'SettingsState(themeMode: ${_this.themeMode}, colorSeedValue: ${_this.colorSeedValue}, compactMode: ${_this.compactMode}, extraDarkMode: ${_this.extraDarkMode}, enableMaterialYou: ${_this.enableMaterialYou}, automaticallyPickAccentColor: ${_this.automaticallyPickAccentColor}, language: ${_this.language}, showDailyScheduleOnFeed: ${_this.showDailyScheduleOnFeed}, chirpMuteVideos: ${_this.chirpMuteVideos})';
+  return 'SettingsState(themeMode: ${_this.themeMode}, colorSeedValue: ${_this.colorSeedValue}, compactMode: ${_this.compactMode}, extraDarkMode: ${_this.extraDarkMode}, enableMaterialYou: ${_this.enableMaterialYou}, automaticallyPickAccentColor: ${_this.automaticallyPickAccentColor}, language: ${_this.language}, showDailyScheduleOnFeed: ${_this.showDailyScheduleOnFeed}, chirpMuteVideos: ${_this.chirpMuteVideos}, courseRemindersEnabled: ${_this.courseRemindersEnabled}, courseReminderMinutes: ${_this.courseReminderMinutes})';
 }
 
 
@@ -54,7 +54,7 @@ abstract mixin class $SettingsStateCopyWith<$Res>  {
   factory $SettingsStateCopyWith(SettingsState value, $Res Function(SettingsState) _then) = _$SettingsStateCopyWithImpl;
 @useResult
 $Res call({
-@ThemeModeConverter() ThemeMode themeMode, int colorSeedValue, bool compactMode, bool extraDarkMode, bool enableMaterialYou, bool automaticallyPickAccentColor, String language, bool showDailyScheduleOnFeed, bool chirpMuteVideos
+@ThemeModeConverter() ThemeMode themeMode, int colorSeedValue, bool compactMode, bool extraDarkMode, bool enableMaterialYou, bool automaticallyPickAccentColor, String language, bool showDailyScheduleOnFeed, bool chirpMuteVideos, bool courseRemindersEnabled, List<int?> courseReminderMinutes
 });
 
 
@@ -71,7 +71,7 @@ class _$SettingsStateCopyWithImpl<$Res>
 
 /// Create a copy of SettingsState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? themeMode = null,Object? colorSeedValue = null,Object? compactMode = null,Object? extraDarkMode = null,Object? enableMaterialYou = null,Object? automaticallyPickAccentColor = null,Object? language = null,Object? showDailyScheduleOnFeed = null,Object? chirpMuteVideos = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? themeMode = null,Object? colorSeedValue = null,Object? compactMode = null,Object? extraDarkMode = null,Object? enableMaterialYou = null,Object? automaticallyPickAccentColor = null,Object? language = null,Object? showDailyScheduleOnFeed = null,Object? chirpMuteVideos = null,Object? courseRemindersEnabled = null,Object? courseReminderMinutes = null,}) {
   return _then(SettingsState(
 themeMode: null == themeMode ? _self.themeMode : themeMode // ignore: cast_nullable_to_non_nullable
 as ThemeMode,colorSeedValue: null == colorSeedValue ? _self.colorSeedValue : colorSeedValue // ignore: cast_nullable_to_non_nullable
@@ -82,7 +82,9 @@ as bool,automaticallyPickAccentColor: null == automaticallyPickAccentColor ? _se
 as bool,language: null == language ? _self.language : language // ignore: cast_nullable_to_non_nullable
 as String,showDailyScheduleOnFeed: null == showDailyScheduleOnFeed ? _self.showDailyScheduleOnFeed : showDailyScheduleOnFeed // ignore: cast_nullable_to_non_nullable
 as bool,chirpMuteVideos: null == chirpMuteVideos ? _self.chirpMuteVideos : chirpMuteVideos // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,courseRemindersEnabled: null == courseRemindersEnabled ? _self.courseRemindersEnabled : courseRemindersEnabled // ignore: cast_nullable_to_non_nullable
+as bool,courseReminderMinutes: null == courseReminderMinutes ? _self.courseReminderMinutes : courseReminderMinutes // ignore: cast_nullable_to_non_nullable
+as List<int?>,
   ));
 }
 
@@ -167,10 +169,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@ThemeModeConverter()  ThemeMode themeMode,  int colorSeedValue,  bool compactMode,  bool extraDarkMode,  bool enableMaterialYou,  bool automaticallyPickAccentColor,  String language,  bool showDailyScheduleOnFeed,  bool chirpMuteVideos)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@ThemeModeConverter()  ThemeMode themeMode,  int colorSeedValue,  bool compactMode,  bool extraDarkMode,  bool enableMaterialYou,  bool automaticallyPickAccentColor,  String language,  bool showDailyScheduleOnFeed,  bool chirpMuteVideos,  bool courseRemindersEnabled,  List<int?> courseReminderMinutes)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SettingsState() when $default != null:
-return $default(_that.themeMode,_that.colorSeedValue,_that.compactMode,_that.extraDarkMode,_that.enableMaterialYou,_that.automaticallyPickAccentColor,_that.language,_that.showDailyScheduleOnFeed,_that.chirpMuteVideos);case _:
+return $default(_that.themeMode,_that.colorSeedValue,_that.compactMode,_that.extraDarkMode,_that.enableMaterialYou,_that.automaticallyPickAccentColor,_that.language,_that.showDailyScheduleOnFeed,_that.chirpMuteVideos,_that.courseRemindersEnabled,_that.courseReminderMinutes);case _:
   return orElse();
 
 }
@@ -188,10 +190,10 @@ return $default(_that.themeMode,_that.colorSeedValue,_that.compactMode,_that.ext
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@ThemeModeConverter()  ThemeMode themeMode,  int colorSeedValue,  bool compactMode,  bool extraDarkMode,  bool enableMaterialYou,  bool automaticallyPickAccentColor,  String language,  bool showDailyScheduleOnFeed,  bool chirpMuteVideos)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@ThemeModeConverter()  ThemeMode themeMode,  int colorSeedValue,  bool compactMode,  bool extraDarkMode,  bool enableMaterialYou,  bool automaticallyPickAccentColor,  String language,  bool showDailyScheduleOnFeed,  bool chirpMuteVideos,  bool courseRemindersEnabled,  List<int?> courseReminderMinutes)  $default,) {final _that = this;
 switch (_that) {
 case _SettingsState():
-return $default(_that.themeMode,_that.colorSeedValue,_that.compactMode,_that.extraDarkMode,_that.enableMaterialYou,_that.automaticallyPickAccentColor,_that.language,_that.showDailyScheduleOnFeed,_that.chirpMuteVideos);case _:
+return $default(_that.themeMode,_that.colorSeedValue,_that.compactMode,_that.extraDarkMode,_that.enableMaterialYou,_that.automaticallyPickAccentColor,_that.language,_that.showDailyScheduleOnFeed,_that.chirpMuteVideos,_that.courseRemindersEnabled,_that.courseReminderMinutes);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -208,10 +210,10 @@ return $default(_that.themeMode,_that.colorSeedValue,_that.compactMode,_that.ext
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@ThemeModeConverter()  ThemeMode themeMode,  int colorSeedValue,  bool compactMode,  bool extraDarkMode,  bool enableMaterialYou,  bool automaticallyPickAccentColor,  String language,  bool showDailyScheduleOnFeed,  bool chirpMuteVideos)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@ThemeModeConverter()  ThemeMode themeMode,  int colorSeedValue,  bool compactMode,  bool extraDarkMode,  bool enableMaterialYou,  bool automaticallyPickAccentColor,  String language,  bool showDailyScheduleOnFeed,  bool chirpMuteVideos,  bool courseRemindersEnabled,  List<int?> courseReminderMinutes)?  $default,) {final _that = this;
 switch (_that) {
 case _SettingsState() when $default != null:
-return $default(_that.themeMode,_that.colorSeedValue,_that.compactMode,_that.extraDarkMode,_that.enableMaterialYou,_that.automaticallyPickAccentColor,_that.language,_that.showDailyScheduleOnFeed,_that.chirpMuteVideos);case _:
+return $default(_that.themeMode,_that.colorSeedValue,_that.compactMode,_that.extraDarkMode,_that.enableMaterialYou,_that.automaticallyPickAccentColor,_that.language,_that.showDailyScheduleOnFeed,_that.chirpMuteVideos,_that.courseRemindersEnabled,_that.courseReminderMinutes);case _:
   return null;
 
 }
@@ -223,7 +225,7 @@ return $default(_that.themeMode,_that.colorSeedValue,_that.compactMode,_that.ext
 @JsonSerializable()
 
 class _SettingsState extends SettingsState {
-  const _SettingsState({@ThemeModeConverter() this.themeMode = ThemeMode.system, this.colorSeedValue = 0xFF6200EE, this.compactMode = false, this.extraDarkMode = false, this.enableMaterialYou = true, this.automaticallyPickAccentColor = true, this.language = 'en', this.showDailyScheduleOnFeed = true, this.chirpMuteVideos = true}): super._();
+  const _SettingsState({@ThemeModeConverter() this.themeMode = ThemeMode.system, this.colorSeedValue = 0xFF6200EE, this.compactMode = false, this.extraDarkMode = false, this.enableMaterialYou = true, this.automaticallyPickAccentColor = true, this.language = 'en', this.showDailyScheduleOnFeed = true, this.chirpMuteVideos = true, this.courseRemindersEnabled = true,  List<int?> courseReminderMinutes = const [1440, 60, 0]}): _courseReminderMinutes = courseReminderMinutes,super._();
   factory _SettingsState.fromJson(Map<String, dynamic> json) => _$SettingsStateFromJson(json);
 
 @override@JsonKey()@ThemeModeConverter() final  ThemeMode themeMode;
@@ -235,6 +237,14 @@ class _SettingsState extends SettingsState {
 @override@JsonKey() final  String language;
 @override@JsonKey() final  bool showDailyScheduleOnFeed;
 @override@JsonKey() final  bool chirpMuteVideos;
+@override@JsonKey() final  bool courseRemindersEnabled;
+ final  List<int?> _courseReminderMinutes;
+@override@JsonKey() List<int?> get courseReminderMinutes {
+  if (_courseReminderMinutes is EqualUnmodifiableListView) return _courseReminderMinutes;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_courseReminderMinutes);
+}
+
 
 /// Create a copy of SettingsState
 /// with the given fields replaced by the non-null parameter values.
@@ -249,18 +259,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SettingsState&&(identical(other.themeMode, themeMode) || other.themeMode == themeMode)&&(identical(other.colorSeedValue, colorSeedValue) || other.colorSeedValue == colorSeedValue)&&(identical(other.compactMode, compactMode) || other.compactMode == compactMode)&&(identical(other.extraDarkMode, extraDarkMode) || other.extraDarkMode == extraDarkMode)&&(identical(other.enableMaterialYou, enableMaterialYou) || other.enableMaterialYou == enableMaterialYou)&&(identical(other.automaticallyPickAccentColor, automaticallyPickAccentColor) || other.automaticallyPickAccentColor == automaticallyPickAccentColor)&&(identical(other.language, language) || other.language == language)&&(identical(other.showDailyScheduleOnFeed, showDailyScheduleOnFeed) || other.showDailyScheduleOnFeed == showDailyScheduleOnFeed)&&(identical(other.chirpMuteVideos, chirpMuteVideos) || other.chirpMuteVideos == chirpMuteVideos));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SettingsState&&(identical(other.themeMode, themeMode) || other.themeMode == themeMode)&&(identical(other.colorSeedValue, colorSeedValue) || other.colorSeedValue == colorSeedValue)&&(identical(other.compactMode, compactMode) || other.compactMode == compactMode)&&(identical(other.extraDarkMode, extraDarkMode) || other.extraDarkMode == extraDarkMode)&&(identical(other.enableMaterialYou, enableMaterialYou) || other.enableMaterialYou == enableMaterialYou)&&(identical(other.automaticallyPickAccentColor, automaticallyPickAccentColor) || other.automaticallyPickAccentColor == automaticallyPickAccentColor)&&(identical(other.language, language) || other.language == language)&&(identical(other.showDailyScheduleOnFeed, showDailyScheduleOnFeed) || other.showDailyScheduleOnFeed == showDailyScheduleOnFeed)&&(identical(other.chirpMuteVideos, chirpMuteVideos) || other.chirpMuteVideos == chirpMuteVideos)&&(identical(other.courseRemindersEnabled, courseRemindersEnabled) || other.courseRemindersEnabled == courseRemindersEnabled)&&const DeepCollectionEquality().equals(other.courseReminderMinutes, _courseReminderMinutes));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,themeMode,colorSeedValue,compactMode,extraDarkMode,enableMaterialYou,automaticallyPickAccentColor,language,showDailyScheduleOnFeed,chirpMuteVideos);
+    return Object.hash(runtimeType,themeMode,colorSeedValue,compactMode,extraDarkMode,enableMaterialYou,automaticallyPickAccentColor,language,showDailyScheduleOnFeed,chirpMuteVideos,courseRemindersEnabled,const DeepCollectionEquality().hash(_courseReminderMinutes));
 }
 
 @override
 String toString() {
-    return 'SettingsState(themeMode: $themeMode, colorSeedValue: $colorSeedValue, compactMode: $compactMode, extraDarkMode: $extraDarkMode, enableMaterialYou: $enableMaterialYou, automaticallyPickAccentColor: $automaticallyPickAccentColor, language: $language, showDailyScheduleOnFeed: $showDailyScheduleOnFeed, chirpMuteVideos: $chirpMuteVideos)';
+    return 'SettingsState(themeMode: $themeMode, colorSeedValue: $colorSeedValue, compactMode: $compactMode, extraDarkMode: $extraDarkMode, enableMaterialYou: $enableMaterialYou, automaticallyPickAccentColor: $automaticallyPickAccentColor, language: $language, showDailyScheduleOnFeed: $showDailyScheduleOnFeed, chirpMuteVideos: $chirpMuteVideos, courseRemindersEnabled: $courseRemindersEnabled, courseReminderMinutes: $courseReminderMinutes)';
 }
 
 
@@ -271,7 +281,7 @@ abstract mixin class _$SettingsStateCopyWith<$Res> implements $SettingsStateCopy
   factory _$SettingsStateCopyWith(_SettingsState value, $Res Function(_SettingsState) _then) = __$SettingsStateCopyWithImpl;
 @override @useResult
 $Res call({
-@ThemeModeConverter() ThemeMode themeMode, int colorSeedValue, bool compactMode, bool extraDarkMode, bool enableMaterialYou, bool automaticallyPickAccentColor, String language, bool showDailyScheduleOnFeed, bool chirpMuteVideos
+@ThemeModeConverter() ThemeMode themeMode, int colorSeedValue, bool compactMode, bool extraDarkMode, bool enableMaterialYou, bool automaticallyPickAccentColor, String language, bool showDailyScheduleOnFeed, bool chirpMuteVideos, bool courseRemindersEnabled, List<int?> courseReminderMinutes
 });
 
 
@@ -288,7 +298,7 @@ class __$SettingsStateCopyWithImpl<$Res>
 
 /// Create a copy of SettingsState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? themeMode = null,Object? colorSeedValue = null,Object? compactMode = null,Object? extraDarkMode = null,Object? enableMaterialYou = null,Object? automaticallyPickAccentColor = null,Object? language = null,Object? showDailyScheduleOnFeed = null,Object? chirpMuteVideos = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? themeMode = null,Object? colorSeedValue = null,Object? compactMode = null,Object? extraDarkMode = null,Object? enableMaterialYou = null,Object? automaticallyPickAccentColor = null,Object? language = null,Object? showDailyScheduleOnFeed = null,Object? chirpMuteVideos = null,Object? courseRemindersEnabled = null,Object? courseReminderMinutes = null,}) {
   return _then(_SettingsState(
 themeMode: null == themeMode ? _self.themeMode : themeMode // ignore: cast_nullable_to_non_nullable
 as ThemeMode,colorSeedValue: null == colorSeedValue ? _self.colorSeedValue : colorSeedValue // ignore: cast_nullable_to_non_nullable
@@ -299,7 +309,9 @@ as bool,automaticallyPickAccentColor: null == automaticallyPickAccentColor ? _se
 as bool,language: null == language ? _self.language : language // ignore: cast_nullable_to_non_nullable
 as String,showDailyScheduleOnFeed: null == showDailyScheduleOnFeed ? _self.showDailyScheduleOnFeed : showDailyScheduleOnFeed // ignore: cast_nullable_to_non_nullable
 as bool,chirpMuteVideos: null == chirpMuteVideos ? _self.chirpMuteVideos : chirpMuteVideos // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,courseRemindersEnabled: null == courseRemindersEnabled ? _self.courseRemindersEnabled : courseRemindersEnabled // ignore: cast_nullable_to_non_nullable
+as bool,courseReminderMinutes: null == courseReminderMinutes ? _self._courseReminderMinutes : courseReminderMinutes // ignore: cast_nullable_to_non_nullable
+as List<int?>,
   ));
 }
 

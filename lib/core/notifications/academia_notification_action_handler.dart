@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:academia/config/config.dart';
 import 'package:academia/injection_container.dart';
+import 'package:courses/courses.dart' as courses;
 import 'package:notifications/notifications.dart';
 import 'package:todos/todos.dart' as todos;
 
@@ -10,6 +11,15 @@ class AcademiaNotificationActionHandler implements NotificationActionHandler {
 
   @override
   Future<void> handle(NotificationAction action) async {
+    final courseId = action.payload['course_id'];
+    if (action.payload['type'] == 'course_reminder' &&
+        courseId?.trim().isNotEmpty == true) {
+      AppRouter.router.push(
+        courses.CourseDetailRoute(courseId: courseId!).location,
+      );
+      return;
+    }
+
     final todoLocalId = int.tryParse(action.payload['localId'] ?? '');
     if (todoLocalId != null) {
       await _handleTodoAction(action.buttonKey, todoLocalId);

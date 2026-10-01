@@ -32,7 +32,11 @@ class _MobileLayout extends StatelessWidget {
             label: 'Home',
           ),
           NavigationDestination(
-            icon: Assets.icons.calendar.image(height: 40),
+            icon: Image.asset(
+              'assets/icons/calendar.png',
+              package: 'agenda',
+              height: 40,
+            ),
             label: 'Calendar',
           ),
           NavigationDestination(
@@ -224,4 +228,3 @@ class _LayoutPageState extends State<LayoutPage> {
     );
   }
 }
-
