@@ -114,9 +114,7 @@ class VerisafeAuthInterceptor extends Interceptor {
     TokenData currentToken,
   ) async {
     final options = response.requestOptions;
-    final rejectedAccessToken = _bearerToken(
-      options.headers['Authorization'],
-    );
+    final rejectedAccessToken = _bearerToken(options.headers['Authorization']);
     options.extra['authRefreshAttempted'] = true;
 
     final retryToken = currentToken.accessToken != rejectedAccessToken
@@ -128,15 +126,21 @@ class VerisafeAuthInterceptor extends Interceptor {
     options.headers['Authorization'] = 'Bearer ${retryToken.accessToken}';
     _updateRevocationRefreshToken(options, retryToken);
 
+    // Dio finalizes multipart bodies while sending them. The original body
+    // cannot be sent a second time after a 401 response.
+    if (options.data is FormData) {
+      options.data = (options.data! as FormData).clone();
+    }
+
     return _dio.fetch<dynamic>(options);
   }
 
   @override
-  void onError(DioException error, ErrorInterceptorHandler handler) {
-    _redactAuthorization(error.requestOptions);
-    final responseOptions = error.response?.requestOptions;
+  void onError(DioException err, ErrorInterceptorHandler handler) {
+    _redactAuthorization(err.requestOptions);
+    final responseOptions = err.response?.requestOptions;
     if (responseOptions != null) _redactAuthorization(responseOptions);
-    handler.next(error);
+    handler.next(err);
   }
 
   Future<TokenData?> _storedToken() async {
