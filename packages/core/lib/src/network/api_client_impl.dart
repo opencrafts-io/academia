@@ -121,6 +121,15 @@ class DioApiClient
     }
     try {
       final response = await request();
+      final statusCode = response.statusCode;
+      if (statusCode != null && (statusCode < 200 || statusCode >= 300)) {
+        throw DioException(
+          requestOptions: response.requestOptions,
+          response: response,
+          type: DioExceptionType.badResponse,
+          message: 'Request failed with status code $statusCode',
+        );
+      }
       final rawData = response.data;
       final result = decoder != null ? decoder(rawData) : rawData as T;
       return right(result);
