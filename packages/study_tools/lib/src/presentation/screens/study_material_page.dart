@@ -1,0 +1,185 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../domain/entities/study_entities.dart';
+import '../cubit/study_tools_cubit.dart';
+import '../widgets/question_set_section.dart';
+import '../widgets/study_delete_confirmation_sheet.dart';
+import '../widgets/study_progress_widgets.dart';
+import '../widgets/study_material_sections.dart';
+import '../widgets/study_tools_feedback.dart';
+import '../widgets/study_tools_sheet.dart';
+
+class StudyMaterialPage extends StatefulWidget {
+  const StudyMaterialPage({required this.materialId, super.key});
+  final int materialId;
+
+  @override
+  State<StudyMaterialPage> createState() => _StudyMaterialPageState();
+}
+
+class _StudyMaterialPageState extends State<StudyMaterialPage> {
+  @override
+  void initState() {
+    super.initState();
+    unawaited(context.read<StudyToolsCubit>().loadMaterial(widget.materialId));
+  }
+
+  @override
+  Widget build(
+    BuildContext context,
+  ) => BlocListener<StudyToolsCubit, StudyToolsState>(
+    listenWhen: (previous, current) =>
+        previous.error != current.error && current.error != null,
+    listener: (context, state) {
+      showStudyToolsSnackBar(context, state.error!, isError: true);
+    },
+    child: BlocBuilder<StudyToolsCubit, StudyToolsState>(
+      builder: (context, state) {
+        final material = state.selectedMaterial;
+        if (state.status == StudyLoadStatus.loading && material == null) {
+          return const Scaffold(
+            body: StudyToolsLoadingView(message: 'Opening your material…'),
+          );
+        }
+        if (material == null) {
+          return Scaffold(
+            body: CustomScrollView(
+              slivers: [
+                _appBar(),
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: StudyToolsFailureView(
+                    message: state.error ?? 'Material unavailable.',
+                    onRetry: () => context.read<StudyToolsCubit>().loadMaterial(
+                      widget.materialId,
+                    ),
+                    onUpgrade: state.errorCode == 'entitlement_required',
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        final hasJob = state.jobs.containsKey(material.id);
+        return Scaffold(
+          body: CustomScrollView(
+            physics: const BouncingScrollPhysics(),
+            slivers: [
+              _appBar(),
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
+                sliver: SliverList.list(
+                  children: [
+                    StudyMaterialHeaderCard(material: material),
+                    const SizedBox(height: 28),
+                    const StudySectionHeading(
+                      title: 'Make it stick',
+                      subtitle: 'Choose a format to create a new practice set.',
+                    ),
+                    const SizedBox(height: 14),
+                    StudyGenerationOptions(
+                      busy:
+                          state.loadingFormat != null ||
+                          hasJob ||
+                          state.generationBlocked,
+                      loadingFormat: state.loadingFormat,
+                      onGenerate: (format) =>
+                          context.read<StudyToolsCubit>().generate(format),
+                    ),
+                    AnimatedSize(
+                      duration: const Duration(milliseconds: 280),
+                      curve: Curves.easeOutCubic,
+                      child: hasJob
+                          ? const Padding(
+                              padding: EdgeInsets.only(top: 18),
+                              child: StudyGenerationProgressCard(),
+                            )
+                          : const SizedBox.shrink(),
+                    ),
+                    if (state.error != null) ...[
+                      const SizedBox(height: 12),
+                      StudyToolsInlineError(
+                        message: state.error!,
+                        onRetry: state.errorCode == 'entitlement_unavailable'
+                            ? () => context
+                                  .read<StudyToolsCubit>()
+                                  .loadMaterial(material.id)
+                            : null,
+                        onUpgrade: state.errorCode == 'entitlement_required',
+                      ),
+                    ],
+                    if (state.errorCode == 'job_already_running') ...[
+                      const SizedBox(height: 8),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: TextButton.icon(
+                          onPressed: _refreshQuestions,
+                          icon: const Icon(Icons.refresh_rounded),
+                          label: const Text('Refresh question sets'),
+                        ),
+                      ),
+                    ],
+                    const SizedBox(height: 32),
+                    const StudySectionHeading(
+                      title: 'Your question sets',
+                      subtitle: 'Reopen any set whenever you want to practise.',
+                    ),
+                    const SizedBox(height: 8),
+                    for (final format in QuestionFormat.values)
+                      QuestionSetSection(noteId: material.id, format: format),
+                    const SizedBox(height: 32),
+                    OutlinedButton.icon(
+                      onPressed: () => _delete(context, material.id),
+                      icon: const Icon(Icons.delete_outline_rounded),
+                      label: const Text('Delete material and study content'),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Theme.of(context).colorScheme.error,
+                        minimumSize: const Size.fromHeight(52),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    ),
+  );
+
+  SliverAppBar _appBar() => SliverAppBar.large(
+    title: const Text('Material'),
+    pinned: true,
+    actions: [
+      IconButton(
+        tooltip: 'Refresh material',
+        onPressed: () =>
+            context.read<StudyToolsCubit>().loadMaterial(widget.materialId),
+        icon: const Icon(Icons.refresh_rounded),
+      ),
+      const SizedBox(width: 8),
+    ],
+  );
+
+  Future<void> _refreshQuestions() async {
+    final cubit = context.read<StudyToolsCubit>();
+    await cubit.loadMaterial(widget.materialId);
+    for (final format in QuestionFormat.values) {
+      await cubit.loadQuestions(format);
+    }
+  }
+
+  Future<void> _delete(BuildContext context, int id) async {
+    final confirmed = await showStudyToolsSheet<bool>(
+      context: context,
+      child: const StudyDeleteConfirmationSheet(),
+    );
+    if (confirmed != true || !context.mounted) return;
+    final deleted = await context.read<StudyToolsCubit>().deleteMaterial(id);
+    if (deleted && context.mounted) Navigator.pop(context, true);
+  }
+}
