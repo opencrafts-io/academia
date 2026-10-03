@@ -564,7 +564,14 @@ class _PostCardState extends State<PostCard> {
                   child: BlocProvider(
                     // Scope PostCubit for optimistic like state
                     create: (_) => PostCubit(widget.post),
-                    child: PostActionRow(onCommentTap: widget.onTap),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const PollWidget(),
+                        const SizedBox(height: 8),
+                        PostActionRow(onCommentTap: widget.onTap),
+                      ],
+                    ),
                   ),
                 ),
               ],

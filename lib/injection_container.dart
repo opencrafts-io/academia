@@ -470,10 +470,18 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   sl.registerFactory<ChirpRemoteDataSource>(
     () => ChirpRemoteDataSource(dioClient: sl.get<DioClient>(), flavor: flavor),
   );
+  // Polls
+  sl.registerFactory<PollRemoteDataSource>(
+    () => ChirpPollRemoteDataSource(
+      dioClient: sl.get<DioClient>(),
+      flavor: flavor,
+    ),
+  );
   sl.registerFactory<ChirpRepository>(
     () => ChirpRepositoryImpl(
       remoteDataSource: sl.get<ChirpRemoteDataSource>(),
       localDataSource: sl<ChirpPostLocalDataSource>(),
+      pollRemoteDataSource: sl<PollRemoteDataSource>(),
     ),
   );
   sl.registerFactory(() => GetFeedPostsUsecase(sl()));
@@ -509,6 +517,15 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     () => LikePostUsecase(chirpRepository: sl.get<ChirpRepository>()),
   );
   sl.registerFactory(
+    () => VoteOnPollUsecase(chirpRepository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
+    () => RetractPollVoteUsecase(chirpRepository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
+    () => GetPollVotersUsecase(chirpRepository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
     () => CheckPostLikedUsecase(chirpRepository: sl.get<ChirpRepository>()),
   );
   sl.registerFactory(
@@ -527,7 +544,11 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
       createPostAttachment: sl.get<CreatePostAttachmentUsecase>(),
       deletePost: sl.get<DeletePostUsecase>(),
       likePost: sl.get<LikePostUsecase>(),
+      voteOnPoll: sl.get<VoteOnPollUsecase>(),
+      retractPollVote: sl.get<RetractPollVoteUsecase>(),
       checkPostLiked: sl.get<CheckPostLikedUsecase>(),
+      // addComment: sl.get<CommentUsecase>(),
+      // getPostReplies: sl.get<GetPostRepliesUsecase>(),
     ),
   );
   sl.registerFactory(

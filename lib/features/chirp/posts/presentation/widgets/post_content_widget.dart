@@ -76,6 +76,8 @@ class _PostContentWidgetState extends State<PostContentWidget> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const SizedBox(height: 8),
+                        const PollWidget(),
+                        const SizedBox(height: 8),
                         const PostActionRow(),
                         const SizedBox(height: 16),
                         Row(

@@ -1376,6 +1376,15 @@ class $PostsTable extends Posts with TableInfo<$PostsTable, Post> {
         type: DriftSqlType.string,
         requiredDuringInsert: true,
       ).withConverter<List<dynamic>>($PostsTable.$convertercomments);
+  @override
+  late final GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String>
+  poll = GeneratedColumn<String>(
+    'poll',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  ).withConverter<Map<String, dynamic>?>($PostsTable.$converterpolln);
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -1423,6 +1432,7 @@ class $PostsTable extends Posts with TableInfo<$PostsTable, Post> {
     viewsCount,
     commentCount,
     comments,
+    poll,
     createdAt,
     updatedAt,
     cachedAt,
@@ -1574,6 +1584,12 @@ class $PostsTable extends Posts with TableInfo<$PostsTable, Post> {
           data['${effectivePrefix}comments'],
         )!,
       ),
+      poll: $PostsTable.$converterpolln.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}poll'],
+        ),
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -1600,6 +1616,10 @@ class $PostsTable extends Posts with TableInfo<$PostsTable, Post> {
       JsonListConverter();
   static TypeConverter<List<dynamic>, String> $convertercomments =
       JsonListConverter();
+  static TypeConverter<Map<String, dynamic>, String> $converterpoll =
+      JsonConverter();
+  static TypeConverter<Map<String, dynamic>?, String?> $converterpolln =
+      NullAwareTypeConverter.wrap($converterpoll);
 }
 
 class Post extends DataClass implements Insertable<Post> {
@@ -1614,6 +1634,9 @@ class Post extends DataClass implements Insertable<Post> {
   final int viewsCount;
   final int commentCount;
   final List<dynamic> comments;
+
+  /// Optional poll attached to the post, stored as its raw JSON blob.
+  final Map<String, dynamic>? poll;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -1631,6 +1654,7 @@ class Post extends DataClass implements Insertable<Post> {
     required this.viewsCount,
     required this.commentCount,
     required this.comments,
+    this.poll,
     required this.createdAt,
     required this.updatedAt,
     this.cachedAt,
@@ -1661,6 +1685,9 @@ class Post extends DataClass implements Insertable<Post> {
         $PostsTable.$convertercomments.toSql(comments),
       );
     }
+    if (!nullToAbsent || poll != null) {
+      map['poll'] = Variable<String>($PostsTable.$converterpolln.toSql(poll));
+    }
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     if (!nullToAbsent || cachedAt != null) {
@@ -1682,6 +1709,7 @@ class Post extends DataClass implements Insertable<Post> {
       viewsCount: Value(viewsCount),
       commentCount: Value(commentCount),
       comments: Value(comments),
+      poll: poll == null && nullToAbsent ? const Value.absent() : Value(poll),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
       cachedAt: cachedAt == null && nullToAbsent
@@ -1707,6 +1735,7 @@ class Post extends DataClass implements Insertable<Post> {
       viewsCount: serializer.fromJson<int>(json['views_count']),
       commentCount: serializer.fromJson<int>(json['comment_count']),
       comments: serializer.fromJson<List<dynamic>>(json['comments']),
+      poll: serializer.fromJson<Map<String, dynamic>?>(json['poll']),
       createdAt: serializer.fromJson<DateTime>(json['created_at']),
       updatedAt: serializer.fromJson<DateTime>(json['updated_at']),
       cachedAt: serializer.fromJson<DateTime?>(json['cached_at']),
@@ -1727,6 +1756,7 @@ class Post extends DataClass implements Insertable<Post> {
       'views_count': serializer.toJson<int>(viewsCount),
       'comment_count': serializer.toJson<int>(commentCount),
       'comments': serializer.toJson<List<dynamic>>(comments),
+      'poll': serializer.toJson<Map<String, dynamic>?>(poll),
       'created_at': serializer.toJson<DateTime>(createdAt),
       'updated_at': serializer.toJson<DateTime>(updatedAt),
       'cached_at': serializer.toJson<DateTime?>(cachedAt),
@@ -1745,6 +1775,7 @@ class Post extends DataClass implements Insertable<Post> {
     int? viewsCount,
     int? commentCount,
     List<dynamic>? comments,
+    Value<Map<String, dynamic>?> poll = const Value.absent(),
     DateTime? createdAt,
     DateTime? updatedAt,
     Value<DateTime?> cachedAt = const Value.absent(),
@@ -1760,6 +1791,7 @@ class Post extends DataClass implements Insertable<Post> {
     viewsCount: viewsCount ?? this.viewsCount,
     commentCount: commentCount ?? this.commentCount,
     comments: comments ?? this.comments,
+    poll: poll.present ? poll.value : this.poll,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
     cachedAt: cachedAt.present ? cachedAt.value : this.cachedAt,
@@ -1783,6 +1815,7 @@ class Post extends DataClass implements Insertable<Post> {
           ? data.commentCount.value
           : this.commentCount,
       comments: data.comments.present ? data.comments.value : this.comments,
+      poll: data.poll.present ? data.poll.value : this.poll,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
       cachedAt: data.cachedAt.present ? data.cachedAt.value : this.cachedAt,
@@ -1803,6 +1836,7 @@ class Post extends DataClass implements Insertable<Post> {
           ..write('viewsCount: $viewsCount, ')
           ..write('commentCount: $commentCount, ')
           ..write('comments: $comments, ')
+          ..write('poll: $poll, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('cachedAt: $cachedAt')
@@ -1823,6 +1857,7 @@ class Post extends DataClass implements Insertable<Post> {
     viewsCount,
     commentCount,
     comments,
+    poll,
     createdAt,
     updatedAt,
     cachedAt,
@@ -1842,6 +1877,7 @@ class Post extends DataClass implements Insertable<Post> {
           other.viewsCount == this.viewsCount &&
           other.commentCount == this.commentCount &&
           other.comments == this.comments &&
+          other.poll == this.poll &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
           other.cachedAt == this.cachedAt);
@@ -1859,6 +1895,7 @@ class PostsCompanion extends UpdateCompanion<Post> {
   final Value<int> viewsCount;
   final Value<int> commentCount;
   final Value<List<dynamic>> comments;
+  final Value<Map<String, dynamic>?> poll;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<DateTime?> cachedAt;
@@ -1874,6 +1911,7 @@ class PostsCompanion extends UpdateCompanion<Post> {
     this.viewsCount = const Value.absent(),
     this.commentCount = const Value.absent(),
     this.comments = const Value.absent(),
+    this.poll = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.cachedAt = const Value.absent(),
@@ -1890,6 +1928,7 @@ class PostsCompanion extends UpdateCompanion<Post> {
     this.viewsCount = const Value.absent(),
     this.commentCount = const Value.absent(),
     required List<dynamic> comments,
+    this.poll = const Value.absent(),
     required DateTime createdAt,
     required DateTime updatedAt,
     this.cachedAt = const Value.absent(),
@@ -1913,6 +1952,7 @@ class PostsCompanion extends UpdateCompanion<Post> {
     Expression<int>? viewsCount,
     Expression<int>? commentCount,
     Expression<String>? comments,
+    Expression<String>? poll,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<DateTime>? cachedAt,
@@ -1929,6 +1969,7 @@ class PostsCompanion extends UpdateCompanion<Post> {
       if (viewsCount != null) 'views_count': viewsCount,
       if (commentCount != null) 'comment_count': commentCount,
       if (comments != null) 'comments': comments,
+      if (poll != null) 'poll': poll,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (cachedAt != null) 'cached_at': cachedAt,
@@ -1947,6 +1988,7 @@ class PostsCompanion extends UpdateCompanion<Post> {
     Value<int>? viewsCount,
     Value<int>? commentCount,
     Value<List<dynamic>>? comments,
+    Value<Map<String, dynamic>?>? poll,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
     Value<DateTime?>? cachedAt,
@@ -1963,6 +2005,7 @@ class PostsCompanion extends UpdateCompanion<Post> {
       viewsCount: viewsCount ?? this.viewsCount,
       commentCount: commentCount ?? this.commentCount,
       comments: comments ?? this.comments,
+      poll: poll ?? this.poll,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       cachedAt: cachedAt ?? this.cachedAt,
@@ -2011,6 +2054,11 @@ class PostsCompanion extends UpdateCompanion<Post> {
         $PostsTable.$convertercomments.toSql(comments.value),
       );
     }
+    if (poll.present) {
+      map['poll'] = Variable<String>(
+        $PostsTable.$converterpolln.toSql(poll.value),
+      );
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -2037,6 +2085,7 @@ class PostsCompanion extends UpdateCompanion<Post> {
           ..write('viewsCount: $viewsCount, ')
           ..write('commentCount: $commentCount, ')
           ..write('comments: $comments, ')
+          ..write('poll: $poll, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('cachedAt: $cachedAt')
@@ -19379,6 +19428,7 @@ typedef $$PostsTableCreateCompanionBuilder = PostsCompanion Function({
   Value<int> viewsCount,
   Value<int> commentCount,
   required List<dynamic> comments,
+  Value<Map<String, dynamic>?> poll,
   required DateTime createdAt,
   required DateTime updatedAt,
   Value<DateTime?> cachedAt,
@@ -19395,6 +19445,7 @@ typedef $$PostsTableUpdateCompanionBuilder = PostsCompanion Function({
   Value<int> viewsCount,
   Value<int> commentCount,
   Value<List<dynamic>> comments,
+  Value<Map<String, dynamic>?> poll,
   Value<DateTime> createdAt,
   Value<DateTime> updatedAt,
   Value<DateTime?> cachedAt,
@@ -19467,6 +19518,16 @@ class $$PostsTableFilterComposer extends Composer<_$AppDataBase, $PostsTable> {
   ColumnWithTypeConverterFilters<List<dynamic>, List<dynamic>, String>
   get comments => $composableBuilder(
     column: $table.comments,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<
+    Map<String, dynamic>?,
+    Map<String, dynamic>,
+    String
+  >
+  get poll => $composableBuilder(
+    column: $table.poll,
     builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
@@ -19550,6 +19611,11 @@ class $$PostsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get poll => $composableBuilder(
+    column: $table.poll,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -19616,6 +19682,9 @@ class $$PostsTableAnnotationComposer
   GeneratedColumnWithTypeConverter<List<dynamic>, String> get comments =>
       $composableBuilder(column: $table.comments, builder: (column) => column);
 
+  GeneratedColumnWithTypeConverter<Map<String, dynamic>?, String> get poll =>
+      $composableBuilder(column: $table.poll, builder: (column) => column);
+
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
@@ -19665,6 +19734,7 @@ class $$PostsTableTableManager
                 Value<int> viewsCount = const Value.absent(),
                 Value<int> commentCount = const Value.absent(),
                 Value<List<dynamic>> comments = const Value.absent(),
+                Value<Map<String, dynamic>?> poll = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<DateTime?> cachedAt = const Value.absent(),
@@ -19680,6 +19750,7 @@ class $$PostsTableTableManager
                 viewsCount: viewsCount,
                 commentCount: commentCount,
                 comments: comments,
+                poll: poll,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 cachedAt: cachedAt,
@@ -19697,6 +19768,7 @@ class $$PostsTableTableManager
                 Value<int> viewsCount = const Value.absent(),
                 Value<int> commentCount = const Value.absent(),
                 required List<dynamic> comments,
+                Value<Map<String, dynamic>?> poll = const Value.absent(),
                 required DateTime createdAt,
                 required DateTime updatedAt,
                 Value<DateTime?> cachedAt = const Value.absent(),
@@ -19712,6 +19784,7 @@ class $$PostsTableTableManager
                 viewsCount: viewsCount,
                 commentCount: commentCount,
                 comments: comments,
+                poll: poll,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 cachedAt: cachedAt,

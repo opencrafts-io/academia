@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:academia/core/core.dart';
 import 'package:academia/features/features.dart';
+import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,6 +22,8 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
   final DeletePostUsecase deletePost;
   final GetPostsFromCommunityUsecase getPostsFromCommunityUsecase;
   final LikePostUsecase likePost;
+  final VoteOnPollUsecase voteOnPoll;
+  final RetractPollVoteUsecase retractPollVote;
   final CheckPostLikedUsecase checkPostLiked;
   final Logger _logger = Logger();
 
@@ -32,6 +36,8 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     required this.deletePost,
     required this.getPostsFromCommunityUsecase,
     required this.likePost,
+    required this.voteOnPoll,
+    required this.retractPollVote,
     required this.checkPostLiked,
   }) : super(FeedInitial()) {
     on<LoadPostsForCommunityEvent>(_onLoadPostsForCommunity);
@@ -41,7 +47,154 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     on<MarkPostAsViewed>(_onMarkPostAsViewed);
     on<UpdatePostInFeed>(_onUpdatePostInFeed);
     on<ToggleLikePost>(_onToggleLikePost);
+    on<VoteOnPollEvent>(_onVoteOnPoll);
+    on<RetractPollVoteEvent>(_onRetractPollVote);
     on<CheckFeedLikeStatuses>(_onCheckFeedLikeStatuses);
+    //   List<PostReply>? addReplyToParent(
+    //     List<PostReply> replies,
+    //     String parentId,
+    //     PostReply newReply,
+    //   ) {
+    //     final updatedReplies = <PostReply>[];
+    //     bool found = false;
+
+    //     for (final reply in replies) {
+    //       if (reply.id == parentId) {
+    //         final updatedChildReplies = [...reply.replies, newReply];
+    //         final updatedParent = reply.copyWith(replies: updatedChildReplies);
+    //         updatedReplies.add(updatedParent);
+    //         found = true;
+    //       } else {
+    //         final updatedNestedReplies = addReplyToParent(
+    //           reply.replies,
+    //           parentId,
+    //           newReply,
+    //         );
+
+    //         if (updatedNestedReplies != null) {
+    //           final updatedReply = reply.copyWith(replies: updatedNestedReplies);
+    //           updatedReplies.add(updatedReply);
+    //           found = true;
+    //         } else {
+    //           updatedReplies.add(reply);
+    //         }
+    //       }
+    //     }
+
+    //     return found ? updatedReplies : null;
+    //   }
+
+    //   on<AddComment>((event, emit) async {
+    //     if (state is! FeedLoaded) return;
+    //     final currentState = state as FeedLoaded;
+
+    //     emit(CommentAdding());
+
+    //     final res = await addComment(
+    //       postId: event.postId,
+    //       content: event.content,
+    //       userName: event.userName,
+    //       parentId: event.parentId,
+    //       userId: event.userId,
+    //     );
+
+    //     res.fold((failure) => emit(CommentError(failure.message)), (newComment) {
+    //       final postIndex = currentState.posts.indexWhere(
+    //         (p) => p.id == event.postId,
+    //       );
+    //       if (postIndex == -1) {
+    //         emit(CommentError("Post not found"));
+    //         return;
+    //       }
+
+    //       final postToUpdate = currentState.posts[postIndex];
+    //       Post updatedPost;
+
+    //       if (event.parentId == null) {
+    //         // Top-level comment - add to post's replies
+    //         final updatedReplies = [...postToUpdate.replies, newComment];
+    //         updatedPost = postToUpdate.copyWith(
+    //           replies: updatedReplies,
+    //           commentCount: postToUpdate.commentCount + 1,
+    //         );
+    //       } else {
+    //         // Nested reply - find parent comment and add to its replies
+    //         final updatedReplies = addReplyToParent(
+    //           postToUpdate.replies,
+    //           event.parentId!,
+    //           newComment,
+    //         );
+
+    //         if (updatedReplies != null) {
+    //           updatedPost = postToUpdate.copyWith(
+    //             replies: updatedReplies,
+    //             commentCount: postToUpdate.commentCount + 1,
+    //           );
+    //         } else {
+    //           emit(CommentError("Parent comment not found"));
+    //           return;
+    //         }
+    //       }
+
+    //       final updatedPosts = List.of(currentState.posts);
+    //       updatedPosts[postIndex] = updatedPost;
+
+    //       emit(CommentAdded(comment: newComment));
+    //       emit(FeedLoaded(posts: updatedPosts));
+    //     });
+    //   });
+
+    //   on<ToggleLikePost>((event, emit) async {
+    //     if (state is! FeedLoaded) return;
+
+    //     final currentState = state as FeedLoaded;
+
+    //     final res = await likePost(event.postId, event.isCurrentlyLiked);
+
+    //     res.fold(
+    //       (failure) {
+    //         emit(currentState);
+    //       },
+    //       (response) {
+    //         final updatedPosts = currentState.posts.map((p) {
+    //           if (p.id == event.postId) {
+    //             return p.copyWith(
+    //               isLiked: response['is_liked'],
+    //               likeCount: response['like_count'],
+    //             );
+    //           }
+    //           return p;
+    //         }).toList();
+    //         emit(FeedLoaded(posts: updatedPosts));
+    //       },
+    //     );
+    //   });
+
+    //   on<GetPostRepliesEvent>((event, emit) async {
+    //     final currentState = state as FeedLoaded;
+    //     final posts = currentState.posts;
+    //     final postIndex = posts.indexWhere((p) => p.id == event.postId);
+    //     emit(RepliesLoading(post: posts[postIndex]));
+
+    //     if (postIndex == -1) return;
+
+    //     final result = await cachePostReplies(event.postId);
+
+    //     result.fold(
+    //       (failure) {
+    //         emit(RepliesError(failure.message));
+    //       },
+    //       (replies) async {
+    //         final postToUpdate = posts[postIndex];
+    //         final updatedPost = postToUpdate.copyWith(replies: replies);
+
+    //         final newPosts = List<Post>.from(posts);
+    //         newPosts[postIndex] = updatedPost;
+
+    //         emit(FeedLoaded(posts: newPosts));
+    //       },
+    //     );
+    //   });
   }
 
   Future<void> _onLoadFeed(LoadFeedEvent event, Emitter<FeedState> emit) async {
@@ -230,6 +383,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
       authorId: event.authorId,
       communityId: event.communityId,
       content: event.content,
+      poll: event.poll,
     );
 
     await result.fold(
@@ -438,6 +592,74 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         }
       },
     );
+  }
+
+  /// Monotonic per-post counter so that when several poll mutations for the
+  /// same post are in flight (events run concurrently), only the response to
+  /// the most recently dispatched one is applied. The server uses replace
+  /// semantics, so the latest request always reflects the user's intent.
+  final Map<int, int> _pollMutationSeq = {};
+
+  int _nextPollSeq(int postId) =>
+      _pollMutationSeq[postId] = (_pollMutationSeq[postId] ?? 0) + 1;
+
+  bool _isLatestPollSeq(int postId, int seq) => _pollMutationSeq[postId] == seq;
+
+  /// Shared success/failure handling for poll mutations.
+  ///
+  /// The feed list is never mutated optimistically (only the card's
+  /// [PostCubit] is), so on failure we only need to signal the rollback via
+  /// [PollVoteError] and then re-emit the state that was current so the feed
+  /// doesn't get stuck on the error state.
+  void _applyPollMutation(
+    Emitter<FeedState> emit,
+    Either<Failure, Post> result, {
+    required Post originalPost,
+  }) {
+    final current = state;
+    result.fold(
+      (failure) {
+        _logger.e('Poll mutation failed: ${failure.message}');
+        emit(PollVoteError(post: originalPost, message: failure.message));
+        emit(current);
+      },
+      (updatedPost) {
+        if (current is FeedLoaded) {
+          final updatedPosts = current.posts.map((p) {
+            return p.id == updatedPost.id ? updatedPost : p;
+          }).toList();
+          emit(current.copyWith(posts: updatedPosts));
+        }
+      },
+    );
+  }
+
+  Future<void> _onVoteOnPoll(
+    VoteOnPollEvent event,
+    Emitter<FeedState> emit,
+  ) async {
+    final seq = _nextPollSeq(event.post.id);
+    final result = await voteOnPoll(
+      post: event.post,
+      optionIds: event.optionIds,
+      voterId: event.voterId,
+    );
+    // A newer vote for this post superseded us; its response wins.
+    if (!_isLatestPollSeq(event.post.id, seq)) return;
+    _applyPollMutation(emit, result, originalPost: event.post);
+  }
+
+  Future<void> _onRetractPollVote(
+    RetractPollVoteEvent event,
+    Emitter<FeedState> emit,
+  ) async {
+    final seq = _nextPollSeq(event.post.id);
+    final result = await retractPollVote(
+      post: event.post,
+      voterId: event.voterId,
+    );
+    if (!_isLatestPollSeq(event.post.id, seq)) return;
+    _applyPollMutation(emit, result, originalPost: event.post);
   }
 
   Future<void> _onCheckFeedLikeStatuses(

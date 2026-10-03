@@ -157,6 +157,10 @@ extension AppDatabaseExtension on AppDataBase {
     // installs in case a later migration needs to recover them.
   }
 
+  Future<void> migrate39To40(Migrator m) async {
+    await m.addColumn(posts, posts.poll);
+  }
+
   Future<void> _createRetiredCourseTables(Migrator m) async {
     // Keep the v23-to-v24 transition valid without restoring the retired Dart
     // models to the current database API.
