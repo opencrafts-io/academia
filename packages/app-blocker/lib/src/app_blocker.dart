@@ -55,7 +55,7 @@ class AppBlocker {
 
   /// Checks whether the required permissions are granted.
   ///
-  /// On Android, checks Accessibility Service and query packages permissions.
+  /// On Android, checks Accessibility Service and exact-alarm permissions.
   /// On iOS, checks FamilyControls authorization status.
   Future<BlockerPermissionStatus> checkPermission() {
     return _platform.checkPermission();

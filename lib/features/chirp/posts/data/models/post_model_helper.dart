@@ -14,6 +14,7 @@ extension PostApiDtoMapper on PostApiDto {
     viewsCount: viewsCount,
     commentCount: commentCount,
     comments: comments.map((c) => c.toData().toJson()).toList(),
+    poll: poll,
     createdAt: createdAt,
     updatedAt: updatedAt,
   );
@@ -40,6 +41,7 @@ extension PostModelHelper on db.Post {
     comments: (comments.isNotEmpty)
         ? comments.map((item) => db.Comment.fromJson(item).toEntity()).toList()
         : const [],
+    poll: _parsePoll(poll),
     createdAt: createdAt,
     updatedAt: updatedAt,
   );
@@ -62,7 +64,19 @@ extension PostEntityHelper on Post {
     comments: comments.isNotEmpty
         ? comments.map((e) => e.toData().toJson()).toList()
         : const [],
+    poll: poll?.toData().toJson(),
     createdAt: createdAt,
     updatedAt: updatedAt,
   );
+}
+
+/// A malformed cached poll blob must not take the whole post down with it —
+/// degrade to "no poll" instead.
+Poll? _parsePoll(Map<String, dynamic>? json) {
+  if (json == null || json.isEmpty) return null;
+  try {
+    return PollData.fromJson(json).toEntity();
+  } catch (_) {
+    return null;
+  }
 }

@@ -33,6 +33,8 @@ abstract class SettingsState with _$SettingsState {
     @Default('en') String language,
     @Default(true) bool showDailyScheduleOnFeed,
     @Default(true) bool chirpMuteVideos,
+    @Default(true) bool courseRemindersEnabled,
+    @Default([1440, 60, 0]) List<int?> courseReminderMinutes,
   }) = _SettingsState;
 
   factory SettingsState.fromJson(Map<String, dynamic> json) =>

@@ -10,16 +10,19 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 
+import 'package:database/app_database_v2.dart' as _i547;
+import 'package:database/daos/course_dao.dart' as _i665;
+import 'package:database/daos/entitlement_dao.dart' as _i979;
+import 'package:database/daos/lock_in_dao.dart' as _i951;
+import 'package:database/daos/order_dao.dart' as _i272;
+import 'package:database/daos/plan_dao.dart' as _i143;
+import 'package:database/daos/subscription_dao.dart' as _i200;
+import 'package:database/daos/todo_item_dao.dart' as _i650;
+import 'package:database/daos/todo_list_dao.dart' as _i606;
+import 'package:database/daos/todo_tag_dao.dart' as _i346;
+import 'package:database/di/database_module.dart' as _i975;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
-
-import '../app_database_v2.dart' as _i883;
-import '../daos/entitlement_dao.dart' as _i344;
-import '../daos/lock_in_dao.dart' as _i524;
-import '../daos/order_dao.dart' as _i237;
-import '../daos/plan_dao.dart' as _i433;
-import '../daos/subscription_dao.dart' as _i951;
-import 'database_module.dart' as _i384;
 
 // initializes the registration of main-scope dependencies inside of GetIt
 _i174.GetIt initAppDatabaseV2(
@@ -29,17 +32,27 @@ _i174.GetIt initAppDatabaseV2(
 }) {
   final gh = _i526.GetItHelper(getIt, environment, environmentFilter);
   final databaseModule = _$DatabaseModule();
-  gh.lazySingleton<_i883.AppDatabaseV2>(() => databaseModule.appDatabaseV2());
-  gh.factory<_i344.EntitlementDao>(
-    () => _i344.EntitlementDao(gh<_i883.AppDatabaseV2>()),
+  gh.lazySingleton<_i547.AppDatabaseV2>(() => databaseModule.appDatabaseV2());
+  gh.factory<_i665.CourseDao>(() => _i665.CourseDao(gh<_i547.AppDatabaseV2>()));
+  gh.factory<_i979.EntitlementDao>(
+    () => _i979.EntitlementDao(gh<_i547.AppDatabaseV2>()),
   );
-  gh.factory<_i524.LockInDao>(() => _i524.LockInDao(gh<_i883.AppDatabaseV2>()));
-  gh.factory<_i237.OrderDao>(() => _i237.OrderDao(gh<_i883.AppDatabaseV2>()));
-  gh.factory<_i433.PlanDao>(() => _i433.PlanDao(gh<_i883.AppDatabaseV2>()));
-  gh.factory<_i951.SubscriptionDao>(
-    () => _i951.SubscriptionDao(gh<_i883.AppDatabaseV2>()),
+  gh.factory<_i951.LockInDao>(() => _i951.LockInDao(gh<_i547.AppDatabaseV2>()));
+  gh.factory<_i272.OrderDao>(() => _i272.OrderDao(gh<_i547.AppDatabaseV2>()));
+  gh.factory<_i143.PlanDao>(() => _i143.PlanDao(gh<_i547.AppDatabaseV2>()));
+  gh.factory<_i200.SubscriptionDao>(
+    () => _i200.SubscriptionDao(gh<_i547.AppDatabaseV2>()),
+  );
+  gh.factory<_i650.TodoItemDao>(
+    () => _i650.TodoItemDao(gh<_i547.AppDatabaseV2>()),
+  );
+  gh.factory<_i606.TodoListDao>(
+    () => _i606.TodoListDao(gh<_i547.AppDatabaseV2>()),
+  );
+  gh.factory<_i346.TodoTagDao>(
+    () => _i346.TodoTagDao(gh<_i547.AppDatabaseV2>()),
   );
   return getIt;
 }
 
-class _$DatabaseModule extends _i384.DatabaseModule {}
+class _$DatabaseModule extends _i975.DatabaseModule {}

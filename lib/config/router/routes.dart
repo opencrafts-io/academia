@@ -1,14 +1,16 @@
 import 'package:academia/core/core.dart';
-import 'package:academia/features/course/course.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/semester/semester.dart';
 import 'package:academia/injection_container.dart';
+import 'package:academia/core/integration/agenda_calendar/agenda_home_page.dart';
+import 'package:agenda/agenda.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:academia/features/features.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 import 'package:lock_in/lock_in.dart';
+import 'package:courses/courses.dart' as courses_package;
 
 part 'routes.g.dart';
 
@@ -79,7 +81,7 @@ class LockInRoute extends GoRouteData with $LockInRoute {
 class CalendarRoute extends GoRouteData with $CalendarRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return AgendaHomePage();
+    return const AgendaHomePage();
   }
 }
 
@@ -88,48 +90,73 @@ class AgendaItemViewRoute extends GoRouteData with $AgendaItemViewRoute {
   String? id;
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return CustomTransitionPage(
-      key: state.pageKey,
-      child: AgendaItemViewPage(agendaEventID: id),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        var tween = Tween(
-          begin: Offset(0.0, 1.0),
-          end: Offset.zero,
-        ).chain(CurveTween(curve: Curves.easeInOut));
-        var offsetAnimation = animation.drive(tween);
-
-        return SlideTransition(position: offsetAnimation, child: child);
-      },
+    return _agendaSheetPage(
+      context,
+      state,
+      AgendaItemViewPage(agendaEventID: id),
     );
   }
 }
 
 class CreateAgendaEventRoute extends GoRouteData with $CreateAgendaEventRoute {
   @override
-  CustomTransitionPage<void> buildPage(
-    BuildContext context,
-    GoRouterState state,
-  ) {
-    return CustomTransitionPage<void>(
-      key: state.pageKey,
-      child: const CreateAgendaEventPage(),
-      transitionsBuilder:
-          (
-            BuildContext context,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-            Widget child,
-          ) {
-            var tween = Tween(
-              begin: Offset(0.0, 1.0),
-              end: Offset.zero,
-            ).chain(CurveTween(curve: Curves.easeInOut));
-            var offsetAnimation = animation.drive(tween);
-
-            return SlideTransition(position: offsetAnimation, child: child);
-          },
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    final extra = state.extra;
+    return _agendaSheetPage(
+      context,
+      state,
+      CreateAgendaEventPage(
+        event: extra is AgendaEvent ? extra : null,
+        initialDate: extra is DateTime ? extra : null,
+      ),
     );
   }
+}
+
+Page<void> _agendaSheetPage(
+  BuildContext context,
+  GoRouterState state,
+  Widget child,
+) {
+  return ModalSheetPage(
+    key: state.pageKey,
+    swipeDismissible: true,
+    transitionCurve: Curves.easeOutCubic,
+    viewportBuilder: (context, child) => SheetViewport(
+      padding: EdgeInsets.only(
+        top: MediaQuery.viewPaddingOf(context).top,
+        bottom: MediaQuery.viewPaddingOf(context).bottom,
+      ),
+      child: child,
+    ),
+    child: SheetKeyboardDismissible(
+      dismissBehavior: SheetKeyboardDismissBehavior.onDragDown(
+        isContentScrollAware: true,
+      ),
+      child: Sheet(
+        scrollConfiguration: const SheetScrollConfiguration(),
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.viewInsetsOf(context).bottom,
+        ),
+        decoration: const MaterialSheetDecoration(
+          size: SheetSize.fit,
+          clipBehavior: Clip.antiAlias,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+          ),
+        ),
+        physics: BouncingSheetPhysics(),
+        child: LayoutBuilder(
+          builder: (context, constraints) => ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: constraints.maxHeight * 0.94,
+            ),
+            child: child,
+          ),
+        ),
+      ),
+    ),
+  );
 }
 
 // class MeteorRoute extends GoRouteData with $MeteorRoute {
@@ -190,7 +217,10 @@ class AuthRoute extends GoRouteData with $AuthRoute {
 
 @TypedGoRoute<ProfileRoute>(
   path: "/profile",
-  routes: [TypedGoRoute<LinkInstitutionProfileRoute>(path: "link-institution")],
+  routes: [
+    TypedGoRoute<LinkInstitutionProfileRoute>(path: "link-institution"),
+    TypedGoRoute<PasswordSettingsRoute>(path: "password-settings"),
+  ],
 )
 class ProfileRoute extends GoRouteData with $ProfileRoute {
   @override
@@ -238,6 +268,39 @@ class LinkInstitutionProfileRoute extends GoRouteData
   }
 }
 
+class PasswordSettingsRoute extends GoRouteData with $PasswordSettingsRoute {
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return ModalSheetPage(
+      fullscreenDialog: true,
+      barrierDismissible: false,
+      swipeDismissible: true,
+      viewportBuilder: (context, child) =>
+          SheetViewport(padding: EdgeInsets.zero, child: child),
+      child: SheetKeyboardDismissible(
+        dismissBehavior: SheetKeyboardDismissBehavior.onDragDown(
+          isContentScrollAware: true,
+        ),
+        child: Sheet(
+          scrollConfiguration: const SheetScrollConfiguration(),
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.viewInsetsOf(context).bottom,
+          ),
+          decoration: MaterialSheetDecoration(
+            size: SheetSize.fit,
+            clipBehavior: Clip.antiAlias,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            ),
+          ),
+          physics: BouncingSheetPhysics(),
+          child: PasswordSettingsSheet(setPassword: sl<SetPasswordUsecase>()),
+        ),
+      ),
+    );
+  }
+}
+
 @TypedGoRoute<CompleteProfileRoute>(path: "/complete-profile")
 class CompleteProfileRoute extends GoRouteData with $CompleteProfileRoute {
   @override
@@ -258,7 +321,6 @@ class LinkInstitutionRequiredPageRoute extends GoRouteData
     return const LinkInstitutionRequiredPage();
   }
 }
-
 
 @TypedGoRoute<ShereheRoute>(
   path: "/sherehe",
@@ -846,216 +908,6 @@ class QrCodeScannerRoute extends GoRouteData with $QrCodeScannerRoute {
   }
 }
 
-@TypedGoRoute<TodosRoute>(
-  path: "/todos",
-  routes: [
-    TypedGoRoute<CreateTodoListRoute>(path: "create-tasklist"),
-    TypedGoRoute<ViewTaskListsRoute>(
-      path: "tasklist",
-      routes: [TypedGoRoute<ViewTaskListRoute>(path: ":taskListId")],
-    ),
-
-    TypedGoRoute<CreateTodoItemRoute>(path: "create-todo-item"),
-    TypedGoRoute<UpdateTodoItemRoute>(path: "todo-item/:todoLocalID"),
-    TypedGoRoute<PomodoroTimerRoute>(path: "pomodoro-timer"),
-  ],
-)
-class TodosRoute extends GoRouteData with $TodosRoute {
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return TodoHomeScreen();
-  }
-}
-
-class CreateTodoListRoute extends GoRouteData with $CreateTodoListRoute {
-  @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return ModalSheetPage(
-      fullscreenDialog: true,
-      swipeDismissible: true,
-      transitionCurve: Curves.bounceIn,
-      viewportBuilder: (context, child) =>
-          SheetViewport(padding: EdgeInsets.zero, child: child),
-      child: SheetKeyboardDismissible(
-        dismissBehavior: SheetKeyboardDismissBehavior.onDragDown(
-          isContentScrollAware: true,
-        ),
-        child: Sheet(
-          scrollConfiguration: const SheetScrollConfiguration(),
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.viewInsetsOf(context).bottom,
-          ),
-          decoration: MaterialSheetDecoration(
-            size: SheetSize.stretch,
-            clipBehavior: Clip.antiAlias,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-            ),
-          ),
-          physics: BouncingSheetPhysics(),
-          child: CreateTodoListScreen(),
-        ),
-      ),
-    );
-  }
-}
-
-class ViewTaskListRoute extends GoRouteData with $ViewTaskListRoute {
-  final int taskListId;
-  ViewTaskListRoute({required this.taskListId});
-  @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return ModalSheetPage(
-      fullscreenDialog: true,
-      swipeDismissible: true,
-      viewportBuilder: (context, child) =>
-          SheetViewport(padding: EdgeInsets.zero, child: child),
-      child: SheetKeyboardDismissible(
-        dismissBehavior: SheetKeyboardDismissBehavior.onDragDown(
-          isContentScrollAware: true,
-        ),
-        child: Sheet(
-          scrollConfiguration: const SheetScrollConfiguration(),
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.viewInsetsOf(context).bottom,
-          ),
-          decoration: MaterialSheetDecoration(
-            size: SheetSize.fit,
-            clipBehavior: Clip.antiAlias,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-            ),
-          ),
-          physics: BouncingSheetPhysics(),
-
-          child: ViewTodoListScreen(todoListId: taskListId),
-        ),
-      ),
-    );
-  }
-}
-
-class ViewTaskListsRoute extends GoRouteData with $ViewTaskListsRoute {
-  @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return ModalSheetPage(
-      fullscreenDialog: true,
-      swipeDismissible: true,
-      viewportBuilder: (context, child) => SheetViewport(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.viewInsetsOf(context).bottom,
-        ),
-        child: child,
-      ),
-      child: SheetKeyboardDismissible(
-        dismissBehavior: SheetKeyboardDismissBehavior.onDragDown(
-          isContentScrollAware: true,
-        ),
-        child: Sheet(
-          scrollConfiguration: const SheetScrollConfiguration(),
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.viewInsetsOf(context).bottom,
-          ),
-          decoration: MaterialSheetDecoration(
-            size: SheetSize.fit,
-            clipBehavior: Clip.antiAlias,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-            ),
-          ),
-          physics: BouncingSheetPhysics(),
-
-          child: CreateTodoListScreen(),
-        ),
-      ),
-    );
-  }
-}
-
-class CreateTodoItemRoute extends GoRouteData with $CreateTodoItemRoute {
-  final int? taskListLocalID;
-  CreateTodoItemRoute({this.taskListLocalID});
-
-  @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return ModalSheetPage(
-      fullscreenDialog: false,
-      swipeDismissible: true,
-      transitionCurve: Curves.easeIn,
-      viewportBuilder: (context, child) =>
-          SheetViewport(padding: EdgeInsets.zero, child: child),
-      child: SheetKeyboardDismissible(
-        dismissBehavior: SheetKeyboardDismissBehavior.onDragDown(
-          isContentScrollAware: true,
-        ),
-        child: Sheet(
-          scrollConfiguration: const SheetScrollConfiguration(),
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.viewInsetsOf(context).bottom,
-          ),
-          decoration: MaterialSheetDecoration(
-            size: SheetSize.fit,
-            clipBehavior: Clip.antiAlias,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-            ),
-          ),
-          physics: BouncingSheetPhysics(),
-          child: CreateTodoItemScreen(taskListLocalID: taskListLocalID),
-        ),
-      ),
-    );
-  }
-}
-
-class PomodoroTimerRoute extends GoRouteData with $PomodoroTimerRoute {
-  final int? todoLocalID;
-
-  const PomodoroTimerRoute({this.todoLocalID});
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return PomodoroTimerScreen(todoLocalId: todoLocalID);
-  }
-}
-
-class UpdateTodoItemRoute extends GoRouteData with $UpdateTodoItemRoute {
-  final int todoLocalID;
-
-  const UpdateTodoItemRoute({required this.todoLocalID});
-
-  @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return ModalSheetPage(
-      fullscreenDialog: false,
-      swipeDismissible: true,
-      transitionCurve: Curves.easeIn,
-      viewportBuilder: (context, child) =>
-          SheetViewport(padding: EdgeInsets.zero, child: child),
-      child: SheetKeyboardDismissible(
-        dismissBehavior: SheetKeyboardDismissBehavior.onDragDown(
-          isContentScrollAware: true,
-        ),
-        child: Sheet(
-          scrollConfiguration: const SheetScrollConfiguration(),
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.viewInsetsOf(context).bottom,
-          ),
-          decoration: MaterialSheetDecoration(
-            size: SheetSize.fit,
-            clipBehavior: Clip.antiAlias,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-            ),
-          ),
-          physics: BouncingSheetPhysics(),
-          child: UpdateTodoItemScreen(todoLocalId: todoLocalID),
-        ),
-      ),
-    );
-  }
-}
-
 @TypedGoRoute<CommunitiesRoute>(
   path: "/communities/:communityId",
   routes: [
@@ -1400,7 +1252,7 @@ class EditSemesterRoute extends GoRouteData with $EditSemesterRoute {
 }
 
 @TypedGoRoute<CoursesPageRoute>(
-  path: "/courses",
+  path: "/local-courses",
   routes: [
     TypedGoRoute<AddCoursesRoute>(path: "create"),
     TypedGoRoute<ViewCourseRoute>(path: "view/:courseId"),
@@ -1408,94 +1260,24 @@ class EditSemesterRoute extends GoRouteData with $EditSemesterRoute {
 )
 class CoursesPageRoute extends GoRouteData with $CoursesPageRoute {
   @override
-  CustomTransitionPage<void> buildPage(
-    BuildContext context,
-    GoRouterState state,
-  ) {
-    return CustomTransitionPage<void>(
-      key: state.pageKey,
-      child: CourseListPage(),
-      transitionDuration: Duration(milliseconds: 300),
-      transitionsBuilder:
-          (
-            BuildContext context,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-            Widget child,
-          ) {
-            var tween = Tween(
-              begin: Offset(0.0, 1.0),
-              end: Offset.zero,
-            ).chain(CurveTween(curve: Curves.easeInOutQuad));
-            var offsetAnimation = animation.drive(tween);
-
-            return SlideTransition(position: offsetAnimation, child: child);
-          },
-    );
+  String? redirect(BuildContext context, GoRouterState state) {
+    if (state.uri.path == '/local-courses') {
+      return const courses_package.CourseListRoute().location;
+    }
+    return null;
   }
 }
 
 class AddCoursesRoute extends GoRouteData with $AddCoursesRoute {
   @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return ModalSheetPage(
-      fullscreenDialog: false,
-      swipeDismissible: true,
-      transitionCurve: Curves.bounceIn,
-      viewportBuilder: (context, child) =>
-          SheetViewport(padding: EdgeInsets.zero, child: child),
-      child: SheetKeyboardDismissible(
-        dismissBehavior: SheetKeyboardDismissBehavior.onDragDown(
-          isContentScrollAware: true,
-        ),
-        child: Sheet(
-          scrollConfiguration: const SheetScrollConfiguration(),
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.viewInsetsOf(context).bottom,
-          ),
-          decoration: MaterialSheetDecoration(
-            size: SheetSize.fit,
-            clipBehavior: Clip.antiAlias,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-            ),
-          ),
-          physics: BouncingSheetPhysics(),
-
-          child: const AddCourseSheet(),
-        ),
-      ),
-    );
-  }
+  String? redirect(BuildContext context, GoRouterState state) =>
+      const courses_package.CreateCourseRoute().location;
 }
 
 class ViewCourseRoute extends GoRouteData with $ViewCourseRoute {
   final String courseId;
   const ViewCourseRoute({required this.courseId});
   @override
-  CustomTransitionPage<void> buildPage(
-    BuildContext context,
-    GoRouterState state,
-  ) {
-    return CustomTransitionPage<void>(
-      key: state.pageKey,
-      child: CourseDetailPage(courseId: courseId),
-      transitionDuration: Duration(milliseconds: 300),
-      transitionsBuilder:
-          (
-            BuildContext context,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-            Widget child,
-          ) {
-            var tween = Tween(
-              begin: Offset(0.0, 1.0),
-              end: Offset.zero,
-            ).chain(CurveTween(curve: Curves.easeInOutQuad));
-            var offsetAnimation = animation.drive(tween);
-
-            return SlideTransition(position: offsetAnimation, child: child);
-          },
-    );
-  }
+  String? redirect(BuildContext context, GoRouterState state) =>
+      courses_package.CourseDetailRoute(courseId: courseId).location;
 }

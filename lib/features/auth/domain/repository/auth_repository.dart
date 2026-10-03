@@ -12,6 +12,13 @@ abstract class AuthRepository {
     String deviceName = "Unknown Device",
   });
   Future<Either<Failure, Token>> signInWithSpotify();
+  Future<Either<Failure, Token>> signInWithPassword({
+    required String email,
+    required String password,
+    String? deviceName,
+    String? deviceToken,
+  });
+  Future<Either<Failure, void>> setPassword(String password);
   Future<Either<Failure, List<Token>>> getPreviousAuthState();
   Future<Either<Failure, Token>> refreshVerisafeToken(Token token);
   Future<Either<Failure, void>> signout();

@@ -5,12 +5,11 @@ import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/injection_container.dart';
 import 'package:drift/drift.dart' as drift;
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:time_since/time_since.dart';
+
 import '../widgets/linked_institutions_list.dart';
 
 class ProfileView extends StatefulWidget {
@@ -115,31 +114,6 @@ class _ProfileViewState extends State<ProfileView> {
                     pinned: true,
                     floating: true,
                     title: Text("Profile"),
-                    actions: [
-                      Visibility(
-                        visible: kDebugMode,
-                        child: IconButton(
-                          icon: Icon(Icons.token),
-                          onPressed: () {
-                            final token =
-                                (BlocProvider.of<AuthBloc>(context).state
-                                        as AuthAuthenticated)
-                                    .token;
-                            Clipboard.setData(
-                              ClipboardData(text: token.accessToken),
-                            );
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  "Debug token copied to system clipboard",
-                                ),
-                                behavior: SnackBarBehavior.floating,
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
                   ),
 
                   SliverToBoxAdapter(
@@ -173,9 +147,9 @@ class _ProfileViewState extends State<ProfileView> {
                               ),
                             ),
                             Card.filled(
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.secondaryContainer,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .secondaryContainer,
                               margin: EdgeInsets.all(0.5),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadiusGeometry.vertical(
@@ -194,9 +168,9 @@ class _ProfileViewState extends State<ProfileView> {
                               ),
                             ),
                             Card.filled(
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.secondaryContainer,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .secondaryContainer,
                               margin: EdgeInsets.all(0.5),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadiusGeometry.zero,
@@ -215,9 +189,9 @@ class _ProfileViewState extends State<ProfileView> {
                               ),
                             ),
                             Card.filled(
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.secondaryContainer,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .secondaryContainer,
                               margin: EdgeInsets.all(0.5),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadiusGeometry.all(
@@ -241,9 +215,9 @@ class _ProfileViewState extends State<ProfileView> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadiusGeometry.zero,
                               ),
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.secondaryContainer,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .secondaryContainer,
                               margin: EdgeInsets.all(0.5),
                               elevation: 0,
                               child: ListTile(
@@ -256,9 +230,9 @@ class _ProfileViewState extends State<ProfileView> {
                               ),
                             ),
                             Card.filled(
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.secondaryContainer,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .secondaryContainer,
                               margin: EdgeInsets.all(0.5),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadiusGeometry.vertical(
@@ -286,9 +260,9 @@ class _ProfileViewState extends State<ProfileView> {
                               ),
                             ),
                             Card.filled(
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.secondaryContainer,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .secondaryContainer,
                               margin: EdgeInsets.all(0.5),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadiusGeometry.circular(8),
@@ -327,9 +301,26 @@ class _ProfileViewState extends State<ProfileView> {
                             ),
 
                             Card.filled(
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.errorContainer,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .secondaryContainer,
+                              margin: EdgeInsets.symmetric(vertical: 8),
+                              child: ListTile(
+                                leading: Icon(Icons.password_outlined),
+                                title: Text("Password and sign-in"),
+                                subtitle: Text(
+                                  state.profile.email.isEmpty
+                                      ? "Set or change your account password"
+                                      : "Use ${state.profile.email} to sign in",
+                                ),
+                                onTap: () => _showPasswordSettings(context),
+                              ),
+                            ),
+
+                            Card.filled(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .errorContainer,
                               clipBehavior: Clip.hardEdge,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
@@ -376,6 +367,17 @@ class _ProfileViewState extends State<ProfileView> {
             },
           ),
         ),
+      ),
+    );
+  }
+
+  Future<void> _showPasswordSettings(BuildContext context) async {
+    final saved = await PasswordSettingsRoute().push<bool>(context);
+    if (!context.mounted || saved != true) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Password saved."),
+        behavior: SnackBarBehavior.floating,
       ),
     );
   }
@@ -444,14 +446,12 @@ class _ProfileViewState extends State<ProfileView> {
             Container(
               padding: EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Theme.of(
-                  context,
-                ).colorScheme.error.withValues(alpha: 0.1),
+                color: Theme.of(context).colorScheme.error
+                    .withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.error.withValues(alpha: 0.3),
+                  color: Theme.of(context).colorScheme.error
+                      .withValues(alpha: 0.3),
                 ),
               ),
               child: Row(

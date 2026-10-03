@@ -30,6 +30,7 @@ import video_player_avfoundation
 import wakelock_plus
 import webview_flutter_wkwebview
 import window_to_front
+import workmanager_apple
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
   AwesomeNotificationsPlugin.register(with: registry.registrar(forPlugin: "AwesomeNotificationsPlugin"))
@@ -57,4 +58,5 @@ func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
   WakelockPlusMacosPlugin.register(with: registry.registrar(forPlugin: "WakelockPlusMacosPlugin"))
   WebViewFlutterPlugin.register(with: registry.registrar(forPlugin: "WebViewFlutterPlugin"))
   WindowToFrontPlugin.register(with: registry.registrar(forPlugin: "WindowToFrontPlugin"))
+  WorkmanagerPlugin.register(with: registry.registrar(forPlugin: "WorkmanagerPlugin"))
 }
