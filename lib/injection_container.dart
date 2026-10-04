@@ -15,6 +15,8 @@ import 'package:get_it/get_it.dart';
 import 'package:lock_in/lock_in.dart';
 import 'package:courses/courses.dart' as courses;
 import 'package:academia/core/institution/verisafe_institution_lookup.dart';
+import 'package:study_tools/study_tools.dart' as study_tools;
+import 'package:billing/billing.dart' as billing;
 
 final sl = GetIt.instance;
 
@@ -648,6 +650,35 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
       sl<InstitutionRemoteDatasource>(),
     ),
   );
+  study_tools.configureStudyToolsDependencies(
+    sl,
+    flavor,
+    accountId: () {
+      final state = sl<ProfileBloc>().state;
+      return state is ProfileLoadedState ? state.profile.id : 'unresolved';
+    },
+  );
+  study_tools.StudyToolsHost.loadCourses = () async {
+    final cubit = sl<courses.CourseCubit>();
+    await cubit.loadActive();
+    final options = cubit.state.courses
+        .map(
+          (course) =>
+              study_tools.StudyCourseOption(id: course.id, title: course.title),
+        )
+        .toList(growable: false);
+    await cubit.close();
+    return options;
+  };
+  study_tools.StudyToolsHost.openPaywall = (context) {
+    const billing.PaywallRoute(featureName: 'Study Tools').push(context);
+  };
+  courses.CourseHost.openMaterials = (context, course) async {
+    await study_tools.StudyToolsRoute(
+      courseId: course.id,
+      courseLabel: course.title,
+    ).push(context);
+  };
 
   sl.registerFactory<InstitutionCommandLocalDatasource>(
     () => InstitutionCommandLocalDatasource(appDataBase: sl()),

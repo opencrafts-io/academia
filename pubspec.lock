@@ -2175,6 +2175,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.1"
+  study_tools:
+    dependency: "direct main"
+    description:
+      path: "packages/study_tools"
+      relative: true
+    source: path
+    version: "0.0.0"
   synchronized:
     dependency: transitive
     description:

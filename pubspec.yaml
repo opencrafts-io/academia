@@ -119,6 +119,8 @@ dependencies:
     path: packages/core/
   courses:
     path: packages/courses/
+  study_tools:
+    path: packages/study_tools/
   # database v2
   database:
     path: packages/database/

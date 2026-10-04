@@ -10,8 +10,10 @@ import 'package:sliver_tools/sliver_tools.dart';
 import 'package:academia/injection_container.dart';
 import 'package:courses/courses.dart' as courses;
 import 'package:todos/todos.dart' as todos;
+import 'package:study_tools/study_tools.dart' as study_tools;
 
 import 'package:academia/features/essentials/widgets/essential_category_tile.dart';
+import 'package:academia/features/essentials/widgets/essential_tools_grid.dart';
 import 'package:academia/features/essentials/widgets/pomodoro_essentials_card.dart';
 
 class EssentialsPage extends StatefulWidget {
@@ -58,6 +60,11 @@ class _EssentialsPageState extends State<EssentialsPage> {
       ontap: _navigateToExamTimetable,
       iconPath: Assets.icons.document.keyName,
     ),
+    _EssentialItem(
+      title: "Study Tools",
+      ontap: () => const study_tools.StudyToolsRoute().push(context),
+      iconPath: Assets.icons.book.keyName,
+    ),
   ];
 
   void _navigateToExamTimetable() async {
@@ -102,48 +109,19 @@ class _EssentialsPageState extends State<EssentialsPage> {
   /// to scan, regardless of the screen width.
   Widget _buildToolsGrid(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    const columnCount = 2;
-    const cornerRadius = Radius.circular(8);
-    final lastRow = (essentialItems.length - 1) ~/ columnCount;
-
-    Widget tile(int index) {
-      final item = essentialItems[index];
-      final row = index ~/ columnCount;
-      final column = index % columnCount;
-
-      return EssentialCategoryTile(
-        title: item.title,
-        iconPath: item.iconPath,
-        onTap: item.ontap,
-        color: colorScheme.surfaceContainerHigh,
-        onColor: colorScheme.onSurface,
-        borderRadius: BorderRadius.only(
-          topLeft: row == 0 && column == 0 ? cornerRadius : Radius.zero,
-          topRight: row == 0 && column == columnCount - 1
-              ? cornerRadius
-              : Radius.zero,
-          bottomLeft: row == lastRow && column == 0
-              ? cornerRadius
-              : Radius.zero,
-          bottomRight: row == lastRow && column == columnCount - 1
-              ? cornerRadius
-              : Radius.zero,
-        ),
-      );
-    }
-
-    return GridView.builder(
-      padding: .symmetric(vertical: 16),
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
+    return EssentialToolsGrid(
       itemCount: essentialItems.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: columnCount,
-        mainAxisExtent: 64,
-        crossAxisSpacing: 2,
-        mainAxisSpacing: 2,
-      ),
-      itemBuilder: (context, index) => tile(index),
+      itemBuilder: (context, index, borderRadius) {
+        final item = essentialItems[index];
+        return EssentialCategoryTile(
+          title: item.title,
+          iconPath: item.iconPath,
+          onTap: item.ontap,
+          color: colorScheme.surfaceContainerHigh,
+          onColor: colorScheme.onSurface,
+          borderRadius: borderRadius,
+        );
+      },
     );
   }
 
