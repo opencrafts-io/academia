@@ -179,15 +179,37 @@ extension Migrations on GeneratedDatabase {
       await m.createTable(db.todoItemTags);
     }
     if (from < 8 && to >= 8) {
-      await m.addColumn(db.courses, db.courses.serverId);
-      await m.addColumn(db.courses, db.courses.idempotencyKey);
-      await m.addColumn(db.courses, db.courses.syncStatus);
-      await m.addColumn(db.courses, db.courses.lastSyncError);
-      await m.addColumn(db.courses, db.courses.color);
+      final courseColumns =
+          (await db.customSelect('PRAGMA table_info(courses)').get())
+              .map((row) => row.read<String>('name'))
+              .toSet();
+
+      if (!courseColumns.contains('server_id')) {
+        await m.addColumn(db.courses, db.courses.serverId);
+      }
+      if (!courseColumns.contains('idempotency_key')) {
+        await m.addColumn(db.courses, db.courses.idempotencyKey);
+      }
+      if (!courseColumns.contains('sync_status')) {
+        await m.addColumn(db.courses, db.courses.syncStatus);
+      }
+      if (!courseColumns.contains('last_sync_error')) {
+        await m.addColumn(db.courses, db.courses.lastSyncError);
+      }
+      if (!courseColumns.contains('color')) {
+        await m.addColumn(db.courses, db.courses.color);
+      }
       await db.customStatement(
         "UPDATE courses SET server_id = id WHERE sync_status = 'synced'",
       );
-      await m.createTable(db.scheduleEntries);
+      final scheduleTable = await db
+          .customSelect(
+            "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'schedule_entries'",
+          )
+          .getSingleOrNull();
+      if (scheduleTable == null) {
+        await m.createTable(db.scheduleEntries);
+      }
     }
   };
 }
