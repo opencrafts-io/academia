@@ -1,5 +1,4 @@
-import 'package:academia/features/agenda/data/models/agenda_event.dart';
-import 'package:academia/features/course/data/models/course.dart';
+import 'package:academia/database/tables/agenda_event.dart';
 import 'package:academia/database/tables/tables.dart';
 export 'package:academia/database/tables/tables.dart';
 import 'package:academia/features/leaderboard/data/models/leaderboard_rank.dart';
@@ -7,11 +6,7 @@ import 'package:academia/features/profile/data/models/user_profile.dart';
 import 'package:academia/features/semester/data/models/semester.dart';
 import 'package:academia/features/streaks/data/streak_activity.dart';
 import 'package:academia/features/streaks/data/streak_milestone.dart';
-import 'package:academia/features/timetable/data/models/timetable.dart';
-import 'package:academia/features/timetable/data/models/timetable_entry.dart';
 import 'package:academia/features/sherehe/data/data.dart';
-
-import 'dart:ui' show Color;
 
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
@@ -60,16 +55,6 @@ part 'database.g.dart';
     *                           SEMESTER
     ************************************************************/
     Semester,
-    /************************************************************
-    *                           COURSE
-    ************************************************************/
-    Course,
-    /************************************************************
-    *                         TIMETABLE
-    ************************************************************/
-    Timetable,
-    TimetableEntry,
-
     // Exam Timetable
     ExamTimetables,
 
@@ -101,7 +86,7 @@ class AppDataBase extends _$AppDataBase {
   AppDataBase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 38;
+  int get schemaVersion => 40;
 
   @override
   MigrationStrategy get migration {
@@ -184,6 +169,12 @@ class AppDataBase extends _$AppDataBase {
               break;
             case 37:
               await migrate37To38(m);
+              break;
+            case 38:
+              await migrate38To39(m);
+              break;
+            case 39:
+              await migrate39To40(m);
               break;
           }
         }

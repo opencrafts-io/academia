@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CourseState {
 
- List<CourseEntity> get courses; CourseEntity? get selectedCourse; bool get isLoading; String? get error;
+ List<CourseEntity> get courses; CourseEntity? get selectedCourse; bool get isLoading; String? get error; List<ScheduleEntryEntity> get weeklySchedule; bool get isScheduleLoading;
 /// Create a copy of CourseState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -27,20 +27,20 @@ $CourseStateCopyWith<CourseState> get copyWith => _$CourseStateCopyWithImpl<Cour
 @override
 bool operator ==(Object other) {
   final _this = this as CourseState;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CourseState&&const DeepCollectionEquality().equals(other.courses, _this.courses)&&(identical(other.selectedCourse, _this.selectedCourse) || other.selectedCourse == _this.selectedCourse)&&(identical(other.isLoading, _this.isLoading) || other.isLoading == _this.isLoading)&&(identical(other.error, _this.error) || other.error == _this.error));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CourseState&&const DeepCollectionEquality().equals(other.courses, _this.courses)&&(identical(other.selectedCourse, _this.selectedCourse) || other.selectedCourse == _this.selectedCourse)&&(identical(other.isLoading, _this.isLoading) || other.isLoading == _this.isLoading)&&(identical(other.error, _this.error) || other.error == _this.error)&&const DeepCollectionEquality().equals(other.weeklySchedule, _this.weeklySchedule)&&(identical(other.isScheduleLoading, _this.isScheduleLoading) || other.isScheduleLoading == _this.isScheduleLoading));
 }
 
 
 @override
 int get hashCode {
   final _this = this as CourseState;
-  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.courses),_this.selectedCourse,_this.isLoading,_this.error);
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.courses),_this.selectedCourse,_this.isLoading,_this.error,const DeepCollectionEquality().hash(_this.weeklySchedule),_this.isScheduleLoading);
 }
 
 @override
 String toString() {
   final _this = this as CourseState;
-  return 'CourseState(courses: ${_this.courses}, selectedCourse: ${_this.selectedCourse}, isLoading: ${_this.isLoading}, error: ${_this.error})';
+  return 'CourseState(courses: ${_this.courses}, selectedCourse: ${_this.selectedCourse}, isLoading: ${_this.isLoading}, error: ${_this.error}, weeklySchedule: ${_this.weeklySchedule}, isScheduleLoading: ${_this.isScheduleLoading})';
 }
 
 
@@ -51,7 +51,7 @@ abstract mixin class $CourseStateCopyWith<$Res>  {
   factory $CourseStateCopyWith(CourseState value, $Res Function(CourseState) _then) = _$CourseStateCopyWithImpl;
 @useResult
 $Res call({
- List<CourseEntity> courses, CourseEntity? selectedCourse, bool isLoading, String? error
+ List<CourseEntity> courses, CourseEntity? selectedCourse, bool isLoading, String? error, List<ScheduleEntryEntity> weeklySchedule, bool isScheduleLoading
 });
 
 
@@ -68,13 +68,15 @@ class _$CourseStateCopyWithImpl<$Res>
 
 /// Create a copy of CourseState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? courses = null,Object? selectedCourse = freezed,Object? isLoading = null,Object? error = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? courses = null,Object? selectedCourse = freezed,Object? isLoading = null,Object? error = freezed,Object? weeklySchedule = null,Object? isScheduleLoading = null,}) {
   return _then(CourseState(
 courses: null == courses ? _self.courses : courses // ignore: cast_nullable_to_non_nullable
 as List<CourseEntity>,selectedCourse: freezed == selectedCourse ? _self.selectedCourse : selectedCourse // ignore: cast_nullable_to_non_nullable
 as CourseEntity?,isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,weeklySchedule: null == weeklySchedule ? _self.weeklySchedule : weeklySchedule // ignore: cast_nullable_to_non_nullable
+as List<ScheduleEntryEntity>,isScheduleLoading: null == isScheduleLoading ? _self.isScheduleLoading : isScheduleLoading // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 /// Create a copy of CourseState
@@ -171,10 +173,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<CourseEntity> courses,  CourseEntity? selectedCourse,  bool isLoading,  String? error)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<CourseEntity> courses,  CourseEntity? selectedCourse,  bool isLoading,  String? error,  List<ScheduleEntryEntity> weeklySchedule,  bool isScheduleLoading)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CourseState() when $default != null:
-return $default(_that.courses,_that.selectedCourse,_that.isLoading,_that.error);case _:
+return $default(_that.courses,_that.selectedCourse,_that.isLoading,_that.error,_that.weeklySchedule,_that.isScheduleLoading);case _:
   return orElse();
 
 }
@@ -192,10 +194,10 @@ return $default(_that.courses,_that.selectedCourse,_that.isLoading,_that.error);
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<CourseEntity> courses,  CourseEntity? selectedCourse,  bool isLoading,  String? error)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<CourseEntity> courses,  CourseEntity? selectedCourse,  bool isLoading,  String? error,  List<ScheduleEntryEntity> weeklySchedule,  bool isScheduleLoading)  $default,) {final _that = this;
 switch (_that) {
 case _CourseState():
-return $default(_that.courses,_that.selectedCourse,_that.isLoading,_that.error);case _:
+return $default(_that.courses,_that.selectedCourse,_that.isLoading,_that.error,_that.weeklySchedule,_that.isScheduleLoading);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -212,10 +214,10 @@ return $default(_that.courses,_that.selectedCourse,_that.isLoading,_that.error);
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<CourseEntity> courses,  CourseEntity? selectedCourse,  bool isLoading,  String? error)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<CourseEntity> courses,  CourseEntity? selectedCourse,  bool isLoading,  String? error,  List<ScheduleEntryEntity> weeklySchedule,  bool isScheduleLoading)?  $default,) {final _that = this;
 switch (_that) {
 case _CourseState() when $default != null:
-return $default(_that.courses,_that.selectedCourse,_that.isLoading,_that.error);case _:
+return $default(_that.courses,_that.selectedCourse,_that.isLoading,_that.error,_that.weeklySchedule,_that.isScheduleLoading);case _:
   return null;
 
 }
@@ -227,7 +229,7 @@ return $default(_that.courses,_that.selectedCourse,_that.isLoading,_that.error);
 
 
 class _CourseState implements CourseState {
-  const _CourseState({ List<CourseEntity> courses = const [], this.selectedCourse, this.isLoading = false, this.error}): _courses = courses;
+  const _CourseState({ List<CourseEntity> courses = const [], this.selectedCourse, this.isLoading = false, this.error,  List<ScheduleEntryEntity> weeklySchedule = const [], this.isScheduleLoading = false}): _courses = courses,_weeklySchedule = weeklySchedule;
 
 
  final  List<CourseEntity> _courses;
@@ -240,6 +242,14 @@ class _CourseState implements CourseState {
 @override final  CourseEntity? selectedCourse;
 @override@JsonKey() final  bool isLoading;
 @override final  String? error;
+ final  List<ScheduleEntryEntity> _weeklySchedule;
+@override@JsonKey() List<ScheduleEntryEntity> get weeklySchedule {
+  if (_weeklySchedule is EqualUnmodifiableListView) return _weeklySchedule;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_weeklySchedule);
+}
+
+@override@JsonKey() final  bool isScheduleLoading;
 
 /// Create a copy of CourseState
 /// with the given fields replaced by the non-null parameter values.
@@ -251,18 +261,18 @@ _$CourseStateCopyWith<_CourseState> get copyWith => __$CourseStateCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CourseState&&const DeepCollectionEquality().equals(other.courses, _courses)&&(identical(other.selectedCourse, selectedCourse) || other.selectedCourse == selectedCourse)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.error, error) || other.error == error));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CourseState&&const DeepCollectionEquality().equals(other.courses, _courses)&&(identical(other.selectedCourse, selectedCourse) || other.selectedCourse == selectedCourse)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.error, error) || other.error == error)&&const DeepCollectionEquality().equals(other.weeklySchedule, _weeklySchedule)&&(identical(other.isScheduleLoading, isScheduleLoading) || other.isScheduleLoading == isScheduleLoading));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_courses),selectedCourse,isLoading,error);
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_courses),selectedCourse,isLoading,error,const DeepCollectionEquality().hash(_weeklySchedule),isScheduleLoading);
 }
 
 @override
 String toString() {
-    return 'CourseState(courses: $courses, selectedCourse: $selectedCourse, isLoading: $isLoading, error: $error)';
+    return 'CourseState(courses: $courses, selectedCourse: $selectedCourse, isLoading: $isLoading, error: $error, weeklySchedule: $weeklySchedule, isScheduleLoading: $isScheduleLoading)';
 }
 
 
@@ -273,7 +283,7 @@ abstract mixin class _$CourseStateCopyWith<$Res> implements $CourseStateCopyWith
   factory _$CourseStateCopyWith(_CourseState value, $Res Function(_CourseState) _then) = __$CourseStateCopyWithImpl;
 @override @useResult
 $Res call({
- List<CourseEntity> courses, CourseEntity? selectedCourse, bool isLoading, String? error
+ List<CourseEntity> courses, CourseEntity? selectedCourse, bool isLoading, String? error, List<ScheduleEntryEntity> weeklySchedule, bool isScheduleLoading
 });
 
 
@@ -290,13 +300,15 @@ class __$CourseStateCopyWithImpl<$Res>
 
 /// Create a copy of CourseState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? courses = null,Object? selectedCourse = freezed,Object? isLoading = null,Object? error = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? courses = null,Object? selectedCourse = freezed,Object? isLoading = null,Object? error = freezed,Object? weeklySchedule = null,Object? isScheduleLoading = null,}) {
   return _then(_CourseState(
 courses: null == courses ? _self._courses : courses // ignore: cast_nullable_to_non_nullable
 as List<CourseEntity>,selectedCourse: freezed == selectedCourse ? _self.selectedCourse : selectedCourse // ignore: cast_nullable_to_non_nullable
 as CourseEntity?,isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,weeklySchedule: null == weeklySchedule ? _self._weeklySchedule : weeklySchedule // ignore: cast_nullable_to_non_nullable
+as List<ScheduleEntryEntity>,isScheduleLoading: null == isScheduleLoading ? _self.isScheduleLoading : isScheduleLoading // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

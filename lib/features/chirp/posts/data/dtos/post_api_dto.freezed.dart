@@ -16,7 +16,10 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PostApiDto {
 
- int get id; CommunityApiDto get community;@JsonKey(name: 'author_id') String get authorId; String get title; String get content; int get upvotes; int get downvotes; List<AttachmentApiDto> get attachments;@JsonKey(name: 'views_count') int get viewsCount;@JsonKey(name: 'comment_count') int get commentCount; List<CommentApiDto> get comments;@JsonKey(name: 'created_at') DateTime get createdAt;@JsonKey(name: 'updated_at') DateTime get updatedAt;
+ int get id; CommunityApiDto get community;@JsonKey(name: 'author_id') String get authorId; String get title; String get content; int get upvotes; int get downvotes; List<AttachmentApiDto> get attachments;@JsonKey(name: 'views_count') int get viewsCount;@JsonKey(name: 'comment_count') int get commentCount; List<CommentApiDto> get comments;/// Optional poll, kept as the raw JSON blob — it is stored verbatim in
+/// the drift `posts.poll` column and parsed by `PollData` on the way to
+/// the entity (see post_model_helper.dart).
+ Map<String, dynamic>? get poll;@JsonKey(name: 'created_at') DateTime get createdAt;@JsonKey(name: 'updated_at') DateTime get updatedAt;
 /// Create a copy of PostApiDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +33,20 @@ $PostApiDtoCopyWith<PostApiDto> get copyWith => _$PostApiDtoCopyWithImpl<PostApi
 @override
 bool operator ==(Object other) {
   final _this = this as PostApiDto;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PostApiDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.community, _this.community) || other.community == _this.community)&&(identical(other.authorId, _this.authorId) || other.authorId == _this.authorId)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.content, _this.content) || other.content == _this.content)&&(identical(other.upvotes, _this.upvotes) || other.upvotes == _this.upvotes)&&(identical(other.downvotes, _this.downvotes) || other.downvotes == _this.downvotes)&&const DeepCollectionEquality().equals(other.attachments, _this.attachments)&&(identical(other.viewsCount, _this.viewsCount) || other.viewsCount == _this.viewsCount)&&(identical(other.commentCount, _this.commentCount) || other.commentCount == _this.commentCount)&&const DeepCollectionEquality().equals(other.comments, _this.comments)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PostApiDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.community, _this.community) || other.community == _this.community)&&(identical(other.authorId, _this.authorId) || other.authorId == _this.authorId)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.content, _this.content) || other.content == _this.content)&&(identical(other.upvotes, _this.upvotes) || other.upvotes == _this.upvotes)&&(identical(other.downvotes, _this.downvotes) || other.downvotes == _this.downvotes)&&const DeepCollectionEquality().equals(other.attachments, _this.attachments)&&(identical(other.viewsCount, _this.viewsCount) || other.viewsCount == _this.viewsCount)&&(identical(other.commentCount, _this.commentCount) || other.commentCount == _this.commentCount)&&const DeepCollectionEquality().equals(other.comments, _this.comments)&&const DeepCollectionEquality().equals(other.poll, _this.poll)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as PostApiDto;
-  return Object.hash(runtimeType,_this.id,_this.community,_this.authorId,_this.title,_this.content,_this.upvotes,_this.downvotes,const DeepCollectionEquality().hash(_this.attachments),_this.viewsCount,_this.commentCount,const DeepCollectionEquality().hash(_this.comments),_this.createdAt,_this.updatedAt);
+  return Object.hash(runtimeType,_this.id,_this.community,_this.authorId,_this.title,_this.content,_this.upvotes,_this.downvotes,const DeepCollectionEquality().hash(_this.attachments),_this.viewsCount,_this.commentCount,const DeepCollectionEquality().hash(_this.comments),const DeepCollectionEquality().hash(_this.poll),_this.createdAt,_this.updatedAt);
 }
 
 @override
 String toString() {
   final _this = this as PostApiDto;
-  return 'PostApiDto(id: ${_this.id}, community: ${_this.community}, authorId: ${_this.authorId}, title: ${_this.title}, content: ${_this.content}, upvotes: ${_this.upvotes}, downvotes: ${_this.downvotes}, attachments: ${_this.attachments}, viewsCount: ${_this.viewsCount}, commentCount: ${_this.commentCount}, comments: ${_this.comments}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt})';
+  return 'PostApiDto(id: ${_this.id}, community: ${_this.community}, authorId: ${_this.authorId}, title: ${_this.title}, content: ${_this.content}, upvotes: ${_this.upvotes}, downvotes: ${_this.downvotes}, attachments: ${_this.attachments}, viewsCount: ${_this.viewsCount}, commentCount: ${_this.commentCount}, comments: ${_this.comments}, poll: ${_this.poll}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt})';
 }
 
 
@@ -54,7 +57,7 @@ abstract mixin class $PostApiDtoCopyWith<$Res>  {
   factory $PostApiDtoCopyWith(PostApiDto value, $Res Function(PostApiDto) _then) = _$PostApiDtoCopyWithImpl;
 @useResult
 $Res call({
- int id, CommunityApiDto community,@JsonKey(name: 'author_id') String authorId, String title, String content, int upvotes, int downvotes, List<AttachmentApiDto> attachments,@JsonKey(name: 'views_count') int viewsCount,@JsonKey(name: 'comment_count') int commentCount, List<CommentApiDto> comments,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
+ int id, CommunityApiDto community,@JsonKey(name: 'author_id') String authorId, String title, String content, int upvotes, int downvotes, List<AttachmentApiDto> attachments,@JsonKey(name: 'views_count') int viewsCount,@JsonKey(name: 'comment_count') int commentCount, List<CommentApiDto> comments, Map<String, dynamic>? poll,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
 });
 
 
@@ -71,7 +74,7 @@ class _$PostApiDtoCopyWithImpl<$Res>
 
 /// Create a copy of PostApiDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? community = null,Object? authorId = null,Object? title = null,Object? content = null,Object? upvotes = null,Object? downvotes = null,Object? attachments = null,Object? viewsCount = null,Object? commentCount = null,Object? comments = null,Object? createdAt = null,Object? updatedAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? community = null,Object? authorId = null,Object? title = null,Object? content = null,Object? upvotes = null,Object? downvotes = null,Object? attachments = null,Object? viewsCount = null,Object? commentCount = null,Object? comments = null,Object? poll = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(PostApiDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,community: null == community ? _self.community : community // ignore: cast_nullable_to_non_nullable
@@ -84,7 +87,8 @@ as int,attachments: null == attachments ? _self.attachments : attachments // ign
 as List<AttachmentApiDto>,viewsCount: null == viewsCount ? _self.viewsCount : viewsCount // ignore: cast_nullable_to_non_nullable
 as int,commentCount: null == commentCount ? _self.commentCount : commentCount // ignore: cast_nullable_to_non_nullable
 as int,comments: null == comments ? _self.comments : comments // ignore: cast_nullable_to_non_nullable
-as List<CommentApiDto>,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as List<CommentApiDto>,poll: freezed == poll ? _self.poll : poll // ignore: cast_nullable_to_non_nullable
+as Map<String, dynamic>?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
@@ -180,10 +184,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  CommunityApiDto community, @JsonKey(name: 'author_id')  String authorId,  String title,  String content,  int upvotes,  int downvotes,  List<AttachmentApiDto> attachments, @JsonKey(name: 'views_count')  int viewsCount, @JsonKey(name: 'comment_count')  int commentCount,  List<CommentApiDto> comments, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  CommunityApiDto community, @JsonKey(name: 'author_id')  String authorId,  String title,  String content,  int upvotes,  int downvotes,  List<AttachmentApiDto> attachments, @JsonKey(name: 'views_count')  int viewsCount, @JsonKey(name: 'comment_count')  int commentCount,  List<CommentApiDto> comments,  Map<String, dynamic>? poll, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PostApiDto() when $default != null:
-return $default(_that.id,_that.community,_that.authorId,_that.title,_that.content,_that.upvotes,_that.downvotes,_that.attachments,_that.viewsCount,_that.commentCount,_that.comments,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.community,_that.authorId,_that.title,_that.content,_that.upvotes,_that.downvotes,_that.attachments,_that.viewsCount,_that.commentCount,_that.comments,_that.poll,_that.createdAt,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -201,10 +205,10 @@ return $default(_that.id,_that.community,_that.authorId,_that.title,_that.conten
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  CommunityApiDto community, @JsonKey(name: 'author_id')  String authorId,  String title,  String content,  int upvotes,  int downvotes,  List<AttachmentApiDto> attachments, @JsonKey(name: 'views_count')  int viewsCount, @JsonKey(name: 'comment_count')  int commentCount,  List<CommentApiDto> comments, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  CommunityApiDto community, @JsonKey(name: 'author_id')  String authorId,  String title,  String content,  int upvotes,  int downvotes,  List<AttachmentApiDto> attachments, @JsonKey(name: 'views_count')  int viewsCount, @JsonKey(name: 'comment_count')  int commentCount,  List<CommentApiDto> comments,  Map<String, dynamic>? poll, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _PostApiDto():
-return $default(_that.id,_that.community,_that.authorId,_that.title,_that.content,_that.upvotes,_that.downvotes,_that.attachments,_that.viewsCount,_that.commentCount,_that.comments,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.community,_that.authorId,_that.title,_that.content,_that.upvotes,_that.downvotes,_that.attachments,_that.viewsCount,_that.commentCount,_that.comments,_that.poll,_that.createdAt,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -221,10 +225,10 @@ return $default(_that.id,_that.community,_that.authorId,_that.title,_that.conten
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  CommunityApiDto community, @JsonKey(name: 'author_id')  String authorId,  String title,  String content,  int upvotes,  int downvotes,  List<AttachmentApiDto> attachments, @JsonKey(name: 'views_count')  int viewsCount, @JsonKey(name: 'comment_count')  int commentCount,  List<CommentApiDto> comments, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  CommunityApiDto community, @JsonKey(name: 'author_id')  String authorId,  String title,  String content,  int upvotes,  int downvotes,  List<AttachmentApiDto> attachments, @JsonKey(name: 'views_count')  int viewsCount, @JsonKey(name: 'comment_count')  int commentCount,  List<CommentApiDto> comments,  Map<String, dynamic>? poll, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _PostApiDto() when $default != null:
-return $default(_that.id,_that.community,_that.authorId,_that.title,_that.content,_that.upvotes,_that.downvotes,_that.attachments,_that.viewsCount,_that.commentCount,_that.comments,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.community,_that.authorId,_that.title,_that.content,_that.upvotes,_that.downvotes,_that.attachments,_that.viewsCount,_that.commentCount,_that.comments,_that.poll,_that.createdAt,_that.updatedAt);case _:
   return null;
 
 }
@@ -236,7 +240,7 @@ return $default(_that.id,_that.community,_that.authorId,_that.title,_that.conten
 @JsonSerializable()
 
 class _PostApiDto implements PostApiDto {
-  const _PostApiDto({required this.id, required this.community, @JsonKey(name: 'author_id') required this.authorId, required this.title, required this.content, this.upvotes = 0, this.downvotes = 0,  List<AttachmentApiDto> attachments = const [], @JsonKey(name: 'views_count') this.viewsCount = 0, @JsonKey(name: 'comment_count') this.commentCount = 0,  List<CommentApiDto> comments = const [], @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt}): _attachments = attachments,_comments = comments;
+  const _PostApiDto({required this.id, required this.community, @JsonKey(name: 'author_id') required this.authorId, required this.title, required this.content, this.upvotes = 0, this.downvotes = 0,  List<AttachmentApiDto> attachments = const [], @JsonKey(name: 'views_count') this.viewsCount = 0, @JsonKey(name: 'comment_count') this.commentCount = 0,  List<CommentApiDto> comments = const [],  Map<String, dynamic>? poll, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt}): _attachments = attachments,_comments = comments,_poll = poll;
   factory _PostApiDto.fromJson(Map<String, dynamic> json) => _$PostApiDtoFromJson(json);
 
 @override final  int id;
@@ -262,6 +266,21 @@ class _PostApiDto implements PostApiDto {
   return EqualUnmodifiableListView(_comments);
 }
 
+/// Optional poll, kept as the raw JSON blob — it is stored verbatim in
+/// the drift `posts.poll` column and parsed by `PollData` on the way to
+/// the entity (see post_model_helper.dart).
+ final  Map<String, dynamic>? _poll;
+/// Optional poll, kept as the raw JSON blob — it is stored verbatim in
+/// the drift `posts.poll` column and parsed by `PollData` on the way to
+/// the entity (see post_model_helper.dart).
+@override Map<String, dynamic>? get poll {
+  final value = _poll;
+  if (value == null) return null;
+  if (_poll is EqualUnmodifiableMapView) return _poll;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(value);
+}
+
 @override@JsonKey(name: 'created_at') final  DateTime createdAt;
 @override@JsonKey(name: 'updated_at') final  DateTime updatedAt;
 
@@ -278,18 +297,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PostApiDto&&(identical(other.id, id) || other.id == id)&&(identical(other.community, community) || other.community == community)&&(identical(other.authorId, authorId) || other.authorId == authorId)&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content)&&(identical(other.upvotes, upvotes) || other.upvotes == upvotes)&&(identical(other.downvotes, downvotes) || other.downvotes == downvotes)&&const DeepCollectionEquality().equals(other.attachments, _attachments)&&(identical(other.viewsCount, viewsCount) || other.viewsCount == viewsCount)&&(identical(other.commentCount, commentCount) || other.commentCount == commentCount)&&const DeepCollectionEquality().equals(other.comments, _comments)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PostApiDto&&(identical(other.id, id) || other.id == id)&&(identical(other.community, community) || other.community == community)&&(identical(other.authorId, authorId) || other.authorId == authorId)&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content)&&(identical(other.upvotes, upvotes) || other.upvotes == upvotes)&&(identical(other.downvotes, downvotes) || other.downvotes == downvotes)&&const DeepCollectionEquality().equals(other.attachments, _attachments)&&(identical(other.viewsCount, viewsCount) || other.viewsCount == viewsCount)&&(identical(other.commentCount, commentCount) || other.commentCount == commentCount)&&const DeepCollectionEquality().equals(other.comments, _comments)&&const DeepCollectionEquality().equals(other.poll, _poll)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,community,authorId,title,content,upvotes,downvotes,const DeepCollectionEquality().hash(_attachments),viewsCount,commentCount,const DeepCollectionEquality().hash(_comments),createdAt,updatedAt);
+    return Object.hash(runtimeType,id,community,authorId,title,content,upvotes,downvotes,const DeepCollectionEquality().hash(_attachments),viewsCount,commentCount,const DeepCollectionEquality().hash(_comments),const DeepCollectionEquality().hash(_poll),createdAt,updatedAt);
 }
 
 @override
 String toString() {
-    return 'PostApiDto(id: $id, community: $community, authorId: $authorId, title: $title, content: $content, upvotes: $upvotes, downvotes: $downvotes, attachments: $attachments, viewsCount: $viewsCount, commentCount: $commentCount, comments: $comments, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'PostApiDto(id: $id, community: $community, authorId: $authorId, title: $title, content: $content, upvotes: $upvotes, downvotes: $downvotes, attachments: $attachments, viewsCount: $viewsCount, commentCount: $commentCount, comments: $comments, poll: $poll, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -300,7 +319,7 @@ abstract mixin class _$PostApiDtoCopyWith<$Res> implements $PostApiDtoCopyWith<$
   factory _$PostApiDtoCopyWith(_PostApiDto value, $Res Function(_PostApiDto) _then) = __$PostApiDtoCopyWithImpl;
 @override @useResult
 $Res call({
- int id, CommunityApiDto community,@JsonKey(name: 'author_id') String authorId, String title, String content, int upvotes, int downvotes, List<AttachmentApiDto> attachments,@JsonKey(name: 'views_count') int viewsCount,@JsonKey(name: 'comment_count') int commentCount, List<CommentApiDto> comments,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
+ int id, CommunityApiDto community,@JsonKey(name: 'author_id') String authorId, String title, String content, int upvotes, int downvotes, List<AttachmentApiDto> attachments,@JsonKey(name: 'views_count') int viewsCount,@JsonKey(name: 'comment_count') int commentCount, List<CommentApiDto> comments, Map<String, dynamic>? poll,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
 });
 
 
@@ -317,7 +336,7 @@ class __$PostApiDtoCopyWithImpl<$Res>
 
 /// Create a copy of PostApiDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? community = null,Object? authorId = null,Object? title = null,Object? content = null,Object? upvotes = null,Object? downvotes = null,Object? attachments = null,Object? viewsCount = null,Object? commentCount = null,Object? comments = null,Object? createdAt = null,Object? updatedAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? community = null,Object? authorId = null,Object? title = null,Object? content = null,Object? upvotes = null,Object? downvotes = null,Object? attachments = null,Object? viewsCount = null,Object? commentCount = null,Object? comments = null,Object? poll = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_PostApiDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,community: null == community ? _self.community : community // ignore: cast_nullable_to_non_nullable
@@ -330,7 +349,8 @@ as int,attachments: null == attachments ? _self._attachments : attachments // ig
 as List<AttachmentApiDto>,viewsCount: null == viewsCount ? _self.viewsCount : viewsCount // ignore: cast_nullable_to_non_nullable
 as int,commentCount: null == commentCount ? _self.commentCount : commentCount // ignore: cast_nullable_to_non_nullable
 as int,comments: null == comments ? _self._comments : comments // ignore: cast_nullable_to_non_nullable
-as List<CommentApiDto>,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as List<CommentApiDto>,poll: freezed == poll ? _self._poll : poll // ignore: cast_nullable_to_non_nullable
+as Map<String, dynamic>?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));

@@ -11,6 +11,7 @@ import '../domain/local_notification_category.dart';
 import '../domain/local_notification_channel.dart';
 import '../domain/local_notification_presentation.dart';
 import '../domain/local_notification_request.dart';
+import '../domain/local_notification_schedule.dart';
 import '../domain/notification_action.dart';
 
 class AwesomeLocalNotificationScheduler
@@ -25,68 +26,64 @@ class AwesomeLocalNotificationScheduler
   @override
   Future<void> initialize(NotificationActionHandler actionHandler) async {
     _actionHandler = actionHandler;
-    await _client.initialize(
-      'resource://drawable/academia',
-      [
-        awesome.NotificationChannel(
-          channelKey: _channelKey(LocalNotificationChannel.reminders),
-          channelName: 'Reminders',
-          channelDescription: 'Notification channel for reminders',
-          locked: true,
-          playSound: true,
-          soundSource: 'resource://raw/reminder',
-          defaultColor: const Color(0xFF1B1D23),
-          importance: awesome.NotificationImportance.Max,
-        ),
-        awesome.NotificationChannel(
-          channelKey: _channelKey(LocalNotificationChannel.alerts),
-          channelName: 'Alerts',
-          channelDescription: 'Notification channel for important alerts',
-          criticalAlerts: true,
-          locked: true,
-          playSound: true,
-          soundSource: 'resource://raw/symphony',
-          defaultPrivacy: awesome.NotificationPrivacy.Public,
-        ),
-        awesome.NotificationChannel(
-          channelKey: _channelKey(LocalNotificationChannel.updates),
-          channelName: 'Updates',
-          channelDescription: 'Notification channel for app updates',
-          importance: awesome.NotificationImportance.Default,
-          locked: true,
-          playSound: true,
-          soundSource: 'resource://raw/meloboom',
-          defaultPrivacy: awesome.NotificationPrivacy.Public,
-        ),
-        awesome.NotificationChannel(
-          channelKey: _channelKey(LocalNotificationChannel.courseAlerts),
-          channelName: 'Course Alerts',
-          channelDescription: 'Notifications for upcoming classes',
-          defaultColor: const Color(0xFF007DFD),
-          importance: awesome.NotificationImportance.Max,
-          playSound: true,
-          ledColor: const Color(0xFF007DFD),
-          soundSource: 'resource://raw/course',
-          defaultPrivacy: awesome.NotificationPrivacy.Private,
-          enableVibration: true,
-        ),
-        awesome.NotificationChannel(
-          channelKey: _channelKey(LocalNotificationChannel.examAlerts),
-          channelName: 'Exam Alerts',
-          channelDescription: 'Notifications for upcoming exams',
-          defaultColor: const Color(0xFFFFA000),
-          importance: awesome.NotificationImportance.Max,
-          playSound: true,
-          ledColor: const Color(0xFFFFA000),
-          soundSource: 'resource://raw/reminder',
-          criticalAlerts: true,
-          locked: true,
-          defaultPrivacy: awesome.NotificationPrivacy.Public,
-          enableVibration: true,
-        ),
-      ],
-      debug: false,
-    );
+    await _client.initialize('resource://drawable/academia', [
+      awesome.NotificationChannel(
+        channelKey: _channelKey(LocalNotificationChannel.reminders),
+        channelName: 'Reminders',
+        channelDescription: 'Notification channel for reminders',
+        locked: true,
+        playSound: true,
+        soundSource: 'resource://raw/reminder',
+        defaultColor: const Color(0xFF1B1D23),
+        importance: awesome.NotificationImportance.Max,
+      ),
+      awesome.NotificationChannel(
+        channelKey: _channelKey(LocalNotificationChannel.alerts),
+        channelName: 'Alerts',
+        channelDescription: 'Notification channel for important alerts',
+        criticalAlerts: true,
+        locked: true,
+        playSound: true,
+        soundSource: 'resource://raw/symphony',
+        defaultPrivacy: awesome.NotificationPrivacy.Public,
+      ),
+      awesome.NotificationChannel(
+        channelKey: _channelKey(LocalNotificationChannel.updates),
+        channelName: 'Updates',
+        channelDescription: 'Notification channel for app updates',
+        importance: awesome.NotificationImportance.Default,
+        locked: true,
+        playSound: true,
+        soundSource: 'resource://raw/meloboom',
+        defaultPrivacy: awesome.NotificationPrivacy.Public,
+      ),
+      awesome.NotificationChannel(
+        channelKey: _channelKey(LocalNotificationChannel.courseAlerts),
+        channelName: 'Course Alerts',
+        channelDescription: 'Notifications for upcoming classes',
+        defaultColor: const Color(0xFF007DFD),
+        importance: awesome.NotificationImportance.Max,
+        playSound: true,
+        ledColor: const Color(0xFF007DFD),
+        soundSource: 'resource://raw/course',
+        defaultPrivacy: awesome.NotificationPrivacy.Private,
+        enableVibration: true,
+      ),
+      awesome.NotificationChannel(
+        channelKey: _channelKey(LocalNotificationChannel.examAlerts),
+        channelName: 'Exam Alerts',
+        channelDescription: 'Notifications for upcoming exams',
+        defaultColor: const Color(0xFFFFA000),
+        importance: awesome.NotificationImportance.Max,
+        playSound: true,
+        ledColor: const Color(0xFFFFA000),
+        soundSource: 'resource://raw/reminder',
+        criticalAlerts: true,
+        locked: true,
+        defaultPrivacy: awesome.NotificationPrivacy.Public,
+        enableVibration: true,
+      ),
+    ], debug: false);
     await _client.setListeners(onActionReceivedMethod: _onActionReceived);
   }
 
@@ -119,26 +116,49 @@ class AwesomeLocalNotificationScheduler
             ? null
             : Color(request.presentation.backgroundColorValue!),
         chronometer: request.presentation.chronometer,
-        notificationLayout: request.presentation.layout
-            == LocalNotificationLayout.bigText
+        notificationLayout:
+            request.presentation.layout == LocalNotificationLayout.bigText
             ? awesome.NotificationLayout.BigText
             : awesome.NotificationLayout.Default,
         payload: request.payload,
       ),
-      schedule: request.schedule == null
-          ? null
-          : awesome.NotificationCalendar.fromDate(
-              date: request.schedule!.at,
-              preciseAlarm: request.schedule!.precise,
-              allowWhileIdle: request.schedule!.allowWhileIdle,
-              repeats: false,
-            ),
+      schedule: _schedule(request.schedule),
       actionButtons: request.actions.map(_actionButton).toList(),
     );
   }
 
   @override
   Future<void> cancel(int id) => _client.cancel(id);
+
+  @override
+  Future<void> cancelScheduledForChannel(LocalNotificationChannel channel) =>
+      _client.cancelSchedulesByChannelKey(_channelKey(channel));
+
+  @override
+  Future<int> scheduledCount() async =>
+      (await _client.listScheduledNotifications()).length;
+
+  awesome.NotificationSchedule? _schedule(LocalNotificationSchedule? schedule) {
+    if (schedule == null) return null;
+    final weekday = schedule.weekday;
+    if (weekday != null) {
+      return awesome.NotificationCalendar(
+        weekday: weekday,
+        hour: schedule.at.hour,
+        minute: schedule.at.minute,
+        second: 0,
+        preciseAlarm: schedule.precise,
+        allowWhileIdle: schedule.allowWhileIdle,
+        repeats: true,
+      );
+    }
+    return awesome.NotificationCalendar.fromDate(
+      date: schedule.at,
+      preciseAlarm: schedule.precise,
+      allowWhileIdle: schedule.allowWhileIdle,
+      repeats: false,
+    );
+  }
 
   @override
   Future<void> cancelAllSchedules() => _client.cancelAllSchedules();
@@ -175,7 +195,8 @@ class AwesomeLocalNotificationScheduler
     LocalNotificationCategory category,
   ) {
     return switch (category) {
-      LocalNotificationCategory.reminder => awesome.NotificationCategory.Reminder,
+      LocalNotificationCategory.reminder =>
+        awesome.NotificationCategory.Reminder,
       LocalNotificationCategory.alarm => awesome.NotificationCategory.Alarm,
       LocalNotificationCategory.status => awesome.NotificationCategory.Status,
       LocalNotificationCategory.event => awesome.NotificationCategory.Event,

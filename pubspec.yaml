@@ -121,6 +121,8 @@ dependencies:
     path: packages/courses/
   study_tools:
     path: packages/study_tools/
+  agenda:
+    path: packages/agenda/
   # database v2
   database:
     path: packages/database/

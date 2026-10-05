@@ -42,7 +42,7 @@ class _EssentialsPageState extends State<EssentialsPage> {
       ontap: () {
         SemestersPageRoute().push(context);
       },
-      iconPath: Assets.icons.calendar.keyName,
+      iconPath: 'packages/agenda/assets/icons/calendar.png',
     ),
     _EssentialItem(
       title: "Courses",

@@ -1,14 +1,13 @@
 import 'dart:convert';
 
 import 'package:academia/features/institution/institution.dart';
-import 'package:academia/features/timetable/timetable.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:magnet/magnet.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-import 'package:academia/features/course/course.dart';
+import 'package:courses/courses.dart' as courses;
 import 'package:logger/logger.dart';
 
 export 'magnet_state.dart';
@@ -19,14 +18,14 @@ class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
   Magnet? _magnet;
   final SyncInstitutionProfileUsecase syncInstitutionProfileUsecase;
   final SaveFeeTransaction saveFeeTransaction;
-  final SaveCourseUsecase saveCourseUsecase;
-  final CreateOrUpdateTimetableEntries createOrUpdateTimetableEntries;
+  final courses.CreateCourse createCourse;
+  final courses.CreateScheduleEntry createScheduleEntry;
 
   MagnetBloc({
     required this.syncInstitutionProfileUsecase,
     required this.saveFeeTransaction,
-    required this.saveCourseUsecase,
-    required this.createOrUpdateTimetableEntries,
+    required this.createCourse,
+    required this.createScheduleEntry,
   }) : super(const MagnetState.initial()) {
     on<InitializeMagnet>(_onInitialize);
     on<ExecuteScrappingCommand>(_onExecute);
@@ -102,30 +101,31 @@ class MagnetBloc extends Bloc<MagnetEvent, MagnetState> {
 
         final coursesWithSchedules = await parseCoursesInBackground(
           computableData,
-          event.userID,
-          timetableId: null,
+          event.institutionID,
         );
         for (final courseWithSchedule in coursesWithSchedules) {
-          final result = await saveCourseUsecase(courseWithSchedule.course);
-          if (result.isLeft()) {
+          final result = await createCourse(courseWithSchedule.course);
+          final savedCourse = result.fold((failure) {
             Logger().e(
-              "Failed to save course ${courseWithSchedule.course.courseName} skipping",
-              error: (result as Left).value,
+              "Failed to save course ${courseWithSchedule.course.title}, skipping",
+              error: failure,
             );
+            return null;
+          }, (course) => course);
+          if (savedCourse == null) {
             continue;
           }
-          final entryResult = await createOrUpdateTimetableEntries(
-            CreateOrUpdateTimetableEntriesParams(
-              entries: courseWithSchedule.schedules,
-            ),
-          );
 
-          if (entryResult.isLeft()) {
-            Logger().e(
-              "Failed to save timetable entries for course ${courseWithSchedule.course.courseName} skipping",
-              error: (entryResult as Left).value,
+          for (final schedule in courseWithSchedule.schedules) {
+            final entryResult = await createScheduleEntry(
+              schedule.copyWith(studentCourseId: savedCourse.id),
             );
-            continue;
+            if (entryResult.isLeft()) {
+              Logger().e(
+                "Failed to save a schedule for ${savedCourse.title}, skipping",
+                error: (entryResult as Left).value,
+              );
+            }
           }
         }
 

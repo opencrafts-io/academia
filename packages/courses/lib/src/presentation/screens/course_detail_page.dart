@@ -3,6 +3,8 @@ import 'package:courses/src/presentation/bloc/course_cubit.dart';
 import 'package:courses/src/presentation/routes/course_routes.dart';
 import 'package:courses/src/presentation/screens/lecturer_list_section.dart';
 import 'package:courses/src/presentation/course_host.dart';
+import 'package:courses/src/presentation/screens/course_schedule_entries_section.dart';
+import 'package:courses/src/presentation/screens/sync_status_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -21,7 +23,12 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
   @override
   void initState() {
     super.initState();
-    context.read<CourseCubit>().loadCourse(widget.courseId);
+    _loadCourse();
+  }
+
+  Future<void> _loadCourse() async {
+    final cubit = context.read<CourseCubit>();
+    await cubit.loadCourse(widget.courseId);
   }
 
   @override
@@ -79,12 +86,32 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
           ),
           SliverToBoxAdapter(child: _CourseDetailsSection(course: course)),
           SliverToBoxAdapter(child: _CourseMaterialsSection(course: course)),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: SyncStatusIndicator(
+                  status: course.syncStatus,
+                  recordLabel: 'Course',
+                  error: course.lastSyncError,
+                  onEdit: () => _edit(course),
+                ),
+              ),
+            ),
+          ),
           if (state.error != null)
             SliverToBoxAdapter(child: _DetailError(message: state.error!)),
           SliverToBoxAdapter(
             child: LecturerListSection(
               courseId: course.id,
               lecturers: course.lecturers,
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: CourseScheduleEntriesSection(
+              course: course,
+              entries: course.scheduleEntries,
             ),
           ),
         ],
@@ -96,7 +123,7 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
     final saved = await EditCourseRoute(courseId: course.id)
         .push<bool>(context);
     if (saved == true && mounted) {
-      await context.read<CourseCubit>().loadCourse(course.id);
+      await _loadCourse();
     }
   }
 

@@ -21,6 +21,7 @@ part 'app_database_v2.g.dart';
     LockInAttempts,
     Courses,
     Lecturers,
+    ScheduleEntries,
     TodoLists,
     TodoTagItems,
     TodoItems,
@@ -46,7 +47,7 @@ class AppDatabaseV2 extends _$AppDatabaseV2 {
     : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 7;
+  int get schemaVersion => 8;
 
   static QueryExecutor _openConnection() {
     driftRuntimeOptions.defaultSerializer = const ValueSerializer.defaults(
@@ -134,31 +135,81 @@ class AppDatabaseV2 extends _$AppDatabaseV2 {
 extension Migrations on GeneratedDatabase {
   OnUpgrade get _schemaUpgrade => (m, from, to) async {
     final db = this as AppDatabaseV2;
-    if (from < 2) {
+    if (from < 2 && to >= 2) {
       await m.createTable(db.plans);
     }
-    if (from < 3) {
+    if (from < 3 && to >= 3) {
       await m.createTable(db.billingOrders);
       await m.createTable(db.billingSubscriptions);
       await m.createTable(db.billingSubscriptionStatuses);
       await m.createTable(db.billingEntitlements);
     }
-    if (from < 4) {
+    if (from < 4 && to >= 4) {
       await m.createTable(db.billingOrderItems);
     }
-    if (from < 5) {
+    if (from < 5 && to >= 5) {
       await m.createTable(db.lockInRuleRecords);
       await m.createTable(db.lockInAttempts);
     }
-    if (from < 6) {
-      await m.createTable(db.courses);
+    if (from < 6 && to >= 6) {
+      await db.customStatement('''
+        CREATE TABLE courses (
+          id TEXT NOT NULL,
+          institution_id INTEGER NOT NULL,
+          title TEXT NOT NULL,
+          code TEXT NULL,
+          term_label TEXT NULL,
+          academic_year TEXT NULL,
+          term_start_date INTEGER NULL,
+          term_end_date INTEGER NULL,
+          previous_course_id TEXT NULL,
+          archived_at INTEGER NULL,
+          created_at INTEGER NOT NULL,
+          updated_at INTEGER NOT NULL,
+          cached_at INTEGER NOT NULL,
+          PRIMARY KEY (id)
+        )
+      ''');
       await m.createTable(db.lecturers);
     }
-    if (from < 7) {
+    if (from < 7 && to >= 7) {
       await m.createTable(db.todoLists);
       await m.createTable(db.todoTagItems);
       await m.createTable(db.todoItems);
       await m.createTable(db.todoItemTags);
+    }
+    if (from < 8 && to >= 8) {
+      final courseColumns =
+          (await db.customSelect('PRAGMA table_info(courses)').get())
+              .map((row) => row.read<String>('name'))
+              .toSet();
+
+      if (!courseColumns.contains('server_id')) {
+        await m.addColumn(db.courses, db.courses.serverId);
+      }
+      if (!courseColumns.contains('idempotency_key')) {
+        await m.addColumn(db.courses, db.courses.idempotencyKey);
+      }
+      if (!courseColumns.contains('sync_status')) {
+        await m.addColumn(db.courses, db.courses.syncStatus);
+      }
+      if (!courseColumns.contains('last_sync_error')) {
+        await m.addColumn(db.courses, db.courses.lastSyncError);
+      }
+      if (!courseColumns.contains('color')) {
+        await m.addColumn(db.courses, db.courses.color);
+      }
+      await db.customStatement(
+        "UPDATE courses SET server_id = id WHERE sync_status = 'synced'",
+      );
+      final scheduleTable = await db
+          .customSelect(
+            "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'schedule_entries'",
+          )
+          .getSingleOrNull();
+      if (scheduleTable == null) {
+        await m.createTable(db.scheduleEntries);
+      }
     }
   };
 }

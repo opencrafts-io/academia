@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:academia/config/router/router.dart';
-import 'package:academia/features/course/course.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/semester/semester.dart';
 import 'package:academia/gen/fonts.gen.dart';
 import 'package:academia/injection_container.dart';
+import 'package:agenda/agenda.dart' as agenda;
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -26,11 +26,25 @@ class Academia extends StatefulWidget {
   State<Academia> createState() => _AcademiaState();
 }
 
-class _AcademiaState extends State<Academia> {
+class _AcademiaState extends State<Academia> with WidgetsBindingObserver {
   @override
   void initState() {
-    setOptimalDisplayMode();
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    setOptimalDisplayMode();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      unawaited(sl<courses.CourseReminderRefresher>().refresh());
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   /// On Android phones with 120hz display by default is chosen the wrong
@@ -72,7 +86,16 @@ class _AcademiaState extends State<Academia> {
           create: (context) =>
               sl<InAppUpdateBloc>()..add(CheckForInAppUpdateEvent()),
         ),
-        BlocProvider(create: (context) => sl<SettingsCubit>()),
+        BlocProvider(
+          create: (context) {
+            final settings = sl<SettingsCubit>();
+            sl<courses.CourseReminderRefresher>().updatePreferences(
+              enabled: settings.state.courseRemindersEnabled,
+              reminderMinutes: settings.state.courseReminderMinutes,
+            );
+            return settings;
+          },
+        ),
         BlocProvider(
           create: (context) => sl<AuthBloc>()..add(AuthCheckStatusEvent()),
         ),
@@ -109,25 +132,31 @@ class _AcademiaState extends State<Academia> {
         ),
         BlocProvider(create: (context) => sl<CommunityHomeBloc>()),
         BlocProvider(create: (context) => sl<CommunityUsersBloc>()),
-        BlocProvider(
-          create: (context) =>
-              sl<AgendaEventBloc>()..add(FetchCachedAgendaEventsEvent()),
-        ),
+        BlocProvider(create: (context) => sl<agenda.AgendaCubit>()),
         BlocProvider(create: (context) => sl<SemesterCubit>()),
-        BlocProvider(create: (context) => sl<CourseCubit>()),
         BlocProvider(create: (context) => sl<courses.CourseCubit>()),
         BlocProvider(create: (context) => sl<InstitutionBloc>()),
         BlocProvider(create: (context) => sl<PermissionCubit>()),
         BlocProvider(create: (context) => sl<LeaderboardBloc>()),
-        BlocProvider(create: (context) => sl<TimetableBloc>()),
-        BlocProvider(
-          create: (context) =>
-              sl<TimetableEntryBloc>()..add(WatchAllTimetableEntriesEvent()),
-        ),
       ],
       child: DynamicColorBuilder(
         builder: (lightScheme, darkScheme) => MultiBlocListener(
           listeners: [
+            BlocListener<SettingsCubit, SettingsState>(
+              listenWhen: (previous, current) =>
+                  previous.courseRemindersEnabled !=
+                      current.courseRemindersEnabled ||
+                  !listEquals(
+                    previous.courseReminderMinutes,
+                    current.courseReminderMinutes,
+                  ),
+              listener: (context, state) {
+                sl<courses.CourseReminderRefresher>().updatePreferences(
+                  enabled: state.courseRemindersEnabled,
+                  reminderMinutes: state.courseReminderMinutes,
+                );
+              },
+            ),
             BlocListener<AuthBloc, AuthState>(
               listener: (context, state) {
                 AppRouter.router.refresh();

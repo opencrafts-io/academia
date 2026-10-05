@@ -3,7 +3,6 @@ import 'package:academia/core/core.dart';
 import 'package:academia/core/network/network.dart';
 import 'package:academia/database/database.dart';
 import 'package:academia/features/auth/data/data.dart';
-import 'package:academia/features/course/course.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/features/semester/semester.dart';
@@ -17,6 +16,9 @@ import 'package:courses/courses.dart' as courses;
 import 'package:academia/core/institution/verisafe_institution_lookup.dart';
 import 'package:study_tools/study_tools.dart' as study_tools;
 import 'package:billing/billing.dart' as billing;
+import 'package:academia/core/notifications/course_schedule_reminder_service.dart';
+import 'package:notifications/notifications.dart';
+import 'package:permissions/permissions.dart';
 
 final sl = GetIt.instance;
 
@@ -308,64 +310,6 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     ),
   );
 
-  // Agenda
-  sl.registerFactory<AgendaEventLocalDataSource>(
-    () => AgendaEventLocalDataSource(localDB: cacheDB),
-  );
-  sl.registerFactory<AgendaEventRemoteDatasource>(
-    () => AgendaEventRemoteDatasource(
-      dioClient: sl.get<DioClient>(),
-      flavor: flavor,
-    ),
-  );
-
-  sl.registerFactory<AgendaEventRepository>(
-    () => AgendaEventRepositoryImpl(
-      agendaEventRemoteDatasource: sl.get<AgendaEventRemoteDatasource>(),
-      agendaEventLocalDataSource: sl.get<AgendaEventLocalDataSource>(),
-    ),
-  );
-
-  sl.registerFactory<GetCachedAgendaEventsUsecase>(
-    () => GetCachedAgendaEventsUsecase(
-      agendaEventRepository: sl.get<AgendaEventRepository>(),
-    ),
-  );
-
-  sl.registerFactory<RefreshAgendaEventsUsecase>(
-    () => RefreshAgendaEventsUsecase(
-      agendaEventRepository: sl.get<AgendaEventRepository>(),
-    ),
-  );
-
-  sl.registerFactory<CreateAgendaEventUsecase>(
-    () => CreateAgendaEventUsecase(
-      agendaEventRepository: sl.get<AgendaEventRepository>(),
-    ),
-  );
-
-  sl.registerFactory<UpdateAgendaEventUsecase>(
-    () => UpdateAgendaEventUsecase(
-      agendaEventRepository: sl.get<AgendaEventRepository>(),
-    ),
-  );
-
-  sl.registerFactory<DeleteAgendaEventUsecase>(
-    () => DeleteAgendaEventUsecase(
-      agendaEventRepository: sl.get<AgendaEventRepository>(),
-    ),
-  );
-
-  sl.registerFactory<AgendaEventBloc>(
-    () => AgendaEventBloc(
-      getCachedAgendaEventsUsecase: sl.get<GetCachedAgendaEventsUsecase>(),
-      refreshAgendaEventsUsecase: sl.get<RefreshAgendaEventsUsecase>(),
-      createAgendaEventUsecase: sl.get<CreateAgendaEventUsecase>(),
-      updateAgendaEventUsecase: sl.get<UpdateAgendaEventUsecase>(),
-      deleteAgendaEventUsecase: sl.get<DeleteAgendaEventUsecase>(),
-    ),
-  );
-
   // Communities
   sl.registerFactory<CommunityRemoteDatasource>(
     () => CommunityRemoteDatasource(
@@ -528,10 +472,18 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   sl.registerFactory<ChirpRemoteDataSource>(
     () => ChirpRemoteDataSource(dioClient: sl.get<DioClient>(), flavor: flavor),
   );
+  // Polls
+  sl.registerFactory<PollRemoteDataSource>(
+    () => ChirpPollRemoteDataSource(
+      dioClient: sl.get<DioClient>(),
+      flavor: flavor,
+    ),
+  );
   sl.registerFactory<ChirpRepository>(
     () => ChirpRepositoryImpl(
       remoteDataSource: sl.get<ChirpRemoteDataSource>(),
       localDataSource: sl<ChirpPostLocalDataSource>(),
+      pollRemoteDataSource: sl<PollRemoteDataSource>(),
     ),
   );
   sl.registerFactory(() => GetFeedPostsUsecase(sl()));
@@ -567,6 +519,15 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     () => LikePostUsecase(chirpRepository: sl.get<ChirpRepository>()),
   );
   sl.registerFactory(
+    () => VoteOnPollUsecase(chirpRepository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
+    () => RetractPollVoteUsecase(chirpRepository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
+    () => GetPollVotersUsecase(chirpRepository: sl.get<ChirpRepository>()),
+  );
+  sl.registerFactory(
     () => CheckPostLikedUsecase(chirpRepository: sl.get<ChirpRepository>()),
   );
   sl.registerFactory(
@@ -585,7 +546,11 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
       createPostAttachment: sl.get<CreatePostAttachmentUsecase>(),
       deletePost: sl.get<DeletePostUsecase>(),
       likePost: sl.get<LikePostUsecase>(),
+      voteOnPoll: sl.get<VoteOnPollUsecase>(),
+      retractPollVote: sl.get<RetractPollVoteUsecase>(),
       checkPostLiked: sl.get<CheckPostLikedUsecase>(),
+      // addComment: sl.get<CommentUsecase>(),
+      // getPostReplies: sl.get<GetPostRepliesUsecase>(),
     ),
   );
   sl.registerFactory(
@@ -679,6 +644,13 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
       courseLabel: course.title,
     ).push(context);
   };
+  sl.registerLazySingleton<courses.CourseReminderRefresher>(
+    () => CourseScheduleReminderService(
+      repository: sl<courses.CourseRepository>(),
+      scheduler: sl<LocalNotificationScheduler>(),
+      permissions: sl<PermissionGateway>(),
+    ),
+  );
 
   sl.registerFactory<InstitutionCommandLocalDatasource>(
     () => InstitutionCommandLocalDatasource(appDataBase: sl()),
@@ -992,140 +964,10 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     ),
   );
 
-  /**********************************************************************
-   *                               Courses
-   **********************************************************************/
-
-  sl.registerFactory<CourseLocalDatasource>(
-    () => CourseLocalDatasourceImpl(appDataBase: sl()),
-  );
-
-  sl.registerFactory<CourseRepository>(
-    () => CourseRepositoryImpl(localDatasource: sl()),
-  );
-
-  sl.registerFactory<WatchAllCoursesUsecase>(
-    () => WatchAllCoursesUsecase(sl()),
-  );
-  sl.registerFactory<SaveCourseUsecase>(() => SaveCourseUsecase(sl()));
-  sl.registerFactory<DeleteCourseUsecase>(() => DeleteCourseUsecase(sl()));
-  sl.registerFactory<WatchInstitutionCoursesUsecase>(
-    () => WatchInstitutionCoursesUsecase(sl()),
-  );
-  sl.registerFactory<GetCourseUsecase>(() => GetCourseUsecase(sl()));
-
-  sl.registerFactory<CourseCubit>(
-    () => CourseCubit(
-      getCourse: sl(),
-      watchInstitutionCourses: sl(),
-      watchAllCourses: sl(),
-      saveCourse: sl(),
-      deleteCourse: sl(),
-    ),
-  );
-
-  /***************************************************************
-   *                       Timetable
-   ***************************************************************/
-
-  sl.registerFactory<TimetableEntryLocalDatasource>(
-    () => TimetableEntryLocalDatasourceImpl(appDataBase: sl()),
-  );
-
-  sl.registerFactory<TimetableLocalDatasource>(
-    () => TimetableLocalDatasourceImpl(appDataBase: sl()),
-  );
-
-  sl.registerFactory<TimetableRepository>(
-    () => TimetableRepositoryImpl(localDatasource: sl()),
-  );
-
-  sl.registerFactory<TimetableEntryRepository>(
-    () => TimetableEntryRepositoryImpl(localDatasource: sl()),
-  );
-
-  sl.registerFactory<CreateOrUpdateTimetableEntry>(
-    () => CreateOrUpdateTimetableEntry(sl()),
-  );
-  sl.registerFactory<CreateOrUpdateTimetableEntries>(
-    () => CreateOrUpdateTimetableEntries(sl()),
-  );
-  sl.registerFactory<GetTimetableEntryById>(() => GetTimetableEntryById(sl()));
-  sl.registerFactory<WatchAllTimetableEntries>(
-    () => WatchAllTimetableEntries(sl()),
-  );
-  sl.registerFactory<WatchTimetableEntriesByTimetableId>(
-    () => WatchTimetableEntriesByTimetableId(sl()),
-  );
-  sl.registerFactory<WatchTimetableEntriesByCourseId>(
-    () => WatchTimetableEntriesByCourseId(sl()),
-  );
-  sl.registerFactory<WatchTimetableEntriesByUserId>(
-    () => WatchTimetableEntriesByUserId(sl()),
-  );
-  sl.registerFactory<WatchTimetableEntriesByInstitutionId>(
-    () => WatchTimetableEntriesByInstitutionId(sl()),
-  );
-  sl.registerFactory<DeleteTimetableEntry>(() => DeleteTimetableEntry(sl()));
-  sl.registerFactory<DeleteTimetableEntries>(
-    () => DeleteTimetableEntries(sl()),
-  );
-  sl.registerFactory<SyncTimetableEntries>(() => SyncTimetableEntries(sl()));
-  sl.registerFactory<FetchTimetableEntriesFromRemote>(
-    () => FetchTimetableEntriesFromRemote(sl()),
-  );
-
-  sl.registerFactory<CreateOrUpdateTimetable>(
-    () => CreateOrUpdateTimetable(sl()),
-  );
-  sl.registerFactory<GetTimetableById>(() => GetTimetableById(sl()));
-  sl.registerFactory<WatchAllTimetables>(() => WatchAllTimetables(sl()));
-  sl.registerFactory<WatchTimetablesByUserId>(
-    () => WatchTimetablesByUserId(sl()),
-  );
-  sl.registerFactory<WatchTimetablesByInstitutionId>(
-    () => WatchTimetablesByInstitutionId(sl()),
-  );
-  sl.registerFactory<DeleteTimetable>(() => DeleteTimetable(sl()));
-  sl.registerFactory<SyncTimetables>(() => SyncTimetables(sl()));
-  sl.registerFactory<FetchTimetablesFromRemote>(
-    () => FetchTimetablesFromRemote(sl()),
-  );
-
-  sl.registerFactory<TimetableBloc>(
-    () => TimetableBloc(
-      watchAllTimetables: sl(),
-      watchTimetablesByUserId: sl(),
-      watchTimetablesByInstitutionId: sl(),
-      createOrUpdateTimetable: sl(),
-      getTimetableById: sl(),
-      deleteTimetable: sl(),
-      syncTimetables: sl(),
-      fetchTimetablesFromRemote: sl(),
-    ),
-  );
-
-  sl.registerFactory<TimetableEntryBloc>(
-    () => TimetableEntryBloc(
-      watchAllTimetableEntries: sl(),
-      watchTimetableEntriesByTimetableId: sl(),
-      watchTimetableEntriesByCourseId: sl(),
-      watchTimetableEntriesByUserId: sl(),
-      watchTimetableEntriesByInstitutionId: sl(),
-      createOrUpdateTimetableEntry: sl(),
-      createOrUpdateTimetableEntries: sl(),
-      getTimetableEntryById: sl(),
-      deleteTimetableEntry: sl(),
-      deleteTimetableEntries: sl(),
-      syncTimetableEntries: sl(),
-      fetchTimetableEntriesFromRemote: sl(),
-    ),
-  );
-
   sl.registerFactory<MagnetBloc>(
     () => MagnetBloc(
-      createOrUpdateTimetableEntries: sl(),
-      saveCourseUsecase: sl(),
+      createScheduleEntry: sl<courses.CreateScheduleEntry>(),
+      createCourse: sl<courses.CreateCourse>(),
       syncInstitutionProfileUsecase: sl(),
       saveFeeTransaction: sl(),
     ),

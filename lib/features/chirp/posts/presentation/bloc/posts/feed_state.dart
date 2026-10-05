@@ -40,4 +40,11 @@ sealed class FeedState with _$FeedState {
     required Post post,
     required String message,
   }) = PostLikeError;
+
+  /// Emitted when a poll vote/retract API call fails.
+  /// The [post] is the original pre-vote version for UI rollback.
+  const factory FeedState.pollVoteError({
+    required Post post,
+    required String message,
+  }) = PollVoteError;
 }

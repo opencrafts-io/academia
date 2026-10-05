@@ -24,6 +24,11 @@ RouteBase get $courseListRoute => GoRouteData.$route(
       factory: $CourseHistoryRoute._fromState,
     ),
     GoRouteData.$route(
+      path: 'timetable',
+      hasOverriddenOnExit: false,
+      factory: $WeeklyTimetableRoute._fromState,
+    ),
+    GoRouteData.$route(
       path: ':courseId',
       hasOverriddenOnExit: false,
       factory: $CourseDetailRoute._fromState,
@@ -96,6 +101,27 @@ mixin $CourseHistoryRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/courses/history');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $WeeklyTimetableRoute on GoRouteData {
+  static WeeklyTimetableRoute _fromState(GoRouterState state) =>
+      const WeeklyTimetableRoute();
+
+  @override
+  String get location => GoRouteData.$location('/courses/timetable');
 
   @override
   void go(BuildContext context) => context.go(location);
