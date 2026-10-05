@@ -1,0 +1,27 @@
+name: portal_sync
+description: Internal portal observation analysis and validated import coordination.
+publish_to: none
+version: 0.1.0
+
+environment:
+  sdk: ^3.13.2
+  flutter: '>=1.17.0'
+
+dependencies:
+  crypto: ^3.0.6
+  firebase_ai: ^4.0.0
+  firebase_core: ^4.0.0
+  flutter_inappwebview: 6.2.0-beta.3
+  flutter:
+    sdk: flutter
+  shared_preferences: ^2.5.5
+  magnet:
+    path: ../magnet
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true

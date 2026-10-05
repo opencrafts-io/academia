@@ -1,3 +1,8 @@
+> **Development checkpoint: INCOMPLETE AND HIGHLY UNSTABLE.**
+> The universal school portal sync implementation is unfinished and intended for
+> internal testing. Real school sync on a device remains unverified. See
+> [implementation status and remaining work](docs/portal-sync-internal.md).
+
 <p align="center">
   <img src="assets/icons/academia-logo-variant-1.png" width="320" alt="Academia logo" />
 </p>

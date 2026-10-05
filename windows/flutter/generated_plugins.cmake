@@ -9,6 +9,9 @@ list(APPEND FLUTTER_PLUGIN_LIST
   desktop_webview_window
   dynamic_color
   file_selector_windows
+  firebase_app_check
+  firebase_auth
+  firebase_core
   flutter_inappwebview_windows
   flutter_secure_storage_windows
   gal

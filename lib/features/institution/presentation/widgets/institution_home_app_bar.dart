@@ -6,9 +6,14 @@ import 'package:go_router/go_router.dart';
 import 'package:loading_indicator_m3e/loading_indicator_m3e.dart';
 
 class InstitutionHomeAppBar extends StatelessWidget {
-  const InstitutionHomeAppBar({super.key, required this.institutionID});
+  const InstitutionHomeAppBar({
+    super.key,
+    required this.institutionID,
+    this.hideLegacyKeys = false,
+  });
 
   final int institutionID;
+  final bool hideLegacyKeys;
 
   @override
   Widget build(BuildContext context) {
@@ -27,29 +32,29 @@ class InstitutionHomeAppBar extends StatelessWidget {
           ),
         ),
         actions: [
-          BlocBuilder<ScrappingCommandBloc, ScrappingCommandState>(
-            builder: (context, state) => state.maybeWhen(
-              loaded: (command) => IconButton(
-                onPressed: () {
-                  InstitutionKeysViewRoute(
-                    institutionID: institutionID,
-                  ).push(context);
-                },
-                icon: Icon(Icons.key_rounded),
-              ),
-              orElse: () => const SizedBox(
-                width: 48,
-                height: 48,
-                child: Center(
-                  child: SizedBox(
-                    width: 22,
-                    height: 22,
-                    child: LoadingIndicatorM3E(),
+          if (!hideLegacyKeys)
+            BlocBuilder<ScrappingCommandBloc, ScrappingCommandState>(
+              builder: (context, state) => state.maybeWhen(
+                loaded: (command) => IconButton(
+                  onPressed: () {
+                    InstitutionKeysViewRoute(institutionID: institutionID)
+                        .push(context);
+                  },
+                  icon: Icon(Icons.key_rounded),
+                ),
+                orElse: () => const SizedBox(
+                  width: 48,
+                  height: 48,
+                  child: Center(
+                    child: SizedBox(
+                      width: 22,
+                      height: 22,
+                      child: LoadingIndicatorM3E(),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
         ],
       ),
     );

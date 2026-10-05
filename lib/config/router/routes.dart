@@ -11,6 +11,7 @@ import 'package:academia/features/features.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 import 'package:lock_in/lock_in.dart';
 import 'package:courses/courses.dart' as courses_package;
+import 'package:academia/core/integration/portal_sync/school_portal_page.dart';
 
 part 'routes.g.dart';
 
@@ -1058,6 +1059,7 @@ class ExamTimetableSearchRoute extends GoRouteData
     TypedGoRoute<InstitutionHomePageRoute>(
       path: "/institution/:institutionID",
       routes: [
+        TypedGoRoute<SchoolPortalRoute>(path: "portal"),
         TypedGoRoute<InstitutionKeysViewRoute>(path: "keys"),
         TypedGoRoute<InstitutionFeesTransactionRoute>(path: "fees"),
         TypedGoRoute<EditStudentProfileRoute>(path: "profile/:profileId"),
@@ -1151,6 +1153,17 @@ class InstitutionKeysViewRoute extends GoRouteData
       ),
       child: Sheet(child: InstitutionKeysView(institutionID: institutionID)),
     );
+  }
+}
+
+class SchoolPortalRoute extends GoRouteData with $SchoolPortalRoute {
+  const SchoolPortalRoute({required this.institutionID});
+
+  final int institutionID;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return SchoolPortalPage(institutionId: institutionID);
   }
 }
 

@@ -13,6 +13,8 @@ import 'package:todos/todos.dart' as todos;
 
 import 'package:academia/features/essentials/widgets/essential_category_tile.dart';
 import 'package:academia/features/essentials/widgets/pomodoro_essentials_card.dart';
+import 'package:academia/core/integration/portal_sync/portal_firebase_bootstrap.dart';
+import 'package:academia/core/integration/portal_sync/school_portal_entry_card.dart';
 
 class EssentialsPage extends StatefulWidget {
   const EssentialsPage({super.key});
@@ -187,6 +189,28 @@ class _EssentialsPageState extends State<EssentialsPage> {
             ],
           ),
 
+          if (portalSyncEnabled)
+            SliverPadding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+              sliver: SliverToBoxAdapter(
+                child: BlocBuilder<InstitutionBloc, InstitutionState>(
+                  builder: (context, state) => SchoolPortalEntryCard(
+                    schools:
+                        state.whenOrNull(loaded: (schools) => schools) ??
+                        const [],
+                    isLoading: state.maybeWhen(
+                      initial: () => true,
+                      loading: () => true,
+                      orElse: () => false,
+                    ),
+                    onSelectSchool: (id) =>
+                        SchoolPortalRoute(institutionID: id).push(context),
+                    onLinkSchool: () =>
+                        LinkInstitutionProfileRoute().push(context),
+                  ),
+                ),
+              ),
+            ),
           SliverPadding(
             padding: EdgeInsets.all(16),
             sliver: SliverToBoxAdapter(child: EssentialsInstitutionSection()),

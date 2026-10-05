@@ -7,9 +7,66 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:975540451403:android:cd6ea85254cca3be1975ce",
+        "android_client_info": {
+          "package_name": "com.instadriver.partner.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdFotj76c-7MJchSB0XpoBAOhR2nlNpWM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:975540451403:android:50f681d3cfcba7bc1975ce",
         "android_client_info": {
           "package_name": "io.opencrafts.academia"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdFotj76c-7MJchSB0XpoBAOhR2nlNpWM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:975540451403:android:ddfd2491970182121975ce",
+        "android_client_info": {
+          "package_name": "io.opencrafts.academia.dev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdFotj76c-7MJchSB0XpoBAOhR2nlNpWM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:975540451403:android:acd2c594092788111975ce",
+        "android_client_info": {
+          "package_name": "io.opencrafts.academia.stg"
         }
       },
       "oauth_client": [],

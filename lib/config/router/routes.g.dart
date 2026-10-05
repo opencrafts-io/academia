@@ -1831,6 +1831,11 @@ RouteBase get $institutionShellRouteData => ShellRouteData.$route(
       factory: $InstitutionHomePageRoute._fromState,
       routes: [
         GoRouteData.$route(
+          path: 'portal',
+          hasOverriddenOnExit: false,
+          factory: $SchoolPortalRoute._fromState,
+        ),
+        GoRouteData.$route(
           path: 'keys',
           hasOverriddenOnExit: false,
           factory: $InstitutionKeysViewRoute._fromState,
@@ -1866,6 +1871,32 @@ mixin $InstitutionHomePageRoute on GoRouteData {
   @override
   String get location => GoRouteData.$location(
     '/institution/${Uri.encodeComponent(_self.institutionID.toString())}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $SchoolPortalRoute on GoRouteData {
+  static SchoolPortalRoute _fromState(GoRouterState state) => SchoolPortalRoute(
+    institutionID: int.parse(state.pathParameters['institutionID']!),
+  );
+
+  SchoolPortalRoute get _self => this as SchoolPortalRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/institution/${Uri.encodeComponent(_self.institutionID.toString())}/portal',
   );
 
   @override

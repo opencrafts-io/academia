@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:magnet/magnet.dart';
+import 'package:academia/core/integration/portal_sync/portal_firebase_bootstrap.dart';
 
 class InstitutionHomePage extends StatefulWidget {
   const InstitutionHomePage({super.key, required this.institutionID});
@@ -22,9 +23,11 @@ class _InstitutionHomePageState extends State<InstitutionHomePage>
   @override
   void initState() {
     super.initState();
-    context.read<MagnetBloc>().add(
-      InitializeMagnet(MagnetConfig.production(schemaServerUrl: "")),
-    );
+    if (!portalSyncEnabled) {
+      context.read<MagnetBloc>().add(
+        InitializeMagnet(MagnetConfig.production(schemaServerUrl: "")),
+      );
+    }
 
     final profileState = context.read<ProfileBloc>().state;
     if (profileState is ProfileLoadedState) {
@@ -75,7 +78,7 @@ class _InstitutionHomePageState extends State<InstitutionHomePage>
                   );
                 },
                 loaded: (key) {
-                  if (key == null) {
+                  if (key == null && !portalSyncEnabled) {
                     showModalBottomSheet(
                       context: context,
                       isDismissible: false,
@@ -123,13 +126,33 @@ class _InstitutionHomePageState extends State<InstitutionHomePage>
           child: CustomScrollView(
             physics: BouncingScrollPhysics(),
             slivers: [
-              InstitutionHomeAppBar(institutionID: widget.institutionID),
+              InstitutionHomeAppBar(
+                institutionID: widget.institutionID,
+                hideLegacyKeys: portalSyncEnabled,
+              ),
               SliverPadding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 sliver: MultiSliver(
                   children: [
-                    SyncStatusSection(),
-                    MagnetLoadingProgressCard(),
+                    if (portalSyncEnabled)
+                      Card.filled(
+                        margin: EdgeInsets.zero,
+                        child: ListTile(
+                          leading: const Icon(Icons.language_rounded),
+                          title: const Text('Connect your school portal'),
+                          subtitle: const Text(
+                            'Browse your courses and review class times before saving',
+                          ),
+                          trailing: const Icon(Icons.arrow_forward_rounded),
+                          onTap: () => SchoolPortalRoute(
+                            institutionID: widget.institutionID,
+                          ).push(context),
+                        ),
+                      )
+                    else ...[
+                      SyncStatusSection(),
+                      MagnetLoadingProgressCard(),
+                    ],
                     SliverPinnedHeader(
                       child: InstitutionSectionLabel(
                         icon: Icons.person_rounded,
