@@ -1,6 +1,10 @@
 export 'src/presentation/cubit/study_tools_cubit.dart';
+export 'src/presentation/cubit/podcast_cubit.dart';
 export 'src/presentation/routes/routes.dart';
 export 'src/presentation/screens/study_material_page.dart';
 export 'src/presentation/screens/study_practice_page.dart';
 export 'src/presentation/screens/study_tools_page.dart';
+export 'src/presentation/screens/study_podcast_player_page.dart';
 export 'src/presentation/study_tools_host.dart';
+export 'src/presentation/audio/podcast_audio_handler.dart';
+export 'src/presentation/widgets/podcast_now_playing_bar.dart';

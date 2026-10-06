@@ -26,6 +26,14 @@ part 'app_database_v2.g.dart';
     TodoTagItems,
     TodoItems,
     TodoItemTags,
+    StudyMaterialRecords,
+    StudyQuestionSetRecords,
+    StudyGenerationJobRecords,
+    StudyPodcastRecords,
+    StudyPodcastDownloads,
+    StudyPlaybackPositions,
+    StudyOfflineEntitlementSnapshots,
+    StudyLegacyImports,
   ],
   daos: [
     PlanDao,
@@ -37,6 +45,7 @@ part 'app_database_v2.g.dart';
     TodoListDao,
     TodoTagDao,
     TodoItemDao,
+    StudyToolsDao,
   ],
 )
 class AppDatabaseV2 extends _$AppDatabaseV2 {
@@ -47,7 +56,7 @@ class AppDatabaseV2 extends _$AppDatabaseV2 {
     : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 8;
+  int get schemaVersion => 9;
 
   static QueryExecutor _openConnection() {
     driftRuntimeOptions.defaultSerializer = const ValueSerializer.defaults(
@@ -210,6 +219,16 @@ extension Migrations on GeneratedDatabase {
       if (scheduleTable == null) {
         await m.createTable(db.scheduleEntries);
       }
+    }
+    if (from < 9 && to >= 9) {
+      await m.createTable(db.studyMaterialRecords);
+      await m.createTable(db.studyQuestionSetRecords);
+      await m.createTable(db.studyGenerationJobRecords);
+      await m.createTable(db.studyPodcastRecords);
+      await m.createTable(db.studyPodcastDownloads);
+      await m.createTable(db.studyPlaybackPositions);
+      await m.createTable(db.studyOfflineEntitlementSnapshots);
+      await m.createTable(db.studyLegacyImports);
     }
   };
 }

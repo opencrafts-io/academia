@@ -6,6 +6,27 @@ part of 'study_dtos.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+_PodcastDto _$PodcastDtoFromJson(Map<String, dynamic> json) => _PodcastDto(
+  id: (json['id'] as num?)?.toInt(),
+  noteId: (json['note_id'] as num).toInt(),
+  title: json['title'] as String? ?? '',
+  generatedAt: DateTime.parse(json['generated_at'] as String),
+  durationSeconds: (json['duration_seconds'] as num?)?.toDouble() ?? 0,
+  audioUrl: json['audio_url'] as String,
+  script: json['script'] as String,
+);
+
+Map<String, dynamic> _$PodcastDtoToJson(_PodcastDto instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'note_id': instance.noteId,
+      'title': instance.title,
+      'generated_at': instance.generatedAt.toIso8601String(),
+      'duration_seconds': instance.durationSeconds,
+      'audio_url': instance.audioUrl,
+      'script': instance.script,
+    };
+
 _StudyArtifactsDto _$StudyArtifactsDtoFromJson(Map<String, dynamic> json) =>
     _StudyArtifactsDto(
       summary: json['summary'] as bool? ?? false,

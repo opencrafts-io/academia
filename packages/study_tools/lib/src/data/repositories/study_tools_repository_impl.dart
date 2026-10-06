@@ -78,6 +78,42 @@ class StudyToolsRepositoryImpl implements StudyToolsRepository {
       remote.generate(noteId, format);
 
   @override
+  Future<Either<Failure, int>> generatePodcast(int noteId) =>
+      remote.generatePodcast(noteId);
+
+  @override
+  Future<Either<Failure, StudyPodcast>> podcast(int noteId) async {
+    final result = await remote.podcast(noteId);
+    return result.fold(
+      (failure) async {
+        if (failure is! NetworkFailure) return left(failure);
+        final cached = await local.podcast(noteId);
+        if (cached == null) return left(failure);
+        return right(cached);
+      },
+      (value) async {
+        await local.savePodcast(value);
+        return right(value);
+      },
+    );
+  }
+
+  @override
+  Future<Either<Failure, StudyPodcast>> podcastVersion(
+    int noteId,
+    String episodeKey,
+  ) async {
+    final cached = await local.podcastVersion(noteId, episodeKey);
+    if (cached != null) return right(cached);
+    return left(
+      const Failure.validation(
+        message: 'This saved episode is no longer available on this device.',
+        code: 'podcast_version_missing',
+      ),
+    );
+  }
+
+  @override
   Future<Either<Failure, GenerationJob>> job(int jobId) => remote.job(jobId);
 
   @override
@@ -109,7 +145,17 @@ class StudyToolsRepositoryImpl implements StudyToolsRepository {
   Future<Map<int, int>> savedJobs() => local.jobs();
 
   @override
-  Future<void> saveJob(int noteId, int jobId) => local.saveJob(noteId, jobId);
+  Future<void> saveJob(
+    int noteId,
+    int jobId, {
+    required List<String> outputs,
+    QuestionFormat? questionFormat,
+  }) => local.saveJob(
+    noteId,
+    jobId,
+    outputs: outputs,
+    questionFormat: questionFormat,
+  );
 
   @override
   Future<void> removeJob(int noteId) => local.removeJob(noteId);

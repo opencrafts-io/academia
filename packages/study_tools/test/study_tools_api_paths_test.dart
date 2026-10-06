@@ -10,6 +10,7 @@ void main() {
     expect(paths.generate(12), '/professor/api/notes/12/generate/');
     expect(paths.job(4), '/professor/api/notes/jobs/4/');
     expect(paths.questions(12), '/professor/api/notes/12/questions/');
+    expect(paths.podcast(12), '/professor/api/notes/12/podcast/');
   });
 
   test('uses QA notes paths for staging and development', () {
@@ -17,6 +18,7 @@ void main() {
       final paths = StudyToolsApiPaths(_flavor(flavor));
       expect(paths.collection, '/qa-professor/api/notes/');
       expect(paths.detail(12), '/qa-professor/api/notes/12/');
+      expect(paths.podcast(12), '/qa-professor/api/notes/12/podcast/');
     }
   });
 }

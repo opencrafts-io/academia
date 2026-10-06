@@ -5,8 +5,10 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 
 import '../cubit/study_tools_cubit.dart';
+import '../cubit/podcast_cubit.dart';
 import '../screens/study_material_page.dart';
 import '../screens/study_practice_page.dart';
+import '../screens/study_podcast_player_page.dart';
 import '../screens/study_tools_page.dart';
 
 part 'study_tools_routes.g.dart';
@@ -16,18 +18,26 @@ part 'study_tools_routes.g.dart';
   routes: [TypedGoRoute<StudyMaterialRoute>(path: 'material/:materialId')],
 )
 class StudyToolsRoute extends GoRouteData with $StudyToolsRoute {
-  const StudyToolsRoute({this.courseId, this.courseLabel});
+  const StudyToolsRoute({this.courseId, this.courseLabel, this.courseLocalId});
 
   final String? courseId;
   final String? courseLabel;
+  final String? courseLocalId;
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) => _studyPage(
     context,
     state,
-    BlocProvider(
-      create: (_) => GetIt.instance<StudyToolsCubit>(),
-      child: StudyToolsPage(courseId: courseId, courseLabel: courseLabel),
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => GetIt.instance<StudyToolsCubit>()),
+        BlocProvider(create: (_) => GetIt.instance<PodcastCubit>()),
+      ],
+      child: StudyToolsPage(
+        courseId: courseId,
+        courseLabel: courseLabel,
+        courseLocalId: courseLocalId,
+      ),
     ),
   );
 }
@@ -40,9 +50,36 @@ class StudyMaterialRoute extends GoRouteData with $StudyMaterialRoute {
   Page<void> buildPage(BuildContext context, GoRouterState state) => _studyPage(
     context,
     state,
-    BlocProvider(
-      create: (_) => GetIt.instance<StudyToolsCubit>(),
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => GetIt.instance<StudyToolsCubit>()),
+        BlocProvider(create: (_) => GetIt.instance<PodcastCubit>()),
+      ],
       child: StudyMaterialPage(materialId: materialId),
+    ),
+  );
+}
+
+@TypedGoRoute<StudyPodcastPlayerRoute>(path: '/study-tools/podcast/:materialId')
+class StudyPodcastPlayerRoute extends GoRouteData
+    with $StudyPodcastPlayerRoute {
+  const StudyPodcastPlayerRoute({required this.materialId, this.episodeKey});
+  final int materialId;
+  final String? episodeKey;
+
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) => _studyPage(
+    context,
+    state,
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => GetIt.instance<StudyToolsCubit>()),
+        BlocProvider(create: (_) => GetIt.instance<PodcastCubit>()),
+      ],
+      child: StudyPodcastPlayerPage(
+        materialId: materialId,
+        episodeKey: episodeKey,
+      ),
     ),
   );
 }

@@ -6,5 +6,6 @@ import 'package:flutter/widgets.dart';
 /// this package to the courses feature.
 class StudyToolsHost {
   static Future<List<StudyCourseOption>> Function()? loadCourses;
-  static void Function(BuildContext context)? openPaywall;
+  static Future<void> Function(BuildContext context)? openPaywall;
+  static void Function(StudyPodcast podcast)? openPodcastPlayer;
 }

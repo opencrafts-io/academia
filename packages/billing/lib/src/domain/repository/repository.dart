@@ -35,6 +35,9 @@ abstract class CheckoutRepository {
 
 abstract class SubscriptionRepository {
   Future<Either<Failure, domain.SubscriptionStatus>> getCurrentStatus();
+
+  /// Fetches a fresh status without falling back to cached data.
+  Future<Either<Failure, domain.SubscriptionStatus>> refreshCurrentStatus();
 }
 
 abstract class EntitlementRepository {

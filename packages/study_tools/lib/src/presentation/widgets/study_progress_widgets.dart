@@ -25,7 +25,15 @@ class StudyToolsLoadingView extends StatelessWidget {
 }
 
 class StudyGenerationProgressCard extends StatelessWidget {
-  const StudyGenerationProgressCard({super.key});
+  const StudyGenerationProgressCard({
+    this.title = 'Generation is in progress',
+    this.description =
+        'You can leave this screen. We’ll check again when you return.',
+    super.key,
+  });
+
+  final String title;
+  final String description;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +52,7 @@ class StudyGenerationProgressCard extends StatelessWidget {
               backgroundColor: colors.onSecondaryContainer.withValues(
                 alpha: 0.16,
               ),
-              semanticsLabel: 'Generating questions',
+              semanticsLabel: title,
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -52,13 +60,13 @@ class StudyGenerationProgressCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Preparing your questions',
+                    title,
                     style: Theme.of(context).textTheme.titleMedium
                         ?.copyWith(color: colors.onSecondaryContainer),
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'You can leave this screen. We’ll check again when you return.',
+                    description,
                     style: Theme.of(context).textTheme.bodyMedium
                         ?.copyWith(color: colors.onSecondaryContainer),
                   ),

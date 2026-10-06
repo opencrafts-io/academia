@@ -9373,6 +9373,3712 @@ class TodoItemTagsCompanion extends UpdateCompanion<TodoItemTag> {
   }
 }
 
+class $StudyMaterialRecordsTable extends StudyMaterialRecords
+    with TableInfo<$StudyMaterialRecordsTable, StudyMaterialRecord> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $StudyMaterialRecordsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _environmentMeta = const VerificationMeta(
+    'environment',
+  );
+  @override
+  late final GeneratedColumn<String> environment = GeneratedColumn<String>(
+    'environment',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _accountIdMeta = const VerificationMeta(
+    'accountId',
+  );
+  @override
+  late final GeneratedColumn<String> accountId = GeneratedColumn<String>(
+    'account_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _noteIdMeta = const VerificationMeta('noteId');
+  @override
+  late final GeneratedColumn<int> noteId = GeneratedColumn<int>(
+    'note_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _metadataJsonMeta = const VerificationMeta(
+    'metadataJson',
+  );
+  @override
+  late final GeneratedColumn<String> metadataJson = GeneratedColumn<String>(
+    'metadata_json',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _cachedAtMeta = const VerificationMeta(
+    'cachedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> cachedAt = GeneratedColumn<DateTime>(
+    'cached_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    environment,
+    accountId,
+    noteId,
+    metadataJson,
+    cachedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'study_material_records';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<StudyMaterialRecord> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('environment')) {
+      context.handle(
+        _environmentMeta,
+        environment.isAcceptableOrUnknown(
+          data['environment']!,
+          _environmentMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_environmentMeta);
+    }
+    if (data.containsKey('account_id')) {
+      context.handle(
+        _accountIdMeta,
+        accountId.isAcceptableOrUnknown(data['account_id']!, _accountIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_accountIdMeta);
+    }
+    if (data.containsKey('note_id')) {
+      context.handle(
+        _noteIdMeta,
+        noteId.isAcceptableOrUnknown(data['note_id']!, _noteIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_noteIdMeta);
+    }
+    if (data.containsKey('metadata_json')) {
+      context.handle(
+        _metadataJsonMeta,
+        metadataJson.isAcceptableOrUnknown(
+          data['metadata_json']!,
+          _metadataJsonMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_metadataJsonMeta);
+    }
+    if (data.containsKey('cached_at')) {
+      context.handle(
+        _cachedAtMeta,
+        cachedAt.isAcceptableOrUnknown(data['cached_at']!, _cachedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_cachedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {environment, accountId, noteId};
+  @override
+  StudyMaterialRecord map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return StudyMaterialRecord(
+      environment: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}environment'],
+      )!,
+      accountId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}account_id'],
+      )!,
+      noteId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}note_id'],
+      )!,
+      metadataJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}metadata_json'],
+      )!,
+      cachedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}cached_at'],
+      )!,
+    );
+  }
+
+  @override
+  $StudyMaterialRecordsTable createAlias(String alias) {
+    return $StudyMaterialRecordsTable(attachedDatabase, alias);
+  }
+}
+
+class StudyMaterialRecord extends DataClass
+    implements Insertable<StudyMaterialRecord> {
+  final String environment;
+  final String accountId;
+  final int noteId;
+  final String metadataJson;
+  final DateTime cachedAt;
+  const StudyMaterialRecord({
+    required this.environment,
+    required this.accountId,
+    required this.noteId,
+    required this.metadataJson,
+    required this.cachedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['environment'] = Variable<String>(environment);
+    map['account_id'] = Variable<String>(accountId);
+    map['note_id'] = Variable<int>(noteId);
+    map['metadata_json'] = Variable<String>(metadataJson);
+    map['cached_at'] = Variable<DateTime>(cachedAt);
+    return map;
+  }
+
+  StudyMaterialRecordsCompanion toCompanion(bool nullToAbsent) {
+    return StudyMaterialRecordsCompanion(
+      environment: Value(environment),
+      accountId: Value(accountId),
+      noteId: Value(noteId),
+      metadataJson: Value(metadataJson),
+      cachedAt: Value(cachedAt),
+    );
+  }
+
+  factory StudyMaterialRecord.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return StudyMaterialRecord(
+      environment: serializer.fromJson<String>(json['environment']),
+      accountId: serializer.fromJson<String>(json['accountId']),
+      noteId: serializer.fromJson<int>(json['noteId']),
+      metadataJson: serializer.fromJson<String>(json['metadataJson']),
+      cachedAt: serializer.fromJson<DateTime>(json['cachedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'environment': serializer.toJson<String>(environment),
+      'accountId': serializer.toJson<String>(accountId),
+      'noteId': serializer.toJson<int>(noteId),
+      'metadataJson': serializer.toJson<String>(metadataJson),
+      'cachedAt': serializer.toJson<DateTime>(cachedAt),
+    };
+  }
+
+  StudyMaterialRecord copyWith({
+    String? environment,
+    String? accountId,
+    int? noteId,
+    String? metadataJson,
+    DateTime? cachedAt,
+  }) => StudyMaterialRecord(
+    environment: environment ?? this.environment,
+    accountId: accountId ?? this.accountId,
+    noteId: noteId ?? this.noteId,
+    metadataJson: metadataJson ?? this.metadataJson,
+    cachedAt: cachedAt ?? this.cachedAt,
+  );
+  StudyMaterialRecord copyWithCompanion(StudyMaterialRecordsCompanion data) {
+    return StudyMaterialRecord(
+      environment: data.environment.present
+          ? data.environment.value
+          : this.environment,
+      accountId: data.accountId.present ? data.accountId.value : this.accountId,
+      noteId: data.noteId.present ? data.noteId.value : this.noteId,
+      metadataJson: data.metadataJson.present
+          ? data.metadataJson.value
+          : this.metadataJson,
+      cachedAt: data.cachedAt.present ? data.cachedAt.value : this.cachedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('StudyMaterialRecord(')
+          ..write('environment: $environment, ')
+          ..write('accountId: $accountId, ')
+          ..write('noteId: $noteId, ')
+          ..write('metadataJson: $metadataJson, ')
+          ..write('cachedAt: $cachedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(environment, accountId, noteId, metadataJson, cachedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is StudyMaterialRecord &&
+          other.environment == this.environment &&
+          other.accountId == this.accountId &&
+          other.noteId == this.noteId &&
+          other.metadataJson == this.metadataJson &&
+          other.cachedAt == this.cachedAt);
+}
+
+class StudyMaterialRecordsCompanion
+    extends UpdateCompanion<StudyMaterialRecord> {
+  final Value<String> environment;
+  final Value<String> accountId;
+  final Value<int> noteId;
+  final Value<String> metadataJson;
+  final Value<DateTime> cachedAt;
+  final Value<int> rowid;
+  const StudyMaterialRecordsCompanion({
+    this.environment = const Value.absent(),
+    this.accountId = const Value.absent(),
+    this.noteId = const Value.absent(),
+    this.metadataJson = const Value.absent(),
+    this.cachedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  StudyMaterialRecordsCompanion.insert({
+    required String environment,
+    required String accountId,
+    required int noteId,
+    required String metadataJson,
+    required DateTime cachedAt,
+    this.rowid = const Value.absent(),
+  }) : environment = Value(environment),
+       accountId = Value(accountId),
+       noteId = Value(noteId),
+       metadataJson = Value(metadataJson),
+       cachedAt = Value(cachedAt);
+  static Insertable<StudyMaterialRecord> custom({
+    Expression<String>? environment,
+    Expression<String>? accountId,
+    Expression<int>? noteId,
+    Expression<String>? metadataJson,
+    Expression<DateTime>? cachedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (environment != null) 'environment': environment,
+      if (accountId != null) 'account_id': accountId,
+      if (noteId != null) 'note_id': noteId,
+      if (metadataJson != null) 'metadata_json': metadataJson,
+      if (cachedAt != null) 'cached_at': cachedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  StudyMaterialRecordsCompanion copyWith({
+    Value<String>? environment,
+    Value<String>? accountId,
+    Value<int>? noteId,
+    Value<String>? metadataJson,
+    Value<DateTime>? cachedAt,
+    Value<int>? rowid,
+  }) {
+    return StudyMaterialRecordsCompanion(
+      environment: environment ?? this.environment,
+      accountId: accountId ?? this.accountId,
+      noteId: noteId ?? this.noteId,
+      metadataJson: metadataJson ?? this.metadataJson,
+      cachedAt: cachedAt ?? this.cachedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (environment.present) {
+      map['environment'] = Variable<String>(environment.value);
+    }
+    if (accountId.present) {
+      map['account_id'] = Variable<String>(accountId.value);
+    }
+    if (noteId.present) {
+      map['note_id'] = Variable<int>(noteId.value);
+    }
+    if (metadataJson.present) {
+      map['metadata_json'] = Variable<String>(metadataJson.value);
+    }
+    if (cachedAt.present) {
+      map['cached_at'] = Variable<DateTime>(cachedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('StudyMaterialRecordsCompanion(')
+          ..write('environment: $environment, ')
+          ..write('accountId: $accountId, ')
+          ..write('noteId: $noteId, ')
+          ..write('metadataJson: $metadataJson, ')
+          ..write('cachedAt: $cachedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $StudyQuestionSetRecordsTable extends StudyQuestionSetRecords
+    with TableInfo<$StudyQuestionSetRecordsTable, StudyQuestionSetRecord> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $StudyQuestionSetRecordsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _environmentMeta = const VerificationMeta(
+    'environment',
+  );
+  @override
+  late final GeneratedColumn<String> environment = GeneratedColumn<String>(
+    'environment',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _accountIdMeta = const VerificationMeta(
+    'accountId',
+  );
+  @override
+  late final GeneratedColumn<String> accountId = GeneratedColumn<String>(
+    'account_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _noteIdMeta = const VerificationMeta('noteId');
+  @override
+  late final GeneratedColumn<int> noteId = GeneratedColumn<int>(
+    'note_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _setIdMeta = const VerificationMeta('setId');
+  @override
+  late final GeneratedColumn<int> setId = GeneratedColumn<int>(
+    'set_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _formatMeta = const VerificationMeta('format');
+  @override
+  late final GeneratedColumn<String> format = GeneratedColumn<String>(
+    'format',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _setJsonMeta = const VerificationMeta(
+    'setJson',
+  );
+  @override
+  late final GeneratedColumn<String> setJson = GeneratedColumn<String>(
+    'set_json',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _cachedAtMeta = const VerificationMeta(
+    'cachedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> cachedAt = GeneratedColumn<DateTime>(
+    'cached_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    environment,
+    accountId,
+    noteId,
+    setId,
+    format,
+    setJson,
+    cachedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'study_question_set_records';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<StudyQuestionSetRecord> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('environment')) {
+      context.handle(
+        _environmentMeta,
+        environment.isAcceptableOrUnknown(
+          data['environment']!,
+          _environmentMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_environmentMeta);
+    }
+    if (data.containsKey('account_id')) {
+      context.handle(
+        _accountIdMeta,
+        accountId.isAcceptableOrUnknown(data['account_id']!, _accountIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_accountIdMeta);
+    }
+    if (data.containsKey('note_id')) {
+      context.handle(
+        _noteIdMeta,
+        noteId.isAcceptableOrUnknown(data['note_id']!, _noteIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_noteIdMeta);
+    }
+    if (data.containsKey('set_id')) {
+      context.handle(
+        _setIdMeta,
+        setId.isAcceptableOrUnknown(data['set_id']!, _setIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_setIdMeta);
+    }
+    if (data.containsKey('format')) {
+      context.handle(
+        _formatMeta,
+        format.isAcceptableOrUnknown(data['format']!, _formatMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_formatMeta);
+    }
+    if (data.containsKey('set_json')) {
+      context.handle(
+        _setJsonMeta,
+        setJson.isAcceptableOrUnknown(data['set_json']!, _setJsonMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_setJsonMeta);
+    }
+    if (data.containsKey('cached_at')) {
+      context.handle(
+        _cachedAtMeta,
+        cachedAt.isAcceptableOrUnknown(data['cached_at']!, _cachedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_cachedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {
+    environment,
+    accountId,
+    noteId,
+    setId,
+    format,
+  };
+  @override
+  StudyQuestionSetRecord map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return StudyQuestionSetRecord(
+      environment: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}environment'],
+      )!,
+      accountId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}account_id'],
+      )!,
+      noteId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}note_id'],
+      )!,
+      setId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}set_id'],
+      )!,
+      format: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}format'],
+      )!,
+      setJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}set_json'],
+      )!,
+      cachedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}cached_at'],
+      )!,
+    );
+  }
+
+  @override
+  $StudyQuestionSetRecordsTable createAlias(String alias) {
+    return $StudyQuestionSetRecordsTable(attachedDatabase, alias);
+  }
+}
+
+class StudyQuestionSetRecord extends DataClass
+    implements Insertable<StudyQuestionSetRecord> {
+  final String environment;
+  final String accountId;
+  final int noteId;
+  final int setId;
+  final String format;
+  final String setJson;
+  final DateTime cachedAt;
+  const StudyQuestionSetRecord({
+    required this.environment,
+    required this.accountId,
+    required this.noteId,
+    required this.setId,
+    required this.format,
+    required this.setJson,
+    required this.cachedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['environment'] = Variable<String>(environment);
+    map['account_id'] = Variable<String>(accountId);
+    map['note_id'] = Variable<int>(noteId);
+    map['set_id'] = Variable<int>(setId);
+    map['format'] = Variable<String>(format);
+    map['set_json'] = Variable<String>(setJson);
+    map['cached_at'] = Variable<DateTime>(cachedAt);
+    return map;
+  }
+
+  StudyQuestionSetRecordsCompanion toCompanion(bool nullToAbsent) {
+    return StudyQuestionSetRecordsCompanion(
+      environment: Value(environment),
+      accountId: Value(accountId),
+      noteId: Value(noteId),
+      setId: Value(setId),
+      format: Value(format),
+      setJson: Value(setJson),
+      cachedAt: Value(cachedAt),
+    );
+  }
+
+  factory StudyQuestionSetRecord.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return StudyQuestionSetRecord(
+      environment: serializer.fromJson<String>(json['environment']),
+      accountId: serializer.fromJson<String>(json['accountId']),
+      noteId: serializer.fromJson<int>(json['noteId']),
+      setId: serializer.fromJson<int>(json['setId']),
+      format: serializer.fromJson<String>(json['format']),
+      setJson: serializer.fromJson<String>(json['setJson']),
+      cachedAt: serializer.fromJson<DateTime>(json['cachedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'environment': serializer.toJson<String>(environment),
+      'accountId': serializer.toJson<String>(accountId),
+      'noteId': serializer.toJson<int>(noteId),
+      'setId': serializer.toJson<int>(setId),
+      'format': serializer.toJson<String>(format),
+      'setJson': serializer.toJson<String>(setJson),
+      'cachedAt': serializer.toJson<DateTime>(cachedAt),
+    };
+  }
+
+  StudyQuestionSetRecord copyWith({
+    String? environment,
+    String? accountId,
+    int? noteId,
+    int? setId,
+    String? format,
+    String? setJson,
+    DateTime? cachedAt,
+  }) => StudyQuestionSetRecord(
+    environment: environment ?? this.environment,
+    accountId: accountId ?? this.accountId,
+    noteId: noteId ?? this.noteId,
+    setId: setId ?? this.setId,
+    format: format ?? this.format,
+    setJson: setJson ?? this.setJson,
+    cachedAt: cachedAt ?? this.cachedAt,
+  );
+  StudyQuestionSetRecord copyWithCompanion(
+    StudyQuestionSetRecordsCompanion data,
+  ) {
+    return StudyQuestionSetRecord(
+      environment: data.environment.present
+          ? data.environment.value
+          : this.environment,
+      accountId: data.accountId.present ? data.accountId.value : this.accountId,
+      noteId: data.noteId.present ? data.noteId.value : this.noteId,
+      setId: data.setId.present ? data.setId.value : this.setId,
+      format: data.format.present ? data.format.value : this.format,
+      setJson: data.setJson.present ? data.setJson.value : this.setJson,
+      cachedAt: data.cachedAt.present ? data.cachedAt.value : this.cachedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('StudyQuestionSetRecord(')
+          ..write('environment: $environment, ')
+          ..write('accountId: $accountId, ')
+          ..write('noteId: $noteId, ')
+          ..write('setId: $setId, ')
+          ..write('format: $format, ')
+          ..write('setJson: $setJson, ')
+          ..write('cachedAt: $cachedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    environment,
+    accountId,
+    noteId,
+    setId,
+    format,
+    setJson,
+    cachedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is StudyQuestionSetRecord &&
+          other.environment == this.environment &&
+          other.accountId == this.accountId &&
+          other.noteId == this.noteId &&
+          other.setId == this.setId &&
+          other.format == this.format &&
+          other.setJson == this.setJson &&
+          other.cachedAt == this.cachedAt);
+}
+
+class StudyQuestionSetRecordsCompanion
+    extends UpdateCompanion<StudyQuestionSetRecord> {
+  final Value<String> environment;
+  final Value<String> accountId;
+  final Value<int> noteId;
+  final Value<int> setId;
+  final Value<String> format;
+  final Value<String> setJson;
+  final Value<DateTime> cachedAt;
+  final Value<int> rowid;
+  const StudyQuestionSetRecordsCompanion({
+    this.environment = const Value.absent(),
+    this.accountId = const Value.absent(),
+    this.noteId = const Value.absent(),
+    this.setId = const Value.absent(),
+    this.format = const Value.absent(),
+    this.setJson = const Value.absent(),
+    this.cachedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  StudyQuestionSetRecordsCompanion.insert({
+    required String environment,
+    required String accountId,
+    required int noteId,
+    required int setId,
+    required String format,
+    required String setJson,
+    required DateTime cachedAt,
+    this.rowid = const Value.absent(),
+  }) : environment = Value(environment),
+       accountId = Value(accountId),
+       noteId = Value(noteId),
+       setId = Value(setId),
+       format = Value(format),
+       setJson = Value(setJson),
+       cachedAt = Value(cachedAt);
+  static Insertable<StudyQuestionSetRecord> custom({
+    Expression<String>? environment,
+    Expression<String>? accountId,
+    Expression<int>? noteId,
+    Expression<int>? setId,
+    Expression<String>? format,
+    Expression<String>? setJson,
+    Expression<DateTime>? cachedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (environment != null) 'environment': environment,
+      if (accountId != null) 'account_id': accountId,
+      if (noteId != null) 'note_id': noteId,
+      if (setId != null) 'set_id': setId,
+      if (format != null) 'format': format,
+      if (setJson != null) 'set_json': setJson,
+      if (cachedAt != null) 'cached_at': cachedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  StudyQuestionSetRecordsCompanion copyWith({
+    Value<String>? environment,
+    Value<String>? accountId,
+    Value<int>? noteId,
+    Value<int>? setId,
+    Value<String>? format,
+    Value<String>? setJson,
+    Value<DateTime>? cachedAt,
+    Value<int>? rowid,
+  }) {
+    return StudyQuestionSetRecordsCompanion(
+      environment: environment ?? this.environment,
+      accountId: accountId ?? this.accountId,
+      noteId: noteId ?? this.noteId,
+      setId: setId ?? this.setId,
+      format: format ?? this.format,
+      setJson: setJson ?? this.setJson,
+      cachedAt: cachedAt ?? this.cachedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (environment.present) {
+      map['environment'] = Variable<String>(environment.value);
+    }
+    if (accountId.present) {
+      map['account_id'] = Variable<String>(accountId.value);
+    }
+    if (noteId.present) {
+      map['note_id'] = Variable<int>(noteId.value);
+    }
+    if (setId.present) {
+      map['set_id'] = Variable<int>(setId.value);
+    }
+    if (format.present) {
+      map['format'] = Variable<String>(format.value);
+    }
+    if (setJson.present) {
+      map['set_json'] = Variable<String>(setJson.value);
+    }
+    if (cachedAt.present) {
+      map['cached_at'] = Variable<DateTime>(cachedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('StudyQuestionSetRecordsCompanion(')
+          ..write('environment: $environment, ')
+          ..write('accountId: $accountId, ')
+          ..write('noteId: $noteId, ')
+          ..write('setId: $setId, ')
+          ..write('format: $format, ')
+          ..write('setJson: $setJson, ')
+          ..write('cachedAt: $cachedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $StudyGenerationJobRecordsTable extends StudyGenerationJobRecords
+    with TableInfo<$StudyGenerationJobRecordsTable, StudyGenerationJobRecord> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $StudyGenerationJobRecordsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _environmentMeta = const VerificationMeta(
+    'environment',
+  );
+  @override
+  late final GeneratedColumn<String> environment = GeneratedColumn<String>(
+    'environment',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _accountIdMeta = const VerificationMeta(
+    'accountId',
+  );
+  @override
+  late final GeneratedColumn<String> accountId = GeneratedColumn<String>(
+    'account_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _noteIdMeta = const VerificationMeta('noteId');
+  @override
+  late final GeneratedColumn<int> noteId = GeneratedColumn<int>(
+    'note_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _jobIdMeta = const VerificationMeta('jobId');
+  @override
+  late final GeneratedColumn<int> jobId = GeneratedColumn<int>(
+    'job_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _requestedOutputsJsonMeta =
+      const VerificationMeta('requestedOutputsJson');
+  @override
+  late final GeneratedColumn<String> requestedOutputsJson =
+      GeneratedColumn<String>(
+        'requested_outputs_json',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _savedAtMeta = const VerificationMeta(
+    'savedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> savedAt = GeneratedColumn<DateTime>(
+    'saved_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    environment,
+    accountId,
+    noteId,
+    jobId,
+    requestedOutputsJson,
+    savedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'study_generation_job_records';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<StudyGenerationJobRecord> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('environment')) {
+      context.handle(
+        _environmentMeta,
+        environment.isAcceptableOrUnknown(
+          data['environment']!,
+          _environmentMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_environmentMeta);
+    }
+    if (data.containsKey('account_id')) {
+      context.handle(
+        _accountIdMeta,
+        accountId.isAcceptableOrUnknown(data['account_id']!, _accountIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_accountIdMeta);
+    }
+    if (data.containsKey('note_id')) {
+      context.handle(
+        _noteIdMeta,
+        noteId.isAcceptableOrUnknown(data['note_id']!, _noteIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_noteIdMeta);
+    }
+    if (data.containsKey('job_id')) {
+      context.handle(
+        _jobIdMeta,
+        jobId.isAcceptableOrUnknown(data['job_id']!, _jobIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_jobIdMeta);
+    }
+    if (data.containsKey('requested_outputs_json')) {
+      context.handle(
+        _requestedOutputsJsonMeta,
+        requestedOutputsJson.isAcceptableOrUnknown(
+          data['requested_outputs_json']!,
+          _requestedOutputsJsonMeta,
+        ),
+      );
+    }
+    if (data.containsKey('saved_at')) {
+      context.handle(
+        _savedAtMeta,
+        savedAt.isAcceptableOrUnknown(data['saved_at']!, _savedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_savedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {environment, accountId, noteId};
+  @override
+  StudyGenerationJobRecord map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return StudyGenerationJobRecord(
+      environment: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}environment'],
+      )!,
+      accountId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}account_id'],
+      )!,
+      noteId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}note_id'],
+      )!,
+      jobId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}job_id'],
+      )!,
+      requestedOutputsJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}requested_outputs_json'],
+      ),
+      savedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}saved_at'],
+      )!,
+    );
+  }
+
+  @override
+  $StudyGenerationJobRecordsTable createAlias(String alias) {
+    return $StudyGenerationJobRecordsTable(attachedDatabase, alias);
+  }
+}
+
+class StudyGenerationJobRecord extends DataClass
+    implements Insertable<StudyGenerationJobRecord> {
+  final String environment;
+  final String accountId;
+  final int noteId;
+  final int jobId;
+  final String? requestedOutputsJson;
+  final DateTime savedAt;
+  const StudyGenerationJobRecord({
+    required this.environment,
+    required this.accountId,
+    required this.noteId,
+    required this.jobId,
+    this.requestedOutputsJson,
+    required this.savedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['environment'] = Variable<String>(environment);
+    map['account_id'] = Variable<String>(accountId);
+    map['note_id'] = Variable<int>(noteId);
+    map['job_id'] = Variable<int>(jobId);
+    if (!nullToAbsent || requestedOutputsJson != null) {
+      map['requested_outputs_json'] = Variable<String>(requestedOutputsJson);
+    }
+    map['saved_at'] = Variable<DateTime>(savedAt);
+    return map;
+  }
+
+  StudyGenerationJobRecordsCompanion toCompanion(bool nullToAbsent) {
+    return StudyGenerationJobRecordsCompanion(
+      environment: Value(environment),
+      accountId: Value(accountId),
+      noteId: Value(noteId),
+      jobId: Value(jobId),
+      requestedOutputsJson: requestedOutputsJson == null && nullToAbsent
+          ? const Value.absent()
+          : Value(requestedOutputsJson),
+      savedAt: Value(savedAt),
+    );
+  }
+
+  factory StudyGenerationJobRecord.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return StudyGenerationJobRecord(
+      environment: serializer.fromJson<String>(json['environment']),
+      accountId: serializer.fromJson<String>(json['accountId']),
+      noteId: serializer.fromJson<int>(json['noteId']),
+      jobId: serializer.fromJson<int>(json['jobId']),
+      requestedOutputsJson: serializer.fromJson<String?>(
+        json['requestedOutputsJson'],
+      ),
+      savedAt: serializer.fromJson<DateTime>(json['savedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'environment': serializer.toJson<String>(environment),
+      'accountId': serializer.toJson<String>(accountId),
+      'noteId': serializer.toJson<int>(noteId),
+      'jobId': serializer.toJson<int>(jobId),
+      'requestedOutputsJson': serializer.toJson<String?>(requestedOutputsJson),
+      'savedAt': serializer.toJson<DateTime>(savedAt),
+    };
+  }
+
+  StudyGenerationJobRecord copyWith({
+    String? environment,
+    String? accountId,
+    int? noteId,
+    int? jobId,
+    Value<String?> requestedOutputsJson = const Value.absent(),
+    DateTime? savedAt,
+  }) => StudyGenerationJobRecord(
+    environment: environment ?? this.environment,
+    accountId: accountId ?? this.accountId,
+    noteId: noteId ?? this.noteId,
+    jobId: jobId ?? this.jobId,
+    requestedOutputsJson: requestedOutputsJson.present
+        ? requestedOutputsJson.value
+        : this.requestedOutputsJson,
+    savedAt: savedAt ?? this.savedAt,
+  );
+  StudyGenerationJobRecord copyWithCompanion(
+    StudyGenerationJobRecordsCompanion data,
+  ) {
+    return StudyGenerationJobRecord(
+      environment: data.environment.present
+          ? data.environment.value
+          : this.environment,
+      accountId: data.accountId.present ? data.accountId.value : this.accountId,
+      noteId: data.noteId.present ? data.noteId.value : this.noteId,
+      jobId: data.jobId.present ? data.jobId.value : this.jobId,
+      requestedOutputsJson: data.requestedOutputsJson.present
+          ? data.requestedOutputsJson.value
+          : this.requestedOutputsJson,
+      savedAt: data.savedAt.present ? data.savedAt.value : this.savedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('StudyGenerationJobRecord(')
+          ..write('environment: $environment, ')
+          ..write('accountId: $accountId, ')
+          ..write('noteId: $noteId, ')
+          ..write('jobId: $jobId, ')
+          ..write('requestedOutputsJson: $requestedOutputsJson, ')
+          ..write('savedAt: $savedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    environment,
+    accountId,
+    noteId,
+    jobId,
+    requestedOutputsJson,
+    savedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is StudyGenerationJobRecord &&
+          other.environment == this.environment &&
+          other.accountId == this.accountId &&
+          other.noteId == this.noteId &&
+          other.jobId == this.jobId &&
+          other.requestedOutputsJson == this.requestedOutputsJson &&
+          other.savedAt == this.savedAt);
+}
+
+class StudyGenerationJobRecordsCompanion
+    extends UpdateCompanion<StudyGenerationJobRecord> {
+  final Value<String> environment;
+  final Value<String> accountId;
+  final Value<int> noteId;
+  final Value<int> jobId;
+  final Value<String?> requestedOutputsJson;
+  final Value<DateTime> savedAt;
+  final Value<int> rowid;
+  const StudyGenerationJobRecordsCompanion({
+    this.environment = const Value.absent(),
+    this.accountId = const Value.absent(),
+    this.noteId = const Value.absent(),
+    this.jobId = const Value.absent(),
+    this.requestedOutputsJson = const Value.absent(),
+    this.savedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  StudyGenerationJobRecordsCompanion.insert({
+    required String environment,
+    required String accountId,
+    required int noteId,
+    required int jobId,
+    this.requestedOutputsJson = const Value.absent(),
+    required DateTime savedAt,
+    this.rowid = const Value.absent(),
+  }) : environment = Value(environment),
+       accountId = Value(accountId),
+       noteId = Value(noteId),
+       jobId = Value(jobId),
+       savedAt = Value(savedAt);
+  static Insertable<StudyGenerationJobRecord> custom({
+    Expression<String>? environment,
+    Expression<String>? accountId,
+    Expression<int>? noteId,
+    Expression<int>? jobId,
+    Expression<String>? requestedOutputsJson,
+    Expression<DateTime>? savedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (environment != null) 'environment': environment,
+      if (accountId != null) 'account_id': accountId,
+      if (noteId != null) 'note_id': noteId,
+      if (jobId != null) 'job_id': jobId,
+      if (requestedOutputsJson != null)
+        'requested_outputs_json': requestedOutputsJson,
+      if (savedAt != null) 'saved_at': savedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  StudyGenerationJobRecordsCompanion copyWith({
+    Value<String>? environment,
+    Value<String>? accountId,
+    Value<int>? noteId,
+    Value<int>? jobId,
+    Value<String?>? requestedOutputsJson,
+    Value<DateTime>? savedAt,
+    Value<int>? rowid,
+  }) {
+    return StudyGenerationJobRecordsCompanion(
+      environment: environment ?? this.environment,
+      accountId: accountId ?? this.accountId,
+      noteId: noteId ?? this.noteId,
+      jobId: jobId ?? this.jobId,
+      requestedOutputsJson: requestedOutputsJson ?? this.requestedOutputsJson,
+      savedAt: savedAt ?? this.savedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (environment.present) {
+      map['environment'] = Variable<String>(environment.value);
+    }
+    if (accountId.present) {
+      map['account_id'] = Variable<String>(accountId.value);
+    }
+    if (noteId.present) {
+      map['note_id'] = Variable<int>(noteId.value);
+    }
+    if (jobId.present) {
+      map['job_id'] = Variable<int>(jobId.value);
+    }
+    if (requestedOutputsJson.present) {
+      map['requested_outputs_json'] = Variable<String>(
+        requestedOutputsJson.value,
+      );
+    }
+    if (savedAt.present) {
+      map['saved_at'] = Variable<DateTime>(savedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('StudyGenerationJobRecordsCompanion(')
+          ..write('environment: $environment, ')
+          ..write('accountId: $accountId, ')
+          ..write('noteId: $noteId, ')
+          ..write('jobId: $jobId, ')
+          ..write('requestedOutputsJson: $requestedOutputsJson, ')
+          ..write('savedAt: $savedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $StudyPodcastRecordsTable extends StudyPodcastRecords
+    with TableInfo<$StudyPodcastRecordsTable, StudyPodcastRecord> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $StudyPodcastRecordsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _environmentMeta = const VerificationMeta(
+    'environment',
+  );
+  @override
+  late final GeneratedColumn<String> environment = GeneratedColumn<String>(
+    'environment',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _accountIdMeta = const VerificationMeta(
+    'accountId',
+  );
+  @override
+  late final GeneratedColumn<String> accountId = GeneratedColumn<String>(
+    'account_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _noteIdMeta = const VerificationMeta('noteId');
+  @override
+  late final GeneratedColumn<int> noteId = GeneratedColumn<int>(
+    'note_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _episodeIdMeta = const VerificationMeta(
+    'episodeId',
+  );
+  @override
+  late final GeneratedColumn<int> episodeId = GeneratedColumn<int>(
+    'episode_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _generatedAtMeta = const VerificationMeta(
+    'generatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> generatedAt = GeneratedColumn<DateTime>(
+    'generated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _metadataJsonMeta = const VerificationMeta(
+    'metadataJson',
+  );
+  @override
+  late final GeneratedColumn<String> metadataJson = GeneratedColumn<String>(
+    'metadata_json',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    environment,
+    accountId,
+    noteId,
+    episodeId,
+    generatedAt,
+    metadataJson,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'study_podcast_records';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<StudyPodcastRecord> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('environment')) {
+      context.handle(
+        _environmentMeta,
+        environment.isAcceptableOrUnknown(
+          data['environment']!,
+          _environmentMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_environmentMeta);
+    }
+    if (data.containsKey('account_id')) {
+      context.handle(
+        _accountIdMeta,
+        accountId.isAcceptableOrUnknown(data['account_id']!, _accountIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_accountIdMeta);
+    }
+    if (data.containsKey('note_id')) {
+      context.handle(
+        _noteIdMeta,
+        noteId.isAcceptableOrUnknown(data['note_id']!, _noteIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_noteIdMeta);
+    }
+    if (data.containsKey('episode_id')) {
+      context.handle(
+        _episodeIdMeta,
+        episodeId.isAcceptableOrUnknown(data['episode_id']!, _episodeIdMeta),
+      );
+    }
+    if (data.containsKey('generated_at')) {
+      context.handle(
+        _generatedAtMeta,
+        generatedAt.isAcceptableOrUnknown(
+          data['generated_at']!,
+          _generatedAtMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_generatedAtMeta);
+    }
+    if (data.containsKey('metadata_json')) {
+      context.handle(
+        _metadataJsonMeta,
+        metadataJson.isAcceptableOrUnknown(
+          data['metadata_json']!,
+          _metadataJsonMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_metadataJsonMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {
+    environment,
+    accountId,
+    noteId,
+    generatedAt,
+  };
+  @override
+  StudyPodcastRecord map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return StudyPodcastRecord(
+      environment: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}environment'],
+      )!,
+      accountId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}account_id'],
+      )!,
+      noteId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}note_id'],
+      )!,
+      episodeId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}episode_id'],
+      ),
+      generatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}generated_at'],
+      )!,
+      metadataJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}metadata_json'],
+      )!,
+    );
+  }
+
+  @override
+  $StudyPodcastRecordsTable createAlias(String alias) {
+    return $StudyPodcastRecordsTable(attachedDatabase, alias);
+  }
+}
+
+class StudyPodcastRecord extends DataClass
+    implements Insertable<StudyPodcastRecord> {
+  final String environment;
+  final String accountId;
+  final int noteId;
+  final int? episodeId;
+  final DateTime generatedAt;
+  final String metadataJson;
+  const StudyPodcastRecord({
+    required this.environment,
+    required this.accountId,
+    required this.noteId,
+    this.episodeId,
+    required this.generatedAt,
+    required this.metadataJson,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['environment'] = Variable<String>(environment);
+    map['account_id'] = Variable<String>(accountId);
+    map['note_id'] = Variable<int>(noteId);
+    if (!nullToAbsent || episodeId != null) {
+      map['episode_id'] = Variable<int>(episodeId);
+    }
+    map['generated_at'] = Variable<DateTime>(generatedAt);
+    map['metadata_json'] = Variable<String>(metadataJson);
+    return map;
+  }
+
+  StudyPodcastRecordsCompanion toCompanion(bool nullToAbsent) {
+    return StudyPodcastRecordsCompanion(
+      environment: Value(environment),
+      accountId: Value(accountId),
+      noteId: Value(noteId),
+      episodeId: episodeId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(episodeId),
+      generatedAt: Value(generatedAt),
+      metadataJson: Value(metadataJson),
+    );
+  }
+
+  factory StudyPodcastRecord.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return StudyPodcastRecord(
+      environment: serializer.fromJson<String>(json['environment']),
+      accountId: serializer.fromJson<String>(json['accountId']),
+      noteId: serializer.fromJson<int>(json['noteId']),
+      episodeId: serializer.fromJson<int?>(json['episodeId']),
+      generatedAt: serializer.fromJson<DateTime>(json['generatedAt']),
+      metadataJson: serializer.fromJson<String>(json['metadataJson']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'environment': serializer.toJson<String>(environment),
+      'accountId': serializer.toJson<String>(accountId),
+      'noteId': serializer.toJson<int>(noteId),
+      'episodeId': serializer.toJson<int?>(episodeId),
+      'generatedAt': serializer.toJson<DateTime>(generatedAt),
+      'metadataJson': serializer.toJson<String>(metadataJson),
+    };
+  }
+
+  StudyPodcastRecord copyWith({
+    String? environment,
+    String? accountId,
+    int? noteId,
+    Value<int?> episodeId = const Value.absent(),
+    DateTime? generatedAt,
+    String? metadataJson,
+  }) => StudyPodcastRecord(
+    environment: environment ?? this.environment,
+    accountId: accountId ?? this.accountId,
+    noteId: noteId ?? this.noteId,
+    episodeId: episodeId.present ? episodeId.value : this.episodeId,
+    generatedAt: generatedAt ?? this.generatedAt,
+    metadataJson: metadataJson ?? this.metadataJson,
+  );
+  StudyPodcastRecord copyWithCompanion(StudyPodcastRecordsCompanion data) {
+    return StudyPodcastRecord(
+      environment: data.environment.present
+          ? data.environment.value
+          : this.environment,
+      accountId: data.accountId.present ? data.accountId.value : this.accountId,
+      noteId: data.noteId.present ? data.noteId.value : this.noteId,
+      episodeId: data.episodeId.present ? data.episodeId.value : this.episodeId,
+      generatedAt: data.generatedAt.present
+          ? data.generatedAt.value
+          : this.generatedAt,
+      metadataJson: data.metadataJson.present
+          ? data.metadataJson.value
+          : this.metadataJson,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('StudyPodcastRecord(')
+          ..write('environment: $environment, ')
+          ..write('accountId: $accountId, ')
+          ..write('noteId: $noteId, ')
+          ..write('episodeId: $episodeId, ')
+          ..write('generatedAt: $generatedAt, ')
+          ..write('metadataJson: $metadataJson')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    environment,
+    accountId,
+    noteId,
+    episodeId,
+    generatedAt,
+    metadataJson,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is StudyPodcastRecord &&
+          other.environment == this.environment &&
+          other.accountId == this.accountId &&
+          other.noteId == this.noteId &&
+          other.episodeId == this.episodeId &&
+          other.generatedAt == this.generatedAt &&
+          other.metadataJson == this.metadataJson);
+}
+
+class StudyPodcastRecordsCompanion extends UpdateCompanion<StudyPodcastRecord> {
+  final Value<String> environment;
+  final Value<String> accountId;
+  final Value<int> noteId;
+  final Value<int?> episodeId;
+  final Value<DateTime> generatedAt;
+  final Value<String> metadataJson;
+  final Value<int> rowid;
+  const StudyPodcastRecordsCompanion({
+    this.environment = const Value.absent(),
+    this.accountId = const Value.absent(),
+    this.noteId = const Value.absent(),
+    this.episodeId = const Value.absent(),
+    this.generatedAt = const Value.absent(),
+    this.metadataJson = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  StudyPodcastRecordsCompanion.insert({
+    required String environment,
+    required String accountId,
+    required int noteId,
+    this.episodeId = const Value.absent(),
+    required DateTime generatedAt,
+    required String metadataJson,
+    this.rowid = const Value.absent(),
+  }) : environment = Value(environment),
+       accountId = Value(accountId),
+       noteId = Value(noteId),
+       generatedAt = Value(generatedAt),
+       metadataJson = Value(metadataJson);
+  static Insertable<StudyPodcastRecord> custom({
+    Expression<String>? environment,
+    Expression<String>? accountId,
+    Expression<int>? noteId,
+    Expression<int>? episodeId,
+    Expression<DateTime>? generatedAt,
+    Expression<String>? metadataJson,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (environment != null) 'environment': environment,
+      if (accountId != null) 'account_id': accountId,
+      if (noteId != null) 'note_id': noteId,
+      if (episodeId != null) 'episode_id': episodeId,
+      if (generatedAt != null) 'generated_at': generatedAt,
+      if (metadataJson != null) 'metadata_json': metadataJson,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  StudyPodcastRecordsCompanion copyWith({
+    Value<String>? environment,
+    Value<String>? accountId,
+    Value<int>? noteId,
+    Value<int?>? episodeId,
+    Value<DateTime>? generatedAt,
+    Value<String>? metadataJson,
+    Value<int>? rowid,
+  }) {
+    return StudyPodcastRecordsCompanion(
+      environment: environment ?? this.environment,
+      accountId: accountId ?? this.accountId,
+      noteId: noteId ?? this.noteId,
+      episodeId: episodeId ?? this.episodeId,
+      generatedAt: generatedAt ?? this.generatedAt,
+      metadataJson: metadataJson ?? this.metadataJson,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (environment.present) {
+      map['environment'] = Variable<String>(environment.value);
+    }
+    if (accountId.present) {
+      map['account_id'] = Variable<String>(accountId.value);
+    }
+    if (noteId.present) {
+      map['note_id'] = Variable<int>(noteId.value);
+    }
+    if (episodeId.present) {
+      map['episode_id'] = Variable<int>(episodeId.value);
+    }
+    if (generatedAt.present) {
+      map['generated_at'] = Variable<DateTime>(generatedAt.value);
+    }
+    if (metadataJson.present) {
+      map['metadata_json'] = Variable<String>(metadataJson.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('StudyPodcastRecordsCompanion(')
+          ..write('environment: $environment, ')
+          ..write('accountId: $accountId, ')
+          ..write('noteId: $noteId, ')
+          ..write('episodeId: $episodeId, ')
+          ..write('generatedAt: $generatedAt, ')
+          ..write('metadataJson: $metadataJson, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $StudyPodcastDownloadsTable extends StudyPodcastDownloads
+    with TableInfo<$StudyPodcastDownloadsTable, StudyPodcastDownload> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $StudyPodcastDownloadsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _environmentMeta = const VerificationMeta(
+    'environment',
+  );
+  @override
+  late final GeneratedColumn<String> environment = GeneratedColumn<String>(
+    'environment',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _accountIdMeta = const VerificationMeta(
+    'accountId',
+  );
+  @override
+  late final GeneratedColumn<String> accountId = GeneratedColumn<String>(
+    'account_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _noteIdMeta = const VerificationMeta('noteId');
+  @override
+  late final GeneratedColumn<int> noteId = GeneratedColumn<int>(
+    'note_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _episodeKeyMeta = const VerificationMeta(
+    'episodeKey',
+  );
+  @override
+  late final GeneratedColumn<String> episodeKey = GeneratedColumn<String>(
+    'episode_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _localPathMeta = const VerificationMeta(
+    'localPath',
+  );
+  @override
+  late final GeneratedColumn<String> localPath = GeneratedColumn<String>(
+    'local_path',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _sizeBytesMeta = const VerificationMeta(
+    'sizeBytes',
+  );
+  @override
+  late final GeneratedColumn<int> sizeBytes = GeneratedColumn<int>(
+    'size_bytes',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _durationSecondsMeta = const VerificationMeta(
+    'durationSeconds',
+  );
+  @override
+  late final GeneratedColumn<double> durationSeconds = GeneratedColumn<double>(
+    'duration_seconds',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _courseLabelMeta = const VerificationMeta(
+    'courseLabel',
+  );
+  @override
+  late final GeneratedColumn<String> courseLabel = GeneratedColumn<String>(
+    'course_label',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _downloadedAtMeta = const VerificationMeta(
+    'downloadedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> downloadedAt = GeneratedColumn<DateTime>(
+    'downloaded_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+    'status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    environment,
+    accountId,
+    noteId,
+    episodeKey,
+    localPath,
+    sizeBytes,
+    durationSeconds,
+    courseLabel,
+    title,
+    downloadedAt,
+    status,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'study_podcast_downloads';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<StudyPodcastDownload> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('environment')) {
+      context.handle(
+        _environmentMeta,
+        environment.isAcceptableOrUnknown(
+          data['environment']!,
+          _environmentMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_environmentMeta);
+    }
+    if (data.containsKey('account_id')) {
+      context.handle(
+        _accountIdMeta,
+        accountId.isAcceptableOrUnknown(data['account_id']!, _accountIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_accountIdMeta);
+    }
+    if (data.containsKey('note_id')) {
+      context.handle(
+        _noteIdMeta,
+        noteId.isAcceptableOrUnknown(data['note_id']!, _noteIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_noteIdMeta);
+    }
+    if (data.containsKey('episode_key')) {
+      context.handle(
+        _episodeKeyMeta,
+        episodeKey.isAcceptableOrUnknown(data['episode_key']!, _episodeKeyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_episodeKeyMeta);
+    }
+    if (data.containsKey('local_path')) {
+      context.handle(
+        _localPathMeta,
+        localPath.isAcceptableOrUnknown(data['local_path']!, _localPathMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_localPathMeta);
+    }
+    if (data.containsKey('size_bytes')) {
+      context.handle(
+        _sizeBytesMeta,
+        sizeBytes.isAcceptableOrUnknown(data['size_bytes']!, _sizeBytesMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_sizeBytesMeta);
+    }
+    if (data.containsKey('duration_seconds')) {
+      context.handle(
+        _durationSecondsMeta,
+        durationSeconds.isAcceptableOrUnknown(
+          data['duration_seconds']!,
+          _durationSecondsMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_durationSecondsMeta);
+    }
+    if (data.containsKey('course_label')) {
+      context.handle(
+        _courseLabelMeta,
+        courseLabel.isAcceptableOrUnknown(
+          data['course_label']!,
+          _courseLabelMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_courseLabelMeta);
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('downloaded_at')) {
+      context.handle(
+        _downloadedAtMeta,
+        downloadedAt.isAcceptableOrUnknown(
+          data['downloaded_at']!,
+          _downloadedAtMeta,
+        ),
+      );
+    }
+    if (data.containsKey('status')) {
+      context.handle(
+        _statusMeta,
+        status.isAcceptableOrUnknown(data['status']!, _statusMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_statusMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {
+    environment,
+    accountId,
+    noteId,
+    episodeKey,
+  };
+  @override
+  StudyPodcastDownload map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return StudyPodcastDownload(
+      environment: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}environment'],
+      )!,
+      accountId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}account_id'],
+      )!,
+      noteId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}note_id'],
+      )!,
+      episodeKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}episode_key'],
+      )!,
+      localPath: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}local_path'],
+      )!,
+      sizeBytes: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}size_bytes'],
+      )!,
+      durationSeconds: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}duration_seconds'],
+      )!,
+      courseLabel: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}course_label'],
+      )!,
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      )!,
+      downloadedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}downloaded_at'],
+      ),
+      status: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}status'],
+      )!,
+    );
+  }
+
+  @override
+  $StudyPodcastDownloadsTable createAlias(String alias) {
+    return $StudyPodcastDownloadsTable(attachedDatabase, alias);
+  }
+}
+
+class StudyPodcastDownload extends DataClass
+    implements Insertable<StudyPodcastDownload> {
+  final String environment;
+  final String accountId;
+  final int noteId;
+  final String episodeKey;
+  final String localPath;
+  final int sizeBytes;
+  final double durationSeconds;
+  final String courseLabel;
+  final String title;
+  final DateTime? downloadedAt;
+  final String status;
+  const StudyPodcastDownload({
+    required this.environment,
+    required this.accountId,
+    required this.noteId,
+    required this.episodeKey,
+    required this.localPath,
+    required this.sizeBytes,
+    required this.durationSeconds,
+    required this.courseLabel,
+    required this.title,
+    this.downloadedAt,
+    required this.status,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['environment'] = Variable<String>(environment);
+    map['account_id'] = Variable<String>(accountId);
+    map['note_id'] = Variable<int>(noteId);
+    map['episode_key'] = Variable<String>(episodeKey);
+    map['local_path'] = Variable<String>(localPath);
+    map['size_bytes'] = Variable<int>(sizeBytes);
+    map['duration_seconds'] = Variable<double>(durationSeconds);
+    map['course_label'] = Variable<String>(courseLabel);
+    map['title'] = Variable<String>(title);
+    if (!nullToAbsent || downloadedAt != null) {
+      map['downloaded_at'] = Variable<DateTime>(downloadedAt);
+    }
+    map['status'] = Variable<String>(status);
+    return map;
+  }
+
+  StudyPodcastDownloadsCompanion toCompanion(bool nullToAbsent) {
+    return StudyPodcastDownloadsCompanion(
+      environment: Value(environment),
+      accountId: Value(accountId),
+      noteId: Value(noteId),
+      episodeKey: Value(episodeKey),
+      localPath: Value(localPath),
+      sizeBytes: Value(sizeBytes),
+      durationSeconds: Value(durationSeconds),
+      courseLabel: Value(courseLabel),
+      title: Value(title),
+      downloadedAt: downloadedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(downloadedAt),
+      status: Value(status),
+    );
+  }
+
+  factory StudyPodcastDownload.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return StudyPodcastDownload(
+      environment: serializer.fromJson<String>(json['environment']),
+      accountId: serializer.fromJson<String>(json['accountId']),
+      noteId: serializer.fromJson<int>(json['noteId']),
+      episodeKey: serializer.fromJson<String>(json['episodeKey']),
+      localPath: serializer.fromJson<String>(json['localPath']),
+      sizeBytes: serializer.fromJson<int>(json['sizeBytes']),
+      durationSeconds: serializer.fromJson<double>(json['durationSeconds']),
+      courseLabel: serializer.fromJson<String>(json['courseLabel']),
+      title: serializer.fromJson<String>(json['title']),
+      downloadedAt: serializer.fromJson<DateTime?>(json['downloadedAt']),
+      status: serializer.fromJson<String>(json['status']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'environment': serializer.toJson<String>(environment),
+      'accountId': serializer.toJson<String>(accountId),
+      'noteId': serializer.toJson<int>(noteId),
+      'episodeKey': serializer.toJson<String>(episodeKey),
+      'localPath': serializer.toJson<String>(localPath),
+      'sizeBytes': serializer.toJson<int>(sizeBytes),
+      'durationSeconds': serializer.toJson<double>(durationSeconds),
+      'courseLabel': serializer.toJson<String>(courseLabel),
+      'title': serializer.toJson<String>(title),
+      'downloadedAt': serializer.toJson<DateTime?>(downloadedAt),
+      'status': serializer.toJson<String>(status),
+    };
+  }
+
+  StudyPodcastDownload copyWith({
+    String? environment,
+    String? accountId,
+    int? noteId,
+    String? episodeKey,
+    String? localPath,
+    int? sizeBytes,
+    double? durationSeconds,
+    String? courseLabel,
+    String? title,
+    Value<DateTime?> downloadedAt = const Value.absent(),
+    String? status,
+  }) => StudyPodcastDownload(
+    environment: environment ?? this.environment,
+    accountId: accountId ?? this.accountId,
+    noteId: noteId ?? this.noteId,
+    episodeKey: episodeKey ?? this.episodeKey,
+    localPath: localPath ?? this.localPath,
+    sizeBytes: sizeBytes ?? this.sizeBytes,
+    durationSeconds: durationSeconds ?? this.durationSeconds,
+    courseLabel: courseLabel ?? this.courseLabel,
+    title: title ?? this.title,
+    downloadedAt: downloadedAt.present ? downloadedAt.value : this.downloadedAt,
+    status: status ?? this.status,
+  );
+  StudyPodcastDownload copyWithCompanion(StudyPodcastDownloadsCompanion data) {
+    return StudyPodcastDownload(
+      environment: data.environment.present
+          ? data.environment.value
+          : this.environment,
+      accountId: data.accountId.present ? data.accountId.value : this.accountId,
+      noteId: data.noteId.present ? data.noteId.value : this.noteId,
+      episodeKey: data.episodeKey.present
+          ? data.episodeKey.value
+          : this.episodeKey,
+      localPath: data.localPath.present ? data.localPath.value : this.localPath,
+      sizeBytes: data.sizeBytes.present ? data.sizeBytes.value : this.sizeBytes,
+      durationSeconds: data.durationSeconds.present
+          ? data.durationSeconds.value
+          : this.durationSeconds,
+      courseLabel: data.courseLabel.present
+          ? data.courseLabel.value
+          : this.courseLabel,
+      title: data.title.present ? data.title.value : this.title,
+      downloadedAt: data.downloadedAt.present
+          ? data.downloadedAt.value
+          : this.downloadedAt,
+      status: data.status.present ? data.status.value : this.status,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('StudyPodcastDownload(')
+          ..write('environment: $environment, ')
+          ..write('accountId: $accountId, ')
+          ..write('noteId: $noteId, ')
+          ..write('episodeKey: $episodeKey, ')
+          ..write('localPath: $localPath, ')
+          ..write('sizeBytes: $sizeBytes, ')
+          ..write('durationSeconds: $durationSeconds, ')
+          ..write('courseLabel: $courseLabel, ')
+          ..write('title: $title, ')
+          ..write('downloadedAt: $downloadedAt, ')
+          ..write('status: $status')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    environment,
+    accountId,
+    noteId,
+    episodeKey,
+    localPath,
+    sizeBytes,
+    durationSeconds,
+    courseLabel,
+    title,
+    downloadedAt,
+    status,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is StudyPodcastDownload &&
+          other.environment == this.environment &&
+          other.accountId == this.accountId &&
+          other.noteId == this.noteId &&
+          other.episodeKey == this.episodeKey &&
+          other.localPath == this.localPath &&
+          other.sizeBytes == this.sizeBytes &&
+          other.durationSeconds == this.durationSeconds &&
+          other.courseLabel == this.courseLabel &&
+          other.title == this.title &&
+          other.downloadedAt == this.downloadedAt &&
+          other.status == this.status);
+}
+
+class StudyPodcastDownloadsCompanion
+    extends UpdateCompanion<StudyPodcastDownload> {
+  final Value<String> environment;
+  final Value<String> accountId;
+  final Value<int> noteId;
+  final Value<String> episodeKey;
+  final Value<String> localPath;
+  final Value<int> sizeBytes;
+  final Value<double> durationSeconds;
+  final Value<String> courseLabel;
+  final Value<String> title;
+  final Value<DateTime?> downloadedAt;
+  final Value<String> status;
+  final Value<int> rowid;
+  const StudyPodcastDownloadsCompanion({
+    this.environment = const Value.absent(),
+    this.accountId = const Value.absent(),
+    this.noteId = const Value.absent(),
+    this.episodeKey = const Value.absent(),
+    this.localPath = const Value.absent(),
+    this.sizeBytes = const Value.absent(),
+    this.durationSeconds = const Value.absent(),
+    this.courseLabel = const Value.absent(),
+    this.title = const Value.absent(),
+    this.downloadedAt = const Value.absent(),
+    this.status = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  StudyPodcastDownloadsCompanion.insert({
+    required String environment,
+    required String accountId,
+    required int noteId,
+    required String episodeKey,
+    required String localPath,
+    required int sizeBytes,
+    required double durationSeconds,
+    required String courseLabel,
+    required String title,
+    this.downloadedAt = const Value.absent(),
+    required String status,
+    this.rowid = const Value.absent(),
+  }) : environment = Value(environment),
+       accountId = Value(accountId),
+       noteId = Value(noteId),
+       episodeKey = Value(episodeKey),
+       localPath = Value(localPath),
+       sizeBytes = Value(sizeBytes),
+       durationSeconds = Value(durationSeconds),
+       courseLabel = Value(courseLabel),
+       title = Value(title),
+       status = Value(status);
+  static Insertable<StudyPodcastDownload> custom({
+    Expression<String>? environment,
+    Expression<String>? accountId,
+    Expression<int>? noteId,
+    Expression<String>? episodeKey,
+    Expression<String>? localPath,
+    Expression<int>? sizeBytes,
+    Expression<double>? durationSeconds,
+    Expression<String>? courseLabel,
+    Expression<String>? title,
+    Expression<DateTime>? downloadedAt,
+    Expression<String>? status,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (environment != null) 'environment': environment,
+      if (accountId != null) 'account_id': accountId,
+      if (noteId != null) 'note_id': noteId,
+      if (episodeKey != null) 'episode_key': episodeKey,
+      if (localPath != null) 'local_path': localPath,
+      if (sizeBytes != null) 'size_bytes': sizeBytes,
+      if (durationSeconds != null) 'duration_seconds': durationSeconds,
+      if (courseLabel != null) 'course_label': courseLabel,
+      if (title != null) 'title': title,
+      if (downloadedAt != null) 'downloaded_at': downloadedAt,
+      if (status != null) 'status': status,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  StudyPodcastDownloadsCompanion copyWith({
+    Value<String>? environment,
+    Value<String>? accountId,
+    Value<int>? noteId,
+    Value<String>? episodeKey,
+    Value<String>? localPath,
+    Value<int>? sizeBytes,
+    Value<double>? durationSeconds,
+    Value<String>? courseLabel,
+    Value<String>? title,
+    Value<DateTime?>? downloadedAt,
+    Value<String>? status,
+    Value<int>? rowid,
+  }) {
+    return StudyPodcastDownloadsCompanion(
+      environment: environment ?? this.environment,
+      accountId: accountId ?? this.accountId,
+      noteId: noteId ?? this.noteId,
+      episodeKey: episodeKey ?? this.episodeKey,
+      localPath: localPath ?? this.localPath,
+      sizeBytes: sizeBytes ?? this.sizeBytes,
+      durationSeconds: durationSeconds ?? this.durationSeconds,
+      courseLabel: courseLabel ?? this.courseLabel,
+      title: title ?? this.title,
+      downloadedAt: downloadedAt ?? this.downloadedAt,
+      status: status ?? this.status,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (environment.present) {
+      map['environment'] = Variable<String>(environment.value);
+    }
+    if (accountId.present) {
+      map['account_id'] = Variable<String>(accountId.value);
+    }
+    if (noteId.present) {
+      map['note_id'] = Variable<int>(noteId.value);
+    }
+    if (episodeKey.present) {
+      map['episode_key'] = Variable<String>(episodeKey.value);
+    }
+    if (localPath.present) {
+      map['local_path'] = Variable<String>(localPath.value);
+    }
+    if (sizeBytes.present) {
+      map['size_bytes'] = Variable<int>(sizeBytes.value);
+    }
+    if (durationSeconds.present) {
+      map['duration_seconds'] = Variable<double>(durationSeconds.value);
+    }
+    if (courseLabel.present) {
+      map['course_label'] = Variable<String>(courseLabel.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (downloadedAt.present) {
+      map['downloaded_at'] = Variable<DateTime>(downloadedAt.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('StudyPodcastDownloadsCompanion(')
+          ..write('environment: $environment, ')
+          ..write('accountId: $accountId, ')
+          ..write('noteId: $noteId, ')
+          ..write('episodeKey: $episodeKey, ')
+          ..write('localPath: $localPath, ')
+          ..write('sizeBytes: $sizeBytes, ')
+          ..write('durationSeconds: $durationSeconds, ')
+          ..write('courseLabel: $courseLabel, ')
+          ..write('title: $title, ')
+          ..write('downloadedAt: $downloadedAt, ')
+          ..write('status: $status, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $StudyPlaybackPositionsTable extends StudyPlaybackPositions
+    with TableInfo<$StudyPlaybackPositionsTable, StudyPlaybackPosition> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $StudyPlaybackPositionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _environmentMeta = const VerificationMeta(
+    'environment',
+  );
+  @override
+  late final GeneratedColumn<String> environment = GeneratedColumn<String>(
+    'environment',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _accountIdMeta = const VerificationMeta(
+    'accountId',
+  );
+  @override
+  late final GeneratedColumn<String> accountId = GeneratedColumn<String>(
+    'account_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _noteIdMeta = const VerificationMeta('noteId');
+  @override
+  late final GeneratedColumn<int> noteId = GeneratedColumn<int>(
+    'note_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _episodeKeyMeta = const VerificationMeta(
+    'episodeKey',
+  );
+  @override
+  late final GeneratedColumn<String> episodeKey = GeneratedColumn<String>(
+    'episode_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _positionMillisecondsMeta =
+      const VerificationMeta('positionMilliseconds');
+  @override
+  late final GeneratedColumn<int> positionMilliseconds = GeneratedColumn<int>(
+    'position_milliseconds',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _speedMeta = const VerificationMeta('speed');
+  @override
+  late final GeneratedColumn<double> speed = GeneratedColumn<double>(
+    'speed',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1.0),
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    environment,
+    accountId,
+    noteId,
+    episodeKey,
+    positionMilliseconds,
+    speed,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'study_playback_positions';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<StudyPlaybackPosition> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('environment')) {
+      context.handle(
+        _environmentMeta,
+        environment.isAcceptableOrUnknown(
+          data['environment']!,
+          _environmentMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_environmentMeta);
+    }
+    if (data.containsKey('account_id')) {
+      context.handle(
+        _accountIdMeta,
+        accountId.isAcceptableOrUnknown(data['account_id']!, _accountIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_accountIdMeta);
+    }
+    if (data.containsKey('note_id')) {
+      context.handle(
+        _noteIdMeta,
+        noteId.isAcceptableOrUnknown(data['note_id']!, _noteIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_noteIdMeta);
+    }
+    if (data.containsKey('episode_key')) {
+      context.handle(
+        _episodeKeyMeta,
+        episodeKey.isAcceptableOrUnknown(data['episode_key']!, _episodeKeyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_episodeKeyMeta);
+    }
+    if (data.containsKey('position_milliseconds')) {
+      context.handle(
+        _positionMillisecondsMeta,
+        positionMilliseconds.isAcceptableOrUnknown(
+          data['position_milliseconds']!,
+          _positionMillisecondsMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_positionMillisecondsMeta);
+    }
+    if (data.containsKey('speed')) {
+      context.handle(
+        _speedMeta,
+        speed.isAcceptableOrUnknown(data['speed']!, _speedMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {
+    environment,
+    accountId,
+    noteId,
+    episodeKey,
+  };
+  @override
+  StudyPlaybackPosition map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return StudyPlaybackPosition(
+      environment: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}environment'],
+      )!,
+      accountId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}account_id'],
+      )!,
+      noteId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}note_id'],
+      )!,
+      episodeKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}episode_key'],
+      )!,
+      positionMilliseconds: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}position_milliseconds'],
+      )!,
+      speed: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}speed'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $StudyPlaybackPositionsTable createAlias(String alias) {
+    return $StudyPlaybackPositionsTable(attachedDatabase, alias);
+  }
+}
+
+class StudyPlaybackPosition extends DataClass
+    implements Insertable<StudyPlaybackPosition> {
+  final String environment;
+  final String accountId;
+  final int noteId;
+  final String episodeKey;
+  final int positionMilliseconds;
+  final double speed;
+  final DateTime updatedAt;
+  const StudyPlaybackPosition({
+    required this.environment,
+    required this.accountId,
+    required this.noteId,
+    required this.episodeKey,
+    required this.positionMilliseconds,
+    required this.speed,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['environment'] = Variable<String>(environment);
+    map['account_id'] = Variable<String>(accountId);
+    map['note_id'] = Variable<int>(noteId);
+    map['episode_key'] = Variable<String>(episodeKey);
+    map['position_milliseconds'] = Variable<int>(positionMilliseconds);
+    map['speed'] = Variable<double>(speed);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  StudyPlaybackPositionsCompanion toCompanion(bool nullToAbsent) {
+    return StudyPlaybackPositionsCompanion(
+      environment: Value(environment),
+      accountId: Value(accountId),
+      noteId: Value(noteId),
+      episodeKey: Value(episodeKey),
+      positionMilliseconds: Value(positionMilliseconds),
+      speed: Value(speed),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory StudyPlaybackPosition.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return StudyPlaybackPosition(
+      environment: serializer.fromJson<String>(json['environment']),
+      accountId: serializer.fromJson<String>(json['accountId']),
+      noteId: serializer.fromJson<int>(json['noteId']),
+      episodeKey: serializer.fromJson<String>(json['episodeKey']),
+      positionMilliseconds: serializer.fromJson<int>(
+        json['positionMilliseconds'],
+      ),
+      speed: serializer.fromJson<double>(json['speed']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'environment': serializer.toJson<String>(environment),
+      'accountId': serializer.toJson<String>(accountId),
+      'noteId': serializer.toJson<int>(noteId),
+      'episodeKey': serializer.toJson<String>(episodeKey),
+      'positionMilliseconds': serializer.toJson<int>(positionMilliseconds),
+      'speed': serializer.toJson<double>(speed),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  StudyPlaybackPosition copyWith({
+    String? environment,
+    String? accountId,
+    int? noteId,
+    String? episodeKey,
+    int? positionMilliseconds,
+    double? speed,
+    DateTime? updatedAt,
+  }) => StudyPlaybackPosition(
+    environment: environment ?? this.environment,
+    accountId: accountId ?? this.accountId,
+    noteId: noteId ?? this.noteId,
+    episodeKey: episodeKey ?? this.episodeKey,
+    positionMilliseconds: positionMilliseconds ?? this.positionMilliseconds,
+    speed: speed ?? this.speed,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  StudyPlaybackPosition copyWithCompanion(
+    StudyPlaybackPositionsCompanion data,
+  ) {
+    return StudyPlaybackPosition(
+      environment: data.environment.present
+          ? data.environment.value
+          : this.environment,
+      accountId: data.accountId.present ? data.accountId.value : this.accountId,
+      noteId: data.noteId.present ? data.noteId.value : this.noteId,
+      episodeKey: data.episodeKey.present
+          ? data.episodeKey.value
+          : this.episodeKey,
+      positionMilliseconds: data.positionMilliseconds.present
+          ? data.positionMilliseconds.value
+          : this.positionMilliseconds,
+      speed: data.speed.present ? data.speed.value : this.speed,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('StudyPlaybackPosition(')
+          ..write('environment: $environment, ')
+          ..write('accountId: $accountId, ')
+          ..write('noteId: $noteId, ')
+          ..write('episodeKey: $episodeKey, ')
+          ..write('positionMilliseconds: $positionMilliseconds, ')
+          ..write('speed: $speed, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    environment,
+    accountId,
+    noteId,
+    episodeKey,
+    positionMilliseconds,
+    speed,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is StudyPlaybackPosition &&
+          other.environment == this.environment &&
+          other.accountId == this.accountId &&
+          other.noteId == this.noteId &&
+          other.episodeKey == this.episodeKey &&
+          other.positionMilliseconds == this.positionMilliseconds &&
+          other.speed == this.speed &&
+          other.updatedAt == this.updatedAt);
+}
+
+class StudyPlaybackPositionsCompanion
+    extends UpdateCompanion<StudyPlaybackPosition> {
+  final Value<String> environment;
+  final Value<String> accountId;
+  final Value<int> noteId;
+  final Value<String> episodeKey;
+  final Value<int> positionMilliseconds;
+  final Value<double> speed;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const StudyPlaybackPositionsCompanion({
+    this.environment = const Value.absent(),
+    this.accountId = const Value.absent(),
+    this.noteId = const Value.absent(),
+    this.episodeKey = const Value.absent(),
+    this.positionMilliseconds = const Value.absent(),
+    this.speed = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  StudyPlaybackPositionsCompanion.insert({
+    required String environment,
+    required String accountId,
+    required int noteId,
+    required String episodeKey,
+    required int positionMilliseconds,
+    this.speed = const Value.absent(),
+    required DateTime updatedAt,
+    this.rowid = const Value.absent(),
+  }) : environment = Value(environment),
+       accountId = Value(accountId),
+       noteId = Value(noteId),
+       episodeKey = Value(episodeKey),
+       positionMilliseconds = Value(positionMilliseconds),
+       updatedAt = Value(updatedAt);
+  static Insertable<StudyPlaybackPosition> custom({
+    Expression<String>? environment,
+    Expression<String>? accountId,
+    Expression<int>? noteId,
+    Expression<String>? episodeKey,
+    Expression<int>? positionMilliseconds,
+    Expression<double>? speed,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (environment != null) 'environment': environment,
+      if (accountId != null) 'account_id': accountId,
+      if (noteId != null) 'note_id': noteId,
+      if (episodeKey != null) 'episode_key': episodeKey,
+      if (positionMilliseconds != null)
+        'position_milliseconds': positionMilliseconds,
+      if (speed != null) 'speed': speed,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  StudyPlaybackPositionsCompanion copyWith({
+    Value<String>? environment,
+    Value<String>? accountId,
+    Value<int>? noteId,
+    Value<String>? episodeKey,
+    Value<int>? positionMilliseconds,
+    Value<double>? speed,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return StudyPlaybackPositionsCompanion(
+      environment: environment ?? this.environment,
+      accountId: accountId ?? this.accountId,
+      noteId: noteId ?? this.noteId,
+      episodeKey: episodeKey ?? this.episodeKey,
+      positionMilliseconds: positionMilliseconds ?? this.positionMilliseconds,
+      speed: speed ?? this.speed,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (environment.present) {
+      map['environment'] = Variable<String>(environment.value);
+    }
+    if (accountId.present) {
+      map['account_id'] = Variable<String>(accountId.value);
+    }
+    if (noteId.present) {
+      map['note_id'] = Variable<int>(noteId.value);
+    }
+    if (episodeKey.present) {
+      map['episode_key'] = Variable<String>(episodeKey.value);
+    }
+    if (positionMilliseconds.present) {
+      map['position_milliseconds'] = Variable<int>(positionMilliseconds.value);
+    }
+    if (speed.present) {
+      map['speed'] = Variable<double>(speed.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('StudyPlaybackPositionsCompanion(')
+          ..write('environment: $environment, ')
+          ..write('accountId: $accountId, ')
+          ..write('noteId: $noteId, ')
+          ..write('episodeKey: $episodeKey, ')
+          ..write('positionMilliseconds: $positionMilliseconds, ')
+          ..write('speed: $speed, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $StudyOfflineEntitlementSnapshotsTable
+    extends StudyOfflineEntitlementSnapshots
+    with
+        TableInfo<
+          $StudyOfflineEntitlementSnapshotsTable,
+          StudyOfflineEntitlementSnapshot
+        > {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $StudyOfflineEntitlementSnapshotsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _environmentMeta = const VerificationMeta(
+    'environment',
+  );
+  @override
+  late final GeneratedColumn<String> environment = GeneratedColumn<String>(
+    'environment',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _accountIdMeta = const VerificationMeta(
+    'accountId',
+  );
+  @override
+  late final GeneratedColumn<String> accountId = GeneratedColumn<String>(
+    'account_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _stateMeta = const VerificationMeta('state');
+  @override
+  late final GeneratedColumn<String> state = GeneratedColumn<String>(
+    'state',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _currentPeriodStartMeta =
+      const VerificationMeta('currentPeriodStart');
+  @override
+  late final GeneratedColumn<DateTime> currentPeriodStart =
+      GeneratedColumn<DateTime>(
+        'current_period_start',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _currentPeriodEndMeta = const VerificationMeta(
+    'currentPeriodEnd',
+  );
+  @override
+  late final GeneratedColumn<DateTime> currentPeriodEnd =
+      GeneratedColumn<DateTime>(
+        'current_period_end',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _verifiedAtMeta = const VerificationMeta(
+    'verifiedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> verifiedAt = GeneratedColumn<DateTime>(
+    'verified_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    environment,
+    accountId,
+    state,
+    currentPeriodStart,
+    currentPeriodEnd,
+    verifiedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'study_offline_entitlement_snapshots';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<StudyOfflineEntitlementSnapshot> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('environment')) {
+      context.handle(
+        _environmentMeta,
+        environment.isAcceptableOrUnknown(
+          data['environment']!,
+          _environmentMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_environmentMeta);
+    }
+    if (data.containsKey('account_id')) {
+      context.handle(
+        _accountIdMeta,
+        accountId.isAcceptableOrUnknown(data['account_id']!, _accountIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_accountIdMeta);
+    }
+    if (data.containsKey('state')) {
+      context.handle(
+        _stateMeta,
+        state.isAcceptableOrUnknown(data['state']!, _stateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_stateMeta);
+    }
+    if (data.containsKey('current_period_start')) {
+      context.handle(
+        _currentPeriodStartMeta,
+        currentPeriodStart.isAcceptableOrUnknown(
+          data['current_period_start']!,
+          _currentPeriodStartMeta,
+        ),
+      );
+    }
+    if (data.containsKey('current_period_end')) {
+      context.handle(
+        _currentPeriodEndMeta,
+        currentPeriodEnd.isAcceptableOrUnknown(
+          data['current_period_end']!,
+          _currentPeriodEndMeta,
+        ),
+      );
+    }
+    if (data.containsKey('verified_at')) {
+      context.handle(
+        _verifiedAtMeta,
+        verifiedAt.isAcceptableOrUnknown(data['verified_at']!, _verifiedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_verifiedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {environment, accountId};
+  @override
+  StudyOfflineEntitlementSnapshot map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return StudyOfflineEntitlementSnapshot(
+      environment: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}environment'],
+      )!,
+      accountId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}account_id'],
+      )!,
+      state: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}state'],
+      )!,
+      currentPeriodStart: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}current_period_start'],
+      ),
+      currentPeriodEnd: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}current_period_end'],
+      ),
+      verifiedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}verified_at'],
+      )!,
+    );
+  }
+
+  @override
+  $StudyOfflineEntitlementSnapshotsTable createAlias(String alias) {
+    return $StudyOfflineEntitlementSnapshotsTable(attachedDatabase, alias);
+  }
+}
+
+class StudyOfflineEntitlementSnapshot extends DataClass
+    implements Insertable<StudyOfflineEntitlementSnapshot> {
+  final String environment;
+  final String accountId;
+  final String state;
+  final DateTime? currentPeriodStart;
+  final DateTime? currentPeriodEnd;
+  final DateTime verifiedAt;
+  const StudyOfflineEntitlementSnapshot({
+    required this.environment,
+    required this.accountId,
+    required this.state,
+    this.currentPeriodStart,
+    this.currentPeriodEnd,
+    required this.verifiedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['environment'] = Variable<String>(environment);
+    map['account_id'] = Variable<String>(accountId);
+    map['state'] = Variable<String>(state);
+    if (!nullToAbsent || currentPeriodStart != null) {
+      map['current_period_start'] = Variable<DateTime>(currentPeriodStart);
+    }
+    if (!nullToAbsent || currentPeriodEnd != null) {
+      map['current_period_end'] = Variable<DateTime>(currentPeriodEnd);
+    }
+    map['verified_at'] = Variable<DateTime>(verifiedAt);
+    return map;
+  }
+
+  StudyOfflineEntitlementSnapshotsCompanion toCompanion(bool nullToAbsent) {
+    return StudyOfflineEntitlementSnapshotsCompanion(
+      environment: Value(environment),
+      accountId: Value(accountId),
+      state: Value(state),
+      currentPeriodStart: currentPeriodStart == null && nullToAbsent
+          ? const Value.absent()
+          : Value(currentPeriodStart),
+      currentPeriodEnd: currentPeriodEnd == null && nullToAbsent
+          ? const Value.absent()
+          : Value(currentPeriodEnd),
+      verifiedAt: Value(verifiedAt),
+    );
+  }
+
+  factory StudyOfflineEntitlementSnapshot.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return StudyOfflineEntitlementSnapshot(
+      environment: serializer.fromJson<String>(json['environment']),
+      accountId: serializer.fromJson<String>(json['accountId']),
+      state: serializer.fromJson<String>(json['state']),
+      currentPeriodStart: serializer.fromJson<DateTime?>(
+        json['currentPeriodStart'],
+      ),
+      currentPeriodEnd: serializer.fromJson<DateTime?>(
+        json['currentPeriodEnd'],
+      ),
+      verifiedAt: serializer.fromJson<DateTime>(json['verifiedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'environment': serializer.toJson<String>(environment),
+      'accountId': serializer.toJson<String>(accountId),
+      'state': serializer.toJson<String>(state),
+      'currentPeriodStart': serializer.toJson<DateTime?>(currentPeriodStart),
+      'currentPeriodEnd': serializer.toJson<DateTime?>(currentPeriodEnd),
+      'verifiedAt': serializer.toJson<DateTime>(verifiedAt),
+    };
+  }
+
+  StudyOfflineEntitlementSnapshot copyWith({
+    String? environment,
+    String? accountId,
+    String? state,
+    Value<DateTime?> currentPeriodStart = const Value.absent(),
+    Value<DateTime?> currentPeriodEnd = const Value.absent(),
+    DateTime? verifiedAt,
+  }) => StudyOfflineEntitlementSnapshot(
+    environment: environment ?? this.environment,
+    accountId: accountId ?? this.accountId,
+    state: state ?? this.state,
+    currentPeriodStart: currentPeriodStart.present
+        ? currentPeriodStart.value
+        : this.currentPeriodStart,
+    currentPeriodEnd: currentPeriodEnd.present
+        ? currentPeriodEnd.value
+        : this.currentPeriodEnd,
+    verifiedAt: verifiedAt ?? this.verifiedAt,
+  );
+  StudyOfflineEntitlementSnapshot copyWithCompanion(
+    StudyOfflineEntitlementSnapshotsCompanion data,
+  ) {
+    return StudyOfflineEntitlementSnapshot(
+      environment: data.environment.present
+          ? data.environment.value
+          : this.environment,
+      accountId: data.accountId.present ? data.accountId.value : this.accountId,
+      state: data.state.present ? data.state.value : this.state,
+      currentPeriodStart: data.currentPeriodStart.present
+          ? data.currentPeriodStart.value
+          : this.currentPeriodStart,
+      currentPeriodEnd: data.currentPeriodEnd.present
+          ? data.currentPeriodEnd.value
+          : this.currentPeriodEnd,
+      verifiedAt: data.verifiedAt.present
+          ? data.verifiedAt.value
+          : this.verifiedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('StudyOfflineEntitlementSnapshot(')
+          ..write('environment: $environment, ')
+          ..write('accountId: $accountId, ')
+          ..write('state: $state, ')
+          ..write('currentPeriodStart: $currentPeriodStart, ')
+          ..write('currentPeriodEnd: $currentPeriodEnd, ')
+          ..write('verifiedAt: $verifiedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    environment,
+    accountId,
+    state,
+    currentPeriodStart,
+    currentPeriodEnd,
+    verifiedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is StudyOfflineEntitlementSnapshot &&
+          other.environment == this.environment &&
+          other.accountId == this.accountId &&
+          other.state == this.state &&
+          other.currentPeriodStart == this.currentPeriodStart &&
+          other.currentPeriodEnd == this.currentPeriodEnd &&
+          other.verifiedAt == this.verifiedAt);
+}
+
+class StudyOfflineEntitlementSnapshotsCompanion
+    extends UpdateCompanion<StudyOfflineEntitlementSnapshot> {
+  final Value<String> environment;
+  final Value<String> accountId;
+  final Value<String> state;
+  final Value<DateTime?> currentPeriodStart;
+  final Value<DateTime?> currentPeriodEnd;
+  final Value<DateTime> verifiedAt;
+  final Value<int> rowid;
+  const StudyOfflineEntitlementSnapshotsCompanion({
+    this.environment = const Value.absent(),
+    this.accountId = const Value.absent(),
+    this.state = const Value.absent(),
+    this.currentPeriodStart = const Value.absent(),
+    this.currentPeriodEnd = const Value.absent(),
+    this.verifiedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  StudyOfflineEntitlementSnapshotsCompanion.insert({
+    required String environment,
+    required String accountId,
+    required String state,
+    this.currentPeriodStart = const Value.absent(),
+    this.currentPeriodEnd = const Value.absent(),
+    required DateTime verifiedAt,
+    this.rowid = const Value.absent(),
+  }) : environment = Value(environment),
+       accountId = Value(accountId),
+       state = Value(state),
+       verifiedAt = Value(verifiedAt);
+  static Insertable<StudyOfflineEntitlementSnapshot> custom({
+    Expression<String>? environment,
+    Expression<String>? accountId,
+    Expression<String>? state,
+    Expression<DateTime>? currentPeriodStart,
+    Expression<DateTime>? currentPeriodEnd,
+    Expression<DateTime>? verifiedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (environment != null) 'environment': environment,
+      if (accountId != null) 'account_id': accountId,
+      if (state != null) 'state': state,
+      if (currentPeriodStart != null)
+        'current_period_start': currentPeriodStart,
+      if (currentPeriodEnd != null) 'current_period_end': currentPeriodEnd,
+      if (verifiedAt != null) 'verified_at': verifiedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  StudyOfflineEntitlementSnapshotsCompanion copyWith({
+    Value<String>? environment,
+    Value<String>? accountId,
+    Value<String>? state,
+    Value<DateTime?>? currentPeriodStart,
+    Value<DateTime?>? currentPeriodEnd,
+    Value<DateTime>? verifiedAt,
+    Value<int>? rowid,
+  }) {
+    return StudyOfflineEntitlementSnapshotsCompanion(
+      environment: environment ?? this.environment,
+      accountId: accountId ?? this.accountId,
+      state: state ?? this.state,
+      currentPeriodStart: currentPeriodStart ?? this.currentPeriodStart,
+      currentPeriodEnd: currentPeriodEnd ?? this.currentPeriodEnd,
+      verifiedAt: verifiedAt ?? this.verifiedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (environment.present) {
+      map['environment'] = Variable<String>(environment.value);
+    }
+    if (accountId.present) {
+      map['account_id'] = Variable<String>(accountId.value);
+    }
+    if (state.present) {
+      map['state'] = Variable<String>(state.value);
+    }
+    if (currentPeriodStart.present) {
+      map['current_period_start'] = Variable<DateTime>(
+        currentPeriodStart.value,
+      );
+    }
+    if (currentPeriodEnd.present) {
+      map['current_period_end'] = Variable<DateTime>(currentPeriodEnd.value);
+    }
+    if (verifiedAt.present) {
+      map['verified_at'] = Variable<DateTime>(verifiedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('StudyOfflineEntitlementSnapshotsCompanion(')
+          ..write('environment: $environment, ')
+          ..write('accountId: $accountId, ')
+          ..write('state: $state, ')
+          ..write('currentPeriodStart: $currentPeriodStart, ')
+          ..write('currentPeriodEnd: $currentPeriodEnd, ')
+          ..write('verifiedAt: $verifiedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $StudyLegacyImportsTable extends StudyLegacyImports
+    with TableInfo<$StudyLegacyImportsTable, StudyLegacyImport> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $StudyLegacyImportsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _environmentMeta = const VerificationMeta(
+    'environment',
+  );
+  @override
+  late final GeneratedColumn<String> environment = GeneratedColumn<String>(
+    'environment',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _accountIdMeta = const VerificationMeta(
+    'accountId',
+  );
+  @override
+  late final GeneratedColumn<String> accountId = GeneratedColumn<String>(
+    'account_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _legacyKeysJsonMeta = const VerificationMeta(
+    'legacyKeysJson',
+  );
+  @override
+  late final GeneratedColumn<String> legacyKeysJson = GeneratedColumn<String>(
+    'legacy_keys_json',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _importedAtMeta = const VerificationMeta(
+    'importedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> importedAt = GeneratedColumn<DateTime>(
+    'imported_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    environment,
+    accountId,
+    legacyKeysJson,
+    importedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'study_legacy_imports';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<StudyLegacyImport> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('environment')) {
+      context.handle(
+        _environmentMeta,
+        environment.isAcceptableOrUnknown(
+          data['environment']!,
+          _environmentMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_environmentMeta);
+    }
+    if (data.containsKey('account_id')) {
+      context.handle(
+        _accountIdMeta,
+        accountId.isAcceptableOrUnknown(data['account_id']!, _accountIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_accountIdMeta);
+    }
+    if (data.containsKey('legacy_keys_json')) {
+      context.handle(
+        _legacyKeysJsonMeta,
+        legacyKeysJson.isAcceptableOrUnknown(
+          data['legacy_keys_json']!,
+          _legacyKeysJsonMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_legacyKeysJsonMeta);
+    }
+    if (data.containsKey('imported_at')) {
+      context.handle(
+        _importedAtMeta,
+        importedAt.isAcceptableOrUnknown(data['imported_at']!, _importedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_importedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {environment, accountId};
+  @override
+  StudyLegacyImport map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return StudyLegacyImport(
+      environment: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}environment'],
+      )!,
+      accountId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}account_id'],
+      )!,
+      legacyKeysJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}legacy_keys_json'],
+      )!,
+      importedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}imported_at'],
+      )!,
+    );
+  }
+
+  @override
+  $StudyLegacyImportsTable createAlias(String alias) {
+    return $StudyLegacyImportsTable(attachedDatabase, alias);
+  }
+}
+
+class StudyLegacyImport extends DataClass
+    implements Insertable<StudyLegacyImport> {
+  final String environment;
+  final String accountId;
+  final String legacyKeysJson;
+  final DateTime importedAt;
+  const StudyLegacyImport({
+    required this.environment,
+    required this.accountId,
+    required this.legacyKeysJson,
+    required this.importedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['environment'] = Variable<String>(environment);
+    map['account_id'] = Variable<String>(accountId);
+    map['legacy_keys_json'] = Variable<String>(legacyKeysJson);
+    map['imported_at'] = Variable<DateTime>(importedAt);
+    return map;
+  }
+
+  StudyLegacyImportsCompanion toCompanion(bool nullToAbsent) {
+    return StudyLegacyImportsCompanion(
+      environment: Value(environment),
+      accountId: Value(accountId),
+      legacyKeysJson: Value(legacyKeysJson),
+      importedAt: Value(importedAt),
+    );
+  }
+
+  factory StudyLegacyImport.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return StudyLegacyImport(
+      environment: serializer.fromJson<String>(json['environment']),
+      accountId: serializer.fromJson<String>(json['accountId']),
+      legacyKeysJson: serializer.fromJson<String>(json['legacyKeysJson']),
+      importedAt: serializer.fromJson<DateTime>(json['importedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'environment': serializer.toJson<String>(environment),
+      'accountId': serializer.toJson<String>(accountId),
+      'legacyKeysJson': serializer.toJson<String>(legacyKeysJson),
+      'importedAt': serializer.toJson<DateTime>(importedAt),
+    };
+  }
+
+  StudyLegacyImport copyWith({
+    String? environment,
+    String? accountId,
+    String? legacyKeysJson,
+    DateTime? importedAt,
+  }) => StudyLegacyImport(
+    environment: environment ?? this.environment,
+    accountId: accountId ?? this.accountId,
+    legacyKeysJson: legacyKeysJson ?? this.legacyKeysJson,
+    importedAt: importedAt ?? this.importedAt,
+  );
+  StudyLegacyImport copyWithCompanion(StudyLegacyImportsCompanion data) {
+    return StudyLegacyImport(
+      environment: data.environment.present
+          ? data.environment.value
+          : this.environment,
+      accountId: data.accountId.present ? data.accountId.value : this.accountId,
+      legacyKeysJson: data.legacyKeysJson.present
+          ? data.legacyKeysJson.value
+          : this.legacyKeysJson,
+      importedAt: data.importedAt.present
+          ? data.importedAt.value
+          : this.importedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('StudyLegacyImport(')
+          ..write('environment: $environment, ')
+          ..write('accountId: $accountId, ')
+          ..write('legacyKeysJson: $legacyKeysJson, ')
+          ..write('importedAt: $importedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(environment, accountId, legacyKeysJson, importedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is StudyLegacyImport &&
+          other.environment == this.environment &&
+          other.accountId == this.accountId &&
+          other.legacyKeysJson == this.legacyKeysJson &&
+          other.importedAt == this.importedAt);
+}
+
+class StudyLegacyImportsCompanion extends UpdateCompanion<StudyLegacyImport> {
+  final Value<String> environment;
+  final Value<String> accountId;
+  final Value<String> legacyKeysJson;
+  final Value<DateTime> importedAt;
+  final Value<int> rowid;
+  const StudyLegacyImportsCompanion({
+    this.environment = const Value.absent(),
+    this.accountId = const Value.absent(),
+    this.legacyKeysJson = const Value.absent(),
+    this.importedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  StudyLegacyImportsCompanion.insert({
+    required String environment,
+    required String accountId,
+    required String legacyKeysJson,
+    required DateTime importedAt,
+    this.rowid = const Value.absent(),
+  }) : environment = Value(environment),
+       accountId = Value(accountId),
+       legacyKeysJson = Value(legacyKeysJson),
+       importedAt = Value(importedAt);
+  static Insertable<StudyLegacyImport> custom({
+    Expression<String>? environment,
+    Expression<String>? accountId,
+    Expression<String>? legacyKeysJson,
+    Expression<DateTime>? importedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (environment != null) 'environment': environment,
+      if (accountId != null) 'account_id': accountId,
+      if (legacyKeysJson != null) 'legacy_keys_json': legacyKeysJson,
+      if (importedAt != null) 'imported_at': importedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  StudyLegacyImportsCompanion copyWith({
+    Value<String>? environment,
+    Value<String>? accountId,
+    Value<String>? legacyKeysJson,
+    Value<DateTime>? importedAt,
+    Value<int>? rowid,
+  }) {
+    return StudyLegacyImportsCompanion(
+      environment: environment ?? this.environment,
+      accountId: accountId ?? this.accountId,
+      legacyKeysJson: legacyKeysJson ?? this.legacyKeysJson,
+      importedAt: importedAt ?? this.importedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (environment.present) {
+      map['environment'] = Variable<String>(environment.value);
+    }
+    if (accountId.present) {
+      map['account_id'] = Variable<String>(accountId.value);
+    }
+    if (legacyKeysJson.present) {
+      map['legacy_keys_json'] = Variable<String>(legacyKeysJson.value);
+    }
+    if (importedAt.present) {
+      map['imported_at'] = Variable<DateTime>(importedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('StudyLegacyImportsCompanion(')
+          ..write('environment: $environment, ')
+          ..write('accountId: $accountId, ')
+          ..write('legacyKeysJson: $legacyKeysJson, ')
+          ..write('importedAt: $importedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabaseV2 extends GeneratedDatabase {
   _$AppDatabaseV2(QueryExecutor e) : super(e);
   $AppDatabaseV2Manager get managers => $AppDatabaseV2Manager(this);
@@ -9398,6 +13104,24 @@ abstract class _$AppDatabaseV2 extends GeneratedDatabase {
   late final $TodoTagItemsTable todoTagItems = $TodoTagItemsTable(this);
   late final $TodoItemsTable todoItems = $TodoItemsTable(this);
   late final $TodoItemTagsTable todoItemTags = $TodoItemTagsTable(this);
+  late final $StudyMaterialRecordsTable studyMaterialRecords =
+      $StudyMaterialRecordsTable(this);
+  late final $StudyQuestionSetRecordsTable studyQuestionSetRecords =
+      $StudyQuestionSetRecordsTable(this);
+  late final $StudyGenerationJobRecordsTable studyGenerationJobRecords =
+      $StudyGenerationJobRecordsTable(this);
+  late final $StudyPodcastRecordsTable studyPodcastRecords =
+      $StudyPodcastRecordsTable(this);
+  late final $StudyPodcastDownloadsTable studyPodcastDownloads =
+      $StudyPodcastDownloadsTable(this);
+  late final $StudyPlaybackPositionsTable studyPlaybackPositions =
+      $StudyPlaybackPositionsTable(this);
+  late final $StudyOfflineEntitlementSnapshotsTable
+  studyOfflineEntitlementSnapshots = $StudyOfflineEntitlementSnapshotsTable(
+    this,
+  );
+  late final $StudyLegacyImportsTable studyLegacyImports =
+      $StudyLegacyImportsTable(this);
   late final PlanDao planDao = PlanDao(this as AppDatabaseV2);
   late final OrderDao orderDao = OrderDao(this as AppDatabaseV2);
   late final SubscriptionDao subscriptionDao = SubscriptionDao(
@@ -9411,6 +13135,7 @@ abstract class _$AppDatabaseV2 extends GeneratedDatabase {
   late final TodoListDao todoListDao = TodoListDao(this as AppDatabaseV2);
   late final TodoTagDao todoTagDao = TodoTagDao(this as AppDatabaseV2);
   late final TodoItemDao todoItemDao = TodoItemDao(this as AppDatabaseV2);
+  late final StudyToolsDao studyToolsDao = StudyToolsDao(this as AppDatabaseV2);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -9431,6 +13156,14 @@ abstract class _$AppDatabaseV2 extends GeneratedDatabase {
     todoTagItems,
     todoItems,
     todoItemTags,
+    studyMaterialRecords,
+    studyQuestionSetRecords,
+    studyGenerationJobRecords,
+    studyPodcastRecords,
+    studyPodcastDownloads,
+    studyPlaybackPositions,
+    studyOfflineEntitlementSnapshots,
+    studyLegacyImports,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -15159,6 +18892,2113 @@ typedef $$TodoItemTagsTableProcessedTableManager =
       TodoItemTag,
       PrefetchHooks Function({bool todoLocalId, bool tagLocalId})
     >;
+typedef $$StudyMaterialRecordsTableCreateCompanionBuilder =
+    StudyMaterialRecordsCompanion Function({
+      required String environment,
+      required String accountId,
+      required int noteId,
+      required String metadataJson,
+      required DateTime cachedAt,
+      Value<int> rowid,
+    });
+typedef $$StudyMaterialRecordsTableUpdateCompanionBuilder =
+    StudyMaterialRecordsCompanion Function({
+      Value<String> environment,
+      Value<String> accountId,
+      Value<int> noteId,
+      Value<String> metadataJson,
+      Value<DateTime> cachedAt,
+      Value<int> rowid,
+    });
+
+class $$StudyMaterialRecordsTableFilterComposer
+    extends Composer<_$AppDatabaseV2, $StudyMaterialRecordsTable> {
+  $$StudyMaterialRecordsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get environment => $composableBuilder(
+    column: $table.environment,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get accountId => $composableBuilder(
+    column: $table.accountId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get noteId => $composableBuilder(
+    column: $table.noteId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get metadataJson => $composableBuilder(
+    column: $table.metadataJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get cachedAt => $composableBuilder(
+    column: $table.cachedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$StudyMaterialRecordsTableOrderingComposer
+    extends Composer<_$AppDatabaseV2, $StudyMaterialRecordsTable> {
+  $$StudyMaterialRecordsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get environment => $composableBuilder(
+    column: $table.environment,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get accountId => $composableBuilder(
+    column: $table.accountId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get noteId => $composableBuilder(
+    column: $table.noteId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get metadataJson => $composableBuilder(
+    column: $table.metadataJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get cachedAt => $composableBuilder(
+    column: $table.cachedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$StudyMaterialRecordsTableAnnotationComposer
+    extends Composer<_$AppDatabaseV2, $StudyMaterialRecordsTable> {
+  $$StudyMaterialRecordsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get environment => $composableBuilder(
+    column: $table.environment,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get accountId =>
+      $composableBuilder(column: $table.accountId, builder: (column) => column);
+
+  GeneratedColumn<int> get noteId =>
+      $composableBuilder(column: $table.noteId, builder: (column) => column);
+
+  GeneratedColumn<String> get metadataJson => $composableBuilder(
+    column: $table.metadataJson,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get cachedAt =>
+      $composableBuilder(column: $table.cachedAt, builder: (column) => column);
+}
+
+class $$StudyMaterialRecordsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabaseV2,
+          $StudyMaterialRecordsTable,
+          StudyMaterialRecord,
+          $$StudyMaterialRecordsTableFilterComposer,
+          $$StudyMaterialRecordsTableOrderingComposer,
+          $$StudyMaterialRecordsTableAnnotationComposer,
+          $$StudyMaterialRecordsTableCreateCompanionBuilder,
+          $$StudyMaterialRecordsTableUpdateCompanionBuilder,
+          (
+            StudyMaterialRecord,
+            BaseReferences<
+              _$AppDatabaseV2,
+              $StudyMaterialRecordsTable,
+              StudyMaterialRecord
+            >,
+          ),
+          StudyMaterialRecord,
+          PrefetchHooks Function()
+        > {
+  $$StudyMaterialRecordsTableTableManager(
+    _$AppDatabaseV2 db,
+    $StudyMaterialRecordsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$StudyMaterialRecordsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$StudyMaterialRecordsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$StudyMaterialRecordsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> environment = const Value.absent(),
+                Value<String> accountId = const Value.absent(),
+                Value<int> noteId = const Value.absent(),
+                Value<String> metadataJson = const Value.absent(),
+                Value<DateTime> cachedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => StudyMaterialRecordsCompanion(
+                environment: environment,
+                accountId: accountId,
+                noteId: noteId,
+                metadataJson: metadataJson,
+                cachedAt: cachedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String environment,
+                required String accountId,
+                required int noteId,
+                required String metadataJson,
+                required DateTime cachedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => StudyMaterialRecordsCompanion.insert(
+                environment: environment,
+                accountId: accountId,
+                noteId: noteId,
+                metadataJson: metadataJson,
+                cachedAt: cachedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$StudyMaterialRecordsTable, StudyMaterialRecord>(
+                    table,
+                  ),
+                  BaseReferences<
+                    _$AppDatabaseV2,
+                    $StudyMaterialRecordsTable,
+                    StudyMaterialRecord
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$StudyMaterialRecordsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabaseV2,
+      $StudyMaterialRecordsTable,
+      StudyMaterialRecord,
+      $$StudyMaterialRecordsTableFilterComposer,
+      $$StudyMaterialRecordsTableOrderingComposer,
+      $$StudyMaterialRecordsTableAnnotationComposer,
+      $$StudyMaterialRecordsTableCreateCompanionBuilder,
+      $$StudyMaterialRecordsTableUpdateCompanionBuilder,
+      (
+        StudyMaterialRecord,
+        BaseReferences<
+          _$AppDatabaseV2,
+          $StudyMaterialRecordsTable,
+          StudyMaterialRecord
+        >,
+      ),
+      StudyMaterialRecord,
+      PrefetchHooks Function()
+    >;
+typedef $$StudyQuestionSetRecordsTableCreateCompanionBuilder =
+    StudyQuestionSetRecordsCompanion Function({
+      required String environment,
+      required String accountId,
+      required int noteId,
+      required int setId,
+      required String format,
+      required String setJson,
+      required DateTime cachedAt,
+      Value<int> rowid,
+    });
+typedef $$StudyQuestionSetRecordsTableUpdateCompanionBuilder =
+    StudyQuestionSetRecordsCompanion Function({
+      Value<String> environment,
+      Value<String> accountId,
+      Value<int> noteId,
+      Value<int> setId,
+      Value<String> format,
+      Value<String> setJson,
+      Value<DateTime> cachedAt,
+      Value<int> rowid,
+    });
+
+class $$StudyQuestionSetRecordsTableFilterComposer
+    extends Composer<_$AppDatabaseV2, $StudyQuestionSetRecordsTable> {
+  $$StudyQuestionSetRecordsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get environment => $composableBuilder(
+    column: $table.environment,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get accountId => $composableBuilder(
+    column: $table.accountId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get noteId => $composableBuilder(
+    column: $table.noteId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get setId => $composableBuilder(
+    column: $table.setId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get format => $composableBuilder(
+    column: $table.format,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get setJson => $composableBuilder(
+    column: $table.setJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get cachedAt => $composableBuilder(
+    column: $table.cachedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$StudyQuestionSetRecordsTableOrderingComposer
+    extends Composer<_$AppDatabaseV2, $StudyQuestionSetRecordsTable> {
+  $$StudyQuestionSetRecordsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get environment => $composableBuilder(
+    column: $table.environment,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get accountId => $composableBuilder(
+    column: $table.accountId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get noteId => $composableBuilder(
+    column: $table.noteId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get setId => $composableBuilder(
+    column: $table.setId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get format => $composableBuilder(
+    column: $table.format,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get setJson => $composableBuilder(
+    column: $table.setJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get cachedAt => $composableBuilder(
+    column: $table.cachedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$StudyQuestionSetRecordsTableAnnotationComposer
+    extends Composer<_$AppDatabaseV2, $StudyQuestionSetRecordsTable> {
+  $$StudyQuestionSetRecordsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get environment => $composableBuilder(
+    column: $table.environment,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get accountId =>
+      $composableBuilder(column: $table.accountId, builder: (column) => column);
+
+  GeneratedColumn<int> get noteId =>
+      $composableBuilder(column: $table.noteId, builder: (column) => column);
+
+  GeneratedColumn<int> get setId =>
+      $composableBuilder(column: $table.setId, builder: (column) => column);
+
+  GeneratedColumn<String> get format =>
+      $composableBuilder(column: $table.format, builder: (column) => column);
+
+  GeneratedColumn<String> get setJson =>
+      $composableBuilder(column: $table.setJson, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get cachedAt =>
+      $composableBuilder(column: $table.cachedAt, builder: (column) => column);
+}
+
+class $$StudyQuestionSetRecordsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabaseV2,
+          $StudyQuestionSetRecordsTable,
+          StudyQuestionSetRecord,
+          $$StudyQuestionSetRecordsTableFilterComposer,
+          $$StudyQuestionSetRecordsTableOrderingComposer,
+          $$StudyQuestionSetRecordsTableAnnotationComposer,
+          $$StudyQuestionSetRecordsTableCreateCompanionBuilder,
+          $$StudyQuestionSetRecordsTableUpdateCompanionBuilder,
+          (
+            StudyQuestionSetRecord,
+            BaseReferences<
+              _$AppDatabaseV2,
+              $StudyQuestionSetRecordsTable,
+              StudyQuestionSetRecord
+            >,
+          ),
+          StudyQuestionSetRecord,
+          PrefetchHooks Function()
+        > {
+  $$StudyQuestionSetRecordsTableTableManager(
+    _$AppDatabaseV2 db,
+    $StudyQuestionSetRecordsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$StudyQuestionSetRecordsTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$StudyQuestionSetRecordsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$StudyQuestionSetRecordsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> environment = const Value.absent(),
+                Value<String> accountId = const Value.absent(),
+                Value<int> noteId = const Value.absent(),
+                Value<int> setId = const Value.absent(),
+                Value<String> format = const Value.absent(),
+                Value<String> setJson = const Value.absent(),
+                Value<DateTime> cachedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => StudyQuestionSetRecordsCompanion(
+                environment: environment,
+                accountId: accountId,
+                noteId: noteId,
+                setId: setId,
+                format: format,
+                setJson: setJson,
+                cachedAt: cachedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String environment,
+                required String accountId,
+                required int noteId,
+                required int setId,
+                required String format,
+                required String setJson,
+                required DateTime cachedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => StudyQuestionSetRecordsCompanion.insert(
+                environment: environment,
+                accountId: accountId,
+                noteId: noteId,
+                setId: setId,
+                format: format,
+                setJson: setJson,
+                cachedAt: cachedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<
+                    $StudyQuestionSetRecordsTable,
+                    StudyQuestionSetRecord
+                  >(table),
+                  BaseReferences<
+                    _$AppDatabaseV2,
+                    $StudyQuestionSetRecordsTable,
+                    StudyQuestionSetRecord
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$StudyQuestionSetRecordsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabaseV2,
+      $StudyQuestionSetRecordsTable,
+      StudyQuestionSetRecord,
+      $$StudyQuestionSetRecordsTableFilterComposer,
+      $$StudyQuestionSetRecordsTableOrderingComposer,
+      $$StudyQuestionSetRecordsTableAnnotationComposer,
+      $$StudyQuestionSetRecordsTableCreateCompanionBuilder,
+      $$StudyQuestionSetRecordsTableUpdateCompanionBuilder,
+      (
+        StudyQuestionSetRecord,
+        BaseReferences<
+          _$AppDatabaseV2,
+          $StudyQuestionSetRecordsTable,
+          StudyQuestionSetRecord
+        >,
+      ),
+      StudyQuestionSetRecord,
+      PrefetchHooks Function()
+    >;
+typedef $$StudyGenerationJobRecordsTableCreateCompanionBuilder =
+    StudyGenerationJobRecordsCompanion Function({
+      required String environment,
+      required String accountId,
+      required int noteId,
+      required int jobId,
+      Value<String?> requestedOutputsJson,
+      required DateTime savedAt,
+      Value<int> rowid,
+    });
+typedef $$StudyGenerationJobRecordsTableUpdateCompanionBuilder =
+    StudyGenerationJobRecordsCompanion Function({
+      Value<String> environment,
+      Value<String> accountId,
+      Value<int> noteId,
+      Value<int> jobId,
+      Value<String?> requestedOutputsJson,
+      Value<DateTime> savedAt,
+      Value<int> rowid,
+    });
+
+class $$StudyGenerationJobRecordsTableFilterComposer
+    extends Composer<_$AppDatabaseV2, $StudyGenerationJobRecordsTable> {
+  $$StudyGenerationJobRecordsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get environment => $composableBuilder(
+    column: $table.environment,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get accountId => $composableBuilder(
+    column: $table.accountId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get noteId => $composableBuilder(
+    column: $table.noteId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get jobId => $composableBuilder(
+    column: $table.jobId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get requestedOutputsJson => $composableBuilder(
+    column: $table.requestedOutputsJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get savedAt => $composableBuilder(
+    column: $table.savedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$StudyGenerationJobRecordsTableOrderingComposer
+    extends Composer<_$AppDatabaseV2, $StudyGenerationJobRecordsTable> {
+  $$StudyGenerationJobRecordsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get environment => $composableBuilder(
+    column: $table.environment,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get accountId => $composableBuilder(
+    column: $table.accountId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get noteId => $composableBuilder(
+    column: $table.noteId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get jobId => $composableBuilder(
+    column: $table.jobId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get requestedOutputsJson => $composableBuilder(
+    column: $table.requestedOutputsJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get savedAt => $composableBuilder(
+    column: $table.savedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$StudyGenerationJobRecordsTableAnnotationComposer
+    extends Composer<_$AppDatabaseV2, $StudyGenerationJobRecordsTable> {
+  $$StudyGenerationJobRecordsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get environment => $composableBuilder(
+    column: $table.environment,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get accountId =>
+      $composableBuilder(column: $table.accountId, builder: (column) => column);
+
+  GeneratedColumn<int> get noteId =>
+      $composableBuilder(column: $table.noteId, builder: (column) => column);
+
+  GeneratedColumn<int> get jobId =>
+      $composableBuilder(column: $table.jobId, builder: (column) => column);
+
+  GeneratedColumn<String> get requestedOutputsJson => $composableBuilder(
+    column: $table.requestedOutputsJson,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get savedAt =>
+      $composableBuilder(column: $table.savedAt, builder: (column) => column);
+}
+
+class $$StudyGenerationJobRecordsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabaseV2,
+          $StudyGenerationJobRecordsTable,
+          StudyGenerationJobRecord,
+          $$StudyGenerationJobRecordsTableFilterComposer,
+          $$StudyGenerationJobRecordsTableOrderingComposer,
+          $$StudyGenerationJobRecordsTableAnnotationComposer,
+          $$StudyGenerationJobRecordsTableCreateCompanionBuilder,
+          $$StudyGenerationJobRecordsTableUpdateCompanionBuilder,
+          (
+            StudyGenerationJobRecord,
+            BaseReferences<
+              _$AppDatabaseV2,
+              $StudyGenerationJobRecordsTable,
+              StudyGenerationJobRecord
+            >,
+          ),
+          StudyGenerationJobRecord,
+          PrefetchHooks Function()
+        > {
+  $$StudyGenerationJobRecordsTableTableManager(
+    _$AppDatabaseV2 db,
+    $StudyGenerationJobRecordsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$StudyGenerationJobRecordsTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$StudyGenerationJobRecordsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$StudyGenerationJobRecordsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> environment = const Value.absent(),
+                Value<String> accountId = const Value.absent(),
+                Value<int> noteId = const Value.absent(),
+                Value<int> jobId = const Value.absent(),
+                Value<String?> requestedOutputsJson = const Value.absent(),
+                Value<DateTime> savedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => StudyGenerationJobRecordsCompanion(
+                environment: environment,
+                accountId: accountId,
+                noteId: noteId,
+                jobId: jobId,
+                requestedOutputsJson: requestedOutputsJson,
+                savedAt: savedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String environment,
+                required String accountId,
+                required int noteId,
+                required int jobId,
+                Value<String?> requestedOutputsJson = const Value.absent(),
+                required DateTime savedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => StudyGenerationJobRecordsCompanion.insert(
+                environment: environment,
+                accountId: accountId,
+                noteId: noteId,
+                jobId: jobId,
+                requestedOutputsJson: requestedOutputsJson,
+                savedAt: savedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<
+                    $StudyGenerationJobRecordsTable,
+                    StudyGenerationJobRecord
+                  >(table),
+                  BaseReferences<
+                    _$AppDatabaseV2,
+                    $StudyGenerationJobRecordsTable,
+                    StudyGenerationJobRecord
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$StudyGenerationJobRecordsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabaseV2,
+      $StudyGenerationJobRecordsTable,
+      StudyGenerationJobRecord,
+      $$StudyGenerationJobRecordsTableFilterComposer,
+      $$StudyGenerationJobRecordsTableOrderingComposer,
+      $$StudyGenerationJobRecordsTableAnnotationComposer,
+      $$StudyGenerationJobRecordsTableCreateCompanionBuilder,
+      $$StudyGenerationJobRecordsTableUpdateCompanionBuilder,
+      (
+        StudyGenerationJobRecord,
+        BaseReferences<
+          _$AppDatabaseV2,
+          $StudyGenerationJobRecordsTable,
+          StudyGenerationJobRecord
+        >,
+      ),
+      StudyGenerationJobRecord,
+      PrefetchHooks Function()
+    >;
+typedef $$StudyPodcastRecordsTableCreateCompanionBuilder =
+    StudyPodcastRecordsCompanion Function({
+      required String environment,
+      required String accountId,
+      required int noteId,
+      Value<int?> episodeId,
+      required DateTime generatedAt,
+      required String metadataJson,
+      Value<int> rowid,
+    });
+typedef $$StudyPodcastRecordsTableUpdateCompanionBuilder =
+    StudyPodcastRecordsCompanion Function({
+      Value<String> environment,
+      Value<String> accountId,
+      Value<int> noteId,
+      Value<int?> episodeId,
+      Value<DateTime> generatedAt,
+      Value<String> metadataJson,
+      Value<int> rowid,
+    });
+
+class $$StudyPodcastRecordsTableFilterComposer
+    extends Composer<_$AppDatabaseV2, $StudyPodcastRecordsTable> {
+  $$StudyPodcastRecordsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get environment => $composableBuilder(
+    column: $table.environment,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get accountId => $composableBuilder(
+    column: $table.accountId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get noteId => $composableBuilder(
+    column: $table.noteId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get episodeId => $composableBuilder(
+    column: $table.episodeId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get generatedAt => $composableBuilder(
+    column: $table.generatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get metadataJson => $composableBuilder(
+    column: $table.metadataJson,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$StudyPodcastRecordsTableOrderingComposer
+    extends Composer<_$AppDatabaseV2, $StudyPodcastRecordsTable> {
+  $$StudyPodcastRecordsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get environment => $composableBuilder(
+    column: $table.environment,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get accountId => $composableBuilder(
+    column: $table.accountId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get noteId => $composableBuilder(
+    column: $table.noteId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get episodeId => $composableBuilder(
+    column: $table.episodeId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get generatedAt => $composableBuilder(
+    column: $table.generatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get metadataJson => $composableBuilder(
+    column: $table.metadataJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$StudyPodcastRecordsTableAnnotationComposer
+    extends Composer<_$AppDatabaseV2, $StudyPodcastRecordsTable> {
+  $$StudyPodcastRecordsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get environment => $composableBuilder(
+    column: $table.environment,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get accountId =>
+      $composableBuilder(column: $table.accountId, builder: (column) => column);
+
+  GeneratedColumn<int> get noteId =>
+      $composableBuilder(column: $table.noteId, builder: (column) => column);
+
+  GeneratedColumn<int> get episodeId =>
+      $composableBuilder(column: $table.episodeId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get generatedAt => $composableBuilder(
+    column: $table.generatedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get metadataJson => $composableBuilder(
+    column: $table.metadataJson,
+    builder: (column) => column,
+  );
+}
+
+class $$StudyPodcastRecordsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabaseV2,
+          $StudyPodcastRecordsTable,
+          StudyPodcastRecord,
+          $$StudyPodcastRecordsTableFilterComposer,
+          $$StudyPodcastRecordsTableOrderingComposer,
+          $$StudyPodcastRecordsTableAnnotationComposer,
+          $$StudyPodcastRecordsTableCreateCompanionBuilder,
+          $$StudyPodcastRecordsTableUpdateCompanionBuilder,
+          (
+            StudyPodcastRecord,
+            BaseReferences<
+              _$AppDatabaseV2,
+              $StudyPodcastRecordsTable,
+              StudyPodcastRecord
+            >,
+          ),
+          StudyPodcastRecord,
+          PrefetchHooks Function()
+        > {
+  $$StudyPodcastRecordsTableTableManager(
+    _$AppDatabaseV2 db,
+    $StudyPodcastRecordsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$StudyPodcastRecordsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$StudyPodcastRecordsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$StudyPodcastRecordsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> environment = const Value.absent(),
+                Value<String> accountId = const Value.absent(),
+                Value<int> noteId = const Value.absent(),
+                Value<int?> episodeId = const Value.absent(),
+                Value<DateTime> generatedAt = const Value.absent(),
+                Value<String> metadataJson = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => StudyPodcastRecordsCompanion(
+                environment: environment,
+                accountId: accountId,
+                noteId: noteId,
+                episodeId: episodeId,
+                generatedAt: generatedAt,
+                metadataJson: metadataJson,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String environment,
+                required String accountId,
+                required int noteId,
+                Value<int?> episodeId = const Value.absent(),
+                required DateTime generatedAt,
+                required String metadataJson,
+                Value<int> rowid = const Value.absent(),
+              }) => StudyPodcastRecordsCompanion.insert(
+                environment: environment,
+                accountId: accountId,
+                noteId: noteId,
+                episodeId: episodeId,
+                generatedAt: generatedAt,
+                metadataJson: metadataJson,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$StudyPodcastRecordsTable, StudyPodcastRecord>(
+                    table,
+                  ),
+                  BaseReferences<
+                    _$AppDatabaseV2,
+                    $StudyPodcastRecordsTable,
+                    StudyPodcastRecord
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$StudyPodcastRecordsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabaseV2,
+      $StudyPodcastRecordsTable,
+      StudyPodcastRecord,
+      $$StudyPodcastRecordsTableFilterComposer,
+      $$StudyPodcastRecordsTableOrderingComposer,
+      $$StudyPodcastRecordsTableAnnotationComposer,
+      $$StudyPodcastRecordsTableCreateCompanionBuilder,
+      $$StudyPodcastRecordsTableUpdateCompanionBuilder,
+      (
+        StudyPodcastRecord,
+        BaseReferences<
+          _$AppDatabaseV2,
+          $StudyPodcastRecordsTable,
+          StudyPodcastRecord
+        >,
+      ),
+      StudyPodcastRecord,
+      PrefetchHooks Function()
+    >;
+typedef $$StudyPodcastDownloadsTableCreateCompanionBuilder =
+    StudyPodcastDownloadsCompanion Function({
+      required String environment,
+      required String accountId,
+      required int noteId,
+      required String episodeKey,
+      required String localPath,
+      required int sizeBytes,
+      required double durationSeconds,
+      required String courseLabel,
+      required String title,
+      Value<DateTime?> downloadedAt,
+      required String status,
+      Value<int> rowid,
+    });
+typedef $$StudyPodcastDownloadsTableUpdateCompanionBuilder =
+    StudyPodcastDownloadsCompanion Function({
+      Value<String> environment,
+      Value<String> accountId,
+      Value<int> noteId,
+      Value<String> episodeKey,
+      Value<String> localPath,
+      Value<int> sizeBytes,
+      Value<double> durationSeconds,
+      Value<String> courseLabel,
+      Value<String> title,
+      Value<DateTime?> downloadedAt,
+      Value<String> status,
+      Value<int> rowid,
+    });
+
+class $$StudyPodcastDownloadsTableFilterComposer
+    extends Composer<_$AppDatabaseV2, $StudyPodcastDownloadsTable> {
+  $$StudyPodcastDownloadsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get environment => $composableBuilder(
+    column: $table.environment,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get accountId => $composableBuilder(
+    column: $table.accountId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get noteId => $composableBuilder(
+    column: $table.noteId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get episodeKey => $composableBuilder(
+    column: $table.episodeKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get localPath => $composableBuilder(
+    column: $table.localPath,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get sizeBytes => $composableBuilder(
+    column: $table.sizeBytes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get durationSeconds => $composableBuilder(
+    column: $table.durationSeconds,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get courseLabel => $composableBuilder(
+    column: $table.courseLabel,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get downloadedAt => $composableBuilder(
+    column: $table.downloadedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$StudyPodcastDownloadsTableOrderingComposer
+    extends Composer<_$AppDatabaseV2, $StudyPodcastDownloadsTable> {
+  $$StudyPodcastDownloadsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get environment => $composableBuilder(
+    column: $table.environment,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get accountId => $composableBuilder(
+    column: $table.accountId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get noteId => $composableBuilder(
+    column: $table.noteId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get episodeKey => $composableBuilder(
+    column: $table.episodeKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get localPath => $composableBuilder(
+    column: $table.localPath,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get sizeBytes => $composableBuilder(
+    column: $table.sizeBytes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get durationSeconds => $composableBuilder(
+    column: $table.durationSeconds,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get courseLabel => $composableBuilder(
+    column: $table.courseLabel,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get downloadedAt => $composableBuilder(
+    column: $table.downloadedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$StudyPodcastDownloadsTableAnnotationComposer
+    extends Composer<_$AppDatabaseV2, $StudyPodcastDownloadsTable> {
+  $$StudyPodcastDownloadsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get environment => $composableBuilder(
+    column: $table.environment,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get accountId =>
+      $composableBuilder(column: $table.accountId, builder: (column) => column);
+
+  GeneratedColumn<int> get noteId =>
+      $composableBuilder(column: $table.noteId, builder: (column) => column);
+
+  GeneratedColumn<String> get episodeKey => $composableBuilder(
+    column: $table.episodeKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get localPath =>
+      $composableBuilder(column: $table.localPath, builder: (column) => column);
+
+  GeneratedColumn<int> get sizeBytes =>
+      $composableBuilder(column: $table.sizeBytes, builder: (column) => column);
+
+  GeneratedColumn<double> get durationSeconds => $composableBuilder(
+    column: $table.durationSeconds,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get courseLabel => $composableBuilder(
+    column: $table.courseLabel,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get downloadedAt => $composableBuilder(
+    column: $table.downloadedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => column);
+}
+
+class $$StudyPodcastDownloadsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabaseV2,
+          $StudyPodcastDownloadsTable,
+          StudyPodcastDownload,
+          $$StudyPodcastDownloadsTableFilterComposer,
+          $$StudyPodcastDownloadsTableOrderingComposer,
+          $$StudyPodcastDownloadsTableAnnotationComposer,
+          $$StudyPodcastDownloadsTableCreateCompanionBuilder,
+          $$StudyPodcastDownloadsTableUpdateCompanionBuilder,
+          (
+            StudyPodcastDownload,
+            BaseReferences<
+              _$AppDatabaseV2,
+              $StudyPodcastDownloadsTable,
+              StudyPodcastDownload
+            >,
+          ),
+          StudyPodcastDownload,
+          PrefetchHooks Function()
+        > {
+  $$StudyPodcastDownloadsTableTableManager(
+    _$AppDatabaseV2 db,
+    $StudyPodcastDownloadsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$StudyPodcastDownloadsTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$StudyPodcastDownloadsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$StudyPodcastDownloadsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> environment = const Value.absent(),
+                Value<String> accountId = const Value.absent(),
+                Value<int> noteId = const Value.absent(),
+                Value<String> episodeKey = const Value.absent(),
+                Value<String> localPath = const Value.absent(),
+                Value<int> sizeBytes = const Value.absent(),
+                Value<double> durationSeconds = const Value.absent(),
+                Value<String> courseLabel = const Value.absent(),
+                Value<String> title = const Value.absent(),
+                Value<DateTime?> downloadedAt = const Value.absent(),
+                Value<String> status = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => StudyPodcastDownloadsCompanion(
+                environment: environment,
+                accountId: accountId,
+                noteId: noteId,
+                episodeKey: episodeKey,
+                localPath: localPath,
+                sizeBytes: sizeBytes,
+                durationSeconds: durationSeconds,
+                courseLabel: courseLabel,
+                title: title,
+                downloadedAt: downloadedAt,
+                status: status,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String environment,
+                required String accountId,
+                required int noteId,
+                required String episodeKey,
+                required String localPath,
+                required int sizeBytes,
+                required double durationSeconds,
+                required String courseLabel,
+                required String title,
+                Value<DateTime?> downloadedAt = const Value.absent(),
+                required String status,
+                Value<int> rowid = const Value.absent(),
+              }) => StudyPodcastDownloadsCompanion.insert(
+                environment: environment,
+                accountId: accountId,
+                noteId: noteId,
+                episodeKey: episodeKey,
+                localPath: localPath,
+                sizeBytes: sizeBytes,
+                durationSeconds: durationSeconds,
+                courseLabel: courseLabel,
+                title: title,
+                downloadedAt: downloadedAt,
+                status: status,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<
+                    $StudyPodcastDownloadsTable,
+                    StudyPodcastDownload
+                  >(table),
+                  BaseReferences<
+                    _$AppDatabaseV2,
+                    $StudyPodcastDownloadsTable,
+                    StudyPodcastDownload
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$StudyPodcastDownloadsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabaseV2,
+      $StudyPodcastDownloadsTable,
+      StudyPodcastDownload,
+      $$StudyPodcastDownloadsTableFilterComposer,
+      $$StudyPodcastDownloadsTableOrderingComposer,
+      $$StudyPodcastDownloadsTableAnnotationComposer,
+      $$StudyPodcastDownloadsTableCreateCompanionBuilder,
+      $$StudyPodcastDownloadsTableUpdateCompanionBuilder,
+      (
+        StudyPodcastDownload,
+        BaseReferences<
+          _$AppDatabaseV2,
+          $StudyPodcastDownloadsTable,
+          StudyPodcastDownload
+        >,
+      ),
+      StudyPodcastDownload,
+      PrefetchHooks Function()
+    >;
+typedef $$StudyPlaybackPositionsTableCreateCompanionBuilder =
+    StudyPlaybackPositionsCompanion Function({
+      required String environment,
+      required String accountId,
+      required int noteId,
+      required String episodeKey,
+      required int positionMilliseconds,
+      Value<double> speed,
+      required DateTime updatedAt,
+      Value<int> rowid,
+    });
+typedef $$StudyPlaybackPositionsTableUpdateCompanionBuilder =
+    StudyPlaybackPositionsCompanion Function({
+      Value<String> environment,
+      Value<String> accountId,
+      Value<int> noteId,
+      Value<String> episodeKey,
+      Value<int> positionMilliseconds,
+      Value<double> speed,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+
+class $$StudyPlaybackPositionsTableFilterComposer
+    extends Composer<_$AppDatabaseV2, $StudyPlaybackPositionsTable> {
+  $$StudyPlaybackPositionsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get environment => $composableBuilder(
+    column: $table.environment,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get accountId => $composableBuilder(
+    column: $table.accountId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get noteId => $composableBuilder(
+    column: $table.noteId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get episodeKey => $composableBuilder(
+    column: $table.episodeKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get positionMilliseconds => $composableBuilder(
+    column: $table.positionMilliseconds,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get speed => $composableBuilder(
+    column: $table.speed,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$StudyPlaybackPositionsTableOrderingComposer
+    extends Composer<_$AppDatabaseV2, $StudyPlaybackPositionsTable> {
+  $$StudyPlaybackPositionsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get environment => $composableBuilder(
+    column: $table.environment,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get accountId => $composableBuilder(
+    column: $table.accountId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get noteId => $composableBuilder(
+    column: $table.noteId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get episodeKey => $composableBuilder(
+    column: $table.episodeKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get positionMilliseconds => $composableBuilder(
+    column: $table.positionMilliseconds,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get speed => $composableBuilder(
+    column: $table.speed,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$StudyPlaybackPositionsTableAnnotationComposer
+    extends Composer<_$AppDatabaseV2, $StudyPlaybackPositionsTable> {
+  $$StudyPlaybackPositionsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get environment => $composableBuilder(
+    column: $table.environment,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get accountId =>
+      $composableBuilder(column: $table.accountId, builder: (column) => column);
+
+  GeneratedColumn<int> get noteId =>
+      $composableBuilder(column: $table.noteId, builder: (column) => column);
+
+  GeneratedColumn<String> get episodeKey => $composableBuilder(
+    column: $table.episodeKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get positionMilliseconds => $composableBuilder(
+    column: $table.positionMilliseconds,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get speed =>
+      $composableBuilder(column: $table.speed, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$StudyPlaybackPositionsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabaseV2,
+          $StudyPlaybackPositionsTable,
+          StudyPlaybackPosition,
+          $$StudyPlaybackPositionsTableFilterComposer,
+          $$StudyPlaybackPositionsTableOrderingComposer,
+          $$StudyPlaybackPositionsTableAnnotationComposer,
+          $$StudyPlaybackPositionsTableCreateCompanionBuilder,
+          $$StudyPlaybackPositionsTableUpdateCompanionBuilder,
+          (
+            StudyPlaybackPosition,
+            BaseReferences<
+              _$AppDatabaseV2,
+              $StudyPlaybackPositionsTable,
+              StudyPlaybackPosition
+            >,
+          ),
+          StudyPlaybackPosition,
+          PrefetchHooks Function()
+        > {
+  $$StudyPlaybackPositionsTableTableManager(
+    _$AppDatabaseV2 db,
+    $StudyPlaybackPositionsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$StudyPlaybackPositionsTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$StudyPlaybackPositionsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$StudyPlaybackPositionsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> environment = const Value.absent(),
+                Value<String> accountId = const Value.absent(),
+                Value<int> noteId = const Value.absent(),
+                Value<String> episodeKey = const Value.absent(),
+                Value<int> positionMilliseconds = const Value.absent(),
+                Value<double> speed = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => StudyPlaybackPositionsCompanion(
+                environment: environment,
+                accountId: accountId,
+                noteId: noteId,
+                episodeKey: episodeKey,
+                positionMilliseconds: positionMilliseconds,
+                speed: speed,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String environment,
+                required String accountId,
+                required int noteId,
+                required String episodeKey,
+                required int positionMilliseconds,
+                Value<double> speed = const Value.absent(),
+                required DateTime updatedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => StudyPlaybackPositionsCompanion.insert(
+                environment: environment,
+                accountId: accountId,
+                noteId: noteId,
+                episodeKey: episodeKey,
+                positionMilliseconds: positionMilliseconds,
+                speed: speed,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<
+                    $StudyPlaybackPositionsTable,
+                    StudyPlaybackPosition
+                  >(table),
+                  BaseReferences<
+                    _$AppDatabaseV2,
+                    $StudyPlaybackPositionsTable,
+                    StudyPlaybackPosition
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$StudyPlaybackPositionsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabaseV2,
+      $StudyPlaybackPositionsTable,
+      StudyPlaybackPosition,
+      $$StudyPlaybackPositionsTableFilterComposer,
+      $$StudyPlaybackPositionsTableOrderingComposer,
+      $$StudyPlaybackPositionsTableAnnotationComposer,
+      $$StudyPlaybackPositionsTableCreateCompanionBuilder,
+      $$StudyPlaybackPositionsTableUpdateCompanionBuilder,
+      (
+        StudyPlaybackPosition,
+        BaseReferences<
+          _$AppDatabaseV2,
+          $StudyPlaybackPositionsTable,
+          StudyPlaybackPosition
+        >,
+      ),
+      StudyPlaybackPosition,
+      PrefetchHooks Function()
+    >;
+typedef $$StudyOfflineEntitlementSnapshotsTableCreateCompanionBuilder =
+    StudyOfflineEntitlementSnapshotsCompanion Function({
+      required String environment,
+      required String accountId,
+      required String state,
+      Value<DateTime?> currentPeriodStart,
+      Value<DateTime?> currentPeriodEnd,
+      required DateTime verifiedAt,
+      Value<int> rowid,
+    });
+typedef $$StudyOfflineEntitlementSnapshotsTableUpdateCompanionBuilder =
+    StudyOfflineEntitlementSnapshotsCompanion Function({
+      Value<String> environment,
+      Value<String> accountId,
+      Value<String> state,
+      Value<DateTime?> currentPeriodStart,
+      Value<DateTime?> currentPeriodEnd,
+      Value<DateTime> verifiedAt,
+      Value<int> rowid,
+    });
+
+class $$StudyOfflineEntitlementSnapshotsTableFilterComposer
+    extends Composer<_$AppDatabaseV2, $StudyOfflineEntitlementSnapshotsTable> {
+  $$StudyOfflineEntitlementSnapshotsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get environment => $composableBuilder(
+    column: $table.environment,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get accountId => $composableBuilder(
+    column: $table.accountId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get state => $composableBuilder(
+    column: $table.state,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get currentPeriodStart => $composableBuilder(
+    column: $table.currentPeriodStart,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get currentPeriodEnd => $composableBuilder(
+    column: $table.currentPeriodEnd,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get verifiedAt => $composableBuilder(
+    column: $table.verifiedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$StudyOfflineEntitlementSnapshotsTableOrderingComposer
+    extends Composer<_$AppDatabaseV2, $StudyOfflineEntitlementSnapshotsTable> {
+  $$StudyOfflineEntitlementSnapshotsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get environment => $composableBuilder(
+    column: $table.environment,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get accountId => $composableBuilder(
+    column: $table.accountId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get state => $composableBuilder(
+    column: $table.state,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get currentPeriodStart => $composableBuilder(
+    column: $table.currentPeriodStart,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get currentPeriodEnd => $composableBuilder(
+    column: $table.currentPeriodEnd,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get verifiedAt => $composableBuilder(
+    column: $table.verifiedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$StudyOfflineEntitlementSnapshotsTableAnnotationComposer
+    extends Composer<_$AppDatabaseV2, $StudyOfflineEntitlementSnapshotsTable> {
+  $$StudyOfflineEntitlementSnapshotsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get environment => $composableBuilder(
+    column: $table.environment,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get accountId =>
+      $composableBuilder(column: $table.accountId, builder: (column) => column);
+
+  GeneratedColumn<String> get state =>
+      $composableBuilder(column: $table.state, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get currentPeriodStart => $composableBuilder(
+    column: $table.currentPeriodStart,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get currentPeriodEnd => $composableBuilder(
+    column: $table.currentPeriodEnd,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get verifiedAt => $composableBuilder(
+    column: $table.verifiedAt,
+    builder: (column) => column,
+  );
+}
+
+class $$StudyOfflineEntitlementSnapshotsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabaseV2,
+          $StudyOfflineEntitlementSnapshotsTable,
+          StudyOfflineEntitlementSnapshot,
+          $$StudyOfflineEntitlementSnapshotsTableFilterComposer,
+          $$StudyOfflineEntitlementSnapshotsTableOrderingComposer,
+          $$StudyOfflineEntitlementSnapshotsTableAnnotationComposer,
+          $$StudyOfflineEntitlementSnapshotsTableCreateCompanionBuilder,
+          $$StudyOfflineEntitlementSnapshotsTableUpdateCompanionBuilder,
+          (
+            StudyOfflineEntitlementSnapshot,
+            BaseReferences<
+              _$AppDatabaseV2,
+              $StudyOfflineEntitlementSnapshotsTable,
+              StudyOfflineEntitlementSnapshot
+            >,
+          ),
+          StudyOfflineEntitlementSnapshot,
+          PrefetchHooks Function()
+        > {
+  $$StudyOfflineEntitlementSnapshotsTableTableManager(
+    _$AppDatabaseV2 db,
+    $StudyOfflineEntitlementSnapshotsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$StudyOfflineEntitlementSnapshotsTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$StudyOfflineEntitlementSnapshotsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$StudyOfflineEntitlementSnapshotsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> environment = const Value.absent(),
+                Value<String> accountId = const Value.absent(),
+                Value<String> state = const Value.absent(),
+                Value<DateTime?> currentPeriodStart = const Value.absent(),
+                Value<DateTime?> currentPeriodEnd = const Value.absent(),
+                Value<DateTime> verifiedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => StudyOfflineEntitlementSnapshotsCompanion(
+                environment: environment,
+                accountId: accountId,
+                state: state,
+                currentPeriodStart: currentPeriodStart,
+                currentPeriodEnd: currentPeriodEnd,
+                verifiedAt: verifiedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String environment,
+                required String accountId,
+                required String state,
+                Value<DateTime?> currentPeriodStart = const Value.absent(),
+                Value<DateTime?> currentPeriodEnd = const Value.absent(),
+                required DateTime verifiedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => StudyOfflineEntitlementSnapshotsCompanion.insert(
+                environment: environment,
+                accountId: accountId,
+                state: state,
+                currentPeriodStart: currentPeriodStart,
+                currentPeriodEnd: currentPeriodEnd,
+                verifiedAt: verifiedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<
+                    $StudyOfflineEntitlementSnapshotsTable,
+                    StudyOfflineEntitlementSnapshot
+                  >(table),
+                  BaseReferences<
+                    _$AppDatabaseV2,
+                    $StudyOfflineEntitlementSnapshotsTable,
+                    StudyOfflineEntitlementSnapshot
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$StudyOfflineEntitlementSnapshotsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabaseV2,
+      $StudyOfflineEntitlementSnapshotsTable,
+      StudyOfflineEntitlementSnapshot,
+      $$StudyOfflineEntitlementSnapshotsTableFilterComposer,
+      $$StudyOfflineEntitlementSnapshotsTableOrderingComposer,
+      $$StudyOfflineEntitlementSnapshotsTableAnnotationComposer,
+      $$StudyOfflineEntitlementSnapshotsTableCreateCompanionBuilder,
+      $$StudyOfflineEntitlementSnapshotsTableUpdateCompanionBuilder,
+      (
+        StudyOfflineEntitlementSnapshot,
+        BaseReferences<
+          _$AppDatabaseV2,
+          $StudyOfflineEntitlementSnapshotsTable,
+          StudyOfflineEntitlementSnapshot
+        >,
+      ),
+      StudyOfflineEntitlementSnapshot,
+      PrefetchHooks Function()
+    >;
+typedef $$StudyLegacyImportsTableCreateCompanionBuilder =
+    StudyLegacyImportsCompanion Function({
+      required String environment,
+      required String accountId,
+      required String legacyKeysJson,
+      required DateTime importedAt,
+      Value<int> rowid,
+    });
+typedef $$StudyLegacyImportsTableUpdateCompanionBuilder =
+    StudyLegacyImportsCompanion Function({
+      Value<String> environment,
+      Value<String> accountId,
+      Value<String> legacyKeysJson,
+      Value<DateTime> importedAt,
+      Value<int> rowid,
+    });
+
+class $$StudyLegacyImportsTableFilterComposer
+    extends Composer<_$AppDatabaseV2, $StudyLegacyImportsTable> {
+  $$StudyLegacyImportsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get environment => $composableBuilder(
+    column: $table.environment,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get accountId => $composableBuilder(
+    column: $table.accountId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get legacyKeysJson => $composableBuilder(
+    column: $table.legacyKeysJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get importedAt => $composableBuilder(
+    column: $table.importedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$StudyLegacyImportsTableOrderingComposer
+    extends Composer<_$AppDatabaseV2, $StudyLegacyImportsTable> {
+  $$StudyLegacyImportsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get environment => $composableBuilder(
+    column: $table.environment,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get accountId => $composableBuilder(
+    column: $table.accountId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get legacyKeysJson => $composableBuilder(
+    column: $table.legacyKeysJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get importedAt => $composableBuilder(
+    column: $table.importedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$StudyLegacyImportsTableAnnotationComposer
+    extends Composer<_$AppDatabaseV2, $StudyLegacyImportsTable> {
+  $$StudyLegacyImportsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get environment => $composableBuilder(
+    column: $table.environment,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get accountId =>
+      $composableBuilder(column: $table.accountId, builder: (column) => column);
+
+  GeneratedColumn<String> get legacyKeysJson => $composableBuilder(
+    column: $table.legacyKeysJson,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get importedAt => $composableBuilder(
+    column: $table.importedAt,
+    builder: (column) => column,
+  );
+}
+
+class $$StudyLegacyImportsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabaseV2,
+          $StudyLegacyImportsTable,
+          StudyLegacyImport,
+          $$StudyLegacyImportsTableFilterComposer,
+          $$StudyLegacyImportsTableOrderingComposer,
+          $$StudyLegacyImportsTableAnnotationComposer,
+          $$StudyLegacyImportsTableCreateCompanionBuilder,
+          $$StudyLegacyImportsTableUpdateCompanionBuilder,
+          (
+            StudyLegacyImport,
+            BaseReferences<
+              _$AppDatabaseV2,
+              $StudyLegacyImportsTable,
+              StudyLegacyImport
+            >,
+          ),
+          StudyLegacyImport,
+          PrefetchHooks Function()
+        > {
+  $$StudyLegacyImportsTableTableManager(
+    _$AppDatabaseV2 db,
+    $StudyLegacyImportsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$StudyLegacyImportsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$StudyLegacyImportsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$StudyLegacyImportsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> environment = const Value.absent(),
+                Value<String> accountId = const Value.absent(),
+                Value<String> legacyKeysJson = const Value.absent(),
+                Value<DateTime> importedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => StudyLegacyImportsCompanion(
+                environment: environment,
+                accountId: accountId,
+                legacyKeysJson: legacyKeysJson,
+                importedAt: importedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String environment,
+                required String accountId,
+                required String legacyKeysJson,
+                required DateTime importedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => StudyLegacyImportsCompanion.insert(
+                environment: environment,
+                accountId: accountId,
+                legacyKeysJson: legacyKeysJson,
+                importedAt: importedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$StudyLegacyImportsTable, StudyLegacyImport>(
+                    table,
+                  ),
+                  BaseReferences<
+                    _$AppDatabaseV2,
+                    $StudyLegacyImportsTable,
+                    StudyLegacyImport
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$StudyLegacyImportsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabaseV2,
+      $StudyLegacyImportsTable,
+      StudyLegacyImport,
+      $$StudyLegacyImportsTableFilterComposer,
+      $$StudyLegacyImportsTableOrderingComposer,
+      $$StudyLegacyImportsTableAnnotationComposer,
+      $$StudyLegacyImportsTableCreateCompanionBuilder,
+      $$StudyLegacyImportsTableUpdateCompanionBuilder,
+      (
+        StudyLegacyImport,
+        BaseReferences<
+          _$AppDatabaseV2,
+          $StudyLegacyImportsTable,
+          StudyLegacyImport
+        >,
+      ),
+      StudyLegacyImport,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseV2Manager {
   final _$AppDatabaseV2 _db;
@@ -15197,4 +21037,33 @@ class $AppDatabaseV2Manager {
       $$TodoItemsTableTableManager(_db, _db.todoItems);
   $$TodoItemTagsTableTableManager get todoItemTags =>
       $$TodoItemTagsTableTableManager(_db, _db.todoItemTags);
+  $$StudyMaterialRecordsTableTableManager get studyMaterialRecords =>
+      $$StudyMaterialRecordsTableTableManager(_db, _db.studyMaterialRecords);
+  $$StudyQuestionSetRecordsTableTableManager get studyQuestionSetRecords =>
+      $$StudyQuestionSetRecordsTableTableManager(
+        _db,
+        _db.studyQuestionSetRecords,
+      );
+  $$StudyGenerationJobRecordsTableTableManager get studyGenerationJobRecords =>
+      $$StudyGenerationJobRecordsTableTableManager(
+        _db,
+        _db.studyGenerationJobRecords,
+      );
+  $$StudyPodcastRecordsTableTableManager get studyPodcastRecords =>
+      $$StudyPodcastRecordsTableTableManager(_db, _db.studyPodcastRecords);
+  $$StudyPodcastDownloadsTableTableManager get studyPodcastDownloads =>
+      $$StudyPodcastDownloadsTableTableManager(_db, _db.studyPodcastDownloads);
+  $$StudyPlaybackPositionsTableTableManager get studyPlaybackPositions =>
+      $$StudyPlaybackPositionsTableTableManager(
+        _db,
+        _db.studyPlaybackPositions,
+      );
+  $$StudyOfflineEntitlementSnapshotsTableTableManager
+  get studyOfflineEntitlementSnapshots =>
+      $$StudyOfflineEntitlementSnapshotsTableTableManager(
+        _db,
+        _db.studyOfflineEntitlementSnapshots,
+      );
+  $$StudyLegacyImportsTableTableManager get studyLegacyImports =>
+      $$StudyLegacyImportsTableTableManager(_db, _db.studyLegacyImports);
 }

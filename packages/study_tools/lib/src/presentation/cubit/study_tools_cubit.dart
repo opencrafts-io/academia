@@ -9,6 +9,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../domain/entities/study_entities.dart';
 import '../../domain/repositories/study_tools_repository.dart';
+import '../../data/services/podcast_local_store.dart';
+import '../audio/podcast_audio_handler.dart';
 
 part 'study_tools_cubit.freezed.dart';
 
@@ -20,10 +22,14 @@ abstract class StudyToolsState with _$StudyToolsState {
     @Default(StudyLoadStatus.initial) StudyLoadStatus status,
     @Default(<StudyMaterial>[]) List<StudyMaterial> materials,
     StudyMaterial? selectedMaterial,
+    StudyPodcast? podcast,
+    @Default(false) bool isLoadingPodcast,
+    @Default(false) bool isGeneratingPodcast,
     @Default(<QuestionFormat, List<QuestionSet>>{})
     Map<QuestionFormat, List<QuestionSet>> questionSets,
     QuestionFormat? loadingFormat,
     @Default(<int, int>{}) Map<int, int> jobs,
+    @Default(<int, List<String>>{}) Map<int, List<String>> jobOutputs,
     String? error,
     String? errorCode,
     @Default(false) bool isUploading,
@@ -33,7 +39,8 @@ abstract class StudyToolsState with _$StudyToolsState {
 
 class StudyToolsCubit extends Cubit<StudyToolsState>
     with WidgetsBindingObserver {
-  StudyToolsCubit(this.repository) : super(const StudyToolsState()) {
+  StudyToolsCubit(this.repository, {this.podcastStore, this.audioHandler})
+    : super(const StudyToolsState()) {
     WidgetsBinding.instance.addObserver(this);
     _connectivitySubscription = Connectivity().onConnectivityChanged.listen((
       results,
@@ -46,6 +53,8 @@ class StudyToolsCubit extends Cubit<StudyToolsState>
     });
   }
   final StudyToolsRepository repository;
+  final PodcastLocalStore? podcastStore;
+  final PodcastAudioHandler? audioHandler;
   final Map<int, Timer> _timers = {};
   final Set<int> _polling = {};
   late final StreamSubscription<List<ConnectivityResult>>
@@ -69,8 +78,8 @@ class StudyToolsCubit extends Cubit<StudyToolsState>
       (failure) => emit(
         state.copyWith(
           status: StudyLoadStatus.failure,
-          error: failure.message,
-          errorCode: _failureCode(failure),
+          error: _readFailureMessage(failure),
+          errorCode: _readFailureCode(failure),
         ),
       ),
       (items) {
@@ -87,7 +96,7 @@ class StudyToolsCubit extends Cubit<StudyToolsState>
     );
   }
 
-  Future<void> loadMaterial(int id) async {
+  Future<void> loadMaterial(int id, {bool loadPodcastMetadata = true}) async {
     emit(
       state.copyWith(
         status: StudyLoadStatus.loading,
@@ -101,8 +110,8 @@ class StudyToolsCubit extends Cubit<StudyToolsState>
       (failure) => emit(
         state.copyWith(
           status: StudyLoadStatus.failure,
-          error: failure.message,
-          errorCode: _failureCode(failure),
+          error: _readFailureMessage(failure),
+          errorCode: _readFailureCode(failure),
         ),
       ),
       (material) {
@@ -110,8 +119,10 @@ class StudyToolsCubit extends Cubit<StudyToolsState>
           state.copyWith(
             status: StudyLoadStatus.loaded,
             selectedMaterial: material,
+            podcast: null,
           ),
         );
+        if (loadPodcastMetadata) unawaited(loadPodcast());
         unawaited(recoverSavedJobs());
       },
     );
@@ -152,16 +163,26 @@ class StudyToolsCubit extends Cubit<StudyToolsState>
     final material = state.selectedMaterial;
     if (material == null ||
         state.loadingFormat != null ||
+        state.isGeneratingPodcast ||
         state.generationBlocked) {
       return;
     }
     emit(state.copyWith(loadingFormat: format, error: null, errorCode: null));
     final result = await repository.generate(material.id, format);
-    result.fold(
-      (failure) {
+    await result.fold<Future<void>>(
+      (failure) async {
         final code = _failureCode(failure);
+        final jobs = code == 'job_already_running'
+            ? await repository.savedJobs()
+            : state.jobs;
+        final savedJobId = jobs[material.id];
+        if (savedJobId != null) {
+          _startPolling(material.id, savedJobId);
+        }
+        if (isClosed) return;
         emit(
           state.copyWith(
+            jobs: jobs,
             loadingFormat: null,
             generationBlocked: code == 'job_already_running',
             error: code == 'job_already_running'
@@ -172,9 +193,123 @@ class StudyToolsCubit extends Cubit<StudyToolsState>
         );
       },
       (jobId) async {
-        await repository.saveJob(material.id, jobId);
+        await repository.saveJob(
+          material.id,
+          jobId,
+          outputs: const ['questions'],
+          questionFormat: format,
+        );
         final jobs = await repository.savedJobs();
-        emit(state.copyWith(jobs: jobs, error: null, errorCode: null));
+        emit(
+          state.copyWith(
+            jobs: jobs,
+            jobOutputs: {
+              ...state.jobOutputs,
+              material.id: const ['questions'],
+            },
+            error: null,
+            errorCode: null,
+          ),
+        );
+        _startPolling(material.id, jobId);
+      },
+    );
+  }
+
+  Future<void> loadPodcast() async {
+    final noteId = state.selectedMaterial?.id;
+    if (noteId == null || state.isLoadingPodcast) return;
+    emit(state.copyWith(isLoadingPodcast: true, error: null, errorCode: null));
+    final result = await repository.podcast(noteId);
+    result.fold(
+      (failure) {
+        final code = _failureCode(failure);
+        emit(
+          state.copyWith(
+            isLoadingPodcast: false,
+            error: code == 'not_found' ? null : _readFailureMessage(failure),
+            errorCode: code == 'not_found' ? null : _readFailureCode(failure),
+          ),
+        );
+      },
+      (podcast) => emit(
+        state.copyWith(
+          podcast: podcast,
+          isLoadingPodcast: false,
+          error: null,
+          errorCode: null,
+        ),
+      ),
+    );
+  }
+
+  Future<void> loadPodcastVersion(String episodeKey) async {
+    final noteId = state.selectedMaterial?.id;
+    if (noteId == null) return;
+    final result = await repository.podcastVersion(noteId, episodeKey);
+    result.fold(
+      (failure) => emit(state.copyWith(error: failure.message)),
+      (podcast) =>
+          emit(state.copyWith(podcast: podcast, error: null, errorCode: null)),
+    );
+  }
+
+  Future<void> generatePodcast() async {
+    final material = state.selectedMaterial;
+    if (material == null ||
+        state.isGeneratingPodcast ||
+        state.loadingFormat != null ||
+        state.jobs.containsKey(material.id) ||
+        state.generationBlocked) {
+      return;
+    }
+    emit(
+      state.copyWith(isGeneratingPodcast: true, error: null, errorCode: null),
+    );
+    final result = await repository.generatePodcast(material.id);
+    await result.fold(
+      (failure) async {
+        final code = _failureCode(failure);
+        final jobs = await repository.savedJobs();
+        if (code == 'job_already_running' && jobs.containsKey(material.id)) {
+          _startPolling(material.id, jobs[material.id]!);
+        } else if (code == 'job_already_running') {
+          await loadMaterial(material.id);
+          await loadPodcast();
+        }
+        if (isClosed) return;
+        emit(
+          state.copyWith(
+            isGeneratingPodcast: false,
+            jobs: jobs,
+            generationBlocked: code == 'job_already_running',
+            error: code == 'job_already_running'
+                ? 'Generation is already running for this material. Refresh the podcast after it finishes.'
+                : failure.message,
+            errorCode: code,
+          ),
+        );
+      },
+      (jobId) async {
+        await repository.saveJob(
+          material.id,
+          jobId,
+          outputs: const ['podcast'],
+        );
+        final jobs = await repository.savedJobs();
+        if (isClosed) return;
+        emit(
+          state.copyWith(
+            jobs: jobs,
+            jobOutputs: {
+              ...state.jobOutputs,
+              material.id: const ['podcast'],
+            },
+            isGeneratingPodcast: true,
+            error: null,
+            errorCode: null,
+          ),
+        );
         _startPolling(material.id, jobId);
       },
     );
@@ -210,8 +345,8 @@ class StudyToolsCubit extends Cubit<StudyToolsState>
 
   Future<bool> deleteMaterial(int id) async {
     final result = await repository.delete(id);
-    return result.fold(
-      (failure) {
+    return await result.fold<Future<bool>>(
+      (failure) async {
         emit(
           state.copyWith(
             error: failure.message,
@@ -220,14 +355,21 @@ class StudyToolsCubit extends Cubit<StudyToolsState>
         );
         return false;
       },
-      (_) {
+      (_) async {
         _timers.remove(id)?.cancel();
+        String? cleanupFailure;
+        try {
+          await audioHandler?.discardIfNote(id);
+          await podcastStore?.removeMaterialFiles(id);
+        } on Object {
+          cleanupFailure = 'The material was deleted, but its saved audio could not be fully removed from this device.';
+        }
         emit(
           state.copyWith(
             materials: state.materials.where((m) => m.id != id).toList(),
             selectedMaterial: null,
-            error: null,
-            errorCode: null,
+            error: cleanupFailure,
+            errorCode: cleanupFailure == null ? null : 'local_cleanup_failed',
           ),
         );
         return true;
@@ -285,6 +427,13 @@ class StudyToolsCubit extends Cubit<StudyToolsState>
           _timers.remove(noteId)?.cancel();
         },
         (job) async {
+          if (job.outputs.isNotEmpty && !isClosed) {
+            emit(
+              state.copyWith(
+                jobOutputs: {...state.jobOutputs, noteId: job.outputs},
+              ),
+            );
+          }
           if (job.noteId != noteId) {
             _timers.remove(noteId)?.cancel();
             if (!isClosed) {
@@ -302,9 +451,14 @@ class StudyToolsCubit extends Cubit<StudyToolsState>
             jobs.remove(noteId);
             await repository.removeJob(noteId);
             if (isClosed) return;
+            final jobOutputs = {...state.jobOutputs}..remove(noteId);
             emit(
               state.copyWith(
                 jobs: jobs,
+                jobOutputs: jobOutputs,
+                loadingFormat: null,
+                isGeneratingPodcast: false,
+                generationBlocked: false,
                 error: job.status == 'failed'
                     ? (job.failureMessage ?? _jobFailure(job.failureCode))
                     : null,
@@ -313,7 +467,12 @@ class StudyToolsCubit extends Cubit<StudyToolsState>
             );
             if (job.status == 'done' && state.selectedMaterial?.id == noteId) {
               await loadMaterial(noteId);
-              await loadQuestionsForOutputs(job.outputs);
+              if (job.outputs.contains('questions')) {
+                await loadQuestionsForOutputs(job.outputs);
+              }
+              if (job.outputs.contains('podcast')) {
+                await loadPodcast();
+              }
             }
           }
         },
@@ -340,16 +499,35 @@ class StudyToolsCubit extends Cubit<StudyToolsState>
 
   String? _failureCode(Failure failure) =>
       failure.maybeMap(server: (e) => e.code, orElse: () => null);
+
+  String _readFailureMessage(Failure failure) =>
+      _failureCode(failure) == 'entitlement_required'
+      ? 'Professor currently requires an active subscription to open study materials. Existing podcast listening for non-subscribers needs an update to Professor access rules.'
+      : failure.message;
+
+  String? _readFailureCode(Failure failure) =>
+      _failureCode(failure) == 'entitlement_required'
+      ? 'podcast_read_access_unavailable'
+      : failure is NetworkFailure
+      ? 'network_unavailable'
+      : _failureCode(failure);
   String _jobFailure(String? code) => switch (code) {
     'unsupported_file_type' =>
       'This file type could not be processed. Try another supported document.',
     'file_too_large' => 'This document is too large to process.',
+    'provider_failed' || 'llm_provider_error' =>
+      'The AI service is temporarily unavailable. Please try again later.',
+    'output_failed' || 'llm_invalid_output' =>
+      'The generated study content could not be prepared. Please retry.',
+    'tts_provider_error' =>
+      'Audio generation is temporarily unavailable. Please retry the podcast.',
     'conversion_failed' =>
-      'The document could not be converted. Try uploading it again.',
-    'provider_failed' =>
-      'Question generation is temporarily unavailable. Try again later.',
-    'output_failed' =>
-      'Questions could not be prepared. Please retry generation.',
-    _ => 'Question generation failed. Please retry.',
+      'The podcast audio could not be converted. Please retry generation.',
+    'file_unreadable' => 'This document could not be read to create a podcast.',
+    'entitlement_required' =>
+      'A subscription is required to generate study content.',
+    'entitlement_unavailable' =>
+      'Subscription access could not be verified. Try again.',
+    _ => 'Study content generation failed. Please retry.',
   };
 }

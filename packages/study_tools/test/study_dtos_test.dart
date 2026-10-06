@@ -94,4 +94,37 @@ void main() {
     expect(material.filename, 'notes.pdf');
     expect(material.sizeBytes, 1024);
   });
+
+  test('decodes podcast metadata with additive identity and title', () {
+    final podcast = PodcastDto.fromJson({
+      'id': 94,
+      'note_id': 2,
+      'title': 'A gentle introduction to Algorithms',
+      'generated_at': '2026-10-03T12:00:00Z',
+      'duration_seconds': 403.5,
+      'audio_url': 'https://media.example.test/audio.mp3?sig=private',
+      'script': 'Host: Let us begin.',
+    }).toEntity();
+
+    expect(podcast.id, 94);
+    expect(podcast.noteId, 2);
+    expect(podcast.title, 'A gentle introduction to Algorithms');
+    expect(podcast.duration.inSeconds, 403);
+    expect(podcast.audioUrl, startsWith('https://media.example.test/'));
+    expect(podcast.script, 'Host: Let us begin.');
+  });
+
+  test('decodes legacy podcast responses without title or id', () {
+    final podcast = PodcastDto.fromJson({
+      'note_id': 2,
+      'generated_at': '2026-10-03T12:00:00Z',
+      'duration_seconds': 0,
+      'audio_url': '/media/podcast.mp3',
+      'script': 'Host: Hello.',
+    }).toEntity();
+
+    expect(podcast.id, isNull);
+    expect(podcast.title, isEmpty);
+    expect(podcast.duration, Duration.zero);
+  });
 }

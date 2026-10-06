@@ -87,6 +87,34 @@ void main() {
       expect(api.path, '/qa-professor/api/notes/14/');
     },
   );
+
+  test('generates and fetches a podcast from an existing material', () async {
+    final api = _RecordingApiClient({'job_id': 73});
+    final datasource = StudyToolsRemoteDatasourceImpl(api, _paths);
+
+    final jobId = await datasource.generatePodcast(14);
+    expect(jobId.getOrElse(() => -1), 73);
+    expect(api.path, '/qa-professor/api/notes/14/generate/');
+    expect(api.data, {
+      'outputs': ['podcast'],
+    });
+
+    api.response = {
+      'id': 17,
+      'note_id': 14,
+      'title': 'Algorithms, in conversation',
+      'generated_at': '2026-10-03T12:00:00Z',
+      'duration_seconds': 420,
+      'audio_url': 'https://cdn.example.test/episode.mp3',
+      'script': 'Host: Start here.',
+    };
+    final podcast = await datasource.podcast(14);
+    expect(api.path, '/qa-professor/api/notes/14/podcast/');
+    expect(
+      podcast.getOrElse(() => throw StateError('Expected podcast')).id,
+      17,
+    );
+  });
 }
 
 final _paths = StudyToolsApiPaths(

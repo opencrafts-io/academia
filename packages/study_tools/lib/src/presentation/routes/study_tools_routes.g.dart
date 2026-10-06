@@ -6,7 +6,11 @@ part of 'study_tools_routes.dart';
 // GoRouterGenerator
 // **************************************************************************
 
-List<RouteBase> get $appRoutes => [$studyToolsRoute, $studyPracticeRoute];
+List<RouteBase> get $appRoutes => [
+  $studyToolsRoute,
+  $studyPodcastPlayerRoute,
+  $studyPracticeRoute,
+];
 
 RouteBase get $studyToolsRoute => GoRouteData.$route(
   path: '/study-tools',
@@ -25,6 +29,7 @@ mixin $StudyToolsRoute on GoRouteData {
   static StudyToolsRoute _fromState(GoRouterState state) => StudyToolsRoute(
     courseId: state.uri.queryParameters['course-id'],
     courseLabel: state.uri.queryParameters['course-label'],
+    courseLocalId: state.uri.queryParameters['course-local-id'],
   );
 
   StudyToolsRoute get _self => this as StudyToolsRoute;
@@ -35,6 +40,7 @@ mixin $StudyToolsRoute on GoRouteData {
     queryParams: {
       if (_self.courseId != null) 'course-id': _self.courseId,
       if (_self.courseLabel != null) 'course-label': _self.courseLabel,
+      if (_self.courseLocalId != null) 'course-local-id': _self.courseLocalId,
     },
   );
 
@@ -63,6 +69,43 @@ mixin $StudyMaterialRoute on GoRouteData {
   @override
   String get location => GoRouteData.$location(
     '/study-tools/material/${Uri.encodeComponent(_self.materialId.toString())}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $studyPodcastPlayerRoute => GoRouteData.$route(
+  path: '/study-tools/podcast/:materialId',
+  hasOverriddenOnExit: false,
+  factory: $StudyPodcastPlayerRoute._fromState,
+);
+
+mixin $StudyPodcastPlayerRoute on GoRouteData {
+  static StudyPodcastPlayerRoute _fromState(GoRouterState state) =>
+      StudyPodcastPlayerRoute(
+        materialId: int.parse(state.pathParameters['materialId']!),
+        episodeKey: state.uri.queryParameters['episode-key'],
+      );
+
+  StudyPodcastPlayerRoute get _self => this as StudyPodcastPlayerRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/study-tools/podcast/${Uri.encodeComponent(_self.materialId.toString())}',
+    queryParams: {
+      if (_self.episodeKey != null) 'episode-key': _self.episodeKey,
+    },
   );
 
   @override
