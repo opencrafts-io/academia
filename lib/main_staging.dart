@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:academia/app.dart';
 import 'package:core/config/flavor.dart';
@@ -11,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:workmanager/workmanager.dart';
+
 import './background_callback_dispatcher.dart';
 
 void main(List<String> args) async {
@@ -38,19 +37,13 @@ void main(List<String> args) async {
       if (runWebViewTitleBarWidget(args)) {
         return;
       }
-      if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
-        await Workmanager().initialize(backgroundCallbackDispatcher);
-        await registerDefaultBackgroundTasks();
-      }
-
-      await di.sl.allReady();
-
       runApp(
         DioRequestInspectorMain(
           inspector: di.sl<DioRequestInspector>(),
           child: Academia(),
         ),
       );
+      scheduleDefaultBackgroundTasksAfterFirstFrame();
     },
     (error, stacktrace) {
       Logger().e(

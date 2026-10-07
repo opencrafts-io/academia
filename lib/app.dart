@@ -27,16 +27,39 @@ class Academia extends StatefulWidget {
 }
 
 class _AcademiaState extends State<Academia> with WidgetsBindingObserver {
+  bool _deferredServicesReady = false;
+  SettingsCubit? _settingsCubit;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     setOptimalDisplayMode();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      unawaited(_initializeDeferredServices());
+    });
+  }
+
+  Future<void> _initializeDeferredServices() async {
+    try {
+      await initializeDeferredServices();
+      if (!mounted) return;
+
+      final settings = _settingsCubit;
+      if (settings == null) return;
+      _deferredServicesReady = true;
+      sl<courses.CourseReminderRefresher>().updatePreferences(
+        enabled: settings.state.courseRemindersEnabled,
+        reminderMinutes: settings.state.courseReminderMinutes,
+      );
+    } catch (error, stackTrace) {
+      debugPrint('Deferred startup initialization failed: $error\n$stackTrace');
+    }
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
+    if (state == AppLifecycleState.resumed && _deferredServicesReady) {
       unawaited(sl<courses.CourseReminderRefresher>().refresh());
     }
   }
@@ -86,16 +109,7 @@ class _AcademiaState extends State<Academia> with WidgetsBindingObserver {
           create: (context) =>
               sl<InAppUpdateBloc>()..add(CheckForInAppUpdateEvent()),
         ),
-        BlocProvider(
-          create: (context) {
-            final settings = sl<SettingsCubit>();
-            sl<courses.CourseReminderRefresher>().updatePreferences(
-              enabled: settings.state.courseRemindersEnabled,
-              reminderMinutes: settings.state.courseReminderMinutes,
-            );
-            return settings;
-          },
-        ),
+        BlocProvider(create: (context) => _settingsCubit = sl<SettingsCubit>()),
         BlocProvider(
           create: (context) => sl<AuthBloc>()..add(AuthCheckStatusEvent()),
         ),
@@ -151,6 +165,7 @@ class _AcademiaState extends State<Academia> with WidgetsBindingObserver {
                     current.courseReminderMinutes,
                   ),
               listener: (context, state) {
+                if (!_deferredServicesReady) return;
                 sl<courses.CourseReminderRefresher>().updatePreferences(
                   enabled: state.courseRemindersEnabled,
                   reminderMinutes: state.courseReminderMinutes,

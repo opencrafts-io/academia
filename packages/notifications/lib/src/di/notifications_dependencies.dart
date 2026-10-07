@@ -37,10 +37,8 @@ void configureNotificationsDependencies(
       if (identityService is NotificationInitializer)
         identityService as NotificationInitializer,
     ];
-    getIt.registerSingletonAsync<NotificationService>(() async {
-      final service = NotificationService(initializers);
-      await service.initialize(actionHandler);
-      return service;
-    });
+    getIt.registerLazySingleton<NotificationService>(
+      () => NotificationService(initializers),
+    );
   }
 }

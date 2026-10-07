@@ -45,16 +45,6 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
 
   configureDependencies(sl, flavor);
 
-  if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
-    await sl<LockInService>().start();
-  }
-
-  if (!isBackground) {
-    final adService = sl<AdService>();
-    await adService.initialize();
-    await adService.loadInterstitialAd();
-  }
-
   sl.registerFactory(
     () => AuthRemoteDatasource(flavor: flavor, dioClient: sl()),
   );
@@ -1015,4 +1005,23 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   sl.registerFactory<ActivityDetailBloc>(
     () => ActivityDetailBloc(getActivityById: sl<GetActivityById>()),
   );
+}
+
+/// Initializes optional platform services after the first app frame is shown.
+Future<void> initializeDeferredServices() async {
+  await Future.wait([
+    initializeNotifications(),
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android)
+      sl<LockInService>().start(),
+    _initializeAds(),
+  ]);
+}
+
+Future<void> initializeNotifications() =>
+    sl<NotificationService>().initialize(sl<NotificationActionHandler>());
+
+Future<void> _initializeAds() async {
+  final adService = sl<AdService>();
+  await adService.initialize();
+  await adService.loadInterstitialAd();
 }
