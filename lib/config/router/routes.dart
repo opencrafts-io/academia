@@ -11,6 +11,7 @@ import 'package:academia/features/features.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 import 'package:lock_in/lock_in.dart';
 import 'package:courses/courses.dart' as courses_package;
+import 'package:rewards/rewards.dart' as rewards;
 
 part 'routes.g.dart';
 
@@ -1000,7 +1001,7 @@ class AchievementsHomePageRoute extends GoRouteData
     with $AchievementsHomePageRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return AchievementsHomePage();
+    return const rewards.RewardsHomePage();
   }
 }
 
@@ -1011,7 +1012,7 @@ class ActivitiesPageRoute extends GoRouteData with $ActivitiesPageRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return ActivityDetailPage(id: id);
+    return rewards.RewardDetailsPage(id: id, isActivity: true);
   }
 }
 
@@ -1022,7 +1023,7 @@ class AchievementDetailPageRoute extends GoRouteData
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return AchievementDetailPage(id: id);
+    return rewards.RewardDetailsPage(id: id);
   }
 }
 

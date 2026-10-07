@@ -17,6 +17,7 @@ import 'package:settings/settings.dart' as settings;
 import 'package:courses/courses.dart' as courses;
 import 'package:todos/todos.dart' as todos;
 import 'package:pomodoro/pomodoro.dart' as pomodoro;
+import 'package:rewards/rewards.dart' as rewards;
 
 class AppRouter {
   static final GlobalKey<NavigatorState> globalNavigatorKey =
@@ -47,6 +48,10 @@ class AppRouter {
       ...courses.routes,
       ...todos.routes,
       ...pomodoro.routes,
+      GoRoute(
+        path: '/rewards',
+        builder: (context, state) => const rewards.RewardsHomePage(),
+      ),
     ],
     initialLocation: SplashScreenRoute().location,
     observers: [
