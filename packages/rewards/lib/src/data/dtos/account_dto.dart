@@ -12,13 +12,10 @@ abstract class AccountDto with _$AccountDto {
   const factory AccountDto({
     @Default('') String id,
     @JsonKey(name: 'vibe_points') @Default(0) int vibePoints,
-    @JsonKey(name: 'points_total') int? pointsTotal,
-    int? points,
   }) = _AccountDto;
 
   factory AccountDto.fromJson(Map<String, dynamic> json) =>
       _$AccountDtoFromJson(json);
 
-  RewardAccount toDomain() =>
-      RewardAccount(id: id, vibePoints: pointsTotal ?? points ?? vibePoints);
+  RewardAccount toDomain() => RewardAccount(id: id, vibePoints: vibePoints);
 }

@@ -3,7 +3,6 @@ import 'package:dartz/dartz.dart';
 
 import '../domain/domain.dart';
 import 'dtos/complete_activity_request_dto.dart';
-import 'dtos/user_streak_dto.dart';
 import 'rewards_remote_data_source.dart';
 
 class RewardsRepositoryImpl implements RewardsRepository {
@@ -61,10 +60,9 @@ class RewardsRepositoryImpl implements RewardsRepository {
   @override
   Future<Either<Failure, List<UserStreak>>> getStreaks() async {
     final result = await _remoteDataSource.getStreaks();
-    return result.map((dto) {
-      final streaks = dto.streaks.isNotEmpty ? dto.streaks : dto.results;
-      return streaks.map((UserStreakDto streak) => streak.toDomain()).toList();
-    });
+    return result.map(
+      (streaks) => streaks.map((streak) => streak.toDomain()).toList(),
+    );
   }
 
   @override

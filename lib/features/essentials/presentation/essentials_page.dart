@@ -13,6 +13,7 @@ import 'package:todos/todos.dart' as todos;
 
 import 'package:academia/features/essentials/widgets/essential_category_tile.dart';
 import 'package:academia/features/essentials/widgets/pomodoro_essentials_card.dart';
+import 'package:academia/features/essentials/widgets/rewards_essentials_card.dart';
 
 class EssentialsPage extends StatefulWidget {
   const EssentialsPage({super.key});
@@ -254,6 +255,8 @@ class _EssentialsPageState extends State<EssentialsPage> {
                     onTap: () => LockInRoute().push(context),
                   ),
                 ),
+                const SizedBox(height: 12),
+                const RewardsEssentialsCard(),
                 const SizedBox(height: 12),
                 const PomodoroEssentialsCard(),
                 SizedBox(height: 22),

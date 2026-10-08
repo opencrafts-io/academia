@@ -6,7 +6,6 @@ part 'leaderboard_entry.freezed.dart';
 abstract class LeaderboardEntry with _$LeaderboardEntry {
   const factory LeaderboardEntry({
     required String id,
-    String? accountId,
     String? username,
     String? avatarUrl,
     required int position,

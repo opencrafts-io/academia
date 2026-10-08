@@ -9,24 +9,12 @@ part of 'leaderboard_around_dto.dart';
 _LeaderboardAroundDto _$LeaderboardAroundDtoFromJson(
   Map<String, dynamic> json,
 ) => _LeaderboardAroundDto(
-  entries:
-      (json['entries'] as List<dynamic>?)
-          ?.map((e) => LeaderboardEntryDto.fromJson(e as Map<String, dynamic>))
-          .toList() ??
-      const <LeaderboardEntryDto>[],
   results:
       (json['results'] as List<dynamic>?)
           ?.map((e) => LeaderboardEntryDto.fromJson(e as Map<String, dynamic>))
           .toList() ??
       const <LeaderboardEntryDto>[],
-  leaderboard:
-      (json['leaderboard'] as List<dynamic>?)
-          ?.map((e) => LeaderboardEntryDto.fromJson(e as Map<String, dynamic>))
-          .toList() ??
-      const <LeaderboardEntryDto>[],
-  user: json['user'] == null
-      ? null
-      : LeaderboardEntryDto.fromJson(json['user'] as Map<String, dynamic>),
+  userId: json['user_id'] as String?,
   userPosition: (json['user_position'] as num?)?.toInt(),
   totalUsers: (json['total_users'] as num?)?.toInt() ?? 0,
 );
@@ -34,10 +22,8 @@ _LeaderboardAroundDto _$LeaderboardAroundDtoFromJson(
 Map<String, dynamic> _$LeaderboardAroundDtoToJson(
   _LeaderboardAroundDto instance,
 ) => <String, dynamic>{
-  'entries': instance.entries,
   'results': instance.results,
-  'leaderboard': instance.leaderboard,
-  'user': instance.user,
+  'user_id': instance.userId,
   'user_position': instance.userPosition,
   'total_users': instance.totalUsers,
 };

@@ -11,10 +11,9 @@ abstract class LeaderboardEntryDto with _$LeaderboardEntryDto {
 
   const factory LeaderboardEntryDto({
     @Default('') String id,
-    @JsonKey(name: 'account_id') String? accountId,
     String? username,
     @JsonKey(name: 'avatar_url') String? avatarUrl,
-    @Default(0) int position,
+    int? position,
     @JsonKey(name: 'vibe_rank') @Default(0) int vibeRank,
     @JsonKey(name: 'vibe_points') @Default(0) int vibePoints,
   }) = _LeaderboardEntryDto;
@@ -23,11 +22,10 @@ abstract class LeaderboardEntryDto with _$LeaderboardEntryDto {
       _$LeaderboardEntryDtoFromJson(json);
 
   LeaderboardEntry toDomain({int? displayPosition}) => LeaderboardEntry(
-    id: id.isEmpty ? accountId ?? '' : id,
-    accountId: accountId,
+    id: id,
     username: username,
     avatarUrl: avatarUrl,
-    position: displayPosition ?? position,
+    position: displayPosition ?? position ?? 0,
     vibeRank: vibeRank,
     vibePoints: vibePoints,
   );

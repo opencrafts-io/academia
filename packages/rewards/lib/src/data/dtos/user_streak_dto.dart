@@ -10,19 +10,25 @@ abstract class UserStreakDto with _$UserStreakDto {
   const UserStreakDto._();
 
   const factory UserStreakDto({
-    @JsonKey(name: 'activity_id') @Default('') String activityId,
+    @JsonKey(name: 'activity_name') @Default('') String activityName,
     @JsonKey(name: 'current_streak') @Default(0) int currentStreak,
     @JsonKey(name: 'longest_streak') @Default(0) int longestStreak,
-    @JsonKey(name: 'last_activity_date') DateTime? lastActivityDate,
+    @JsonKey(name: 'days_until_next_milestone')
+    @Default(0)
+    int daysUntilNextMilestone,
+    @JsonKey(name: 'total_completions') @Default(0) int totalCompletions,
+    @JsonKey(name: 'last_completion_date') String? lastCompletionDate,
   }) = _UserStreakDto;
 
   factory UserStreakDto.fromJson(Map<String, dynamic> json) =>
       _$UserStreakDtoFromJson(json);
 
   UserStreak toDomain() => UserStreak(
-    activityId: activityId,
+    activityName: activityName,
     currentStreak: currentStreak,
     longestStreak: longestStreak,
-    lastActivityDate: lastActivityDate,
+    daysUntilNextMilestone: daysUntilNextMilestone,
+    totalCompletions: totalCompletions,
+    lastCompletionDate: lastCompletionDate,
   );
 }

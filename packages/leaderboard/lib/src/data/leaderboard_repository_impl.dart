@@ -20,7 +20,15 @@ class LeaderboardRepositoryImpl implements LeaderboardRepository {
     );
     return result.map((dto) {
       return LeaderboardPage(
-        entries: dto.results.map((entry) => entry.toDomain()).toList(),
+        entries: dto.results
+            .asMap()
+            .entries
+            .map(
+              (row) => row.value.toDomain(
+                displayPosition: ((page - 1) * pageSize) + row.key + 1,
+              ),
+            )
+            .toList(growable: false),
         totalUsers: dto.count,
         userPosition: null,
         hasNext: dto.next != null || page * pageSize < dto.count,
@@ -40,14 +48,13 @@ class LeaderboardRepositoryImpl implements LeaderboardRepository {
     );
     return result.map((dto) {
       final position = dto.userPosition;
-      final rows = dto.rows;
+      final rows = dto.results;
       return LeaderboardPage(
         entries: rows
             .map(
               (row) => row.toDomain(
                 displayPosition:
-                    (row.id == accountId || row.accountId == accountId) &&
-                        row.position == 0
+                    row.id == accountId && row.position == null
                     ? position
                     : null,
               ),

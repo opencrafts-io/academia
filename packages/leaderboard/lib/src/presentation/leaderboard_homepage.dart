@@ -227,9 +227,7 @@ class _LeaderboardHomepageState extends State<LeaderboardHomepage> {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
               child: _LeaderboardTile(
                 entry: entry,
-                isCurrentUser:
-                    entry.accountId == widget.accountId ||
-                    entry.id == widget.accountId,
+                isCurrentUser: entry.id == widget.accountId,
               ),
             ),
           ),

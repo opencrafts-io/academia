@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ActivityCompletion {
 
- String get id; String get activityId; int get pointsEarned; DateTime? get createdAt; bool get alreadyProcessed; UserStreak? get streak; List<RewardMilestone> get milestones;
+ String get id; String get activityId; int get pointsEarned; DateTime? get createdAt; bool get alreadyProcessed; int? get currentStreak; bool? get milestoneAchieved; int? get milestoneBonus; UserStreak? get streak; List<RewardMilestone> get milestones;
 /// Create a copy of ActivityCompletion
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -27,20 +27,20 @@ $ActivityCompletionCopyWith<ActivityCompletion> get copyWith => _$ActivityComple
 @override
 bool operator ==(Object other) {
   final _this = this as ActivityCompletion;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ActivityCompletion&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.activityId, _this.activityId) || other.activityId == _this.activityId)&&(identical(other.pointsEarned, _this.pointsEarned) || other.pointsEarned == _this.pointsEarned)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.alreadyProcessed, _this.alreadyProcessed) || other.alreadyProcessed == _this.alreadyProcessed)&&(identical(other.streak, _this.streak) || other.streak == _this.streak)&&const DeepCollectionEquality().equals(other.milestones, _this.milestones));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ActivityCompletion&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.activityId, _this.activityId) || other.activityId == _this.activityId)&&(identical(other.pointsEarned, _this.pointsEarned) || other.pointsEarned == _this.pointsEarned)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.alreadyProcessed, _this.alreadyProcessed) || other.alreadyProcessed == _this.alreadyProcessed)&&(identical(other.currentStreak, _this.currentStreak) || other.currentStreak == _this.currentStreak)&&(identical(other.milestoneAchieved, _this.milestoneAchieved) || other.milestoneAchieved == _this.milestoneAchieved)&&(identical(other.milestoneBonus, _this.milestoneBonus) || other.milestoneBonus == _this.milestoneBonus)&&(identical(other.streak, _this.streak) || other.streak == _this.streak)&&const DeepCollectionEquality().equals(other.milestones, _this.milestones));
 }
 
 
 @override
 int get hashCode {
   final _this = this as ActivityCompletion;
-  return Object.hash(runtimeType,_this.id,_this.activityId,_this.pointsEarned,_this.createdAt,_this.alreadyProcessed,_this.streak,const DeepCollectionEquality().hash(_this.milestones));
+  return Object.hash(runtimeType,_this.id,_this.activityId,_this.pointsEarned,_this.createdAt,_this.alreadyProcessed,_this.currentStreak,_this.milestoneAchieved,_this.milestoneBonus,_this.streak,const DeepCollectionEquality().hash(_this.milestones));
 }
 
 @override
 String toString() {
   final _this = this as ActivityCompletion;
-  return 'ActivityCompletion(id: ${_this.id}, activityId: ${_this.activityId}, pointsEarned: ${_this.pointsEarned}, createdAt: ${_this.createdAt}, alreadyProcessed: ${_this.alreadyProcessed}, streak: ${_this.streak}, milestones: ${_this.milestones})';
+  return 'ActivityCompletion(id: ${_this.id}, activityId: ${_this.activityId}, pointsEarned: ${_this.pointsEarned}, createdAt: ${_this.createdAt}, alreadyProcessed: ${_this.alreadyProcessed}, currentStreak: ${_this.currentStreak}, milestoneAchieved: ${_this.milestoneAchieved}, milestoneBonus: ${_this.milestoneBonus}, streak: ${_this.streak}, milestones: ${_this.milestones})';
 }
 
 
@@ -51,7 +51,7 @@ abstract mixin class $ActivityCompletionCopyWith<$Res>  {
   factory $ActivityCompletionCopyWith(ActivityCompletion value, $Res Function(ActivityCompletion) _then) = _$ActivityCompletionCopyWithImpl;
 @useResult
 $Res call({
- String id, String activityId, int pointsEarned, DateTime? createdAt, bool alreadyProcessed, UserStreak? streak, List<RewardMilestone> milestones
+ String id, String activityId, int pointsEarned, DateTime? createdAt, bool alreadyProcessed, int? currentStreak, bool? milestoneAchieved, int? milestoneBonus, UserStreak? streak, List<RewardMilestone> milestones
 });
 
 
@@ -68,14 +68,17 @@ class _$ActivityCompletionCopyWithImpl<$Res>
 
 /// Create a copy of ActivityCompletion
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? activityId = null,Object? pointsEarned = null,Object? createdAt = freezed,Object? alreadyProcessed = null,Object? streak = freezed,Object? milestones = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? activityId = null,Object? pointsEarned = null,Object? createdAt = freezed,Object? alreadyProcessed = null,Object? currentStreak = freezed,Object? milestoneAchieved = freezed,Object? milestoneBonus = freezed,Object? streak = freezed,Object? milestones = null,}) {
   return _then(ActivityCompletion(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,activityId: null == activityId ? _self.activityId : activityId // ignore: cast_nullable_to_non_nullable
 as String,pointsEarned: null == pointsEarned ? _self.pointsEarned : pointsEarned // ignore: cast_nullable_to_non_nullable
 as int,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,alreadyProcessed: null == alreadyProcessed ? _self.alreadyProcessed : alreadyProcessed // ignore: cast_nullable_to_non_nullable
-as bool,streak: freezed == streak ? _self.streak : streak // ignore: cast_nullable_to_non_nullable
+as bool,currentStreak: freezed == currentStreak ? _self.currentStreak : currentStreak // ignore: cast_nullable_to_non_nullable
+as int?,milestoneAchieved: freezed == milestoneAchieved ? _self.milestoneAchieved : milestoneAchieved // ignore: cast_nullable_to_non_nullable
+as bool?,milestoneBonus: freezed == milestoneBonus ? _self.milestoneBonus : milestoneBonus // ignore: cast_nullable_to_non_nullable
+as int?,streak: freezed == streak ? _self.streak : streak // ignore: cast_nullable_to_non_nullable
 as UserStreak?,milestones: null == milestones ? _self.milestones : milestones // ignore: cast_nullable_to_non_nullable
 as List<RewardMilestone>,
   ));
@@ -174,10 +177,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String activityId,  int pointsEarned,  DateTime? createdAt,  bool alreadyProcessed,  UserStreak? streak,  List<RewardMilestone> milestones)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String activityId,  int pointsEarned,  DateTime? createdAt,  bool alreadyProcessed,  int? currentStreak,  bool? milestoneAchieved,  int? milestoneBonus,  UserStreak? streak,  List<RewardMilestone> milestones)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ActivityCompletion() when $default != null:
-return $default(_that.id,_that.activityId,_that.pointsEarned,_that.createdAt,_that.alreadyProcessed,_that.streak,_that.milestones);case _:
+return $default(_that.id,_that.activityId,_that.pointsEarned,_that.createdAt,_that.alreadyProcessed,_that.currentStreak,_that.milestoneAchieved,_that.milestoneBonus,_that.streak,_that.milestones);case _:
   return orElse();
 
 }
@@ -195,10 +198,10 @@ return $default(_that.id,_that.activityId,_that.pointsEarned,_that.createdAt,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String activityId,  int pointsEarned,  DateTime? createdAt,  bool alreadyProcessed,  UserStreak? streak,  List<RewardMilestone> milestones)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String activityId,  int pointsEarned,  DateTime? createdAt,  bool alreadyProcessed,  int? currentStreak,  bool? milestoneAchieved,  int? milestoneBonus,  UserStreak? streak,  List<RewardMilestone> milestones)  $default,) {final _that = this;
 switch (_that) {
 case _ActivityCompletion():
-return $default(_that.id,_that.activityId,_that.pointsEarned,_that.createdAt,_that.alreadyProcessed,_that.streak,_that.milestones);case _:
+return $default(_that.id,_that.activityId,_that.pointsEarned,_that.createdAt,_that.alreadyProcessed,_that.currentStreak,_that.milestoneAchieved,_that.milestoneBonus,_that.streak,_that.milestones);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -215,10 +218,10 @@ return $default(_that.id,_that.activityId,_that.pointsEarned,_that.createdAt,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String activityId,  int pointsEarned,  DateTime? createdAt,  bool alreadyProcessed,  UserStreak? streak,  List<RewardMilestone> milestones)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String activityId,  int pointsEarned,  DateTime? createdAt,  bool alreadyProcessed,  int? currentStreak,  bool? milestoneAchieved,  int? milestoneBonus,  UserStreak? streak,  List<RewardMilestone> milestones)?  $default,) {final _that = this;
 switch (_that) {
 case _ActivityCompletion() when $default != null:
-return $default(_that.id,_that.activityId,_that.pointsEarned,_that.createdAt,_that.alreadyProcessed,_that.streak,_that.milestones);case _:
+return $default(_that.id,_that.activityId,_that.pointsEarned,_that.createdAt,_that.alreadyProcessed,_that.currentStreak,_that.milestoneAchieved,_that.milestoneBonus,_that.streak,_that.milestones);case _:
   return null;
 
 }
@@ -230,7 +233,7 @@ return $default(_that.id,_that.activityId,_that.pointsEarned,_that.createdAt,_th
 
 
 class _ActivityCompletion implements ActivityCompletion {
-  const _ActivityCompletion({required this.id, required this.activityId, required this.pointsEarned, this.createdAt, required this.alreadyProcessed, this.streak,  List<RewardMilestone> milestones = const <RewardMilestone>[]}): _milestones = milestones;
+  const _ActivityCompletion({required this.id, required this.activityId, required this.pointsEarned, this.createdAt, required this.alreadyProcessed, this.currentStreak, this.milestoneAchieved, this.milestoneBonus, this.streak,  List<RewardMilestone> milestones = const <RewardMilestone>[]}): _milestones = milestones;
 
 
 @override final  String id;
@@ -238,6 +241,9 @@ class _ActivityCompletion implements ActivityCompletion {
 @override final  int pointsEarned;
 @override final  DateTime? createdAt;
 @override final  bool alreadyProcessed;
+@override final  int? currentStreak;
+@override final  bool? milestoneAchieved;
+@override final  int? milestoneBonus;
 @override final  UserStreak? streak;
  final  List<RewardMilestone> _milestones;
 @override@JsonKey() List<RewardMilestone> get milestones {
@@ -257,18 +263,18 @@ _$ActivityCompletionCopyWith<_ActivityCompletion> get copyWith => __$ActivityCom
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ActivityCompletion&&(identical(other.id, id) || other.id == id)&&(identical(other.activityId, activityId) || other.activityId == activityId)&&(identical(other.pointsEarned, pointsEarned) || other.pointsEarned == pointsEarned)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.alreadyProcessed, alreadyProcessed) || other.alreadyProcessed == alreadyProcessed)&&(identical(other.streak, streak) || other.streak == streak)&&const DeepCollectionEquality().equals(other.milestones, _milestones));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ActivityCompletion&&(identical(other.id, id) || other.id == id)&&(identical(other.activityId, activityId) || other.activityId == activityId)&&(identical(other.pointsEarned, pointsEarned) || other.pointsEarned == pointsEarned)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.alreadyProcessed, alreadyProcessed) || other.alreadyProcessed == alreadyProcessed)&&(identical(other.currentStreak, currentStreak) || other.currentStreak == currentStreak)&&(identical(other.milestoneAchieved, milestoneAchieved) || other.milestoneAchieved == milestoneAchieved)&&(identical(other.milestoneBonus, milestoneBonus) || other.milestoneBonus == milestoneBonus)&&(identical(other.streak, streak) || other.streak == streak)&&const DeepCollectionEquality().equals(other.milestones, _milestones));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,activityId,pointsEarned,createdAt,alreadyProcessed,streak,const DeepCollectionEquality().hash(_milestones));
+    return Object.hash(runtimeType,id,activityId,pointsEarned,createdAt,alreadyProcessed,currentStreak,milestoneAchieved,milestoneBonus,streak,const DeepCollectionEquality().hash(_milestones));
 }
 
 @override
 String toString() {
-    return 'ActivityCompletion(id: $id, activityId: $activityId, pointsEarned: $pointsEarned, createdAt: $createdAt, alreadyProcessed: $alreadyProcessed, streak: $streak, milestones: $milestones)';
+    return 'ActivityCompletion(id: $id, activityId: $activityId, pointsEarned: $pointsEarned, createdAt: $createdAt, alreadyProcessed: $alreadyProcessed, currentStreak: $currentStreak, milestoneAchieved: $milestoneAchieved, milestoneBonus: $milestoneBonus, streak: $streak, milestones: $milestones)';
 }
 
 
@@ -279,7 +285,7 @@ abstract mixin class _$ActivityCompletionCopyWith<$Res> implements $ActivityComp
   factory _$ActivityCompletionCopyWith(_ActivityCompletion value, $Res Function(_ActivityCompletion) _then) = __$ActivityCompletionCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String activityId, int pointsEarned, DateTime? createdAt, bool alreadyProcessed, UserStreak? streak, List<RewardMilestone> milestones
+ String id, String activityId, int pointsEarned, DateTime? createdAt, bool alreadyProcessed, int? currentStreak, bool? milestoneAchieved, int? milestoneBonus, UserStreak? streak, List<RewardMilestone> milestones
 });
 
 
@@ -296,14 +302,17 @@ class __$ActivityCompletionCopyWithImpl<$Res>
 
 /// Create a copy of ActivityCompletion
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? activityId = null,Object? pointsEarned = null,Object? createdAt = freezed,Object? alreadyProcessed = null,Object? streak = freezed,Object? milestones = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? activityId = null,Object? pointsEarned = null,Object? createdAt = freezed,Object? alreadyProcessed = null,Object? currentStreak = freezed,Object? milestoneAchieved = freezed,Object? milestoneBonus = freezed,Object? streak = freezed,Object? milestones = null,}) {
   return _then(_ActivityCompletion(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,activityId: null == activityId ? _self.activityId : activityId // ignore: cast_nullable_to_non_nullable
 as String,pointsEarned: null == pointsEarned ? _self.pointsEarned : pointsEarned // ignore: cast_nullable_to_non_nullable
 as int,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,alreadyProcessed: null == alreadyProcessed ? _self.alreadyProcessed : alreadyProcessed // ignore: cast_nullable_to_non_nullable
-as bool,streak: freezed == streak ? _self.streak : streak // ignore: cast_nullable_to_non_nullable
+as bool,currentStreak: freezed == currentStreak ? _self.currentStreak : currentStreak // ignore: cast_nullable_to_non_nullable
+as int?,milestoneAchieved: freezed == milestoneAchieved ? _self.milestoneAchieved : milestoneAchieved // ignore: cast_nullable_to_non_nullable
+as bool?,milestoneBonus: freezed == milestoneBonus ? _self.milestoneBonus : milestoneBonus // ignore: cast_nullable_to_non_nullable
+as int?,streak: freezed == streak ? _self.streak : streak // ignore: cast_nullable_to_non_nullable
 as UserStreak?,milestones: null == milestones ? _self._milestones : milestones // ignore: cast_nullable_to_non_nullable
 as List<RewardMilestone>,
   ));

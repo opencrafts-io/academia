@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AccountDto {
 
- String get id;@JsonKey(name: 'vibe_points') int get vibePoints;@JsonKey(name: 'points_total') int? get pointsTotal; int? get points;
+ String get id;@JsonKey(name: 'vibe_points') int get vibePoints;
 /// Create a copy of AccountDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $AccountDtoCopyWith<AccountDto> get copyWith => _$AccountDtoCopyWithImpl<Account
 @override
 bool operator ==(Object other) {
   final _this = this as AccountDto;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AccountDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.vibePoints, _this.vibePoints) || other.vibePoints == _this.vibePoints)&&(identical(other.pointsTotal, _this.pointsTotal) || other.pointsTotal == _this.pointsTotal)&&(identical(other.points, _this.points) || other.points == _this.points));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AccountDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.vibePoints, _this.vibePoints) || other.vibePoints == _this.vibePoints));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as AccountDto;
-  return Object.hash(runtimeType,_this.id,_this.vibePoints,_this.pointsTotal,_this.points);
+  return Object.hash(runtimeType,_this.id,_this.vibePoints);
 }
 
 @override
 String toString() {
   final _this = this as AccountDto;
-  return 'AccountDto(id: ${_this.id}, vibePoints: ${_this.vibePoints}, pointsTotal: ${_this.pointsTotal}, points: ${_this.points})';
+  return 'AccountDto(id: ${_this.id}, vibePoints: ${_this.vibePoints})';
 }
 
 
@@ -54,7 +54,7 @@ abstract mixin class $AccountDtoCopyWith<$Res>  {
   factory $AccountDtoCopyWith(AccountDto value, $Res Function(AccountDto) _then) = _$AccountDtoCopyWithImpl;
 @useResult
 $Res call({
- String id,@JsonKey(name: 'vibe_points') int vibePoints,@JsonKey(name: 'points_total') int? pointsTotal, int? points
+ String id,@JsonKey(name: 'vibe_points') int vibePoints
 });
 
 
@@ -71,13 +71,11 @@ class _$AccountDtoCopyWithImpl<$Res>
 
 /// Create a copy of AccountDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? vibePoints = null,Object? pointsTotal = freezed,Object? points = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? vibePoints = null,}) {
   return _then(AccountDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,vibePoints: null == vibePoints ? _self.vibePoints : vibePoints // ignore: cast_nullable_to_non_nullable
-as int,pointsTotal: freezed == pointsTotal ? _self.pointsTotal : pointsTotal // ignore: cast_nullable_to_non_nullable
-as int?,points: freezed == points ? _self.points : points // ignore: cast_nullable_to_non_nullable
-as int?,
+as int,
   ));
 }
 
@@ -162,10 +160,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'vibe_points')  int vibePoints, @JsonKey(name: 'points_total')  int? pointsTotal,  int? points)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'vibe_points')  int vibePoints)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AccountDto() when $default != null:
-return $default(_that.id,_that.vibePoints,_that.pointsTotal,_that.points);case _:
+return $default(_that.id,_that.vibePoints);case _:
   return orElse();
 
 }
@@ -183,10 +181,10 @@ return $default(_that.id,_that.vibePoints,_that.pointsTotal,_that.points);case _
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'vibe_points')  int vibePoints, @JsonKey(name: 'points_total')  int? pointsTotal,  int? points)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'vibe_points')  int vibePoints)  $default,) {final _that = this;
 switch (_that) {
 case _AccountDto():
-return $default(_that.id,_that.vibePoints,_that.pointsTotal,_that.points);case _:
+return $default(_that.id,_that.vibePoints);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -203,10 +201,10 @@ return $default(_that.id,_that.vibePoints,_that.pointsTotal,_that.points);case _
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'vibe_points')  int vibePoints, @JsonKey(name: 'points_total')  int? pointsTotal,  int? points)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'vibe_points')  int vibePoints)?  $default,) {final _that = this;
 switch (_that) {
 case _AccountDto() when $default != null:
-return $default(_that.id,_that.vibePoints,_that.pointsTotal,_that.points);case _:
+return $default(_that.id,_that.vibePoints);case _:
   return null;
 
 }
@@ -218,13 +216,11 @@ return $default(_that.id,_that.vibePoints,_that.pointsTotal,_that.points);case _
 @JsonSerializable()
 
 class _AccountDto extends AccountDto {
-  const _AccountDto({this.id = '', @JsonKey(name: 'vibe_points') this.vibePoints = 0, @JsonKey(name: 'points_total') this.pointsTotal, this.points}): super._();
+  const _AccountDto({this.id = '', @JsonKey(name: 'vibe_points') this.vibePoints = 0}): super._();
   factory _AccountDto.fromJson(Map<String, dynamic> json) => _$AccountDtoFromJson(json);
 
 @override@JsonKey() final  String id;
 @override@JsonKey(name: 'vibe_points') final  int vibePoints;
-@override@JsonKey(name: 'points_total') final  int? pointsTotal;
-@override final  int? points;
 
 /// Create a copy of AccountDto
 /// with the given fields replaced by the non-null parameter values.
@@ -239,18 +235,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AccountDto&&(identical(other.id, id) || other.id == id)&&(identical(other.vibePoints, vibePoints) || other.vibePoints == vibePoints)&&(identical(other.pointsTotal, pointsTotal) || other.pointsTotal == pointsTotal)&&(identical(other.points, points) || other.points == points));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AccountDto&&(identical(other.id, id) || other.id == id)&&(identical(other.vibePoints, vibePoints) || other.vibePoints == vibePoints));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,vibePoints,pointsTotal,points);
+    return Object.hash(runtimeType,id,vibePoints);
 }
 
 @override
 String toString() {
-    return 'AccountDto(id: $id, vibePoints: $vibePoints, pointsTotal: $pointsTotal, points: $points)';
+    return 'AccountDto(id: $id, vibePoints: $vibePoints)';
 }
 
 
@@ -261,7 +257,7 @@ abstract mixin class _$AccountDtoCopyWith<$Res> implements $AccountDtoCopyWith<$
   factory _$AccountDtoCopyWith(_AccountDto value, $Res Function(_AccountDto) _then) = __$AccountDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String id,@JsonKey(name: 'vibe_points') int vibePoints,@JsonKey(name: 'points_total') int? pointsTotal, int? points
+ String id,@JsonKey(name: 'vibe_points') int vibePoints
 });
 
 
@@ -278,13 +274,11 @@ class __$AccountDtoCopyWithImpl<$Res>
 
 /// Create a copy of AccountDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? vibePoints = null,Object? pointsTotal = freezed,Object? points = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? vibePoints = null,}) {
   return _then(_AccountDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,vibePoints: null == vibePoints ? _self.vibePoints : vibePoints // ignore: cast_nullable_to_non_nullable
-as int,pointsTotal: freezed == pointsTotal ? _self.pointsTotal : pointsTotal // ignore: cast_nullable_to_non_nullable
-as int?,points: freezed == points ? _self.points : points // ignore: cast_nullable_to_non_nullable
-as int?,
+as int,
   ));
 }
 

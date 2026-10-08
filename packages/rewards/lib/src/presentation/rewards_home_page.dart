@@ -321,6 +321,17 @@ class _StreaksSection extends StatelessWidget {
                     ),
                     const Spacer(),
                     Text(
+                      streak.activityName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.labelLarge?.copyWith(
+                        color: index.isEven
+                            ? colors.onSecondaryContainer
+                            : colors.onPrimaryContainer,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    Text(
                       '${streak.currentStreak} day${streak.currentStreak == 1 ? '' : 's'}',
                       style: theme.textTheme.headlineSmall?.copyWith(
                         fontWeight: FontWeight.w800,
@@ -337,6 +348,17 @@ class _StreaksSection extends StatelessWidget {
                             : colors.onPrimaryContainer,
                       ),
                     ),
+                    if (streak.daysUntilNextMilestone > 0)
+                      Text(
+                        '${streak.daysUntilNextMilestone} days to next milestone',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: index.isEven
+                              ? colors.onSecondaryContainer
+                              : colors.onPrimaryContainer,
+                        ),
+                      ),
                   ],
                 ),
               ),

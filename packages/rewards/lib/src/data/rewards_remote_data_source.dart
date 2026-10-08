@@ -8,7 +8,7 @@ import 'dtos/activity_history_page_dto.dart';
 import 'dtos/activity_page_dto.dart';
 import 'dtos/complete_activity_request_dto.dart';
 import 'dtos/milestone_page_dto.dart';
-import 'dtos/user_streaks_dto.dart';
+import 'dtos/user_streak_dto.dart';
 
 abstract interface class RewardsRemoteDataSource {
   Future<Either<Failure, AccountDto>> getAccount();
@@ -16,7 +16,7 @@ abstract interface class RewardsRemoteDataSource {
   Future<Either<Failure, ActivityCompletionDto>> completeActivity(
     CompleteActivityRequestDto request,
   );
-  Future<Either<Failure, UserStreaksDto>> getStreaks();
+  Future<Either<Failure, List<UserStreakDto>>> getStreaks();
   Future<Either<Failure, MilestonePageDto>> getActiveMilestones();
   Future<Either<Failure, ActivityHistoryPageDto>> getActivityHistory(
     String accountId,
@@ -55,9 +55,11 @@ class RewardsRemoteDataSourceImpl implements RewardsRemoteDataSource {
   );
 
   @override
-  Future<Either<Failure, UserStreaksDto>> getStreaks() => _apiClient.get(
+  Future<Either<Failure, List<UserStreakDto>>> getStreaks() => _apiClient.get(
     _paths.streaks,
-    decoder: (json) => UserStreaksDto.fromJson(json as Map<String, dynamic>),
+    decoder: (json) => (json as List<dynamic>)
+        .map((row) => UserStreakDto.fromJson(row as Map<String, dynamic>))
+        .toList(growable: false),
   );
 
   @override

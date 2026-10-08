@@ -13,6 +13,9 @@ abstract class ActivityCompletion with _$ActivityCompletion {
     required int pointsEarned,
     DateTime? createdAt,
     required bool alreadyProcessed,
+    int? currentStreak,
+    bool? milestoneAchieved,
+    int? milestoneBonus,
     UserStreak? streak,
     @Default(<RewardMilestone>[]) List<RewardMilestone> milestones,
   }) = _ActivityCompletion;

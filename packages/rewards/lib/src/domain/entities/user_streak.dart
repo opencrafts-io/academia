@@ -5,9 +5,11 @@ part 'user_streak.freezed.dart';
 @freezed
 abstract class UserStreak with _$UserStreak {
   const factory UserStreak({
-    required String activityId,
+    required String activityName,
     required int currentStreak,
     required int longestStreak,
-    DateTime? lastActivityDate,
+    required int daysUntilNextMilestone,
+    required int totalCompletions,
+    String? lastCompletionDate,
   }) = _UserStreak;
 }

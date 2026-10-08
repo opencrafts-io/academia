@@ -1000,8 +1000,8 @@ class CommunityMembershipsRoute extends GoRouteData
 class AchievementsHomePageRoute extends GoRouteData
     with $AchievementsHomePageRoute {
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const rewards.RewardsHomePage();
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return _rewardsSheetPage(context, state, const rewards.RewardsHomePage());
   }
 }
 
@@ -1011,8 +1011,12 @@ class ActivitiesPageRoute extends GoRouteData with $ActivitiesPageRoute {
   const ActivitiesPageRoute({required this.id});
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return rewards.RewardDetailsPage(id: id, isActivity: true);
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return _rewardsSheetPage(
+      context,
+      state,
+      rewards.RewardDetailsPage(id: id, isActivity: true),
+    );
   }
 }
 
@@ -1022,9 +1026,49 @@ class AchievementDetailPageRoute extends GoRouteData
   const AchievementDetailPageRoute({required this.id});
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return rewards.RewardDetailsPage(id: id);
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return _rewardsSheetPage(
+      context,
+      state,
+      rewards.RewardDetailsPage(id: id),
+    );
   }
+}
+
+Page<void> _rewardsSheetPage(
+  BuildContext context,
+  GoRouterState state,
+  Widget child,
+) {
+  return ModalSheetPage(
+    key: state.pageKey,
+    swipeDismissible: true,
+    transitionCurve: Curves.easeOutCubic,
+    viewportBuilder: (context, child) => SheetViewport(
+      padding: EdgeInsets.only(
+        top: MediaQuery.viewPaddingOf(context).top,
+        bottom: MediaQuery.viewPaddingOf(context).bottom,
+      ),
+      child: child,
+    ),
+    child: Sheet(
+      scrollConfiguration: const SheetScrollConfiguration(),
+      decoration: const MaterialSheetDecoration(
+        size: SheetSize.fit,
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+        ),
+      ),
+      physics: BouncingSheetPhysics(),
+      child: LayoutBuilder(
+        builder: (context, constraints) => ConstrainedBox(
+          constraints: BoxConstraints(maxHeight: constraints.maxHeight * .94),
+          child: child,
+        ),
+      ),
+    ),
+  );
 }
 
 @TypedGoRoute<ExamTimetableRoute>(

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UserStreak {
 
- String get activityId; int get currentStreak; int get longestStreak; DateTime? get lastActivityDate;
+ String get activityName; int get currentStreak; int get longestStreak; int get daysUntilNextMilestone; int get totalCompletions; String? get lastCompletionDate;
 /// Create a copy of UserStreak
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -27,20 +27,20 @@ $UserStreakCopyWith<UserStreak> get copyWith => _$UserStreakCopyWithImpl<UserStr
 @override
 bool operator ==(Object other) {
   final _this = this as UserStreak;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserStreak&&(identical(other.activityId, _this.activityId) || other.activityId == _this.activityId)&&(identical(other.currentStreak, _this.currentStreak) || other.currentStreak == _this.currentStreak)&&(identical(other.longestStreak, _this.longestStreak) || other.longestStreak == _this.longestStreak)&&(identical(other.lastActivityDate, _this.lastActivityDate) || other.lastActivityDate == _this.lastActivityDate));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserStreak&&(identical(other.activityName, _this.activityName) || other.activityName == _this.activityName)&&(identical(other.currentStreak, _this.currentStreak) || other.currentStreak == _this.currentStreak)&&(identical(other.longestStreak, _this.longestStreak) || other.longestStreak == _this.longestStreak)&&(identical(other.daysUntilNextMilestone, _this.daysUntilNextMilestone) || other.daysUntilNextMilestone == _this.daysUntilNextMilestone)&&(identical(other.totalCompletions, _this.totalCompletions) || other.totalCompletions == _this.totalCompletions)&&(identical(other.lastCompletionDate, _this.lastCompletionDate) || other.lastCompletionDate == _this.lastCompletionDate));
 }
 
 
 @override
 int get hashCode {
   final _this = this as UserStreak;
-  return Object.hash(runtimeType,_this.activityId,_this.currentStreak,_this.longestStreak,_this.lastActivityDate);
+  return Object.hash(runtimeType,_this.activityName,_this.currentStreak,_this.longestStreak,_this.daysUntilNextMilestone,_this.totalCompletions,_this.lastCompletionDate);
 }
 
 @override
 String toString() {
   final _this = this as UserStreak;
-  return 'UserStreak(activityId: ${_this.activityId}, currentStreak: ${_this.currentStreak}, longestStreak: ${_this.longestStreak}, lastActivityDate: ${_this.lastActivityDate})';
+  return 'UserStreak(activityName: ${_this.activityName}, currentStreak: ${_this.currentStreak}, longestStreak: ${_this.longestStreak}, daysUntilNextMilestone: ${_this.daysUntilNextMilestone}, totalCompletions: ${_this.totalCompletions}, lastCompletionDate: ${_this.lastCompletionDate})';
 }
 
 
@@ -51,7 +51,7 @@ abstract mixin class $UserStreakCopyWith<$Res>  {
   factory $UserStreakCopyWith(UserStreak value, $Res Function(UserStreak) _then) = _$UserStreakCopyWithImpl;
 @useResult
 $Res call({
- String activityId, int currentStreak, int longestStreak, DateTime? lastActivityDate
+ String activityName, int currentStreak, int longestStreak, int daysUntilNextMilestone, int totalCompletions, String? lastCompletionDate
 });
 
 
@@ -68,13 +68,15 @@ class _$UserStreakCopyWithImpl<$Res>
 
 /// Create a copy of UserStreak
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? activityId = null,Object? currentStreak = null,Object? longestStreak = null,Object? lastActivityDate = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? activityName = null,Object? currentStreak = null,Object? longestStreak = null,Object? daysUntilNextMilestone = null,Object? totalCompletions = null,Object? lastCompletionDate = freezed,}) {
   return _then(UserStreak(
-activityId: null == activityId ? _self.activityId : activityId // ignore: cast_nullable_to_non_nullable
+activityName: null == activityName ? _self.activityName : activityName // ignore: cast_nullable_to_non_nullable
 as String,currentStreak: null == currentStreak ? _self.currentStreak : currentStreak // ignore: cast_nullable_to_non_nullable
 as int,longestStreak: null == longestStreak ? _self.longestStreak : longestStreak // ignore: cast_nullable_to_non_nullable
-as int,lastActivityDate: freezed == lastActivityDate ? _self.lastActivityDate : lastActivityDate // ignore: cast_nullable_to_non_nullable
-as DateTime?,
+as int,daysUntilNextMilestone: null == daysUntilNextMilestone ? _self.daysUntilNextMilestone : daysUntilNextMilestone // ignore: cast_nullable_to_non_nullable
+as int,totalCompletions: null == totalCompletions ? _self.totalCompletions : totalCompletions // ignore: cast_nullable_to_non_nullable
+as int,lastCompletionDate: freezed == lastCompletionDate ? _self.lastCompletionDate : lastCompletionDate // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -159,10 +161,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String activityId,  int currentStreak,  int longestStreak,  DateTime? lastActivityDate)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String activityName,  int currentStreak,  int longestStreak,  int daysUntilNextMilestone,  int totalCompletions,  String? lastCompletionDate)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserStreak() when $default != null:
-return $default(_that.activityId,_that.currentStreak,_that.longestStreak,_that.lastActivityDate);case _:
+return $default(_that.activityName,_that.currentStreak,_that.longestStreak,_that.daysUntilNextMilestone,_that.totalCompletions,_that.lastCompletionDate);case _:
   return orElse();
 
 }
@@ -180,10 +182,10 @@ return $default(_that.activityId,_that.currentStreak,_that.longestStreak,_that.l
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String activityId,  int currentStreak,  int longestStreak,  DateTime? lastActivityDate)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String activityName,  int currentStreak,  int longestStreak,  int daysUntilNextMilestone,  int totalCompletions,  String? lastCompletionDate)  $default,) {final _that = this;
 switch (_that) {
 case _UserStreak():
-return $default(_that.activityId,_that.currentStreak,_that.longestStreak,_that.lastActivityDate);case _:
+return $default(_that.activityName,_that.currentStreak,_that.longestStreak,_that.daysUntilNextMilestone,_that.totalCompletions,_that.lastCompletionDate);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -200,10 +202,10 @@ return $default(_that.activityId,_that.currentStreak,_that.longestStreak,_that.l
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String activityId,  int currentStreak,  int longestStreak,  DateTime? lastActivityDate)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String activityName,  int currentStreak,  int longestStreak,  int daysUntilNextMilestone,  int totalCompletions,  String? lastCompletionDate)?  $default,) {final _that = this;
 switch (_that) {
 case _UserStreak() when $default != null:
-return $default(_that.activityId,_that.currentStreak,_that.longestStreak,_that.lastActivityDate);case _:
+return $default(_that.activityName,_that.currentStreak,_that.longestStreak,_that.daysUntilNextMilestone,_that.totalCompletions,_that.lastCompletionDate);case _:
   return null;
 
 }
@@ -215,13 +217,15 @@ return $default(_that.activityId,_that.currentStreak,_that.longestStreak,_that.l
 
 
 class _UserStreak implements UserStreak {
-  const _UserStreak({required this.activityId, required this.currentStreak, required this.longestStreak, this.lastActivityDate});
+  const _UserStreak({required this.activityName, required this.currentStreak, required this.longestStreak, required this.daysUntilNextMilestone, required this.totalCompletions, this.lastCompletionDate});
 
 
-@override final  String activityId;
+@override final  String activityName;
 @override final  int currentStreak;
 @override final  int longestStreak;
-@override final  DateTime? lastActivityDate;
+@override final  int daysUntilNextMilestone;
+@override final  int totalCompletions;
+@override final  String? lastCompletionDate;
 
 /// Create a copy of UserStreak
 /// with the given fields replaced by the non-null parameter values.
@@ -233,18 +237,18 @@ _$UserStreakCopyWith<_UserStreak> get copyWith => __$UserStreakCopyWithImpl<_Use
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserStreak&&(identical(other.activityId, activityId) || other.activityId == activityId)&&(identical(other.currentStreak, currentStreak) || other.currentStreak == currentStreak)&&(identical(other.longestStreak, longestStreak) || other.longestStreak == longestStreak)&&(identical(other.lastActivityDate, lastActivityDate) || other.lastActivityDate == lastActivityDate));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserStreak&&(identical(other.activityName, activityName) || other.activityName == activityName)&&(identical(other.currentStreak, currentStreak) || other.currentStreak == currentStreak)&&(identical(other.longestStreak, longestStreak) || other.longestStreak == longestStreak)&&(identical(other.daysUntilNextMilestone, daysUntilNextMilestone) || other.daysUntilNextMilestone == daysUntilNextMilestone)&&(identical(other.totalCompletions, totalCompletions) || other.totalCompletions == totalCompletions)&&(identical(other.lastCompletionDate, lastCompletionDate) || other.lastCompletionDate == lastCompletionDate));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,activityId,currentStreak,longestStreak,lastActivityDate);
+    return Object.hash(runtimeType,activityName,currentStreak,longestStreak,daysUntilNextMilestone,totalCompletions,lastCompletionDate);
 }
 
 @override
 String toString() {
-    return 'UserStreak(activityId: $activityId, currentStreak: $currentStreak, longestStreak: $longestStreak, lastActivityDate: $lastActivityDate)';
+    return 'UserStreak(activityName: $activityName, currentStreak: $currentStreak, longestStreak: $longestStreak, daysUntilNextMilestone: $daysUntilNextMilestone, totalCompletions: $totalCompletions, lastCompletionDate: $lastCompletionDate)';
 }
 
 
@@ -255,7 +259,7 @@ abstract mixin class _$UserStreakCopyWith<$Res> implements $UserStreakCopyWith<$
   factory _$UserStreakCopyWith(_UserStreak value, $Res Function(_UserStreak) _then) = __$UserStreakCopyWithImpl;
 @override @useResult
 $Res call({
- String activityId, int currentStreak, int longestStreak, DateTime? lastActivityDate
+ String activityName, int currentStreak, int longestStreak, int daysUntilNextMilestone, int totalCompletions, String? lastCompletionDate
 });
 
 
@@ -272,13 +276,15 @@ class __$UserStreakCopyWithImpl<$Res>
 
 /// Create a copy of UserStreak
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? activityId = null,Object? currentStreak = null,Object? longestStreak = null,Object? lastActivityDate = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? activityName = null,Object? currentStreak = null,Object? longestStreak = null,Object? daysUntilNextMilestone = null,Object? totalCompletions = null,Object? lastCompletionDate = freezed,}) {
   return _then(_UserStreak(
-activityId: null == activityId ? _self.activityId : activityId // ignore: cast_nullable_to_non_nullable
+activityName: null == activityName ? _self.activityName : activityName // ignore: cast_nullable_to_non_nullable
 as String,currentStreak: null == currentStreak ? _self.currentStreak : currentStreak // ignore: cast_nullable_to_non_nullable
 as int,longestStreak: null == longestStreak ? _self.longestStreak : longestStreak // ignore: cast_nullable_to_non_nullable
-as int,lastActivityDate: freezed == lastActivityDate ? _self.lastActivityDate : lastActivityDate // ignore: cast_nullable_to_non_nullable
-as DateTime?,
+as int,daysUntilNextMilestone: null == daysUntilNextMilestone ? _self.daysUntilNextMilestone : daysUntilNextMilestone // ignore: cast_nullable_to_non_nullable
+as int,totalCompletions: null == totalCompletions ? _self.totalCompletions : totalCompletions // ignore: cast_nullable_to_non_nullable
+as int,lastCompletionDate: freezed == lastCompletionDate ? _self.lastCompletionDate : lastCompletionDate // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
