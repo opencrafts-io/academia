@@ -31,8 +31,10 @@ class Academia extends StatefulWidget {
 
 class _AcademiaState extends State<Academia> with WidgetsBindingObserver {
   String? _studyDataAccountId;
+  bool _podcastAudioHandlerReady = false;
 
   Future<void> _clearPodcastAccount(String? accountId) async {
+    await sl.isReady<study_tools.PodcastAudioHandler>();
     await sl<study_tools.PodcastAudioHandler>().stop();
     await sl<study_tools.PodcastLocalStore>().clearAccountData(
       accountId: accountId,
@@ -47,9 +49,22 @@ class _AcademiaState extends State<Academia> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     setOptimalDisplayMode();
+    unawaited(_initializePodcastAudioHandler());
     WidgetsBinding.instance.addPostFrameCallback((_) {
       unawaited(_initializeDeferredServices());
     });
+  }
+
+  Future<void> _initializePodcastAudioHandler() async {
+    try {
+      await sl.isReady<study_tools.PodcastAudioHandler>();
+      if (!mounted) return;
+      setState(() => _podcastAudioHandlerReady = true);
+    } catch (error, stackTrace) {
+      debugPrint(
+        'Podcast audio startup initialization failed: $error\n$stackTrace',
+      );
+    }
   }
 
   Future<void> _initializeDeferredServices() async {
@@ -310,15 +325,16 @@ class _AcademiaState extends State<Academia> with WidgetsBindingObserver {
                       fit: StackFit.expand,
                       children: [
                         child ?? const SizedBox.shrink(),
-                        Positioned(
-                          left: 0,
-                          right: 0,
-                          bottom: MediaQuery.viewPaddingOf(context).bottom + 76,
-                          child: study_tools.PodcastNowPlayingBar(
-                            floating: true,
-                            handler: sl<study_tools.PodcastAudioHandler>(),
+                        if (_podcastAudioHandlerReady)
+                          Positioned(
+                            left: 0,
+                            right: 0,
+                            bottom: MediaQuery.viewPaddingOf(context).bottom + 76,
+                            child: study_tools.PodcastNowPlayingBar(
+                              floating: true,
+                              handler: sl<study_tools.PodcastAudioHandler>(),
+                            ),
                           ),
-                        ),
                       ],
                     ),
                   );
