@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/entities/study_entities.dart';
 import '../cubit/study_tools_cubit.dart';
+import '../cubit/study_load_state.dart';
 import '../cubit/podcast_cubit.dart';
 import '../routes/study_tools_routes.dart';
 import '../study_tools_host.dart';
@@ -88,7 +89,12 @@ class _StudyToolsPageState extends State<StudyToolsPage> {
           showStudyToolsSnackBar(
             context,
             state.error!,
-            isError: state.status == StudyLoadStatus.failure,
+            isError: state.status.when(
+              initial: () => false,
+              loading: () => false,
+              loaded: () => false,
+              failure: (_, __) => true,
+            ),
           );
         },
         child: BlocBuilder<StudyToolsCubit, StudyToolsState>(
@@ -101,7 +107,19 @@ class _StudyToolsPageState extends State<StudyToolsPage> {
   Widget _buildLibrary(StudyToolsState state) {
     final podcastState = context.watch<PodcastCubit>().state;
     if (_showDownloads) return _buildDownloads(podcastState);
-    if (state.status == StudyLoadStatus.loading && state.materials.isEmpty) {
+    final isLoading = state.status.when(
+      initial: () => false,
+      loading: () => true,
+      loaded: () => false,
+      failure: (_, __) => false,
+    );
+    final hasFailed = state.status.when(
+      initial: () => false,
+      loading: () => false,
+      loaded: () => false,
+      failure: (_, __) => true,
+    );
+    if (isLoading && state.materials.isEmpty) {
       return CustomScrollView(
         slivers: [
           _appBar(),
@@ -112,7 +130,7 @@ class _StudyToolsPageState extends State<StudyToolsPage> {
         ],
       );
     }
-    if (state.status == StudyLoadStatus.failure && state.materials.isEmpty) {
+    if (hasFailed && state.materials.isEmpty) {
       return CustomScrollView(
         slivers: [
           _appBar(),

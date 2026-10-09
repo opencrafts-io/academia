@@ -59,7 +59,7 @@ class _TodoItemsListState extends State<TodoItemsList> {
     );
   }
 
-  Widget _buildFooter(BuildContext context) {
+  Widget _buildFooter(BuildContext context, {required bool hasActiveItems}) {
     return BlocBuilder<TodoItemCubit, TodoItemState>(
       builder: (context, state) {
         final isPaginating = state.maybeWhen(
@@ -84,16 +84,34 @@ class _TodoItemsListState extends State<TodoItemsList> {
           );
         }
 
-        if (!hasMore) {
+        if (!hasMore && !hasActiveItems) {
+          final theme = Theme.of(context);
           return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 24),
+            padding: const EdgeInsets.symmetric(vertical: 36),
             child: Center(
-              child: Text(
-                "You're all caught up",
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  fontSize: 13,
-                ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.task_alt_rounded,
+                    size: 36,
+                    color: theme.colorScheme.primary,
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    'All done for now',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Your next task will show up here.',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
               ),
             ),
           );
@@ -133,7 +151,7 @@ class _TodoItemsListState extends State<TodoItemsList> {
             itemBuilder: _buildCard,
           ),
         ],
-        _buildFooter(context),
+        _buildFooter(context, hasActiveItems: activeItems.isNotEmpty),
       ],
     );
   }

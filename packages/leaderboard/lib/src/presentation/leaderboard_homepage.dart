@@ -1,3 +1,4 @@
+import 'package:ads/ads.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
@@ -190,6 +191,10 @@ class _LeaderboardHomepageState extends State<LeaderboardHomepage> {
             padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
             child: _Podium(entries: podium),
           ),
+        const Padding(
+          padding: EdgeInsets.fromLTRB(16, 0, 16, 12),
+          child: InlineBannerAdWidget(),
+        ),
         Padding(
           padding: const EdgeInsets.fromLTRB(24, 8, 24, 10),
           child: Row(

@@ -134,7 +134,6 @@ abstract class MagnetCourseDto with _$MagnetCourseDto {
     @JsonKey(name: 'updated_at') String? updatedAt,
     @JsonKey(name: 'institution_id') dynamic institutionId,
     @JsonKey(name: 'server_id') dynamic serverId,
-    @JsonKey(name: 'semester_id') dynamic semesterId,
     @JsonKey(name: 'course_schedules')
     @Default([])
     List<MagnetCourseScheduleDto> courseSchedules,

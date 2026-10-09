@@ -4,6 +4,19 @@ part 'study_entities.freezed.dart';
 
 enum StudyGenerationOutput { questions, podcast }
 
+enum GenerationJobStatus { pending, processing, done, failed, unknown }
+
+extension GenerationJobStatusApi on GenerationJobStatus {
+  static GenerationJobStatus parse(String? value) => switch (value
+      ?.toLowerCase()) {
+    'queued' || 'pending' => GenerationJobStatus.pending,
+    'processing' || 'running' => GenerationJobStatus.processing,
+    'done' || 'completed' => GenerationJobStatus.done,
+    'failed' || 'error' => GenerationJobStatus.failed,
+    _ => GenerationJobStatus.unknown,
+  };
+}
+
 const studyUploadMaxBytes = 20 * 1024 * 1024;
 const studyUploadExtensions = {'pdf', 'docx', 'pptx', 'xlsx', 'xls'};
 
@@ -114,7 +127,7 @@ abstract class GenerationJob with _$GenerationJob {
     required int id,
     required int? noteId,
     required List<String> outputs,
-    required String status,
+    required GenerationJobStatus status,
     required String? failureCode,
     required String? failureMessage,
     required DateTime createdAt,

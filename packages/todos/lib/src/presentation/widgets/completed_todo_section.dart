@@ -27,19 +27,43 @@ class CompletedTodoSection extends StatelessWidget {
         Material(
           color: Colors.transparent,
           child: InkWell(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(20),
             onTap: onToggleExpanded,
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
+              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 4),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  Icon(
+                    Icons.check_circle_outline_rounded,
+                    size: 20,
+                    color: scheme.primary,
+                  ),
+                  const SizedBox(width: 10),
                   Text(
-                    "Completed (${items.length})",
+                    'Completed',
                     style: theme.textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: scheme.secondaryContainer,
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: Text(
+                      '${items.length}',
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: scheme.onSecondaryContainer,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                  const Spacer(),
                   Icon(
                     expanded
                         ? Icons.expand_less_rounded

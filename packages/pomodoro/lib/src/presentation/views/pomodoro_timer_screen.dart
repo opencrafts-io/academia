@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:ads/ads.dart';
 import 'package:material3_indicators/material3_indicators.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -168,6 +169,8 @@ class _PomodoroTimerScreenState extends State<PomodoroTimerScreen> {
                 _buildRing(context, state, color),
                 const SizedBox(height: 24),
                 _buildSessionDots(state, color),
+                const SizedBox(height: 16),
+                const Center(child: BannerAdWidget()),
                 const Spacer(),
                 _buildControls(context, cubit, state, color),
                 const SizedBox(height: 32),

@@ -206,7 +206,7 @@ extension GenerationJobDtoMapper on GenerationJobDto {
     id: id,
     noteId: noteId,
     outputs: outputs,
-    status: status,
+    status: GenerationJobStatusApi.parse(status),
     failureCode: failureCode,
     failureMessage: failureMessage,
     createdAt: createdAt,

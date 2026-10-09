@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:academia/config/router/router.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
-import 'package:academia/features/semester/semester.dart';
 import 'package:academia/gen/fonts.gen.dart';
 import 'package:academia/injection_container.dart';
 import 'package:agenda/agenda.dart' as agenda;
@@ -43,6 +42,7 @@ class _AcademiaState extends State<Academia> with WidgetsBindingObserver {
 
   bool _deferredServicesReady = false;
   bool _appLaunchRewardSubmitted = false;
+  bool _wasBackgrounded = false;
   SettingsCubit? _settingsCubit;
 
   @override
@@ -74,9 +74,18 @@ class _AcademiaState extends State<Academia> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.hidden) {
+      _wasBackgrounded = true;
+    }
     if (state == AppLifecycleState.resumed &&
         sl<AdService>().isSupportedPlatform) {
-      unawaited(sl<AdService>().refreshEligibility());
+      if (_wasBackgrounded) {
+        _wasBackgrounded = false;
+        unawaited(sl<AdService>().onAppResumed());
+      } else {
+        unawaited(sl<AdService>().refreshEligibility());
+      }
     }
     if (state == AppLifecycleState.resumed && _deferredServicesReady) {
       unawaited(sl<courses.CourseReminderRefresher>().refresh());
@@ -183,7 +192,6 @@ class _AcademiaState extends State<Academia> with WidgetsBindingObserver {
         BlocProvider(create: (context) => sl<CommunityHomeBloc>()),
         BlocProvider(create: (context) => sl<CommunityUsersBloc>()),
         BlocProvider(create: (context) => sl<agenda.AgendaCubit>()),
-        BlocProvider(create: (context) => sl<SemesterCubit>()),
         BlocProvider(create: (context) => sl<courses.CourseCubit>()),
         BlocProvider(create: (context) => sl<InstitutionBloc>()),
         BlocProvider(create: (context) => sl<PermissionCubit>()),

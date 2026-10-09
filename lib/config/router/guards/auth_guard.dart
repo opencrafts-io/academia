@@ -14,11 +14,13 @@ class AuthGuard implements RouteGuard {
     // Define which location represents the "Entry Point"
     final String loginLocation = AuthRoute().location;
     final bool isGoingToAuth = state.matchedLocation == loginLocation;
+    final bool isGoingToSplash =
+        state.matchedLocation == SplashScreenRoute().location;
 
     // User is NOT authenticated
     if (authState is AuthUnauthenticated || authState is AuthInitial) {
       // If they aren't going to auth already, redirect them there
-      return isGoingToAuth ? null : loginLocation;
+      return isGoingToAuth || isGoingToSplash ? null : loginLocation;
     }
 
     // User IS authenticated but trying to go to Login/Register

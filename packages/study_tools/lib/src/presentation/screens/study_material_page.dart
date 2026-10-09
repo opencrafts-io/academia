@@ -1,17 +1,20 @@
 import 'dart:async';
 
+import 'package:ads/ads.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/entities/study_entities.dart';
 import '../cubit/podcast_cubit.dart';
 import '../cubit/study_tools_cubit.dart';
+import '../cubit/study_load_state.dart';
 import '../widgets/podcast_now_playing_bar.dart';
 import '../widgets/question_set_section.dart';
 import '../widgets/study_delete_confirmation_sheet.dart';
 import '../widgets/study_progress_widgets.dart';
 import '../widgets/study_material_sections.dart';
 import '../widgets/study_podcast_section.dart';
+import '../widgets/study_generation_ad_gate.dart';
 import '../widgets/study_tools_feedback.dart';
 import '../widgets/study_tools_sheet.dart';
 
@@ -42,7 +45,13 @@ class _StudyMaterialPageState extends State<StudyMaterialPage> {
     child: BlocBuilder<StudyToolsCubit, StudyToolsState>(
       builder: (context, state) {
         final material = state.selectedMaterial;
-        if (state.status == StudyLoadStatus.loading && material == null) {
+        final isLoading = state.status.when(
+          initial: () => false,
+          loading: () => true,
+          loaded: () => false,
+          failure: (_, _) => false,
+        );
+        if (isLoading && material == null) {
           return Scaffold(
             body: _withPodcastBar(
               context,
@@ -112,10 +121,23 @@ class _StudyMaterialPageState extends State<StudyMaterialPage> {
                         isLoading: state.isLoadingPodcast,
                         hasJob: hasJob,
                         progressMessage: podcastProgressMessage,
-                        onGenerate: () =>
-                            context.read<StudyToolsCubit>().generatePodcast(),
+                        onGenerate: () => unawaited(
+                          requestStudyGeneration(
+                            context: context,
+                            contentLabel: 'A podcast',
+                            pointCost: 6,
+                            generate: () => context
+                                .read<StudyToolsCubit>()
+                                .generatePodcast(),
+                          ),
+                        ),
                       ),
-                      const SizedBox(height: 32),
+                      if (state.podcast != null) ...[
+                        const SizedBox(height: 16),
+                        const InlineBannerAdWidget(),
+                        const SizedBox(height: 24),
+                      ] else
+                        const SizedBox(height: 32),
                       const StudySectionHeading(
                         title: 'Make it stick',
                         subtitle:
@@ -128,8 +150,18 @@ class _StudyMaterialPageState extends State<StudyMaterialPage> {
                             hasJob ||
                             state.generationBlocked,
                         loadingFormat: state.loadingFormat,
-                        onGenerate: (format) =>
-                            context.read<StudyToolsCubit>().generate(format),
+                        onGenerate: (format) => unawaited(
+                          requestStudyGeneration(
+                            context: context,
+                            contentLabel: format == QuestionFormat.flashcard
+                                ? 'Flashcards'
+                                : 'Questions',
+                            pointCost: 3,
+                            generate: () => context
+                                .read<StudyToolsCubit>()
+                                .generate(format),
+                          ),
+                        ),
                       ),
                       AnimatedSize(
                         duration: const Duration(milliseconds: 280),

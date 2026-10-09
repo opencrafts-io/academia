@@ -8,6 +8,8 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
+  core:
+    path: ../core/
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1

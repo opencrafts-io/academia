@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:analytics/analytics.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:core/core.dart';
 
 import '../../domain/entities/agenda_event.dart';
 import '../../domain/usecases/create_agenda_event.dart';
@@ -10,7 +10,7 @@ import '../../domain/usecases/list_agenda_events.dart';
 import '../../domain/usecases/update_agenda_event.dart';
 import 'agenda_state.dart';
 
-class AgendaCubit extends Cubit<AgendaState> {
+class AgendaCubit extends SafeCubit<AgendaState> {
   AgendaCubit({
     required ListAgendaEvents listAgendaEvents,
     required CreateAgendaEvent createAgendaEvent,

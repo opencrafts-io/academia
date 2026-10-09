@@ -150,8 +150,14 @@ class TodoTagRepositoryImpl implements TodoTagRepository {
       for (final item in dirtyItems) {
         // Case 1: Pending deletion
         if (item.isPendingDeletion) {
-          if (item.id != null) await remoteDataSource.deleteTag(item.id!);
-          await localDataSource.hardDeleteTag(item.localId);
+          if (item.id?.isNotEmpty ?? false) {
+            final deletion = await remoteDataSource.deleteTag(item.id!);
+            if (deletion.isLeft()) continue;
+          }
+          final localDeletion = await localDataSource.hardDeleteTag(
+            item.localId,
+          );
+          if (localDeletion.isLeft()) return localDeletion;
           continue;
         }
 
@@ -161,14 +167,17 @@ class TodoTagRepositoryImpl implements TodoTagRepository {
             ? await remoteDataSource.createTag(item.toDto())
             : await remoteDataSource.updateTag(item.toDto());
 
-        remoteOp.fold(
-          (_) => null, // Failed — will retry on next sync
-          (dto) async {
-            await localDataSource.updateTag(
-              dto.toDataModel(localId: item.localId, isDirty: false),
-            );
-          },
+        if (remoteOp.isLeft()) continue;
+        final dto = remoteOp.fold((_) => null, (value) => value)!;
+        final localUpdate = await localDataSource.updateTag(
+          dto.toDataModel(localId: item.localId, isDirty: false),
         );
+        if (localUpdate.isLeft()) {
+          return localUpdate.fold(
+            (failure) => Left(failure),
+            (_) => const Right(unit),
+          );
+        }
       }
       return const Right(unit);
     });

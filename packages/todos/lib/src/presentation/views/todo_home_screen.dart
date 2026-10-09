@@ -190,12 +190,6 @@ class _TodoHomeScreenState extends State<TodoHomeScreen>
                         onPressed: _showHelpDialog,
                         icon: Icon(Icons.lightbulb_outline),
                       ),
-                      IconButton(
-                        onPressed: () {
-                          context.push('/profile');
-                        },
-                        icon: const Icon(Icons.account_circle_outlined),
-                      ),
                     ],
                   ),
                   SliverFillRemaining(

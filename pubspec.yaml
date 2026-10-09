@@ -149,6 +149,8 @@ dependencies:
   # application settings subsystem
   settings:
     path: packages/settings/
+  splash:
+    path: packages/splash/
   # application permissions subsystem
   permissions:
     path: packages/permissions/

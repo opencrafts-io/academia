@@ -1,5 +1,6 @@
 import 'package:academia/core/core.dart';
 import 'package:agenda/agenda.dart';
+import 'package:ads/ads.dart';
 import 'package:courses/courses.dart' as courses;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -485,6 +486,10 @@ class _AgendaHomePageState extends State<AgendaHomePage> {
                   },
                 );
               },
+            ),
+            SliverPadding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 20),
+              sliver: const SliverToBoxAdapter(child: InlineBannerAdWidget()),
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 104)),
           ],

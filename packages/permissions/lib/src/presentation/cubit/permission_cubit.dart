@@ -1,4 +1,4 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:core/core.dart';
 
 import '../../application/permission_capability.dart';
 import '../../application/permission_gateway.dart';
@@ -6,7 +6,7 @@ import '../../application/permission_request_observer.dart';
 import '../../application/permission_status.dart';
 import 'permission_state.dart';
 
-class PermissionCubit extends Cubit<PermissionState> {
+class PermissionCubit extends SafeCubit<PermissionState> {
   PermissionCubit(this._permissionGateway, this._permissionRequestObserver)
     : super(const PermissionInitial());
 
