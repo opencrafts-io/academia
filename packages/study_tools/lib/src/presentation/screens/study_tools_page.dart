@@ -17,6 +17,7 @@ import '../widgets/study_tools_feedback.dart';
 import '../widgets/study_tools_sheet.dart';
 import '../widgets/study_upload_sheet.dart';
 import '../widgets/podcast_download_card.dart';
+import '../widgets/podcast_now_playing_bar.dart';
 
 class StudyToolsPage extends StatefulWidget {
   const StudyToolsPage({
@@ -62,23 +63,37 @@ class _StudyToolsPageState extends State<StudyToolsPage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    floatingActionButton: FloatingActionButton.extended(
-      onPressed: _pickMaterial,
-      icon: const Icon(Icons.add_rounded),
-      label: const Text('Upload'),
+    floatingActionButton: BlocSelector<PodcastCubit, PodcastCubitState, bool>(
+      selector: (state) => state.currentMediaItem?.extras?['noteId'] is int,
+      builder: (context, hasPodcast) => Padding(
+        padding: EdgeInsets.only(
+          bottom: hasPodcast && MediaQuery.viewInsetsOf(context).bottom == 0
+              ? 80
+              : 0,
+        ),
+        child: FloatingActionButton.extended(
+          onPressed: _pickMaterial,
+          icon: const Icon(Icons.add_rounded),
+          label: const Text('Upload'),
+        ),
+      ),
     ),
-    body: BlocListener<StudyToolsCubit, StudyToolsState>(
-      listenWhen: (previous, current) =>
-          previous.error != current.error && current.error != null,
-      listener: (context, state) {
-        showStudyToolsSnackBar(
-          context,
-          state.error!,
-          isError: state.status == StudyLoadStatus.failure,
-        );
-      },
-      child: BlocBuilder<StudyToolsCubit, StudyToolsState>(
-        builder: (context, state) => _buildLibrary(state),
+    body: PodcastNowPlayingOverlay(
+      handler: context.read<PodcastCubit>().audioHandler,
+      bottomInset: MediaQuery.viewPaddingOf(context).bottom,
+      child: BlocListener<StudyToolsCubit, StudyToolsState>(
+        listenWhen: (previous, current) =>
+            previous.error != current.error && current.error != null,
+        listener: (context, state) {
+          showStudyToolsSnackBar(
+            context,
+            state.error!,
+            isError: state.status == StudyLoadStatus.failure,
+          );
+        },
+        child: BlocBuilder<StudyToolsCubit, StudyToolsState>(
+          builder: (context, state) => _buildLibrary(state),
+        ),
       ),
     ),
   );

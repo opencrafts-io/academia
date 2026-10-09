@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:analytics/analytics.dart';
 import 'package:audio_service/audio_service.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:core/core.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../data/services/podcast_local_store.dart';
@@ -29,7 +29,7 @@ abstract class PodcastCubitState with _$PodcastCubitState {
   }) = _PodcastCubitState;
 }
 
-class PodcastCubit extends Cubit<PodcastCubitState> {
+class PodcastCubit extends SafeCubit<PodcastCubitState> {
   PodcastCubit(this.store, this.audioHandler, {this.analyticsTracker})
     : super(const PodcastCubitState()) {
     _playbackSubscription = audioHandler.playbackState.listen((value) {

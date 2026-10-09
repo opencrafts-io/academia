@@ -4,6 +4,7 @@ import 'package:academia/config/config.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/gen/assets.gen.dart';
 import 'package:academia/injection_container.dart';
+import 'package:ads/ads.dart';
 import 'package:analytics/analytics.dart';
 import 'package:billing/billing.dart' as billing;
 import 'package:core/core.dart' as core;
@@ -210,6 +211,7 @@ class _HomePageState extends State<HomePage> {
       featureName: 'Academia Premium',
       accessMessage: 'Upgrade to unlock premium tools across Academia.',
     ).push(context);
+    await sl<AdService>().refreshEligibility();
     if (!mounted) return;
     setState(() {
       _subscriptionStatusFuture = _loadSubscriptionStatus();

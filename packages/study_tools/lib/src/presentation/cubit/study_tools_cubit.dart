@@ -4,7 +4,6 @@ import 'package:core/core.dart';
 import 'package:analytics/analytics.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/widgets.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -38,15 +37,14 @@ abstract class StudyToolsState with _$StudyToolsState {
   }) = _StudyToolsState;
 }
 
-class StudyToolsCubit extends Cubit<StudyToolsState>
+class StudyToolsCubit extends SafeCubit<StudyToolsState>
     with WidgetsBindingObserver {
   StudyToolsCubit(
     this.repository, {
     this.podcastStore,
     this.audioHandler,
     this.analyticsTracker,
-  })
-    : super(const StudyToolsState()) {
+  }) : super(const StudyToolsState()) {
     WidgetsBinding.instance.addObserver(this);
     _connectivitySubscription = Connectivity().onConnectivityChanged.listen((
       results,
@@ -343,10 +341,12 @@ class StudyToolsCubit extends Cubit<StudyToolsState>
   }
 
   Future<void> loadQuestions(QuestionFormat format) async {
+    if (isClosed) return;
     final noteId = state.selectedMaterial?.id;
     if (noteId == null) return;
     emit(state.copyWith(loadingFormat: format, error: null, errorCode: null));
     final result = await repository.questionSets(noteId, format);
+    if (isClosed) return;
     result.fold(
       (failure) => emit(
         state.copyWith(

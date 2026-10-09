@@ -7,6 +7,7 @@ import 'package:academia/features/semester/semester.dart';
 import 'package:academia/gen/fonts.gen.dart';
 import 'package:academia/injection_container.dart';
 import 'package:agenda/agenda.dart' as agenda;
+import 'package:ads/ads.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +32,6 @@ class Academia extends StatefulWidget {
 
 class _AcademiaState extends State<Academia> with WidgetsBindingObserver {
   String? _studyDataAccountId;
-  bool _podcastAudioHandlerReady = false;
 
   Future<void> _clearPodcastAccount(String? accountId) async {
     await sl.isReady<study_tools.PodcastAudioHandler>();
@@ -40,6 +40,7 @@ class _AcademiaState extends State<Academia> with WidgetsBindingObserver {
       accountId: accountId,
     );
   }
+
   bool _deferredServicesReady = false;
   bool _appLaunchRewardSubmitted = false;
   SettingsCubit? _settingsCubit;
@@ -49,22 +50,9 @@ class _AcademiaState extends State<Academia> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     setOptimalDisplayMode();
-    unawaited(_initializePodcastAudioHandler());
     WidgetsBinding.instance.addPostFrameCallback((_) {
       unawaited(_initializeDeferredServices());
     });
-  }
-
-  Future<void> _initializePodcastAudioHandler() async {
-    try {
-      await sl.isReady<study_tools.PodcastAudioHandler>();
-      if (!mounted) return;
-      setState(() => _podcastAudioHandlerReady = true);
-    } catch (error, stackTrace) {
-      debugPrint(
-        'Podcast audio startup initialization failed: $error\n$stackTrace',
-      );
-    }
   }
 
   Future<void> _initializeDeferredServices() async {
@@ -86,6 +74,10 @@ class _AcademiaState extends State<Academia> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed &&
+        sl<AdService>().isSupportedPlatform) {
+      unawaited(sl<AdService>().refreshEligibility());
+    }
     if (state == AppLifecycleState.resumed && _deferredServicesReady) {
       unawaited(sl<courses.CourseReminderRefresher>().refresh());
     }
@@ -321,22 +313,7 @@ class _AcademiaState extends State<Academia> with WidgetsBindingObserver {
                         );
                       }
                     },
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        child ?? const SizedBox.shrink(),
-                        if (_podcastAudioHandlerReady)
-                          Positioned(
-                            left: 0,
-                            right: 0,
-                            bottom: MediaQuery.viewPaddingOf(context).bottom + 76,
-                            child: study_tools.PodcastNowPlayingBar(
-                              floating: true,
-                              handler: sl<study_tools.PodcastAudioHandler>(),
-                            ),
-                          ),
-                      ],
-                    ),
+                    child: child ?? const SizedBox.shrink(),
                   );
                 },
               );

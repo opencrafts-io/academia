@@ -631,7 +631,7 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   };
   study_tools.StudyToolsHost.openPaywall = (context) async {
     await const billing.PaywallRoute(featureName: 'Study Tools').push(context);
-    await sl<billing.BillingService>().refreshSubscriptionStatus();
+    await sl<AdService>().refreshEligibility();
   };
   courses.CourseHost.openMaterials = (context, course) async {
     await study_tools.StudyToolsRoute(
