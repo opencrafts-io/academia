@@ -1,8 +1,8 @@
 import 'dart:async';
+import 'dart:ui' show ImageFilter;
 
 import 'package:academia/config/config.dart';
 import 'package:academia/features/features.dart';
-import 'package:academia/gen/assets.gen.dart';
 import 'package:academia/injection_container.dart';
 import 'package:ads/ads.dart';
 import 'package:analytics/analytics.dart';
@@ -10,7 +10,7 @@ import 'package:billing/billing.dart' as billing;
 import 'package:core/core.dart' as core;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:permissions/permissions.dart';
@@ -235,38 +235,75 @@ class _HomePageState extends State<HomePage> {
               sliver: SliverAppBar(
                 pinned: true,
                 forceElevated: innerBoxIsScrolled,
-                leading: Assets.icons.academia.image(),
-                title: InkWell(
-                  onTap: () => _showActionsSheet(context),
-                  child:
-                      Row(
-                            mainAxisSize: MainAxisSize.min,
-                            spacing: 4,
-                            children: [
-                              Text(
-                                'Academia',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headlineMedium
-                                    ?.copyWith(fontWeight: FontWeight.bold),
+                forceMaterialTransparency: true,
+                backgroundColor: Colors.transparent,
+                surfaceTintColor: Colors.transparent,
+                systemOverlayStyle:
+                    ThemeData.estimateBrightnessForColor(
+                          Theme.of(context).colorScheme.surface,
+                        ) ==
+                        Brightness.dark
+                    ? SystemUiOverlayStyle.light
+                    : SystemUiOverlayStyle.dark,
+                flexibleSpace: SizedBox.expand(
+                  child: ClipRect(
+                    child: innerBoxIsScrolled
+                        ? BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 36, sigmaY: 36),
+                            blendMode: BlendMode.src,
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [
+                                    Theme.of(context).colorScheme.surface
+                                        .withValues(alpha: 0.72),
+                                    Theme.of(context).colorScheme.surface
+                                        .withValues(alpha: 0.84),
+                                  ],
+                                ),
                               ),
-                              const Icon(
-                                Icons.arrow_drop_down_circle_outlined,
-                                size: 20,
-                              ),
-                            ],
+                            ),
                           )
-                          .animate(
-                            onPlay: (controller) =>
-                                controller.repeat(reverse: true),
-                          )
-                          .scaleXY(
-                            begin: 1.0,
-                            end: 1.1,
-                            duration: 1000.ms,
-                            curve: Curves.elasticOut,
+                        : ColoredBox(
+                            color: Theme.of(context).colorScheme.surface,
                           ),
+                  ),
                 ),
+                leadingWidth: 160,
+                leading: Tooltip(
+                  message: 'Open app sections',
+                  child: InkWell(
+                    onTap: () => _showActionsSheet(context),
+                    borderRadius: BorderRadius.circular(12),
+                    child: SizedBox(
+                      height: 48,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 12, right: 4),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Academia',
+                              style: Theme.of(context).textTheme.headlineSmall
+                                  ?.copyWith(fontWeight: FontWeight.w600),
+                            ),
+                            const SizedBox(width: 2),
+                            Icon(
+                              Icons.keyboard_arrow_down_rounded,
+                              size: 22,
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurfaceVariant,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                title: null,
                 centerTitle: false,
                 actions: [
                   FutureBuilder(
@@ -294,13 +331,28 @@ class _HomePageState extends State<HomePage> {
                       );
                     },
                   ),
-                  IconButton(
-                    onPressed: () => showSearch(
-                      context: context,
-                      delegate: GlobalSearchDelegate(),
+                  SearchAnchor(
+                    isFullScreen: true,
+                    viewHintText: 'Search communities...',
+                    viewOnChanged: (query) => searchGlobalCommunities(
+                      context,
+                      query,
                     ),
-                    icon: const Icon(Icons.search),
-                    tooltip: 'Search',
+                    viewBuilder: (suggestions) => suggestions.isEmpty
+                        ? const SizedBox.shrink()
+                        : suggestions.first,
+                    suggestionsBuilder: (context, controller) => [
+                      GlobalSearchResults(query: controller.text),
+                    ],
+                    builder: (context, controller) => IconButton(
+                      onPressed: controller.openView,
+                      constraints: const BoxConstraints(
+                        minWidth: 48,
+                        minHeight: 48,
+                      ),
+                      icon: const Icon(Icons.search),
+                      tooltip: 'Search communities',
+                    ),
                   ),
                   IconButton(
                     onPressed: () => ProfileRoute().push(context),
