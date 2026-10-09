@@ -49,6 +49,10 @@ class AppRouter {
       ...todos.routes,
       ...pomodoro.routes,
       ...study_tools.routes,
+      GoRoute(
+        path: '/rewards',
+        redirect: (context, state) => '/achievements',
+      ),
     ],
     initialLocation: SplashScreenRoute().location,
     observers: [

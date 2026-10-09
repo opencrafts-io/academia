@@ -19,6 +19,8 @@ import 'package:courses/courses.dart' as courses;
 import 'package:todos/todos.dart' as todos;
 import 'package:pomodoro/pomodoro.dart' as pomodoro;
 import 'package:study_tools/study_tools.dart' as study_tools;
+import 'package:rewards/rewards.dart' as rewards;
+import 'package:leaderboard/leaderboard.dart' as leaderboard;
 
 class Academia extends StatefulWidget {
   const Academia({super.key});
@@ -36,19 +38,59 @@ class _AcademiaState extends State<Academia> with WidgetsBindingObserver {
       accountId: accountId,
     );
   }
+  bool _deferredServicesReady = false;
+  bool _appLaunchRewardSubmitted = false;
+  SettingsCubit? _settingsCubit;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     setOptimalDisplayMode();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      unawaited(_initializeDeferredServices());
+    });
+  }
+
+  Future<void> _initializeDeferredServices() async {
+    try {
+      await initializeDeferredServices();
+      if (!mounted) return;
+
+      final settings = _settingsCubit;
+      if (settings == null) return;
+      _deferredServicesReady = true;
+      sl<courses.CourseReminderRefresher>().updatePreferences(
+        enabled: settings.state.courseRemindersEnabled,
+        reminderMinutes: settings.state.courseReminderMinutes,
+      );
+    } catch (error, stackTrace) {
+      debugPrint('Deferred startup initialization failed: $error\n$stackTrace');
+    }
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
+    if (state == AppLifecycleState.resumed && _deferredServicesReady) {
       unawaited(sl<courses.CourseReminderRefresher>().refresh());
     }
+  }
+
+  Future<void> _submitAppLaunchReward() async {
+    if (kIsWeb || defaultTargetPlatform != TargetPlatform.android) return;
+    if (_appLaunchRewardSubmitted) return;
+    _appLaunchRewardSubmitted = true;
+    final result = await sl<rewards.RecordAppLaunch>()();
+    result.fold(
+      (failure) => debugPrint(
+        'App launch activity was not recorded: ${failure.message}',
+      ),
+      (completion) {
+        // The server owns point totals and idempotency. An already-processed
+        // completion intentionally produces no reward feedback.
+        if (completion.alreadyProcessed) return;
+      },
+    );
   }
 
   @override
@@ -96,16 +138,7 @@ class _AcademiaState extends State<Academia> with WidgetsBindingObserver {
           create: (context) =>
               sl<InAppUpdateBloc>()..add(CheckForInAppUpdateEvent()),
         ),
-        BlocProvider(
-          create: (context) {
-            final settings = sl<SettingsCubit>();
-            sl<courses.CourseReminderRefresher>().updatePreferences(
-              enabled: settings.state.courseRemindersEnabled,
-              reminderMinutes: settings.state.courseReminderMinutes,
-            );
-            return settings;
-          },
-        ),
+        BlocProvider(create: (context) => _settingsCubit = sl<SettingsCubit>()),
         BlocProvider(
           create: (context) => sl<AuthBloc>()..add(AuthCheckStatusEvent()),
         ),
@@ -147,7 +180,7 @@ class _AcademiaState extends State<Academia> with WidgetsBindingObserver {
         BlocProvider(create: (context) => sl<courses.CourseCubit>()),
         BlocProvider(create: (context) => sl<InstitutionBloc>()),
         BlocProvider(create: (context) => sl<PermissionCubit>()),
-        BlocProvider(create: (context) => sl<LeaderboardBloc>()),
+        BlocProvider(create: (context) => sl<leaderboard.LeaderboardBloc>()),
       ],
       child: DynamicColorBuilder(
         builder: (lightScheme, darkScheme) => MultiBlocListener(
@@ -161,6 +194,7 @@ class _AcademiaState extends State<Academia> with WidgetsBindingObserver {
                     current.courseReminderMinutes,
                   ),
               listener: (context, state) {
+                if (!_deferredServicesReady) return;
                 sl<courses.CourseReminderRefresher>().updatePreferences(
                   enabled: state.courseRemindersEnabled,
                   reminderMinutes: state.courseReminderMinutes,
@@ -176,6 +210,9 @@ class _AcademiaState extends State<Academia> with WidgetsBindingObserver {
                 }
                 if (state is AuthAuthenticated) {
                   context.read<FeedBloc>().add(CheckFeedLikeStatuses());
+                  unawaited(_submitAppLaunchReward());
+                } else if (state is AuthUnauthenticated) {
+                  _appLaunchRewardSubmitted = false;
                 }
               },
             ),

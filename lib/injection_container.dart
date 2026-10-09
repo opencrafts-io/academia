@@ -48,16 +48,6 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
 
   configureDependencies(sl, flavor);
 
-  if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
-    await sl<LockInService>().start();
-  }
-
-  if (!isBackground) {
-    final adService = sl<AdService>();
-    await adService.initialize();
-    await adService.loadInterstitialAd();
-  }
-
   sl.registerFactory(
     () => AuthRemoteDatasource(flavor: flavor, dioClient: sl()),
   );
@@ -986,78 +976,23 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
       saveFeeTransaction: sl(),
     ),
   );
+}
 
-  /**********************************************************************
-   *                               LEADERBOARD
-   **********************************************************************/
-  sl.registerFactory<LeaderboardLocalDataSource>(
-    () => LeaderboardLocalDataSource(localDB: sl()),
-  );
-  sl.registerFactory<LeaderboardRemoteDataSource>(
-    () => LeaderboardRemoteDataSource(dioClient: sl(), flavor: sl()),
-  );
-  sl.registerFactory<LeaderboardRepository>(
-    () => LeaderboardRepositoryImpl(
-      leaderboardRemoteDataSource: sl(),
-      leaderboardLocalDataSource: sl(),
-    ),
-  );
-  sl.registerFactory<GetGlobalLeaderboardUsecase>(
-    () => GetGlobalLeaderboardUsecase(leaderboardRepository: sl()),
-  );
+/// Initializes optional platform services after the first app frame is shown.
+Future<void> initializeDeferredServices() async {
+  await Future.wait([
+    initializeNotifications(),
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android)
+      sl<LockInService>().start(),
+    _initializeAds(),
+  ]);
+}
 
-  sl.registerFactory(() => LeaderboardBloc(getGlobalLeaderboardUsecase: sl()));
+Future<void> initializeNotifications() =>
+    sl<NotificationService>().initialize(sl<NotificationActionHandler>());
 
-  /**********************************************************************
-   *                               STREAKS
-   **********************************************************************/
-  sl.registerFactory<AchievementLocalDatasource>(
-    () => AchievementLocalDatasource(localDB: sl<AppDataBase>()),
-  );
-
-  sl.registerFactory<AchievementRemoteDatasource>(
-    () => AchievementRemoteDatasource(dioClient: sl(), flavor: sl()),
-  );
-
-  sl.registerFactory<AchievementRepository>(
-    () => AchievementRepositoryImpl(
-      remoteDatasource: sl<AchievementRemoteDatasource>(),
-      localDatasource: sl<AchievementLocalDatasource>(),
-    ),
-  );
-
-  sl.registerFactory<GetAchievements>(
-    () => GetAchievements(sl<AchievementRepository>()),
-  );
-
-  sl.registerFactory<GetAchievementById>(
-    () => GetAchievementById(sl<AchievementRepository>()),
-  );
-
-  sl.registerFactory<GetStreakActivities>(
-    () => GetStreakActivities(sl<AchievementRepository>()),
-  );
-
-  sl.registerFactory<GetActivityById>(
-    () => GetActivityById(sl<AchievementRepository>()),
-  );
-
-  sl.registerFactory<AchievementsBloc>(
-    () => AchievementsBloc(getAchievements: sl<GetAchievements>()),
-  );
-
-  sl.registerFactory<ActivitiesBloc>(
-    () => ActivitiesBloc(getStreakActivities: sl<GetStreakActivities>()),
-  );
-
-  sl.registerFactory<AchievementDetailBloc>(
-    () => AchievementDetailBloc(
-      getAchievementById: sl<GetAchievementById>(),
-      getActivityById: sl<GetActivityById>(),
-    ),
-  );
-
-  sl.registerFactory<ActivityDetailBloc>(
-    () => ActivityDetailBloc(getActivityById: sl<GetActivityById>()),
-  );
+Future<void> _initializeAds() async {
+  final adService = sl<AdService>();
+  await adService.initialize();
+  await adService.loadInterstitialAd();
 }

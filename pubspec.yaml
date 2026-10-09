@@ -129,6 +129,10 @@ dependencies:
   # application billing subsystem
   billing:
     path: packages/billing/
+  leaderboard:
+    path: packages/leaderboard/
+  rewards:
+    path: packages/rewards/
   todos:
     path: packages/todos/
   pomodoro:

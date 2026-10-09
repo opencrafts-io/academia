@@ -1,9 +1,13 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:academia/background_task/background_task.dart';
 import 'package:academia/background_task/daily_login_background_task.dart';
 import 'package:academia/background_task/todo_item_sync_background_task.dart';
 import 'package:academia/background_task/todo_list_sync_background_task.dart';
 import 'package:core/config/flavor.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:notifications/notifications.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:academia/injection_container.dart' as di;
@@ -21,7 +25,7 @@ void backgroundCallbackDispatcher() {
         isBackground: true,
       );
 
-      await di.sl.allReady();
+      await di.initializeNotifications();
 
       final scheduler = di.sl<LocalNotificationScheduler>();
       final dailyLogin = DailyLoginBackgroundTask(scheduler);
@@ -80,4 +84,17 @@ Future<void> registerDefaultBackgroundTasks() async {
       networkType: NetworkType.connected,
     ),
   );
+}
+
+void scheduleDefaultBackgroundTasksAfterFirstFrame() {
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    unawaited(_initializeDefaultBackgroundTasks());
+  });
+}
+
+Future<void> _initializeDefaultBackgroundTasks() async {
+  if (kIsWeb || (!Platform.isAndroid && !Platform.isIOS)) return;
+
+  await Workmanager().initialize(backgroundCallbackDispatcher);
+  await registerDefaultBackgroundTasks();
 }
