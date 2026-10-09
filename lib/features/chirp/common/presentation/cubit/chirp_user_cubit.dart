@@ -1,6 +1,6 @@
 import 'package:academia/features/chirp/common/domain/domain.dart';
+import 'package:academia/core/core.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'chirp_user_states.dart';
 
@@ -8,7 +8,7 @@ part 'chirp_user_states.dart';
 /// For loading chirp user information from all available repositories
 /// This cubit is intended to be used in widget level since its a one time 
 /// thing. 
-class ChirpUserCubit extends Cubit<ChirpUserState> {
+class ChirpUserCubit extends SafeCubit<ChirpUserState> {
   final GetChirpUserByUsernameUsecase getChirpUserByUsernameUsecase;
   final GetChirpUserByIdUsecase getChirpUserByIdUsecase;
 

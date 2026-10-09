@@ -1,7 +1,7 @@
+import 'package:academia/core/core.dart';
 import 'package:academia/features/chirp/posts/posts.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-class PostCubit extends Cubit<Post> {
+class PostCubit extends SafeCubit<Post> {
   PostCubit(super.post);
 
   void incrementCommentCount() {

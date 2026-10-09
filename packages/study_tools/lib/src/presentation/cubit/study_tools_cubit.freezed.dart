@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$StudyToolsState {
 
- StudyLoadStatus get status; List<StudyMaterial> get materials; StudyMaterial? get selectedMaterial; StudyPodcast? get podcast; bool get isLoadingPodcast; bool get isGeneratingPodcast; Map<QuestionFormat, List<QuestionSet>> get questionSets; QuestionFormat? get loadingFormat; Map<int, int> get jobs; Map<int, List<String>> get jobOutputs; String? get error; String? get errorCode; bool get isUploading; bool get generationBlocked;
+ StudyLoadState get status; List<StudyMaterial> get materials; StudyMaterial? get selectedMaterial; StudyPodcast? get podcast; bool get isLoadingPodcast; bool get isGeneratingPodcast; Map<QuestionFormat, List<QuestionSet>> get questionSets; QuestionFormat? get loadingFormat; Map<int, int> get jobs; Map<int, List<String>> get jobOutputs; String? get error; String? get errorCode; bool get isUploading; bool get generationBlocked;
 /// Create a copy of StudyToolsState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -51,7 +51,7 @@ abstract mixin class $StudyToolsStateCopyWith<$Res>  {
   factory $StudyToolsStateCopyWith(StudyToolsState value, $Res Function(StudyToolsState) _then) = _$StudyToolsStateCopyWithImpl;
 @useResult
 $Res call({
- StudyLoadStatus status, List<StudyMaterial> materials, StudyMaterial? selectedMaterial, StudyPodcast? podcast, bool isLoadingPodcast, bool isGeneratingPodcast, Map<QuestionFormat, List<QuestionSet>> questionSets, QuestionFormat? loadingFormat, Map<int, int> jobs, Map<int, List<String>> jobOutputs, String? error, String? errorCode, bool isUploading, bool generationBlocked
+ StudyLoadState status, List<StudyMaterial> materials, StudyMaterial? selectedMaterial, StudyPodcast? podcast, bool isLoadingPodcast, bool isGeneratingPodcast, Map<QuestionFormat, List<QuestionSet>> questionSets, QuestionFormat? loadingFormat, Map<int, int> jobs, Map<int, List<String>> jobOutputs, String? error, String? errorCode, bool isUploading, bool generationBlocked
 });
 
 
@@ -71,7 +71,7 @@ class _$StudyToolsStateCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? materials = null,Object? selectedMaterial = freezed,Object? podcast = freezed,Object? isLoadingPodcast = null,Object? isGeneratingPodcast = null,Object? questionSets = null,Object? loadingFormat = freezed,Object? jobs = null,Object? jobOutputs = null,Object? error = freezed,Object? errorCode = freezed,Object? isUploading = null,Object? generationBlocked = null,}) {
   return _then(StudyToolsState(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as StudyLoadStatus,materials: null == materials ? _self.materials : materials // ignore: cast_nullable_to_non_nullable
+as StudyLoadState,materials: null == materials ? _self.materials : materials // ignore: cast_nullable_to_non_nullable
 as List<StudyMaterial>,selectedMaterial: freezed == selectedMaterial ? _self.selectedMaterial : selectedMaterial // ignore: cast_nullable_to_non_nullable
 as StudyMaterial?,podcast: freezed == podcast ? _self.podcast : podcast // ignore: cast_nullable_to_non_nullable
 as StudyPodcast?,isLoadingPodcast: null == isLoadingPodcast ? _self.isLoadingPodcast : isLoadingPodcast // ignore: cast_nullable_to_non_nullable
@@ -193,7 +193,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( StudyLoadStatus status,  List<StudyMaterial> materials,  StudyMaterial? selectedMaterial,  StudyPodcast? podcast,  bool isLoadingPodcast,  bool isGeneratingPodcast,  Map<QuestionFormat, List<QuestionSet>> questionSets,  QuestionFormat? loadingFormat,  Map<int, int> jobs,  Map<int, List<String>> jobOutputs,  String? error,  String? errorCode,  bool isUploading,  bool generationBlocked)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( StudyLoadState status,  List<StudyMaterial> materials,  StudyMaterial? selectedMaterial,  StudyPodcast? podcast,  bool isLoadingPodcast,  bool isGeneratingPodcast,  Map<QuestionFormat, List<QuestionSet>> questionSets,  QuestionFormat? loadingFormat,  Map<int, int> jobs,  Map<int, List<String>> jobOutputs,  String? error,  String? errorCode,  bool isUploading,  bool generationBlocked)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _StudyToolsState() when $default != null:
 return $default(_that.status,_that.materials,_that.selectedMaterial,_that.podcast,_that.isLoadingPodcast,_that.isGeneratingPodcast,_that.questionSets,_that.loadingFormat,_that.jobs,_that.jobOutputs,_that.error,_that.errorCode,_that.isUploading,_that.generationBlocked);case _:
@@ -214,7 +214,7 @@ return $default(_that.status,_that.materials,_that.selectedMaterial,_that.podcas
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( StudyLoadStatus status,  List<StudyMaterial> materials,  StudyMaterial? selectedMaterial,  StudyPodcast? podcast,  bool isLoadingPodcast,  bool isGeneratingPodcast,  Map<QuestionFormat, List<QuestionSet>> questionSets,  QuestionFormat? loadingFormat,  Map<int, int> jobs,  Map<int, List<String>> jobOutputs,  String? error,  String? errorCode,  bool isUploading,  bool generationBlocked)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( StudyLoadState status,  List<StudyMaterial> materials,  StudyMaterial? selectedMaterial,  StudyPodcast? podcast,  bool isLoadingPodcast,  bool isGeneratingPodcast,  Map<QuestionFormat, List<QuestionSet>> questionSets,  QuestionFormat? loadingFormat,  Map<int, int> jobs,  Map<int, List<String>> jobOutputs,  String? error,  String? errorCode,  bool isUploading,  bool generationBlocked)  $default,) {final _that = this;
 switch (_that) {
 case _StudyToolsState():
 return $default(_that.status,_that.materials,_that.selectedMaterial,_that.podcast,_that.isLoadingPodcast,_that.isGeneratingPodcast,_that.questionSets,_that.loadingFormat,_that.jobs,_that.jobOutputs,_that.error,_that.errorCode,_that.isUploading,_that.generationBlocked);case _:
@@ -234,7 +234,7 @@ return $default(_that.status,_that.materials,_that.selectedMaterial,_that.podcas
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( StudyLoadStatus status,  List<StudyMaterial> materials,  StudyMaterial? selectedMaterial,  StudyPodcast? podcast,  bool isLoadingPodcast,  bool isGeneratingPodcast,  Map<QuestionFormat, List<QuestionSet>> questionSets,  QuestionFormat? loadingFormat,  Map<int, int> jobs,  Map<int, List<String>> jobOutputs,  String? error,  String? errorCode,  bool isUploading,  bool generationBlocked)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( StudyLoadState status,  List<StudyMaterial> materials,  StudyMaterial? selectedMaterial,  StudyPodcast? podcast,  bool isLoadingPodcast,  bool isGeneratingPodcast,  Map<QuestionFormat, List<QuestionSet>> questionSets,  QuestionFormat? loadingFormat,  Map<int, int> jobs,  Map<int, List<String>> jobOutputs,  String? error,  String? errorCode,  bool isUploading,  bool generationBlocked)?  $default,) {final _that = this;
 switch (_that) {
 case _StudyToolsState() when $default != null:
 return $default(_that.status,_that.materials,_that.selectedMaterial,_that.podcast,_that.isLoadingPodcast,_that.isGeneratingPodcast,_that.questionSets,_that.loadingFormat,_that.jobs,_that.jobOutputs,_that.error,_that.errorCode,_that.isUploading,_that.generationBlocked);case _:
@@ -249,10 +249,10 @@ return $default(_that.status,_that.materials,_that.selectedMaterial,_that.podcas
 
 
 class _StudyToolsState implements StudyToolsState {
-  const _StudyToolsState({this.status = StudyLoadStatus.initial,  List<StudyMaterial> materials = const <StudyMaterial>[], this.selectedMaterial, this.podcast, this.isLoadingPodcast = false, this.isGeneratingPodcast = false,  Map<QuestionFormat, List<QuestionSet>> questionSets = const <QuestionFormat, List<QuestionSet>>{}, this.loadingFormat,  Map<int, int> jobs = const <int, int>{},  Map<int, List<String>> jobOutputs = const <int, List<String>>{}, this.error, this.errorCode, this.isUploading = false, this.generationBlocked = false}): _materials = materials,_questionSets = questionSets,_jobs = jobs,_jobOutputs = jobOutputs;
+  const _StudyToolsState({this.status = const StudyLoadState.initial(),  List<StudyMaterial> materials = const <StudyMaterial>[], this.selectedMaterial, this.podcast, this.isLoadingPodcast = false, this.isGeneratingPodcast = false,  Map<QuestionFormat, List<QuestionSet>> questionSets = const <QuestionFormat, List<QuestionSet>>{}, this.loadingFormat,  Map<int, int> jobs = const <int, int>{},  Map<int, List<String>> jobOutputs = const <int, List<String>>{}, this.error, this.errorCode, this.isUploading = false, this.generationBlocked = false}): _materials = materials,_questionSets = questionSets,_jobs = jobs,_jobOutputs = jobOutputs;
   
 
-@override@JsonKey() final  StudyLoadStatus status;
+@override@JsonKey() final  StudyLoadState status;
  final  List<StudyMaterial> _materials;
 @override@JsonKey() List<StudyMaterial> get materials {
   if (_materials is EqualUnmodifiableListView) return _materials;
@@ -323,7 +323,7 @@ abstract mixin class _$StudyToolsStateCopyWith<$Res> implements $StudyToolsState
   factory _$StudyToolsStateCopyWith(_StudyToolsState value, $Res Function(_StudyToolsState) _then) = __$StudyToolsStateCopyWithImpl;
 @override @useResult
 $Res call({
- StudyLoadStatus status, List<StudyMaterial> materials, StudyMaterial? selectedMaterial, StudyPodcast? podcast, bool isLoadingPodcast, bool isGeneratingPodcast, Map<QuestionFormat, List<QuestionSet>> questionSets, QuestionFormat? loadingFormat, Map<int, int> jobs, Map<int, List<String>> jobOutputs, String? error, String? errorCode, bool isUploading, bool generationBlocked
+ StudyLoadState status, List<StudyMaterial> materials, StudyMaterial? selectedMaterial, StudyPodcast? podcast, bool isLoadingPodcast, bool isGeneratingPodcast, Map<QuestionFormat, List<QuestionSet>> questionSets, QuestionFormat? loadingFormat, Map<int, int> jobs, Map<int, List<String>> jobOutputs, String? error, String? errorCode, bool isUploading, bool generationBlocked
 });
 
 
@@ -343,7 +343,7 @@ class __$StudyToolsStateCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? materials = null,Object? selectedMaterial = freezed,Object? podcast = freezed,Object? isLoadingPodcast = null,Object? isGeneratingPodcast = null,Object? questionSets = null,Object? loadingFormat = freezed,Object? jobs = null,Object? jobOutputs = null,Object? error = freezed,Object? errorCode = freezed,Object? isUploading = null,Object? generationBlocked = null,}) {
   return _then(_StudyToolsState(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as StudyLoadStatus,materials: null == materials ? _self._materials : materials // ignore: cast_nullable_to_non_nullable
+as StudyLoadState,materials: null == materials ? _self._materials : materials // ignore: cast_nullable_to_non_nullable
 as List<StudyMaterial>,selectedMaterial: freezed == selectedMaterial ? _self.selectedMaterial : selectedMaterial // ignore: cast_nullable_to_non_nullable
 as StudyMaterial?,podcast: freezed == podcast ? _self.podcast : podcast // ignore: cast_nullable_to_non_nullable
 as StudyPodcast?,isLoadingPodcast: null == isLoadingPodcast ? _self.isLoadingPodcast : isLoadingPodcast // ignore: cast_nullable_to_non_nullable

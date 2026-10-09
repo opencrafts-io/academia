@@ -1541,7 +1541,7 @@ as List<StudyQuestion>,
 /// @nodoc
 mixin _$GenerationJob {
 
- int get id; int? get noteId; List<String> get outputs; String get status; String? get failureCode; String? get failureMessage; DateTime get createdAt; DateTime? get finishedAt;
+ int get id; int? get noteId; List<String> get outputs; GenerationJobStatus get status; String? get failureCode; String? get failureMessage; DateTime get createdAt; DateTime? get finishedAt;
 /// Create a copy of GenerationJob
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1577,7 +1577,7 @@ abstract mixin class $GenerationJobCopyWith<$Res>  {
   factory $GenerationJobCopyWith(GenerationJob value, $Res Function(GenerationJob) _then) = _$GenerationJobCopyWithImpl;
 @useResult
 $Res call({
- int id, int? noteId, List<String> outputs, String status, String? failureCode, String? failureMessage, DateTime createdAt, DateTime? finishedAt
+ int id, int? noteId, List<String> outputs, GenerationJobStatus status, String? failureCode, String? failureMessage, DateTime createdAt, DateTime? finishedAt
 });
 
 
@@ -1600,7 +1600,7 @@ id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,noteId: freezed == noteId ? _self.noteId : noteId // ignore: cast_nullable_to_non_nullable
 as int?,outputs: null == outputs ? _self.outputs : outputs // ignore: cast_nullable_to_non_nullable
 as List<String>,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as String,failureCode: freezed == failureCode ? _self.failureCode : failureCode // ignore: cast_nullable_to_non_nullable
+as GenerationJobStatus,failureCode: freezed == failureCode ? _self.failureCode : failureCode // ignore: cast_nullable_to_non_nullable
 as String?,failureMessage: freezed == failureMessage ? _self.failureMessage : failureMessage // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,finishedAt: freezed == finishedAt ? _self.finishedAt : finishedAt // ignore: cast_nullable_to_non_nullable
@@ -1689,7 +1689,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  int? noteId,  List<String> outputs,  String status,  String? failureCode,  String? failureMessage,  DateTime createdAt,  DateTime? finishedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  int? noteId,  List<String> outputs,  GenerationJobStatus status,  String? failureCode,  String? failureMessage,  DateTime createdAt,  DateTime? finishedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _GenerationJob() when $default != null:
 return $default(_that.id,_that.noteId,_that.outputs,_that.status,_that.failureCode,_that.failureMessage,_that.createdAt,_that.finishedAt);case _:
@@ -1710,7 +1710,7 @@ return $default(_that.id,_that.noteId,_that.outputs,_that.status,_that.failureCo
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  int? noteId,  List<String> outputs,  String status,  String? failureCode,  String? failureMessage,  DateTime createdAt,  DateTime? finishedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  int? noteId,  List<String> outputs,  GenerationJobStatus status,  String? failureCode,  String? failureMessage,  DateTime createdAt,  DateTime? finishedAt)  $default,) {final _that = this;
 switch (_that) {
 case _GenerationJob():
 return $default(_that.id,_that.noteId,_that.outputs,_that.status,_that.failureCode,_that.failureMessage,_that.createdAt,_that.finishedAt);case _:
@@ -1730,7 +1730,7 @@ return $default(_that.id,_that.noteId,_that.outputs,_that.status,_that.failureCo
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  int? noteId,  List<String> outputs,  String status,  String? failureCode,  String? failureMessage,  DateTime createdAt,  DateTime? finishedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  int? noteId,  List<String> outputs,  GenerationJobStatus status,  String? failureCode,  String? failureMessage,  DateTime createdAt,  DateTime? finishedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _GenerationJob() when $default != null:
 return $default(_that.id,_that.noteId,_that.outputs,_that.status,_that.failureCode,_that.failureMessage,_that.createdAt,_that.finishedAt);case _:
@@ -1757,7 +1757,7 @@ class _GenerationJob implements GenerationJob {
   return EqualUnmodifiableListView(_outputs);
 }
 
-@override final  String status;
+@override final  GenerationJobStatus status;
 @override final  String? failureCode;
 @override final  String? failureMessage;
 @override final  DateTime createdAt;
@@ -1795,7 +1795,7 @@ abstract mixin class _$GenerationJobCopyWith<$Res> implements $GenerationJobCopy
   factory _$GenerationJobCopyWith(_GenerationJob value, $Res Function(_GenerationJob) _then) = __$GenerationJobCopyWithImpl;
 @override @useResult
 $Res call({
- int id, int? noteId, List<String> outputs, String status, String? failureCode, String? failureMessage, DateTime createdAt, DateTime? finishedAt
+ int id, int? noteId, List<String> outputs, GenerationJobStatus status, String? failureCode, String? failureMessage, DateTime createdAt, DateTime? finishedAt
 });
 
 
@@ -1818,7 +1818,7 @@ id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,noteId: freezed == noteId ? _self.noteId : noteId // ignore: cast_nullable_to_non_nullable
 as int?,outputs: null == outputs ? _self._outputs : outputs // ignore: cast_nullable_to_non_nullable
 as List<String>,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as String,failureCode: freezed == failureCode ? _self.failureCode : failureCode // ignore: cast_nullable_to_non_nullable
+as GenerationJobStatus,failureCode: freezed == failureCode ? _self.failureCode : failureCode // ignore: cast_nullable_to_non_nullable
 as String?,failureMessage: freezed == failureMessage ? _self.failureMessage : failureMessage // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,finishedAt: freezed == finishedAt ? _self.finishedAt : finishedAt // ignore: cast_nullable_to_non_nullable

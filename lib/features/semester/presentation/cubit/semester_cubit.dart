@@ -3,11 +3,10 @@ import 'dart:async';
 import 'package:academia/core/core.dart';
 import 'package:academia/features/semester/domain/domain.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'semester_state.dart';
 
-class SemesterCubit extends Cubit<SemesterState> {
+class SemesterCubit extends SafeCubit<SemesterState> {
   final CreateSemesterUsecase createSemesterUsecase;
   final DeleteSemesterUsecase deleteSemesterUsecase;
   final GetSemestersForInstituionUsecase getSemestersForInstitutionUsecase;

@@ -10,6 +10,7 @@ import '../../data/services/podcast_local_store.dart';
 import '../../domain/entities/study_entities.dart';
 import '../cubit/podcast_cubit.dart';
 import '../cubit/study_tools_cubit.dart';
+import '../cubit/study_load_state.dart';
 import '../study_tools_host.dart';
 import '../widgets/study_material_sections.dart';
 import '../widgets/study_progress_widgets.dart';
@@ -74,7 +75,12 @@ class _StudyPodcastPlayerPageState extends State<StudyPodcastPlayerPage> {
                 _appBar(),
                 SliverFillRemaining(
                   hasScrollBody: false,
-                  child: studyState.status == StudyLoadStatus.loading
+                  child: studyState.status.when(
+                        initial: () => false,
+                        loading: () => true,
+                        loaded: () => false,
+                        failure: (_, __) => false,
+                      )
                       ? const StudyToolsLoadingView(
                           message: 'Opening the episode…',
                         )

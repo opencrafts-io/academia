@@ -223,7 +223,6 @@ class AdService {
     if (!isSupportedPlatform || _showingInterstitial || !await canShowAds()) {
       return;
     }
-    if (_showingInterstitial) return;
 
     final ad = _interstitialAd;
     if (ad == null) {

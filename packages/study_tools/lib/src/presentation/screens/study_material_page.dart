@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/entities/study_entities.dart';
 import '../cubit/podcast_cubit.dart';
 import '../cubit/study_tools_cubit.dart';
+import '../cubit/study_load_state.dart';
 import '../widgets/podcast_now_playing_bar.dart';
 import '../widgets/question_set_section.dart';
 import '../widgets/study_delete_confirmation_sheet.dart';
@@ -42,7 +43,13 @@ class _StudyMaterialPageState extends State<StudyMaterialPage> {
     child: BlocBuilder<StudyToolsCubit, StudyToolsState>(
       builder: (context, state) {
         final material = state.selectedMaterial;
-        if (state.status == StudyLoadStatus.loading && material == null) {
+        final isLoading = state.status.when(
+          initial: () => false,
+          loading: () => true,
+          loaded: () => false,
+          failure: (_, __) => false,
+        );
+        if (isLoading && material == null) {
           return Scaffold(
             body: _withPodcastBar(
               context,
