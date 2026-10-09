@@ -7,13 +7,11 @@ import '../mappers/todo_item_mapper.dart';
 import '../../domain/domain.dart';
 
 class TodoItemSyncService {
-  TodoItemSyncService({
-    required TodoLocalStore localDataSource,
-    required TodoItemRemoteDatasource remoteDataSource,
-    required TodoNotificationService todoNotificationService,
-  }) : _localDataSource = localDataSource,
-       _remoteDataSource = remoteDataSource,
-       _todoNotificationService = todoNotificationService;
+  TodoItemSyncService(
+    this._localDataSource,
+    this._remoteDataSource,
+    this._todoNotificationService,
+  );
 
   final TodoLocalStore _localDataSource;
   final TodoItemRemoteDatasource _remoteDataSource;
@@ -25,11 +23,15 @@ class TodoItemSyncService {
     return dirtyResult.fold((failure) => Left(failure), (dirtyItems) async {
       for (final item in dirtyItems) {
         if (item.isPendingDeletion) {
-          _todoNotificationService.cancelReminder(item.localId);
-          if (item.id != null) {
-            await _remoteDataSource.deleteTodoItem(item.id!);
+          await _todoNotificationService.cancelReminder(item.localId);
+          if (item.id?.isNotEmpty ?? false) {
+            final deletion = await _remoteDataSource.deleteTodoItem(item.id!);
+            if (deletion.isLeft()) continue;
           }
-          await _localDataSource.hardDeleteTodoItem(item.localId);
+          final localDeletion = await _localDataSource.hardDeleteTodoItem(
+            item.localId,
+          );
+          if (localDeletion.isLeft()) return localDeletion;
           continue;
         }
 
@@ -38,26 +40,36 @@ class TodoItemSyncService {
             ? await _remoteDataSource.createTodoItem(item.toDto())
             : await _remoteDataSource.updateTodoItem(item.toDto());
 
-        remoteOperation.fold((_) => null, (dto) async {
-          // Re-read because a linked Pomodoro session may have incremented
-          // focusedSeconds while the remote operation was in flight.
-          final freshLocal = await _localDataSource.getTodoItemByID(
-            item.localId,
+        if (remoteOperation.isLeft()) continue;
+        final dto = remoteOperation.fold((_) => null, (value) => value)!;
+        // Re-read because a linked Pomodoro session may have incremented
+        // focusedSeconds while the remote operation was in flight.
+        final freshLocal = await _localDataSource.getTodoItemByID(item.localId);
+        if (freshLocal.isLeft()) {
+          return freshLocal.fold(
+            (failure) => Left(failure),
+            (_) => const Right(unit),
           );
-          final currentFocusedSeconds = freshLocal.fold(
-            (_) => item.focusedSeconds,
-            (fresh) => fresh?.focusedSeconds ?? item.focusedSeconds,
-          );
+        }
+        final currentFocusedSeconds = freshLocal.fold(
+          (_) => item.focusedSeconds,
+          (fresh) => fresh?.focusedSeconds ?? item.focusedSeconds,
+        );
 
-          await _localDataSource.updateTodoItem(
-            dto.toDataModel(
-              localId: item.localId,
-              taskListLocalId: item.taskListLocalId,
-              isDirty: false,
-              focusedSeconds: currentFocusedSeconds,
-            ),
+        final localUpdate = await _localDataSource.updateTodoItem(
+          dto.toDataModel(
+            localId: item.localId,
+            taskListLocalId: item.taskListLocalId,
+            isDirty: false,
+            focusedSeconds: currentFocusedSeconds,
+          ),
+        );
+        if (localUpdate.isLeft()) {
+          return localUpdate.fold(
+            (failure) => Left(failure),
+            (_) => const Right(unit),
           );
-        });
+        }
       }
       return const Right(unit);
     });

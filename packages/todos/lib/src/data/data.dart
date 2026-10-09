@@ -17,4 +17,5 @@ export 'package:todos/src/data/repository/todo_list_repository_impl.dart';
 export 'package:todos/src/data/repository/todo_tag_repository_impl.dart';
 export 'package:todos/src/data/services/todo_notification_service_impl.dart';
 export 'package:todos/src/data/services/todo_item_tag_resolver.dart';
+export 'package:todos/src/data/services/todo_item_read_service.dart';
 export 'package:todos/src/data/services/todo_item_sync_service.dart';

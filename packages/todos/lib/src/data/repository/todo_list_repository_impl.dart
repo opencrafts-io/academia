@@ -198,8 +198,14 @@ class TodoListRepositoryImpl implements TodoListRepository {
       for (final item in dirtyItems) {
         // Case 1: Pending Deletion
         if (item.isPendingDeletion) {
-          if (item.id != null) await remoteDataSource.deleteTodoList(item.id!);
-          await localDataSource.hardDeleteTodoList(item.localId);
+          if (item.id?.isNotEmpty ?? false) {
+            final deletion = await remoteDataSource.deleteTodoList(item.id!);
+            if (deletion.isLeft()) continue;
+          }
+          final localDeletion = await localDataSource.hardDeleteTodoList(
+            item.localId,
+          );
+          if (localDeletion.isLeft()) return localDeletion;
           continue;
         }
 
@@ -209,15 +215,17 @@ class TodoListRepositoryImpl implements TodoListRepository {
             ? await remoteDataSource.createTodoList(item.toDto())
             : await remoteDataSource.updateTodoList(item.toDto());
 
-        remoteOp.fold(
-          (failure) => null, // Log and continue
-          (dto) async {
-            // Mark as clean and update with potential server-side changes
-            await localDataSource.updateTodoList(
-              dto.toDataModel(localId: item.localId, isDirty: false),
-            );
-          },
+        if (remoteOp.isLeft()) continue;
+        final dto = remoteOp.fold((_) => null, (value) => value)!;
+        final localUpdate = await localDataSource.updateTodoList(
+          dto.toDataModel(localId: item.localId, isDirty: false),
         );
+        if (localUpdate.isLeft()) {
+          return localUpdate.fold(
+            (failure) => Left(failure),
+            (_) => const Right(unit),
+          );
+        }
       }
       return const Right(unit);
     });

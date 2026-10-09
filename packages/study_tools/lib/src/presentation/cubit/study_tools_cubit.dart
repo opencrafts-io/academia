@@ -12,6 +12,8 @@ import '../../domain/repositories/study_tools_repository.dart';
 import '../../data/services/podcast_local_store.dart';
 import '../audio/podcast_audio_handler.dart';
 import '../services/study_generation_job_poller.dart';
+import '../services/study_generation_service.dart';
+import '../services/study_material_deletion_service.dart';
 import 'study_load_state.dart';
 
 part 'study_tools_cubit.freezed.dart';
@@ -67,6 +69,15 @@ class StudyToolsCubit extends SafeCubit<StudyToolsState>
   final PodcastAudioHandler? audioHandler;
   final AnalyticsTracker? analyticsTracker;
   late final StudyGenerationJobPoller _jobPoller;
+  late final StudyGenerationService _generationService = StudyGenerationService(
+    repository,
+  );
+  late final StudyMaterialDeletionService _deletionService =
+      StudyMaterialDeletionService(
+        repository: repository,
+        podcastStore: podcastStore,
+        audioHandler: audioHandler,
+      );
   late final StreamSubscription<List<ConnectivityResult>>
   _connectivitySubscription;
   bool _hasLoadedMaterials = false;
@@ -202,7 +213,7 @@ class StudyToolsCubit extends SafeCubit<StudyToolsState>
       return;
     }
     emit(state.copyWith(loadingFormat: format, error: null, errorCode: null));
-    final result = await repository.generate(material.id, format);
+    final result = await _generationService.startQuestions(material.id, format);
     await result.fold<Future<void>>(
       (failure) async {
         final code = _failureCode(failure);
@@ -228,12 +239,6 @@ class StudyToolsCubit extends SafeCubit<StudyToolsState>
       },
       (jobId) async {
         _track(AnalyticsFeatureAction.questionGenerationStarted);
-        await repository.saveJob(
-          material.id,
-          jobId,
-          outputs: const ['questions'],
-          questionFormat: format,
-        );
         final jobs = await repository.savedJobs();
         emit(
           state.copyWith(
@@ -301,7 +306,7 @@ class StudyToolsCubit extends SafeCubit<StudyToolsState>
     emit(
       state.copyWith(isGeneratingPodcast: true, error: null, errorCode: null),
     );
-    final result = await repository.generatePodcast(material.id);
+    final result = await _generationService.startPodcast(material.id);
     await result.fold(
       (failure) async {
         final code = _failureCode(failure);
@@ -327,11 +332,6 @@ class StudyToolsCubit extends SafeCubit<StudyToolsState>
       },
       (jobId) async {
         _track(AnalyticsFeatureAction.podcastGenerationStarted);
-        await repository.saveJob(
-          material.id,
-          jobId,
-          outputs: const ['podcast'],
-        );
         final jobs = await repository.savedJobs();
         if (isClosed) return;
         emit(
@@ -383,7 +383,7 @@ class StudyToolsCubit extends SafeCubit<StudyToolsState>
   }
 
   Future<bool> deleteMaterial(int id) async {
-    final result = await repository.delete(id);
+    final result = await _deletionService.delete(id);
     return await result.fold<Future<bool>>(
       (failure) async {
         emit(
@@ -394,16 +394,12 @@ class StudyToolsCubit extends SafeCubit<StudyToolsState>
         );
         return false;
       },
-      (_) async {
+      (cleanupFailed) async {
         _track(AnalyticsFeatureAction.materialDeleted);
         _jobPoller.cancel(id);
-        String? cleanupFailure;
-        try {
-          await audioHandler?.discardIfNote(id);
-          await podcastStore?.removeMaterialFiles(id);
-        } on Object {
-          cleanupFailure = 'The material was deleted, but its saved audio could not be fully removed from this device.';
-        }
+        final cleanupFailure = cleanupFailed
+            ? 'The material was deleted, but its saved audio could not be fully removed from this device.'
+            : null;
         emit(
           state.copyWith(
             materials: state.materials.where((m) => m.id != id).toList(),

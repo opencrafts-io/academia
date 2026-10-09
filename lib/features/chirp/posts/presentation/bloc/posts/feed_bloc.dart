@@ -3,11 +3,12 @@ import 'dart:async';
 import 'package:academia/core/core.dart';
 import 'package:academia/features/features.dart';
 import 'package:dartz/dartz.dart';
-import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:logger/logger.dart';
+
+import '../../services/post_attachment_uploader.dart';
 
 export 'feed_state.dart';
 
@@ -50,162 +51,41 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     on<VoteOnPollEvent>(_onVoteOnPoll);
     on<RetractPollVoteEvent>(_onRetractPollVote);
     on<CheckFeedLikeStatuses>(_onCheckFeedLikeStatuses);
-    //   List<PostReply>? addReplyToParent(
-    //     List<PostReply> replies,
-    //     String parentId,
-    //     PostReply newReply,
-    //   ) {
-    //     final updatedReplies = <PostReply>[];
-    //     bool found = false;
-
-    //     for (final reply in replies) {
-    //       if (reply.id == parentId) {
-    //         final updatedChildReplies = [...reply.replies, newReply];
-    //         final updatedParent = reply.copyWith(replies: updatedChildReplies);
-    //         updatedReplies.add(updatedParent);
-    //         found = true;
-    //       } else {
-    //         final updatedNestedReplies = addReplyToParent(
-    //           reply.replies,
-    //           parentId,
-    //           newReply,
-    //         );
-
-    //         if (updatedNestedReplies != null) {
-    //           final updatedReply = reply.copyWith(replies: updatedNestedReplies);
-    //           updatedReplies.add(updatedReply);
-    //           found = true;
-    //         } else {
-    //           updatedReplies.add(reply);
-    //         }
-    //       }
-    //     }
-
-    //     return found ? updatedReplies : null;
-    //   }
-
-    //   on<AddComment>((event, emit) async {
-    //     if (state is! FeedLoaded) return;
-    //     final currentState = state as FeedLoaded;
-
-    //     emit(CommentAdding());
-
-    //     final res = await addComment(
-    //       postId: event.postId,
-    //       content: event.content,
-    //       userName: event.userName,
-    //       parentId: event.parentId,
-    //       userId: event.userId,
-    //     );
-
-    //     res.fold((failure) => emit(CommentError(failure.message)), (newComment) {
-    //       final postIndex = currentState.posts.indexWhere(
-    //         (p) => p.id == event.postId,
-    //       );
-    //       if (postIndex == -1) {
-    //         emit(CommentError("Post not found"));
-    //         return;
-    //       }
-
-    //       final postToUpdate = currentState.posts[postIndex];
-    //       Post updatedPost;
-
-    //       if (event.parentId == null) {
-    //         // Top-level comment - add to post's replies
-    //         final updatedReplies = [...postToUpdate.replies, newComment];
-    //         updatedPost = postToUpdate.copyWith(
-    //           replies: updatedReplies,
-    //           commentCount: postToUpdate.commentCount + 1,
-    //         );
-    //       } else {
-    //         // Nested reply - find parent comment and add to its replies
-    //         final updatedReplies = addReplyToParent(
-    //           postToUpdate.replies,
-    //           event.parentId!,
-    //           newComment,
-    //         );
-
-    //         if (updatedReplies != null) {
-    //           updatedPost = postToUpdate.copyWith(
-    //             replies: updatedReplies,
-    //             commentCount: postToUpdate.commentCount + 1,
-    //           );
-    //         } else {
-    //           emit(CommentError("Parent comment not found"));
-    //           return;
-    //         }
-    //       }
-
-    //       final updatedPosts = List.of(currentState.posts);
-    //       updatedPosts[postIndex] = updatedPost;
-
-    //       emit(CommentAdded(comment: newComment));
-    //       emit(FeedLoaded(posts: updatedPosts));
-    //     });
-    //   });
-
-    //   on<ToggleLikePost>((event, emit) async {
-    //     if (state is! FeedLoaded) return;
-
-    //     final currentState = state as FeedLoaded;
-
-    //     final res = await likePost(event.postId, event.isCurrentlyLiked);
-
-    //     res.fold(
-    //       (failure) {
-    //         emit(currentState);
-    //       },
-    //       (response) {
-    //         final updatedPosts = currentState.posts.map((p) {
-    //           if (p.id == event.postId) {
-    //             return p.copyWith(
-    //               isLiked: response['is_liked'],
-    //               likeCount: response['like_count'],
-    //             );
-    //           }
-    //           return p;
-    //         }).toList();
-    //         emit(FeedLoaded(posts: updatedPosts));
-    //       },
-    //     );
-    //   });
-
-    //   on<GetPostRepliesEvent>((event, emit) async {
-    //     final currentState = state as FeedLoaded;
-    //     final posts = currentState.posts;
-    //     final postIndex = posts.indexWhere((p) => p.id == event.postId);
-    //     emit(RepliesLoading(post: posts[postIndex]));
-
-    //     if (postIndex == -1) return;
-
-    //     final result = await cachePostReplies(event.postId);
-
-    //     result.fold(
-    //       (failure) {
-    //         emit(RepliesError(failure.message));
-    //       },
-    //       (replies) async {
-    //         final postToUpdate = posts[postIndex];
-    //         final updatedPost = postToUpdate.copyWith(replies: replies);
-
-    //         final newPosts = List<Post>.from(posts);
-    //         newPosts[postIndex] = updatedPost;
-
-    //         emit(FeedLoaded(posts: newPosts));
-    //       },
-    //     );
-    //   });
   }
 
-  Future<void> _onLoadFeed(LoadFeedEvent event, Emitter<FeedState> emit) async {
+  Future<void> _onLoadFeed(LoadFeedEvent event, Emitter<FeedState> emit) =>
+      _loadPage(
+        page: event.page,
+        fetch: () => getFeedPosts(page: event.page, pageSize: event.pageSize),
+        emit: emit,
+      );
+
+  Future<void> _onLoadPostsForCommunity(
+    LoadPostsForCommunityEvent event,
+    Emitter<FeedState> emit,
+  ) => _loadPage(
+    page: event.page,
+    fetch: () => getPostsFromCommunityUsecase(
+      communityId: event.communityID,
+      page: event.page,
+      pageSize: event.pageSize,
+    ),
+    emit: emit,
+  );
+
+  Future<void> _loadPage({
+    required int page,
+    required Future<Either<Failure, PaginatedData<Post>>> Function() fetch,
+    required Emitter<FeedState> emit,
+  }) async {
     final currentState = state;
 
     // Show full-screen loader for first page
-    if (event.page == 1) {
+    if (page == 1) {
       emit(FeedLoading());
     }
     // Show pagination loader when fetching more
-    else if (currentState is FeedLoaded && event.page > 1) {
+    else if (currentState is FeedLoaded && page > 1) {
       emit(
         FeedPaginationLoading(
           existingPosts: currentState.posts,
@@ -214,7 +94,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
       );
     }
     // Retry after pagination error
-    else if (currentState is FeedPaginationError && event.page > 1) {
+    else if (currentState is FeedPaginationError && page > 1) {
       emit(
         FeedPaginationLoading(
           existingPosts: currentState.existingPosts,
@@ -223,15 +103,12 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
       );
     }
 
-    final result = await getFeedPosts(
-      page: event.page,
-      pageSize: event.pageSize,
-    );
+    final result = await fetch();
 
     result.fold(
       (failure) {
         // Pagination failed, keep previous posts visible
-        if (currentState is FeedLoaded && event.page > 1) {
+        if (currentState is FeedLoaded && page > 1) {
           emit(
             FeedPaginationError(
               existingPosts: currentState.posts,
@@ -239,7 +116,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
               hasMore: currentState.hasMore,
             ),
           );
-        } else if (currentState is FeedPaginationError && event.page > 1) {
+        } else if (currentState is FeedPaginationError && page > 1) {
           // Retry after pagination error failed again
           emit(
             FeedPaginationError(
@@ -255,7 +132,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
       },
       (paginatedData) {
         // Append or replace posts depending on the page
-        if (currentState is FeedLoaded && event.page > 1) {
+        if (currentState is FeedLoaded && page > 1) {
           emit(
             FeedLoaded(
               posts: [...currentState.posts, ...paginatedData.results],
@@ -276,95 +153,6 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
             ),
           );
           // Refresh like statuses after the initial page loads
-          if (!isClosed) add(CheckFeedLikeStatuses());
-        }
-      },
-    );
-  }
-
-  Future<void> _onLoadPostsForCommunity(
-    LoadPostsForCommunityEvent event,
-    Emitter<FeedState> emit,
-  ) async {
-    final currentState = state;
-
-    // Show full-screen loader for first page
-    if (event.page == 1) {
-      emit(FeedLoading());
-    }
-    // Show pagination loader when fetching more
-    else if (currentState is FeedLoaded && event.page > 1) {
-      emit(
-        FeedPaginationLoading(
-          existingPosts: currentState.posts,
-          hasMore: currentState.hasMore,
-        ),
-      );
-    }
-    // Retry after pagination error
-    else if (currentState is FeedPaginationError && event.page > 1) {
-      emit(
-        FeedPaginationLoading(
-          existingPosts: currentState.existingPosts,
-          hasMore: currentState.hasMore,
-        ),
-      );
-    }
-
-    final result = await getPostsFromCommunityUsecase(
-      communityId: event.communityID,
-      page: event.page,
-      pageSize: event.pageSize,
-    );
-
-    result.fold(
-      (failure) {
-        // Pagination failed, keep previous posts visible
-        if (currentState is FeedLoaded && event.page > 1) {
-          emit(
-            FeedPaginationError(
-              existingPosts: currentState.posts,
-              message: failure.message,
-              hasMore: currentState.hasMore,
-            ),
-          );
-        } else if (currentState is FeedPaginationError && event.page > 1) {
-          // Retry after pagination error failed again
-          emit(
-            FeedPaginationError(
-              existingPosts: currentState.existingPosts,
-              message: failure.message,
-              hasMore: currentState.hasMore,
-            ),
-          );
-        } else {
-          // First load failed
-          emit(FeedError(message: failure.message));
-        }
-      },
-      (paginatedData) {
-        // Append or replace posts depending on the page
-        if (currentState is FeedLoaded && event.page > 1) {
-          emit(
-            FeedLoaded(
-              posts: [...currentState.posts, ...paginatedData.results],
-              next: paginatedData.next,
-              previous: paginatedData.previous,
-              count: paginatedData.count,
-              hasMore: paginatedData.hasMore,
-            ),
-          );
-        } else {
-          emit(
-            FeedLoaded(
-              posts: paginatedData.results,
-              next: paginatedData.next,
-              previous: paginatedData.previous,
-              count: paginatedData.count,
-              hasMore: paginatedData.hasMore,
-            ),
-          );
-          // Refresh like statuses after the initial page loads.
           if (!isClosed) add(CheckFeedLikeStatuses());
         }
       },
@@ -394,65 +182,14 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         _logger.i("Post created successfully: ${post.id}");
         _logger.i("Attachments to process: ${event.attachments.length}");
 
-        bool attachmentFailed = false;
-        final uploadedAttachments = <Attachments>[];
-
-        if (event.attachments.isNotEmpty) {
-          for (final xfile in event.attachments) {
-            try {
-              final bytes = await xfile.readAsBytes();
-              final multipartFile = MultipartFile.fromBytes(
-                bytes,
-                filename: xfile.name,
-              );
-
-              final attachResult = await createPostAttachment.call(
-                postId: post.id,
-                file: multipartFile,
-              );
-
-              attachResult.fold(
-                (failure) {
-                  _logger.e("Attachment upload failed: ${failure.message}");
-                  attachmentFailed = true;
-                },
-                (attachment) {
-                  _logger.i(
-                    "Attachment uploaded successfully: ${attachment.id}",
-                  );
-                  uploadedAttachments.add(attachment);
-                },
-              );
-
-              if (attachmentFailed) break;
-            } catch (e) {
-              _logger.e("Error preparing attachment: $e");
-              attachmentFailed = true;
-              break;
-            }
-          }
-
-          if (attachmentFailed) {
-            _logger.w(
-              "Deleting post ${post.id} due to failed attachment upload",
-            );
-
-            final deleteResult = await deletePost.call(postId: post.id);
-
-            deleteResult.fold(
-              (failure) => _logger.e(
-                "Failed to delete post after attachment error: ${failure.message}",
-              ),
-              (_) => _logger.i(
-                "Post ${post.id} deleted successfully after rollback",
-              ),
-            );
-
-            emit(
-              PostCreateError("Failed to upload attachments. Post deleted."),
-            );
-            return;
-          }
+        final uploadedAttachments = await PostAttachmentUploader(
+          createPostAttachment: createPostAttachment,
+          deletePost: deletePost,
+          logger: _logger,
+        ).upload(post.id, event.attachments);
+        if (uploadedAttachments == null) {
+          emit(PostCreateError("Failed to upload attachments. Post deleted."));
+          return;
         }
 
         // If everything succeeded, build an updated post with attachments

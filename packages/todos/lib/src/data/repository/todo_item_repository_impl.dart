@@ -18,10 +18,14 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
   }) : _tagResolver = TodoItemTagResolver(localDataSource);
 
   final TodoItemTagResolver _tagResolver;
+  late final TodoItemReadService _reader = TodoItemReadService(
+    localDataSource,
+    remoteDataSource,
+  );
   late final TodoItemSyncService _syncService = TodoItemSyncService(
-    localDataSource: localDataSource,
-    remoteDataSource: remoteDataSource,
-    todoNotificationService: todoNotificationService,
+    localDataSource,
+    remoteDataSource,
+    todoNotificationService,
   );
 
   @override
@@ -29,146 +33,15 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
     String? url,
     String? taskListId,
     int? taskListLocalId,
-  }) async {
-    final results = await Future.wait([
-      localDataSource.getTodoItems(
-        taskListLocalId: taskListLocalId,
-        isPendingDeletion: false,
-      ),
-      remoteDataSource.getTodoItems(url: url, taskListId: taskListId),
-    ]);
-
-    final localResult = results[0] as Either<Failure, List<TodoItemEntity>>;
-    final remoteResult = results[1] as Either<Failure, PaginatedTodoItemDto>;
-
-    final localEntities = await localResult.fold(
-      (_) => Future.value(<TodoItemEntity>[]),
-      (items) => Future.wait(
-        items.map((item) async {
-          final tags = await _tagResolver.resolveTags(item.localId);
-          return item.toDomain(tags: tags);
-        }),
-      ),
-    );
-
-    if (remoteResult.isLeft()) {
-      return localResult.fold(
-        (failure) => Left(failure),
-        (_) => Right(TodoItemPage(items: localEntities)),
-      );
-    }
-
-    final paginatedDto = remoteResult.getOrElse(() => throw Exception());
-
-    await Future.wait(
-      paginatedDto.results.where((dto) => dto.id != null).map((dto) async {
-        final existing = await localDataSource.getTodoItemByExternalID(dto.id!);
-
-        await existing.fold((_) => Future.value(), (localModel) async {
-          int resolvedListLocalId = localModel?.taskListLocalId ?? 0;
-          if (resolvedListLocalId == 0 || dto.taskList != null) {
-            resolvedListLocalId = await _tagResolver.resolveTaskListLocalId(
-              dto.taskList,
-            );
-          }
-
-          final dataModel = dto.toDataModel(
-            localId: localModel?.localId ?? 0,
-            taskListLocalId: resolvedListLocalId,
-            isDirty: false,
-            focusedSeconds: localModel?.focusedSeconds ?? 0,
-          );
-
-          if (localModel != null) {
-            await Future.wait([
-              localDataSource.updateTodoItem(dataModel),
-              _tagResolver.resolveTagUuidsToLocalIds(dto.tags).then(
-                (tagLocalIds) => localDataSource.syncTagsForTodoItem(
-                  todoLocalId: localModel.localId,
-                  tagLocalIds: tagLocalIds,
-                ),
-              ),
-            ]);
-          } else {
-            final created = await localDataSource.createTodoItem(dataModel);
-            await created.fold((_) => Future.value(), (createdItem) async {
-              final tagLocalIds = await _tagResolver.resolveTagUuidsToLocalIds(
-                dto.tags,
-              );
-              await localDataSource.syncTagsForTodoItem(
-                todoLocalId: createdItem.localId,
-                tagLocalIds: tagLocalIds,
-              );
-            });
-          }
-        });
-      }),
-    );
-
-    final freshLocal = await localDataSource.getTodoItems(
-      taskListLocalId: taskListLocalId,
-      isPendingDeletion: false,
-    );
-
-    return freshLocal.fold((_) => Right(TodoItemPage(items: localEntities)), (
-      items,
-    ) async {
-      final entities = await Future.wait(
-        items.map((item) async {
-          final tags = await _tagResolver.resolveTags(item.localId);
-          return item.toDomain(tags: tags);
-        }),
-      );
-      return Right(TodoItemPage(items: entities, nextUrl: paginatedDto.next));
-    });
-  }
+  }) => _reader.getTodoItems(
+    url: url,
+    taskListId: taskListId,
+    taskListLocalId: taskListLocalId,
+  );
 
   @override
-  Future<Either<Failure, TodoItemEntity>> getTodoItemById(String id) async {
-    final localResult = await localDataSource.getTodoItemByExternalID(id);
-
-    return localResult.fold((failure) => Left(failure), (localItem) async {
-      if (localItem != null && !localItem.isDirty) {
-        final tags = await _tagResolver.resolveTags(localItem.localId);
-        return Right(localItem.toDomain(tags: tags));
-      }
-
-      final remoteResult = await remoteDataSource.getTodoItemById(id);
-      return remoteResult.fold(
-        (failure) {
-          if (localItem != null) {
-            return Right(localItem.toDomain());
-          }
-          return Left(failure);
-        },
-        (dto) async {
-          final resolvedListLocalId = await _tagResolver.resolveTaskListLocalId(
-            dto.taskList,
-          );
-          final dataModel = dto.toDataModel(
-            localId: localItem?.localId ?? 0,
-            taskListLocalId: resolvedListLocalId,
-            isDirty: false,
-            focusedSeconds: localItem?.focusedSeconds ?? 0,
-          );
-          if (localItem == null) {
-            await localDataSource.createTodoItem(dataModel);
-          } else {
-            await localDataSource.updateTodoItem(dataModel);
-          }
-          final tagLocalIds = await _tagResolver.resolveTagUuidsToLocalIds(
-            dto.tags,
-          );
-          await localDataSource.syncTagsForTodoItem(
-            todoLocalId: dataModel.localId,
-            tagLocalIds: tagLocalIds,
-          );
-          final tags = await _tagResolver.resolveTags(dataModel.localId);
-          return Right(dataModel.toDomain(tags: tags));
-        },
-      );
-    });
-  }
+  Future<Either<Failure, TodoItemEntity>> getTodoItemById(String id) =>
+      _reader.getTodoItemById(id);
 
   @override
   Future<Either<Failure, TodoItemEntity>> createTodoItem(
@@ -318,10 +191,8 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
       localId,
       status: TodoStatus.completed,
       completed: DateTime.now(),
-      remoteUpdate: (local) => remoteDataSource.completeTodoItem(
-        local.id!,
-        local.toDto(),
-      ),
+      remoteUpdate: (local) =>
+          remoteDataSource.completeTodoItem(local.id!, local.toDto()),
     );
   }
 
@@ -331,10 +202,8 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
       localId,
       status: TodoStatus.needsAction,
       completed: null,
-      remoteUpdate: (local) => remoteDataSource.reopenTodoItem(
-        local.id!,
-        local.toDto(),
-      ),
+      remoteUpdate: (local) =>
+          remoteDataSource.reopenTodoItem(local.id!, local.toDto()),
     );
   }
 
@@ -453,5 +322,4 @@ class TodoItemRepositoryImpl implements TodoItemRepository {
       return Right(updated.toDomain(tags: tags));
     });
   }
-
 }

@@ -1,3 +1,5 @@
+import 'package:core/core.dart';
+import 'package:dartz/dartz.dart';
 import 'package:todos/src/data/datasource/todo_local_store.dart';
 import 'package:todos/src/domain/domain.dart';
 
@@ -12,12 +14,19 @@ class TodoItemTagResolver {
   }
 
   Future<int> resolveTaskListLocalId(String? remoteId) async {
-    if (remoteId == null) return 0;
+    final result = await resolveTaskListLocalIdResult(remoteId);
+    return result.fold((_) => 0, (id) => id);
+  }
+
+  Future<Either<Failure, int>> resolveTaskListLocalIdResult(
+    String? remoteId,
+  ) async {
+    if (remoteId == null) return const Right(0);
 
     final existing = await _localDataSource.getTodoListByExternalID(remoteId);
 
-    return existing.fold((_) => 0, (list) async {
-      if (list != null) return list.localId;
+    return existing.fold((failure) => Left(failure), (list) async {
+      if (list != null) return Right(list.localId);
 
       final ghost = TodoListEntity(
         localId: 0,
@@ -33,32 +42,43 @@ class TodoItemTagResolver {
       );
 
       final created = await _localDataSource.createTodo(ghost);
-      return created.fold((_) => 0, (list) => list.localId);
+      return created.map((list) => list.localId);
     });
   }
 
-  Future<List<int>> resolveTagUuidsToLocalIds(List<String> uuids) async {
+  Future<Either<Failure, List<int>>> resolveTagUuidsToLocalIds(
+    List<String> uuids,
+  ) async {
     final localIds = <int>[];
     for (final uuid in uuids) {
       final result = await _localDataSource.getTagByExternalID(uuid);
-      await result.fold((_) async => null, (tag) async {
-        if (tag != null) {
-          localIds.add(tag.localId);
-        } else {
-          final ghost = TodoTagEntity(
-            localId: 0,
-            id: uuid,
-            name: 'Loading tag...',
-            isDirty: false,
-            createdAt: DateTime.now(),
-            isPendingDeletion: false,
-            syncStatus: SyncStatus.pending,
-          );
-          final created = await _localDataSource.createTag(ghost);
-          created.fold((_) => null, (tag) => localIds.add(tag.localId));
-        }
-      });
+      final lookupFailure = result.fold<Failure?>(
+        (failure) => failure,
+        (_) => null,
+      );
+      if (lookupFailure != null) return Left(lookupFailure);
+      final tag = result.fold((_) => null, (value) => value);
+      if (tag != null) {
+        localIds.add(tag.localId);
+      } else {
+        final ghost = TodoTagEntity(
+          localId: 0,
+          id: uuid,
+          name: 'Loading tag...',
+          isDirty: false,
+          createdAt: DateTime.now(),
+          isPendingDeletion: false,
+          syncStatus: SyncStatus.pending,
+        );
+        final created = await _localDataSource.createTag(ghost);
+        final createFailure = created.fold<Failure?>(
+          (failure) => failure,
+          (_) => null,
+        );
+        if (createFailure != null) return Left(createFailure);
+        created.fold((_) {}, (createdTag) => localIds.add(createdTag.localId));
+      }
     }
-    return localIds;
+    return Right(localIds);
   }
 }
