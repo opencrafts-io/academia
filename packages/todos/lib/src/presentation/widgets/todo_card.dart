@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:todos/src/domain/domain.dart';
 import 'package:pomodoro/pomodoro.dart' show formatFocusedDuration;
 import 'package:intl/intl.dart';
-import 'package:time_since/time_since.dart';
 
 enum _TodoCardAction { edit, focus, delete }
 
@@ -35,16 +34,6 @@ class _TodoCardState extends State<TodoCard> {
 
   TodoItemEntity get item => widget.item;
   bool get _isCompleted => item.status == TodoStatus.completed;
-
-  Color _priorityColor(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return switch (item.priority) {
-      TodoPriority.high => Colors.red.shade400,
-      TodoPriority.medium => Colors.orange.shade400,
-      TodoPriority.low => scheme.primary,
-      TodoPriority.none => Colors.transparent,
-    };
-  }
 
   Future<void> _deleteWithUndo(BuildContext context) async {
     late Completer<void> delayCompleter;
@@ -80,6 +69,11 @@ class _TodoCardState extends State<TodoCard> {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
+    final cardColor = _isCompleted
+        ? scheme.surfaceContainerLow
+        : isDark
+        ? scheme.surfaceContainerHigh
+        : scheme.surfaceContainerLowest;
 
     return Dismissible(
       key: ValueKey(item.localId),
@@ -89,62 +83,59 @@ class _TodoCardState extends State<TodoCard> {
         await _deleteWithUndo(context);
         return false;
       },
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 5),
-        decoration: BoxDecoration(
-          color: _isCompleted
-              ? scheme.surfaceContainerLow
-              : scheme.surfaceContainer,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: scheme.outlineVariant.withAlpha(_isCompleted ? 30 : 70),
-          ),
-          boxShadow: isDark || _isCompleted
-              ? null
-              : [
-                  BoxShadow(
-                    color: scheme.shadow.withAlpha(18),
-                    blurRadius: 10,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-        ),
-        clipBehavior: Clip.antiAlias,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 6),
         child: Material(
-          color: Colors.transparent,
+          color: cardColor,
+          elevation: isDark || _isCompleted ? 0 : 1,
+          shadowColor: scheme.shadow.withAlpha(20),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(28),
+          ),
+          clipBehavior: Clip.antiAlias,
           child: InkWell(
             onTap: () => setState(() => _expanded = !_expanded),
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(8, 10, 14, 10),
-              child: IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Container(
-                      width: 4,
-                      margin: const EdgeInsets.symmetric(vertical: 4),
-                      decoration: BoxDecoration(
-                        color: _priorityColor(context),
-                        borderRadius: BorderRadius.circular(3),
+              padding: const EdgeInsets.fromLTRB(12, 12, 10, 12),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  IconButton(
+                    tooltip: _isCompleted
+                        ? 'Reopen ${item.title}'
+                        : 'Complete ${item.title}',
+                    onPressed: _isCompleted
+                        ? widget.onReopen
+                        : widget.onComplete,
+                    icon: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 220),
+                      switchInCurve: Curves.easeOutCubic,
+                      transitionBuilder: (child, animation) =>
+                          ScaleTransition(scale: animation, child: child),
+                      child: Icon(
+                        _isCompleted
+                            ? Icons.check_circle_rounded
+                            : Icons.radio_button_unchecked_rounded,
+                        key: ValueKey(_isCompleted),
+                        size: 28,
+                        color: _isCompleted
+                            ? scheme.primary
+                            : scheme.onSurfaceVariant,
                       ),
                     ),
-                    const SizedBox(width: 10),
-                    Checkbox.adaptive(
-                      value: _isCompleted,
-                      onChanged: (_) => _isCompleted
-                          ? widget.onReopen()
-                          : widget.onComplete(),
-                      activeColor: scheme.primary,
-                      shape: const CircleBorder(),
-                      side: BorderSide(
-                        color: scheme.outline.withAlpha(150),
-                        width: 1.5,
-                      ),
+                  ),
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: AnimatedSize(
+                      duration: const Duration(milliseconds: 240),
+                      curve: Curves.easeOutCubic,
+                      alignment: Alignment.topCenter,
+                      child: _buildContent(context, theme, scheme),
                     ),
-                    Expanded(child: _buildContent(context, theme, scheme)),
-                    _buildActionsButton(context, scheme),
-                  ],
-                ),
+                  ),
+                  const SizedBox(width: 4),
+                  _buildActionsButton(context, scheme),
+                ],
               ),
             ),
           ),
@@ -161,8 +152,17 @@ class _TodoCardState extends State<TodoCard> {
     final hasNotes = item.notes != null && item.notes!.isNotEmpty;
     final metaChips = [
       if (!_isCompleted && item.due != null) DueDateTime(dateTime: item.due!),
+      if (!_isCompleted && item.priority != TodoPriority.none)
+        _buildPriorityChip(scheme),
       if (item.focusedSeconds > 0) _buildFocusedTimeChip(context),
       if (!_isCompleted) ...item.tags.map((tag) => _buildTagChip(context, tag)),
+      if (item.syncStatus == SyncStatus.pending)
+        _TodoMetaPill(
+          icon: Icons.cloud_upload_outlined,
+          label: 'Syncing',
+          background: scheme.surfaceContainerHigh,
+          foreground: scheme.onSurfaceVariant,
+        ),
     ];
 
     return Padding(
@@ -170,75 +170,90 @@ class _TodoCardState extends State<TodoCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Text(
-                  item.title,
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    decoration: _isCompleted
-                        ? TextDecoration.lineThrough
-                        : null,
-                    color: _isCompleted
-                        ? scheme.onSurface.withAlpha(100)
-                        : scheme.onSurface,
-                  ),
-                ),
-              ),
-              if (item.syncStatus == SyncStatus.pending)
-                Padding(
-                  padding: const EdgeInsets.only(left: 6, top: 2),
-                  child: Icon(
-                    Icons.cloud_upload_outlined,
-                    size: 14,
-                    color: scheme.onSurfaceVariant.withAlpha(128),
-                  ),
-                ),
-            ],
+          Text(
+            item.title,
+            maxLines: _expanded ? null : 2,
+            overflow: _expanded ? null : TextOverflow.ellipsis,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w700,
+              height: 1.25,
+              decoration: _isCompleted ? TextDecoration.lineThrough : null,
+              color: _isCompleted ? scheme.onSurfaceVariant : scheme.onSurface,
+            ),
           ),
           if (_isCompleted)
             Padding(
-              padding: const EdgeInsets.only(top: 4),
+              padding: const EdgeInsets.only(top: 6),
               child: Text(
                 item.completed != null
-                    ? "Completed: ${DateFormat('EEE d MMM').format(item.completed!.toLocal())}"
-                    : "Completed",
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: scheme.onSurfaceVariant.withAlpha(180),
+                    ? "Finished ${DateFormat('d MMM').format(item.completed!.toLocal())}"
+                    : 'Finished',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: scheme.onSurfaceVariant,
                 ),
               ),
             )
           else if (hasNotes)
             Padding(
-              padding: const EdgeInsets.only(top: 4),
+              padding: const EdgeInsets.only(top: 6),
               child: Text(
                 item.notes!,
-                maxLines: _expanded ? null : 1,
+                maxLines: _expanded ? null : 2,
                 overflow: _expanded ? null : TextOverflow.ellipsis,
-                style: theme.textTheme.bodySmall?.copyWith(
+                style: theme.textTheme.bodyMedium?.copyWith(
                   color: scheme.onSurfaceVariant,
+                  height: 1.35,
                 ),
               ),
             ),
           if (metaChips.isNotEmpty)
             Padding(
-              padding: const EdgeInsets.only(top: 6),
-              child: Wrap(spacing: 6, runSpacing: 4, children: metaChips),
+              padding: const EdgeInsets.only(top: 12),
+              child: Wrap(spacing: 6, runSpacing: 6, children: metaChips),
             ),
         ],
       ),
     );
   }
 
+  Widget _buildPriorityChip(ColorScheme scheme) {
+    final style = switch (item.priority) {
+      TodoPriority.high => (
+        label: 'High priority',
+        background: scheme.errorContainer,
+        foreground: scheme.onErrorContainer,
+      ),
+      TodoPriority.medium => (
+        label: 'Medium priority',
+        background: scheme.tertiaryContainer,
+        foreground: scheme.onTertiaryContainer,
+      ),
+      TodoPriority.low => (
+        label: 'Low priority',
+        background: scheme.secondaryContainer,
+        foreground: scheme.onSecondaryContainer,
+      ),
+      TodoPriority.none => (
+        label: '',
+        background: scheme.surfaceContainerHigh,
+        foreground: scheme.onSurfaceVariant,
+      ),
+    };
+    return _TodoMetaPill(
+      icon: Icons.flag_outlined,
+      label: style.label,
+      background: style.background,
+      foreground: style.foreground,
+    );
+  }
+
   Widget _buildActionsButton(BuildContext context, ColorScheme scheme) {
     return PopupMenuButton<_TodoCardAction>(
-      tooltip: "More actions",
+      tooltip: 'Options for ${item.title}',
       icon: Icon(
         Icons.more_vert_rounded,
-        size: 20,
-        color: scheme.onSurfaceVariant.withAlpha(180),
+        size: 24,
+        color: scheme.onSurfaceVariant,
       ),
       padding: EdgeInsets.zero,
       onSelected: (action) {
@@ -272,11 +287,8 @@ class _TodoCardState extends State<TodoCard> {
         PopupMenuItem(
           value: _TodoCardAction.delete,
           child: ListTile(
-            leading: Icon(
-              Icons.delete_outline_rounded,
-              color: Colors.red.shade400,
-            ),
-            title: Text("Delete", style: TextStyle(color: Colors.red.shade400)),
+            leading: Icon(Icons.delete_outline_rounded, color: scheme.error),
+            title: Text('Delete', style: TextStyle(color: scheme.error)),
             contentPadding: EdgeInsets.zero,
           ),
         ),
@@ -286,17 +298,11 @@ class _TodoCardState extends State<TodoCard> {
 
   Widget _buildFocusedTimeChip(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(Icons.timer_outlined, size: 12, color: scheme.onSurfaceVariant),
-        const SizedBox(width: 3),
-        Text(
-          formatFocusedDuration(Duration(seconds: item.focusedSeconds)),
-          style: TextStyle(fontSize: 11, color: scheme.onSurfaceVariant),
-        ),
-      ],
+    return _TodoMetaPill(
+      icon: Icons.timer_outlined,
+      label: formatFocusedDuration(Duration(seconds: item.focusedSeconds)),
+      background: scheme.primaryContainer,
+      foreground: scheme.onPrimaryContainer,
     );
   }
 
@@ -311,54 +317,33 @@ class _TodoCardState extends State<TodoCard> {
       if (parsed != null) tagColor = Color(parsed);
     }
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-      decoration: BoxDecoration(
-        color: tagColor.withAlpha(30),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: tagColor.withAlpha(80), width: 0.8),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 6,
-            height: 6,
-            decoration: BoxDecoration(color: tagColor, shape: BoxShape.circle),
-          ),
-          const SizedBox(width: 4),
-          Text(
-            tag.name,
-            style: TextStyle(
-              fontSize: 11,
-              color: tagColor,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
+    return _TodoMetaPill(
+      dotColor: tagColor,
+      label: tag.name,
+      background: scheme.surfaceContainerHigh,
+      foreground: scheme.onSurfaceVariant,
     );
   }
 
   Widget _buildDismissBackground(ColorScheme scheme) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 5),
+      margin: const EdgeInsets.symmetric(vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.red.shade400,
-        borderRadius: BorderRadius.circular(20),
+        color: scheme.errorContainer,
+        borderRadius: BorderRadius.circular(28),
       ),
       alignment: Alignment.centerRight,
-      padding: const EdgeInsets.only(right: 20),
-      child: const Column(
+      padding: const EdgeInsets.only(right: 24),
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.delete_outline_rounded, color: Colors.white),
-          SizedBox(height: 4),
+          Icon(Icons.delete_outline_rounded, color: scheme.onErrorContainer),
+          const SizedBox(height: 4),
           Text(
             "Delete",
             style: TextStyle(
-              color: Colors.white,
-              fontSize: 11,
+              color: scheme.onErrorContainer,
+              fontSize: 12,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -368,105 +353,110 @@ class _TodoCardState extends State<TodoCard> {
   }
 }
 
-class DueDateTime extends StatefulWidget {
+class DueDateTime extends StatelessWidget {
   final DateTime dateTime;
-  final bool isCompleted;
-  final IconData? overdueIcon;
-  final IconData? upcomingIcon;
-  final double fontSize;
-  final bool showBold;
 
-  const DueDateTime({
-    super.key,
-    required this.dateTime,
-    this.isCompleted = false,
-    this.overdueIcon = Icons.warning_amber_rounded,
-    this.upcomingIcon = Icons.calendar_today_outlined,
-    this.fontSize = 11,
-    this.showBold = true,
-  });
-
-  @override
-  State<DueDateTime> createState() => _DueDateTimeState();
-}
-
-class _DueDateTimeState extends State<DueDateTime> {
-  late DateTime _due;
-  late bool _isOverdue;
-  late bool _isDueToday;
-
-  @override
-  void initState() {
-    super.initState();
-    _due = widget.dateTime.toLocal();
-    _updateStatus();
-
-    // Rebuild once a minute to update timeago text
-    Future.delayed(const Duration(minutes: 1), () {
-      if (mounted) {
-        setState(_updateStatus);
-      }
-    });
-  }
-
-  @override
-  void didUpdateWidget(covariant DueDateTime oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.dateTime != widget.dateTime ||
-        oldWidget.isCompleted != widget.isCompleted) {
-      _due = widget.dateTime.toLocal();
-      _updateStatus();
-    }
-  }
-
-  void _updateStatus() {
-    final now = DateTime.now();
-    _isOverdue = !widget.isCompleted && _due.isBefore(now);
-    _isDueToday =
-        !widget.isCompleted &&
-        _due.year == now.year &&
-        _due.month == now.month &&
-        _due.day == now.day;
-  }
-
-  String _formatDisplay() {
-    if (_isOverdue) {
-      return timeSince(_due);
-    } else {
-      return DateFormat('EEE d MMM, HH:mm').format(_due);
-    }
-  }
+  const DueDateTime({super.key, required this.dateTime});
 
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final due = dateTime.toLocal();
+    final now = DateTime.now();
+    final isOverdue = due.isBefore(now);
+    final isToday = DateUtils.isSameDay(due, now);
+    final isTomorrow = DateUtils.isSameDay(
+      due,
+      now.add(const Duration(days: 1)),
+    );
+    final time = MaterialLocalizations.of(context).formatTimeOfDay(
+      TimeOfDay.fromDateTime(due),
+      alwaysUse24HourFormat: MediaQuery.alwaysUse24HourFormatOf(context),
+    );
+    final label = isOverdue
+        ? 'Overdue · ${isToday ? time : DateFormat('d MMM').format(due)}'
+        : isToday
+        ? 'Today · $time'
+        : isTomorrow
+        ? 'Tomorrow · $time'
+        : DateFormat('EEE, d MMM').format(due);
 
-    final Color chipColor = switch (true) {
-      _ when _isOverdue => Colors.red.shade400,
-      _ when _isDueToday => Colors.orange.shade400,
-      _ => scheme.onSurfaceVariant,
-    };
+    return _TodoMetaPill(
+      icon: isOverdue ? Icons.error_outline_rounded : Icons.event_outlined,
+      label: label,
+      background: isOverdue
+          ? scheme.errorContainer
+          : isToday
+          ? scheme.tertiaryContainer
+          : scheme.surfaceContainerHigh,
+      foreground: isOverdue
+          ? scheme.onErrorContainer
+          : isToday
+          ? scheme.onTertiaryContainer
+          : scheme.onSurfaceVariant,
+    );
+  }
+}
 
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(
-          _isOverdue ? widget.overdueIcon : widget.upcomingIcon,
-          size: widget.fontSize + 1,
-          color: chipColor,
+class _TodoMetaPill extends StatelessWidget {
+  const _TodoMetaPill({
+    required this.label,
+    required this.background,
+    required this.foreground,
+    this.icon,
+    this.dotColor,
+  });
+
+  final String label;
+  final Color background;
+  final Color foreground;
+  final IconData? icon;
+  final Color? dotColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: background,
+        borderRadius: BorderRadius.circular(100),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (icon != null) ...[
+              Icon(icon, size: 14, color: foreground),
+              const SizedBox(width: 5),
+            ],
+            if (dotColor != null) ...[
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  color: dotColor,
+                  shape: BoxShape.circle,
+                ),
+                child: const SizedBox(width: 7, height: 7),
+              ),
+              const SizedBox(width: 6),
+            ],
+            Flexible(
+              fit: FlexFit.loose,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 190),
+                child: Text(
+                  label,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                    color: foreground,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
-        const SizedBox(width: 3),
-        Text(
-          _formatDisplay(),
-          style: TextStyle(
-            fontSize: widget.fontSize,
-            color: chipColor,
-            fontWeight: (widget.showBold && (_isOverdue || _isDueToday))
-                ? FontWeight.w600
-                : FontWeight.normal,
-          ),
-        ),
-      ],
+      ),
     );
   }
 }
