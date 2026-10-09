@@ -22,6 +22,8 @@ class LockInPage extends StatefulWidget {
 class _LockInPageState extends State<LockInPage> with WidgetsBindingObserver {
   late Future<_LockInOverview> _overview;
   var _permissionSetupStarted = false;
+  DateTime? _selectedActivityDate;
+  int? _selectedActivityCount;
 
   @override
   void initState() {
@@ -53,7 +55,7 @@ class _LockInPageState extends State<LockInPage> with WidgetsBindingObserver {
       permission: await widget.service.checkPermission(),
       rules: await widget.service.rules(),
       attempts: await widget.service.attemptCountsByDay(
-        from: now.subtract(const Duration(days: 83)),
+        from: now.subtract(const Duration(days: 364)),
         to: now,
       ),
     );
@@ -195,17 +197,6 @@ class _LockInPageState extends State<LockInPage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FutureBuilder<_LockInOverview>(
-        future: _overview,
-        builder: (context, snapshot) =>
-            snapshot.data?.permission == BlockPermissionStatus.granted
-            ? FloatingActionButton.extended(
-                onPressed: () => _editRule(),
-                icon: const Icon(Icons.add_rounded),
-                label: const Text('New rule'),
-              )
-            : const SizedBox.shrink(),
-      ),
       body: FutureBuilder<_LockInOverview>(
         future: _overview,
         builder: (context, snapshot) {
@@ -253,7 +244,7 @@ class _LockInPageState extends State<LockInPage> with WidgetsBindingObserver {
               slivers: [
                 const SliverAppBar.large(pinned: true, title: Text('Lock In')),
                 SliverPadding(
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 112),
+                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 120),
                   sliver: SliverList.list(
                     children: [
                       if (overview.permission != BlockPermissionStatus.granted)
@@ -263,120 +254,46 @@ class _LockInPageState extends State<LockInPage> with WidgetsBindingObserver {
                           onGrant: _requestPermission,
                         )
                       else ...[
-                        Text(
-                          'Focus statistics',
-                          style: Theme.of(
-                            context,
-                          ).textTheme.titleLarge?.copyWith(fontWeight: .w800),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          'Your last 12 weeks, stored on this device.',
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.onSurfaceVariant,
-                              ),
-                        ),
-                        const SizedBox(height: 12),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _FocusStatCard(
-                                value: blockedOpens,
-                                label: 'Blocked opens',
-                                detail: 'During focus time',
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.primaryContainer,
-                                foreground: Theme.of(
-                                  context,
-                                ).colorScheme.onPrimaryContainer,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: _FocusStatCard(
-                                value: enabledRules.length,
-                                label: 'Active rules',
-                                detail: 'Keeping you on track',
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.secondaryContainer,
-                                foreground: Theme.of(
-                                  context,
-                                ).colorScheme.onSecondaryContainer,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: _FocusStatCard(
-                                value: protectedApps.length,
-                                label: 'Apps protected',
-                                detail: 'Across your rules',
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.tertiaryContainer,
-                                foreground: Theme.of(
-                                  context,
-                                ).colorScheme.onTertiaryContainer,
-                              ),
-                            ),
-                          ],
+                        _DashboardHero(
+                          activeRules: enabledRules.length,
+                          protectedApps: protectedApps.length,
                         ),
                         const SizedBox(height: 28),
-                        Text(
-                          'Recovery activity',
-                          style: Theme.of(
-                            context,
-                          ).textTheme.titleLarge?.copyWith(fontWeight: .w800),
+                        _SectionHeading(
+                          title: 'Your focus, in view',
+                          subtitle:
+                              'A private year of activity, saved on this device.',
                         ),
-                        const SizedBox(height: 8),
-                        Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: ShapeDecoration(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.surfaceContainer,
-                            shape: RoundedSuperellipseBorder(
-                              borderRadius: BorderRadius.circular(24),
-                            ),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: .start,
-                            children: [
-                              AttemptHeatmap(counts: overview.attempts),
-                              const SizedBox(height: 12),
-                              Text(
-                                'Every square is a locally stored blocked launch. No activity leaves this device.',
-                                style: Theme.of(context).textTheme.bodySmall
-                                    ?.copyWith(
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.onSurfaceVariant,
-                                    ),
-                              ),
-                            ],
-                          ),
+                        const SizedBox(height: 14),
+                        _ActivityCard(
+                          attempts: overview.attempts,
+                          totalAttempts: blockedOpens,
+                          selectedDate: _selectedActivityDate,
+                          selectedCount: _selectedActivityCount,
+                          onDaySelected: (date, count) {
+                            setState(() {
+                              _selectedActivityDate = date;
+                              _selectedActivityCount = count;
+                            });
+                          },
                         ),
-                        const SizedBox(height: 28),
-                        Text(
-                          'Your rules',
-                          style: Theme.of(
-                            context,
-                          ).textTheme.titleLarge?.copyWith(fontWeight: .w800),
+                        const SizedBox(height: 30),
+                        _SectionHeading(
+                          title: 'Focus plans',
+                          subtitle: overview.rules.isEmpty
+                              ? 'Build a routine that protects your attention.'
+                              : '${overview.rules.length} ${overview.rules.length == 1 ? 'plan' : 'plans'} configured',
+                          trailing: overview.rules.isNotEmpty
+                              ? TextButton.icon(
+                                  onPressed: () => _editRule(),
+                                  icon: const Icon(Icons.add_rounded),
+                                  label: const Text('Add'),
+                                )
+                              : null,
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 14),
                         if (overview.rules.isEmpty)
-                          const Card(
-                            child: Padding(
-                              padding: EdgeInsets.all(16),
-                              child: Text(
-                                'No rules yet. Create one to block distracting apps during a recurring time window.',
-                              ),
-                            ),
-                          ),
+                          _EmptyRulesCard(onCreateRule: () => _editRule()),
                         for (final entry in overview.rules.indexed) ...[
                           _RuleCard(
                             rule: entry.$2,
@@ -386,7 +303,7 @@ class _LockInPageState extends State<LockInPage> with WidgetsBindingObserver {
                           if (entry.$1 < overview.rules.length - 1)
                             SizedBox(
                               key: ValueKey('lock-in-rule-gap-${entry.$2.id}'),
-                              height: 12,
+                              height: 10,
                             ),
                         ],
                       ],
@@ -435,7 +352,7 @@ class _PermissionCard extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Text(
-              'App blocking is off',
+              'Finish Android setup',
               style: Theme.of(
                 context,
               ).textTheme.headlineSmall?.copyWith(fontWeight: .w800),
@@ -445,14 +362,16 @@ class _PermissionCard extends StatelessWidget {
               restricted
                   ? 'Android has restricted the required app-blocking permission.'
                   : setupStarted
-                  ? 'One or more required Android permissions are still off. Enable Accessibility Service and Alarms & reminders, then return here to finish setup.'
-                  : 'You have not enabled the required Android permissions yet. Lock In needs Accessibility Service to detect selected apps and Alarms & reminders to enforce your schedules.',
+                  ? 'Lock In still needs a system setting. Android will open whichever is missing: Accessibility Service to detect selected apps, or Alarms & reminders to run schedules.'
+                  : 'Lock In uses Accessibility Service to detect selected apps and Alarms & reminders to run schedules. We’ll open the first setting that needs attention.',
             ),
             const SizedBox(height: 12),
             FilledButton(
               onPressed: restricted ? null : onGrant,
               child: Text(
-                setupStarted ? 'Continue setup' : 'Allow app blocking',
+                setupStarted
+                    ? 'Review Android settings'
+                    : 'Set up focus blocking',
               ),
             ),
           ],
@@ -462,70 +381,422 @@ class _PermissionCard extends StatelessWidget {
   }
 }
 
-class _FocusStatCard extends StatelessWidget {
-  const _FocusStatCard({
-    required this.value,
-    required this.label,
-    required this.detail,
-    required this.color,
-    required this.foreground,
+class _DashboardHero extends StatelessWidget {
+  const _DashboardHero({
+    required this.activeRules,
+    required this.protectedApps,
   });
 
-  final int value;
-  final String label;
-  final String detail;
-  final Color color;
-  final Color foreground;
+  final int activeRules;
+  final int protectedApps;
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      label: '$value $label. $detail.',
+    final colors = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    final hasPlan = activeRules > 0;
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: .96, end: 1),
+      duration: const Duration(milliseconds: 520),
+      curve: Curves.easeOutCubic,
+      builder: (context, scale, child) => Transform.scale(
+        scale: scale,
+        alignment: Alignment.topCenter,
+        child: child,
+      ),
       child: Container(
-        constraints: const BoxConstraints(minHeight: 144),
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(24),
         decoration: ShapeDecoration(
-          color: color,
+          color: colors.primaryContainer,
           shape: RoundedSuperellipseBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(32),
           ),
         ),
         child: Column(
-          crossAxisAlignment: .start,
-          mainAxisAlignment: .spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              '$value',
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                color: foreground,
-                fontWeight: .w800,
-              ),
-            ),
-            Column(
-              crossAxisAlignment: .start,
+            Row(
               children: [
-                Text(
-                  label,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    color: foreground,
-                    fontWeight: .w700,
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: colors.primary.withValues(alpha: .12),
+                    borderRadius: BorderRadius.circular(18),
+                  ),
+                  child: Icon(
+                    Icons.hourglass_bottom_rounded,
+                    color: colors.primary,
                   ),
                 ),
-                const SizedBox(height: 2),
-                Text(
-                  detail,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: foreground.withValues(alpha: .72),
+                const Spacer(),
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 280),
+                  child: _StatusPill(
+                    key: ValueKey(hasPlan),
+                    label: hasPlan ? 'READY TO FOCUS' : 'YOUR SPACE',
+                    icon: hasPlan
+                        ? Icons.check_circle_rounded
+                        : Icons.spa_rounded,
                   ),
                 ),
               ],
             ),
+            const SizedBox(height: 22),
+            Text(
+              hasPlan
+                  ? 'Make room for\nwhat matters.'
+                  : 'Make space for\nwhat matters.',
+              style: textTheme.headlineMedium?.copyWith(
+                color: colors.onPrimaryContainer,
+                fontWeight: FontWeight.w700,
+                height: 1.06,
+                letterSpacing: -.7,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              hasPlan
+                  ? 'Your focus plans are ready when you are.'
+                  : 'Set a gentle boundary around the apps that pull you away.',
+              style: textTheme.bodyLarge?.copyWith(
+                color: colors.onPrimaryContainer.withValues(alpha: .78),
+              ),
+            ),
+            const SizedBox(height: 22),
+            Row(
+              children: [
+                _HeroMetric(
+                  icon: Icons.event_repeat_rounded,
+                  value: activeRules,
+                  label: 'enabled plans',
+                ),
+                const SizedBox(width: 20),
+                _HeroMetric(
+                  icon: Icons.shield_outlined,
+                  value: protectedApps,
+                  label: 'apps protected',
+                ),
+                const Spacer(),
+              ],
+            ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _StatusPill extends StatelessWidget {
+  const _StatusPill({super.key, required this.label, required this.icon});
+
+  final String label;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 8),
+      decoration: ShapeDecoration(
+        color: colors.surface.withValues(alpha: .62),
+        shape: const StadiumBorder(),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 15, color: colors.primary),
+          const SizedBox(width: 6),
+          Text(
+            label,
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+              color: colors.onSurface,
+              fontWeight: FontWeight.w700,
+              letterSpacing: .35,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _HeroMetric extends StatelessWidget {
+  const _HeroMetric({
+    required this.icon,
+    required this.value,
+    required this.label,
+  });
+
+  final IconData icon;
+  final int value;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    return Semantics(
+      label: '$value $label',
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            size: 18,
+            color: colors.onPrimaryContainer.withValues(alpha: .72),
+          ),
+          const SizedBox(width: 8),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TweenAnimationBuilder<double>(
+                tween: Tween(begin: 0, end: value.toDouble()),
+                duration: const Duration(milliseconds: 700),
+                curve: Curves.easeOutCubic,
+                builder: (context, current, _) => Text(
+                  current.round().toString(),
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: colors.onPrimaryContainer,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              Text(
+                label,
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: colors.onPrimaryContainer.withValues(alpha: .72),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SectionHeading extends StatelessWidget {
+  const _SectionHeading({
+    required this.title,
+    required this.subtitle,
+    this.trailing,
+  });
+
+  final String title;
+  final String subtitle;
+  final Widget? trailing;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -.2,
+                ),
+              ),
+              const SizedBox(height: 3),
+              Text(
+                subtitle,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+        ),
+        ?trailing,
+      ],
+    );
+  }
+}
+
+class _ActivityCard extends StatelessWidget {
+  const _ActivityCard({
+    required this.attempts,
+    required this.totalAttempts,
+    required this.selectedDate,
+    required this.selectedCount,
+    required this.onDaySelected,
+  });
+
+  final Map<DateTime, int> attempts;
+  final int totalAttempts;
+  final DateTime? selectedDate;
+  final int? selectedCount;
+  final void Function(DateTime, int) onDaySelected;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    final localizations = MaterialLocalizations.of(context);
+    final selectionText = selectedDate == null
+        ? 'Tap a day to explore your activity'
+        : '${localizations.formatMediumDate(selectedDate!)} · ${selectedCount ?? 0} ${selectedCount == 1 ? 'blocked open' : 'blocked opens'}';
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOutCubicEmphasized,
+      padding: const EdgeInsets.fromLTRB(18, 18, 18, 16),
+      decoration: ShapeDecoration(
+        color: colors.surfaceContainerLow,
+        shape: RoundedSuperellipseBorder(
+          side: BorderSide(color: colors.outlineVariant.withValues(alpha: .55)),
+          borderRadius: BorderRadius.circular(28),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '$totalAttempts',
+                      style: Theme.of(context).textTheme.headlineMedium
+                          ?.copyWith(
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: -1,
+                          ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      'blocked opens in the last year',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: colors.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(Icons.insights_rounded, color: colors.primary),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Semantics(
+            label: 'Blocked app activity calendar',
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: AttemptHeatmap(
+                counts: attempts,
+                onDaySelected: onDaySelected,
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Icon(
+                Icons.swipe_rounded,
+                size: 16,
+                color: colors.onSurfaceVariant,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                'Swipe to explore the year',
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: colors.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 220),
+            child: Text(
+              selectionText,
+              key: ValueKey(selectionText),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(
+                context,
+              ).textTheme.labelMedium?.copyWith(color: colors.onSurfaceVariant),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text('Less', style: Theme.of(context).textTheme.labelSmall),
+              const SizedBox(width: 8),
+              for (final opacity in [.10, .28, .48, .7, 1.0]) ...[
+                Container(
+                  width: 12,
+                  height: 12,
+                  decoration: BoxDecoration(
+                    color: Color.lerp(
+                      colors.surfaceContainerHighest,
+                      colors.primary,
+                      opacity,
+                    ),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+                const SizedBox(width: 4),
+              ],
+              Text('More', style: Theme.of(context).textTheme.labelSmall),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _EmptyRulesCard extends StatelessWidget {
+  const _EmptyRulesCard({required this.onCreateRule});
+
+  final VoidCallback onCreateRule;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    return Container(
+      padding: const EdgeInsets.all(22),
+      decoration: ShapeDecoration(
+        color: colors.surfaceContainerLow,
+        shape: RoundedSuperellipseBorder(
+          side: BorderSide(color: colors.outlineVariant.withValues(alpha: .65)),
+          borderRadius: BorderRadius.circular(28),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(Icons.add_task_rounded, color: colors.primary, size: 28),
+          const SizedBox(height: 14),
+          Text(
+            'Start with one small boundary',
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            'Choose the apps and hours you want to keep clear for focused work.',
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: colors.onSurfaceVariant),
+          ),
+          const SizedBox(height: 18),
+          FilledButton.icon(
+            onPressed: onCreateRule,
+            icon: const Icon(Icons.add_rounded),
+            label: const Text('Create a focus plan'),
+          ),
+        ],
       ),
     );
   }

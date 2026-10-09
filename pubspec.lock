@@ -388,6 +388,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
+  contribution_heatmap:
+    dependency: transitive
+    description:
+      name: contribution_heatmap
+      sha256: c42f2f46b3e392801db39124bbc3efbc5a99eeb05a8f542c82aea7b16f1712ca
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.6.0"
   convert:
     dependency: transitive
     description:
