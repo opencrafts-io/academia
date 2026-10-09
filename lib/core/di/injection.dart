@@ -3,6 +3,8 @@ import 'package:core/config/flavor.dart';
 import 'package:agenda/agenda.dart';
 import 'package:database/database.dart';
 import 'package:billing/billing.dart';
+import 'package:leaderboard/leaderboard.dart' as leaderboard;
+import 'package:rewards/rewards.dart' as rewards;
 import 'package:ads/ads.dart';
 import 'package:analytics/analytics.dart';
 import 'package:academia/core/notifications/academia_notification_action_handler.dart';
@@ -37,6 +39,8 @@ void configureDependencies(GetIt getIt, FlavorConfig flavorConfig) {
         : const DisabledAnalyticsGateway(),
   );
   configureBillingDependencies(getIt);
+  leaderboard.configureLeaderboardDependencies(getIt);
+  rewards.configureRewardsDependencies(getIt);
   configureAdsDependencies(getIt);
   configureSettingsDependencies(getIt);
   configurePermissionsDependencies(

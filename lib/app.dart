@@ -18,6 +18,8 @@ import 'package:settings/settings.dart';
 import 'package:courses/courses.dart' as courses;
 import 'package:todos/todos.dart' as todos;
 import 'package:pomodoro/pomodoro.dart' as pomodoro;
+import 'package:rewards/rewards.dart' as rewards;
+import 'package:leaderboard/leaderboard.dart' as leaderboard;
 
 class Academia extends StatefulWidget {
   const Academia({super.key});
@@ -28,6 +30,7 @@ class Academia extends StatefulWidget {
 
 class _AcademiaState extends State<Academia> with WidgetsBindingObserver {
   bool _deferredServicesReady = false;
+  bool _appLaunchRewardSubmitted = false;
   SettingsCubit? _settingsCubit;
 
   @override
@@ -62,6 +65,23 @@ class _AcademiaState extends State<Academia> with WidgetsBindingObserver {
     if (state == AppLifecycleState.resumed && _deferredServicesReady) {
       unawaited(sl<courses.CourseReminderRefresher>().refresh());
     }
+  }
+
+  Future<void> _submitAppLaunchReward() async {
+    if (kIsWeb || defaultTargetPlatform != TargetPlatform.android) return;
+    if (_appLaunchRewardSubmitted) return;
+    _appLaunchRewardSubmitted = true;
+    final result = await sl<rewards.RecordAppLaunch>()();
+    result.fold(
+      (failure) => debugPrint(
+        'App launch activity was not recorded: ${failure.message}',
+      ),
+      (completion) {
+        // The server owns point totals and idempotency. An already-processed
+        // completion intentionally produces no reward feedback.
+        if (completion.alreadyProcessed) return;
+      },
+    );
   }
 
   @override
@@ -151,7 +171,7 @@ class _AcademiaState extends State<Academia> with WidgetsBindingObserver {
         BlocProvider(create: (context) => sl<courses.CourseCubit>()),
         BlocProvider(create: (context) => sl<InstitutionBloc>()),
         BlocProvider(create: (context) => sl<PermissionCubit>()),
-        BlocProvider(create: (context) => sl<LeaderboardBloc>()),
+        BlocProvider(create: (context) => sl<leaderboard.LeaderboardBloc>()),
       ],
       child: DynamicColorBuilder(
         builder: (lightScheme, darkScheme) => MultiBlocListener(
@@ -177,6 +197,9 @@ class _AcademiaState extends State<Academia> with WidgetsBindingObserver {
                 AppRouter.router.refresh();
                 if (state is AuthAuthenticated) {
                   context.read<FeedBloc>().add(CheckFeedLikeStatuses());
+                  unawaited(_submitAppLaunchReward());
+                } else if (state is AuthUnauthenticated) {
+                  _appLaunchRewardSubmitted = false;
                 }
               },
             ),
