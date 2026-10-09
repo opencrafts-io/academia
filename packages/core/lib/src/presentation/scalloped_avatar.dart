@@ -1,6 +1,6 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
+
+import 'm3e_shape_clipper.dart';
 
 class ScallopedAvatar extends StatelessWidget {
   const ScallopedAvatar({
@@ -10,6 +10,7 @@ class ScallopedAvatar extends StatelessWidget {
     this.radius = 24,
     this.scallops = 10,
     this.depth = 3,
+    this.roundness = 1.4,
   });
 
   final String label;
@@ -17,6 +18,7 @@ class ScallopedAvatar extends StatelessWidget {
   final double radius;
   final int scallops;
   final double depth;
+  final double roundness;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,12 @@ class ScallopedAvatar extends StatelessWidget {
       image: true,
       child: ExcludeSemantics(
         child: ClipPath(
-          clipper: _ScallopClipper(scallops: scallops, depth: depth),
+          clipper: M3EShapeClipper(
+            M3EShape.scalloped,
+            lobes: scallops,
+            depth: radius == 0 ? .12 : depth / radius,
+            roundness: roundness,
+          ),
           child: SizedBox.square(
             dimension: diameter,
             child: DecoratedBox(
@@ -52,55 +59,4 @@ class ScallopedAvatar extends StatelessWidget {
     size: radius * 1.15,
     color: colors.onPrimaryContainer,
   );
-}
-
-class _ScallopClipper extends CustomClipper<Path> {
-  const _ScallopClipper({required this.scallops, required this.depth});
-
-  final int scallops;
-  final double depth;
-
-  @override
-  Path getClip(Size size) {
-    final center = Offset(size.width / 2, size.height / 2);
-    final outerRadius = math.min(size.width, size.height) / 2;
-    final innerRadius = math.max(0, outerRadius - depth);
-    final path = Path();
-    final segment = math.pi / scallops;
-
-    for (var index = 0; index < scallops * 2; index++) {
-      final radius = index.isEven ? outerRadius : innerRadius;
-      final angle = -math.pi / 2 + segment * index;
-      final point = Offset(
-        center.dx + radius * math.cos(angle),
-        center.dy + radius * math.sin(angle),
-      );
-      if (index == 0) {
-        path.moveTo(point.dx, point.dy);
-      } else {
-        final previousAngle = -math.pi / 2 + segment * (index - 1);
-        final previousRadius = (index - 1).isEven ? outerRadius : innerRadius;
-        final previous = Offset(
-          center.dx + previousRadius * math.cos(previousAngle),
-          center.dy + previousRadius * math.sin(previousAngle),
-        );
-        final midpoint = Offset(
-          (previous.dx + point.dx) / 2,
-          (previous.dy + point.dy) / 2,
-        );
-        path.quadraticBezierTo(
-          previous.dx,
-          previous.dy,
-          midpoint.dx,
-          midpoint.dy,
-        );
-      }
-    }
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(covariant _ScallopClipper oldClipper) =>
-      oldClipper.scallops != scallops || oldClipper.depth != depth;
 }

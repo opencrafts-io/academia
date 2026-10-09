@@ -304,10 +304,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   IconButton(
                     onPressed: () => ProfileRoute().push(context),
-                    icon: const UserAvatar(
-                      scallopDepth: 4,
-                      numberOfScallops: 8,
-                    ),
+                    icon: const UserAvatar(shape: core.M3EShape.bun),
                     tooltip: 'Profile',
                   ),
                 ],

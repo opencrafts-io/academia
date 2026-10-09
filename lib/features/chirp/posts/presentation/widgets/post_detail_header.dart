@@ -33,7 +33,7 @@ class PostDetailHeader extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  ChirpUserAvatar(avatarUrl: avatarUrl, numberOfScallops: 6),
+                  ChirpUserAvatar(avatarUrl: avatarUrl),
                   const SizedBox(width: 8),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

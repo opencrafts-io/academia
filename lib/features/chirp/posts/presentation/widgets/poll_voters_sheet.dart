@@ -359,7 +359,7 @@ class _VoterTile extends StatelessWidget {
           username = state.user.username ?? username;
         }
         return ListTile(
-          leading: ChirpUserAvatar(avatarUrl: avatarUrl, numberOfScallops: 6),
+          leading: ChirpUserAvatar(avatarUrl: avatarUrl),
           title: Text(username, maxLines: 1, overflow: TextOverflow.ellipsis),
           subtitle: Text(
             subtitle,
