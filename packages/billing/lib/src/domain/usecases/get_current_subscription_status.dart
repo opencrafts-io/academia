@@ -16,4 +16,7 @@ class GetCurrentSubscriptionStatus
   ) {
     return _repository.getCurrentStatus();
   }
+
+  Future<Either<Failure, domain.SubscriptionStatus>> refresh() =>
+      _repository.refreshCurrentStatus();
 }

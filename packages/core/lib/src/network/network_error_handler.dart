@@ -24,18 +24,30 @@ mixin DioErrorHandler {
         );
 
       case DioExceptionType.badResponse:
-        // Extracts the server's custom error message if available, otherwise defaults
-        final serverMessage =
-            de.response?.data?['message'] ?? de.response?.data?['error'];
         final statusCode = de.response?.statusCode;
+        final body = de.response?.data;
+        final envelope = body is Map ? body['error'] : null;
+        final nested = envelope is Map ? envelope : null;
+        final legacyMessage = body is Map
+            ? (body['message'] ??
+                  (body['error'] is String ? body['error'] : null))
+            : null;
+        final message = nested?['message'] ?? legacyMessage;
+        final code = nested?['code']?.toString();
+        final details = nested?['details'];
+        final metadata = details is Map
+            ? Map<String, dynamic>.from(details)
+            : null;
 
         return left(
           ServerFailure(
             message:
-                serverMessage?.toString() ??
+                message?.toString() ??
                 "Server error ($statusCode). Please try again.",
             error: de,
             statusCode: statusCode,
+            code: code,
+            metadata: metadata,
           ),
         );
 

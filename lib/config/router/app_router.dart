@@ -17,6 +17,7 @@ import 'package:settings/settings.dart' as settings;
 import 'package:courses/courses.dart' as courses;
 import 'package:todos/todos.dart' as todos;
 import 'package:pomodoro/pomodoro.dart' as pomodoro;
+import 'package:study_tools/study_tools.dart' as study_tools;
 
 class AppRouter {
   static final GlobalKey<NavigatorState> globalNavigatorKey =
@@ -47,6 +48,7 @@ class AppRouter {
       ...courses.routes,
       ...todos.routes,
       ...pomodoro.routes,
+      ...study_tools.routes,
       GoRoute(
         path: '/rewards',
         redirect: (context, state) => '/achievements',

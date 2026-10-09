@@ -1,6 +1,7 @@
 import 'package:core/config/flavor.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/core/network/network.dart';
+import 'package:academia/config/router/router.dart';
 import 'package:academia/database/database.dart';
 import 'package:academia/features/auth/data/data.dart';
 import 'package:academia/features/features.dart';
@@ -14,6 +15,8 @@ import 'package:get_it/get_it.dart';
 import 'package:lock_in/lock_in.dart';
 import 'package:courses/courses.dart' as courses;
 import 'package:academia/core/institution/verisafe_institution_lookup.dart';
+import 'package:study_tools/study_tools.dart' as study_tools;
+import 'package:billing/billing.dart' as billing;
 import 'package:academia/core/notifications/course_schedule_reminder_service.dart';
 import 'package:notifications/notifications.dart';
 import 'package:permissions/permissions.dart';
@@ -603,6 +606,48 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
       sl<InstitutionRemoteDatasource>(),
     ),
   );
+  study_tools.configureStudyToolsDependencies(
+    sl,
+    flavor,
+    accountId: () {
+      final state = sl<ProfileBloc>().state;
+      return state is ProfileLoadedState ? state.profile.id : null;
+    },
+  );
+  study_tools.StudyToolsHost.loadCourses = () async {
+    final cubit = sl<courses.CourseCubit>();
+    await cubit.loadActive();
+    final options = cubit.state.courses
+        .map(
+          (course) => study_tools.StudyCourseOption(
+            id: course.serverId ?? 'local:${course.id}',
+            title: course.title,
+            professorId: course.serverId,
+          ),
+        )
+        .toList(growable: false);
+    await cubit.close();
+    return options;
+  };
+  study_tools.StudyToolsHost.openPaywall = (context) async {
+    await const billing.PaywallRoute(featureName: 'Study Tools').push(context);
+    await sl<billing.BillingService>().refreshSubscriptionStatus();
+  };
+  courses.CourseHost.openMaterials = (context, course) async {
+    await study_tools.StudyToolsRoute(
+      courseId: course.serverId,
+      courseLabel: course.title,
+      courseLocalId: course.id,
+    ).push(context);
+  };
+  study_tools.StudyToolsHost.openPodcastPlayer = (podcast) {
+    AppRouter.router.push(
+      study_tools.StudyPodcastPlayerRoute(
+        materialId: podcast.noteId,
+        episodeKey: study_tools.PodcastLocalStore.episodeKey(podcast),
+      ).location,
+    );
+  };
   sl.registerLazySingleton<courses.CourseReminderRefresher>(
     () => CourseScheduleReminderService(
       repository: sl<courses.CourseRepository>(),

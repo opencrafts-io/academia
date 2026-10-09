@@ -32,22 +32,40 @@ class SensitiveRequestInspector extends Interceptor {
       return;
     }
 
+    if (_isQuestionResponse(response.requestOptions)) {
+      _inspector.onResponse(
+        Response<dynamic>(
+          requestOptions: response.requestOptions,
+          statusCode: response.statusCode,
+          statusMessage: response.statusMessage,
+          headers: response.headers,
+          data: const {'redacted': true},
+        ),
+        ResponseInterceptorHandler(),
+      );
+      handler.next(response);
+      return;
+    }
+
     _inspector.onResponse(response, handler);
   }
 
   @override
-  void onError(DioException error, ErrorInterceptorHandler handler) {
-    final wasRecorded = _recordedRequests.remove(error.requestOptions);
-    if (!wasRecorded && _isSensitive(error.requestOptions)) {
-      handler.next(error);
+  void onError(DioException err, ErrorInterceptorHandler handler) {
+    final wasRecorded = _recordedRequests.remove(err.requestOptions);
+    if (!wasRecorded && _isSensitive(err.requestOptions)) {
+      handler.next(err);
       return;
     }
 
-    _inspector.onError(error, handler);
+    _inspector.onError(err, handler);
   }
 
   bool _isSensitive(RequestOptions options) =>
       options.extra['sensitive'] == true ||
       options.extra['authRefreshAttempted'] == true ||
       options.extra['authRetried'] == true;
+
+  bool _isQuestionResponse(RequestOptions options) =>
+      options.path.endsWith('/questions/');
 }
