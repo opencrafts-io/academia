@@ -21,7 +21,6 @@ class LockInPage extends StatefulWidget {
 
 class _LockInPageState extends State<LockInPage> with WidgetsBindingObserver {
   late Future<_LockInOverview> _overview;
-  var _permissionSetupStarted = false;
   DateTime? _selectedActivityDate;
   int? _selectedActivityCount;
 
@@ -69,13 +68,11 @@ class _LockInPageState extends State<LockInPage> with WidgetsBindingObserver {
     await overview;
   }
 
-  Future<void> _requestPermission() async {
-    final consent = await _requestAccessibilityConsent();
-    if (consent != true || !mounted) return;
-
-    setState(() {
-      _permissionSetupStarted = true;
-    });
+  Future<void> _requestPermission(BlockPermissionStatus status) async {
+    if (status != BlockPermissionStatus.exactAlarmDenied) {
+      final consent = await _requestAccessibilityConsent();
+      if (consent != true || !mounted) return;
+    }
     await widget.service.requestPermission();
     if (mounted) await _refresh();
   }
@@ -250,8 +247,8 @@ class _LockInPageState extends State<LockInPage> with WidgetsBindingObserver {
                       if (overview.permission != BlockPermissionStatus.granted)
                         _PermissionCard(
                           status: overview.permission!,
-                          setupStarted: _permissionSetupStarted,
-                          onGrant: _requestPermission,
+                          onGrant: () =>
+                              _requestPermission(overview.permission!),
                         )
                       else ...[
                         _DashboardHero(
@@ -320,19 +317,37 @@ class _LockInPageState extends State<LockInPage> with WidgetsBindingObserver {
 }
 
 class _PermissionCard extends StatelessWidget {
-  const _PermissionCard({
-    required this.status,
-    required this.setupStarted,
-    required this.onGrant,
-  });
+  const _PermissionCard({required this.status, required this.onGrant});
 
   final BlockPermissionStatus status;
-  final bool setupStarted;
   final VoidCallback onGrant;
 
   @override
   Widget build(BuildContext context) {
     final restricted = status == BlockPermissionStatus.restricted;
+    final title = switch (status) {
+      BlockPermissionStatus.accessibilityDenied =>
+        'Accessibility access is off',
+      BlockPermissionStatus.exactAlarmDenied => 'Alarms & reminders are off',
+      _ => 'Finish Android setup',
+    };
+    final description = switch (status) {
+      BlockPermissionStatus.restricted =>
+        'Android has restricted the required app-blocking permission.',
+      BlockPermissionStatus.accessibilityDenied =>
+        'Accessibility Service lets Lock In detect which selected apps are '
+            'open so it can apply your blocking rules.',
+      BlockPermissionStatus.exactAlarmDenied =>
+        'Allow Alarms & reminders so your focus plans can start and end on '
+            'schedule.',
+      _ => 'Lock In needs Android permission to apply your app-blocking rules.',
+    };
+    final buttonLabel = switch (status) {
+      BlockPermissionStatus.accessibilityDenied =>
+        'Open Accessibility settings',
+      BlockPermissionStatus.exactAlarmDenied => 'Open Alarms & reminders',
+      _ => 'Set up focus blocking',
+    };
     return Container(
       decoration: ShapeDecoration(
         color: Theme.of(context).colorScheme.primaryContainer,
@@ -352,27 +367,17 @@ class _PermissionCard extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Text(
-              'Finish Android setup',
+              title,
               style: Theme.of(
                 context,
               ).textTheme.headlineSmall?.copyWith(fontWeight: .w800),
             ),
             const SizedBox(height: 8),
-            Text(
-              restricted
-                  ? 'Android has restricted the required app-blocking permission.'
-                  : setupStarted
-                  ? 'Lock In still needs a system setting. Android will open whichever is missing: Accessibility Service to detect selected apps, or Alarms & reminders to run schedules.'
-                  : 'Lock In uses Accessibility Service to detect selected apps and Alarms & reminders to run schedules. We’ll open the first setting that needs attention.',
-            ),
+            Text(description),
             const SizedBox(height: 12),
             FilledButton(
               onPressed: restricted ? null : onGrant,
-              child: Text(
-                setupStarted
-                    ? 'Review Android settings'
-                    : 'Set up focus blocking',
-              ),
+              child: Text(buttonLabel),
             ),
           ],
         ),

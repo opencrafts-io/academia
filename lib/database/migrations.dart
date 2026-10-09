@@ -40,7 +40,16 @@ extension AppDatabaseExtension on AppDataBase {
   }
 
   Future<void> migrate22To23(Migrator m) async {
-    await m.createTable(semester);
+    await m.database.customStatement('''
+      CREATE TABLE IF NOT EXISTS "semester" (
+        "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        "name" TEXT NOT NULL,
+        "description" TEXT,
+        "institution_id" INTEGER REFERENCES "institution" ("institution_id"),
+        "start_date" INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        "end_date" INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP
+      );
+    ''');
   }
 
   Future<void> migrate23To24(Migrator m) async {
@@ -159,6 +168,21 @@ extension AppDatabaseExtension on AppDataBase {
 
   Future<void> migrate39To40(Migrator m) async {
     await m.addColumn(posts, posts.poll);
+  }
+
+  Future<void> migrate40To41(Migrator m) async {
+    // Remove retired course tables first because they referenced semester.
+    for (final table in [
+      'timetable_entry',
+      'course',
+      'timetable',
+      'streak_milestone',
+      'streak_activity',
+      'leaderboard_rank',
+      'semester',
+    ]) {
+      await m.database.customStatement('DROP TABLE IF EXISTS "$table";');
+    }
   }
 
   Future<void> _createRetiredCourseTables(Migrator m) async {

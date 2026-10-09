@@ -6,7 +6,13 @@ import 'package:injectable/injectable.dart';
 
 import '../domain/lock_rule.dart';
 
-enum BlockPermissionStatus { granted, denied, restricted }
+enum BlockPermissionStatus {
+  granted,
+  denied,
+  accessibilityDenied,
+  exactAlarmDenied,
+  restricted,
+}
 
 class BlockedAttemptEvent {
   const BlockedAttemptEvent({
@@ -117,6 +123,10 @@ class AppBlockerGateway implements AppBlockingGateway {
     return switch (status) {
       BlockerPermissionStatus.granted => BlockPermissionStatus.granted,
       BlockerPermissionStatus.denied => BlockPermissionStatus.denied,
+      BlockerPermissionStatus.accessibilityDenied =>
+        BlockPermissionStatus.accessibilityDenied,
+      BlockerPermissionStatus.exactAlarmDenied =>
+        BlockPermissionStatus.exactAlarmDenied,
       BlockerPermissionStatus.restricted => BlockPermissionStatus.restricted,
     };
   }

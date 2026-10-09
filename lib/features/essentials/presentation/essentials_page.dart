@@ -39,13 +39,6 @@ class _EssentialItem {
 class _EssentialsPageState extends State<EssentialsPage> {
   late final List<_EssentialItem> essentialItems = <_EssentialItem>[
     _EssentialItem(
-      title: "Semesters",
-      ontap: () {
-        SemestersPageRoute().push(context);
-      },
-      iconPath: 'packages/agenda/assets/icons/calendar.png',
-    ),
-    _EssentialItem(
       title: "Courses",
       ontap: () => const courses.CourseListRoute().push(context),
       iconPath: Assets.icons.book.keyName,

@@ -2,9 +2,6 @@ import 'package:academia/database/tables/agenda_event.dart';
 import 'package:academia/database/tables/tables.dart';
 export 'package:academia/database/tables/tables.dart';
 import 'package:academia/features/profile/data/models/user_profile.dart';
-import 'package:academia/features/semester/data/models/semester.dart';
-import 'package:academia/features/streaks/data/streak_activity.dart';
-import 'package:academia/features/streaks/data/streak_milestone.dart';
 import 'package:academia/features/sherehe/data/data.dart';
 
 import 'package:drift/drift.dart';
@@ -50,10 +47,6 @@ part 'database.g.dart';
     InstitutionProfiles,
     InstitutionFeeTransactions,
 
-    /************************************************************
-    *                           SEMESTER
-    ************************************************************/
-    Semester,
     // Exam Timetable
     ExamTimetables,
 
@@ -66,15 +59,6 @@ part 'database.g.dart';
     Communities,
     // Memberships
     ChirpCommunityMemberships,
-
-    /**************************************************************
-    *               LEADERBOARD FEATURE DATA MODELS
-    ***************************************************************/
-    LeaderboardRank,
-
-    // ---------------------- STREAKS -----------------------------
-    StreakActivity,
-    StreakMilestone,
   ],
 )
 class AppDataBase extends _$AppDataBase {
@@ -85,7 +69,7 @@ class AppDataBase extends _$AppDataBase {
   AppDataBase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 40;
+  int get schemaVersion => 41;
 
   @override
   MigrationStrategy get migration {
@@ -174,6 +158,9 @@ class AppDataBase extends _$AppDataBase {
               break;
             case 39:
               await migrate39To40(m);
+              break;
+            case 40:
+              await migrate40To41(m);
               break;
           }
         }

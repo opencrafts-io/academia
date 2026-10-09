@@ -1,6 +1,6 @@
 import 'package:academia/core/core.dart';
+import 'package:academia/core/integration/splash_launch_page.dart';
 import 'package:academia/features/institution/institution.dart';
-import 'package:academia/features/semester/semester.dart';
 import 'package:academia/injection_container.dart';
 import 'package:academia/core/integration/agenda_calendar/agenda_home_page.dart';
 import 'package:agenda/agenda.dart';
@@ -31,7 +31,7 @@ final GlobalKey<NavigatorState> shellNavigatorKey = GlobalKey<NavigatorState>();
 class SplashScreenRoute extends GoRouteData with $SplashScreenRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return SplashScreen();
+    return const SplashLaunchPage();
   }
 }
 

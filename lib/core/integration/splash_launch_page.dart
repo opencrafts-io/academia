@@ -14,14 +14,14 @@ import 'package:settings/settings.dart' as settings;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:splash/splash.dart';
 
-class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+class SplashLaunchPage extends StatefulWidget {
+  const SplashLaunchPage({super.key});
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  State<SplashLaunchPage> createState() => _SplashLaunchPageState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashLaunchPageState extends State<SplashLaunchPage> {
   static const _launchCountKey = 'splash_launch_tip_count';
   static const _cachedConfigurationKey = 'splash_launch_tips_payload';
 
