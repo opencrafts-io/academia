@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:analytics/analytics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/entities/agenda_event.dart';
@@ -15,6 +16,7 @@ class AgendaCubit extends Cubit<AgendaState> {
     required CreateAgendaEvent createAgendaEvent,
     required UpdateAgendaEvent updateAgendaEvent,
     required DeleteAgendaEvent deleteAgendaEvent,
+    this.analyticsTracker,
   }) : _listAgendaEvents = listAgendaEvents,
        _createAgendaEvent = createAgendaEvent,
        _updateAgendaEvent = updateAgendaEvent,
@@ -25,6 +27,21 @@ class AgendaCubit extends Cubit<AgendaState> {
   final CreateAgendaEvent _createAgendaEvent;
   final UpdateAgendaEvent _updateAgendaEvent;
   final DeleteAgendaEvent _deleteAgendaEvent;
+  final AnalyticsTracker? analyticsTracker;
+
+  void _track(AnalyticsFeatureAction action) {
+    final tracker = analyticsTracker;
+    if (tracker != null) {
+      unawaited(
+        tracker.track(
+          AnalyticsEvent.featureAction(
+            featurePackage: AnalyticsFeaturePackage.agenda,
+            action: action,
+          ),
+        ),
+      );
+    }
+  }
 
   Future<void> loadRange({
     required DateTime startDate,
@@ -80,6 +97,7 @@ class AgendaCubit extends Cubit<AgendaState> {
         return false;
       },
       (event) {
+        _track(AnalyticsFeatureAction.eventCreated);
         emit(
           state.copyWith(
             isSaving: false,
@@ -104,6 +122,7 @@ class AgendaCubit extends Cubit<AgendaState> {
         return false;
       },
       (event) {
+        _track(AnalyticsFeatureAction.eventUpdated);
         emit(
           state.copyWith(
             isSaving: false,
@@ -128,6 +147,7 @@ class AgendaCubit extends Cubit<AgendaState> {
         return false;
       },
       (_) {
+        _track(AnalyticsFeatureAction.eventDeleted);
         emit(
           state.copyWith(
             isSaving: false,

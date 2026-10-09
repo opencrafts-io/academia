@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:analytics/analytics.dart';
 import 'package:core/core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:todos/todos.dart';
@@ -12,6 +15,7 @@ class TodoListCubit extends SafeCubit<TodoListState> {
   final SyncTodoLists syncTodoListsUseCase;
   final GetDefaultTodoListUsecase getDefaultTodoListUsecase;
   final MarkTodoListModified markTodoListModifiedUseCase;
+  final AnalyticsTracker? analyticsTracker;
 
   TodoListCubit({
     required this.getTodoListsUseCase,
@@ -21,8 +25,23 @@ class TodoListCubit extends SafeCubit<TodoListState> {
     required this.syncTodoListsUseCase,
     required this.getDefaultTodoListUsecase,
     required this.markTodoListModifiedUseCase,
+    this.analyticsTracker,
   }) : super(const TodoListState.initial()) {
     _init();
+  }
+
+  void _track(AnalyticsFeatureAction action) {
+    final tracker = analyticsTracker;
+    if (tracker != null) {
+      unawaited(
+        tracker.track(
+          AnalyticsEvent.featureAction(
+            featurePackage: AnalyticsFeaturePackage.todos,
+            action: action,
+          ),
+        ),
+      );
+    }
   }
 
   Future<void> _init() async {
@@ -116,6 +135,7 @@ class TodoListCubit extends SafeCubit<TodoListState> {
     final result = await createTodoListUseCase(todoList);
 
     result.fold((failure) => null, (newTodoList) {
+      _track(AnalyticsFeatureAction.taskListCreated);
       final latestState = state.mapOrNull(success: (s) => s);
       if (latestState == null) return;
 
@@ -182,6 +202,7 @@ class TodoListCubit extends SafeCubit<TodoListState> {
         emit(currentState);
       },
       (updated) {
+        _track(AnalyticsFeatureAction.taskListUpdated);
         final latestState = state.mapOrNull(success: (s) => s);
         if (latestState == null) return;
         final syncedLists = latestState.todoLists.map((existing) {
@@ -206,6 +227,7 @@ class TodoListCubit extends SafeCubit<TodoListState> {
 
     try {
       await deleteTodoListUseCase(todoListId);
+      _track(AnalyticsFeatureAction.taskListDeleted);
     } catch (e) {
       lists.add(deletedList);
       emit(currentState.copyWith(todoLists: lists));

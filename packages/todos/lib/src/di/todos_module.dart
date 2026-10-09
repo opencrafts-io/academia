@@ -1,4 +1,5 @@
 import 'package:database/daos/daos.dart';
+import 'package:analytics/analytics.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:todos/src/data/datasource/drift_todo_local_store.dart';
@@ -34,6 +35,7 @@ void configureTodosDependencies(GetIt getIt) {
       moveItemUseCase: getIt<MoveTodoItem>(),
       syncItemsUseCase: getIt<SyncTodoItems>(),
       addFocusedTimeUseCase: getIt<AddFocusedTimeToTodoItem>(),
+      analyticsTracker: getIt<AnalyticsTracker>(),
     ),
   );
 }

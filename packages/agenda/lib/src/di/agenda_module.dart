@@ -1,5 +1,6 @@
 import 'package:core/config/flavor.dart';
 import 'package:core/core.dart';
+import 'package:analytics/analytics.dart';
 import 'package:get_it/get_it.dart';
 
 import '../data/datasources/agenda_api_paths.dart';
@@ -40,6 +41,7 @@ void configureAgendaDependencies(GetIt getIt) {
       createAgendaEvent: getIt<CreateAgendaEvent>(),
       updateAgendaEvent: getIt<UpdateAgendaEvent>(),
       deleteAgendaEvent: getIt<DeleteAgendaEvent>(),
+      analyticsTracker: getIt<AnalyticsTracker>(),
     ),
   );
 }

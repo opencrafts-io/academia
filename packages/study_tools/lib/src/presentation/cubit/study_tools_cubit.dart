@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:core/core.dart';
+import 'package:analytics/analytics.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,7 +40,12 @@ abstract class StudyToolsState with _$StudyToolsState {
 
 class StudyToolsCubit extends Cubit<StudyToolsState>
     with WidgetsBindingObserver {
-  StudyToolsCubit(this.repository, {this.podcastStore, this.audioHandler})
+  StudyToolsCubit(
+    this.repository, {
+    this.podcastStore,
+    this.audioHandler,
+    this.analyticsTracker,
+  })
     : super(const StudyToolsState()) {
     WidgetsBinding.instance.addObserver(this);
     _connectivitySubscription = Connectivity().onConnectivityChanged.listen((
@@ -55,11 +61,26 @@ class StudyToolsCubit extends Cubit<StudyToolsState>
   final StudyToolsRepository repository;
   final PodcastLocalStore? podcastStore;
   final PodcastAudioHandler? audioHandler;
+  final AnalyticsTracker? analyticsTracker;
   final Map<int, Timer> _timers = {};
   final Set<int> _polling = {};
   late final StreamSubscription<List<ConnectivityResult>>
   _connectivitySubscription;
   bool _hasLoadedMaterials = false;
+
+  void _track(AnalyticsFeatureAction action) {
+    final tracker = analyticsTracker;
+    if (tracker != null) {
+      unawaited(
+        tracker.track(
+          AnalyticsEvent.featureAction(
+            featurePackage: AnalyticsFeaturePackage.studyTools,
+            action: action,
+          ),
+        ),
+      );
+    }
+  }
 
   Future<void> loadMaterials({bool force = false}) async {
     if (_hasLoadedMaterials && !force) {
@@ -115,6 +136,7 @@ class StudyToolsCubit extends Cubit<StudyToolsState>
         ),
       ),
       (material) {
+        _track(AnalyticsFeatureAction.materialOpened);
         emit(
           state.copyWith(
             status: StudyLoadStatus.loaded,
@@ -148,14 +170,17 @@ class StudyToolsCubit extends Cubit<StudyToolsState>
           errorCode: _failureCode(failure),
         ),
       ),
-      (material) => emit(
-        state.copyWith(
-          isUploading: false,
-          selectedMaterial: material,
-          error: null,
-          errorCode: null,
-        ),
-      ),
+      (material) {
+        _track(AnalyticsFeatureAction.materialUploaded);
+        emit(
+          state.copyWith(
+            isUploading: false,
+            selectedMaterial: material,
+            error: null,
+            errorCode: null,
+          ),
+        );
+      },
     );
   }
 
@@ -193,6 +218,7 @@ class StudyToolsCubit extends Cubit<StudyToolsState>
         );
       },
       (jobId) async {
+        _track(AnalyticsFeatureAction.questionGenerationStarted);
         await repository.saveJob(
           material.id,
           jobId,
@@ -291,6 +317,7 @@ class StudyToolsCubit extends Cubit<StudyToolsState>
         );
       },
       (jobId) async {
+        _track(AnalyticsFeatureAction.podcastGenerationStarted);
         await repository.saveJob(
           material.id,
           jobId,
@@ -329,6 +356,7 @@ class StudyToolsCubit extends Cubit<StudyToolsState>
         ),
       ),
       (sets) {
+        _track(AnalyticsFeatureAction.practiceOpened);
         final newestFirst = [...sets]
           ..sort((a, b) => b.generatedAt.compareTo(a.generatedAt));
         emit(
@@ -356,6 +384,7 @@ class StudyToolsCubit extends Cubit<StudyToolsState>
         return false;
       },
       (_) async {
+        _track(AnalyticsFeatureAction.materialDeleted);
         _timers.remove(id)?.cancel();
         String? cleanupFailure;
         try {

@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:analytics/analytics.dart';
 import 'package:core/core.dart';
 import 'package:todos/todos.dart';
 import 'package:injectable/injectable.dart';
@@ -9,6 +12,7 @@ class TodoTagCubit extends SafeCubit<TodoTagState> {
   final UpdateTodoTag updateTagUseCase;
   final DeleteTodoTag deleteTagUseCase;
   final SyncTodoTags syncTagsUseCase;
+  final AnalyticsTracker? analyticsTracker;
 
   TodoTagCubit({
     required this.getTagsUseCase,
@@ -16,8 +20,23 @@ class TodoTagCubit extends SafeCubit<TodoTagState> {
     required this.updateTagUseCase,
     required this.deleteTagUseCase,
     required this.syncTagsUseCase,
+    this.analyticsTracker,
   }) : super(const TodoTagState.initial()) {
     _init();
+  }
+
+  void _track(AnalyticsFeatureAction action) {
+    final tracker = analyticsTracker;
+    if (tracker != null) {
+      unawaited(
+        tracker.track(
+          AnalyticsEvent.featureAction(
+            featurePackage: AnalyticsFeaturePackage.todos,
+            action: action,
+          ),
+        ),
+      );
+    }
   }
 
   /// Kicks off initial tag load on cubit creation.
@@ -78,6 +97,7 @@ class TodoTagCubit extends SafeCubit<TodoTagState> {
     result.fold(
       (_) => null, // Optimistic entry stays; sync will reconcile later
       (newTag) {
+        _track(AnalyticsFeatureAction.tagCreated);
         final latest = state.mapOrNull(success: (s) => s);
         if (latest == null) return;
         final synced = latest.tags.map((existing) {
@@ -108,6 +128,7 @@ class TodoTagCubit extends SafeCubit<TodoTagState> {
     result.fold(
       (failure) => emit(currentState), // Roll back on failure
       (updated) {
+        _track(AnalyticsFeatureAction.tagUpdated);
         final latest = state.mapOrNull(success: (s) => s);
         if (latest == null) return;
         final synced = latest.tags.map((existing) {
@@ -139,7 +160,9 @@ class TodoTagCubit extends SafeCubit<TodoTagState> {
       if (deleted != null) {
         emit(currentState.copyWith(tags: [...currentState.tags, deleted]));
       }
-    }, (_) => null);
+    }, (_) {
+      _track(AnalyticsFeatureAction.tagDeleted);
+    });
   }
 
   /// Pushes all locally dirty or pending-deletion tags to the remote,

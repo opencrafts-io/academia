@@ -12,6 +12,7 @@ enum AnalyticsEventName {
   acquisitionStarted('acquisition_started'),
   activationCompleted('activation_completed'),
   learningActionCompleted('learning_action_completed'),
+  featureActionRecorded('feature_action_recorded'),
   paywallViewed('paywall_viewed'),
   checkoutStarted('checkout_started'),
   purchaseCompleted('purchase_completed'),
@@ -51,6 +52,43 @@ enum AnalyticsPermissionCapability {
 
 enum AnalyticsPermissionOutcome { granted, denied, permanentlyDenied }
 
+enum AnalyticsFeaturePackage {
+  studyTools('study_tools'),
+  todos('todos'),
+  agenda('agenda');
+
+  const AnalyticsFeaturePackage(this.wireName);
+  final String wireName;
+}
+
+enum AnalyticsFeatureAction {
+  materialOpened('material_opened'),
+  materialUploaded('material_uploaded'),
+  materialDeleted('material_deleted'),
+  questionGenerationStarted('question_generation_started'),
+  podcastGenerationStarted('podcast_generation_started'),
+  practiceOpened('practice_opened'),
+  podcastPlayStarted('podcast_play_started'),
+  podcastDownloadCompleted('podcast_download_completed'),
+  taskCreated('task_created'),
+  taskUpdated('task_updated'),
+  taskDeleted('task_deleted'),
+  taskCompleted('task_completed'),
+  taskReopened('task_reopened'),
+  taskListCreated('task_list_created'),
+  taskListUpdated('task_list_updated'),
+  taskListDeleted('task_list_deleted'),
+  tagCreated('tag_created'),
+  tagUpdated('tag_updated'),
+  tagDeleted('tag_deleted'),
+  eventCreated('event_created'),
+  eventUpdated('event_updated'),
+  eventDeleted('event_deleted');
+
+  const AnalyticsFeatureAction(this.wireName);
+  final String wireName;
+}
+
 class AnalyticsEvent {
   const AnalyticsEvent._({
     required this.name,
@@ -58,7 +96,7 @@ class AnalyticsEvent {
     this.properties = const {},
   });
 
-  static const schemaVersion = 1;
+  static const schemaVersion = 2;
 
   final AnalyticsEventName name;
   final AnalyticsEventOwner owner;
@@ -122,13 +160,34 @@ class AnalyticsEvent {
     owner: AnalyticsEventOwner.conversion,
   );
 
-  factory AnalyticsEvent.screenViewed(String route) {
+  factory AnalyticsEvent.screenViewed(
+    String route, {
+    AnalyticsFeaturePackage? featurePackage,
+  }) {
     return AnalyticsEvent._(
       name: AnalyticsEventName.screenViewed,
-      owner: AnalyticsEventOwner.activation,
-      properties: {'screen_route': route},
+      owner: featurePackage == null
+          ? AnalyticsEventOwner.activation
+          : AnalyticsEventOwner.learning,
+      properties: {
+        'screen_route': route,
+        if (featurePackage != null)
+          'feature_package': featurePackage.wireName,
+      },
     );
   }
+
+  factory AnalyticsEvent.featureAction({
+    required AnalyticsFeaturePackage featurePackage,
+    required AnalyticsFeatureAction action,
+  }) => AnalyticsEvent._(
+    name: AnalyticsEventName.featureActionRecorded,
+    owner: AnalyticsEventOwner.learning,
+    properties: {
+      'feature_package': featurePackage.wireName,
+      'feature_action': action.wireName,
+    },
+  );
 }
 
 class AnalyticsIdentity {

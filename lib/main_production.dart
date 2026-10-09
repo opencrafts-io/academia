@@ -40,6 +40,12 @@ void main(List<String> args) async {
         return;
       }
 
+      try {
+        await _initPostHog();
+      } catch (error, stackTrace) {
+        debugPrint('PostHog startup initialization failed: $error\n$stackTrace');
+      }
+
       runApp(
         PostHogWidget(
           child: DioRequestInspectorMain(
@@ -49,9 +55,6 @@ void main(List<String> args) async {
         ),
       );
       scheduleDefaultBackgroundTasksAfterFirstFrame();
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        unawaited(_initPostHog());
-      });
     },
     (error, stack) {
       try {
@@ -71,8 +74,8 @@ Future<void> _initPostHog() async {
         ..flushAt = 10
         ..captureApplicationLifecycleEvents = true
         ..sessionReplay = true
-        ..sessionReplayConfig.maskAllTexts = false
-        ..sessionReplayConfig.maskAllImages = false
+        ..sessionReplayConfig.maskAllTexts = true
+        ..sessionReplayConfig.maskAllImages = true
         ..errorTrackingConfig.captureFlutterErrors = true
         ..errorTrackingConfig.capturePlatformDispatcherErrors = true
         ..errorTrackingConfig.captureIsolateErrors = true

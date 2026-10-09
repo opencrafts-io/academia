@@ -11,6 +11,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 
 import 'package:core/config/flavor.dart' as _i666;
+import 'package:analytics/analytics.dart' as _i993;
 import 'package:dio/dio.dart' as _i361;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
@@ -161,6 +162,7 @@ _i174.GetIt initTodos(
       updateTagUseCase: gh<_i496.UpdateTodoTag>(),
       deleteTagUseCase: gh<_i496.DeleteTodoTag>(),
       syncTagsUseCase: gh<_i496.SyncTodoTags>(),
+      analyticsTracker: gh<_i993.AnalyticsTracker>(),
     ),
   );
   gh.factory<_i1070.CreateTodoList>(
@@ -193,6 +195,7 @@ _i174.GetIt initTodos(
       syncTodoListsUseCase: gh<_i496.SyncTodoLists>(),
       getDefaultTodoListUsecase: gh<_i496.GetDefaultTodoListUsecase>(),
       markTodoListModifiedUseCase: gh<_i496.MarkTodoListModified>(),
+      analyticsTracker: gh<_i993.AnalyticsTracker>(),
     ),
   );
   return getIt;

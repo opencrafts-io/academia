@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:analytics/analytics.dart';
 import 'package:core/core.dart';
 import 'package:todos/todos.dart';
 
@@ -12,6 +15,7 @@ class TodoItemCubit extends SafeCubit<TodoItemState> {
   final MoveTodoItem moveItemUseCase;
   final SyncTodoItems syncItemsUseCase;
   final AddFocusedTimeToTodoItem addFocusedTimeUseCase;
+  final AnalyticsTracker? analyticsTracker;
 
   /// The local ID of the task list this cubit is scoped to.
   /// Null means all lists are shown.
@@ -28,9 +32,24 @@ class TodoItemCubit extends SafeCubit<TodoItemState> {
     required this.moveItemUseCase,
     required this.syncItemsUseCase,
     required this.addFocusedTimeUseCase,
+    this.analyticsTracker,
     this.taskListLocalId,
   }) : super(const TodoItemState.initial()) {
     _init();
+  }
+
+  void _track(AnalyticsFeatureAction action) {
+    final tracker = analyticsTracker;
+    if (tracker != null) {
+      unawaited(
+        tracker.track(
+          AnalyticsEvent.featureAction(
+            featurePackage: AnalyticsFeaturePackage.todos,
+            action: action,
+          ),
+        ),
+      );
+    }
   }
 
   /// Kicks off initial item load on cubit creation.
@@ -98,6 +117,7 @@ class TodoItemCubit extends SafeCubit<TodoItemState> {
     result.fold(
       (_) => null, // Optimistic entry stays; sync will reconcile later
       (newItem) {
+        _track(AnalyticsFeatureAction.taskCreated);
         final latest = state.mapOrNull(success: (s) => s);
         if (latest == null) return;
         final synced = latest.items.map((existing) {
@@ -128,6 +148,7 @@ class TodoItemCubit extends SafeCubit<TodoItemState> {
     result.fold(
       (_) => emit(currentState), // Roll back on failure
       (updated) {
+        _track(AnalyticsFeatureAction.taskUpdated);
         final latest = state.mapOrNull(success: (s) => s);
         if (latest == null) return;
         final synced = latest.items.map((existing) {
@@ -159,7 +180,9 @@ class TodoItemCubit extends SafeCubit<TodoItemState> {
       if (deleted != null) {
         emit(currentState.copyWith(items: [...currentState.items, deleted]));
       }
-    }, (_) => null);
+    }, (_) {
+      _track(AnalyticsFeatureAction.taskDeleted);
+    });
   }
 
   /// Optimistically marks an item as complete in state then syncs to remote.
@@ -188,6 +211,7 @@ class TodoItemCubit extends SafeCubit<TodoItemState> {
     result.fold(
       (_) => emit(currentState), // Roll back on failure
       (updated) {
+        _track(AnalyticsFeatureAction.taskCompleted);
         final latest = state.mapOrNull(success: (s) => s);
         if (latest == null) return;
         final synced = latest.items.map((existing) {
@@ -221,6 +245,7 @@ class TodoItemCubit extends SafeCubit<TodoItemState> {
     result.fold(
       (_) => emit(currentState), // Roll back on failure
       (updated) {
+        _track(AnalyticsFeatureAction.taskReopened);
         final latest = state.mapOrNull(success: (s) => s);
         if (latest == null) return;
         final synced = latest.items.map((existing) {

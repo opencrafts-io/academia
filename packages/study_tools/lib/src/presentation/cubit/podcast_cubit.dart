@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:analytics/analytics.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -29,7 +30,7 @@ abstract class PodcastCubitState with _$PodcastCubitState {
 }
 
 class PodcastCubit extends Cubit<PodcastCubitState> {
-  PodcastCubit(this.store, this.audioHandler)
+  PodcastCubit(this.store, this.audioHandler, {this.analyticsTracker})
     : super(const PodcastCubitState()) {
     _playbackSubscription = audioHandler.playbackState.listen((value) {
       if (!isClosed) emit(state.copyWith(playbackState: value));
@@ -44,6 +45,7 @@ class PodcastCubit extends Cubit<PodcastCubitState> {
 
   final PodcastLocalStore store;
   final PodcastAudioHandler audioHandler;
+  final AnalyticsTracker? analyticsTracker;
   late final StreamSubscription<PlaybackState> _playbackSubscription;
   late final StreamSubscription<MediaItem?> _mediaSubscription;
   late final StreamSubscription<String?> _errorSubscription;
@@ -72,12 +74,29 @@ class PodcastCubit extends Cubit<PodcastCubitState> {
     required String title,
     String? courseLabel,
     bool offline = false,
-  }) => audioHandler.playEpisode(
-    podcast,
-    title: title,
-    courseLabel: courseLabel,
-    preferDownload: offline,
-  );
+  }) async {
+    await audioHandler.playEpisode(
+      podcast,
+      title: title,
+      courseLabel: courseLabel,
+      preferDownload: offline,
+    );
+    _track(AnalyticsFeatureAction.podcastPlayStarted);
+  }
+
+  void _track(AnalyticsFeatureAction action) {
+    final tracker = analyticsTracker;
+    if (tracker != null) {
+      unawaited(
+        tracker.track(
+          AnalyticsEvent.featureAction(
+            featurePackage: AnalyticsFeaturePackage.studyTools,
+            action: action,
+          ),
+        ),
+      );
+    }
+  }
 
   Future<void> download({
     required StudyPodcast podcast,
@@ -105,6 +124,7 @@ class PodcastCubit extends Cubit<PodcastCubitState> {
           }
         },
       );
+      _track(AnalyticsFeatureAction.podcastDownloadCompleted);
       await loadDownloads();
       if (!isClosed) emit(state.copyWith(isDownloading: false));
     } on PodcastSubscriptionException catch (error) {
