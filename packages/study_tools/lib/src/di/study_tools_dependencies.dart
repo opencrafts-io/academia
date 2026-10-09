@@ -1,6 +1,7 @@
 import 'package:core/config/flavor.dart';
 import 'package:core/core.dart';
 import 'package:analytics/analytics.dart';
+import 'package:ads/ads.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:billing/billing.dart';
 import 'package:database/daos/study_tools_dao.dart';
@@ -88,14 +89,14 @@ void configureStudyToolsDependencies(
       podcastStore: getIt<PodcastLocalStore>(),
       audioHandler: getIt<PodcastAudioHandler>(),
       analyticsTracker: getIt<AnalyticsTracker>(),
+      adService: getIt<AdService>(),
     ),
   );
   getIt.registerFactory(
-    () =>
-        PodcastCubit(
-          getIt<PodcastLocalStore>(),
-          getIt<PodcastAudioHandler>(),
-          analyticsTracker: getIt<AnalyticsTracker>(),
-        ),
+    () => PodcastCubit(
+      getIt<PodcastLocalStore>(),
+      getIt<PodcastAudioHandler>(),
+      analyticsTracker: getIt<AnalyticsTracker>(),
+    ),
   );
 }

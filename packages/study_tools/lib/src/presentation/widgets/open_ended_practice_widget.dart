@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../domain/entities/study_entities.dart';
+import 'practice_completion_ad.dart';
 
 class OpenEndedPracticeWidget extends StatefulWidget {
   const OpenEndedPracticeWidget({required this.set, super.key});
@@ -14,6 +15,8 @@ class OpenEndedPracticeWidget extends StatefulWidget {
 class _OpenEndedPracticeWidgetState extends State<OpenEndedPracticeWidget> {
   int _index = 0;
   bool _revealed = false;
+  bool _isComplete = false;
+  bool _isFinishing = false;
   final _drafts = <int, String>{};
   final _controllers = <int, TextEditingController>{};
 
@@ -28,6 +31,7 @@ class _OpenEndedPracticeWidgetState extends State<OpenEndedPracticeWidget> {
   @override
   Widget build(BuildContext context) {
     final questions = widget.set.questions.cast<OpenEndedQuestion>();
+    if (_isComplete) return _completionScreen(context);
     final question = questions[_index];
     final colors = Theme.of(context).colorScheme;
     return Scaffold(
@@ -188,6 +192,18 @@ class _OpenEndedPracticeWidgetState extends State<OpenEndedPracticeWidget> {
                       minimumSize: const Size.fromHeight(54),
                     ),
                   ),
+                ] else ...[
+                  const SizedBox(height: 20),
+                  FilledButton.icon(
+                    onPressed: _isFinishing ? null : _finishSet,
+                    icon: const Icon(Icons.check_rounded),
+                    label: Text(
+                      _isFinishing ? 'Finishing set…' : 'Finish practice',
+                    ),
+                    style: FilledButton.styleFrom(
+                      minimumSize: const Size.fromHeight(54),
+                    ),
+                  ),
                 ],
               ],
             ),
@@ -196,4 +212,53 @@ class _OpenEndedPracticeWidgetState extends State<OpenEndedPracticeWidget> {
       ),
     );
   }
+
+  Future<void> _finishSet() async {
+    if (_isFinishing) return;
+    setState(() => _isFinishing = true);
+    await showPracticeInterstitialAd();
+    if (!mounted) return;
+    setState(() => _isComplete = true);
+  }
+
+  Widget _completionScreen(BuildContext context) => Scaffold(
+    appBar: AppBar(title: const Text('Practice complete')),
+    body: Center(
+      child: Padding(
+        padding: const EdgeInsets.all(28),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.task_alt_rounded,
+              size: 56,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Set complete',
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'You worked through ${widget.set.questions.length} questions.',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            const SizedBox(height: 24),
+            FilledButton.icon(
+              onPressed: () => setState(() {
+                _index = 0;
+                _revealed = false;
+                _isComplete = false;
+                _isFinishing = false;
+              }),
+              icon: const Icon(Icons.restart_alt_rounded),
+              label: const Text('Review again'),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
 }

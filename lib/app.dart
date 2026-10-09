@@ -43,6 +43,7 @@ class _AcademiaState extends State<Academia> with WidgetsBindingObserver {
 
   bool _deferredServicesReady = false;
   bool _appLaunchRewardSubmitted = false;
+  bool _wasBackgrounded = false;
   SettingsCubit? _settingsCubit;
 
   @override
@@ -74,9 +75,18 @@ class _AcademiaState extends State<Academia> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.hidden) {
+      _wasBackgrounded = true;
+    }
     if (state == AppLifecycleState.resumed &&
         sl<AdService>().isSupportedPlatform) {
-      unawaited(sl<AdService>().refreshEligibility());
+      if (_wasBackgrounded) {
+        _wasBackgrounded = false;
+        unawaited(sl<AdService>().onAppResumed());
+      } else {
+        unawaited(sl<AdService>().refreshEligibility());
+      }
     }
     if (state == AppLifecycleState.resumed && _deferredServicesReady) {
       unawaited(sl<courses.CourseReminderRefresher>().refresh());

@@ -8,6 +8,8 @@ environment:
   flutter: ">=3.10.0"
 
 dependencies:
+  ads:
+    path: ../ads
   flutter:
     sdk: flutter
   core:

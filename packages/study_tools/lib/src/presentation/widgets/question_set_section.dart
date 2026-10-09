@@ -1,3 +1,4 @@
+import 'package:ads/ads.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -65,7 +66,7 @@ class _QuestionSetSectionState extends State<QuestionSetSection> {
                 ],
               ),
               const SizedBox(height: 8),
-              for (var index = 0; index < sets.length; index++)
+              for (var index = 0; index < sets.length; index++) ...[
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: Card.filled(
@@ -137,6 +138,12 @@ class _QuestionSetSectionState extends State<QuestionSetSection> {
                     ),
                   ),
                 ),
+                if ((index + 1) % 3 == 0 && index + 1 < sets.length)
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                    child: InlineBannerAdWidget(),
+                  ),
+              ],
             ],
           );
         },

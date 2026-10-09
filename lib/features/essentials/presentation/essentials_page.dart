@@ -89,8 +89,6 @@ class _EssentialsPageState extends State<EssentialsPage> {
       if (!mounted) return;
 
       if (isSupported) {
-        final adService = sl<AdService>();
-        adService.showInterstitialAd();
         if (!mounted) return;
         ExamTimetableRoute(institutionId: primaryInstitution.institutionId)
             .push(context);
@@ -170,6 +168,10 @@ class _EssentialsPageState extends State<EssentialsPage> {
             padding: EdgeInsets.all(16),
             sliver: SliverToBoxAdapter(child: EssentialsInstitutionSection()),
           ),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            sliver: const SliverToBoxAdapter(child: InlineBannerAdWidget()),
+          ),
           // Academia's tools
           SliverPadding(
             padding: EdgeInsetsGeometry.symmetric(horizontal: 16),
@@ -245,7 +247,6 @@ class _EssentialsPageState extends State<EssentialsPage> {
                 ),
                 _buildToolsGrid(context),
                 SizedBox(height: 22),
-                BannerAdWidget(),
               ],
             ),
           ),

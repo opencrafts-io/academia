@@ -14,6 +14,7 @@ import '../cubit/study_load_state.dart';
 import '../study_tools_host.dart';
 import '../widgets/study_material_sections.dart';
 import '../widgets/study_progress_widgets.dart';
+import '../widgets/study_generation_ad_gate.dart';
 import '../widgets/study_tools_feedback.dart';
 
 class StudyPodcastPlayerPage extends StatefulWidget {
@@ -75,11 +76,12 @@ class _StudyPodcastPlayerPageState extends State<StudyPodcastPlayerPage> {
                 _appBar(),
                 SliverFillRemaining(
                   hasScrollBody: false,
-                  child: studyState.status.when(
+                  child:
+                      studyState.status.when(
                         initial: () => false,
                         loading: () => true,
                         loaded: () => false,
-                        failure: (_, __) => false,
+                        failure: (_, _) => false,
                       )
                       ? const StudyToolsLoadingView(
                           message: 'Opening the episode…',
@@ -184,9 +186,16 @@ class _StudyPodcastPlayerPageState extends State<StudyPodcastPlayerPage> {
                           ] else ...[
                             const SizedBox(height: 18),
                             FilledButton.icon(
-                              onPressed: () => context
-                                  .read<StudyToolsCubit>()
-                                  .generatePodcast(),
+                              onPressed: () => unawaited(
+                                requestStudyGeneration(
+                                  context: context,
+                                  contentLabel: 'A podcast',
+                                  pointCost: 6,
+                                  generate: () => context
+                                      .read<StudyToolsCubit>()
+                                      .generatePodcast(),
+                                ),
+                              ),
                               icon: const Icon(Icons.graphic_eq_rounded),
                               label: const Text('Generate podcast'),
                             ),

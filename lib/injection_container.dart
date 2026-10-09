@@ -144,4 +144,6 @@ Future<void> _initializeAds() async {
   final adService = sl<AdService>();
   await adService.initialize();
   await adService.loadInterstitialAd();
+  await adService.loadAppOpenAd();
+  await adService.loadRewardedAd();
 }

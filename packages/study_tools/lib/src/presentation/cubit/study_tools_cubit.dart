@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:core/core.dart';
 import 'package:analytics/analytics.dart';
+import 'package:ads/ads.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/widgets.dart';
@@ -46,6 +47,7 @@ class StudyToolsCubit extends SafeCubit<StudyToolsState>
     this.podcastStore,
     this.audioHandler,
     this.analyticsTracker,
+    this.adService,
   }) : super(const StudyToolsState()) {
     _jobPoller = StudyGenerationJobPoller(
       repository: repository,
@@ -68,6 +70,7 @@ class StudyToolsCubit extends SafeCubit<StudyToolsState>
   final PodcastLocalStore? podcastStore;
   final PodcastAudioHandler? audioHandler;
   final AnalyticsTracker? analyticsTracker;
+  final AdService? adService;
   late final StudyGenerationJobPoller _jobPoller;
   late final StudyGenerationService _generationService = StudyGenerationService(
     repository,
@@ -81,6 +84,74 @@ class StudyToolsCubit extends SafeCubit<StudyToolsState>
   late final StreamSubscription<List<ConnectivityResult>>
   _connectivitySubscription;
   bool _hasLoadedMaterials = false;
+  bool _rewardedGenerationInProgress = false;
+
+  int get generationPoints => adService?.generationPoints ?? 0;
+
+  Future<RewardedGenerationRequirement> generationAdRequirement() =>
+      adService?.getRewardedGenerationRequirement() ??
+      Future.value(RewardedGenerationRequirement.unavailable);
+
+  Future<bool> watchGenerationAd() async {
+    final service = adService;
+    if (service == null) return false;
+    final result = await service.showRewardedGenerationAd(acceptedByUser: true);
+    if (isClosed) return false;
+    switch (result) {
+      case RewardedGenerationResult.earned:
+        return true;
+      case RewardedGenerationResult.notRequired:
+        return true;
+      case RewardedGenerationResult.dismissed:
+        emit(
+          state.copyWith(
+            error:
+                'The ad ended before the reward. Generation was not started.',
+            errorCode: 'reward_not_earned',
+          ),
+        );
+        return false;
+      case RewardedGenerationResult.unavailable:
+        emit(
+          state.copyWith(
+            error: 'A rewarded ad is unavailable right now. Try again later.',
+            errorCode: 'rewarded_ad_unavailable',
+          ),
+        );
+        return false;
+    }
+  }
+
+  Future<int?> _reserveGenerationPoints(int cost) async {
+    final requirement = await generationAdRequirement();
+    switch (requirement) {
+      case RewardedGenerationRequirement.notRequired:
+        return 0;
+      case RewardedGenerationRequirement.unavailable:
+        emit(
+          state.copyWith(
+            error:
+                'Generation is unavailable right now. Please try again later.',
+            errorCode: 'generation_access_unavailable',
+          ),
+        );
+        return null;
+      case RewardedGenerationRequirement.required:
+        final service = adService;
+        if (service == null || !service.spendGenerationPoints(cost)) {
+          final pointsNeeded = cost - (service?.generationPoints ?? 0);
+          emit(
+            state.copyWith(
+              error:
+                  'Earn $pointsNeeded more generation points before generating.',
+              errorCode: 'generation_points_required',
+            ),
+          );
+          return null;
+        }
+        return cost;
+    }
+  }
 
   void _track(AnalyticsFeatureAction action) {
     final tracker = analyticsTracker;
@@ -209,13 +280,21 @@ class StudyToolsCubit extends SafeCubit<StudyToolsState>
     if (material == null ||
         state.loadingFormat != null ||
         state.isGeneratingPodcast ||
-        state.generationBlocked) {
+        state.generationBlocked ||
+        _rewardedGenerationInProgress) {
       return;
     }
+    _rewardedGenerationInProgress = true;
+    final reservedPoints = await _reserveGenerationPoints(3);
+    _rewardedGenerationInProgress = false;
+    if (reservedPoints == null || isClosed) return;
     emit(state.copyWith(loadingFormat: format, error: null, errorCode: null));
     final result = await _generationService.startQuestions(material.id, format);
     await result.fold<Future<void>>(
       (failure) async {
+        if (reservedPoints > 0) {
+          adService?.refundGenerationPoints(reservedPoints);
+        }
         final code = _failureCode(failure);
         final jobs = code == 'job_already_running'
             ? await repository.savedJobs()
@@ -300,15 +379,23 @@ class StudyToolsCubit extends SafeCubit<StudyToolsState>
         state.isGeneratingPodcast ||
         state.loadingFormat != null ||
         state.jobs.containsKey(material.id) ||
-        state.generationBlocked) {
+        state.generationBlocked ||
+        _rewardedGenerationInProgress) {
       return;
     }
+    _rewardedGenerationInProgress = true;
+    final reservedPoints = await _reserveGenerationPoints(6);
+    _rewardedGenerationInProgress = false;
+    if (reservedPoints == null || isClosed) return;
     emit(
       state.copyWith(isGeneratingPodcast: true, error: null, errorCode: null),
     );
     final result = await _generationService.startPodcast(material.id);
     await result.fold(
       (failure) async {
+        if (reservedPoints > 0) {
+          adService?.refundGenerationPoints(reservedPoints);
+        }
         final code = _failureCode(failure);
         final jobs = await repository.savedJobs();
         if (code == 'job_already_running' && jobs.containsKey(material.id)) {

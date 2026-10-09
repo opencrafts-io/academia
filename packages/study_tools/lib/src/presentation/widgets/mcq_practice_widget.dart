@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:material3_indicators/material3_indicators.dart';
 
 import '../../domain/entities/study_entities.dart';
+import 'practice_completion_ad.dart';
 
 class McqPracticeWidget extends StatefulWidget {
   const McqPracticeWidget({required this.set, super.key});
@@ -13,8 +16,17 @@ class McqPracticeWidget extends StatefulWidget {
 
 class _McqPracticeWidgetState extends State<McqPracticeWidget> {
   int _index = 0;
+  bool _isFinishing = false;
   final _selected = <int, int>{};
   final _checked = <int>{};
+
+  Future<void> _finishSet() async {
+    if (_isFinishing) return;
+    setState(() => _isFinishing = true);
+    await showPracticeInterstitialAd();
+    if (!mounted) return;
+    setState(() => _index++);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -133,22 +145,26 @@ class _McqPracticeWidgetState extends State<McqPracticeWidget> {
                 ),
                 const SizedBox(height: 12),
                 FilledButton.icon(
-                  onPressed: _selected[_index] == null
+                  onPressed: _selected[_index] == null || _isFinishing
                       ? null
-                      : () => setState(() {
+                      : () {
                           if (!isChecked) {
-                            _checked.add(_index);
+                            setState(() => _checked.add(_index));
+                          } else if (_index == questions.length - 1) {
+                            unawaited(_finishSet());
                           } else {
-                            _index++;
+                            setState(() => _index++);
                           }
-                        }),
+                        },
                   icon: Icon(
                     isChecked
                         ? Icons.arrow_forward_rounded
                         : Icons.check_rounded,
                   ),
                   label: Text(
-                    isChecked
+                    _isFinishing
+                        ? 'Opening results…'
+                        : isChecked
                         ? (_index == questions.length - 1
                               ? 'See result'
                               : 'Next question')
@@ -206,6 +222,7 @@ class _McqPracticeWidgetState extends State<McqPracticeWidget> {
                     FilledButton.icon(
                       onPressed: () => setState(() {
                         _index = 0;
+                        _isFinishing = false;
                         _selected.clear();
                         _checked.clear();
                       }),

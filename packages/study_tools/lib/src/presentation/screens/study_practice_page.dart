@@ -7,6 +7,7 @@ import '../cubit/study_tools_cubit.dart';
 import '../widgets/flashcard_practice_widget.dart';
 import '../widgets/mcq_practice_widget.dart';
 import '../widgets/open_ended_practice_widget.dart';
+import '../widgets/practice_completion_ad.dart';
 
 class StudyPracticePage extends StatefulWidget {
   const StudyPracticePage({
@@ -37,14 +38,29 @@ class _StudyPracticePageState extends State<StudyPracticePage> {
     await cubit.loadMaterial(widget.materialId);
     await cubit.loadQuestions(format);
     if (!mounted) return;
-    setState(() {
-      final sets = cubit.state.questionSets[format] ?? const [];
-      for (final set in sets) {
-        if (set.id == widget.setId) {
-          _set = set;
-          break;
-        }
+    final sets = cubit.state.questionSets[format] ?? const [];
+    QuestionSet? loadedSet;
+    for (final set in sets) {
+      if (set.id == widget.setId) {
+        loadedSet = set;
+        break;
       }
+    }
+
+    if (loadedSet != null && loadedSet.questions.isNotEmpty) {
+      switch (format) {
+        case QuestionFormat.mcq:
+        case QuestionFormat.openEnded:
+          await showPracticeInterstitialAd();
+          break;
+        case QuestionFormat.flashcard:
+          break;
+      }
+    }
+    if (!mounted) return;
+
+    setState(() {
+      _set = loadedSet;
       _loading = false;
     });
   }
@@ -115,7 +131,10 @@ class _StudyPracticePageState extends State<StudyPracticePage> {
       );
     }
     return switch (set.format) {
-      QuestionFormat.flashcard => FlashcardPracticeWidget(set: set),
+      QuestionFormat.flashcard => FlashcardPracticeWidget(
+        key: ValueKey(set.id),
+        set: set,
+      ),
       QuestionFormat.mcq => McqPracticeWidget(set: set),
       QuestionFormat.openEnded => OpenEndedPracticeWidget(set: set),
     };
