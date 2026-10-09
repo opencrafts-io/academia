@@ -303,6 +303,21 @@ class BillingService {
     );
   }
 
+  /// Gets subscription status from the server without accepting a cached
+  /// fallback. Premium offline downloads use this to save a verified snapshot.
+  Future<Either<Failure, SubscriptionStatus>> refreshSubscriptionStatus() async {
+    final result = await _getCurrentSubscriptionStatus.refresh();
+    result.fold(
+      (_) {},
+      (status) {
+        _cachedStatus = status;
+        _cachedEntitlements = null;
+        _cachedEntitlementsPlanCode = null;
+      },
+    );
+    return result;
+  }
+
   /// Returns whether [key] is currently available to the user.
   ///
   /// This convenience method fails closed and returns `false` if the billing

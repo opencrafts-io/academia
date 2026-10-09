@@ -13,6 +13,12 @@ abstract interface class StudyToolsRepository {
     String? courseLabel,
   });
   Future<Either<Failure, int>> generate(int noteId, QuestionFormat format);
+  Future<Either<Failure, int>> generatePodcast(int noteId);
+  Future<Either<Failure, StudyPodcast>> podcast(int noteId);
+  Future<Either<Failure, StudyPodcast>> podcastVersion(
+    int noteId,
+    String episodeKey,
+  );
   Future<Either<Failure, GenerationJob>> job(int jobId);
   Future<Either<Failure, List<QuestionSet>>> questionSets(
     int noteId,
@@ -20,6 +26,11 @@ abstract interface class StudyToolsRepository {
   );
   Future<Either<Failure, Unit>> delete(int noteId);
   Future<Map<int, int>> savedJobs();
-  Future<void> saveJob(int noteId, int jobId);
+  Future<void> saveJob(
+    int noteId,
+    int jobId, {
+    required List<String> outputs,
+    QuestionFormat? questionFormat,
+  });
   Future<void> removeJob(int noteId);
 }

@@ -9,6 +9,7 @@ import '../widgets/question_set_section.dart';
 import '../widgets/study_delete_confirmation_sheet.dart';
 import '../widgets/study_progress_widgets.dart';
 import '../widgets/study_material_sections.dart';
+import '../widgets/study_podcast_section.dart';
 import '../widgets/study_tools_feedback.dart';
 import '../widgets/study_tools_sheet.dart';
 
@@ -65,6 +66,24 @@ class _StudyMaterialPageState extends State<StudyMaterialPage> {
         }
 
         final hasJob = state.jobs.containsKey(material.id);
+        final hasPodcastJob =
+            state.jobOutputs[material.id]?.contains('podcast') ??
+            state.isGeneratingPodcast;
+        final jobOutputs = state.jobOutputs[material.id];
+        final progressTitle = jobOutputs == null || jobOutputs.isEmpty
+            ? 'Generation is in progress'
+            : jobOutputs.contains('podcast')
+            ? 'Preparing your podcast'
+            : 'Preparing your questions';
+        final podcastProgressMessage = state.isLoadingPodcast
+            ? 'Checking for an existing episode…'
+            : !hasJob
+            ? 'Creating your podcast…'
+            : hasPodcastJob
+            ? 'Creating your podcast…'
+            : jobOutputs == null || jobOutputs.isEmpty
+            ? 'Generation is in progress…'
+            : 'Another study output is being generated for this material.';
         return Scaffold(
           body: CustomScrollView(
             physics: const BouncingScrollPhysics(),
@@ -76,6 +95,17 @@ class _StudyMaterialPageState extends State<StudyMaterialPage> {
                   children: [
                     StudyMaterialHeaderCard(material: material),
                     const SizedBox(height: 28),
+                    StudyPodcastSection(
+                      material: material,
+                      podcast: state.podcast,
+                      isGenerating: state.isGeneratingPodcast,
+                      isLoading: state.isLoadingPodcast,
+                      hasJob: hasJob,
+                      progressMessage: podcastProgressMessage,
+                      onGenerate: () =>
+                          context.read<StudyToolsCubit>().generatePodcast(),
+                    ),
+                    const SizedBox(height: 32),
                     const StudySectionHeading(
                       title: 'Make it stick',
                       subtitle: 'Choose a format to create a new practice set.',
@@ -94,9 +124,11 @@ class _StudyMaterialPageState extends State<StudyMaterialPage> {
                       duration: const Duration(milliseconds: 280),
                       curve: Curves.easeOutCubic,
                       child: hasJob
-                          ? const Padding(
-                              padding: EdgeInsets.only(top: 18),
-                              child: StudyGenerationProgressCard(),
+                          ? Padding(
+                              padding: const EdgeInsets.only(top: 18),
+                              child: StudyGenerationProgressCard(
+                                title: progressTitle,
+                              ),
                             )
                           : const SizedBox.shrink(),
                     ),

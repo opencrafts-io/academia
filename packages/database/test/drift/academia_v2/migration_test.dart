@@ -93,6 +93,32 @@ void main() {
     await db.close();
   });
 
+  test('v8 upgrade creates scoped Study Tools and podcast tables', () async {
+    final schema = await verifier.schemaAt(8);
+    final db = AppDatabaseV2(schema.newConnection());
+
+    await verifier.migrateAndValidate(db, 9);
+
+    for (final table in [
+      'study_material_records',
+      'study_question_set_records',
+      'study_generation_job_records',
+      'study_podcast_records',
+      'study_podcast_downloads',
+      'study_playback_positions',
+      'study_offline_entitlement_snapshots',
+      'study_legacy_imports',
+    ]) {
+      final result = await db.customSelect(
+        "SELECT name FROM sqlite_master WHERE type = 'table' AND name = ?",
+        variables: [Variable.withString(table)],
+      ).get();
+      expect(result, hasLength(1), reason: '$table should exist after upgrade');
+    }
+
+    await db.close();
+  });
+
   // The following template shows how to write tests ensuring your migrations
   // preserve existing data.
   // Testing this can be useful for migrations that change existing columns

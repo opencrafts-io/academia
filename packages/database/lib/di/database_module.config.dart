@@ -16,6 +16,7 @@ import 'package:database/daos/entitlement_dao.dart' as _i979;
 import 'package:database/daos/lock_in_dao.dart' as _i951;
 import 'package:database/daos/order_dao.dart' as _i272;
 import 'package:database/daos/plan_dao.dart' as _i143;
+import 'package:database/daos/study_tools_dao.dart' as _i629;
 import 'package:database/daos/subscription_dao.dart' as _i200;
 import 'package:database/daos/todo_item_dao.dart' as _i650;
 import 'package:database/daos/todo_list_dao.dart' as _i606;
@@ -40,6 +41,9 @@ _i174.GetIt initAppDatabaseV2(
   gh.factory<_i951.LockInDao>(() => _i951.LockInDao(gh<_i547.AppDatabaseV2>()));
   gh.factory<_i272.OrderDao>(() => _i272.OrderDao(gh<_i547.AppDatabaseV2>()));
   gh.factory<_i143.PlanDao>(() => _i143.PlanDao(gh<_i547.AppDatabaseV2>()));
+  gh.factory<_i629.StudyToolsDao>(
+    () => _i629.StudyToolsDao(gh<_i547.AppDatabaseV2>()),
+  );
   gh.factory<_i200.SubscriptionDao>(
     () => _i200.SubscriptionDao(gh<_i547.AppDatabaseV2>()),
   );

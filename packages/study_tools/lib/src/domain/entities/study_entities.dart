@@ -2,6 +2,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'study_entities.freezed.dart';
 
+enum StudyGenerationOutput { questions, podcast }
+
 const studyUploadMaxBytes = 20 * 1024 * 1024;
 const studyUploadExtensions = {'pdf', 'docx', 'pptx', 'xlsx', 'xls'};
 
@@ -48,8 +50,11 @@ extension QuestionFormatApi on QuestionFormat {
 
 @freezed
 abstract class StudyCourseOption with _$StudyCourseOption {
-  const factory StudyCourseOption({required String id, required String title}) =
-      _StudyCourseOption;
+  const factory StudyCourseOption({
+    required String id,
+    required String title,
+    String? professorId,
+  }) = _StudyCourseOption;
 }
 
 @freezed
@@ -115,4 +120,36 @@ abstract class GenerationJob with _$GenerationJob {
     required DateTime createdAt,
     required DateTime? finishedAt,
   }) = _GenerationJob;
+}
+
+@freezed
+abstract class StudyPodcast with _$StudyPodcast {
+  const factory StudyPodcast({
+    required int? id,
+    required int noteId,
+    @Default('') String title,
+    required DateTime generatedAt,
+    required Duration duration,
+    required String audioUrl,
+    required String script,
+  }) = _StudyPodcast;
+}
+
+enum PodcastDownloadStatus { downloading, ready, failed }
+
+@freezed
+abstract class PodcastDownloadedEpisode with _$PodcastDownloadedEpisode {
+  const factory PodcastDownloadedEpisode({
+    required String environment,
+    required String accountId,
+    required int noteId,
+    required String episodeKey,
+    required String title,
+    required String courseLabel,
+    required String localPath,
+    required int sizeBytes,
+    required Duration duration,
+    required DateTime? downloadedAt,
+    required PodcastDownloadStatus status,
+  }) = _PodcastDownloadedEpisode;
 }

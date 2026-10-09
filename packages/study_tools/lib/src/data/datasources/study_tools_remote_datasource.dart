@@ -17,6 +17,8 @@ abstract interface class StudyToolsRemoteDatasource {
     String? courseLabel,
   });
   Future<Either<Failure, int>> generate(int noteId, QuestionFormat format);
+  Future<Either<Failure, int>> generatePodcast(int noteId);
+  Future<Either<Failure, StudyPodcast>> podcast(int noteId);
   Future<Either<Failure, GenerationJob>> job(int id);
   Future<Either<Failure, List<QuestionSet>>> questionSets(
     int noteId,
@@ -116,6 +118,22 @@ class StudyToolsRemoteDatasourceImpl implements StudyToolsRemoteDatasource {
         },
         decoder: (json) => (json as Map<String, dynamic>)['job_id'] as int,
       );
+
+  @override
+  Future<Either<Failure, int>> generatePodcast(int noteId) => _api.post(
+    _paths.generate(noteId),
+    data: {
+      'outputs': ['podcast'],
+    },
+    decoder: (json) => (json as Map<String, dynamic>)['job_id'] as int,
+  );
+
+  @override
+  Future<Either<Failure, StudyPodcast>> podcast(int noteId) => _api.get(
+    _paths.podcast(noteId),
+    decoder: (json) =>
+        PodcastDto.fromJson(Map<String, dynamic>.from(json as Map)).toEntity(),
+  );
 
   @override
   Future<Either<Failure, GenerationJob>> job(int id) => _api.get(

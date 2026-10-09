@@ -10,6 +10,7 @@ class StudyToolsApiPaths {
   String generate(int noteId) => '${detail(noteId)}generate/';
   String job(int jobId) => '${collection}jobs/$jobId/';
   String questions(int noteId) => '${detail(noteId)}questions/';
+  String podcast(int noteId) => '${detail(noteId)}podcast/';
 
   String get _prefix =>
       flavorConfig.isProduction ? '/professor/' : '/qa-professor/';

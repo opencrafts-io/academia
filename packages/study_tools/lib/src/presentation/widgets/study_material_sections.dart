@@ -50,7 +50,9 @@ class StudyMaterialHeaderCard extends StatelessWidget {
               runSpacing: 8,
               children: [
                 _MaterialMetadataChip(
-                  icon: material.courseId == null
+                  icon:
+                      material.courseId == null &&
+                          material.courseLabel.trim().isEmpty
                       ? Icons.folder_open_outlined
                       : Icons.school_outlined,
                   label: material.courseLabel.isEmpty

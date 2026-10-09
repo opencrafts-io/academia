@@ -18,6 +18,7 @@ import 'package:settings/settings.dart';
 import 'package:courses/courses.dart' as courses;
 import 'package:todos/todos.dart' as todos;
 import 'package:pomodoro/pomodoro.dart' as pomodoro;
+import 'package:study_tools/study_tools.dart' as study_tools;
 
 class Academia extends StatefulWidget {
   const Academia({super.key});
@@ -27,6 +28,15 @@ class Academia extends StatefulWidget {
 }
 
 class _AcademiaState extends State<Academia> with WidgetsBindingObserver {
+  String? _studyDataAccountId;
+
+  Future<void> _clearPodcastAccount(String? accountId) async {
+    await sl<study_tools.PodcastAudioHandler>().stop();
+    await sl<study_tools.PodcastLocalStore>().clearAccountData(
+      accountId: accountId,
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -160,6 +170,10 @@ class _AcademiaState extends State<Academia> with WidgetsBindingObserver {
             BlocListener<AuthBloc, AuthState>(
               listener: (context, state) {
                 AppRouter.router.refresh();
+                if (state is AuthUnauthenticated) {
+                  unawaited(_clearPodcastAccount(_studyDataAccountId));
+                  _studyDataAccountId = null;
+                }
                 if (state is AuthAuthenticated) {
                   context.read<FeedBloc>().add(CheckFeedLikeStatuses());
                 }
@@ -168,6 +182,12 @@ class _AcademiaState extends State<Academia> with WidgetsBindingObserver {
             BlocListener<ProfileBloc, ProfileState>(
               listener: (context, state) {
                 if (state is ProfileLoadedState) {
+                  final previousAccountId = _studyDataAccountId;
+                  _studyDataAccountId = state.profile.id;
+                  if (previousAccountId != null &&
+                      previousAccountId != state.profile.id) {
+                    unawaited(_clearPodcastAccount(previousAccountId));
+                  }
                   context.read<InstitutionBloc>().add(
                     GetCachedUserInstitutionsEvent(state.profile.id),
                   );
@@ -249,7 +269,21 @@ class _AcademiaState extends State<Academia> with WidgetsBindingObserver {
                         );
                       }
                     },
-                    child: child ?? SizedBox.shrink(),
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        child ?? const SizedBox.shrink(),
+                        Positioned(
+                          left: 0,
+                          right: 0,
+                          bottom: MediaQuery.viewPaddingOf(context).bottom + 76,
+                          child: study_tools.PodcastNowPlayingBar(
+                            floating: true,
+                            handler: sl<study_tools.PodcastAudioHandler>(),
+                          ),
+                        ),
+                      ],
+                    ),
                   );
                 },
               );

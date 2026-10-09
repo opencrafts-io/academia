@@ -6,6 +6,34 @@ part 'study_dtos.freezed.dart';
 part 'study_dtos.g.dart';
 
 @freezed
+abstract class PodcastDto with _$PodcastDto {
+  const factory PodcastDto({
+    int? id,
+    @JsonKey(name: 'note_id') required int noteId,
+    @Default('') String title,
+    @JsonKey(name: 'generated_at') required DateTime generatedAt,
+    @JsonKey(name: 'duration_seconds') @Default(0) double durationSeconds,
+    @JsonKey(name: 'audio_url') required String audioUrl,
+    required String script,
+  }) = _PodcastDto;
+
+  factory PodcastDto.fromJson(Map<String, dynamic> json) =>
+      _$PodcastDtoFromJson(json);
+}
+
+extension PodcastDtoMapper on PodcastDto {
+  StudyPodcast toEntity() => StudyPodcast(
+    id: id,
+    noteId: noteId,
+    title: title,
+    generatedAt: generatedAt,
+    duration: Duration(milliseconds: (durationSeconds * 1000).round()),
+    audioUrl: audioUrl,
+    script: script,
+  );
+}
+
+@freezed
 abstract class StudyArtifactsDto with _$StudyArtifactsDto {
   const factory StudyArtifactsDto({
     @Default(false) bool summary,

@@ -14,6 +14,294 @@ part of 'study_dtos.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
+mixin _$PodcastDto {
+
+ int? get id;@JsonKey(name: 'note_id') int get noteId; String get title;@JsonKey(name: 'generated_at') DateTime get generatedAt;@JsonKey(name: 'duration_seconds') double get durationSeconds;@JsonKey(name: 'audio_url') String get audioUrl; String get script;
+/// Create a copy of PodcastDto
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$PodcastDtoCopyWith<PodcastDto> get copyWith => _$PodcastDtoCopyWithImpl<PodcastDto>(this as PodcastDto, _$identity);
+
+  /// Serializes this PodcastDto to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  final _this = this as PodcastDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PodcastDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.noteId, _this.noteId) || other.noteId == _this.noteId)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.generatedAt, _this.generatedAt) || other.generatedAt == _this.generatedAt)&&(identical(other.durationSeconds, _this.durationSeconds) || other.durationSeconds == _this.durationSeconds)&&(identical(other.audioUrl, _this.audioUrl) || other.audioUrl == _this.audioUrl)&&(identical(other.script, _this.script) || other.script == _this.script));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+  final _this = this as PodcastDto;
+  return Object.hash(runtimeType,_this.id,_this.noteId,_this.title,_this.generatedAt,_this.durationSeconds,_this.audioUrl,_this.script);
+}
+
+@override
+String toString() {
+  final _this = this as PodcastDto;
+  return 'PodcastDto(id: ${_this.id}, noteId: ${_this.noteId}, title: ${_this.title}, generatedAt: ${_this.generatedAt}, durationSeconds: ${_this.durationSeconds}, audioUrl: ${_this.audioUrl}, script: ${_this.script})';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $PodcastDtoCopyWith<$Res>  {
+  factory $PodcastDtoCopyWith(PodcastDto value, $Res Function(PodcastDto) _then) = _$PodcastDtoCopyWithImpl;
+@useResult
+$Res call({
+ int? id,@JsonKey(name: 'note_id') int noteId, String title,@JsonKey(name: 'generated_at') DateTime generatedAt,@JsonKey(name: 'duration_seconds') double durationSeconds,@JsonKey(name: 'audio_url') String audioUrl, String script
+});
+
+
+
+
+}
+/// @nodoc
+class _$PodcastDtoCopyWithImpl<$Res>
+    implements $PodcastDtoCopyWith<$Res> {
+  _$PodcastDtoCopyWithImpl(this._self, this._then);
+
+  final PodcastDto _self;
+  final $Res Function(PodcastDto) _then;
+
+/// Create a copy of PodcastDto
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? noteId = null,Object? title = null,Object? generatedAt = null,Object? durationSeconds = null,Object? audioUrl = null,Object? script = null,}) {
+  return _then(PodcastDto(
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int?,noteId: null == noteId ? _self.noteId : noteId // ignore: cast_nullable_to_non_nullable
+as int,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String,generatedAt: null == generatedAt ? _self.generatedAt : generatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,durationSeconds: null == durationSeconds ? _self.durationSeconds : durationSeconds // ignore: cast_nullable_to_non_nullable
+as double,audioUrl: null == audioUrl ? _self.audioUrl : audioUrl // ignore: cast_nullable_to_non_nullable
+as String,script: null == script ? _self.script : script // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [PodcastDto].
+extension PodcastDtoPatterns on PodcastDto {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _PodcastDto value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _PodcastDto() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _PodcastDto value)  $default,){
+final _that = this;
+switch (_that) {
+case _PodcastDto():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _PodcastDto value)?  $default,){
+final _that = this;
+switch (_that) {
+case _PodcastDto() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id, @JsonKey(name: 'note_id')  int noteId,  String title, @JsonKey(name: 'generated_at')  DateTime generatedAt, @JsonKey(name: 'duration_seconds')  double durationSeconds, @JsonKey(name: 'audio_url')  String audioUrl,  String script)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _PodcastDto() when $default != null:
+return $default(_that.id,_that.noteId,_that.title,_that.generatedAt,_that.durationSeconds,_that.audioUrl,_that.script);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id, @JsonKey(name: 'note_id')  int noteId,  String title, @JsonKey(name: 'generated_at')  DateTime generatedAt, @JsonKey(name: 'duration_seconds')  double durationSeconds, @JsonKey(name: 'audio_url')  String audioUrl,  String script)  $default,) {final _that = this;
+switch (_that) {
+case _PodcastDto():
+return $default(_that.id,_that.noteId,_that.title,_that.generatedAt,_that.durationSeconds,_that.audioUrl,_that.script);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id, @JsonKey(name: 'note_id')  int noteId,  String title, @JsonKey(name: 'generated_at')  DateTime generatedAt, @JsonKey(name: 'duration_seconds')  double durationSeconds, @JsonKey(name: 'audio_url')  String audioUrl,  String script)?  $default,) {final _that = this;
+switch (_that) {
+case _PodcastDto() when $default != null:
+return $default(_that.id,_that.noteId,_that.title,_that.generatedAt,_that.durationSeconds,_that.audioUrl,_that.script);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _PodcastDto implements PodcastDto {
+  const _PodcastDto({this.id, @JsonKey(name: 'note_id') required this.noteId, this.title = '', @JsonKey(name: 'generated_at') required this.generatedAt, @JsonKey(name: 'duration_seconds') this.durationSeconds = 0, @JsonKey(name: 'audio_url') required this.audioUrl, required this.script});
+  factory _PodcastDto.fromJson(Map<String, dynamic> json) => _$PodcastDtoFromJson(json);
+
+@override final  int? id;
+@override@JsonKey(name: 'note_id') final  int noteId;
+@override@JsonKey() final  String title;
+@override@JsonKey(name: 'generated_at') final  DateTime generatedAt;
+@override@JsonKey(name: 'duration_seconds') final  double durationSeconds;
+@override@JsonKey(name: 'audio_url') final  String audioUrl;
+@override final  String script;
+
+/// Create a copy of PodcastDto
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$PodcastDtoCopyWith<_PodcastDto> get copyWith => __$PodcastDtoCopyWithImpl<_PodcastDto>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$PodcastDtoToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PodcastDto&&(identical(other.id, id) || other.id == id)&&(identical(other.noteId, noteId) || other.noteId == noteId)&&(identical(other.title, title) || other.title == title)&&(identical(other.generatedAt, generatedAt) || other.generatedAt == generatedAt)&&(identical(other.durationSeconds, durationSeconds) || other.durationSeconds == durationSeconds)&&(identical(other.audioUrl, audioUrl) || other.audioUrl == audioUrl)&&(identical(other.script, script) || other.script == script));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+    return Object.hash(runtimeType,id,noteId,title,generatedAt,durationSeconds,audioUrl,script);
+}
+
+@override
+String toString() {
+    return 'PodcastDto(id: $id, noteId: $noteId, title: $title, generatedAt: $generatedAt, durationSeconds: $durationSeconds, audioUrl: $audioUrl, script: $script)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$PodcastDtoCopyWith<$Res> implements $PodcastDtoCopyWith<$Res> {
+  factory _$PodcastDtoCopyWith(_PodcastDto value, $Res Function(_PodcastDto) _then) = __$PodcastDtoCopyWithImpl;
+@override @useResult
+$Res call({
+ int? id,@JsonKey(name: 'note_id') int noteId, String title,@JsonKey(name: 'generated_at') DateTime generatedAt,@JsonKey(name: 'duration_seconds') double durationSeconds,@JsonKey(name: 'audio_url') String audioUrl, String script
+});
+
+
+
+
+}
+/// @nodoc
+class __$PodcastDtoCopyWithImpl<$Res>
+    implements _$PodcastDtoCopyWith<$Res> {
+  __$PodcastDtoCopyWithImpl(this._self, this._then);
+
+  final _PodcastDto _self;
+  final $Res Function(_PodcastDto) _then;
+
+/// Create a copy of PodcastDto
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? noteId = null,Object? title = null,Object? generatedAt = null,Object? durationSeconds = null,Object? audioUrl = null,Object? script = null,}) {
+  return _then(_PodcastDto(
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int?,noteId: null == noteId ? _self.noteId : noteId // ignore: cast_nullable_to_non_nullable
+as int,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String,generatedAt: null == generatedAt ? _self.generatedAt : generatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,durationSeconds: null == durationSeconds ? _self.durationSeconds : durationSeconds // ignore: cast_nullable_to_non_nullable
+as double,audioUrl: null == audioUrl ? _self.audioUrl : audioUrl // ignore: cast_nullable_to_non_nullable
+as String,script: null == script ? _self.script : script // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
 mixin _$StudyArtifactsDto {
 
  bool get summary; Set<QuestionFormat> get questions; bool get podcast;@JsonKey(name: 'study_plans') List<int> get studyPlans;

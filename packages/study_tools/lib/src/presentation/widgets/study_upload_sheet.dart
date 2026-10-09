@@ -14,12 +14,14 @@ class StudyUploadSheet extends StatefulWidget {
     required this.courses,
     required this.cubit,
     this.preselectedCourseId,
+    this.preselectedCourseOptionId,
     this.preselectedCourseLabel,
   });
   final PlatformFile file;
   final List<StudyCourseOption> courses;
   final StudyToolsCubit cubit;
   final String? preselectedCourseId;
+  final String? preselectedCourseOptionId;
   final String? preselectedCourseLabel;
 
   @override
@@ -27,7 +29,8 @@ class StudyUploadSheet extends StatefulWidget {
 }
 
 class _StudyUploadSheetState extends State<StudyUploadSheet> {
-  late String? _courseId = widget.preselectedCourseId;
+  late String? _courseId =
+      widget.preselectedCourseOptionId ?? widget.preselectedCourseId;
   late final _label = TextEditingController(
     text: widget.preselectedCourseLabel,
   );
@@ -141,10 +144,14 @@ class _StudyUploadSheetState extends State<StudyUploadSheet> {
 
   Future<void> _submit() async {
     setState(() => _submitting = true);
+    final selectedCourse = widget.courses
+        .where((course) => course.id == _courseId)
+        .firstOrNull;
     await widget.cubit.upload(
       file: widget.file,
-      courseId: _courseId,
-      courseLabel: _courseId == null ? _label.text : null,
+      courseId: selectedCourse?.professorId,
+      courseLabel:
+          selectedCourse?.title ?? (_courseId == null ? _label.text : null),
     );
     if (!mounted) return;
     setState(() => _submitting = false);
