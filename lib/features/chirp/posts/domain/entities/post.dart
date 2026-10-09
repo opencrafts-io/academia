@@ -20,6 +20,7 @@ abstract class Post with _$Post {
     required int viewsCount,
     required int commentCount,
     @Default([]) List<Comment> comments,
+    Poll? poll,
     required DateTime createdAt,
     required DateTime updatedAt,
   }) = _Post;

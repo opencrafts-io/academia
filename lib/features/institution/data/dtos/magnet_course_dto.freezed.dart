@@ -338,7 +338,7 @@ as String?,
 /// @nodoc
 mixin _$MagnetCourseDto implements DiagnosticableTreeMixin {
 
- dynamic get id;@JsonKey(name: 'course_code') String? get courseCode;@JsonKey(name: 'course_name') String? get courseName; String? get instructor;@JsonKey(name: 'is_synced') bool? get isSynced; dynamic get color;@JsonKey(name: 'is_deleted') bool? get isDeleted;@JsonKey(name: 'created_at') String? get createdAt;@JsonKey(name: 'updated_at') String? get updatedAt;@JsonKey(name: 'institution_id') dynamic get institutionId;@JsonKey(name: 'server_id') dynamic get serverId;@JsonKey(name: 'semester_id') dynamic get semesterId;@JsonKey(name: 'course_schedules') List<MagnetCourseScheduleDto> get courseSchedules;
+ dynamic get id;@JsonKey(name: 'course_code') String? get courseCode;@JsonKey(name: 'course_name') String? get courseName; String? get instructor;@JsonKey(name: 'is_synced') bool? get isSynced; dynamic get color;@JsonKey(name: 'is_deleted') bool? get isDeleted;@JsonKey(name: 'created_at') String? get createdAt;@JsonKey(name: 'updated_at') String? get updatedAt;@JsonKey(name: 'institution_id') dynamic get institutionId;@JsonKey(name: 'server_id') dynamic get serverId;@JsonKey(name: 'course_schedules') List<MagnetCourseScheduleDto> get courseSchedules;
 /// Create a copy of MagnetCourseDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -353,26 +353,26 @@ void debugFillProperties(DiagnosticPropertiesBuilder properties) {
   final _this = this as MagnetCourseDto;
   properties
     ..add(DiagnosticsProperty('type', 'MagnetCourseDto'))
-    ..add(DiagnosticsProperty('id', _this.id))..add(DiagnosticsProperty('courseCode', _this.courseCode))..add(DiagnosticsProperty('courseName', _this.courseName))..add(DiagnosticsProperty('instructor', _this.instructor))..add(DiagnosticsProperty('isSynced', _this.isSynced))..add(DiagnosticsProperty('color', _this.color))..add(DiagnosticsProperty('isDeleted', _this.isDeleted))..add(DiagnosticsProperty('createdAt', _this.createdAt))..add(DiagnosticsProperty('updatedAt', _this.updatedAt))..add(DiagnosticsProperty('institutionId', _this.institutionId))..add(DiagnosticsProperty('serverId', _this.serverId))..add(DiagnosticsProperty('semesterId', _this.semesterId))..add(DiagnosticsProperty('courseSchedules', _this.courseSchedules));
+    ..add(DiagnosticsProperty('id', _this.id))..add(DiagnosticsProperty('courseCode', _this.courseCode))..add(DiagnosticsProperty('courseName', _this.courseName))..add(DiagnosticsProperty('instructor', _this.instructor))..add(DiagnosticsProperty('isSynced', _this.isSynced))..add(DiagnosticsProperty('color', _this.color))..add(DiagnosticsProperty('isDeleted', _this.isDeleted))..add(DiagnosticsProperty('createdAt', _this.createdAt))..add(DiagnosticsProperty('updatedAt', _this.updatedAt))..add(DiagnosticsProperty('institutionId', _this.institutionId))..add(DiagnosticsProperty('serverId', _this.serverId))..add(DiagnosticsProperty('courseSchedules', _this.courseSchedules));
 }
 
 @override
 bool operator ==(Object other) {
   final _this = this as MagnetCourseDto;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MagnetCourseDto&&const DeepCollectionEquality().equals(other.id, _this.id)&&(identical(other.courseCode, _this.courseCode) || other.courseCode == _this.courseCode)&&(identical(other.courseName, _this.courseName) || other.courseName == _this.courseName)&&(identical(other.instructor, _this.instructor) || other.instructor == _this.instructor)&&(identical(other.isSynced, _this.isSynced) || other.isSynced == _this.isSynced)&&const DeepCollectionEquality().equals(other.color, _this.color)&&(identical(other.isDeleted, _this.isDeleted) || other.isDeleted == _this.isDeleted)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt)&&const DeepCollectionEquality().equals(other.institutionId, _this.institutionId)&&const DeepCollectionEquality().equals(other.serverId, _this.serverId)&&const DeepCollectionEquality().equals(other.semesterId, _this.semesterId)&&const DeepCollectionEquality().equals(other.courseSchedules, _this.courseSchedules));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MagnetCourseDto&&const DeepCollectionEquality().equals(other.id, _this.id)&&(identical(other.courseCode, _this.courseCode) || other.courseCode == _this.courseCode)&&(identical(other.courseName, _this.courseName) || other.courseName == _this.courseName)&&(identical(other.instructor, _this.instructor) || other.instructor == _this.instructor)&&(identical(other.isSynced, _this.isSynced) || other.isSynced == _this.isSynced)&&const DeepCollectionEquality().equals(other.color, _this.color)&&(identical(other.isDeleted, _this.isDeleted) || other.isDeleted == _this.isDeleted)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt)&&const DeepCollectionEquality().equals(other.institutionId, _this.institutionId)&&const DeepCollectionEquality().equals(other.serverId, _this.serverId)&&const DeepCollectionEquality().equals(other.courseSchedules, _this.courseSchedules));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as MagnetCourseDto;
-  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.id),_this.courseCode,_this.courseName,_this.instructor,_this.isSynced,const DeepCollectionEquality().hash(_this.color),_this.isDeleted,_this.createdAt,_this.updatedAt,const DeepCollectionEquality().hash(_this.institutionId),const DeepCollectionEquality().hash(_this.serverId),const DeepCollectionEquality().hash(_this.semesterId),const DeepCollectionEquality().hash(_this.courseSchedules));
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.id),_this.courseCode,_this.courseName,_this.instructor,_this.isSynced,const DeepCollectionEquality().hash(_this.color),_this.isDeleted,_this.createdAt,_this.updatedAt,const DeepCollectionEquality().hash(_this.institutionId),const DeepCollectionEquality().hash(_this.serverId),const DeepCollectionEquality().hash(_this.courseSchedules));
 }
 
 @override
 String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
   final _this = this as MagnetCourseDto;
-  return 'MagnetCourseDto(id: ${_this.id}, courseCode: ${_this.courseCode}, courseName: ${_this.courseName}, instructor: ${_this.instructor}, isSynced: ${_this.isSynced}, color: ${_this.color}, isDeleted: ${_this.isDeleted}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt}, institutionId: ${_this.institutionId}, serverId: ${_this.serverId}, semesterId: ${_this.semesterId}, courseSchedules: ${_this.courseSchedules})';
+  return 'MagnetCourseDto(id: ${_this.id}, courseCode: ${_this.courseCode}, courseName: ${_this.courseName}, instructor: ${_this.instructor}, isSynced: ${_this.isSynced}, color: ${_this.color}, isDeleted: ${_this.isDeleted}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt}, institutionId: ${_this.institutionId}, serverId: ${_this.serverId}, courseSchedules: ${_this.courseSchedules})';
 }
 
 
@@ -383,7 +383,7 @@ abstract mixin class $MagnetCourseDtoCopyWith<$Res>  {
   factory $MagnetCourseDtoCopyWith(MagnetCourseDto value, $Res Function(MagnetCourseDto) _then) = _$MagnetCourseDtoCopyWithImpl;
 @useResult
 $Res call({
- dynamic id,@JsonKey(name: 'course_code') String? courseCode,@JsonKey(name: 'course_name') String? courseName, String? instructor,@JsonKey(name: 'is_synced') bool? isSynced, dynamic color,@JsonKey(name: 'is_deleted') bool? isDeleted,@JsonKey(name: 'created_at') String? createdAt,@JsonKey(name: 'updated_at') String? updatedAt,@JsonKey(name: 'institution_id') dynamic institutionId,@JsonKey(name: 'server_id') dynamic serverId,@JsonKey(name: 'semester_id') dynamic semesterId,@JsonKey(name: 'course_schedules') List<MagnetCourseScheduleDto> courseSchedules
+ dynamic id,@JsonKey(name: 'course_code') String? courseCode,@JsonKey(name: 'course_name') String? courseName, String? instructor,@JsonKey(name: 'is_synced') bool? isSynced, dynamic color,@JsonKey(name: 'is_deleted') bool? isDeleted,@JsonKey(name: 'created_at') String? createdAt,@JsonKey(name: 'updated_at') String? updatedAt,@JsonKey(name: 'institution_id') dynamic institutionId,@JsonKey(name: 'server_id') dynamic serverId,@JsonKey(name: 'course_schedules') List<MagnetCourseScheduleDto> courseSchedules
 });
 
 
@@ -400,7 +400,7 @@ class _$MagnetCourseDtoCopyWithImpl<$Res>
 
 /// Create a copy of MagnetCourseDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? courseCode = freezed,Object? courseName = freezed,Object? instructor = freezed,Object? isSynced = freezed,Object? color = freezed,Object? isDeleted = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? institutionId = freezed,Object? serverId = freezed,Object? semesterId = freezed,Object? courseSchedules = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? courseCode = freezed,Object? courseName = freezed,Object? instructor = freezed,Object? isSynced = freezed,Object? color = freezed,Object? isDeleted = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? institutionId = freezed,Object? serverId = freezed,Object? courseSchedules = null,}) {
   return _then(MagnetCourseDto(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as dynamic,courseCode: freezed == courseCode ? _self.courseCode : courseCode // ignore: cast_nullable_to_non_nullable
@@ -413,7 +413,6 @@ as bool?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore
 as String?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as String?,institutionId: freezed == institutionId ? _self.institutionId : institutionId // ignore: cast_nullable_to_non_nullable
 as dynamic,serverId: freezed == serverId ? _self.serverId : serverId // ignore: cast_nullable_to_non_nullable
-as dynamic,semesterId: freezed == semesterId ? _self.semesterId : semesterId // ignore: cast_nullable_to_non_nullable
 as dynamic,courseSchedules: null == courseSchedules ? _self.courseSchedules : courseSchedules // ignore: cast_nullable_to_non_nullable
 as List<MagnetCourseScheduleDto>,
   ));
@@ -500,10 +499,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( dynamic id, @JsonKey(name: 'course_code')  String? courseCode, @JsonKey(name: 'course_name')  String? courseName,  String? instructor, @JsonKey(name: 'is_synced')  bool? isSynced,  dynamic color, @JsonKey(name: 'is_deleted')  bool? isDeleted, @JsonKey(name: 'created_at')  String? createdAt, @JsonKey(name: 'updated_at')  String? updatedAt, @JsonKey(name: 'institution_id')  dynamic institutionId, @JsonKey(name: 'server_id')  dynamic serverId, @JsonKey(name: 'semester_id')  dynamic semesterId, @JsonKey(name: 'course_schedules')  List<MagnetCourseScheduleDto> courseSchedules)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( dynamic id, @JsonKey(name: 'course_code')  String? courseCode, @JsonKey(name: 'course_name')  String? courseName,  String? instructor, @JsonKey(name: 'is_synced')  bool? isSynced,  dynamic color, @JsonKey(name: 'is_deleted')  bool? isDeleted, @JsonKey(name: 'created_at')  String? createdAt, @JsonKey(name: 'updated_at')  String? updatedAt, @JsonKey(name: 'institution_id')  dynamic institutionId, @JsonKey(name: 'server_id')  dynamic serverId, @JsonKey(name: 'course_schedules')  List<MagnetCourseScheduleDto> courseSchedules)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MagnetCourseDto() when $default != null:
-return $default(_that.id,_that.courseCode,_that.courseName,_that.instructor,_that.isSynced,_that.color,_that.isDeleted,_that.createdAt,_that.updatedAt,_that.institutionId,_that.serverId,_that.semesterId,_that.courseSchedules);case _:
+return $default(_that.id,_that.courseCode,_that.courseName,_that.instructor,_that.isSynced,_that.color,_that.isDeleted,_that.createdAt,_that.updatedAt,_that.institutionId,_that.serverId,_that.courseSchedules);case _:
   return orElse();
 
 }
@@ -521,10 +520,10 @@ return $default(_that.id,_that.courseCode,_that.courseName,_that.instructor,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( dynamic id, @JsonKey(name: 'course_code')  String? courseCode, @JsonKey(name: 'course_name')  String? courseName,  String? instructor, @JsonKey(name: 'is_synced')  bool? isSynced,  dynamic color, @JsonKey(name: 'is_deleted')  bool? isDeleted, @JsonKey(name: 'created_at')  String? createdAt, @JsonKey(name: 'updated_at')  String? updatedAt, @JsonKey(name: 'institution_id')  dynamic institutionId, @JsonKey(name: 'server_id')  dynamic serverId, @JsonKey(name: 'semester_id')  dynamic semesterId, @JsonKey(name: 'course_schedules')  List<MagnetCourseScheduleDto> courseSchedules)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( dynamic id, @JsonKey(name: 'course_code')  String? courseCode, @JsonKey(name: 'course_name')  String? courseName,  String? instructor, @JsonKey(name: 'is_synced')  bool? isSynced,  dynamic color, @JsonKey(name: 'is_deleted')  bool? isDeleted, @JsonKey(name: 'created_at')  String? createdAt, @JsonKey(name: 'updated_at')  String? updatedAt, @JsonKey(name: 'institution_id')  dynamic institutionId, @JsonKey(name: 'server_id')  dynamic serverId, @JsonKey(name: 'course_schedules')  List<MagnetCourseScheduleDto> courseSchedules)  $default,) {final _that = this;
 switch (_that) {
 case _MagnetCourseDto():
-return $default(_that.id,_that.courseCode,_that.courseName,_that.instructor,_that.isSynced,_that.color,_that.isDeleted,_that.createdAt,_that.updatedAt,_that.institutionId,_that.serverId,_that.semesterId,_that.courseSchedules);case _:
+return $default(_that.id,_that.courseCode,_that.courseName,_that.instructor,_that.isSynced,_that.color,_that.isDeleted,_that.createdAt,_that.updatedAt,_that.institutionId,_that.serverId,_that.courseSchedules);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -541,10 +540,10 @@ return $default(_that.id,_that.courseCode,_that.courseName,_that.instructor,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( dynamic id, @JsonKey(name: 'course_code')  String? courseCode, @JsonKey(name: 'course_name')  String? courseName,  String? instructor, @JsonKey(name: 'is_synced')  bool? isSynced,  dynamic color, @JsonKey(name: 'is_deleted')  bool? isDeleted, @JsonKey(name: 'created_at')  String? createdAt, @JsonKey(name: 'updated_at')  String? updatedAt, @JsonKey(name: 'institution_id')  dynamic institutionId, @JsonKey(name: 'server_id')  dynamic serverId, @JsonKey(name: 'semester_id')  dynamic semesterId, @JsonKey(name: 'course_schedules')  List<MagnetCourseScheduleDto> courseSchedules)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( dynamic id, @JsonKey(name: 'course_code')  String? courseCode, @JsonKey(name: 'course_name')  String? courseName,  String? instructor, @JsonKey(name: 'is_synced')  bool? isSynced,  dynamic color, @JsonKey(name: 'is_deleted')  bool? isDeleted, @JsonKey(name: 'created_at')  String? createdAt, @JsonKey(name: 'updated_at')  String? updatedAt, @JsonKey(name: 'institution_id')  dynamic institutionId, @JsonKey(name: 'server_id')  dynamic serverId, @JsonKey(name: 'course_schedules')  List<MagnetCourseScheduleDto> courseSchedules)?  $default,) {final _that = this;
 switch (_that) {
 case _MagnetCourseDto() when $default != null:
-return $default(_that.id,_that.courseCode,_that.courseName,_that.instructor,_that.isSynced,_that.color,_that.isDeleted,_that.createdAt,_that.updatedAt,_that.institutionId,_that.serverId,_that.semesterId,_that.courseSchedules);case _:
+return $default(_that.id,_that.courseCode,_that.courseName,_that.instructor,_that.isSynced,_that.color,_that.isDeleted,_that.createdAt,_that.updatedAt,_that.institutionId,_that.serverId,_that.courseSchedules);case _:
   return null;
 
 }
@@ -556,7 +555,7 @@ return $default(_that.id,_that.courseCode,_that.courseName,_that.instructor,_tha
 @JsonSerializable()
 
 class _MagnetCourseDto with DiagnosticableTreeMixin implements MagnetCourseDto {
-  const _MagnetCourseDto({this.id, @JsonKey(name: 'course_code') this.courseCode, @JsonKey(name: 'course_name') this.courseName, this.instructor, @JsonKey(name: 'is_synced') this.isSynced, this.color, @JsonKey(name: 'is_deleted') this.isDeleted, @JsonKey(name: 'created_at') this.createdAt, @JsonKey(name: 'updated_at') this.updatedAt, @JsonKey(name: 'institution_id') this.institutionId, @JsonKey(name: 'server_id') this.serverId, @JsonKey(name: 'semester_id') this.semesterId, @JsonKey(name: 'course_schedules')  List<MagnetCourseScheduleDto> courseSchedules = const []}): _courseSchedules = courseSchedules;
+  const _MagnetCourseDto({this.id, @JsonKey(name: 'course_code') this.courseCode, @JsonKey(name: 'course_name') this.courseName, this.instructor, @JsonKey(name: 'is_synced') this.isSynced, this.color, @JsonKey(name: 'is_deleted') this.isDeleted, @JsonKey(name: 'created_at') this.createdAt, @JsonKey(name: 'updated_at') this.updatedAt, @JsonKey(name: 'institution_id') this.institutionId, @JsonKey(name: 'server_id') this.serverId, @JsonKey(name: 'course_schedules')  List<MagnetCourseScheduleDto> courseSchedules = const []}): _courseSchedules = courseSchedules;
   factory _MagnetCourseDto.fromJson(Map<String, dynamic> json) => _$MagnetCourseDtoFromJson(json);
 
 @override final  dynamic id;
@@ -570,7 +569,6 @@ class _MagnetCourseDto with DiagnosticableTreeMixin implements MagnetCourseDto {
 @override@JsonKey(name: 'updated_at') final  String? updatedAt;
 @override@JsonKey(name: 'institution_id') final  dynamic institutionId;
 @override@JsonKey(name: 'server_id') final  dynamic serverId;
-@override@JsonKey(name: 'semester_id') final  dynamic semesterId;
  final  List<MagnetCourseScheduleDto> _courseSchedules;
 @override@JsonKey(name: 'course_schedules') List<MagnetCourseScheduleDto> get courseSchedules {
   if (_courseSchedules is EqualUnmodifiableListView) return _courseSchedules;
@@ -593,23 +591,23 @@ Map<String, dynamic> toJson() {
 void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     properties
     ..add(DiagnosticsProperty('type', 'MagnetCourseDto'))
-    ..add(DiagnosticsProperty('id', id))..add(DiagnosticsProperty('courseCode', courseCode))..add(DiagnosticsProperty('courseName', courseName))..add(DiagnosticsProperty('instructor', instructor))..add(DiagnosticsProperty('isSynced', isSynced))..add(DiagnosticsProperty('color', color))..add(DiagnosticsProperty('isDeleted', isDeleted))..add(DiagnosticsProperty('createdAt', createdAt))..add(DiagnosticsProperty('updatedAt', updatedAt))..add(DiagnosticsProperty('institutionId', institutionId))..add(DiagnosticsProperty('serverId', serverId))..add(DiagnosticsProperty('semesterId', semesterId))..add(DiagnosticsProperty('courseSchedules', courseSchedules));
+    ..add(DiagnosticsProperty('id', id))..add(DiagnosticsProperty('courseCode', courseCode))..add(DiagnosticsProperty('courseName', courseName))..add(DiagnosticsProperty('instructor', instructor))..add(DiagnosticsProperty('isSynced', isSynced))..add(DiagnosticsProperty('color', color))..add(DiagnosticsProperty('isDeleted', isDeleted))..add(DiagnosticsProperty('createdAt', createdAt))..add(DiagnosticsProperty('updatedAt', updatedAt))..add(DiagnosticsProperty('institutionId', institutionId))..add(DiagnosticsProperty('serverId', serverId))..add(DiagnosticsProperty('courseSchedules', courseSchedules));
 }
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MagnetCourseDto&&const DeepCollectionEquality().equals(other.id, id)&&(identical(other.courseCode, courseCode) || other.courseCode == courseCode)&&(identical(other.courseName, courseName) || other.courseName == courseName)&&(identical(other.instructor, instructor) || other.instructor == instructor)&&(identical(other.isSynced, isSynced) || other.isSynced == isSynced)&&const DeepCollectionEquality().equals(other.color, color)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&const DeepCollectionEquality().equals(other.institutionId, institutionId)&&const DeepCollectionEquality().equals(other.serverId, serverId)&&const DeepCollectionEquality().equals(other.semesterId, semesterId)&&const DeepCollectionEquality().equals(other.courseSchedules, _courseSchedules));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MagnetCourseDto&&const DeepCollectionEquality().equals(other.id, id)&&(identical(other.courseCode, courseCode) || other.courseCode == courseCode)&&(identical(other.courseName, courseName) || other.courseName == courseName)&&(identical(other.instructor, instructor) || other.instructor == instructor)&&(identical(other.isSynced, isSynced) || other.isSynced == isSynced)&&const DeepCollectionEquality().equals(other.color, color)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&const DeepCollectionEquality().equals(other.institutionId, institutionId)&&const DeepCollectionEquality().equals(other.serverId, serverId)&&const DeepCollectionEquality().equals(other.courseSchedules, _courseSchedules));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,const DeepCollectionEquality().hash(id),courseCode,courseName,instructor,isSynced,const DeepCollectionEquality().hash(color),isDeleted,createdAt,updatedAt,const DeepCollectionEquality().hash(institutionId),const DeepCollectionEquality().hash(serverId),const DeepCollectionEquality().hash(semesterId),const DeepCollectionEquality().hash(_courseSchedules));
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(id),courseCode,courseName,instructor,isSynced,const DeepCollectionEquality().hash(color),isDeleted,createdAt,updatedAt,const DeepCollectionEquality().hash(institutionId),const DeepCollectionEquality().hash(serverId),const DeepCollectionEquality().hash(_courseSchedules));
 }
 
 @override
 String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-    return 'MagnetCourseDto(id: $id, courseCode: $courseCode, courseName: $courseName, instructor: $instructor, isSynced: $isSynced, color: $color, isDeleted: $isDeleted, createdAt: $createdAt, updatedAt: $updatedAt, institutionId: $institutionId, serverId: $serverId, semesterId: $semesterId, courseSchedules: $courseSchedules)';
+    return 'MagnetCourseDto(id: $id, courseCode: $courseCode, courseName: $courseName, instructor: $instructor, isSynced: $isSynced, color: $color, isDeleted: $isDeleted, createdAt: $createdAt, updatedAt: $updatedAt, institutionId: $institutionId, serverId: $serverId, courseSchedules: $courseSchedules)';
 }
 
 
@@ -620,7 +618,7 @@ abstract mixin class _$MagnetCourseDtoCopyWith<$Res> implements $MagnetCourseDto
   factory _$MagnetCourseDtoCopyWith(_MagnetCourseDto value, $Res Function(_MagnetCourseDto) _then) = __$MagnetCourseDtoCopyWithImpl;
 @override @useResult
 $Res call({
- dynamic id,@JsonKey(name: 'course_code') String? courseCode,@JsonKey(name: 'course_name') String? courseName, String? instructor,@JsonKey(name: 'is_synced') bool? isSynced, dynamic color,@JsonKey(name: 'is_deleted') bool? isDeleted,@JsonKey(name: 'created_at') String? createdAt,@JsonKey(name: 'updated_at') String? updatedAt,@JsonKey(name: 'institution_id') dynamic institutionId,@JsonKey(name: 'server_id') dynamic serverId,@JsonKey(name: 'semester_id') dynamic semesterId,@JsonKey(name: 'course_schedules') List<MagnetCourseScheduleDto> courseSchedules
+ dynamic id,@JsonKey(name: 'course_code') String? courseCode,@JsonKey(name: 'course_name') String? courseName, String? instructor,@JsonKey(name: 'is_synced') bool? isSynced, dynamic color,@JsonKey(name: 'is_deleted') bool? isDeleted,@JsonKey(name: 'created_at') String? createdAt,@JsonKey(name: 'updated_at') String? updatedAt,@JsonKey(name: 'institution_id') dynamic institutionId,@JsonKey(name: 'server_id') dynamic serverId,@JsonKey(name: 'course_schedules') List<MagnetCourseScheduleDto> courseSchedules
 });
 
 
@@ -637,7 +635,7 @@ class __$MagnetCourseDtoCopyWithImpl<$Res>
 
 /// Create a copy of MagnetCourseDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? courseCode = freezed,Object? courseName = freezed,Object? instructor = freezed,Object? isSynced = freezed,Object? color = freezed,Object? isDeleted = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? institutionId = freezed,Object? serverId = freezed,Object? semesterId = freezed,Object? courseSchedules = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? courseCode = freezed,Object? courseName = freezed,Object? instructor = freezed,Object? isSynced = freezed,Object? color = freezed,Object? isDeleted = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? institutionId = freezed,Object? serverId = freezed,Object? courseSchedules = null,}) {
   return _then(_MagnetCourseDto(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as dynamic,courseCode: freezed == courseCode ? _self.courseCode : courseCode // ignore: cast_nullable_to_non_nullable
@@ -650,7 +648,6 @@ as bool?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore
 as String?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as String?,institutionId: freezed == institutionId ? _self.institutionId : institutionId // ignore: cast_nullable_to_non_nullable
 as dynamic,serverId: freezed == serverId ? _self.serverId : serverId // ignore: cast_nullable_to_non_nullable
-as dynamic,semesterId: freezed == semesterId ? _self.semesterId : semesterId // ignore: cast_nullable_to_non_nullable
 as dynamic,courseSchedules: null == courseSchedules ? _self._courseSchedules : courseSchedules // ignore: cast_nullable_to_non_nullable
 as List<MagnetCourseScheduleDto>,
   ));

@@ -2,6 +2,7 @@
 // ignore_for_file: unused_local_variable, unused_import
 import 'package:drift/drift.dart';
 import 'package:drift_dev/api/migrations_native.dart';
+import 'package:drift/native.dart';
 import 'package:database/app_database_v2.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -35,6 +36,87 @@ void main() {
         }
       });
     }
+  });
+
+  test('v8 migration keeps pre-existing course columns and data', () async {
+    final executor = NativeDatabase.memory(
+      setup: (database) {
+        database.execute('''
+          CREATE TABLE courses (
+            id TEXT NOT NULL PRIMARY KEY,
+            institution_id INTEGER NOT NULL,
+            title TEXT NOT NULL,
+            code TEXT NULL,
+            term_label TEXT NULL,
+            academic_year TEXT NULL,
+            term_start_date INTEGER NULL,
+            term_end_date INTEGER NULL,
+            previous_course_id TEXT NULL,
+            archived_at INTEGER NULL,
+            created_at INTEGER NOT NULL,
+            updated_at INTEGER NOT NULL,
+            cached_at INTEGER NOT NULL,
+            server_id TEXT NULL,
+            sync_status TEXT NOT NULL DEFAULT 'synced'
+          )
+        ''');
+        database.execute('''
+          INSERT INTO courses (
+            id, institution_id, title, created_at, updated_at, cached_at
+          ) VALUES ('course-1', 1, 'Existing course', 1, 1, 1)
+        ''');
+        database.execute('PRAGMA user_version = 7');
+      },
+    );
+    final db = AppDatabaseV2(executor);
+
+    await db.customSelect('SELECT 1').get();
+
+    final course = await db
+        .customSelect('SELECT id, server_id FROM courses')
+        .getSingle();
+    expect(course.read<String>('id'), 'course-1');
+    expect(course.read<String>('server_id'), 'course-1');
+    expect(
+      await db.customSelect('PRAGMA table_info(courses)').get(),
+      hasLength(18),
+    );
+    expect(
+      await db
+          .customSelect(
+            "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'schedule_entries'",
+          )
+          .get(),
+      hasLength(1),
+    );
+
+    await db.close();
+  });
+
+  test('v8 upgrade creates scoped Study Tools and podcast tables', () async {
+    final schema = await verifier.schemaAt(8);
+    final db = AppDatabaseV2(schema.newConnection());
+
+    await verifier.migrateAndValidate(db, 9);
+
+    for (final table in [
+      'study_material_records',
+      'study_question_set_records',
+      'study_generation_job_records',
+      'study_podcast_records',
+      'study_podcast_downloads',
+      'study_playback_positions',
+      'study_offline_entitlement_snapshots',
+      'study_legacy_imports',
+    ]) {
+      final result = await db.customSelect(
+        "SELECT name FROM sqlite_master WHERE type = 'table' AND name = ?",
+        variables: [Variable.withString(table)],
+      ).get();
+      expect(result, hasLength(1), reason: '$table should exist after upgrade');
+    }
+
+    await db.close();
   });
 
   // The following template shows how to write tests ensuring your migrations

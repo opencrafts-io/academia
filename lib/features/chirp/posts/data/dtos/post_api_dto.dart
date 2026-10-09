@@ -20,6 +20,11 @@ abstract class PostApiDto with _$PostApiDto {
     @JsonKey(name: 'views_count') @Default(0) int viewsCount,
     @JsonKey(name: 'comment_count') @Default(0) int commentCount,
     @Default([]) List<CommentApiDto> comments,
+
+    /// Optional poll, kept as the raw JSON blob — it is stored verbatim in
+    /// the drift `posts.poll` column and parsed by `PollData` on the way to
+    /// the entity (see post_model_helper.dart).
+    Map<String, dynamic>? poll,
     @JsonKey(name: 'created_at') required DateTime createdAt,
     @JsonKey(name: 'updated_at') required DateTime updatedAt,
   }) = _PostApiDto;

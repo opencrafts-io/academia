@@ -25,5 +25,5 @@ class Token extends Equatable {
   ];
 
   @override
-  bool? get stringify => true;
+  bool? get stringify => false;
 }

@@ -1,0 +1,306 @@
+import 'dart:async';
+
+import 'package:ads/ads.dart';
+import 'package:material3_indicators/material3_indicators.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pomodoro/src/domain/enums/pomodoro_phase.dart';
+import 'package:pomodoro/src/presentation/cubit/pomodoro_cubit.dart';
+import 'package:pomodoro/src/presentation/cubit/pomodoro_state.dart';
+import 'package:pomodoro/src/presentation/routes/pomodoro_routes.dart';
+import 'package:pomodoro/src/presentation/utils/duration_format.dart';
+import 'package:pomodoro/src/presentation/views/pomodoro_todo_picker_screen.dart';
+import 'package:pomodoro/src/presentation/widgets/pomodoro_settings_sheet.dart';
+import 'package:smooth_sheets/smooth_sheets.dart';
+
+/// Full-screen Pomodoro focus timer. When [todoLocalId] is given, the
+/// running session is attributed to that todo item; otherwise it's a
+/// freestanding session.
+class PomodoroTimerScreen extends StatefulWidget {
+  const PomodoroTimerScreen({super.key, this.todoLocalId});
+
+  final int? todoLocalId;
+
+  @override
+  State<PomodoroTimerScreen> createState() => _PomodoroTimerScreenState();
+}
+
+class _PomodoroTimerScreenState extends State<PomodoroTimerScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final cubit = context.read<PomodoroCubit>();
+      unawaited(_linkRoutedTodo(cubit));
+    });
+  }
+
+  Future<void> _linkRoutedTodo(PomodoroCubit cubit) async {
+    await cubit.ready;
+    if (!mounted) return;
+    await cubit.linkTodoItem(widget.todoLocalId);
+  }
+
+  Color _phaseColor(ColorScheme scheme, PomodoroPhase phase) => switch (phase) {
+    PomodoroPhase.focus => scheme.primary,
+    PomodoroPhase.shortBreak => scheme.tertiary,
+    PomodoroPhase.longBreak => scheme.secondary,
+  };
+
+  void _openSettings(BuildContext context, PomodoroState state) {
+    unawaited(
+      showModalSheet<void>(
+        context: context,
+        swipeDismissible: true,
+        transitionCurve: Curves.easeOutCubic,
+        builder: (sheetContext) => SheetKeyboardDismissible(
+          dismissBehavior: SheetKeyboardDismissBehavior.onDragDown(
+            isContentScrollAware: true,
+          ),
+          child: Sheet(
+            scrollConfiguration: const SheetScrollConfiguration(),
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.viewInsetsOf(sheetContext).bottom,
+            ),
+            decoration: MaterialSheetDecoration(
+              size: SheetSize.fit,
+              clipBehavior: Clip.antiAlias,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+              ),
+            ),
+            physics: BouncingSheetPhysics(),
+            child: PomodoroSettingsSheet(
+              focusDuration: state.focusDuration,
+              shortBreakDuration: state.shortBreakDuration,
+              longBreakDuration: state.longBreakDuration,
+              sessionsBeforeLongBreak: state.sessionsBeforeLongBreak,
+              onSave:
+                  ({
+                    required focusDuration,
+                    required shortBreakDuration,
+                    required longBreakDuration,
+                    required sessionsBeforeLongBreak,
+                  }) {
+                    unawaited(
+                      context.read<PomodoroCubit>().updateSettings(
+                        focusDuration: focusDuration,
+                        shortBreakDuration: shortBreakDuration,
+                        longBreakDuration: longBreakDuration,
+                        sessionsBeforeLongBreak: sessionsBeforeLongBreak,
+                      ),
+                    );
+                  },
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _openTodoPicker(
+    BuildContext context,
+    PomodoroState state,
+  ) async {
+    final selection = await PomodoroTodoPickerRoute(
+      selectedTodoLocalID: state.linkedTodoItemLocalId,
+    ).push<PomodoroTodoSelection>(context);
+
+    if (!context.mounted || selection == null) return;
+    context.read<PomodoroCubit>().linkTodoItem(selection.localId);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
+    return BlocBuilder<PomodoroCubit, PomodoroState>(
+      builder: (context, state) {
+        final color = _phaseColor(scheme, state.phase);
+        final cubit = context.read<PomodoroCubit>();
+
+        return Scaffold(
+          appBar: AppBar(
+            title: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 220),
+              child: Text(state.phase.label, key: ValueKey(state.phase)),
+            ),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.checklist_rounded),
+                tooltip: "Choose Todo",
+                onPressed: () => _openTodoPicker(context, state),
+              ),
+              IconButton(
+                icon: const Icon(Icons.tune),
+                onPressed: () => _openSettings(context, state),
+              ),
+            ],
+          ),
+          body: SafeArea(
+            child: Column(
+              children: [
+                AnimatedSize(
+                  duration: const Duration(milliseconds: 220),
+                  curve: Curves.easeOutCubic,
+                  child: state.linkedTodoItemTitle == null
+                      ? const SizedBox.shrink()
+                      : Padding(
+                          padding: const EdgeInsets.only(top: 12),
+                          child: Column(
+                            children: [
+                              Chip(
+                                avatar: const Icon(
+                                  Icons.checklist_rounded,
+                                  size: 16,
+                                ),
+                                label: Text(
+                                  'Focusing on: ${state.linkedTodoItemTitle}',
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              _buildTrackedTime(context, state),
+                            ],
+                          ),
+                        ),
+                ),
+                const Spacer(),
+                _buildRing(context, state, color),
+                const SizedBox(height: 24),
+                _buildSessionDots(state, color),
+                const SizedBox(height: 16),
+                const Center(child: BannerAdWidget()),
+                const Spacer(),
+                _buildControls(context, cubit, state, color),
+                const SizedBox(height: 32),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildTrackedTime(BuildContext context, PomodoroState state) {
+    if (state.trackedFocusedSeconds == 0) {
+      return const SizedBox.shrink();
+    }
+    return Text(
+      "Total tracked: "
+      "${formatFocusedDuration(Duration(seconds: state.trackedFocusedSeconds))}",
+      style: Theme.of(context).textTheme.bodySmall
+          ?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+    );
+  }
+
+  Widget _buildRing(BuildContext context, PomodoroState state, Color color) {
+    return SizedBox(
+      width: 260,
+      height: 260,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          SizedBox(
+            width: 260,
+            height: 260,
+            child: TweenAnimationBuilder<double>(
+              tween: Tween<double>(
+                end: state.progress.clamp(0.0, 1.0).toDouble(),
+              ),
+              duration: const Duration(milliseconds: 800),
+              curve: Curves.easeOutCubic,
+              builder: (context, value, _) => WavyCircularProgressIndicator(
+                value: value,
+                size: 260,
+                amplitude: 2,
+                frequency: 8,
+                strokeWidth: 10,
+                backgroundColor: color.withAlpha(30),
+                color: color,
+              ),
+            ),
+          ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 180),
+                child: Text(
+                  formatPomodoroCountdown(state.remaining),
+                  key: ValueKey(state.remaining.inSeconds),
+                  style: Theme.of(context).textTheme.displayMedium
+                      ?.copyWith(fontWeight: FontWeight.bold, color: color),
+                ),
+              ),
+              const SizedBox(height: 4),
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 180),
+                child: Text(
+                  state.isRunning ? 'Running' : 'Paused',
+                  key: ValueKey(state.isRunning),
+                  style: Theme.of(context).textTheme.bodySmall
+                      ?.copyWith(color: color.withAlpha(180)),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSessionDots(PomodoroState state, Color color) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(state.sessionsBeforeLongBreak, (i) {
+        final filled = i < state.completedFocusSessions;
+        return Container(
+          margin: const EdgeInsets.symmetric(horizontal: 4),
+          width: 10,
+          height: 10,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: filled ? color : color.withAlpha(40),
+          ),
+        );
+      }),
+    );
+  }
+
+  Widget _buildControls(
+    BuildContext context,
+    PomodoroCubit cubit,
+    PomodoroState state,
+    Color color,
+  ) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        IconButton.filledTonal(
+          iconSize: 28,
+          onPressed: cubit.reset,
+          icon: const Icon(Icons.replay_rounded),
+        ),
+        const SizedBox(width: 24),
+        IconButton.filled(
+          iconSize: 40,
+          style: IconButton.styleFrom(
+            backgroundColor: color,
+            padding: const EdgeInsets.all(20),
+          ),
+          onPressed: state.isRunning ? cubit.pause : cubit.start,
+          icon: Icon(
+            state.isRunning ? Icons.pause_rounded : Icons.play_arrow_rounded,
+          ),
+        ),
+        const SizedBox(width: 24),
+        IconButton.filledTonal(
+          iconSize: 28,
+          onPressed: cubit.skip,
+          icon: const Icon(Icons.skip_next_rounded),
+        ),
+      ],
+    );
+  }
+}

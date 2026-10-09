@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+
 import 'database.dart';
 
 extension AppDatabaseExtension on AppDataBase {
@@ -39,14 +40,23 @@ extension AppDatabaseExtension on AppDataBase {
   }
 
   Future<void> migrate22To23(Migrator m) async {
-    await m.createTable(semester);
+    await m.database.customStatement('''
+      CREATE TABLE IF NOT EXISTS "semester" (
+        "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        "name" TEXT NOT NULL,
+        "description" TEXT,
+        "institution_id" INTEGER REFERENCES "institution" ("institution_id"),
+        "start_date" INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        "end_date" INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP
+      );
+    ''');
   }
 
   Future<void> migrate23To24(Migrator m) async {
-    await m.deleteTable('institution_course_timetable_entry');
-    await m.createTable(course);
-    await m.createTable(timetable);
-    await m.createTable(timetableEntry);
+    await m.database.customStatement(
+      "DROP TABLE IF EXISTS 'institution_course_timetable_entry';",
+    );
+    await _createRetiredCourseTables(m);
   }
 
   Future<void> migrate24To25(Migrator m) async {
@@ -105,13 +115,12 @@ extension AppDatabaseExtension on AppDataBase {
   }
 
   Future<void> migrate31To32(Migrator m) async {
-    m.createTable(todoLists);
+    // Todos now use AppDatabaseV2. Existing v1 todo tables are left in place
+    // for older installations but are no longer part of this database API.
   }
 
   Future<void> migrate32To33(Migrator m) async {
-    await m.createTable(todoTagItems);
-    await m.createTable(todoItems);
-    await m.createTable(todoItemTags);
+    // Todo schema creation is handled by the shared database package.
   }
 
   Future<void> migrate33To34(Migrator m) async {
@@ -149,6 +158,83 @@ extension AppDatabaseExtension on AppDataBase {
   }
 
   Future<void> migrate37To38(Migrator m) async {
-    await m.addColumn(todoItems, todoItems.focusedSeconds);
+    // Focus tracking is stored in the shared database package.
+  }
+
+  Future<void> migrate38To39(Migrator m) async {
+    // The app no longer maps these tables. Keep existing rows on upgraded
+    // installs in case a later migration needs to recover them.
+  }
+
+  Future<void> migrate39To40(Migrator m) async {
+    await m.addColumn(posts, posts.poll);
+  }
+
+  Future<void> migrate40To41(Migrator m) async {
+    // Remove retired course tables first because they referenced semester.
+    for (final table in [
+      'timetable_entry',
+      'course',
+      'timetable',
+      'streak_milestone',
+      'streak_activity',
+      'leaderboard_rank',
+      'semester',
+    ]) {
+      await m.database.customStatement('DROP TABLE IF EXISTS "$table";');
+    }
+  }
+
+  Future<void> _createRetiredCourseTables(Migrator m) async {
+    // Keep the v23-to-v24 transition valid without restoring the retired Dart
+    // models to the current database API.
+    await m.database.customStatement('''
+      CREATE TABLE IF NOT EXISTS "course" (
+        "id" TEXT NOT NULL PRIMARY KEY,
+        "server_id" INTEGER UNIQUE,
+        "institution" INTEGER REFERENCES "institution" ("institution_id"),
+        "semester" INTEGER REFERENCES "semester" ("id"),
+        "course_code" TEXT NOT NULL,
+        "course_name" TEXT NOT NULL,
+        "instructor" TEXT NOT NULL,
+        "color" INTEGER DEFAULT 505294591,
+        "is_synced" INTEGER NOT NULL DEFAULT 0 CHECK ("is_synced" IN (0, 1)),
+        "is_deleted" INTEGER NOT NULL DEFAULT 0 CHECK ("is_deleted" IN (0, 1)),
+        "created_at" INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        "updated_at" INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP
+      );
+    ''');
+    await m.database.customStatement('''
+      CREATE TABLE IF NOT EXISTS "timetable" (
+        "id" TEXT NOT NULL PRIMARY KEY,
+        "server_id" INTEGER UNIQUE,
+        "name" TEXT NOT NULL,
+        "user_id" TEXT NOT NULL,
+        "institution" INTEGER REFERENCES "institution" ("institution_id"),
+        "is_synced" INTEGER NOT NULL DEFAULT 0 CHECK ("is_synced" IN (0, 1)),
+        "is_deleted" INTEGER NOT NULL DEFAULT 0 CHECK ("is_deleted" IN (0, 1)),
+        "created_at" INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        "updated_at" INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP
+      );
+    ''');
+    await m.database.customStatement('''
+      CREATE TABLE IF NOT EXISTS "timetable_entry" (
+        "id" TEXT NOT NULL PRIMARY KEY,
+        "server_id" INTEGER UNIQUE,
+        "user_id" TEXT NOT NULL,
+        "institution_id" INTEGER NOT NULL,
+        "course_id" TEXT NOT NULL REFERENCES "course" ("id"),
+        "timetable_id" TEXT NOT NULL REFERENCES "timetable" ("id"),
+        "rrule" TEXT,
+        "start_date" INTEGER NOT NULL,
+        "duration_minutes" INTEGER NOT NULL,
+        "location" TEXT,
+        "room" TEXT,
+        "building" TEXT,
+        "is_synced" INTEGER NOT NULL DEFAULT 0 CHECK ("is_synced" IN (0, 1)),
+        "is_deleted" INTEGER NOT NULL DEFAULT 0 CHECK ("is_deleted" IN (0, 1)),
+        "last_updated" INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP
+      );
+    ''');
   }
 }

@@ -8,9 +8,8 @@ import 'package:material3_indicators/material3_indicators.dart';
 
 /// Explains a blocked feature and owns the in-app plan selection flow.
 ///
-/// The optional [onWebHandoffRequested] callback is deliberately the final
-/// seam in this feature. The app receives a short-lived checkout URL without
-/// this package deciding how the separate checkout web app is opened.
+/// The typed billing route supplies [onWebHandoffRequested] to open checkout.
+/// Direct consumers can provide their own handler for the short-lived session.
 class PaywallPage extends StatelessWidget {
   const PaywallPage({
     super.key,
@@ -54,6 +53,11 @@ class PaywallPage extends StatelessWidget {
         );
       },
       builder: (context, state) {
+        final canChangePlan =
+            state.status != SubscriptionManagementStatus.loading &&
+            state.status != SubscriptionManagementStatus.creatingOrder &&
+            state.status !=
+                SubscriptionManagementStatus.creatingCheckoutSession;
         return Scaffold(
           body: SafeArea(
             top: false,
@@ -121,9 +125,11 @@ class PaywallPage extends StatelessWidget {
                             PlanWidget(
                               plan: plan,
                               isSelected: state.selectedPlan?.code == plan.code,
-                              onTap: (selected) => context
-                                  .read<SubscriptionManagementBloc>()
-                                  .add(SelectSubscriptionPlan(selected)),
+                              onTap: canChangePlan
+                                  ? (selected) => context
+                                        .read<SubscriptionManagementBloc>()
+                                        .add(SelectSubscriptionPlan(selected))
+                                  : null,
                             ),
                             const SizedBox(height: 10),
                           ],
@@ -251,9 +257,11 @@ class _PaywallAction extends StatelessWidget {
     final isReady =
         state.status == SubscriptionManagementStatus.orderReady ||
         state.status == SubscriptionManagementStatus.checkoutSessionReady;
-    final enabled = isReady
-        ? onWebHandoff != null || state.order != null
-        : state.selectedPlan != null && !isCreating;
+    final enabled =
+        state.status != SubscriptionManagementStatus.loading &&
+        (isReady
+            ? onWebHandoff != null || state.order != null
+            : state.selectedPlan != null && !isCreating);
 
     return SizedBox(
       width: double.infinity,

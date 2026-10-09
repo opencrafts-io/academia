@@ -33,6 +33,21 @@ class AuthSignInWithSpotifyEvent extends AuthEvent {
   const AuthSignInWithSpotifyEvent();
 }
 
+/// Carries credentials to the auth handler without including them in Equatable
+/// props or its debug string.
+class AuthSignInWithPasswordEvent extends AuthEvent {
+  const AuthSignInWithPasswordEvent({
+    required this.email,
+    required this.password,
+  });
+
+  final String email;
+  final String password;
+
+  @override
+  String toString() => 'AuthSignInWithPasswordEvent()';
+}
+
 /// Event dispatched to check the current authentication status of the user
 /// (e.g., on app start).
 class AuthCheckStatusEvent extends AuthEvent {
@@ -42,4 +57,8 @@ class AuthCheckStatusEvent extends AuthEvent {
 /// Event dispatched to trigger a sign-out process.
 class AuthSignOutEvent extends AuthEvent {
   const AuthSignOutEvent();
+}
+
+class AuthSessionExpiredEvent extends AuthEvent {
+  const AuthSessionExpiredEvent();
 }

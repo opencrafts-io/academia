@@ -296,6 +296,10 @@ class MethodChannelAppBlocker extends AppBlockerPlatform {
         return BlockerPermissionStatus.granted;
       case 'restricted':
         return BlockerPermissionStatus.restricted;
+      case 'accessibilityDenied':
+        return BlockerPermissionStatus.accessibilityDenied;
+      case 'exactAlarmDenied':
+        return BlockerPermissionStatus.exactAlarmDenied;
       default:
         return BlockerPermissionStatus.denied;
     }

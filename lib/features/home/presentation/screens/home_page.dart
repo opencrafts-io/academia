@@ -4,14 +4,18 @@ import 'package:academia/config/config.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/gen/assets.gen.dart';
 import 'package:academia/injection_container.dart';
+import 'package:ads/ads.dart';
 import 'package:analytics/analytics.dart';
 import 'package:billing/billing.dart' as billing;
 import 'package:core/core.dart' as core;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:permissions/permissions.dart';
+import 'package:leaderboard/leaderboard.dart' as leaderboard;
+import 'package:rewards/rewards.dart' as rewards;
 
 class _HomeActionsSheet extends StatelessWidget {
   const _HomeActionsSheet();
@@ -70,6 +74,17 @@ class _HomeActionsSheet extends StatelessWidget {
                 onTap: () {
                   Navigator.pop(context);
                   OrganizedEventsRoute().push(context);
+                },
+              ),
+
+              const Divider(indent: 16, endIndent: 16),
+              _SheetSectionLabel(label: 'Rewards'),
+              _SheetTile(
+                icon: Symbols.workspace_premium,
+                label: 'Points and rewards',
+                onTap: () {
+                  Navigator.pop(context);
+                  context.push('/rewards');
                 },
               ),
             ],
@@ -132,15 +147,23 @@ class _HomePageState extends State<HomePage> {
 
   late Future<bool> _premiumUpgradeEnabledFuture;
   late Future<billing.SubscriptionStatus?> _subscriptionStatusFuture;
+  String? _accountId;
 
   @override
   void initState() {
     super.initState();
     _premiumUpgradeEnabledFuture = _isPremiumUpgradeEnabled();
     _subscriptionStatusFuture = _loadSubscriptionStatus();
+    unawaited(_loadVerisafeAccountId());
     WidgetsBinding.instance.addPostFrameCallback(
       (_) => unawaited(_promptForNotificationsIfNeeded()),
     );
+  }
+
+  Future<void> _loadVerisafeAccountId() async {
+    final result = await sl<rewards.GetRewardAccount>()();
+    if (!mounted) return;
+    result.fold((_) {}, (account) => setState(() => _accountId = account.id));
   }
 
   bool get _supportsNotificationPrompt =>
@@ -188,6 +211,7 @@ class _HomePageState extends State<HomePage> {
       featureName: 'Academia Premium',
       accessMessage: 'Upgrade to unlock premium tools across Academia.',
     ).push(context);
+    await sl<AdService>().refreshEligibility();
     if (!mounted) return;
     setState(() {
       _subscriptionStatusFuture = _loadSubscriptionStatus();
@@ -291,8 +315,12 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ],
-          body: const TabBarView(
-            children: [LeaderboardHomepage(), FeedPage(), ShereheHome()],
+          body: TabBarView(
+            children: [
+              leaderboard.LeaderboardHomepage(accountId: _accountId),
+              FeedPage(),
+              ShereheHome(),
+            ],
           ),
         ),
       ),

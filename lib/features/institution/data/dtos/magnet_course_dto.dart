@@ -1,8 +1,6 @@
-import 'package:academia/features/course/course.dart';
-import 'package:academia/features/institution/data/mappers/course_with_schedules.dart';
-import 'package:academia/features/timetable/timetable.dart';
+import 'package:courses/courses.dart' as courses;
+import 'package:academia/features/institution/data/mappers/magnet_course_import.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:uuid/uuid.dart';
 
@@ -39,39 +37,85 @@ abstract class MagnetCourseScheduleDto with _$MagnetCourseScheduleDto {
 }
 
 extension MagnetCourseScheduleDtoMapper on MagnetCourseScheduleDto {
-  TimetableEntryEntity toEntity({
+  List<courses.ScheduleEntryEntity> toScheduleEntries({
     required String courseId,
-    required String fallbackUserId,
-    String? fallbackTimetableId,
-    String? fallbackInstitutionId,
   }) {
+    if (isDeleted == true) return const [];
+
     const uuid = Uuid();
-    return TimetableEntryEntity(
-      id: id?.toString() ?? uuid.v4(),
-      serverId: serverId != null ? int.tryParse(serverId.toString()) : null,
-      userId: userId?.toString() ?? fallbackUserId,
-      institutionId:
-          int.tryParse(
-            institutionId?.toString() ?? fallbackInstitutionId ?? '0',
-          ) ??
-          0,
-      courseId: courseId,
-      timetableId: timetableId?.toString() ?? fallbackTimetableId ?? uuid.v4(),
-      rrule: rrule?.toString(),
-      startDate: startDate != null
-          ? DateTime.parse(startDate!)
-          : DateTime.now(),
-      durationMinutes: int.tryParse(durationMinutes?.toString() ?? '0') ?? 0,
-      location: location?.toString(),
-      room: room?.toString(),
-      building: building?.toString(),
-      isSynced: isSynced ?? false,
-      isDeleted: isDeleted ?? false,
-      lastUpdated: lastUpdated != null
-          ? DateTime.parse(lastUpdated!)
-          : DateTime.now(),
-    );
+    final start = DateTime.tryParse(startDate ?? '')?.toLocal();
+    if (start == null) return const [];
+
+    final duration = int.tryParse(durationMinutes?.toString() ?? '') ?? 0;
+    if (duration <= 0) return const [];
+    final end = start.add(Duration(minutes: duration));
+    final recurring = (rrule?.toString().trim().isNotEmpty ?? false);
+    final weekdays = _weekdaysFromRule(rrule?.toString(), start.weekday);
+    final now = DateTime.now();
+    final place = [location, room, building]
+        .map((value) => value?.toString().trim() ?? '')
+        .where((value) => value.isNotEmpty)
+        .toSet()
+        .join(' · ');
+
+    return weekdays.map((weekday) {
+      final idSuffix = weekdays.length == 1 ? '' : '-$weekday';
+      return courses.ScheduleEntryEntity(
+        id: '${id?.toString() ?? uuid.v4()}$idSuffix',
+        studentCourseId: courseId,
+        dayOfWeek: _weekdayNames[weekday - 1],
+        startTime: _formatTime(start),
+        endTime: _formatTime(end),
+        venue: place.isEmpty ? null : place,
+        isRecurring: recurring,
+        specificDate: recurring
+            ? null
+            : DateTime(start.year, start.month, start.day),
+        createdAt: now,
+        updatedAt: now,
+      );
+    }).toList();
   }
+
+  static const _weekdayNames = [
+    'monday',
+    'tuesday',
+    'wednesday',
+    'thursday',
+    'friday',
+    'saturday',
+    'sunday',
+  ];
+
+  static List<int> _weekdaysFromRule(String? rule, int fallbackWeekday) {
+    final byDay = RegExp(
+      r'(?:^|;)BYDAY=([^;]+)',
+      caseSensitive: false,
+    ).firstMatch(rule ?? '')?.group(1);
+    if (byDay == null || byDay.trim().isEmpty) return [fallbackWeekday];
+
+    const codes = {
+      'MO': DateTime.monday,
+      'TU': DateTime.tuesday,
+      'WE': DateTime.wednesday,
+      'TH': DateTime.thursday,
+      'FR': DateTime.friday,
+      'SA': DateTime.saturday,
+      'SU': DateTime.sunday,
+    };
+    final weekdays =
+        byDay
+            .split(',')
+            .map((code) => codes[code.trim().toUpperCase()])
+            .whereType<int>()
+            .toSet()
+            .toList()
+          ..sort();
+    return weekdays.isEmpty ? [fallbackWeekday] : weekdays;
+  }
+
+  static String _formatTime(DateTime value) =>
+      '${value.hour.toString().padLeft(2, '0')}:${value.minute.toString().padLeft(2, '0')}';
 }
 
 /// Mirrors a single entry of the raw `courses` array returned by a Magnet
@@ -90,7 +134,6 @@ abstract class MagnetCourseDto with _$MagnetCourseDto {
     @JsonKey(name: 'updated_at') String? updatedAt,
     @JsonKey(name: 'institution_id') dynamic institutionId,
     @JsonKey(name: 'server_id') dynamic serverId,
-    @JsonKey(name: 'semester_id') dynamic semesterId,
     @JsonKey(name: 'course_schedules')
     @Default([])
     List<MagnetCourseScheduleDto> courseSchedules,
@@ -101,85 +144,57 @@ abstract class MagnetCourseDto with _$MagnetCourseDto {
 }
 
 extension MagnetCourseDtoMapper on MagnetCourseDto {
-  CourseWithSchedules toCourseWithSchedules({
-    required String userId,
-    String? timetableId,
-  }) {
+  MagnetCourseImport toCourseImport({required int institutionId}) {
     const uuid = Uuid();
     final courseId = id?.toString() ?? uuid.v4();
-
-    final course = CourseEntity(
-      id: courseId,
-      courseCode: courseCode ?? '',
-      courseName: courseName ?? courseCode ?? '',
-      instructor: instructor ?? '',
-      isSynced: isSynced ?? false,
-      color: Color(
-        int.tryParse(
-              color?.toString().replaceAll('0x', '').replaceAll('0X', '') ?? '',
-              radix: 16,
-            ) ??
-            0xFFCBA6F7,
-      ),
-      isDeleted: isDeleted ?? false,
-      createdAt: createdAt != null
-          ? DateTime.parse(createdAt!)
-          : DateTime.now(),
-      updatedAt: updatedAt != null
-          ? DateTime.parse(updatedAt!)
-          : DateTime.now(),
-      institutionId: int.tryParse(institutionId?.toString() ?? '0'),
-      serverId: serverId != null ? int.tryParse(serverId.toString()) : null,
-      semesterId: semesterId != null
-          ? int.tryParse(semesterId.toString())
-          : null,
+    final rawColor = color?.toString().trim();
+    final hexColor = rawColor
+        ?.replaceFirst(RegExp(r'^#'), '')
+        .replaceFirst(RegExp(r'^0x', caseSensitive: false), '');
+    final parsedColor = color is int
+        ? color as int
+        : hexColor == null
+        ? null
+        : int.tryParse(hexColor, radix: 16);
+    final course = courses.CreateCourseParams(
+      institutionId: institutionId,
+      title: courseName ?? courseCode ?? 'Untitled course',
+      code: courseCode,
+      color: parsedColor == null ? null : '#${parsedColor.toRadixString(16)}',
     );
 
     final schedules = courseSchedules
-        .map(
-          (schedule) => schedule.toEntity(
-            courseId: courseId,
-            fallbackUserId: userId,
-            fallbackTimetableId: timetableId,
-            fallbackInstitutionId: institutionId?.toString(),
-          ),
-        )
+        .expand((schedule) => schedule.toScheduleEntries(courseId: courseId))
         .toList();
-
-    return CourseWithSchedules(course: course, schedules: schedules);
+    return MagnetCourseImport(course: course, schedules: schedules);
   }
 }
 
 /// Parses the raw `courses` array (with nested `course_schedules`) from a
 /// Magnet scrape result.
-List<CourseWithSchedules> parseCoursesWithSchedules(
+List<MagnetCourseImport> parseCoursesWithSchedules(
   Map<String, dynamic> data, {
-  required String userId,
-  String? timetableId,
+  required int institutionId,
 }) {
   final List<dynamic> rawList = data['courses'] ?? [];
   return rawList
       .map((json) => MagnetCourseDto.fromJson(Map<String, dynamic>.from(json)))
-      .map(
-        (dto) =>
-            dto.toCourseWithSchedules(userId: userId, timetableId: timetableId),
-      )
+      .where((dto) => dto.isDeleted != true)
+      .map((dto) => dto.toCourseImport(institutionId: institutionId))
       .toList();
 }
 
 /// Offloads [parseCoursesWithSchedules] onto a background isolate via
 /// [compute], matching the isolate-offload the original hand-parser used.
-Future<List<CourseWithSchedules>> parseCoursesInBackground(
+Future<List<MagnetCourseImport>> parseCoursesInBackground(
   Map<String, dynamic> data,
-  String userId, {
-  String? timetableId,
-}) {
+  int institutionId,
+) {
   return compute(
     (Map<String, dynamic> params) => parseCoursesWithSchedules(
       params['data'],
-      userId: params['userId'],
-      timetableId: params['timetableId'],
+      institutionId: params['institutionId'],
     ),
-    {'data': data, 'userId': userId, 'timetableId': timetableId},
+    {'data': data, 'institutionId': institutionId},
   );
 }

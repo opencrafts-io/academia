@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:academia/config/router/router.dart';
-import 'package:academia/features/course/course.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
-import 'package:academia/features/semester/semester.dart';
 import 'package:academia/gen/fonts.gen.dart';
 import 'package:academia/injection_container.dart';
+import 'package:agenda/agenda.dart' as agenda;
+import 'package:ads/ads.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +15,12 @@ import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:permissions/permissions.dart';
 import 'package:settings/settings.dart';
+import 'package:courses/courses.dart' as courses;
+import 'package:todos/todos.dart' as todos;
+import 'package:pomodoro/pomodoro.dart' as pomodoro;
+import 'package:study_tools/study_tools.dart' as study_tools;
+import 'package:rewards/rewards.dart' as rewards;
+import 'package:leaderboard/leaderboard.dart' as leaderboard;
 
 class Academia extends StatefulWidget {
   const Academia({super.key});
@@ -23,11 +29,90 @@ class Academia extends StatefulWidget {
   State<Academia> createState() => _AcademiaState();
 }
 
-class _AcademiaState extends State<Academia> {
+class _AcademiaState extends State<Academia> with WidgetsBindingObserver {
+  String? _studyDataAccountId;
+
+  Future<void> _clearPodcastAccount(String? accountId) async {
+    await sl.isReady<study_tools.PodcastAudioHandler>();
+    await sl<study_tools.PodcastAudioHandler>().stop();
+    await sl<study_tools.PodcastLocalStore>().clearAccountData(
+      accountId: accountId,
+    );
+  }
+
+  bool _deferredServicesReady = false;
+  bool _appLaunchRewardSubmitted = false;
+  bool _wasBackgrounded = false;
+  SettingsCubit? _settingsCubit;
+
   @override
   void initState() {
-    setOptimalDisplayMode();
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    setOptimalDisplayMode();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      unawaited(_initializeDeferredServices());
+    });
+  }
+
+  Future<void> _initializeDeferredServices() async {
+    try {
+      await initializeDeferredServices();
+      if (!mounted) return;
+
+      final settings = _settingsCubit;
+      if (settings == null) return;
+      _deferredServicesReady = true;
+      sl<courses.CourseReminderRefresher>().updatePreferences(
+        enabled: settings.state.courseRemindersEnabled,
+        reminderMinutes: settings.state.courseReminderMinutes,
+      );
+    } catch (error, stackTrace) {
+      debugPrint('Deferred startup initialization failed: $error\n$stackTrace');
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.hidden) {
+      _wasBackgrounded = true;
+    }
+    if (state == AppLifecycleState.resumed &&
+        sl<AdService>().isSupportedPlatform) {
+      if (_wasBackgrounded) {
+        _wasBackgrounded = false;
+        unawaited(sl<AdService>().onAppResumed());
+      } else {
+        unawaited(sl<AdService>().refreshEligibility());
+      }
+    }
+    if (state == AppLifecycleState.resumed && _deferredServicesReady) {
+      unawaited(sl<courses.CourseReminderRefresher>().refresh());
+    }
+  }
+
+  Future<void> _submitAppLaunchReward() async {
+    if (kIsWeb || defaultTargetPlatform != TargetPlatform.android) return;
+    if (_appLaunchRewardSubmitted) return;
+    _appLaunchRewardSubmitted = true;
+    final result = await sl<rewards.RecordAppLaunch>()();
+    result.fold(
+      (failure) => debugPrint(
+        'App launch activity was not recorded: ${failure.message}',
+      ),
+      (completion) {
+        // The server owns point totals and idempotency. An already-processed
+        // completion intentionally produces no reward feedback.
+        if (completion.alreadyProcessed) return;
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   /// On Android phones with 120hz display by default is chosen the wrong
@@ -69,7 +154,7 @@ class _AcademiaState extends State<Academia> {
           create: (context) =>
               sl<InAppUpdateBloc>()..add(CheckForInAppUpdateEvent()),
         ),
-        BlocProvider(create: (context) => sl<SettingsCubit>()),
+        BlocProvider(create: (context) => _settingsCubit = sl<SettingsCubit>()),
         BlocProvider(
           create: (context) => sl<AuthBloc>()..add(AuthCheckStatusEvent()),
         ),
@@ -94,10 +179,10 @@ class _AcademiaState extends State<Academia> {
         BlocProvider(
           create: (context) => sl<ProfileBloc>()..add(GetCachedProfileEvent()),
         ),
-        BlocProvider(create: (context) => sl<TodoListCubit>()),
-        BlocProvider(create: (context) => sl<TodoTagCubit>()),
-        BlocProvider(create: (context) => sl<TodoItemCubit>()),
-        BlocProvider(create: (context) => sl<PomodoroCubit>()),
+        BlocProvider(create: (context) => sl<todos.TodoListCubit>()),
+        BlocProvider(create: (context) => sl<todos.TodoTagCubit>()),
+        BlocProvider(create: (context) => sl<todos.TodoItemCubit>()),
+        BlocProvider(create: (context) => sl<pomodoro.PomodoroCubit>()),
         BlocProvider(create: (context) => sl<CommunityListingCubit>()),
         BlocProvider(
           create: (context) => CreateCommunityBloc(
@@ -106,35 +191,55 @@ class _AcademiaState extends State<Academia> {
         ),
         BlocProvider(create: (context) => sl<CommunityHomeBloc>()),
         BlocProvider(create: (context) => sl<CommunityUsersBloc>()),
-        BlocProvider(
-          create: (context) =>
-              sl<AgendaEventBloc>()..add(FetchCachedAgendaEventsEvent()),
-        ),
-        BlocProvider(create: (context) => sl<SemesterCubit>()),
-        BlocProvider(create: (context) => sl<CourseCubit>()),
+        BlocProvider(create: (context) => sl<agenda.AgendaCubit>()),
+        BlocProvider(create: (context) => sl<courses.CourseCubit>()),
         BlocProvider(create: (context) => sl<InstitutionBloc>()),
         BlocProvider(create: (context) => sl<PermissionCubit>()),
-        BlocProvider(create: (context) => sl<LeaderboardBloc>()),
-        BlocProvider(create: (context) => sl<TimetableBloc>()),
-        BlocProvider(
-          create: (context) =>
-              sl<TimetableEntryBloc>()..add(WatchAllTimetableEntriesEvent()),
-        ),
+        BlocProvider(create: (context) => sl<leaderboard.LeaderboardBloc>()),
       ],
       child: DynamicColorBuilder(
         builder: (lightScheme, darkScheme) => MultiBlocListener(
           listeners: [
+            BlocListener<SettingsCubit, SettingsState>(
+              listenWhen: (previous, current) =>
+                  previous.courseRemindersEnabled !=
+                      current.courseRemindersEnabled ||
+                  !listEquals(
+                    previous.courseReminderMinutes,
+                    current.courseReminderMinutes,
+                  ),
+              listener: (context, state) {
+                if (!_deferredServicesReady) return;
+                sl<courses.CourseReminderRefresher>().updatePreferences(
+                  enabled: state.courseRemindersEnabled,
+                  reminderMinutes: state.courseReminderMinutes,
+                );
+              },
+            ),
             BlocListener<AuthBloc, AuthState>(
               listener: (context, state) {
                 AppRouter.router.refresh();
+                if (state is AuthUnauthenticated) {
+                  unawaited(_clearPodcastAccount(_studyDataAccountId));
+                  _studyDataAccountId = null;
+                }
                 if (state is AuthAuthenticated) {
                   context.read<FeedBloc>().add(CheckFeedLikeStatuses());
+                  unawaited(_submitAppLaunchReward());
+                } else if (state is AuthUnauthenticated) {
+                  _appLaunchRewardSubmitted = false;
                 }
               },
             ),
             BlocListener<ProfileBloc, ProfileState>(
               listener: (context, state) {
                 if (state is ProfileLoadedState) {
+                  final previousAccountId = _studyDataAccountId;
+                  _studyDataAccountId = state.profile.id;
+                  if (previousAccountId != null &&
+                      previousAccountId != state.profile.id) {
+                    unawaited(_clearPodcastAccount(previousAccountId));
+                  }
                   context.read<InstitutionBloc>().add(
                     GetCachedUserInstitutionsEvent(state.profile.id),
                   );
@@ -216,7 +321,7 @@ class _AcademiaState extends State<Academia> {
                         );
                       }
                     },
-                    child: child ?? SizedBox.shrink(),
+                    child: child ?? const SizedBox.shrink(),
                   );
                 },
               );

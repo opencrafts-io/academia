@@ -1,7 +1,10 @@
 import 'package:core/core.dart';
 import 'package:core/config/flavor.dart';
+import 'package:agenda/agenda.dart';
 import 'package:database/database.dart';
 import 'package:billing/billing.dart';
+import 'package:leaderboard/leaderboard.dart' as leaderboard;
+import 'package:rewards/rewards.dart' as rewards;
 import 'package:ads/ads.dart';
 import 'package:analytics/analytics.dart';
 import 'package:academia/core/notifications/academia_notification_action_handler.dart';
@@ -13,6 +16,11 @@ import 'package:lock_in/lock_in.dart';
 import 'package:permissions/permissions.dart';
 import 'package:notifications/notifications.dart';
 import 'package:settings/settings.dart';
+import 'package:todos/todos.dart';
+import 'package:pomodoro/pomodoro.dart';
+import 'package:academia/core/integration/todos_pomodoro_todo_gateway.dart';
+import 'package:academia/core/integration/method_channel_pomodoro_status_surface.dart';
+import 'package:academia/core/integration/shared_preferences_pomodoro_session_store.dart';
 
 import 'package:injectable/injectable.dart';
 
@@ -21,6 +29,7 @@ import 'package:get_it/get_it.dart';
 @InjectableInit()
 void configureDependencies(GetIt getIt, FlavorConfig flavorConfig) {
   configureCoreDependencies(getIt, flavorConfig);
+  configureAgendaDependencies(getIt);
   configureLocalDatabaseDependencies(getIt);
   configureLockInDependencies(getIt);
   configureAnalyticsDependencies(
@@ -30,6 +39,8 @@ void configureDependencies(GetIt getIt, FlavorConfig flavorConfig) {
         : const DisabledAnalyticsGateway(),
   );
   configureBillingDependencies(getIt);
+  leaderboard.configureLeaderboardDependencies(getIt);
+  rewards.configureRewardsDependencies(getIt);
   configureAdsDependencies(getIt);
   configureSettingsDependencies(getIt);
   configurePermissionsDependencies(
@@ -49,6 +60,13 @@ void configureDependencies(GetIt getIt, FlavorConfig flavorConfig) {
           )
         : const NotificationConfiguration.disabled(),
     actionHandler: const AcademiaNotificationActionHandler(),
+  );
+  configureTodosDependencies(getIt);
+  configurePomodoroDependencies(
+    getIt,
+    todoGateway: TodosPomodoroTodoGateway(getIt<TodoItemCubit>()),
+    sessionStore: SharedPreferencesPomodoroSessionStore(),
+    statusSurface: MethodChannelPomodoroStatusSurface(),
   );
   configureInAppUpdateDependencies(
     getIt,

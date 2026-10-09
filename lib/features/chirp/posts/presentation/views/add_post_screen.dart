@@ -25,6 +25,7 @@ class _AddPostPageState extends State<AddPostPage> {
   final List<XFile> attachments = [];
   Community? _selectedCommunity;
   String? authorId;
+  PollDraft? _pollDraft;
   bool _isSubmitting = false;
 
   final TextEditingController _postTitleController = TextEditingController();
@@ -119,6 +120,12 @@ class _AddPostPageState extends State<AddPostPage> {
     }
   }
 
+  Future<void> _openPollSheet() async {
+    final draft = await showCreatePollSheet(context, initial: _pollDraft);
+    if (draft == null || !mounted) return;
+    setState(() => _pollDraft = draft);
+  }
+
   void _showSnackBar(String message) {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
@@ -148,6 +155,7 @@ class _AddPostPageState extends State<AddPostPage> {
         communityId: _selectedCommunity!.id,
         content: _postDescriptionController.text.trim(),
         attachments: List<XFile>.from(attachments),
+        poll: _pollDraft,
       ),
     );
 
@@ -169,6 +177,7 @@ class _AddPostPageState extends State<AddPostPage> {
         _postDescriptionController.clear();
         attachments.clear();
         _selectedCommunity = null;
+        _pollDraft = null;
       });
       _showSnackBar("Post created successfully!");
       context.pop(true);
@@ -317,12 +326,47 @@ class _AddPostPageState extends State<AddPostPage> {
                         onPickPhoto: _pickImagesFromGallery,
                         onPickVideo: () => _pickVideo(ImageSource.gallery),
                       ),
+                      const SizedBox(height: 12),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton.filledTonal(
+                                onPressed: _openPollSheet,
+                                icon: Icon(
+                                  _pollDraft == null
+                                      ? Icons.poll_outlined
+                                      : Icons.poll,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                _pollDraft == null ? "Add poll" : "Edit poll",
+                                style: Theme.of(context).textTheme.labelSmall,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                       const Divider(),
                     ],
                   ),
                 ),
               ),
             ),
+            if (_pollDraft != null)
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                sliver: SliverToBoxAdapter(
+                  child: PollDraftPreview(
+                    draft: _pollDraft!,
+                    onEdit: _openPollSheet,
+                    onRemove: () => setState(() => _pollDraft = null),
+                  ),
+                ),
+              ),
             SliverVisibility(
               visible: attachments.isNotEmpty,
               maintainSize: false,

@@ -12,8 +12,7 @@ class FeedAttachmentCarousel extends StatefulWidget {
   final List<Attachments> attachments;
 
   @override
-  State<FeedAttachmentCarousel> createState() =>
-      _FeedAttachmentCarouselState();
+  State<FeedAttachmentCarousel> createState() => _FeedAttachmentCarouselState();
 }
 
 class _FeedAttachmentCarouselState extends State<FeedAttachmentCarousel> {
@@ -52,8 +51,7 @@ class _FeedAttachmentCarouselState extends State<FeedAttachmentCarousel> {
               child: PageView.builder(
                 controller: _pageController,
                 itemCount: attachments.length,
-                onPageChanged: (index) =>
-                    setState(() => _currentPage = index),
+                onPageChanged: (index) => setState(() => _currentPage = index),
                 itemBuilder: (context, index) {
                   final attachment = attachments[index];
                   // The backend's casing for attachmentType isn't
@@ -61,7 +59,9 @@ class _FeedAttachmentCarouselState extends State<FeedAttachmentCarousel> {
                   // against this with .toLowerCase()) - matching case
                   // sensitively here risked silently routing a video
                   // through the image renderer via the fallback branch.
-                  return switch (attachment.attachmentType.trim().toLowerCase()) {
+                  return switch (attachment.attachmentType
+                      .trim()
+                      .toLowerCase()) {
                     'video' => FeedVideoAttachment(
                       url: attachment.file,
                       attachmentId: attachment.id,

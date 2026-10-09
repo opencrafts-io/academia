@@ -8,8 +8,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:settings/settings.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:academia/injection_container.dart';
+import 'package:courses/courses.dart' as courses;
+import 'package:todos/todos.dart' as todos;
+import 'package:study_tools/study_tools.dart' as study_tools;
 
-import '../widgets/essential_category_tile.dart';
+import 'package:academia/features/essentials/widgets/essential_category_tile.dart';
+import 'package:academia/features/essentials/widgets/essential_tools_grid.dart';
+import 'package:academia/features/essentials/widgets/pomodoro_essentials_card.dart';
+import 'package:academia/features/essentials/widgets/rewards_essentials_card.dart';
 
 class EssentialsPage extends StatefulWidget {
   const EssentialsPage({super.key});
@@ -31,22 +37,15 @@ class _EssentialItem {
 }
 
 class _EssentialsPageState extends State<EssentialsPage> {
-  late List<_EssentialItem> essentialItems = <_EssentialItem>[
-    _EssentialItem(
-      title: "Semesters",
-      ontap: () {
-        SemestersPageRoute().push(context);
-      },
-      iconPath: Assets.icons.calendar.keyName,
-    ),
+  late final List<_EssentialItem> essentialItems = <_EssentialItem>[
     _EssentialItem(
       title: "Courses",
-      ontap: () => CoursesPageRoute().push(context),
+      ontap: () => const courses.CourseListRoute().push(context),
       iconPath: Assets.icons.book.keyName,
     ),
     _EssentialItem(
       title: "To-Dos",
-      ontap: () => TodosRoute().push(context),
+      ontap: () => todos.TodosRoute().push(context),
       iconPath: Assets.icons.notificationIconBell.keyName,
     ),
 
@@ -54,6 +53,11 @@ class _EssentialsPageState extends State<EssentialsPage> {
       title: "Exam timetable",
       ontap: _navigateToExamTimetable,
       iconPath: Assets.icons.document.keyName,
+    ),
+    _EssentialItem(
+      title: "Study Tools",
+      ontap: () => const study_tools.StudyToolsRoute().push(context),
+      iconPath: Assets.icons.book.keyName,
     ),
   ];
 
@@ -78,8 +82,6 @@ class _EssentialsPageState extends State<EssentialsPage> {
       if (!mounted) return;
 
       if (isSupported) {
-        final adService = sl<AdService>();
-        adService.showInterstitialAd();
         if (!mounted) return;
         ExamTimetableRoute(institutionId: primaryInstitution.institutionId)
             .push(context);
@@ -99,48 +101,19 @@ class _EssentialsPageState extends State<EssentialsPage> {
   /// to scan, regardless of the screen width.
   Widget _buildToolsGrid(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    const columnCount = 2;
-    const cornerRadius = Radius.circular(8);
-    final lastRow = (essentialItems.length - 1) ~/ columnCount;
-
-    Widget tile(int index) {
-      final item = essentialItems[index];
-      final row = index ~/ columnCount;
-      final column = index % columnCount;
-
-      return EssentialCategoryTile(
-        title: item.title,
-        iconPath: item.iconPath,
-        onTap: item.ontap,
-        color: colorScheme.surfaceContainerHigh,
-        onColor: colorScheme.onSurface,
-        borderRadius: BorderRadius.only(
-          topLeft: row == 0 && column == 0 ? cornerRadius : Radius.zero,
-          topRight: row == 0 && column == columnCount - 1
-              ? cornerRadius
-              : Radius.zero,
-          bottomLeft: row == lastRow && column == 0
-              ? cornerRadius
-              : Radius.zero,
-          bottomRight: row == lastRow && column == columnCount - 1
-              ? cornerRadius
-              : Radius.zero,
-        ),
-      );
-    }
-
-    return GridView.builder(
-      padding: .symmetric(vertical: 16),
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
+    return EssentialToolsGrid(
       itemCount: essentialItems.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: columnCount,
-        mainAxisExtent: 64,
-        crossAxisSpacing: 2,
-        mainAxisSpacing: 2,
-      ),
-      itemBuilder: (context, index) => tile(index),
+      itemBuilder: (context, index, borderRadius) {
+        final item = essentialItems[index];
+        return EssentialCategoryTile(
+          title: item.title,
+          iconPath: item.iconPath,
+          onTap: item.ontap,
+          color: colorScheme.surfaceContainerHigh,
+          onColor: colorScheme.onSurface,
+          borderRadius: borderRadius,
+        );
+      },
     );
   }
 
@@ -187,6 +160,10 @@ class _EssentialsPageState extends State<EssentialsPage> {
           SliverPadding(
             padding: EdgeInsets.all(16),
             sliver: SliverToBoxAdapter(child: EssentialsInstitutionSection()),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            sliver: const SliverToBoxAdapter(child: InlineBannerAdWidget()),
           ),
           // Academia's tools
           SliverPadding(
@@ -251,6 +228,10 @@ class _EssentialsPageState extends State<EssentialsPage> {
                     onTap: () => LockInRoute().push(context),
                   ),
                 ),
+                const SizedBox(height: 12),
+                const RewardsEssentialsCard(),
+                const SizedBox(height: 12),
+                const PomodoroEssentialsCard(),
                 SizedBox(height: 22),
                 Text(
                   "Explore tools",
@@ -259,7 +240,6 @@ class _EssentialsPageState extends State<EssentialsPage> {
                 ),
                 _buildToolsGrid(context),
                 SizedBox(height: 22),
-                BannerAdWidget(),
               ],
             ),
           ),

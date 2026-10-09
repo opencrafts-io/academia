@@ -1,10 +1,13 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:academia/background_task/background_task.dart';
-import 'package:academia/background_task/course_alert_background_task.dart';
 import 'package:academia/background_task/daily_login_background_task.dart';
+import 'package:academia/background_task/todo_item_sync_background_task.dart';
+import 'package:academia/background_task/todo_list_sync_background_task.dart';
 import 'package:core/config/flavor.dart';
-import 'package:academia/features/course/course.dart';
-import 'package:academia/features/features.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:notifications/notifications.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:academia/injection_container.dart' as di;
@@ -22,16 +25,10 @@ void backgroundCallbackDispatcher() {
         isBackground: true,
       );
 
-      await di.sl.allReady();
+      await di.initializeNotifications();
 
       final scheduler = di.sl<LocalNotificationScheduler>();
       final dailyLogin = DailyLoginBackgroundTask(scheduler);
-      final courseAlert = CourseAlertBackgroundTask(
-        scheduler,
-        timetableEntryRepository: di.sl<TimetableEntryRepository>(),
-        courseRepository: di.sl<CourseRepository>(),
-      );
-
       final todoItemSync = TodoItemSyncBackgroundTask(
         todoItemRepository: di.sl(),
       );
@@ -40,7 +37,6 @@ void backgroundCallbackDispatcher() {
       );
 
       final Map<String, BackgroundTask> taskRegistry = {
-        courseAlert.taskName: courseAlert,
         dailyLogin.taskName: dailyLogin,
         todoItemSync.taskName: todoItemSync,
         todoListSync.taskName: todoListSync,
@@ -60,30 +56,7 @@ void backgroundCallbackDispatcher() {
 }
 
 Future<void> registerDefaultBackgroundTasks() async {
-  // Calculate delay to next 5 AM
-  final now = DateTime.now();
-  var next5Am = DateTime(now.year, now.month, now.day, 5);
-
-  if (now.isAfter(next5Am)) {
-    next5Am = next5Am.add(const Duration(days: 1));
-  }
-
-  final initialDelay = next5Am.difference(now);
-
-  // Run the course alert task once every 24 hours at 5 AM
-  // It schedules precise notifications for the day
-  await Workmanager().registerPeriodicTask(
-    'io.opencrafts.academia.course.alert',
-    'io.opencrafts.academia.course.alert',
-    initialDelay: initialDelay,
-    backoffPolicy: BackoffPolicy.linear,
-    frequency: const Duration(hours: 24),
-    existingWorkPolicy: ExistingPeriodicWorkPolicy.replace,
-    constraints: Constraints(
-      requiresBatteryNotLow: false,
-      networkType: NetworkType.notRequired,
-    ),
-  );
+  await Workmanager().cancelByUniqueName('io.opencrafts.academia.course.alert');
 
   // Register TodoList sync task - runs every 1 hour
   await Workmanager().registerPeriodicTask(
@@ -111,4 +84,17 @@ Future<void> registerDefaultBackgroundTasks() async {
       networkType: NetworkType.connected,
     ),
   );
+}
+
+void scheduleDefaultBackgroundTasksAfterFirstFrame() {
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    unawaited(_initializeDefaultBackgroundTasks());
+  });
+}
+
+Future<void> _initializeDefaultBackgroundTasks() async {
+  if (kIsWeb || (!Platform.isAndroid && !Platform.isIOS)) return;
+
+  await Workmanager().initialize(backgroundCallbackDispatcher);
+  await registerDefaultBackgroundTasks();
 }
