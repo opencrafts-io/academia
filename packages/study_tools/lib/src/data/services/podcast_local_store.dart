@@ -115,8 +115,6 @@ class PodcastLocalStore
 
   @override
   Future<bool> canListenOnline(StudyPodcast podcast) async {
-    final current = _currentScope;
-    if (current == null) return false;
     try {
       final results = await Connectivity().checkConnectivity();
       return results.any((result) => result != ConnectivityResult.none);
