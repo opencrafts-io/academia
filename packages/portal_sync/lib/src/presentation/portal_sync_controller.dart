@@ -5,7 +5,10 @@ import 'package:flutter/foundation.dart';
 import '../diagnostics/portal_debug_log.dart';
 import '../domain/entities/portal_analysis_plan.dart';
 import '../domain/entities/portal_connection.dart';
+import '../domain/entities/portal_draft.dart';
 import '../domain/entities/portal_draft_extractor.dart';
+import '../domain/entities/portal_media_analysis_request.dart';
+import '../domain/entities/portal_media_selection.dart';
 import '../domain/entities/portal_snapshot.dart';
 import '../domain/repositories/portal_sync_repositories.dart';
 import 'portal_sync_state.dart';
@@ -13,20 +16,30 @@ import 'portal_sync_state.dart';
 class PortalSyncController extends ChangeNotifier {
   PortalSyncController({
     required this._connection,
-    required this.analysisClient,
+    required this.inferenceGateway,
     required this.cacheStore,
     required this.usageStore,
     required this.accessPolicy,
     required this.importer,
+    this.mediaAnalysisClient,
     this._extractor = const PortalDraftExtractor(),
     this.modelVersion = 'gemini-3.8-flash',
   });
 
-  final PortalAnalysisClient analysisClient;
+  /// The analysis adapter — today's direct Firebase client by default, or a
+  /// future server-callable adapter. Swapping this is a DI registration
+  /// change; see docs/portal-sync-plan.md, "Package boundaries and
+  /// migration".
+  final PortalInferenceGateway inferenceGateway;
   final PortalCacheStore cacheStore;
   final PortalUsageStore usageStore;
   final PortalAccessPolicy accessPolicy;
   final PortalImporter importer;
+
+  /// Optional: the document/image fallback is only available once a
+  /// composition root injects this. Leaving it null disables
+  /// [analyzeMediaFallback] without affecting the DOM capture path.
+  final PortalMediaAnalysisClient? mediaAnalysisClient;
   final PortalDraftExtractor _extractor;
   final String modelVersion;
 
@@ -100,7 +113,13 @@ class PortalSyncController extends ChangeNotifier {
     final future = _captureLoop(snapshot, generation);
     _captureFuture = future;
     return future.whenComplete(() {
-      if (identical(_captureFuture, future)) _captureFuture = null;
+      // Only the generation that owns this future may clear the in-flight
+      // slot or drain a queued snapshot. A stale future from a generation
+      // that `setConnection`/`stop` already abandoned must not steal a
+      // snapshot queued for the *new* generation's own in-flight call, nor
+      // clobber the new generation's `_captureFuture` out from under it.
+      if (!identical(_captureFuture, future)) return;
+      _captureFuture = null;
       final queued = _queuedSnapshot;
       _queuedSnapshot = null;
       if (queued != null && !_paused && !_stopped && !_disposed) {
@@ -129,6 +148,7 @@ class PortalSyncController extends ChangeNotifier {
           error: null,
           clearError: true,
           accessDenied: false,
+          allowanceExhausted: false,
           isBusy: false,
         ),
       );
@@ -149,6 +169,7 @@ class PortalSyncController extends ChangeNotifier {
           phase: PortalSyncPhase.blocked,
           message: 'Portal analysis is not available for this account.',
           accessDenied: true,
+          allowanceExhausted: false,
           isBusy: false,
         ),
       );
@@ -167,6 +188,7 @@ class PortalSyncController extends ChangeNotifier {
         isBusy: true,
         clearError: true,
         accessDenied: false,
+        allowanceExhausted: false,
       ),
     );
     PortalAnalysisPlan? plan;
@@ -206,6 +228,7 @@ class PortalSyncController extends ChangeNotifier {
             phase: PortalSyncPhase.blocked,
             message: 'The local portal analysis limit has been reached. Try again later.',
             accessDenied: false,
+            allowanceExhausted: false,
             isBusy: false,
           ),
         );
@@ -238,11 +261,14 @@ class PortalSyncController extends ChangeNotifier {
         }
         return;
       }
+      PortalInferenceOutcome outcome;
       try {
         portalDebugLog('analysis.started', model: modelVersion);
-        plan = await analysisClient
+        outcome = await inferenceGateway
             .analyze(
-              PortalAnalysisRequest(
+              PortalInferenceRequest(
+                accountId: _connection.accountId,
+                budgetKey: _budgetKey(snapshot),
                 structuralContent: snapshot.toAnalysisJson(),
                 modelVersion: modelVersion,
               ),
@@ -272,6 +298,30 @@ class PortalSyncController extends ChangeNotifier {
         return;
       }
       if (!_isCurrent(generation)) return;
+      if (outcome is PortalInferenceRejected) {
+        // A typed, non-exceptional rejection from a server-verified gateway:
+        // the account has no entitlement or its allowance is exhausted.
+        // Today's direct Firebase client never produces this branch; it has
+        // no server-side check to reject against.
+        portalDebugLog(
+          'inference.rejected reason=${outcome.reason.name}',
+          model: modelVersion,
+        );
+        _emit(
+          _state.copyWith(
+            phase: PortalSyncPhase.blocked,
+            message: outcome.message ?? _rejectionMessage(outcome.reason),
+            accessDenied:
+                outcome.reason == PortalInferenceRejectionReason.noEntitlement,
+            allowanceExhausted:
+                outcome.reason ==
+                PortalInferenceRejectionReason.allowanceExhausted,
+            isBusy: false,
+          ),
+        );
+        return;
+      }
+      plan = (outcome as PortalInferenceSuccess).plan;
       final failure = plan.validationFailureFor(snapshot);
       if (failure != null) {
         final adjusted = plan.supportedSubsetFor(snapshot);
@@ -436,6 +486,23 @@ class PortalSyncController extends ChangeNotifier {
     });
   }
 
+  /// Stable per-request key a server-side atomic reservation would key its
+  /// allowance decrement on: account, connection, and content fingerprint.
+  /// Today's direct client ignores this; it is here so the request shape
+  /// already matches what a callable gateway needs (see
+  /// `PortalInferenceRequest.budgetKey`).
+  String _budgetKey(PortalSnapshot snapshot) => [
+    _connection.accountId,
+    _connection.institutionId,
+    snapshot.origin,
+    snapshot.structuralFingerprint,
+    modelVersion,
+    PortalAnalysisPlan.promptVersion,
+  ].join('|');
+
+  String _rejectionMessage(PortalInferenceRejectionReason reason) =>
+      reason.studentMessage;
+
   String _rowGroup(List<String> row, PortalTablePlan table) {
     final columns = table.columns;
     final values = [
@@ -492,12 +559,179 @@ class PortalSyncController extends ChangeNotifier {
     return capture(snapshot);
   }
 
+  /// Explicit, student-initiated document/image fallback. The student has
+  /// already picked a specific crop or document before this is called —
+  /// this method never captures anything on its own. It shares the DOM
+  /// path's usage allowance (same [usageStore] key) and feeds its result
+  /// into the same review/save state the DOM path uses: a successful
+  /// extraction lands in [PortalSyncState.draft] exactly like a DOM
+  /// capture, so [saveDraft] saves it through the same [importer].
+  Future<void> analyzeMediaFallback(PortalMediaSelection selection) async {
+    final client = mediaAnalysisClient;
+    if (_disposed || _state.isBusy || client == null) return;
+    final generation = _generation;
+    var allowed = false;
+    try {
+      allowed = await accessPolicy.canAnalyze();
+    } catch (error, stack) {
+      portalDebugLog('media_access.failed', error: error, stackTrace: stack);
+      allowed = false;
+    }
+    if (!_isCurrent(generation)) return;
+    if (!allowed) {
+      _emit(
+        _state.copyWith(
+          phase: PortalSyncPhase.blocked,
+          message: 'Portal analysis is not available for this account.',
+          accessDenied: true,
+          isBusy: false,
+        ),
+      );
+      return;
+    }
+    var usageAllowed = false;
+    try {
+      usageAllowed = await usageStore.canAttempt(_connection.accountId);
+    } catch (error, stack) {
+      portalDebugLog(
+        'media_usage.check_failed',
+        error: error,
+        stackTrace: stack,
+      );
+      usageAllowed = false;
+    }
+    if (!_isCurrent(generation)) return;
+    if (!usageAllowed) {
+      portalDebugLog('usage.local_limit_reached');
+      _emit(
+        _state.copyWith(
+          phase: PortalSyncPhase.blocked,
+          message: 'The local portal analysis limit has been reached. Try again later.',
+          accessDenied: false,
+          isBusy: false,
+        ),
+      );
+      return;
+    }
+    _emit(
+      _state.copyWith(
+        phase: PortalSyncPhase.analyzing,
+        message: 'Reading the selected capture',
+        isBusy: true,
+        clearError: true,
+      ),
+    );
+    try {
+      // Counted the same way as the DOM path: once the provider call is
+      // actually about to happen, success or failure, it is a used attempt.
+      await usageStore.recordAttempt(_connection.accountId);
+      if (!_isCurrent(generation)) return;
+    } catch (error, stack) {
+      portalDebugLog(
+        'media_usage.record_failed',
+        error: error,
+        stackTrace: stack,
+      );
+      if (_isCurrent(generation)) {
+        _emit(
+          _state.copyWith(
+            phase: PortalSyncPhase.blocked,
+            message:
+                'Local usage limits are unavailable, so analysis is paused.',
+            isBusy: false,
+          ),
+        );
+      }
+      return;
+    }
+    try {
+      portalDebugLog('media_analysis.started', model: modelVersion);
+      final plan = await client
+          .analyzeMedia(
+            PortalMediaAnalysisRequest(
+              selection: selection,
+              modelVersion: modelVersion,
+            ),
+          )
+          .timeout(const Duration(seconds: 30));
+      if (!_isCurrent(generation)) return;
+      final draft = plan.toDraft(_connection);
+      if (draft == null) {
+        portalDebugLog('media_analysis.empty', model: modelVersion);
+        _emit(
+          _state.copyWith(
+            phase: PortalSyncPhase.error,
+            error: 'No validated course information was found in this capture.',
+            isBusy: false,
+          ),
+        );
+        return;
+      }
+      portalDebugLog('media_analysis.succeeded', model: modelVersion);
+      final merged = _mergeDrafts(_state.draft, draft);
+      _emit(
+        _state.copyWith(
+          phase: PortalSyncPhase.review,
+          draft: merged,
+          coursesCount: merged.courses.length,
+          meetingsCount: merged.meetings.length,
+          message: 'Review the detected courses and meetings.',
+          isBusy: false,
+          clearError: true,
+        ),
+      );
+    } catch (error, stack) {
+      portalDebugLog(
+        'media_analysis.failed',
+        model: modelVersion,
+        error: error,
+        stackTrace: stack,
+      );
+      if (_isCurrent(generation)) {
+        _emit(
+          _state.copyWith(
+            phase: PortalSyncPhase.error,
+            error: 'Could not read this capture. You can try again or continue browsing.',
+            isBusy: false,
+          ),
+        );
+      }
+    }
+  }
+
+  /// Existing on-device values are kept on a source id collision: a value
+  /// read directly from the DOM is treated as more reliable than one a
+  /// model read from an image, so the media fallback only ever fills gaps.
+  PortalDraft _mergeDrafts(PortalDraft? existing, PortalDraft incoming) {
+    if (existing == null) return incoming;
+    final courses = {
+      for (final course in incoming.courses) course.sourceId: course,
+      for (final course in existing.courses) course.sourceId: course,
+    };
+    final meetings = {
+      for (final meeting in incoming.meetings) meeting.sourceId: meeting,
+      for (final meeting in existing.meetings) meeting.sourceId: meeting,
+    };
+    return PortalDraft(
+      courses: courses.values.toList(),
+      meetings: meetings.values.toList(),
+      sourceOrigin: existing.sourceOrigin,
+      observedAt: DateTime.now().toUtc(),
+    );
+  }
+
   void stop() {
     if (_disposed) return;
     _stopped = true;
     _paused = false;
     _generation++;
     _queuedSnapshot = null;
+    // Abandon the in-flight slot rather than leave a stopped generation's
+    // still-resolving call occupying it: a capture after `resume()` must not
+    // wait on a call this controller already gave up on. The abandoned
+    // future's own completion is a no-op (see the `whenComplete` guard in
+    // `capture`), since `_captureFuture` no longer points to it.
+    _captureFuture = null;
     _captures.clear();
     _failedAttempts.clear();
     _explicitRetryFingerprints.clear();
@@ -514,6 +748,11 @@ class PortalSyncController extends ChangeNotifier {
     if (_disposed) return;
     _generation++;
     _queuedSnapshot = null;
+    // One in-flight analysis per *connection*: a new connection gets its own
+    // free slot immediately rather than queuing behind the old connection's
+    // still-resolving call (which may take up to the 30s analysis timeout
+    // to unwind). See the `stop()` comment above for why this is safe.
+    _captureFuture = null;
     _captures.clear();
     _failedAttempts.clear();
     _explicitRetryFingerprints.clear();

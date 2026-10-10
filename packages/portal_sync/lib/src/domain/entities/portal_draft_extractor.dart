@@ -1,11 +1,8 @@
-import 'dart:convert';
-
-import 'package:crypto/crypto.dart';
-
 import 'portal_analysis_plan.dart';
 import 'portal_connection.dart';
 import 'portal_draft.dart';
 import 'portal_snapshot.dart';
+import 'portal_source_identity.dart';
 
 typedef PortalCapture = (PortalSnapshot snapshot, PortalAnalysisPlan plan);
 
@@ -36,7 +33,7 @@ class PortalDraftExtractor {
             final title = _cell(row, table.columns.title)?.trim() ?? '';
             if (code.isEmpty || title.isEmpty) continue;
             final term = _cell(row, table.columns.term)?.trim();
-            final sourceId = _id([
+            final sourceId = PortalSourceIdentity.hash([
               connection.accountId,
               connection.origin,
               connection.institutionId,
@@ -75,7 +72,7 @@ class PortalDraftExtractor {
               existingForCode.isEmpty &&
               title != null &&
               title.isNotEmpty) {
-            final sourceId = _id([
+            final sourceId = PortalSourceIdentity.hash([
               connection.accountId,
               connection.origin,
               connection.institutionId,
@@ -116,13 +113,13 @@ class PortalDraftExtractor {
       // code identifies exactly one term. Never attach it to an arbitrary one.
       if (matchingCourses.length != 1) continue;
       final courseSourceId = matchingCourses.single.sourceId;
-      final day = _normalizeDay(_cell(row, columns.day) ?? '');
-      final start = _normalizeTime(_cell(row, columns.start) ?? '');
-      final end = _normalizeTime(_cell(row, columns.end) ?? '');
+      final day = normalizePortalDay(_cell(row, columns.day) ?? '');
+      final start = normalizePortalTime(_cell(row, columns.start) ?? '');
+      final end = normalizePortalTime(_cell(row, columns.end) ?? '');
       if (day == null ||
           start == null ||
           end == null ||
-          !_validRange(start, end)) {
+          !validPortalTimeRange(start, end)) {
         continue;
       }
       final occurrenceKey = '$courseSourceId|$day|${pending.table.nodeId}';
@@ -131,7 +128,7 @@ class PortalDraftExtractor {
         (count) => count + 1,
         ifAbsent: () => 0,
       );
-      final sourceId = _id([
+      final sourceId = PortalSourceIdentity.hash([
         courseSourceId,
         day,
         pending.table.nodeId,
@@ -161,40 +158,4 @@ class PortalDraftExtractor {
       index == null || index >= row.length ? null : row[index];
   static String? _nonEmpty(String? value) =>
       value == null || value.isEmpty ? null : value;
-
-  static String _id(List<Object?> components) =>
-      sha256.convert(utf8.encode(jsonEncode(components))).toString();
-
-  static String? _normalizeDay(String value) {
-    final normalized = value.trim().toLowerCase().replaceAll('.', '');
-    return switch (normalized) {
-      'monday' || 'mon' => 'Monday',
-      'tuesday' || 'tue' || 'tues' => 'Tuesday',
-      'wednesday' || 'wed' => 'Wednesday',
-      'thursday' || 'thu' || 'thur' || 'thurs' => 'Thursday',
-      'friday' || 'fri' => 'Friday',
-      'saturday' || 'sat' => 'Saturday',
-      'sunday' || 'sun' => 'Sunday',
-      _ => null,
-    };
-  }
-
-  static String? _normalizeTime(String value) {
-    final match = RegExp(
-      r'^(\d{1,2}):(\d{2})(?:\s*([AP]M))?$',
-      caseSensitive: false,
-    ).firstMatch(value.trim());
-    if (match == null) return null;
-    var hour = int.parse(match.group(1)!);
-    final minute = int.parse(match.group(2)!);
-    final meridiem = match.group(3)?.toUpperCase();
-    if (minute > 59 || (meridiem == null ? hour > 23 : hour < 1 || hour > 12)) {
-      return null;
-    }
-    if (meridiem == 'AM' && hour == 12) hour = 0;
-    if (meridiem == 'PM' && hour != 12) hour += 12;
-    return '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
-  }
-
-  static bool _validRange(String start, String end) => start.compareTo(end) < 0;
 }

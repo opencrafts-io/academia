@@ -112,7 +112,7 @@ class _SchoolPortalPageState extends State<SchoolPortalPage> {
       );
       final controller = PortalSyncController(
         connection: connection,
-        analysisClient: FirebasePortalAnalysisClient(
+        inferenceGateway: FirebasePortalAnalysisClient(
           firebaseAI: ai,
           modelName: portalModelName,
         ),

@@ -24,6 +24,7 @@ class PortalSyncState {
     this.fromCache = false,
     this.error,
     this.accessDenied = false,
+    this.allowanceExhausted = false,
     this.isBusy = false,
   });
 
@@ -36,7 +37,19 @@ class PortalSyncState {
   final int meetingsCount;
   final bool fromCache;
   final String? error;
+
+  /// Set when a server-verified inference gateway rejected a request
+  /// because the account has no active entitlement. Distinct from the
+  /// pre-existing UI-level [PortalAccessPolicy] billing gate, which sets
+  /// this same flag today for the client-side-only subscription check.
   final bool accessDenied;
+
+  /// Set when a server-verified inference gateway rejected a request
+  /// because the account's usage allowance for the current period is
+  /// exhausted. Distinct from the local, best-effort [PortalUsageStore]
+  /// limit (`usage.local_limit_reached`), which blocks before a gateway
+  /// call is even attempted.
+  final bool allowanceExhausted;
   final bool isBusy;
 
   PortalSyncState copyWith({
@@ -53,6 +66,7 @@ class PortalSyncState {
     String? error,
     bool clearError = false,
     bool? accessDenied,
+    bool? allowanceExhausted,
     bool? isBusy,
   }) => PortalSyncState(
     phase: phase ?? this.phase,
@@ -65,6 +79,7 @@ class PortalSyncState {
     fromCache: fromCache ?? this.fromCache,
     error: clearError ? null : error ?? this.error,
     accessDenied: accessDenied ?? this.accessDenied,
+    allowanceExhausted: allowanceExhausted ?? this.allowanceExhausted,
     isBusy: isBusy ?? this.isBusy,
   );
 }

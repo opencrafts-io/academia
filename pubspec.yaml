@@ -123,6 +123,8 @@ dependencies:
     path: packages/core/
   courses:
     path: packages/courses/
+  institutions:
+    path: packages/institutions/
   agenda:
     path: packages/agenda/
   # database v2

@@ -319,29 +319,211 @@ void main() {
     expect(controller.state.phase, PortalSyncPhase.idle);
     controller.dispose();
   });
+
+  group('inference gateway adapter selection', () {
+    test('the controller behaves identically against any PortalInferenceGateway implementation', () async {
+      // Stands in for swapping FirebasePortalAnalysisClient for a future
+      // CallableInferenceGateway: nothing in the controller changes, only
+      // the DI registration of `inferenceGateway`.
+      final gatewayA = _AnalysisClient((_) async => coursePlan());
+      final controllerA = _controller(connection, gatewayA, _MemoryCache());
+      await controllerA.capture(snapshot('Algorithms'));
+      expect(controllerA.state.phase, PortalSyncPhase.review);
+      expect(controllerA.state.draft?.courses.single.title, 'Algorithms');
+      controllerA.dispose();
+
+      final gatewayB = _AnalysisClient((_) async => coursePlan());
+      final controllerB = _controller(connection, gatewayB, _MemoryCache());
+      await controllerB.capture(snapshot('Algorithms'));
+      expect(controllerB.state.phase, PortalSyncPhase.review);
+      expect(controllerB.state.draft?.courses.single.title, 'Algorithms');
+      controllerB.dispose();
+    });
+
+    test('the request sent to the gateway carries account identity and a budget key', () async {
+      final gateway = _AnalysisClient((_) async => coursePlan());
+      final controller = _controller(connection, gateway, _MemoryCache());
+      await controller.capture(snapshot('Algorithms'));
+      expect(gateway.requests, hasLength(1));
+      expect(gateway.requests.single.accountId, connection.accountId);
+      expect(gateway.requests.single.budgetKey, isNotEmpty);
+      controller.dispose();
+    });
+  });
+
+  group('typed inference rejection handling', () {
+    test('a no-entitlement rejection blocks without being treated as a page failure', () async {
+      final gateway = _OutcomeGateway(
+        (_) async => const PortalInferenceRejected(
+          PortalInferenceRejectionReason.noEntitlement,
+        ),
+      );
+      final controller = _controller(connection, gateway, _MemoryCache());
+      await controller.capture(snapshot('Algorithms'));
+      expect(controller.state.phase, PortalSyncPhase.blocked);
+      expect(controller.state.accessDenied, isTrue);
+      expect(controller.state.allowanceExhausted, isFalse);
+      // A rejection is not a technical failure: the bounded single-retry
+      // counter must not treat it as one.
+      await controller.retryAnalysis();
+      expect(
+        gateway.calls,
+        1,
+        reason: 'retryAnalysis is a no-op without a prior failed attempt',
+      );
+      controller.dispose();
+    });
+
+    test(
+      'an allowance-exhausted rejection is distinguishable from no entitlement',
+      () async {
+        final gateway = _OutcomeGateway(
+          (_) async => const PortalInferenceRejected(
+            PortalInferenceRejectionReason.allowanceExhausted,
+            message: 'Try again next month.',
+          ),
+        );
+        final controller = _controller(connection, gateway, _MemoryCache());
+        await controller.capture(snapshot('Algorithms'));
+        expect(controller.state.phase, PortalSyncPhase.blocked);
+        expect(controller.state.accessDenied, isFalse);
+        expect(controller.state.allowanceExhausted, isTrue);
+        expect(controller.state.message, 'Try again next month.');
+        controller.dispose();
+      },
+    );
+
+    test('a later successful capture on the same session clears a prior rejection flag', () async {
+      // A single gateway that rejects once, then succeeds — simulating an
+      // account regaining allowance (for example, after a period rollover)
+      // within one browsing session, without needing a second controller.
+      var callCount = 0;
+      final gateway = _OutcomeGateway((_) async {
+        callCount++;
+        if (callCount == 1) {
+          return const PortalInferenceRejected(
+            PortalInferenceRejectionReason.allowanceExhausted,
+          );
+        }
+        return PortalInferenceSuccess(coursePlan());
+      });
+      final controller = _controller(connection, gateway, _MemoryCache());
+
+      await controller.capture(snapshot('Algorithms'));
+      expect(controller.state.allowanceExhausted, isTrue);
+      expect(controller.state.phase, PortalSyncPhase.blocked);
+
+      await controller.capture(snapshot('Algorithms'));
+      expect(controller.state.allowanceExhausted, isFalse);
+      expect(controller.state.phase, PortalSyncPhase.review);
+      expect(callCount, 2);
+      controller.dispose();
+    });
+  });
+
+  group('reconnect does not wait on an abandoned in-flight call', () {
+    test('setConnection frees the in-flight slot for the new connection immediately', () async {
+      final stuck = Completer<PortalAnalysisPlan>();
+      var callCount = 0;
+      final gateway = _AnalysisClient((_) {
+        callCount++;
+        return callCount == 1 ? stuck.future : Future.value(coursePlan());
+      });
+      final controller = _controller(connection, gateway, _MemoryCache());
+
+      // Starts an analysis that never resolves on its own — simulating a
+      // slow/abandoned network call on the old connection.
+      final firstCapture = controller.capture(snapshot('Algorithms'));
+      await Future<void>.delayed(Duration.zero);
+      expect(controller.state.phase, PortalSyncPhase.analyzing);
+
+      final otherConnection = PortalConnection(
+        accountId: 'account-b',
+        institutionId: 2,
+        schoolName: 'Other',
+        portalUri: Uri.parse('https://other.example.edu'),
+      );
+      controller.setConnection(otherConnection);
+
+      final secondCapture = controller.capture(
+        PortalSnapshot.fromJson({
+          'origin': 'https://other.example.edu',
+          'path': '/courses',
+          'title': 'My courses',
+          'language': 'en',
+          'nodes': [
+            {
+              'id': 'table-1',
+              'kind': 'table',
+              'label': 'Courses',
+              'headers': ['Code', 'Title'],
+              'rows': [
+                ['CS101', 'New school course'],
+              ],
+            },
+          ],
+        }),
+      );
+      // The new connection's capture must resolve without waiting on the
+      // old connection's still-pending (abandoned) completer. Before the
+      // `_captureFuture` reset fix, this would hang until `stuck` completed.
+      await secondCapture.timeout(const Duration(seconds: 2));
+      expect(controller.state.phase, PortalSyncPhase.review);
+      expect(controller.state.draft?.courses.single.title, 'New school course');
+      expect(callCount, 2);
+
+      stuck.complete(coursePlan());
+      await firstCapture;
+      controller.dispose();
+    });
+  });
 }
 
 PortalSyncController _controller(
   PortalConnection connection,
-  PortalAnalysisClient client,
+  PortalInferenceGateway client,
   PortalCacheStore cache, {
   PortalImporter? importer,
+  PortalUsageStore? usageStore,
+  PortalAccessPolicy? accessPolicy,
 }) => PortalSyncController(
   connection: connection,
-  analysisClient: client,
+  inferenceGateway: client,
   cacheStore: cache,
-  usageStore: _Usage(),
-  accessPolicy: _Access(),
+  usageStore: usageStore ?? _Usage(),
+  accessPolicy: accessPolicy ?? _Access(),
   importer: importer ?? _RecordingImporter(),
 );
 
-class _AnalysisClient implements PortalAnalysisClient {
+/// Fake gateway standing in for either adapter in tests: both
+/// [FirebasePortalAnalysisClient] and a future [CallableInferenceGateway]
+/// implement the exact same [PortalInferenceGateway] contract this fake
+/// does, which is what a DI-swap test exercises.
+class _AnalysisClient implements PortalInferenceGateway {
   _AnalysisClient(this.handler);
-  final Future<PortalAnalysisPlan> Function(PortalAnalysisRequest) handler;
+  final Future<PortalAnalysisPlan> Function(PortalInferenceRequest) handler;
+  int calls = 0;
+  final requests = <PortalInferenceRequest>[];
+
+  @override
+  Future<PortalInferenceOutcome> analyze(PortalInferenceRequest request) async {
+    calls++;
+    requests.add(request);
+    return PortalInferenceSuccess(await handler(request));
+  }
+}
+
+/// A gateway whose handler controls the outcome directly — success or a
+/// typed rejection — for exercising branches [_AnalysisClient] cannot
+/// reach, since [_AnalysisClient] always wraps its handler's plan in
+/// [PortalInferenceSuccess].
+class _OutcomeGateway implements PortalInferenceGateway {
+  _OutcomeGateway(this.handler);
+  final Future<PortalInferenceOutcome> Function(PortalInferenceRequest) handler;
   int calls = 0;
 
   @override
-  Future<PortalAnalysisPlan> analyze(PortalAnalysisRequest request) {
+  Future<PortalInferenceOutcome> analyze(PortalInferenceRequest request) {
     calls++;
     return handler(request);
   }

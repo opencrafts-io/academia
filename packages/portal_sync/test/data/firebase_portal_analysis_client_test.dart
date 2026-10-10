@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:firebase_ai/firebase_ai.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:portal_sync/portal_sync.dart';
@@ -8,7 +10,12 @@ void main() {
     final client = FirebasePortalAnalysisClient(firebaseAI: firebase);
     await expectLater(
       client.analyze(
-        PortalAnalysisRequest(structuralContent: {}, modelVersion: ''),
+        PortalInferenceRequest(
+          accountId: 'account-a',
+          budgetKey: 'budget-a',
+          structuralContent: {},
+          modelVersion: '',
+        ),
       ),
       throwsA(isA<_ConfigurationCaptured>()),
     );
@@ -34,7 +41,12 @@ void main() {
       final client = FirebasePortalAnalysisClient(firebaseAI: firebase);
       await expectLater(
         client.analyze(
-          PortalAnalysisRequest(structuralContent: {}, modelVersion: ''),
+          PortalInferenceRequest(
+            accountId: 'account-a',
+            budgetKey: 'budget-a',
+            structuralContent: {},
+            modelVersion: '',
+          ),
         ),
         throwsA(isA<_ConfigurationCaptured>()),
       );
@@ -94,6 +106,78 @@ void main() {
       );
     },
   );
+
+  group('analyzeMedia (document/image fallback)', () {
+    test(
+      'builds a value-returning schema distinct from the DOM column plan',
+      () async {
+        final firebase = _CaptureConfiguration();
+        final client = FirebasePortalAnalysisClient(firebaseAI: firebase);
+        final selection = PortalMediaSelection.validated(
+          bytes: Uint8List.fromList([1, 2, 3, 4]),
+          mimeType: 'image/jpeg',
+          kind: PortalMediaKind.image,
+        );
+        await expectLater(
+          client.analyzeMedia(
+            PortalMediaAnalysisRequest(selection: selection, modelVersion: ''),
+          ),
+          throwsA(isA<_ConfigurationCaptured>()),
+        );
+        final schema = firebase.configuration!.responseSchema!.toJson();
+        expect(
+          schema['required'],
+          unorderedEquals(['pageType', 'courses', 'meetings']),
+        );
+        final courseItem =
+            ((schema['properties'] as Map)['courses'] as Map)['items'] as Map;
+        expect(
+          courseItem['required'],
+          unorderedEquals(['code', 'title', 'term', 'section', 'lecturer']),
+        );
+        final meetingItem =
+            ((schema['properties'] as Map)['meetings'] as Map)['items'] as Map;
+        expect(
+          meetingItem['required'],
+          unorderedEquals(['code', 'day', 'start', 'end', 'venue', 'term']),
+        );
+        // Values are strings here, not the DOM path's integer column indices:
+        // there is no local table to index into for an image/document.
+        expect((courseItem['properties'] as Map)['code']['type'], 'STRING');
+        for (final optional in ['term', 'section', 'lecturer']) {
+          expect(
+            (courseItem['properties'] as Map)[optional]['nullable'],
+            isTrue,
+          );
+        }
+        expect(
+          firebase.configuration!.toJson()['responseMimeType'],
+          'application/json',
+        );
+      },
+    );
+
+    test('reuses the same model instance plumbing as the DOM path', () async {
+      final firebase = _CaptureConfiguration();
+      final client = FirebasePortalAnalysisClient(
+        firebaseAI: firebase,
+        modelName: 'gemini-3.5-flash-lite',
+      );
+      final selection = PortalMediaSelection.validated(
+        bytes: Uint8List.fromList(List.filled(10, 9)),
+        mimeType: 'application/pdf',
+        kind: PortalMediaKind.document,
+      );
+      await expectLater(
+        client.analyzeMedia(
+          PortalMediaAnalysisRequest(selection: selection, modelVersion: ''),
+        ),
+        throwsA(isA<_ConfigurationCaptured>()),
+      );
+      expect(firebase.model, 'gemini-3.5-flash-lite');
+      expect(firebase.configuration!.toJson()['maxOutputTokens'], 1000);
+    });
+  });
 }
 
 // Capture the actual SDK configuration without making a billable cloud request.

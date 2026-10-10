@@ -151,7 +151,7 @@ void main() {
         schoolName: 'Example University',
         portalUri: Uri.parse('https://portal.school.edu'),
       ),
-      analysisClient: client,
+      inferenceGateway: client,
       cacheStore: _Cache(),
       usageStore: usage,
       accessPolicy: _Access(),
@@ -211,7 +211,7 @@ void main() {
         schoolName: 'Example University',
         portalUri: Uri.parse('https://portal.school.edu'),
       ),
-      analysisClient: FirebasePortalAnalysisClient(
+      inferenceGateway: FirebasePortalAnalysisClient(
         firebaseAI: _FirebaseWithTransport(transport),
       ),
       cacheStore: _Cache(),
@@ -377,31 +377,33 @@ PortalSnapshot _page(String page, List<String> headers, List<String> row) =>
       ],
     });
 
-class _MappingClient implements PortalAnalysisClient {
-  final requests = <PortalAnalysisRequest>[];
+class _MappingClient implements PortalInferenceGateway {
+  final requests = <PortalInferenceRequest>[];
   @override
-  Future<PortalAnalysisPlan> analyze(PortalAnalysisRequest request) async {
+  Future<PortalInferenceOutcome> analyze(PortalInferenceRequest request) async {
     requests.add(request);
     final nodes = request.structuralContent['nodes'] as List;
     final headers = (nodes.single as Map)['headers'] as List;
     final courses = headers.contains('Title');
-    return PortalAnalysisPlan(
-      pageType: courses ? PortalPageType.courses : PortalPageType.timetable,
-      tables: [
-        PortalTablePlan(
-          nodeId: 'n0',
-          kind: courses ? PortalTableKind.courses : PortalTableKind.meetings,
-          columns: courses
-              ? const PortalColumnMap(code: 0, title: 1, term: 2)
-              : const PortalColumnMap(
-                  code: 0,
-                  day: 1,
-                  start: 2,
-                  end: 3,
-                  venue: 4,
-                ),
-        ),
-      ],
+    return PortalInferenceSuccess(
+      PortalAnalysisPlan(
+        pageType: courses ? PortalPageType.courses : PortalPageType.timetable,
+        tables: [
+          PortalTablePlan(
+            nodeId: 'n0',
+            kind: courses ? PortalTableKind.courses : PortalTableKind.meetings,
+            columns: courses
+                ? const PortalColumnMap(code: 0, title: 1, term: 2)
+                : const PortalColumnMap(
+                    code: 0,
+                    day: 1,
+                    start: 2,
+                    end: 3,
+                    venue: 4,
+                  ),
+          ),
+        ],
+      ),
     );
   }
 }

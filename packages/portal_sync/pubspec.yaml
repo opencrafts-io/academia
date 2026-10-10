@@ -8,7 +8,9 @@ environment:
   flutter: '>=1.17.0'
 
 dependencies:
+  cloud_functions: ^6.5.0
   crypto: ^3.0.6
+  dio: ^5.11.1
   firebase_ai: ^4.0.0
   firebase_core: ^4.0.0
   flutter_inappwebview: 6.2.0-beta.3

@@ -239,4 +239,172 @@ void main() {
       expect(plan.validateFor(exam), isFalse);
     },
   );
+
+  group('profile and fee_statement categories', () {
+    final feeSnapshot = PortalSnapshot.fromJson({
+      'origin': 'https://portal.example.edu',
+      'path': '/fees',
+      'title': 'Fee statement',
+      'language': 'en',
+      'nodes': [
+        {
+          'id': 'fee-table',
+          'kind': 'table',
+          'label': 'Fee statement',
+          'headers': ['Date', 'Description', 'Debit', 'Credit', 'Balance'],
+          'rows': [
+            ['2026-09-01', 'Tuition fee', '1,500,000', '', '1,500,000'],
+            ['2026-09-15', 'Bank payment', '', '500,000', '1,000,000'],
+          ],
+        },
+      ],
+    });
+
+    final profileSnapshot = PortalSnapshot.fromJson({
+      'origin': 'https://portal.example.edu',
+      'path': '/student/profile',
+      'title': 'Student profile',
+      'language': 'en',
+      'nodes': [
+        {
+          'id': 'field-reg',
+          'kind': 'field',
+          'label': 'Registration number',
+          'headers': [],
+          'rows': [],
+          'value': 'REG-12345',
+        },
+        {
+          'id': 'field-name',
+          'kind': 'field',
+          'label': 'Full name',
+          'headers': [],
+          'rows': [],
+          'value': 'Jane Doe',
+        },
+      ],
+    });
+
+    test('a real fee statement table with debit/credit/balance validates', () {
+      final plan = PortalAnalysisPlan.fromJson({
+        'pageType': 'feeStatement',
+        'tables': [
+          {
+            'nodeId': 'fee-table',
+            'kind': 'feeLineItems',
+            'columns': {
+              'date': 0,
+              'description': 1,
+              'debit': 2,
+              'credit': 3,
+              'balance': 4,
+            },
+          },
+        ],
+      });
+      expect(plan.validateFor(feeSnapshot), isTrue);
+    });
+
+    test('an empty mapping on a fee page is normal browsing, not a failure', () {
+      final plan = PortalAnalysisPlan.fromJson({
+        'pageType': 'feeStatement',
+        'tables': [],
+      });
+      expect(plan.validateFor(feeSnapshot), isTrue);
+    });
+
+    test('a generic table on a fee page still fails validation', () {
+      final generic = PortalSnapshot.fromJson({
+        ...feeSnapshot.toAnalysisJson(),
+        'path': '/fees',
+        'title': 'Fee statement',
+        'nodes': [
+          {
+            'id': 'fee-table',
+            'kind': 'table',
+            'label': 'Details',
+            'headers': ['Code', 'Title'],
+            'rows': [
+              ['CS101', 'Algorithms'],
+            ],
+          },
+        ],
+      });
+      final plan = PortalAnalysisPlan.fromJson({
+        'pageType': 'feeStatement',
+        'tables': [
+          {
+            'nodeId': 'fee-table',
+            'kind': 'feeLineItems',
+            'columns': {'description': 1},
+          },
+        ],
+      });
+      expect(plan.validateFor(generic), isFalse);
+      expect(plan.supportedSubsetFor(generic).tables, isEmpty);
+    });
+
+    test('a fee table missing both debit/credit/balance columns fails', () {
+      final plan = PortalAnalysisPlan.fromJson({
+        'pageType': 'feeStatement',
+        'tables': [
+          {
+            'nodeId': 'fee-table',
+            'kind': 'feeLineItems',
+            'columns': {'date': 0, 'description': 1},
+          },
+        ],
+      });
+      expect(plan.validateFor(feeSnapshot), isFalse);
+    });
+
+    test('a labelled profile field maps to a supported field key', () {
+      final plan = PortalAnalysisPlan.fromJson({
+        'pageType': 'profile',
+        'tables': [],
+        'fields': [
+          {'nodeId': 'field-reg', 'fieldKey': 'registrationNumber'},
+          {'nodeId': 'field-name', 'fieldKey': 'fullName'},
+        ],
+      });
+      expect(plan.validateFor(profileSnapshot), isTrue);
+    });
+
+    test('an unknown profile field key is rejected by the schema parser', () {
+      expect(
+        () => PortalAnalysisPlan.fromJson({
+          'pageType': 'profile',
+          'tables': [],
+          'fields': [
+            {'nodeId': 'field-reg', 'fieldKey': 'nationalId'},
+          ],
+        }),
+        throwsFormatException,
+      );
+    });
+
+    test('duplicate field keys are rejected even on distinct nodes', () {
+      final plan = PortalAnalysisPlan.fromJson({
+        'pageType': 'profile',
+        'tables': [],
+        'fields': [
+          {'nodeId': 'field-reg', 'fieldKey': 'fullName'},
+          {'nodeId': 'field-name', 'fieldKey': 'fullName'},
+        ],
+      });
+      expect(plan.validateFor(profileSnapshot), isFalse);
+      expect(plan.supportedSubsetFor(profileSnapshot).fields, hasLength(1));
+    });
+
+    test('a field mapping pointing at a table node is rejected', () {
+      final plan = PortalAnalysisPlan.fromJson({
+        'pageType': 'profile',
+        'tables': [],
+        'fields': [
+          {'nodeId': 'fee-table', 'fieldKey': 'fullName'},
+        ],
+      });
+      expect(plan.validateFor(feeSnapshot), isFalse);
+    });
+  });
 }
