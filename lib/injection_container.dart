@@ -600,13 +600,6 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     ),
   );
 
-  sl.registerFactory<InstitutionCommandLocalDatasource>(
-    () => InstitutionCommandLocalDatasource(appDataBase: sl()),
-  );
-  sl.registerFactory<InstitutionCommandRemoteDatasource>(
-    () => InstitutionCommandRemoteDatasource(flavor: flavor, dioClient: sl()),
-  );
-
   sl.registerFactory<InstitutionKeyLocalDatasource>(
     () => InstitutionKeyLocalDatasource(appDataBase: sl()),
   );
@@ -656,13 +649,6 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
     ),
   );
 
-  sl.registerFactory<InstitutionCommandRepository>(
-    () => InstitutionScrappingCommandRepositoryImpl(
-      institutionCommandLocalDatasource: sl(),
-      institutionCommandRemoteDatasource: sl(),
-    ),
-  );
-
   sl.registerFactory<GetAllUserAccountInstitutionsUsecase>(
     () => GetAllUserAccountInstitutionsUsecase(
       institutionRepository: sl<InstitutionRepositoryImpl>(),
@@ -698,13 +684,6 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   );
   sl.registerFactory<SaveInstitutionKeyUsecase>(
     () => SaveInstitutionKeyUsecase(repository: sl()),
-  );
-
-  sl.registerFactory<GetInstitutionScrappingCommandUsecase>(
-    () => GetInstitutionScrappingCommandUsecase(repository: sl()),
-  );
-  sl.registerFactory<FetchInstitutionScrappingCommandUsecase>(
-    () => FetchInstitutionScrappingCommandUsecase(repository: sl()),
   );
 
   // --- Student Profile Usecases ---
@@ -748,10 +727,6 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   // Create Usecase
   sl.registerFactory<CreateProfileUsecase>(
     () => CreateProfileUsecase(repository: sl<StudentProfileRepository>()),
-  );
-
-  sl.registerFactory<SyncInstitutionProfileUsecase>(
-    () => SyncInstitutionProfileUsecase(createProfileUsecase: sl()),
   );
 
   // Update Usecases
@@ -826,10 +801,6 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
       getAllUserAccountInstitutionsUsecase: sl(),
       analyticsTracker: sl(),
     ),
-  );
-
-  sl.registerFactory<ScrappingCommandBloc>(
-    () => ScrappingCommandBloc(getInstitutionScrappingCommandUsecase: sl()),
   );
 
   // Exam Timetable
@@ -909,15 +880,6 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
       getSemestersForInstitutionUsecase: sl(),
       updateSemesterUsecase: sl(),
       watchAllSemestersUsecase: sl(),
-    ),
-  );
-
-  sl.registerFactory<MagnetBloc>(
-    () => MagnetBloc(
-      createScheduleEntry: sl<courses.CreateScheduleEntry>(),
-      createCourse: sl<courses.CreateCourse>(),
-      syncInstitutionProfileUsecase: sl(),
-      saveFeeTransaction: sl(),
     ),
   );
 

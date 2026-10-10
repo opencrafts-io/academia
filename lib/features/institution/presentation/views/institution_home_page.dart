@@ -4,7 +4,6 @@ import 'package:academia/features/institution/institution.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sliver_tools/sliver_tools.dart';
-import 'package:magnet/magnet.dart';
 import 'package:academia/core/integration/portal_sync/portal_firebase_bootstrap.dart';
 
 class InstitutionHomePage extends StatefulWidget {
@@ -23,11 +22,6 @@ class _InstitutionHomePageState extends State<InstitutionHomePage>
   @override
   void initState() {
     super.initState();
-    if (!portalSyncEnabled) {
-      context.read<MagnetBloc>().add(
-        InitializeMagnet(MagnetConfig.production(schemaServerUrl: "")),
-      );
-    }
 
     final profileState = context.read<ProfileBloc>().state;
     if (profileState is ProfileLoadedState) {
@@ -52,169 +46,100 @@ class _InstitutionHomePageState extends State<InstitutionHomePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: MultiBlocListener(
-        listeners: [
-          BlocListener<ScrappingCommandBloc, ScrappingCommandState>(
-            listener: (context, state) {},
-          ),
-          BlocListener<InstitutionKeyBloc, InstitutionKeyState>(
-            listener: (context, state) {
-              state.whenOrNull(
-                error: (message, key) {
-                  ScaffoldMessenger.of(context).clearSnackBars();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("We couldn't retrieve your keys"),
-                      behavior: SnackBarBehavior.floating,
-                      action: SnackBarAction(
-                        label: "Try again",
-                        onPressed: () => context.read<InstitutionKeyBloc>().add(
-                          GetInstitutionKeyEvent(
-                            institutionID: widget.institutionID,
-                          ),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          // Re-reading the institution key here still serves one purpose:
+          // it lazily migrates any legacy plaintext key row into secure
+          // storage (see InstitutionKeyRepositoryImpl). There is no more
+          // user-facing "keys" UI for it to feed.
+          BlocProvider.of<InstitutionKeyBloc>(context)
+              .add(GetInstitutionKeyEvent(institutionID: widget.institutionID));
+          await Future.delayed(Duration(seconds: 3));
+        },
+        child: CustomScrollView(
+          physics: BouncingScrollPhysics(),
+          slivers: [
+            InstitutionHomeAppBar(institutionID: widget.institutionID),
+            SliverPadding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              sliver: MultiSliver(
+                children: [
+                  if (portalSyncEnabled)
+                    Card.filled(
+                      margin: EdgeInsets.zero,
+                      child: ListTile(
+                        leading: const Icon(Icons.language_rounded),
+                        title: const Text('Connect your school portal'),
+                        subtitle: const Text(
+                          'Browse your courses and review class times before saving',
                         ),
-                      ),
-                    ),
-                  );
-                },
-                loaded: (key) {
-                  if (key == null && !portalSyncEnabled) {
-                    showModalBottomSheet(
-                      context: context,
-                      isDismissible: false,
-                      enableDrag: false,
-                      isScrollControlled: true,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(28.0),
-                        ),
-                      ),
-                      builder: (context) {
-                        return InstitutionSetupSheetContent(
+                        trailing: const Icon(Icons.arrow_forward_rounded),
+                        onTap: () => SchoolPortalRoute(
                           institutionID: widget.institutionID,
-                        );
-                      },
-                    );
-                  }
-                },
-              );
-            },
-          ),
-          BlocListener<MagnetBloc, MagnetState>(
-            listener: (context, state) async {
-              state.whenOrNull(
-                success: (result) {
-                  ScaffoldMessenger.of(context).clearSnackBars();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("All synced — now saving offline…"),
-                      behavior: SnackBarBehavior.floating,
-                    ),
-                  );
-                },
-              );
-            },
-          ),
-        ],
-        child: RefreshIndicator(
-          onRefresh: () async {
-            BlocProvider.of<ScrappingCommandBloc>(context).add(
-              GetScrappingCommandEvent(institutionID: widget.institutionID),
-            );
-            await Future.delayed(Duration(seconds: 3));
-          },
-          child: CustomScrollView(
-            physics: BouncingScrollPhysics(),
-            slivers: [
-              InstitutionHomeAppBar(
-                institutionID: widget.institutionID,
-                hideLegacyKeys: portalSyncEnabled,
-              ),
-              SliverPadding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                sliver: MultiSliver(
-                  children: [
-                    if (portalSyncEnabled)
-                      Card.filled(
-                        margin: EdgeInsets.zero,
-                        child: ListTile(
-                          leading: const Icon(Icons.language_rounded),
-                          title: const Text('Connect your school portal'),
-                          subtitle: const Text(
-                            'Browse your courses and review class times before saving',
-                          ),
-                          trailing: const Icon(Icons.arrow_forward_rounded),
-                          onTap: () => SchoolPortalRoute(
-                            institutionID: widget.institutionID,
-                          ).push(context),
-                        ),
-                      )
-                    else ...[
-                      SyncStatusSection(),
-                      MagnetLoadingProgressCard(),
-                    ],
-                    SliverPinnedHeader(
-                      child: InstitutionSectionLabel(
-                        icon: Icons.person_rounded,
-                        title: "Profile",
+                        ).push(context),
                       ),
                     ),
+                  SliverPinnedHeader(
+                    child: InstitutionSectionLabel(
+                      icon: Icons.person_rounded,
+                      title: "Profile",
+                    ),
+                  ),
 
-                    BlocBuilder<StudentProfileBloc, StudentProfileState>(
-                      builder: (context, state) {
-                        final profile = state.whenOrNull(
-                          success: (profile, profiles) => profile,
-                        );
-                        return InstitutionStudentProfileCard(
-                          onTap: () {
-                            if (profile?.id != null) {
-                              EditStudentProfileRoute(
-                                profileId: profile!.id!,
-                                institutionID: widget.institutionID,
-                              ).push(context);
-                              return;
-                            }
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  "Can't update your profile at the moment"
-                                  " please try again later",
-                                ),
-                                behavior: SnackBarBehavior.floating,
+                  BlocBuilder<StudentProfileBloc, StudentProfileState>(
+                    builder: (context, state) {
+                      final profile = state.whenOrNull(
+                        success: (profile, profiles) => profile,
+                      );
+                      return InstitutionStudentProfileCard(
+                        onTap: () {
+                          if (profile?.id != null) {
+                            EditStudentProfileRoute(
+                              profileId: profile!.id!,
+                              institutionID: widget.institutionID,
+                            ).push(context);
+                            return;
+                          }
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                "Can't update your profile at the moment"
+                                " please try again later",
                               ),
-                            );
-                          },
-                          profile: profile,
-                        );
-                      },
-                    ),
+                              behavior: SnackBarBehavior.floating,
+                            ),
+                          );
+                        },
+                        profile: profile,
+                      );
+                    },
+                  ),
 
-                    SliverPinnedHeader(
-                      child: InstitutionSectionLabel(
-                        icon: Icons.payments_rounded,
-                        title: "Finances",
-                      ),
+                  SliverPinnedHeader(
+                    child: InstitutionSectionLabel(
+                      icon: Icons.payments_rounded,
+                      title: "Finances",
                     ),
+                  ),
 
-                    InstitutionFeesSectionCard(
-                      institutionID: widget.institutionID,
-                    ),
+                  InstitutionFeesSectionCard(
+                    institutionID: widget.institutionID,
+                  ),
 
-                    SliverPinnedHeader(
-                      child: InstitutionSectionLabel(
-                        icon: Icons.menu_book_rounded,
-                        title: "Courses",
-                      ),
+                  SliverPinnedHeader(
+                    child: InstitutionSectionLabel(
+                      icon: Icons.menu_book_rounded,
+                      title: "Courses",
                     ),
-                    InstitutionCoursesSectionCard(
-                      institutionId: widget.institutionID,
-                    ),
-                    SizedBox(height: 22),
-                  ],
-                ),
+                  ),
+                  InstitutionCoursesSectionCard(
+                    institutionId: widget.institutionID,
+                  ),
+                  SizedBox(height: 22),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

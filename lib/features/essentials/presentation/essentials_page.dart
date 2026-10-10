@@ -71,30 +71,11 @@ class _EssentialsPageState extends State<EssentialsPage> {
     if (institutions != null && institutions.isNotEmpty) {
       final primaryInstitution = institutions.first;
 
-      final result = await sl<FetchInstitutionScrappingCommandUsecase>()(
-        primaryInstitution.institutionId,
-      );
-
-      final isSupported = result.fold(
-        (failure) => false,
-        (command) => command != null,
-      );
-
+      final adService = sl<AdService>();
+      adService.showInterstitialAd();
       if (!mounted) return;
-
-      if (isSupported) {
-        final adService = sl<AdService>();
-        adService.showInterstitialAd();
-        if (!mounted) return;
-        ExamTimetableRoute(institutionId: primaryInstitution.institutionId)
-            .push(context);
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("This feature is not supported for your school"),
-          ),
-        );
-      }
+      ExamTimetableRoute(institutionId: primaryInstitution.institutionId)
+          .push(context);
     } else {
       const LinkInstitutionRequiredPageRoute().push(context);
     }

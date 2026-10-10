@@ -1060,7 +1060,6 @@ class ExamTimetableSearchRoute extends GoRouteData
       path: "/institution/:institutionID",
       routes: [
         TypedGoRoute<SchoolPortalRoute>(path: "portal"),
-        TypedGoRoute<InstitutionKeysViewRoute>(path: "keys"),
         TypedGoRoute<InstitutionFeesTransactionRoute>(path: "fees"),
         TypedGoRoute<EditStudentProfileRoute>(path: "profile/:profileId"),
       ],
@@ -1077,17 +1076,15 @@ class InstitutionShellRouteData extends ShellRouteData {
 
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) =>
-              sl<ScrappingCommandBloc>()
-                ..add(GetScrappingCommandEvent(institutionID: institutionID)),
-        ),
+        // Kept so any legacy plaintext institution key row still gets
+        // lazily migrated into secure storage (see
+        // InstitutionKeyRepositoryImpl) even though the key-entry UI it
+        // used to feed (the old recipe/"teaching" flow) is gone.
         BlocProvider(
           create: (context) =>
               sl<InstitutionKeyBloc>()
                 ..add(GetInstitutionKeyEvent(institutionID: institutionID)),
         ),
-        BlocProvider(create: (context) => sl<MagnetBloc>()),
         BlocProvider(create: (context) => sl<StudentProfileBloc>()),
         BlocProvider(
           create: (context) =>
@@ -1135,23 +1132,6 @@ class InstitutionHomePageRoute extends GoRouteData
           ),
         );
       },
-    );
-  }
-}
-
-class InstitutionKeysViewRoute extends GoRouteData
-    with $InstitutionKeysViewRoute {
-  InstitutionKeysViewRoute({required this.institutionID});
-  final int institutionID;
-  @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return ModalSheetPage(
-      swipeDismissible: true,
-      viewportBuilder: (context, child) => SheetViewport(
-        padding: EdgeInsets.only(top: MediaQuery.viewPaddingOf(context).top),
-        child: child,
-      ),
-      child: Sheet(child: InstitutionKeysView(institutionID: institutionID)),
     );
   }
 }

@@ -1,7 +1,5 @@
 import 'package:academia/core/error/failures.dart';
 import 'package:academia/core/usecase/usecase.dart';
-import 'package:academia/features/institution/data/dtos/institution_profile_api_dto.dart';
-import 'package:academia/features/institution/data/models/institution_profile_helper.dart';
 import 'package:academia/features/institution/domain/domain.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
@@ -203,45 +201,6 @@ class CreateProfileParams extends Equatable {
   List<Object> get props => [profile];
 }
 
-class SyncProfileParams extends Equatable {
-  final Map<String, dynamic> rawData;
-  final String userId;
-  final int institutionId;
-
-  const SyncProfileParams({
-    required this.rawData,
-    required this.userId,
-    required this.institutionId,
-  });
-
-  @override
-  List<Object> get props => [rawData, userId, institutionId];
-}
-
-class SyncInstitutionProfileUsecase
-    extends UseCase<InstitutionProfile, SyncProfileParams> {
-  final CreateProfileUsecase createProfileUsecase;
-
-  SyncInstitutionProfileUsecase({required this.createProfileUsecase});
-
-  @override
-  Future<Either<Failure, InstitutionProfile>> call(
-    SyncProfileParams params,
-  ) async {
-    final extra = {
-      "user_id": params.userId,
-      "institution": params.institutionId,
-      "created_at": DateTime.now().toIso8601String(),
-      "updated_at": DateTime.now().toIso8601String(),
-    };
-
-    final profile = InstitutionProfileApiDto.fromJson(
-      Map<String, dynamic>.from(params.rawData)..addEntries(extra.entries),
-    ).toEntity();
-
-    return createProfileUsecase(CreateProfileParams(profile: profile));
-  }
-}
 // ============================================================================
 // Update Usecases
 // ============================================================================
