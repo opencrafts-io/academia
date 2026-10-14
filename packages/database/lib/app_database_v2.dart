@@ -34,6 +34,7 @@ part 'app_database_v2.g.dart';
     StudyPlaybackPositions,
     StudyOfflineEntitlementSnapshots,
     StudyLegacyImports,
+    Profiles,
   ],
   daos: [
     PlanDao,
@@ -46,6 +47,7 @@ part 'app_database_v2.g.dart';
     TodoTagDao,
     TodoItemDao,
     StudyToolsDao,
+    ProfileDao,
   ],
 )
 class AppDatabaseV2 extends _$AppDatabaseV2 {
@@ -56,7 +58,7 @@ class AppDatabaseV2 extends _$AppDatabaseV2 {
     : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 9;
+  int get schemaVersion => 10;
 
   static QueryExecutor _openConnection() {
     driftRuntimeOptions.defaultSerializer = const ValueSerializer.defaults(
@@ -65,7 +67,12 @@ class AppDatabaseV2 extends _$AppDatabaseV2 {
 
     return driftDatabase(
       name: 'academia_v2',
-      native: const DriftNativeOptions(
+      native: DriftNativeOptions(
+        shareAcrossIsolates: true,
+        setup: (database) {
+          database.execute('PRAGMA journal_mode = WAL;');
+          database.execute('PRAGMA busy_timeout = 5000;');
+        },
         // By default, `driftDatabase` from `package:drift_flutter` stores the
         // database files in `getApplicationDocumentsDirectory()`.
         databaseDirectory: getApplicationSupportDirectory,
@@ -229,6 +236,9 @@ extension Migrations on GeneratedDatabase {
       await m.createTable(db.studyPlaybackPositions);
       await m.createTable(db.studyOfflineEntitlementSnapshots);
       await m.createTable(db.studyLegacyImports);
+    }
+    if (from < 10 && to >= 10) {
+      await m.createTable(db.profiles);
     }
   };
 }

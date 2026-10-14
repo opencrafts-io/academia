@@ -4,7 +4,7 @@ import 'package:academia/injection_container.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:academia/features/profile/profile.dart';
+import 'package:profile/profile.dart';
 import 'package:academia/features/sherehe/sherehe.dart';
 import 'package:academia/constants/constants.dart';
 import 'package:go_router/go_router.dart';

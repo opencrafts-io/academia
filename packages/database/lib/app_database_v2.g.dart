@@ -13079,6 +13079,810 @@ class StudyLegacyImportsCompanion extends UpdateCompanion<StudyLegacyImport> {
   }
 }
 
+class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ProfilesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _usernameMeta = const VerificationMeta(
+    'username',
+  );
+  @override
+  late final GeneratedColumn<String> username = GeneratedColumn<String>(
+    'username',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _emailMeta = const VerificationMeta('email');
+  @override
+  late final GeneratedColumn<String> email = GeneratedColumn<String>(
+    'email',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _termsAcceptedMeta = const VerificationMeta(
+    'termsAccepted',
+  );
+  @override
+  late final GeneratedColumn<bool> termsAccepted = GeneratedColumn<bool>(
+    'terms_accepted',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("terms_accepted" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _onboardedMeta = const VerificationMeta(
+    'onboarded',
+  );
+  @override
+  late final GeneratedColumn<bool> onboarded = GeneratedColumn<bool>(
+    'onboarded',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("onboarded" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _nationalIdMeta = const VerificationMeta(
+    'nationalId',
+  );
+  @override
+  late final GeneratedColumn<String> nationalId = GeneratedColumn<String>(
+    'national_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _avatarUrlMeta = const VerificationMeta(
+    'avatarUrl',
+  );
+  @override
+  late final GeneratedColumn<String> avatarUrl = GeneratedColumn<String>(
+    'avatar_url',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _bioMeta = const VerificationMeta('bio');
+  @override
+  late final GeneratedColumn<String> bio = GeneratedColumn<String>(
+    'bio',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _phoneMeta = const VerificationMeta('phone');
+  @override
+  late final GeneratedColumn<String> phone = GeneratedColumn<String>(
+    'phone',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _vibePointsMeta = const VerificationMeta(
+    'vibePoints',
+  );
+  @override
+  late final GeneratedColumn<int> vibePoints = GeneratedColumn<int>(
+    'vibe_points',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> deletedAt = GeneratedColumn<DateTime>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    name,
+    username,
+    email,
+    termsAccepted,
+    onboarded,
+    nationalId,
+    avatarUrl,
+    bio,
+    phone,
+    vibePoints,
+    createdAt,
+    updatedAt,
+    deletedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'profiles';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<Profile> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('username')) {
+      context.handle(
+        _usernameMeta,
+        username.isAcceptableOrUnknown(data['username']!, _usernameMeta),
+      );
+    }
+    if (data.containsKey('email')) {
+      context.handle(
+        _emailMeta,
+        email.isAcceptableOrUnknown(data['email']!, _emailMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_emailMeta);
+    }
+    if (data.containsKey('terms_accepted')) {
+      context.handle(
+        _termsAcceptedMeta,
+        termsAccepted.isAcceptableOrUnknown(
+          data['terms_accepted']!,
+          _termsAcceptedMeta,
+        ),
+      );
+    }
+    if (data.containsKey('onboarded')) {
+      context.handle(
+        _onboardedMeta,
+        onboarded.isAcceptableOrUnknown(data['onboarded']!, _onboardedMeta),
+      );
+    }
+    if (data.containsKey('national_id')) {
+      context.handle(
+        _nationalIdMeta,
+        nationalId.isAcceptableOrUnknown(data['national_id']!, _nationalIdMeta),
+      );
+    }
+    if (data.containsKey('avatar_url')) {
+      context.handle(
+        _avatarUrlMeta,
+        avatarUrl.isAcceptableOrUnknown(data['avatar_url']!, _avatarUrlMeta),
+      );
+    }
+    if (data.containsKey('bio')) {
+      context.handle(
+        _bioMeta,
+        bio.isAcceptableOrUnknown(data['bio']!, _bioMeta),
+      );
+    }
+    if (data.containsKey('phone')) {
+      context.handle(
+        _phoneMeta,
+        phone.isAcceptableOrUnknown(data['phone']!, _phoneMeta),
+      );
+    }
+    if (data.containsKey('vibe_points')) {
+      context.handle(
+        _vibePointsMeta,
+        vibePoints.isAcceptableOrUnknown(data['vibe_points']!, _vibePointsMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    if (data.containsKey('deleted_at')) {
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Profile map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Profile(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      username: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}username'],
+      ),
+      email: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}email'],
+      )!,
+      termsAccepted: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}terms_accepted'],
+      )!,
+      onboarded: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}onboarded'],
+      )!,
+      nationalId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}national_id'],
+      ),
+      avatarUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}avatar_url'],
+      ),
+      bio: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}bio'],
+      ),
+      phone: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}phone'],
+      ),
+      vibePoints: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}vibe_points'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}deleted_at'],
+      ),
+    );
+  }
+
+  @override
+  $ProfilesTable createAlias(String alias) {
+    return $ProfilesTable(attachedDatabase, alias);
+  }
+}
+
+class Profile extends DataClass implements Insertable<Profile> {
+  final String id;
+  final String name;
+  final String? username;
+  final String email;
+  final bool termsAccepted;
+  final bool onboarded;
+  final String? nationalId;
+  final String? avatarUrl;
+  final String? bio;
+  final String? phone;
+  final int vibePoints;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final DateTime? deletedAt;
+  const Profile({
+    required this.id,
+    required this.name,
+    this.username,
+    required this.email,
+    required this.termsAccepted,
+    required this.onboarded,
+    this.nationalId,
+    this.avatarUrl,
+    this.bio,
+    this.phone,
+    required this.vibePoints,
+    required this.createdAt,
+    required this.updatedAt,
+    this.deletedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['name'] = Variable<String>(name);
+    if (!nullToAbsent || username != null) {
+      map['username'] = Variable<String>(username);
+    }
+    map['email'] = Variable<String>(email);
+    map['terms_accepted'] = Variable<bool>(termsAccepted);
+    map['onboarded'] = Variable<bool>(onboarded);
+    if (!nullToAbsent || nationalId != null) {
+      map['national_id'] = Variable<String>(nationalId);
+    }
+    if (!nullToAbsent || avatarUrl != null) {
+      map['avatar_url'] = Variable<String>(avatarUrl);
+    }
+    if (!nullToAbsent || bio != null) {
+      map['bio'] = Variable<String>(bio);
+    }
+    if (!nullToAbsent || phone != null) {
+      map['phone'] = Variable<String>(phone);
+    }
+    map['vibe_points'] = Variable<int>(vibePoints);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt);
+    }
+    return map;
+  }
+
+  ProfilesCompanion toCompanion(bool nullToAbsent) {
+    return ProfilesCompanion(
+      id: Value(id),
+      name: Value(name),
+      username: username == null && nullToAbsent
+          ? const Value.absent()
+          : Value(username),
+      email: Value(email),
+      termsAccepted: Value(termsAccepted),
+      onboarded: Value(onboarded),
+      nationalId: nationalId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nationalId),
+      avatarUrl: avatarUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(avatarUrl),
+      bio: bio == null && nullToAbsent ? const Value.absent() : Value(bio),
+      phone: phone == null && nullToAbsent
+          ? const Value.absent()
+          : Value(phone),
+      vibePoints: Value(vibePoints),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
+    );
+  }
+
+  factory Profile.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Profile(
+      id: serializer.fromJson<String>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      username: serializer.fromJson<String?>(json['username']),
+      email: serializer.fromJson<String>(json['email']),
+      termsAccepted: serializer.fromJson<bool>(json['termsAccepted']),
+      onboarded: serializer.fromJson<bool>(json['onboarded']),
+      nationalId: serializer.fromJson<String?>(json['nationalId']),
+      avatarUrl: serializer.fromJson<String?>(json['avatarUrl']),
+      bio: serializer.fromJson<String?>(json['bio']),
+      phone: serializer.fromJson<String?>(json['phone']),
+      vibePoints: serializer.fromJson<int>(json['vibePoints']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'name': serializer.toJson<String>(name),
+      'username': serializer.toJson<String?>(username),
+      'email': serializer.toJson<String>(email),
+      'termsAccepted': serializer.toJson<bool>(termsAccepted),
+      'onboarded': serializer.toJson<bool>(onboarded),
+      'nationalId': serializer.toJson<String?>(nationalId),
+      'avatarUrl': serializer.toJson<String?>(avatarUrl),
+      'bio': serializer.toJson<String?>(bio),
+      'phone': serializer.toJson<String?>(phone),
+      'vibePoints': serializer.toJson<int>(vibePoints),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'deletedAt': serializer.toJson<DateTime?>(deletedAt),
+    };
+  }
+
+  Profile copyWith({
+    String? id,
+    String? name,
+    Value<String?> username = const Value.absent(),
+    String? email,
+    bool? termsAccepted,
+    bool? onboarded,
+    Value<String?> nationalId = const Value.absent(),
+    Value<String?> avatarUrl = const Value.absent(),
+    Value<String?> bio = const Value.absent(),
+    Value<String?> phone = const Value.absent(),
+    int? vibePoints,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    Value<DateTime?> deletedAt = const Value.absent(),
+  }) => Profile(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    username: username.present ? username.value : this.username,
+    email: email ?? this.email,
+    termsAccepted: termsAccepted ?? this.termsAccepted,
+    onboarded: onboarded ?? this.onboarded,
+    nationalId: nationalId.present ? nationalId.value : this.nationalId,
+    avatarUrl: avatarUrl.present ? avatarUrl.value : this.avatarUrl,
+    bio: bio.present ? bio.value : this.bio,
+    phone: phone.present ? phone.value : this.phone,
+    vibePoints: vibePoints ?? this.vibePoints,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
+  );
+  Profile copyWithCompanion(ProfilesCompanion data) {
+    return Profile(
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      username: data.username.present ? data.username.value : this.username,
+      email: data.email.present ? data.email.value : this.email,
+      termsAccepted: data.termsAccepted.present
+          ? data.termsAccepted.value
+          : this.termsAccepted,
+      onboarded: data.onboarded.present ? data.onboarded.value : this.onboarded,
+      nationalId: data.nationalId.present
+          ? data.nationalId.value
+          : this.nationalId,
+      avatarUrl: data.avatarUrl.present ? data.avatarUrl.value : this.avatarUrl,
+      bio: data.bio.present ? data.bio.value : this.bio,
+      phone: data.phone.present ? data.phone.value : this.phone,
+      vibePoints: data.vibePoints.present
+          ? data.vibePoints.value
+          : this.vibePoints,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Profile(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('username: $username, ')
+          ..write('email: $email, ')
+          ..write('termsAccepted: $termsAccepted, ')
+          ..write('onboarded: $onboarded, ')
+          ..write('nationalId: $nationalId, ')
+          ..write('avatarUrl: $avatarUrl, ')
+          ..write('bio: $bio, ')
+          ..write('phone: $phone, ')
+          ..write('vibePoints: $vibePoints, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    name,
+    username,
+    email,
+    termsAccepted,
+    onboarded,
+    nationalId,
+    avatarUrl,
+    bio,
+    phone,
+    vibePoints,
+    createdAt,
+    updatedAt,
+    deletedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Profile &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.username == this.username &&
+          other.email == this.email &&
+          other.termsAccepted == this.termsAccepted &&
+          other.onboarded == this.onboarded &&
+          other.nationalId == this.nationalId &&
+          other.avatarUrl == this.avatarUrl &&
+          other.bio == this.bio &&
+          other.phone == this.phone &&
+          other.vibePoints == this.vibePoints &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.deletedAt == this.deletedAt);
+}
+
+class ProfilesCompanion extends UpdateCompanion<Profile> {
+  final Value<String> id;
+  final Value<String> name;
+  final Value<String?> username;
+  final Value<String> email;
+  final Value<bool> termsAccepted;
+  final Value<bool> onboarded;
+  final Value<String?> nationalId;
+  final Value<String?> avatarUrl;
+  final Value<String?> bio;
+  final Value<String?> phone;
+  final Value<int> vibePoints;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<DateTime?> deletedAt;
+  final Value<int> rowid;
+  const ProfilesCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.username = const Value.absent(),
+    this.email = const Value.absent(),
+    this.termsAccepted = const Value.absent(),
+    this.onboarded = const Value.absent(),
+    this.nationalId = const Value.absent(),
+    this.avatarUrl = const Value.absent(),
+    this.bio = const Value.absent(),
+    this.phone = const Value.absent(),
+    this.vibePoints = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ProfilesCompanion.insert({
+    required String id,
+    required String name,
+    this.username = const Value.absent(),
+    required String email,
+    this.termsAccepted = const Value.absent(),
+    this.onboarded = const Value.absent(),
+    this.nationalId = const Value.absent(),
+    this.avatarUrl = const Value.absent(),
+    this.bio = const Value.absent(),
+    this.phone = const Value.absent(),
+    this.vibePoints = const Value.absent(),
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    this.deletedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       name = Value(name),
+       email = Value(email),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<Profile> custom({
+    Expression<String>? id,
+    Expression<String>? name,
+    Expression<String>? username,
+    Expression<String>? email,
+    Expression<bool>? termsAccepted,
+    Expression<bool>? onboarded,
+    Expression<String>? nationalId,
+    Expression<String>? avatarUrl,
+    Expression<String>? bio,
+    Expression<String>? phone,
+    Expression<int>? vibePoints,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? deletedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (username != null) 'username': username,
+      if (email != null) 'email': email,
+      if (termsAccepted != null) 'terms_accepted': termsAccepted,
+      if (onboarded != null) 'onboarded': onboarded,
+      if (nationalId != null) 'national_id': nationalId,
+      if (avatarUrl != null) 'avatar_url': avatarUrl,
+      if (bio != null) 'bio': bio,
+      if (phone != null) 'phone': phone,
+      if (vibePoints != null) 'vibe_points': vibePoints,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (deletedAt != null) 'deleted_at': deletedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ProfilesCompanion copyWith({
+    Value<String>? id,
+    Value<String>? name,
+    Value<String?>? username,
+    Value<String>? email,
+    Value<bool>? termsAccepted,
+    Value<bool>? onboarded,
+    Value<String?>? nationalId,
+    Value<String?>? avatarUrl,
+    Value<String?>? bio,
+    Value<String?>? phone,
+    Value<int>? vibePoints,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<DateTime?>? deletedAt,
+    Value<int>? rowid,
+  }) {
+    return ProfilesCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      username: username ?? this.username,
+      email: email ?? this.email,
+      termsAccepted: termsAccepted ?? this.termsAccepted,
+      onboarded: onboarded ?? this.onboarded,
+      nationalId: nationalId ?? this.nationalId,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
+      bio: bio ?? this.bio,
+      phone: phone ?? this.phone,
+      vibePoints: vibePoints ?? this.vibePoints,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (username.present) {
+      map['username'] = Variable<String>(username.value);
+    }
+    if (email.present) {
+      map['email'] = Variable<String>(email.value);
+    }
+    if (termsAccepted.present) {
+      map['terms_accepted'] = Variable<bool>(termsAccepted.value);
+    }
+    if (onboarded.present) {
+      map['onboarded'] = Variable<bool>(onboarded.value);
+    }
+    if (nationalId.present) {
+      map['national_id'] = Variable<String>(nationalId.value);
+    }
+    if (avatarUrl.present) {
+      map['avatar_url'] = Variable<String>(avatarUrl.value);
+    }
+    if (bio.present) {
+      map['bio'] = Variable<String>(bio.value);
+    }
+    if (phone.present) {
+      map['phone'] = Variable<String>(phone.value);
+    }
+    if (vibePoints.present) {
+      map['vibe_points'] = Variable<int>(vibePoints.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ProfilesCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('username: $username, ')
+          ..write('email: $email, ')
+          ..write('termsAccepted: $termsAccepted, ')
+          ..write('onboarded: $onboarded, ')
+          ..write('nationalId: $nationalId, ')
+          ..write('avatarUrl: $avatarUrl, ')
+          ..write('bio: $bio, ')
+          ..write('phone: $phone, ')
+          ..write('vibePoints: $vibePoints, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabaseV2 extends GeneratedDatabase {
   _$AppDatabaseV2(QueryExecutor e) : super(e);
   $AppDatabaseV2Manager get managers => $AppDatabaseV2Manager(this);
@@ -13122,6 +13926,7 @@ abstract class _$AppDatabaseV2 extends GeneratedDatabase {
   );
   late final $StudyLegacyImportsTable studyLegacyImports =
       $StudyLegacyImportsTable(this);
+  late final $ProfilesTable profiles = $ProfilesTable(this);
   late final PlanDao planDao = PlanDao(this as AppDatabaseV2);
   late final OrderDao orderDao = OrderDao(this as AppDatabaseV2);
   late final SubscriptionDao subscriptionDao = SubscriptionDao(
@@ -13136,6 +13941,7 @@ abstract class _$AppDatabaseV2 extends GeneratedDatabase {
   late final TodoTagDao todoTagDao = TodoTagDao(this as AppDatabaseV2);
   late final TodoItemDao todoItemDao = TodoItemDao(this as AppDatabaseV2);
   late final StudyToolsDao studyToolsDao = StudyToolsDao(this as AppDatabaseV2);
+  late final ProfileDao profileDao = ProfileDao(this as AppDatabaseV2);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -13164,6 +13970,7 @@ abstract class _$AppDatabaseV2 extends GeneratedDatabase {
     studyPlaybackPositions,
     studyOfflineEntitlementSnapshots,
     studyLegacyImports,
+    profiles,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -20999,6 +21806,384 @@ typedef $$StudyLegacyImportsTableProcessedTableManager =
       StudyLegacyImport,
       PrefetchHooks Function()
     >;
+typedef $$ProfilesTableCreateCompanionBuilder = ProfilesCompanion Function({
+  required String id,
+  required String name,
+  Value<String?> username,
+  required String email,
+  Value<bool> termsAccepted,
+  Value<bool> onboarded,
+  Value<String?> nationalId,
+  Value<String?> avatarUrl,
+  Value<String?> bio,
+  Value<String?> phone,
+  Value<int> vibePoints,
+  required DateTime createdAt,
+  required DateTime updatedAt,
+  Value<DateTime?> deletedAt,
+  Value<int> rowid,
+});
+typedef $$ProfilesTableUpdateCompanionBuilder = ProfilesCompanion Function({
+  Value<String> id,
+  Value<String> name,
+  Value<String?> username,
+  Value<String> email,
+  Value<bool> termsAccepted,
+  Value<bool> onboarded,
+  Value<String?> nationalId,
+  Value<String?> avatarUrl,
+  Value<String?> bio,
+  Value<String?> phone,
+  Value<int> vibePoints,
+  Value<DateTime> createdAt,
+  Value<DateTime> updatedAt,
+  Value<DateTime?> deletedAt,
+  Value<int> rowid,
+});
+
+class $$ProfilesTableFilterComposer
+    extends Composer<_$AppDatabaseV2, $ProfilesTable> {
+  $$ProfilesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get username => $composableBuilder(
+    column: $table.username,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get email => $composableBuilder(
+    column: $table.email,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get termsAccepted => $composableBuilder(
+    column: $table.termsAccepted,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get onboarded => $composableBuilder(
+    column: $table.onboarded,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nationalId => $composableBuilder(
+    column: $table.nationalId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get avatarUrl => $composableBuilder(
+    column: $table.avatarUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get bio => $composableBuilder(
+    column: $table.bio,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get phone => $composableBuilder(
+    column: $table.phone,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get vibePoints => $composableBuilder(
+    column: $table.vibePoints,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$ProfilesTableOrderingComposer
+    extends Composer<_$AppDatabaseV2, $ProfilesTable> {
+  $$ProfilesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get username => $composableBuilder(
+    column: $table.username,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get email => $composableBuilder(
+    column: $table.email,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get termsAccepted => $composableBuilder(
+    column: $table.termsAccepted,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get onboarded => $composableBuilder(
+    column: $table.onboarded,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nationalId => $composableBuilder(
+    column: $table.nationalId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get avatarUrl => $composableBuilder(
+    column: $table.avatarUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get bio => $composableBuilder(
+    column: $table.bio,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get phone => $composableBuilder(
+    column: $table.phone,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get vibePoints => $composableBuilder(
+    column: $table.vibePoints,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ProfilesTableAnnotationComposer
+    extends Composer<_$AppDatabaseV2, $ProfilesTable> {
+  $$ProfilesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get username =>
+      $composableBuilder(column: $table.username, builder: (column) => column);
+
+  GeneratedColumn<String> get email =>
+      $composableBuilder(column: $table.email, builder: (column) => column);
+
+  GeneratedColumn<bool> get termsAccepted => $composableBuilder(
+    column: $table.termsAccepted,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get onboarded =>
+      $composableBuilder(column: $table.onboarded, builder: (column) => column);
+
+  GeneratedColumn<String> get nationalId => $composableBuilder(
+    column: $table.nationalId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get avatarUrl =>
+      $composableBuilder(column: $table.avatarUrl, builder: (column) => column);
+
+  GeneratedColumn<String> get bio =>
+      $composableBuilder(column: $table.bio, builder: (column) => column);
+
+  GeneratedColumn<String> get phone =>
+      $composableBuilder(column: $table.phone, builder: (column) => column);
+
+  GeneratedColumn<int> get vibePoints => $composableBuilder(
+    column: $table.vibePoints,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
+}
+
+class $$ProfilesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabaseV2,
+          $ProfilesTable,
+          Profile,
+          $$ProfilesTableFilterComposer,
+          $$ProfilesTableOrderingComposer,
+          $$ProfilesTableAnnotationComposer,
+          $$ProfilesTableCreateCompanionBuilder,
+          $$ProfilesTableUpdateCompanionBuilder,
+          (Profile, BaseReferences<_$AppDatabaseV2, $ProfilesTable, Profile>),
+          Profile,
+          PrefetchHooks Function()
+        > {
+  $$ProfilesTableTableManager(_$AppDatabaseV2 db, $ProfilesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ProfilesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ProfilesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ProfilesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String?> username = const Value.absent(),
+                Value<String> email = const Value.absent(),
+                Value<bool> termsAccepted = const Value.absent(),
+                Value<bool> onboarded = const Value.absent(),
+                Value<String?> nationalId = const Value.absent(),
+                Value<String?> avatarUrl = const Value.absent(),
+                Value<String?> bio = const Value.absent(),
+                Value<String?> phone = const Value.absent(),
+                Value<int> vibePoints = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ProfilesCompanion(
+                id: id,
+                name: name,
+                username: username,
+                email: email,
+                termsAccepted: termsAccepted,
+                onboarded: onboarded,
+                nationalId: nationalId,
+                avatarUrl: avatarUrl,
+                bio: bio,
+                phone: phone,
+                vibePoints: vibePoints,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                deletedAt: deletedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String name,
+                Value<String?> username = const Value.absent(),
+                required String email,
+                Value<bool> termsAccepted = const Value.absent(),
+                Value<bool> onboarded = const Value.absent(),
+                Value<String?> nationalId = const Value.absent(),
+                Value<String?> avatarUrl = const Value.absent(),
+                Value<String?> bio = const Value.absent(),
+                Value<String?> phone = const Value.absent(),
+                Value<int> vibePoints = const Value.absent(),
+                required DateTime createdAt,
+                required DateTime updatedAt,
+                Value<DateTime?> deletedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ProfilesCompanion.insert(
+                id: id,
+                name: name,
+                username: username,
+                email: email,
+                termsAccepted: termsAccepted,
+                onboarded: onboarded,
+                nationalId: nationalId,
+                avatarUrl: avatarUrl,
+                bio: bio,
+                phone: phone,
+                vibePoints: vibePoints,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                deletedAt: deletedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$ProfilesTable, Profile>(table),
+                  BaseReferences<_$AppDatabaseV2, $ProfilesTable, Profile>(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ProfilesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabaseV2,
+      $ProfilesTable,
+      Profile,
+      $$ProfilesTableFilterComposer,
+      $$ProfilesTableOrderingComposer,
+      $$ProfilesTableAnnotationComposer,
+      $$ProfilesTableCreateCompanionBuilder,
+      $$ProfilesTableUpdateCompanionBuilder,
+      (Profile, BaseReferences<_$AppDatabaseV2, $ProfilesTable, Profile>),
+      Profile,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseV2Manager {
   final _$AppDatabaseV2 _db;
@@ -21066,4 +22251,6 @@ class $AppDatabaseV2Manager {
       );
   $$StudyLegacyImportsTableTableManager get studyLegacyImports =>
       $$StudyLegacyImportsTableTableManager(_db, _db.studyLegacyImports);
+  $$ProfilesTableTableManager get profiles =>
+      $$ProfilesTableTableManager(_db, _db.profiles);
 }

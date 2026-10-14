@@ -20,7 +20,7 @@ export 'package:rewards/rewards.dart'
 
 part 'routes.g.dart';
 part 'routes/feed_routes.dart';
-part 'routes/auth_routes.dart';
+part 'routes/institution_routes.dart';
 part 'routes/sherehe_routes.dart';
 part 'routes/community_routes.dart';
 part 'routes/academic_routes.dart';

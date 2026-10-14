@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:academia/features/chirp/posts/posts.dart';
-import 'package:academia/features/profile/profile.dart';
+import 'package:profile/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

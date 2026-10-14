@@ -17,10 +17,7 @@ void _registerInstitutions(GetIt sl, FlavorConfig flavor) {
   study_tools.configureStudyToolsDependencies(
     sl,
     flavor,
-    accountId: () {
-      final state = sl<ProfileBloc>().state;
-      return state is ProfileLoadedState ? state.profile.id : null;
-    },
+    accountId: () => study_tools.StudyToolsHost.currentAccountId,
   );
   study_tools.StudyToolsHost.loadCourses = () async {
     final cubit = sl<courses.CourseCubit>();

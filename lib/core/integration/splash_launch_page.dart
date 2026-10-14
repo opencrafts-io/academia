@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:academia/config/config.dart';
-import 'package:academia/features/auth/auth.dart';
+import 'package:auth/auth.dart';
 import 'package:academia/gen/assets.gen.dart';
 import 'package:academia/injection_container.dart';
 import 'package:analytics/analytics.dart';

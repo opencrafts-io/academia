@@ -506,7 +506,6 @@ class _PostCardState extends State<PostCard> {
                         children: [
                           ChirpUserAvatar(
                             avatarUrl: avatarUrl,
-                            numberOfScallops: 6,
                           ),
                           const SizedBox(width: 8),
                           Column(

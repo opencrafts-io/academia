@@ -1,8 +1,9 @@
 import 'package:academia/config/config.dart';
-import 'package:academia/core/core.dart';
 import 'package:ads/ads.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:academia/gen/assets.gen.dart';
+import 'package:profile/profile.dart';
+import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:settings/settings.dart';
@@ -152,7 +153,7 @@ class _EssentialsPageState extends State<EssentialsPage> {
                 onPressed: () {
                   ProfileRoute().push(context);
                 },
-                icon: UserAvatar(scallopDepth: 4, numberOfScallops: 12),
+                icon: const UserAvatar(shape: M3EShape.bun),
               ),
             ],
           ),

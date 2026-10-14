@@ -7,5 +7,6 @@ export 'src/usecase/usecase.dart';
 export 'src/failure/failure.dart';
 export 'src/network/network.dart';
 export 'src/presentation/safe_cubit.dart';
+export 'src/presentation/m3e_shape_clipper.dart';
 export 'src/presentation/scalloped_avatar.dart';
 export 'src/di/core_module.dart';

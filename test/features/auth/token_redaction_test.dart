@@ -1,4 +1,4 @@
-import 'package:academia/features/auth/data/models/token.dart';
+import 'package:auth/auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

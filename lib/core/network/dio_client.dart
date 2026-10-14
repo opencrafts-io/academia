@@ -1,15 +1,12 @@
 import 'package:academia/core/network/sensitive_request_inspector.dart';
-import 'package:academia/core/network/verisafe_api_paths.dart';
-import 'package:academia/core/network/verisafe_auth_interceptor.dart';
-import 'package:academia/features/auth/data/datasources/auth_local_datasource.dart';
-import 'package:academia/features/auth/data/models/token.dart';
+import 'package:auth/auth.dart';
 import 'package:core/config/flavor.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
 
 export 'verisafe_auth_interceptor.dart' show AuthTokenRefreshException;
 
-class DioClient {
+class DioClient implements AuthHttpClient {
   DioClient(
     FlavorConfig flavor, {
     required this.authLocalDatasource,
@@ -43,9 +40,11 @@ class DioClient {
 
   final AuthLocalDatasource authLocalDatasource;
   final DioRequestInspector? requestInspector;
+  @override
   final Dio dio;
   late final VerisafeAuthInterceptor _authInterceptor;
 
+  @override
   Future<TokenData> refreshTokenPair(TokenData token) =>
       _authInterceptor.refreshTokenPair(token);
 }

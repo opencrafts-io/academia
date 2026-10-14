@@ -2,10 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:academia/core/network/dio_client.dart';
-import 'package:academia/features/auth/data/datasources/auth_local_datasource.dart';
-import 'package:academia/features/auth/data/models/token.dart';
-import 'package:academia/features/auth/data/datasources/auth_remote_datasource.dart';
-import 'package:academia/features/auth/data/repository/auth_repository_impl.dart';
+import 'package:auth/auth.dart';
 import 'package:core/config/flavor.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';

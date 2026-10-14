@@ -8,3 +8,4 @@ export 'package:database/daos/todo_item_dao.dart';
 export 'package:database/daos/todo_list_dao.dart';
 export 'package:database/daos/todo_tag_dao.dart';
 export 'package:database/daos/study_tools_dao.dart';
+export 'package:database/daos/profile_dao.dart';

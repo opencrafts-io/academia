@@ -14,14 +14,12 @@ class FeedPage extends StatefulWidget {
 
 class _FeedPageState extends State<FeedPage>
     with AutomaticKeepAliveClientMixin {
-  final ScrollController _scrollController = ScrollController();
   int _currentPage = 1;
   late StreamSubscription _blockSubscription;
 
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_onScroll);
     _blockSubscription = context.read<BlockBloc>().stream.listen((state) {
       if (state is BlockActionSuccess) _loadFeed();
     });
@@ -37,9 +35,8 @@ class _FeedPageState extends State<FeedPage>
     context.read<FeedBloc>().add(LoadFeedEvent(page: _currentPage));
   }
 
-  void _onScroll() {
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent * 0.9) {
+  void _onScroll(ScrollMetrics metrics) {
+    if (metrics.pixels >= metrics.maxScrollExtent * 0.9) {
       final state = context.read<FeedBloc>().state;
       if (state is FeedLoaded && state.hasMore) {
         _currentPage++;
@@ -54,7 +51,6 @@ class _FeedPageState extends State<FeedPage>
   @override
   void dispose() {
     _blockSubscription.cancel();
-    _scrollController.dispose();
     super.dispose();
   }
 
@@ -90,26 +86,36 @@ class _FeedPageState extends State<FeedPage>
                 )
                 .timeout(const Duration(seconds: 30), onTimeout: () => bloc.state);
           },
-          child: CustomScrollView(
-            controller: _scrollController,
-            physics: const AlwaysScrollableScrollPhysics(),
-            slivers: [
-              SliverOverlapInjector(
-                handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
-                  context,
+          child: NotificationListener<ScrollNotification>(
+            onNotification: (notification) {
+              if (notification is ScrollUpdateNotification &&
+                  notification.depth == 0 &&
+                  notification.metrics.axis == Axis.vertical) {
+                _onScroll(notification.metrics);
+              }
+              return false;
+            },
+            child: CustomScrollView(
+              primary: true,
+              physics: const AlwaysScrollableScrollPhysics(),
+              slivers: [
+                SliverOverlapInjector(
+                  handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                    context,
+                  ),
                 ),
-              ),
-              PostListSliver(
-                interleaveAds: true,
-                onRetry: _loadFeed,
-                onRetryPagination: _loadNextPage,
-                emptyState: FeedEmptyState(
-                  title: "It's a little quiet in here...",
-                  message: 'Follow communities and post to fill up your feed.',
-                  onRefresh: _loadFeed,
+                PostListSliver(
+                  interleaveAds: true,
+                  onRetry: _loadFeed,
+                  onRetryPagination: _loadNextPage,
+                  emptyState: FeedEmptyState(
+                    title: "It's a little quiet in here...",
+                    message: 'Follow communities and post to fill up your feed.',
+                    onRefresh: _loadFeed,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

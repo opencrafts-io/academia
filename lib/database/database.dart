@@ -1,7 +1,7 @@
 import 'package:academia/database/tables/agenda_event.dart';
 import 'package:academia/database/tables/tables.dart';
 export 'package:academia/database/tables/tables.dart';
-import 'package:academia/features/profile/data/models/user_profile.dart';
+import 'package:academia/database/tables/user_profile.dart';
 import 'package:academia/features/sherehe/data/data.dart';
 
 import 'package:drift/drift.dart';

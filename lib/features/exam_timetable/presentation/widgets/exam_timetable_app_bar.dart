@@ -1,5 +1,6 @@
 import 'package:academia/config/router/routes.dart';
-import 'package:academia/features/profile/presentation/widgets/user_avatar.dart';
+import 'package:profile/profile.dart';
+import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 
 class ExamTimetableAppBar extends StatelessWidget
@@ -73,7 +74,7 @@ class ExamTimetableAppBar extends StatelessWidget
         ),
         IconButton(
           onPressed: () => ProfileRoute().push(context),
-          icon: UserAvatar(scallopDepth: 4, numberOfScallops: 12),
+          icon: const UserAvatar(shape: M3EShape.bun),
         ),
       ],
     );
