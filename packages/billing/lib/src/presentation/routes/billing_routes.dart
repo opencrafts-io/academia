@@ -15,6 +15,7 @@ const _developmentFrontendUrl = String.fromEnvironment(
   'BILLING_DEV_FRONTEND_URL',
   defaultValue: 'http://127.0.0.1:3000',
 );
+const _productionFrontendUrl = 'https://webacademia.opencrafts.io';
 
 @TypedGoRoute<PaywallRoute>(path: '/billing')
 class PaywallRoute extends GoRouteData with $PaywallRoute {
@@ -50,15 +51,18 @@ class PaywallRoute extends GoRouteData with $PaywallRoute {
               return;
             }
 
+            final code = sessionUri.queryParameters['code'];
+            if (code == null || code.isEmpty) {
+              _showCheckoutError(context);
+              return;
+            }
+
             late final Uri checkoutUri;
             if (kDebugMode) {
-              final code = sessionUri.queryParameters['code'];
               final developmentFrontendUri = Uri.tryParse(
                 _developmentFrontendUrl,
               );
-              if (code == null ||
-                  code.isEmpty ||
-                  developmentFrontendUri == null ||
+              if (developmentFrontendUri == null ||
                   developmentFrontendUri.host.isEmpty ||
                   developmentFrontendUri.userInfo.isNotEmpty ||
                   !(developmentFrontendUri.scheme == 'https' ||
@@ -76,7 +80,10 @@ class PaywallRoute extends GoRouteData with $PaywallRoute {
                 queryParameters: {'code': code},
               );
             } else {
-              checkoutUri = sessionUri;
+              checkoutUri = Uri.parse(_productionFrontendUrl).replace(
+                path: '/checkout/start',
+                queryParameters: {'code': code},
+              );
             }
             unawaited(_launchCheckout(context, checkoutUri));
           },
