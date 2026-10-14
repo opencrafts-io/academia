@@ -17,6 +17,8 @@ import 'package:permissions/permissions.dart';
 import 'package:notifications/notifications.dart';
 import 'package:settings/settings.dart';
 import 'package:todos/todos.dart';
+import 'package:profile/profile.dart';
+import 'package:auth/auth.dart';
 import 'package:pomodoro/pomodoro.dart';
 import 'package:academia/core/integration/todos_pomodoro_todo_gateway.dart';
 import 'package:academia/core/integration/method_channel_pomodoro_status_surface.dart';
@@ -39,6 +41,7 @@ void configureDependencies(GetIt getIt, FlavorConfig flavorConfig) {
         : const DisabledAnalyticsGateway(),
   );
   configureBillingDependencies(getIt);
+  configureAuthDependencies(getIt);
   leaderboard.configureLeaderboardDependencies(getIt);
   rewards.configureRewardsDependencies(getIt);
   configureAdsDependencies(getIt);
@@ -61,6 +64,7 @@ void configureDependencies(GetIt getIt, FlavorConfig flavorConfig) {
         : const NotificationConfiguration.disabled(),
     actionHandler: const AcademiaNotificationActionHandler(),
   );
+  configureProfileDependencies(getIt);
   configureTodosDependencies(getIt);
   configurePomodoroDependencies(
     getIt,

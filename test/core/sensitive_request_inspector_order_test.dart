@@ -1,7 +1,7 @@
 import 'package:academia/core/network/dio_client.dart';
 import 'package:academia/core/network/sensitive_request_inspector.dart';
 import 'package:academia/core/network/verisafe_auth_interceptor.dart';
-import 'package:academia/features/auth/data/datasources/auth_local_datasource.dart';
+import 'package:auth/auth.dart';
 import 'package:core/config/flavor.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
 import 'package:flutter_test/flutter_test.dart';

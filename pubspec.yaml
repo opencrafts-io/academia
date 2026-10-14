@@ -51,7 +51,6 @@ dependencies:
   flutter_bloc: ^9.1.1
   flutter_native_splash: ^2.4.6
   material_symbols_icons: ^4.2815.1
-  lottie: ^3.3.1
   phone_form_field: ^10.0.8
   cached_network_image: ^3.4.1
   time_since: ^1.0.1
@@ -157,6 +156,10 @@ dependencies:
   # application notification delivery subsystem
   notifications:
     path: packages/notifications/
+  profile:
+    path: packages/profile/
+  auth:
+    path: packages/auth/
   # local focus app-blocking subsystem
   lock_in:
     path: packages/lock-in/
@@ -196,7 +199,6 @@ flutter:
   assets:
     - packages/animated_emoji/lottie/
     - assets/icons/
-    - assets/lotties/
     - assets/svgs/
     - assets/illustrations/
   #   - images/a_dot_burr.jpeg

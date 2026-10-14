@@ -1,10 +1,6 @@
 part of '../injection_container.dart';
 
-void _registerShereheAndProfile(
-  GetIt sl,
-  FlavorConfig flavor,
-  AppDataBase cacheDB,
-) {
+void _registerShereheAndProfile(GetIt sl, AppDataBase cacheDB) {
   //sherehe
   sl.registerFactory<ShereheRemoteDataSource>(
     () => ShereheRemoteDataSource(dioClient: sl.get<DioClient>(), flavor: sl()),
@@ -131,64 +127,6 @@ void _registerShereheAndProfile(
       createTicketInvite: sl(),
       updateTicketInvite: sl(),
       deleteTicketInvite: sl(),
-    ),
-  );
-  sl.registerFactory<ProfileRemoteDatasource>(
-    () =>
-        ProfileRemoteDatasource(dioClient: sl.get<DioClient>(), flavor: flavor),
-  );
-  sl.registerFactory<ProfileLocalDatasource>(
-    () => ProfileLocalDatasource(localDB: cacheDB),
-  );
-
-  sl.registerFactory<ProfileRepositoryImpl>(
-    () => ProfileRepositoryImpl(
-      profileLocalDatasource: sl.get<ProfileLocalDatasource>(),
-      profileRemoteDatasource: sl.get<ProfileRemoteDatasource>(),
-    ),
-  );
-
-  sl.registerFactory<RefreshCurrentUserProfileUsecase>(
-    () => RefreshCurrentUserProfileUsecase(
-      profileRepository: sl.get<ProfileRepositoryImpl>(),
-    ),
-  );
-
-  sl.registerFactory<UpdateUserProfile>(
-    () => UpdateUserProfile(profileRepository: sl.get<ProfileRepositoryImpl>()),
-  );
-
-  sl.registerFactory<UpdateUserPhone>(
-    () => UpdateUserPhone(profileRepository: sl.get<ProfileRepositoryImpl>()),
-  );
-
-  sl.registerFactory<GetCachedProfileUsecase>(
-    () => GetCachedProfileUsecase(
-      profileRepository: sl.get<ProfileRepositoryImpl>(),
-    ),
-  );
-  sl.registerFactory<RequestAccountDeletionUsecase>(
-    () => RequestAccountDeletionUsecase(
-      profileRepository: sl.get<ProfileRepositoryImpl>(),
-    ),
-  );
-  sl.registerFactory<RequestAccountRecoveryUsecase>(
-    () => RequestAccountRecoveryUsecase(
-      profileRepository: sl.get<ProfileRepositoryImpl>(),
-    ),
-  );
-
-  sl.registerLazySingleton<ProfileBloc>(
-    () => ProfileBloc(
-      getCachedProfileUsecase: sl.get<GetCachedProfileUsecase>(),
-      refreshCurrentUserProfileUsecase: sl
-          .get<RefreshCurrentUserProfileUsecase>(),
-      updateUserProfile: sl.get<UpdateUserProfile>(),
-      updateUserPhone: sl.get<UpdateUserPhone>(),
-      requestAccountDeletionUsecase: sl.get<RequestAccountDeletionUsecase>(),
-      requestAccountRecoveryUsecase: sl.get<RequestAccountRecoveryUsecase>(),
-      analyticsTracker: sl(),
-      notificationIdentityService: sl(),
     ),
   );
 }

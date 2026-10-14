@@ -3,7 +3,6 @@ import 'package:academia/core/core.dart';
 import 'package:academia/core/network/network.dart';
 import 'package:academia/config/router/router.dart';
 import 'package:academia/database/database.dart';
-import 'package:academia/features/auth/data/data.dart';
 import 'package:academia/features/features.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:ads/ads.dart';
@@ -19,6 +18,7 @@ import 'package:billing/billing.dart' as billing;
 import 'package:academia/core/notifications/course_schedule_reminder_service.dart';
 import 'package:notifications/notifications.dart';
 import 'package:permissions/permissions.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'injection/sherehe_profile.dart';
 part 'injection/communities.dart';
@@ -50,76 +50,23 @@ Future<void> init(FlavorConfig flavor, {bool isBackground = false}) async {
   );
 
   sl.registerSingleton<Dio>(dioClient.dio);
+  sl.registerSingleton<AuthHttpClient>(dioClient);
 
   configureDependencies(sl, flavor);
+  if (!isBackground) {
+    const resetKey = 'profile_storage_v2_auth_reset_v1';
+    final preferences = await SharedPreferences.getInstance();
+    if (!(preferences.getBool(resetKey) ?? false)) {
+      await cacheDB.delete(cacheDB.userProfile).go();
 
-  sl.registerFactory(
-    () => AuthRemoteDatasource(flavor: flavor, dioClient: sl()),
-  );
-  sl.registerFactory<AuthRepositoryImpl>(
-    () => AuthRepositoryImpl(
-      authRemoteDatasource: sl.get<AuthRemoteDatasource>(),
-      authLocalDatasource: sl.get<AuthLocalDatasource>(),
-    ),
-  );
+      final tokenDeletion = await sl<AuthLocalDatasource>().deleteAllTokens();
+      if (tokenDeletion.isRight()) {
+        await preferences.setBool(resetKey, true);
+      }
+    }
+  }
 
-  sl.registerFactory<SignInWithGoogleUsecase>(
-    () => SignInWithGoogleUsecase(sl.get<AuthRepositoryImpl>()),
-  );
-
-  sl.registerFactory<SignInWithProviderUsecase>(
-    () => SignInWithProviderUsecase(repository: sl.get<AuthRepositoryImpl>()),
-  );
-
-  sl.registerFactory<SignInWithPasswordUsecase>(
-    () => SignInWithPasswordUsecase(repository: sl.get<AuthRepositoryImpl>()),
-  );
-
-  sl.registerFactory<SetPasswordUsecase>(
-    () => SetPasswordUsecase(repository: sl.get<AuthRepositoryImpl>()),
-  );
-
-  sl.registerFactory<SignInWithAppleUsecase>(
-    () => SignInWithAppleUsecase(sl.get<AuthRepositoryImpl>()),
-  );
-
-  sl.registerFactory<SignInAsReviewUsecase>(
-    () => SignInAsReviewUsecase(repository: sl.get<AuthRepositoryImpl>()),
-  );
-
-  sl.registerFactory<SignInWithSpotifyUsecase>(
-    () => SignInWithSpotifyUsecase(sl.get<AuthRepositoryImpl>()),
-  );
-
-  sl.registerFactory<GetPreviousAuthState>(
-    () => GetPreviousAuthState(sl.get<AuthRepositoryImpl>()),
-  );
-  sl.registerFactory<RefreshVerisafeTokenUsecase>(
-    () => RefreshVerisafeTokenUsecase(authRepository: sl<AuthRepositoryImpl>()),
-  );
-
-  sl.registerFactory<SignOutUsecase>(
-    () => SignOutUsecase(authRepository: sl<AuthRepositoryImpl>()),
-  );
-
-  sl.registerLazySingleton<AuthBloc>(
-    () => AuthBloc(
-      signOutUsecase: sl(),
-      signInWithProviderUsecase: sl(),
-      signInWithAppleUsecase: sl(),
-      signInAsReviewUsecase: sl(),
-      signInWithPasswordUsecase: sl(),
-      refreshVerisafeTokenUsecase: sl(),
-      signInWithSpotifyUsecase: sl.get<SignInWithSpotifyUsecase>(),
-      getPreviousAuthState: sl.get<GetPreviousAuthState>(),
-      signInWithGoogle: sl.get<SignInWithGoogleUsecase>(),
-      authLocalDatasource: sl<AuthLocalDatasource>(),
-      analyticsTracker: sl(),
-      notificationIdentityService: sl(),
-    ),
-  );
-
-  _registerShereheAndProfile(sl, flavor, cacheDB);
+  _registerShereheAndProfile(sl, cacheDB);
   _registerCommunities(sl, flavor);
   _registerChirp(sl, flavor);
   _registerInstitutions(sl, flavor);

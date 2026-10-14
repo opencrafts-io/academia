@@ -1,5 +1,5 @@
 import 'package:academia/config/router/routes.dart';
-import 'package:academia/features/profile/presentation/widgets/user_avatar.dart';
+import 'package:profile/profile.dart';
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 

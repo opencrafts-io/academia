@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:academia/features/institution/domain/entities/institution.dart';
-import 'package:academia/features/profile/presentation/bloc/profile_bloc.dart';
+import 'package:profile/profile.dart';
 import 'package:academia/features/sherehe/domain/entities/ticket_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

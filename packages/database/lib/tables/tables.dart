@@ -14,3 +14,4 @@ export 'package:database/tables/todo_items.dart';
 export 'package:database/tables/todo_lists.dart';
 export 'package:database/tables/todo_tag_items.dart';
 export 'package:database/tables/study_material_records.dart';
+export 'package:database/tables/profiles.dart';

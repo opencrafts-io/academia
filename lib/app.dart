@@ -221,10 +221,12 @@ class _AcademiaState extends State<Academia> with WidgetsBindingObserver {
                 AppRouter.router.refresh();
                 if (state is AuthUnauthenticated) {
                   study_tools.StudyToolsHost.currentAccountId = null;
+                  context.read<ProfileBloc>().add(ClearCachedProfileEvent());
                   unawaited(_clearPodcastAccount(_studyDataAccountId));
                   _studyDataAccountId = null;
                 }
                 if (state is AuthAuthenticated) {
+                  context.read<ProfileBloc>().add(RefreshProfileEvent());
                   context.read<FeedBloc>().add(CheckFeedLikeStatuses());
                   unawaited(_submitAppLaunchReward());
                 } else if (state is AuthUnauthenticated) {
@@ -235,10 +237,11 @@ class _AcademiaState extends State<Academia> with WidgetsBindingObserver {
             BlocListener<ProfileBloc, ProfileState>(
               listener: (context, state) {
                 if (state is ProfileLoadedState) {
+                  AppRouter.router.refresh();
                   final previousAccountId = _studyDataAccountId;
+                  _studyDataAccountId = state.profile.id;
                   study_tools.StudyToolsHost.currentAccountId =
                       state.profile.id;
-                  _studyDataAccountId = state.profile.id;
                   if (previousAccountId != null &&
                       previousAccountId != state.profile.id) {
                     unawaited(_clearPodcastAccount(previousAccountId));
