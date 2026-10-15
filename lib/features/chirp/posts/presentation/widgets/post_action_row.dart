@@ -1,8 +1,7 @@
 import 'package:academia/features/chirp/chirp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../../profile/profile.dart';
+import 'package:profile/profile.dart';
 
 /// Vote/comment/views row shared by the feed card and the post detail
 /// screen - both drove an identical [PostCubit]/[FeedBloc] wiring (optimistic

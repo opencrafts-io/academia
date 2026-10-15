@@ -1,8 +1,8 @@
-export 'package:auth/auth.dart';
+export 'package:auth/auth.dart' hide routes;
 
 export 'home/home.dart';
 
-export 'package:profile/profile.dart';
+export 'package:profile/profile.dart' hide routes;
 
 export 'sherehe/sherehe.dart';
 export 'chirp/chirp.dart';

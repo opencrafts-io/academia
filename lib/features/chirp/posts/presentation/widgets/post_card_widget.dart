@@ -5,11 +5,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:profile/profile.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:time_since/time_since.dart';
 import 'package:visibility_detector/visibility_detector.dart';
-
-import '../../../../profile/profile.dart';
 
 class PostCard extends StatefulWidget {
   final Post post;
@@ -504,9 +503,7 @@ class _PostCardState extends State<PostCard> {
 
                       return Row(
                         children: [
-                          ChirpUserAvatar(
-                            avatarUrl: avatarUrl,
-                          ),
+                          ChirpUserAvatar(avatarUrl: avatarUrl),
                           const SizedBox(width: 8),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

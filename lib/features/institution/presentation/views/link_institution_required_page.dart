@@ -1,6 +1,6 @@
-import 'package:academia/config/config.dart';
 import 'package:academia/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
+import 'package:profile/profile.dart' show LinkInstitutionProfileRoute;
 
 class LinkInstitutionRequiredPage extends StatelessWidget {
   const LinkInstitutionRequiredPage({super.key});
@@ -31,10 +31,7 @@ class LinkInstitutionRequiredPage extends StatelessWidget {
                   color: colorScheme.primaryContainer,
                   shape: BoxShape.circle,
                 ),
-                child: Assets.icons.motarboard.image(
-                  height: 80,
-                  width: 80,
-                ),
+                child: Assets.icons.motarboard.image(height: 80, width: 80),
               ),
               const SizedBox(height: 32),
               Text(
@@ -93,10 +90,7 @@ class LinkInstitutionRequiredPage extends StatelessWidget {
                   icon: const Icon(Icons.add_link_rounded),
                   label: const Text(
                     'Link Institution',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
