@@ -31,6 +31,10 @@ class Posts extends Table {
 
   TextColumn get comments => text().map(JsonListConverter())();
 
+  /// Optional poll attached to the post, stored as its raw JSON blob.
+  @JsonKey("poll")
+  TextColumn get poll => text().map(JsonConverter()).nullable()();
+
   @JsonKey("created_at")
   DateTimeColumn get createdAt => dateTime()();
 

@@ -57,7 +57,6 @@ _MagnetCourseDto _$MagnetCourseDtoFromJson(Map<String, dynamic> json) =>
       updatedAt: json['updated_at'] as String?,
       institutionId: json['institution_id'],
       serverId: json['server_id'],
-      semesterId: json['semester_id'],
       courseSchedules:
           (json['course_schedules'] as List<dynamic>?)
               ?.map(
@@ -81,6 +80,5 @@ Map<String, dynamic> _$MagnetCourseDtoToJson(_MagnetCourseDto instance) =>
       'updated_at': instance.updatedAt,
       'institution_id': instance.institutionId,
       'server_id': instance.serverId,
-      'semester_id': instance.semesterId,
       'course_schedules': instance.courseSchedules,
     };

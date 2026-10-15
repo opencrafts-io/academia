@@ -1,4 +1,5 @@
 import 'package:academia/core/core.dart';
+import 'package:core/core.dart' as core;
 import 'package:flutter/material.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -157,7 +158,11 @@ class _ExpressiveAvatar extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.zero,
         child: ClipPath(
-          clipper: ScallopClipper(numberOfScallops: 8, scallopDepth: 4),
+          clipper: const core.M3EShapeClipper(
+            core.M3EShape.scalloped,
+            lobes: 8,
+            depth: .12,
+          ),
           child: Container(
             color: theme.colorScheme.surface,
             child: _buildImageLogic(theme, hasImage),

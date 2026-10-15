@@ -1,8 +1,8 @@
 import 'package:drift/drift.dart';
 import 'package:injectable/injectable.dart';
 
-import '../app_database_v2.dart';
-import '../tables/tables.dart';
+import 'package:database/app_database_v2.dart';
+import 'package:database/tables/tables.dart';
 
 part 'lock_in_dao.g.dart';
 
@@ -13,15 +13,15 @@ class LockInDao extends DatabaseAccessor<AppDatabaseV2> with _$LockInDaoMixin {
   LockInDao(super.db);
 
   Future<List<LockInRuleRecord>> getRules() {
-    return (select(lockInRuleRecords)
-          ..orderBy([(rule) => OrderingTerm.asc(rule.name)]))
-        .get();
+    return (select(
+      lockInRuleRecords,
+    )..orderBy([(rule) => OrderingTerm.asc(rule.name)])).get();
   }
 
   Stream<List<LockInRuleRecord>> watchRules() {
-    return (select(lockInRuleRecords)
-          ..orderBy([(rule) => OrderingTerm.asc(rule.name)]))
-        .watch();
+    return (select(
+      lockInRuleRecords,
+    )..orderBy([(rule) => OrderingTerm.asc(rule.name)])).watch();
   }
 
   Future<void> upsertRule({
@@ -66,10 +66,7 @@ class LockInDao extends DatabaseAccessor<AppDatabaseV2> with _$LockInDaoMixin {
     );
   }
 
-  Future<List<LockInAttempt>> getAttempts({
-    DateTime? from,
-    DateTime? to,
-  }) {
+  Future<List<LockInAttempt>> getAttempts({DateTime? from, DateTime? to}) {
     final query = select(lockInAttempts)
       ..orderBy([(attempt) => OrderingTerm.desc(attempt.occurredAt)]);
     if (from != null) {

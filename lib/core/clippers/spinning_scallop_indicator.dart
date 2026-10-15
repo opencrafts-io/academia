@@ -1,15 +1,18 @@
-import 'package:flutter/material.dart';
-import './scallop_clipper.dart';
 import 'dart:math' as math;
 
+import 'package:core/core.dart';
+import 'package:flutter/material.dart';
+
 class SpinningScallopIndicator extends StatefulWidget {
-  final double scallopDepth;
-  final int numberOfScallops;
+  final int lobes;
+  final double depth;
+  final double roundness;
 
   const SpinningScallopIndicator({
     super.key,
-    this.scallopDepth = 4.0, // Sane default
-    this.numberOfScallops = 16, // Sane default
+    this.lobes = 8,
+    this.depth = .12,
+    this.roundness = 1.4,
   });
 
   @override
@@ -26,7 +29,7 @@ class _SpinningScallopIndicatorState extends State<SpinningScallopIndicator>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds:2), // Adjust rotation speed here
+      duration: const Duration(seconds: 2),
     )..repeat();
   }
 
@@ -44,16 +47,17 @@ class _SpinningScallopIndicatorState extends State<SpinningScallopIndicator>
         return Transform.rotate(
           angle: _controller.value * 2 * math.pi,
           child: ClipPath(
-            clipper: ScallopClipper(
-              scallopDepth: widget.scallopDepth,
-              numberOfScallops: widget.numberOfScallops,
+            clipper: M3EShapeClipper(
+              M3EShape.scalloped,
+              lobes: widget.lobes,
+              depth: widget.depth,
+              roundness: widget.roundness,
             ),
             child: Container(
               width: 40,
               height: 40,
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.primary,
-                // The ScallopClipper handles the shape, so we use a simple Container
               ),
             ),
           ),

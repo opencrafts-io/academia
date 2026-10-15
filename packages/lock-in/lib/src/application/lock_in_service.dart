@@ -96,12 +96,6 @@ class LockInService {
         ),
       );
     });
-    try {
-      await installedApps();
-    } on Object {
-      // Attempt events can still be persisted using their package identifier
-      // when Android has not granted app-discovery access yet.
-    }
   }
 
   Future<void> dispose() async {

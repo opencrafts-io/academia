@@ -105,49 +105,17 @@ class _CommunitySearchCard extends StatelessWidget {
   }
 }
 
-class GlobalSearchDelegate extends SearchDelegate<void> {
-  GlobalSearchDelegate() : super(searchFieldLabel: 'Search communities...');
-
-  void _performSearch(BuildContext context) {
-    if (query.trim().isEmpty) return;
-    context.read<CommunityListingCubit>().searchForCommunity(query, page: 1);
-  }
-
-  @override
-  List<Widget> buildActions(BuildContext context) => [
-    if (query.isNotEmpty)
-      IconButton(
-        onPressed: () {
-          query = '';
-          showSuggestions(context);
-        },
-        icon: const Icon(Icons.close),
-        tooltip: 'Clear',
-      ),
-  ];
-
-  @override
-  Widget buildLeading(BuildContext context) => IconButton(
-    onPressed: () => close(context, null),
-    icon: const Icon(Icons.arrow_back),
-    tooltip: 'Back',
+void searchGlobalCommunities(BuildContext context, String query) {
+  final trimmedQuery = query.trim();
+  if (trimmedQuery.isEmpty) return;
+  context.read<CommunityListingCubit>().searchForCommunity(
+    trimmedQuery,
+    page: 1,
   );
-
-  @override
-  Widget buildResults(BuildContext context) {
-    _performSearch(context);
-    return _SearchBody(query: query);
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    _performSearch(context);
-    return _SearchBody(query: query);
-  }
 }
 
-class _SearchBody extends StatelessWidget {
-  const _SearchBody({required this.query});
+class GlobalSearchResults extends StatelessWidget {
+  const GlobalSearchResults({required this.query});
   final String query;
 
   @override

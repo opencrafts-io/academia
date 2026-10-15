@@ -18,13 +18,21 @@ class SubscriptionRepositoryImpl implements domain.SubscriptionRepository {
 
   @override
   Future<Either<Failure, domain.SubscriptionStatus>> getCurrentStatus() async {
-    final remoteResult = await _remoteDataSource.getCurrentStatus();
-
+    final remoteResult = await refreshCurrentStatus();
     return remoteResult.fold(
-      (failure) => _localDataSource.getCurrentStatus(),
+      (_) => _localDataSource.getCurrentStatus(),
+      Right.new,
+    );
+  }
+
+  @override
+  Future<Either<Failure, domain.SubscriptionStatus>> refreshCurrentStatus() async {
+    final remoteResult = await _remoteDataSource.getCurrentStatus();
+    return remoteResult.fold(
+      Left.new,
       (dto) async {
         final status = dto.toDomain();
-        unawaited(_localDataSource.cacheStatus(status));
+        await _localDataSource.cacheStatus(status);
         return Right(status);
       },
     );

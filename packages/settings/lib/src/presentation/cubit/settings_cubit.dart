@@ -35,6 +35,28 @@ class SettingsCubit extends HydratedCubit<SettingsState> {
   void toggleChirpMuteVideos() =>
       emit(state.copyWith(chirpMuteVideos: !state.chirpMuteVideos));
 
+  void toggleCourseReminders() => emit(
+    state.copyWith(courseRemindersEnabled: !state.courseRemindersEnabled),
+  );
+
+  void updateCourseReminderMinutes(int index, int? minutes) {
+    if (index < 0 || index >= 3) return;
+    final values = List<int?>.generate(
+      3,
+      (slot) => slot < state.courseReminderMinutes.length
+          ? state.courseReminderMinutes[slot]
+          : null,
+    );
+    if (minutes != null &&
+        values.asMap().entries.any(
+          (entry) => entry.key != index && entry.value == minutes,
+        )) {
+      return;
+    }
+    values[index] = minutes;
+    emit(state.copyWith(courseReminderMinutes: values));
+  }
+
   @override
   SettingsState? fromJson(Map<String, dynamic> json) =>
       SettingsState.fromJson(json);

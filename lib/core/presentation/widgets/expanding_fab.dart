@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
 import 'dart:math' as math;
 
 class FabAction {
@@ -7,6 +9,7 @@ class FabAction {
   final Color? iconColor;
   final VoidCallback onPressed;
   final String? tooltip;
+  final String? label;
 
   FabAction({
     required this.icon,
@@ -14,6 +17,7 @@ class FabAction {
     this.iconColor,
     required this.onPressed,
     this.tooltip,
+    this.label,
   });
 }
 
@@ -25,7 +29,7 @@ class _ActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FloatingActionButton.small(
+    final button = FloatingActionButton.small(
       heroTag: action.hashCode,
       backgroundColor: action.backgroundColor,
       onPressed: onPressed,
@@ -35,6 +39,30 @@ class _ActionButton extends StatelessWidget {
         color: action.iconColor ?? Theme.of(context).colorScheme.onSecondary,
         size: 20,
       ),
+    );
+    if (action.label == null) return button;
+
+    final colors = Theme.of(context).colorScheme;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Material(
+          color: colors.surfaceContainerHigh,
+          elevation: 2,
+          shadowColor: colors.shadow.withAlpha(40),
+          borderRadius: BorderRadius.circular(14),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+            child: Text(
+              action.label!,
+              style: Theme.of(context).textTheme.labelLarge
+                  ?.copyWith(fontWeight: FontWeight.w600),
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        button,
+      ],
     );
   }
 }
@@ -72,8 +100,8 @@ class _ExpandingFabState extends State<ExpandingFab>
     );
     _expandAnimation = CurvedAnimation(
       parent: _controller,
-      curve: Curves.elasticOut,
-      reverseCurve: Curves.easeInOut,
+      curve: Curves.easeOutCubic,
+      reverseCurve: Curves.easeInCubic,
     );
   }
 
@@ -84,6 +112,7 @@ class _ExpandingFabState extends State<ExpandingFab>
   }
 
   void _toggle() {
+    HapticFeedback.selectionClick();
     setState(() {
       _isExpanded = !_isExpanded;
       if (_isExpanded) {
@@ -96,8 +125,15 @@ class _ExpandingFabState extends State<ExpandingFab>
 
   @override
   Widget build(BuildContext context) {
+    final reduceMotion = MediaQuery.disableAnimationsOf(context);
+    _controller.duration = reduceMotion
+        ? Duration.zero
+        : const Duration(milliseconds: 260);
     return Flow(
-      delegate: _ExpandingFabFlowDelegate(animation: _expandAnimation),
+      delegate: _ExpandingFabFlowDelegate(
+        animation: _expandAnimation,
+        actions: widget.actions,
+      ),
       clipBehavior: Clip.none,
       children: [
         ...widget.actions.map((action) {
@@ -117,10 +153,13 @@ class _ExpandingFabState extends State<ExpandingFab>
         FloatingActionButton(
           heroTag: widget.hashCode,
           backgroundColor: widget.mainButtonColor,
+          tooltip: _isExpanded ? 'Close create menu' : 'Add to agenda',
           onPressed: _toggle,
           child: AnimatedRotation(
             turns: _isExpanded ? 0.125 : 0.0,
-            duration: const Duration(milliseconds: 250),
+            duration: reduceMotion
+                ? Duration.zero
+                : const Duration(milliseconds: 220),
             child: Icon(_isExpanded ? widget.closeIcon : widget.mainIcon),
           ),
         ),
@@ -131,10 +170,11 @@ class _ExpandingFabState extends State<ExpandingFab>
 
 class _ExpandingFabFlowDelegate extends FlowDelegate {
   final Animation<double> animation;
+  final List<FabAction> actions;
 
   // Pass the animation to the super constructor's `repaint` argument.
   // This tells Flow to repaint whenever the animation ticks.
-  _ExpandingFabFlowDelegate({required this.animation})
+  _ExpandingFabFlowDelegate({required this.animation, required this.actions})
     : super(repaint: animation);
 
   @override
@@ -161,21 +201,18 @@ class _ExpandingFabFlowDelegate extends FlowDelegate {
       transform: Matrix4.translationValues(mainButtonX, mainButtonY, 0),
     );
 
-    const distance = 80.0;
-
     for (int i = 0; i < context.childCount - 1; i++) {
       final smallButtonSize = context.getChildSize(i)!;
-      final angle = (i * (math.pi / 4)) + (math.pi / 4);
-
-      // Calculate the (x, y) offset from the main button's center
-      final dx = -math.cos(angle) * distance;
-      final dy = -math.sin(angle) * distance;
-
-      // Apply the animation value to the offset
-      final offset = Offset(dx, dy) * animationValue;
+      final radialAngle = (200 + (i * 35)) * math.pi / 180;
+      final offset =
+          Offset(math.cos(radialAngle) * 112, math.sin(radialAngle) * 112) *
+          animationValue;
 
       // Calculate the final top-left (x, y) position for the small button
-      final x = mainButtonCenter.dx + offset.dx - (smallButtonSize.width / 2);
+      final anchorX = i < actions.length && actions[i].label != null
+          ? smallButtonSize.width - 20
+          : smallButtonSize.width / 2;
+      final x = mainButtonCenter.dx + offset.dx - anchorX;
       final y = mainButtonCenter.dy + offset.dy - (smallButtonSize.height / 2);
 
       // Use a Matrix4 to translate, then scale from the center

@@ -181,6 +181,7 @@ _i174.GetIt initBilling(
       gh<_i515.GetCurrentSubscriptionStatus>(),
       gh<_i515.CreateOrder>(),
       gh<_i515.CreateOrderItem>(),
+      gh<_i515.GetOrderById>(),
       gh<_i515.CreateCheckoutSession>(),
       gh<_i548.AnalyticsTracker>(),
     ),

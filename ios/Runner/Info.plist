@@ -4,6 +4,8 @@
 	<dict>
 		<key>NSAppleMusicUsageDescription</key>
 		<string>Academia requires access to your media library to allow you to upload, attach, and play audio files and study materials within the app.</string>
+		<key>NSSupportsLiveActivities</key>
+		<true/>
 		<key>CADisableMinimumFrameDurationOnPhone</key>
 		<true/>
 		<key>CFBundleDevelopmentRegion</key>
@@ -43,6 +45,7 @@
 		<true/>
 		<key>UIBackgroundModes</key>
 		<array>
+			<string>audio</string>
 			<string>fetch</string>
 			<string>remote-notification</string>
 		</array>

@@ -56,7 +56,7 @@ extension FeedStatePatterns on FeedState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( FeedInitial value)?  initial,TResult Function( FeedLoading value)?  loading,TResult Function( FeedPaginationLoading value)?  paginationLoading,TResult Function( FeedLoaded value)?  loaded,TResult Function( FeedPaginationError value)?  paginationError,TResult Function( FeedError value)?  error,TResult Function( PostDetailLoading value)?  postDetailLoading,TResult Function( PostDetailLoaded value)?  postDetailLoaded,TResult Function( PostDetailError value)?  postDetailError,TResult Function( PostCreating value)?  postCreating,TResult Function( PostCreated value)?  postCreated,TResult Function( PostCreateError value)?  postCreateError,TResult Function( PostLikeError value)?  postLikeError,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( FeedInitial value)?  initial,TResult Function( FeedLoading value)?  loading,TResult Function( FeedPaginationLoading value)?  paginationLoading,TResult Function( FeedLoaded value)?  loaded,TResult Function( FeedPaginationError value)?  paginationError,TResult Function( FeedError value)?  error,TResult Function( PostDetailLoading value)?  postDetailLoading,TResult Function( PostDetailLoaded value)?  postDetailLoaded,TResult Function( PostDetailError value)?  postDetailError,TResult Function( PostCreating value)?  postCreating,TResult Function( PostCreated value)?  postCreated,TResult Function( PostCreateError value)?  postCreateError,TResult Function( PostLikeError value)?  postLikeError,TResult Function( PollVoteError value)?  pollVoteError,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case FeedInitial() when initial != null:
@@ -72,7 +72,8 @@ return postDetailError(_that);case PostCreating() when postCreating != null:
 return postCreating(_that);case PostCreated() when postCreated != null:
 return postCreated(_that);case PostCreateError() when postCreateError != null:
 return postCreateError(_that);case PostLikeError() when postLikeError != null:
-return postLikeError(_that);case _:
+return postLikeError(_that);case PollVoteError() when pollVoteError != null:
+return pollVoteError(_that);case _:
   return orElse();
 
 }
@@ -90,7 +91,7 @@ return postLikeError(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( FeedInitial value)  initial,required TResult Function( FeedLoading value)  loading,required TResult Function( FeedPaginationLoading value)  paginationLoading,required TResult Function( FeedLoaded value)  loaded,required TResult Function( FeedPaginationError value)  paginationError,required TResult Function( FeedError value)  error,required TResult Function( PostDetailLoading value)  postDetailLoading,required TResult Function( PostDetailLoaded value)  postDetailLoaded,required TResult Function( PostDetailError value)  postDetailError,required TResult Function( PostCreating value)  postCreating,required TResult Function( PostCreated value)  postCreated,required TResult Function( PostCreateError value)  postCreateError,required TResult Function( PostLikeError value)  postLikeError,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( FeedInitial value)  initial,required TResult Function( FeedLoading value)  loading,required TResult Function( FeedPaginationLoading value)  paginationLoading,required TResult Function( FeedLoaded value)  loaded,required TResult Function( FeedPaginationError value)  paginationError,required TResult Function( FeedError value)  error,required TResult Function( PostDetailLoading value)  postDetailLoading,required TResult Function( PostDetailLoaded value)  postDetailLoaded,required TResult Function( PostDetailError value)  postDetailError,required TResult Function( PostCreating value)  postCreating,required TResult Function( PostCreated value)  postCreated,required TResult Function( PostCreateError value)  postCreateError,required TResult Function( PostLikeError value)  postLikeError,required TResult Function( PollVoteError value)  pollVoteError,}){
 final _that = this;
 switch (_that) {
 case FeedInitial():
@@ -106,7 +107,8 @@ return postDetailError(_that);case PostCreating():
 return postCreating(_that);case PostCreated():
 return postCreated(_that);case PostCreateError():
 return postCreateError(_that);case PostLikeError():
-return postLikeError(_that);}
+return postLikeError(_that);case PollVoteError():
+return pollVoteError(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -120,7 +122,7 @@ return postLikeError(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( FeedInitial value)?  initial,TResult? Function( FeedLoading value)?  loading,TResult? Function( FeedPaginationLoading value)?  paginationLoading,TResult? Function( FeedLoaded value)?  loaded,TResult? Function( FeedPaginationError value)?  paginationError,TResult? Function( FeedError value)?  error,TResult? Function( PostDetailLoading value)?  postDetailLoading,TResult? Function( PostDetailLoaded value)?  postDetailLoaded,TResult? Function( PostDetailError value)?  postDetailError,TResult? Function( PostCreating value)?  postCreating,TResult? Function( PostCreated value)?  postCreated,TResult? Function( PostCreateError value)?  postCreateError,TResult? Function( PostLikeError value)?  postLikeError,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( FeedInitial value)?  initial,TResult? Function( FeedLoading value)?  loading,TResult? Function( FeedPaginationLoading value)?  paginationLoading,TResult? Function( FeedLoaded value)?  loaded,TResult? Function( FeedPaginationError value)?  paginationError,TResult? Function( FeedError value)?  error,TResult? Function( PostDetailLoading value)?  postDetailLoading,TResult? Function( PostDetailLoaded value)?  postDetailLoaded,TResult? Function( PostDetailError value)?  postDetailError,TResult? Function( PostCreating value)?  postCreating,TResult? Function( PostCreated value)?  postCreated,TResult? Function( PostCreateError value)?  postCreateError,TResult? Function( PostLikeError value)?  postLikeError,TResult? Function( PollVoteError value)?  pollVoteError,}){
 final _that = this;
 switch (_that) {
 case FeedInitial() when initial != null:
@@ -136,7 +138,8 @@ return postDetailError(_that);case PostCreating() when postCreating != null:
 return postCreating(_that);case PostCreated() when postCreated != null:
 return postCreated(_that);case PostCreateError() when postCreateError != null:
 return postCreateError(_that);case PostLikeError() when postLikeError != null:
-return postLikeError(_that);case _:
+return postLikeError(_that);case PollVoteError() when pollVoteError != null:
+return pollVoteError(_that);case _:
   return null;
 
 }
@@ -153,7 +156,7 @@ return postLikeError(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<Post> existingPosts,  bool hasMore)?  paginationLoading,TResult Function( List<Post> posts,  String? next,  String? previous,  int count,  bool hasMore)?  loaded,TResult Function( List<Post> existingPosts,  String message,  bool hasMore)?  paginationError,TResult Function( String message)?  error,TResult Function()?  postDetailLoading,TResult Function( Post post)?  postDetailLoaded,TResult Function( String message)?  postDetailError,TResult Function()?  postCreating,TResult Function( List<Post> posts)?  postCreated,TResult Function( String message)?  postCreateError,TResult Function( Post post,  String message)?  postLikeError,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<Post> existingPosts,  bool hasMore)?  paginationLoading,TResult Function( List<Post> posts,  String? next,  String? previous,  int count,  bool hasMore)?  loaded,TResult Function( List<Post> existingPosts,  String message,  bool hasMore)?  paginationError,TResult Function( String message)?  error,TResult Function()?  postDetailLoading,TResult Function( Post post)?  postDetailLoaded,TResult Function( String message)?  postDetailError,TResult Function()?  postCreating,TResult Function( List<Post> posts)?  postCreated,TResult Function( String message)?  postCreateError,TResult Function( Post post,  String message)?  postLikeError,TResult Function( Post post,  String message)?  pollVoteError,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case FeedInitial() when initial != null:
 return initial();case FeedLoading() when loading != null:
@@ -168,7 +171,8 @@ return postDetailError(_that.message);case PostCreating() when postCreating != n
 return postCreating();case PostCreated() when postCreated != null:
 return postCreated(_that.posts);case PostCreateError() when postCreateError != null:
 return postCreateError(_that.message);case PostLikeError() when postLikeError != null:
-return postLikeError(_that.post,_that.message);case _:
+return postLikeError(_that.post,_that.message);case PollVoteError() when pollVoteError != null:
+return pollVoteError(_that.post,_that.message);case _:
   return orElse();
 
 }
@@ -186,7 +190,7 @@ return postLikeError(_that.post,_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<Post> existingPosts,  bool hasMore)  paginationLoading,required TResult Function( List<Post> posts,  String? next,  String? previous,  int count,  bool hasMore)  loaded,required TResult Function( List<Post> existingPosts,  String message,  bool hasMore)  paginationError,required TResult Function( String message)  error,required TResult Function()  postDetailLoading,required TResult Function( Post post)  postDetailLoaded,required TResult Function( String message)  postDetailError,required TResult Function()  postCreating,required TResult Function( List<Post> posts)  postCreated,required TResult Function( String message)  postCreateError,required TResult Function( Post post,  String message)  postLikeError,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<Post> existingPosts,  bool hasMore)  paginationLoading,required TResult Function( List<Post> posts,  String? next,  String? previous,  int count,  bool hasMore)  loaded,required TResult Function( List<Post> existingPosts,  String message,  bool hasMore)  paginationError,required TResult Function( String message)  error,required TResult Function()  postDetailLoading,required TResult Function( Post post)  postDetailLoaded,required TResult Function( String message)  postDetailError,required TResult Function()  postCreating,required TResult Function( List<Post> posts)  postCreated,required TResult Function( String message)  postCreateError,required TResult Function( Post post,  String message)  postLikeError,required TResult Function( Post post,  String message)  pollVoteError,}) {final _that = this;
 switch (_that) {
 case FeedInitial():
 return initial();case FeedLoading():
@@ -201,7 +205,8 @@ return postDetailError(_that.message);case PostCreating():
 return postCreating();case PostCreated():
 return postCreated(_that.posts);case PostCreateError():
 return postCreateError(_that.message);case PostLikeError():
-return postLikeError(_that.post,_that.message);}
+return postLikeError(_that.post,_that.message);case PollVoteError():
+return pollVoteError(_that.post,_that.message);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -215,7 +220,7 @@ return postLikeError(_that.post,_that.message);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<Post> existingPosts,  bool hasMore)?  paginationLoading,TResult? Function( List<Post> posts,  String? next,  String? previous,  int count,  bool hasMore)?  loaded,TResult? Function( List<Post> existingPosts,  String message,  bool hasMore)?  paginationError,TResult? Function( String message)?  error,TResult? Function()?  postDetailLoading,TResult? Function( Post post)?  postDetailLoaded,TResult? Function( String message)?  postDetailError,TResult? Function()?  postCreating,TResult? Function( List<Post> posts)?  postCreated,TResult? Function( String message)?  postCreateError,TResult? Function( Post post,  String message)?  postLikeError,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<Post> existingPosts,  bool hasMore)?  paginationLoading,TResult? Function( List<Post> posts,  String? next,  String? previous,  int count,  bool hasMore)?  loaded,TResult? Function( List<Post> existingPosts,  String message,  bool hasMore)?  paginationError,TResult? Function( String message)?  error,TResult? Function()?  postDetailLoading,TResult? Function( Post post)?  postDetailLoaded,TResult? Function( String message)?  postDetailError,TResult? Function()?  postCreating,TResult? Function( List<Post> posts)?  postCreated,TResult? Function( String message)?  postCreateError,TResult? Function( Post post,  String message)?  postLikeError,TResult? Function( Post post,  String message)?  pollVoteError,}) {final _that = this;
 switch (_that) {
 case FeedInitial() when initial != null:
 return initial();case FeedLoading() when loading != null:
@@ -230,7 +235,8 @@ return postDetailError(_that.message);case PostCreating() when postCreating != n
 return postCreating();case PostCreated() when postCreated != null:
 return postCreated(_that.posts);case PostCreateError() when postCreateError != null:
 return postCreateError(_that.message);case PostLikeError() when postLikeError != null:
-return postLikeError(_that.post,_that.message);case _:
+return postLikeError(_that.post,_that.message);case PollVoteError() when pollVoteError != null:
+return pollVoteError(_that.post,_that.message);case _:
   return null;
 
 }
@@ -1018,6 +1024,85 @@ class _$PostLikeErrorCopyWithImpl<$Res>
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') $Res call({Object? post = null,Object? message = null,}) {
   return _then(PostLikeError(
+post: null == post ? _self.post : post // ignore: cast_nullable_to_non_nullable
+as Post,message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+/// Create a copy of FeedState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$PostCopyWith<$Res> get post {
+  
+  return $PostCopyWith<$Res>(_self.post, (value) {
+    return _then(_self.copyWith(post: value));
+  });
+}
+}
+
+/// @nodoc
+
+
+class PollVoteError implements FeedState {
+  const PollVoteError({required this.post, required this.message});
+  
+
+ final  Post post;
+ final  String message;
+
+/// Create a copy of FeedState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$PollVoteErrorCopyWith<PollVoteError> get copyWith => _$PollVoteErrorCopyWithImpl<PollVoteError>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is PollVoteError&&(identical(other.post, post) || other.post == post)&&(identical(other.message, message) || other.message == message));
+}
+
+
+@override
+int get hashCode {
+    return Object.hash(runtimeType,post,message);
+}
+
+@override
+String toString() {
+    return 'FeedState.pollVoteError(post: $post, message: $message)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $PollVoteErrorCopyWith<$Res> implements $FeedStateCopyWith<$Res> {
+  factory $PollVoteErrorCopyWith(PollVoteError value, $Res Function(PollVoteError) _then) = _$PollVoteErrorCopyWithImpl;
+@useResult
+$Res call({
+ Post post, String message
+});
+
+
+$PostCopyWith<$Res> get post;
+
+}
+/// @nodoc
+class _$PollVoteErrorCopyWithImpl<$Res>
+    implements $PollVoteErrorCopyWith<$Res> {
+  _$PollVoteErrorCopyWithImpl(this._self, this._then);
+
+  final PollVoteError _self;
+  final $Res Function(PollVoteError) _then;
+
+/// Create a copy of FeedState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? post = null,Object? message = null,}) {
+  return _then(PollVoteError(
 post: null == post ? _self.post : post // ignore: cast_nullable_to_non_nullable
 as Post,message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String,

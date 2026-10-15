@@ -1,10 +1,10 @@
+import 'package:academia/core/core.dart';
 import 'package:academia/features/chirp/memberships/memberships.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 export 'chirp_community_membership_listing_state.dart';
 
 class ChirpCommunityMembershipListingCubit
-    extends Cubit<ChirpCommunityMembershipListingState> {
+    extends SafeCubit<ChirpCommunityMembershipListingState> {
   ChirpCommunityMembershipListingCubit({
     required this.getCommunityMembershipsUsecase,
   }) : super(const ChirpCommunityMembershipListingState.initial());

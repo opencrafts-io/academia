@@ -1,4 +1,4 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:core/core.dart';
 import 'package:permissions/permissions.dart';
 
 class NotificationPreferencesState {
@@ -25,7 +25,8 @@ class NotificationPreferencesState {
   }
 }
 
-class NotificationPreferencesCubit extends Cubit<NotificationPreferencesState> {
+class NotificationPreferencesCubit
+    extends SafeCubit<NotificationPreferencesState> {
   NotificationPreferencesCubit(
     this._gateway,
     this._requestObserver, {

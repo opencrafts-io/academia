@@ -12,15 +12,15 @@ class SubscriptionDao extends DatabaseAccessor<AppDatabaseV2>
   SubscriptionDao(super.db);
 
   Future<BillingSubscriptionStatuse?> getCurrentStatus() {
-    return (select(billingSubscriptionStatuses)
-          ..where((status) => status.id.equals(_currentStatusId)))
-        .getSingleOrNull();
+    return (select(
+      billingSubscriptionStatuses,
+    )..where((status) => status.id.equals(_currentStatusId))).getSingleOrNull();
   }
 
   Future<BillingSubscription?> getSubscriptionById(int id) {
-    return (select(billingSubscriptions)
-          ..where((subscription) => subscription.id.equals(id)))
-        .getSingleOrNull();
+    return (select(
+      billingSubscriptions,
+    )..where((subscription) => subscription.id.equals(id))).getSingleOrNull();
   }
 
   Future<void> cacheStatus({

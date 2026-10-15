@@ -164,6 +164,7 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
     required String authorId,
     required int communityId,
     required String content,
+    PollDraft? poll,
   }) async {
     try {
       if (!await isConnectedToInternet()) {
@@ -175,6 +176,7 @@ class ChirpRemoteDataSource with DioErrorHandler, ConnectivityChecker {
         'author_id': authorId,
         'community_id': communityId,
         'content': content,
+        if (poll != null) 'poll': poll.toJson(),
       };
 
       final res = await dioClient.dio.post(

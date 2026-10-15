@@ -427,10 +427,6 @@ class $AssetsIconsGen {
   AssetGenImage get calculator =>
       const AssetGenImage('assets/icons/calculator.png');
 
-  /// File path: assets/icons/calendar.png
-  AssetGenImage get calendar =>
-      const AssetGenImage('assets/icons/calendar.png');
-
   /// File path: assets/icons/camera.png
   AssetGenImage get camera => const AssetGenImage('assets/icons/camera.png');
 
@@ -824,7 +820,6 @@ class $AssetsIconsGen {
     bulb,
     burger,
     calculator,
-    calendar,
     camera,
     car,
     card,
@@ -924,63 +919,6 @@ class $AssetsIllustrationsGen {
   List<AssetGenImage> get values => [examTimetable];
 }
 
-class $AssetsLottiesGen {
-  const $AssetsLottiesGen();
-
-  /// File path: assets/lotties/calendar_events.json
-  String get calendarEvents => 'assets/lotties/calendar_events.json';
-
-  /// File path: assets/lotties/chat.json
-  String get chat => 'assets/lotties/chat.json';
-
-  /// File path: assets/lotties/digital-marketing.json
-  String get digitalMarketing => 'assets/lotties/digital-marketing.json';
-
-  /// File path: assets/lotties/google-calendar.json
-  String get googleCalendar => 'assets/lotties/google-calendar.json';
-
-  /// File path: assets/lotties/graduation-certificate.json
-  String get graduationCertificate =>
-      'assets/lotties/graduation-certificate.json';
-
-  /// File path: assets/lotties/organize.json
-  String get organize => 'assets/lotties/organize.json';
-
-  /// File path: assets/lotties/painting.json
-  String get painting => 'assets/lotties/painting.json';
-
-  /// File path: assets/lotties/promotional-staff.json
-  String get promotionalStaff => 'assets/lotties/promotional-staff.json';
-
-  /// File path: assets/lotties/questions.json
-  String get questions => 'assets/lotties/questions.json';
-
-  /// File path: assets/lotties/task-assigning.json
-  String get taskAssigning => 'assets/lotties/task-assigning.json';
-
-  /// File path: assets/lotties/thinking-learning.json
-  String get thinkingLearning => 'assets/lotties/thinking-learning.json';
-
-  /// File path: assets/lotties/under-maintenance.json
-  String get underMaintenance => 'assets/lotties/under-maintenance.json';
-
-  /// List of all assets
-  List<String> get values => [
-    calendarEvents,
-    chat,
-    digitalMarketing,
-    googleCalendar,
-    graduationCertificate,
-    organize,
-    painting,
-    promotionalStaff,
-    questions,
-    taskAssigning,
-    thinkingLearning,
-    underMaintenance,
-  ];
-}
-
 class $AssetsSvgsGen {
   const $AssetsSvgsGen();
 
@@ -1048,13 +986,10 @@ class $PackagesAnimatedEmojiLottieGen {
   ];
 }
 
-class Assets {
-  const Assets._();
-
+abstract final class Assets {
   static const $AssetsIconsGen icons = $AssetsIconsGen();
   static const $AssetsIllustrationsGen illustrations =
       $AssetsIllustrationsGen();
-  static const $AssetsLottiesGen lotties = $AssetsLottiesGen();
   static const $AssetsSvgsGen svgs = $AssetsSvgsGen();
   static const $PackagesGen packages = $PackagesGen();
 }

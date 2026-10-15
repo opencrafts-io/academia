@@ -12,12 +12,14 @@ class CreatePostUsecase {
     required String authorId,
     required int communityId,
     required String content,
+    PollDraft? poll,
   }) async {
     return chirpRepository.createPost(
       title: title,
       authorId: authorId,
       communityId: communityId,
       content: content,
+      poll: poll,
     );
   }
 }

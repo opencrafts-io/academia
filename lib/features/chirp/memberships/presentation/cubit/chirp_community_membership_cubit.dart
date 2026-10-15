@@ -1,10 +1,10 @@
+import 'package:academia/core/core.dart';
 import 'package:academia/features/chirp/memberships/memberships.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 export 'chirp_community_membership_state.dart';
 
 class ChirpCommunityMembershipCubit
-    extends Cubit<ChirpCommunityMembershipState> {
+    extends SafeCubit<ChirpCommunityMembershipState> {
   // Usecases
   JoinCommunityUsecase joinCommunityUsecase;
   LeaveCommunityUsecase leaveCommunityUsecase;

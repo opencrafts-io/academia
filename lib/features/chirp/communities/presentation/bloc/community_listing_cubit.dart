@@ -1,12 +1,12 @@
+import 'package:academia/core/core.dart';
 import 'package:academia/features/features.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 export 'community_listing_state.dart';
 
 /// CommunityBloc
 /// Manages all community related functionality e.g performing
 /// crud and manipulating community members
-class CommunityListingCubit extends Cubit<CommunityListingState> {
+class CommunityListingCubit extends SafeCubit<CommunityListingState> {
   final GetPostableCommunitiesUsecase getPostableCommunitiesUsecase;
   final SearchForCommunityUsecase searchForCommunityUsecase;
 

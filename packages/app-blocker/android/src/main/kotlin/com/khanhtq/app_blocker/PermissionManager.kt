@@ -33,29 +33,30 @@ class PermissionManager(private val context: Context) {
     /**
      * Returns the aggregate permission status string:
      * - `"granted"` — accessibility service enabled **and** exact-alarm permission granted.
-     * - `"denied"`  — one or more required permissions are missing.
+     * - `"accessibilityDenied"` — Accessibility Service is not enabled.
+     * - `"exactAlarmDenied"` — exact-alarm access is not granted.
      */
     fun checkAllPermissions(): String {
-        val accessibility = checkAccessibilityPermission()
-        val exactAlarm = checkExactAlarmPermission()
-        return if (accessibility && exactAlarm) "granted" else "denied"
+        if (!checkAccessibilityPermission()) return "accessibilityDenied"
+        if (!checkExactAlarmPermission()) return "exactAlarmDenied"
+        return "granted"
     }
 
     /**
      * Navigates the user to the settings screen for the first missing permission.
-     * Returns the current aggregate status (always `"denied"` when called, since
-     * the user hasn't granted the permission yet).
+     * Returns the status for the setting opened, or `"granted"` if nothing is
+     * missing.
      *
      * @param activity The currently visible [Activity] used to start the settings intent.
      */
     fun requestAllPermissions(activity: Activity): String {
         if (!checkAccessibilityPermission()) {
             requestAccessibilityPermission(activity)
-            return "denied"
+            return "accessibilityDenied"
         }
         if (!checkExactAlarmPermission()) {
             requestExactAlarmPermission(activity)
-            return "denied"
+            return "exactAlarmDenied"
         }
         return "granted"
     }

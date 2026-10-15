@@ -191,8 +191,14 @@ class AppBlockerAccessibilityService : AccessibilityService() {
         startActivity(Intent(Intent.ACTION_VIEW, uri).apply {
             // This targets the host Flutter application directly, avoiding an
             // Android resolver while still letting Flutter receive the link.
+            // Reuse MainActivity so its cached audio_service FlutterEngine gets
+            // the route through onNewIntent. CLEAR_TASK would recreate the
+            // Activity while reattaching to an engine that still has the old
+            // dashboard route.
             setPackage(this@AppBlockerAccessibilityService.packageName)
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                Intent.FLAG_ACTIVITY_SINGLE_TOP
         })
     }
 

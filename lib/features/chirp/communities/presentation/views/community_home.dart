@@ -1,6 +1,6 @@
 import 'package:academia/config/router/routes.dart';
 import 'package:academia/features/chirp/chirp.dart';
-import 'package:academia/features/profile/presentation/bloc/profile_bloc.dart';
+import 'package:profile/profile.dart';
 import 'package:academia/gen/assets.gen.dart';
 import 'package:academia/injection_container.dart';
 import 'package:flutter/material.dart';

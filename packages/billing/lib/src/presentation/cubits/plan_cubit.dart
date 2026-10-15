@@ -1,12 +1,11 @@
 import 'package:billing/src/domain/domain.dart';
 import 'package:core/core.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import 'plan_state.dart';
 
 @LazySingleton()
-class PlanCubit extends Cubit<PlanState> {
+class PlanCubit extends SafeCubit<PlanState> {
   PlanCubit(this._getPlans, this._getPlanByCode)
     : super(const PlanState.initial());
 

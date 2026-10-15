@@ -28,6 +28,7 @@ _PostApiDto _$PostApiDtoFromJson(Map<String, dynamic> json) => _PostApiDto(
           ?.map((e) => CommentApiDto.fromJson(e as Map<String, dynamic>))
           .toList() ??
       const [],
+  poll: json['poll'] as Map<String, dynamic>?,
   createdAt: DateTime.parse(json['created_at'] as String),
   updatedAt: DateTime.parse(json['updated_at'] as String),
 );
@@ -45,6 +46,7 @@ Map<String, dynamic> _$PostApiDtoToJson(_PostApiDto instance) =>
       'views_count': instance.viewsCount,
       'comment_count': instance.commentCount,
       'comments': instance.comments,
+      'poll': instance.poll,
       'created_at': instance.createdAt.toIso8601String(),
       'updated_at': instance.updatedAt.toIso8601String(),
     };

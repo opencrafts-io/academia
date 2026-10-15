@@ -1,13 +1,10 @@
-export 'auth/auth.dart';
+export 'package:auth/auth.dart' hide routes;
+
 export 'home/home.dart';
-export 'profile/profile.dart';
+
+export 'package:profile/profile.dart' hide routes;
+
 export 'sherehe/sherehe.dart';
 export 'chirp/chirp.dart';
-export 'agenda/agenda.dart';
-export 'todos/todos.dart';
 export 'essentials/essentials.dart';
-export 'leaderboard/leaderboard.dart';
-export 'streaks/streaks.dart';
 export 'exam_timetable/exam_timetable.dart';
-export 'timetable/timetable.dart';
-export 'splash/splash.dart';

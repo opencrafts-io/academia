@@ -20,6 +20,12 @@ _SettingsState _$SettingsStateFromJson(Map<String, dynamic> json) =>
       language: json['language'] as String? ?? 'en',
       showDailyScheduleOnFeed: json['showDailyScheduleOnFeed'] as bool? ?? true,
       chirpMuteVideos: json['chirpMuteVideos'] as bool? ?? true,
+      courseRemindersEnabled: json['courseRemindersEnabled'] as bool? ?? true,
+      courseReminderMinutes:
+          (json['courseReminderMinutes'] as List<dynamic>?)
+              ?.map((e) => (e as num?)?.toInt())
+              .toList() ??
+          const [1440, 60, 0],
     );
 
 Map<String, dynamic> _$SettingsStateToJson(_SettingsState instance) =>
@@ -33,4 +39,6 @@ Map<String, dynamic> _$SettingsStateToJson(_SettingsState instance) =>
       'language': instance.language,
       'showDailyScheduleOnFeed': instance.showDailyScheduleOnFeed,
       'chirpMuteVideos': instance.chirpMuteVideos,
+      'courseRemindersEnabled': instance.courseRemindersEnabled,
+      'courseReminderMinutes': instance.courseReminderMinutes,
     };

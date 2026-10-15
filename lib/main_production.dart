@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:academia/app.dart';
 import 'package:core/config/flavor.dart';
@@ -10,8 +9,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:workmanager/workmanager.dart';
+
 import './background_callback_dispatcher.dart';
+
 import 'package:posthog_flutter/posthog_flutter.dart';
 
 void main(List<String> args) async {
@@ -40,14 +40,11 @@ void main(List<String> args) async {
         return;
       }
 
-      await _initPostHog();
-
-      if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
-        await Workmanager().initialize(backgroundCallbackDispatcher);
-        await registerDefaultBackgroundTasks();
+      try {
+        await _initPostHog();
+      } catch (error, stackTrace) {
+        debugPrint('PostHog startup initialization failed: $error\n$stackTrace');
       }
-
-      await di.sl.allReady();
 
       runApp(
         PostHogWidget(
@@ -57,6 +54,7 @@ void main(List<String> args) async {
           ),
         ),
       );
+      scheduleDefaultBackgroundTasksAfterFirstFrame();
     },
     (error, stack) {
       try {
@@ -76,8 +74,8 @@ Future<void> _initPostHog() async {
         ..flushAt = 10
         ..captureApplicationLifecycleEvents = true
         ..sessionReplay = true
-        ..sessionReplayConfig.maskAllTexts = false
-        ..sessionReplayConfig.maskAllImages = false
+        ..sessionReplayConfig.maskAllTexts = true
+        ..sessionReplayConfig.maskAllImages = true
         ..errorTrackingConfig.captureFlutterErrors = true
         ..errorTrackingConfig.capturePlatformDispatcherErrors = true
         ..errorTrackingConfig.captureIsolateErrors = true

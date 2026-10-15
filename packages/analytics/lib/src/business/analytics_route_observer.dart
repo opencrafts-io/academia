@@ -34,6 +34,52 @@ class AnalyticsRouteObserver extends NavigatorObserver {
       return;
     }
 
-    unawaited(_analyticsTracker.track(AnalyticsEvent.screenViewed(name)));
+    unawaited(
+      _analyticsTracker.track(
+        AnalyticsEvent.screenViewed(
+          _stableRouteName(name),
+          featurePackage: _featurePackageFor(name),
+        ),
+      ),
+    );
+  }
+
+  String _stableRouteName(String route) {
+    final path = Uri.tryParse(route)?.path ?? route.split('?').first;
+    return path
+        .split('/')
+        .map((segment) =>
+            int.tryParse(segment) != null || _isUuid(segment)
+                ? ':id'
+                : segment)
+        .join('/');
+  }
+
+  bool _isUuid(String value) => RegExp(
+    r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89aAbB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$',
+  ).hasMatch(value);
+
+  AnalyticsFeaturePackage? _featurePackageFor(String route) {
+    final normalized = route.toLowerCase();
+    if (normalized.startsWith('/study-tools') ||
+        normalized.startsWith('studytools') ||
+        normalized.startsWith('studymaterial') ||
+        normalized.startsWith('studypractice') ||
+        normalized.startsWith('studypodcast')) {
+      return AnalyticsFeaturePackage.studyTools;
+    }
+    if (normalized.startsWith('/todos') ||
+        normalized.startsWith('todos') ||
+        normalized.contains('todo') ||
+        normalized.contains('tasklist')) {
+      return AnalyticsFeaturePackage.todos;
+    }
+    if (normalized.startsWith('/agenda') ||
+        normalized.startsWith('agenda') ||
+        normalized.startsWith('/calendar') ||
+        normalized.startsWith('calendar')) {
+      return AnalyticsFeaturePackage.agenda;
+    }
+    return null;
   }
 }

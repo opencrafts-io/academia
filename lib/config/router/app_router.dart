@@ -1,6 +1,7 @@
 import 'package:academia/config/router/app_navigation_observer.dart';
 import 'package:academia/config/router/route_guard.dart';
 import 'package:academia/config/router/routes.dart';
+import 'package:academia/config/router/package_routes.dart';
 import 'package:academia/injection_container.dart';
 import 'package:analytics/analytics.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
@@ -9,11 +10,7 @@ import 'package:go_router/go_router.dart';
 
 import 'guards/guards.dart';
 
-import 'package:billing/billing.dart' as billing;
-import 'package:in_app_update/in_app_update.dart' as in_app_update;
 import 'package:lock_in/lock_in.dart';
-import 'package:permissions/permissions.dart' as permissions;
-import 'package:settings/settings.dart' as settings;
 
 class AppRouter {
   static final GlobalKey<NavigatorState> globalNavigatorKey =
@@ -37,10 +34,7 @@ class AppRouter {
           onReturnHome: () => context.go(HomeRoute().location),
         ),
       ),
-      ...billing.routes,
-      ...in_app_update.routes,
-      ...settings.routes,
-      ...permissions.routes,
+      ...packageRoutes,
     ],
     initialLocation: SplashScreenRoute().location,
     observers: [

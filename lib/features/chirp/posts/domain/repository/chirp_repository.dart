@@ -16,6 +16,7 @@ abstract class ChirpRepository {
     required String authorId,
     required int communityId,
     required String content,
+    PollDraft? poll,
   });
 
   Future<void> markPostAsViewed({
@@ -55,6 +56,27 @@ abstract class ChirpRepository {
     required Post post,
     required int voteValue,
     required String voterId,
+  });
+
+  /// Replaces the user's selection on the post's poll. Returns the updated
+  /// [Post] with server-authoritative poll counts and `myVotes`.
+  Future<Either<Failure, Post>> voteOnPoll({
+    required Post post,
+    required List<int> optionIds,
+    required String voterId,
+  });
+
+  /// Removes all of the user's selections on the post's poll.
+  Future<Either<Failure, Post>> retractPollVote({
+    required Post post,
+    required String voterId,
+  });
+
+  Future<Either<Failure, PaginatedData<PollVoter>>> getPollVoters({
+    required int pollId,
+    int? optionId,
+    required int page,
+    required int pageSize,
   });
 
   Future<Either<Failure, int>> checkIsLiked({required int postId});
