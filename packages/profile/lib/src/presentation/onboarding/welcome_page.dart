@@ -105,7 +105,7 @@ class _WelcomeContent extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Text(
-          'Takes about 2 minutes',
+          'Takes a minute',
           textAlign: TextAlign.center,
           style: theme.textTheme.labelMedium?.copyWith(
             color: colors.onSurfaceVariant,

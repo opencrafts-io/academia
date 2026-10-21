@@ -6,6 +6,9 @@ import '../../domain/user_profile.dart';
 import '../bloc/profile_bloc.dart';
 import 'onboarding_components.dart';
 
+import 'package:flutter/gestures.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 class OnboardingSuccessPage extends StatefulWidget {
   const OnboardingSuccessPage({super.key, required this.onNext});
 
@@ -103,8 +106,66 @@ class _OnboardingSuccessPageState extends State<OnboardingSuccessPage> {
             borderRadius: BorderRadius.circular(20),
           ),
           tileColor: Theme.of(context).colorScheme.surfaceContainerLow,
-          title: const Text('I agree to the Academia terms and privacy policy'),
-          subtitle: const Text('You can review these before continuing.'),
+          title: Text.rich(
+            TextSpan(
+              text:
+                  "By continuing, I acknowledge that I have read"
+                  " and understood Academia's ",
+              children: [
+                TextSpan(
+                  text: "Terms of servie",
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                    decoration: TextDecoration.underline,
+                  ),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () async {
+                      try {
+                        final url = Uri.parse('https://policy.opencrafts.io');
+                        if (await canLaunchUrl(url)) {
+                          launchUrl(url);
+                        }
+                      } catch (e) {
+                        if (!context.mounted) return;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Failed to lauch url"),
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                      }
+                    },
+                ),
+                const TextSpan(text: " and "),
+                TextSpan(
+                  text: "Privacy Policy",
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                    decoration: TextDecoration.underline,
+                  ),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () async {
+                      try {
+                        final url = Uri.parse('https://policy.opencrafts.io');
+                        if (await canLaunchUrl(url)) {
+                          launchUrl(url);
+                        }
+                      } catch (e) {
+                        if (!context.mounted) return;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Failed to lauch url"),
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                      }
+                    },
+                ),
+              ],
+            ),
+            textAlign: TextAlign.left,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
         ),
         const SizedBox(height: 22),
         FilledButton.icon(
@@ -127,7 +188,7 @@ class _OnboardingSuccessPageState extends State<OnboardingSuccessPage> {
         const SizedBox(height: 16),
         Text(
           'You’re in control of your profile details and can update them later.',
-          textAlign: TextAlign.center,
+          textAlign: TextAlign.start,
           style: Theme.of(context).textTheme.bodyMedium
               ?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
         ),
