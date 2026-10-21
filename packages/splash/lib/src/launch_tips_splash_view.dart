@@ -37,18 +37,6 @@ class LaunchTipsSplashView extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
           child: Column(
             children: [
-              Row(
-                children: [
-                  brand,
-                  const SizedBox(width: 12),
-                  Text(
-                    'Academia',
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ],
-              ),
               Expanded(
                 child: Center(
                   child: AnimatedSwitcher(
@@ -182,7 +170,7 @@ class LaunchTipsSplashView extends StatelessWidget {
         SizedBox.square(
           dimension: 18,
           child: CircularProgressIndicator(
-            strokeWidth: 2,
+            strokeWidth: 4,
             color: colors.primary,
           ),
         ),
@@ -217,62 +205,49 @@ class _TipCard extends StatelessWidget {
 
     return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 480),
-      child: Card.filled(
-        color: colors.surfaceContainerHigh,
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              DecoratedBox(
-                decoration: BoxDecoration(
-                  color: colors.primaryContainer,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: SizedBox.square(
-                  dimension: 56,
-                  child: Icon(
-                    tip.icon,
-                    color: colors.onPrimaryContainer,
-                    size: 28,
-                  ),
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            DecoratedBox(
+              decoration: BoxDecoration(
+                color: colors.primaryContainer,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: SizedBox.square(
+                dimension: 56,
+                child: Icon(
+                  tip.icon,
+                  color: colors.onPrimaryContainer,
+                  size: 28,
                 ),
               ),
+            ),
+            const SizedBox(height: 24),
+            Text(tip.title, style: theme.textTheme.headlineSmall),
+            const SizedBox(height: 12),
+            Text(
+              tip.message,
+              style: theme.textTheme.bodyLarge?.copyWith(
+                color: colors.onSurfaceVariant,
+              ),
+            ),
+            if (tip.action != null && tip.actionLabel.isNotEmpty) ...[
               const SizedBox(height: 24),
-              Text(
-                'A QUICK TIP',
-                style: theme.textTheme.labelMedium?.copyWith(
-                  color: colors.primary,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 1.2,
+              SizedBox(
+                width: double.infinity,
+                height: 52,
+                child: FilledButton(
+                  onPressed: actionEnabled
+                      ? () => onAction?.call(tip.action!)
+                      : null,
+                  child: Text(tip.actionLabel),
                 ),
               ),
-              const SizedBox(height: 8),
-              Text(tip.title, style: theme.textTheme.headlineSmall),
-              const SizedBox(height: 12),
-              Text(
-                tip.message,
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  color: colors.onSurfaceVariant,
-                ),
-              ),
-              if (tip.action != null && tip.actionLabel.isNotEmpty) ...[
-                const SizedBox(height: 24),
-                SizedBox(
-                  width: double.infinity,
-                  height: 52,
-                  child: FilledButton.icon(
-                    onPressed: actionEnabled
-                        ? () => onAction?.call(tip.action!)
-                        : null,
-                    icon: const Icon(Icons.arrow_forward_rounded),
-                    label: Text(tip.actionLabel),
-                  ),
-                ),
-              ],
             ],
-          ),
+          ],
         ),
       ),
     );

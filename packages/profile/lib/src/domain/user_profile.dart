@@ -1,90 +1,27 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class UserProfile extends Equatable {
-  final String id;
-  final String name;
-  final String? username;
-  final String email;
-  final bool termsAccepted;
-  final bool onboarded;
-  final String? nationalID;
-  final String? avatarUrl;
-  final String? bio;
-  final int vibePoints;
-  final String? phone;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final DateTime? deletedAt;
+part 'user_profile.freezed.dart';
+part 'user_profile.g.dart';
 
-  const UserProfile({
-    required this.id,
-    required this.name,
-    required this.email,
-    required this.termsAccepted,
-    required this.onboarded,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.bio,
-    required this.phone,
-    required this.username,
-    required this.nationalID,
-    required this.vibePoints,
-    this.avatarUrl,
-    this.deletedAt,
-  });
+@freezed
+abstract class UserProfile with _$UserProfile {
+  const factory UserProfile({
+    required String id,
+    required String name,
+    required String? username,
+    required String email,
+    @JsonKey(name: 'terms_accepted') required bool termsAccepted,
+    required bool onboarded,
+    @JsonKey(name: 'national_id') required String? nationalID,
+    @JsonKey(name: 'avatar_url') String? avatarUrl,
+    required String? bio,
+    @JsonKey(name: 'vibe_points') required int vibePoints,
+    required String? phone,
+    @JsonKey(name: 'created_at') required DateTime createdAt,
+    @JsonKey(name: 'updated_at') required DateTime updatedAt,
+    @JsonKey(name: 'deleted_at') DateTime? deletedAt,
+  }) = _UserProfile;
 
-  UserProfile copyWith({
-    String? id,
-    String? name,
-    String? username,
-    String? email,
-    bool? termsAccepted,
-    bool? onboarded,
-    String? nationalID,
-    String? avatarUrl,
-    String? bio,
-    int? vibePoints,
-    String? phone,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-    DateTime? deletedAt,
-  }) {
-    return UserProfile(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      username: username ?? this.username,
-      email: email ?? this.email,
-      termsAccepted: termsAccepted ?? this.termsAccepted,
-      onboarded: onboarded ?? this.onboarded,
-      nationalID: nationalID ?? this.nationalID,
-      avatarUrl: avatarUrl ?? this.avatarUrl,
-      bio: bio ?? this.bio,
-      vibePoints: vibePoints ?? this.vibePoints,
-      phone: phone ?? this.phone,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      deletedAt: deletedAt ?? this.deletedAt,
-    );
-  }
-
-  @override
-  List<Object?> get props => [
-    id,
-    username,
-    nationalID,
-    name,
-    email,
-    termsAccepted,
-    onboarded,
-    avatarUrl,
-    bio,
-    vibePoints,
-    phone,
-    createdAt,
-    updatedAt,
-    deletedAt,
-  ];
-
-  @override
-  bool? get stringify => true;
+  factory UserProfile.fromJson(Map<String, dynamic> json) =>
+      _$UserProfileFromJson(json);
 }
