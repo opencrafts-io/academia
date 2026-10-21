@@ -29,6 +29,7 @@ class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
       _apiClient.patch(
         _paths.account,
         data: {
+          'id': profile.id, // needed for account ownership comparison
           'name': profile.name.trim(),
           'username': profile.username?.trim(),
           'national_id': profile.nationalID?.trim(),
@@ -42,7 +43,10 @@ class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
   Future<Either<Failure, UserProfile>> updateUserPhone(UserProfile profile) =>
       _apiClient.patch(
         _paths.phone,
-        data: {'phone': profile.phone?.trim()},
+        data: {
+          'id': profile.id, // needed for account ownership comparison
+          'phone': profile.phone?.trim(),
+        },
         decoder: _decodeProfile,
       );
 
