@@ -74,8 +74,8 @@ Future<void> _initPostHog() async {
         ..flushAt = 10
         ..captureApplicationLifecycleEvents = true
         ..sessionReplay = true
-        ..sessionReplayConfig.maskAllTexts = true
-        ..sessionReplayConfig.maskAllImages = true
+        ..sessionReplayConfig.maskAllTexts = false
+        ..sessionReplayConfig.maskAllImages = false
         ..errorTrackingConfig.captureFlutterErrors = true
         ..errorTrackingConfig.capturePlatformDispatcherErrors = true
         ..errorTrackingConfig.captureIsolateErrors = true
