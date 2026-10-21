@@ -21,7 +21,6 @@ class NameEditPage extends StatefulWidget {
 
 class _NameEditPageState extends State<NameEditPage> {
   final _formKey = GlobalKey<FormState>();
-  final _nationalIdController = TextEditingController();
   final _nameController = TextEditingController();
   final _usernameController = TextEditingController();
   UserProfile? _profile;
@@ -40,7 +39,6 @@ class _NameEditPageState extends State<NameEditPage> {
 
   @override
   void dispose() {
-    _nationalIdController.dispose();
     _nameController.dispose();
     _usernameController.dispose();
     super.dispose();
@@ -48,7 +46,6 @@ class _NameEditPageState extends State<NameEditPage> {
 
   void _applyProfile(UserProfile profile) {
     _profile = profile;
-    _nationalIdController.text = profile.nationalID ?? '';
     _nameController.text = profile.name;
     _usernameController.text = profile.username ?? '';
   }
@@ -61,7 +58,6 @@ class _NameEditPageState extends State<NameEditPage> {
     context.read<ProfileBloc>().add(
       UpdateUserProfileEvent(
         profile: _profile!.copyWith(
-          nationalID: _nationalIdController.text.trim(),
           username: _usernameController.text.trim(),
           name: _nameController.text.trim(),
         ),
@@ -136,26 +132,7 @@ class _NameEditPageState extends State<NameEditPage> {
               return null;
             },
           ),
-          const SizedBox(height: 18),
-          TextFormField(
-            controller: _nationalIdController,
-            textInputAction: TextInputAction.done,
-            maxLength: 64,
-            autocorrect: false,
-            decoration: profileInputDecoration(
-              context: context,
-              label: 'National ID or passport number',
-              icon: Icons.credit_card_outlined,
-              helperText: 'Used only where student services require it.',
-            ),
-            validator: (value) {
-              final id = (value ?? '').trim();
-              if (id.length < 7) return 'Enter at least 7 characters.';
-              return null;
-            },
-            onFieldSubmitted: (_) => _submit(),
-          ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 28),
           ProfileStepActions(
             onPrevious: widget.onPrevious,
             onNext: _submit,

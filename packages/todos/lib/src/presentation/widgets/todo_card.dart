@@ -361,7 +361,7 @@ class DueDateTime extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final due = dateTime.toLocal();
+    final due = dateTime.toUtc();
     final now = DateTime.now();
     final isOverdue = due.isBefore(now);
     final isToday = DateUtils.isSameDay(due, now);
