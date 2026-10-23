@@ -336,6 +336,23 @@ class CommunityActionSection extends StatelessWidget {
                             }
                           },
                         ),
+                        ListTile(
+                          leading: const Icon(Icons.poll_outlined),
+                          title: const Text("Create poll"),
+                          onTap: () {
+                            final communityState = communityHomeBloc.state;
+                            final router = GoRouter.of(context);
+
+                            Navigator.of(modalContext).pop();
+
+                            if (communityState is CommunityHomeLoaded) {
+                              router.push(
+                                const AddPostRoute(poll: true).location,
+                                extra: communityState.community,
+                              );
+                            }
+                          },
+                        ),
 
                         // Share Community
                         ListTile(
