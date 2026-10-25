@@ -26,6 +26,11 @@ abstract class PomodoroState with _$PomodoroState {
     int? linkedTodoItemLocalId,
     String? linkedTodoItemTitle,
     @Default(0) int trackedFocusedSeconds,
+
+    /// Set when the timer was paused automatically because the session has
+    /// been going for `PomodoroCubit.activityCheckInterval` without the user
+    /// confirming they're still there.
+    @Default(false) bool awaitingActivityCheck,
   }) = _PomodoroState;
 
   factory PomodoroState.initial() => const PomodoroState(
