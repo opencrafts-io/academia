@@ -1,10 +1,12 @@
-import 'package:academia/features/chirp/posts/domain/domain.dart';
-import 'package:academia/features/chirp/posts/presentation/utils/poll_validator.dart';
+import 'package:academia/features/features.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-/// Opens the poll builder as a modal sheet. Resolves with a normalized
-/// [PollDraft] when the user taps "Done", or null when dismissed.
+/// Opens the poll builder as a modal sheet for attaching a poll to a post.
+/// Resolves with a normalized [PollDraft] when the user taps "Done", or null
+/// when dismissed.
 Future<PollDraft?> showCreatePollSheet(
   BuildContext context, {
   PollDraft? initial,
@@ -13,15 +15,44 @@ Future<PollDraft?> showCreatePollSheet(
     context: context,
     isScrollControlled: true,
     useSafeArea: true,
+    // Swiping would throw away a half-built poll; it closes from its close
+    // button (or back) instead. The fixed size keeps it from being dragged
+    // down to half height too.
+    enableDrag: false,
     backgroundColor: Colors.transparent,
-    builder: (_) => CreatePollSheet(initial: initial),
+    builder: (_) => DraggableScrollableSheet(
+      initialChildSize: 0.9,
+      minChildSize: 0.9,
+      maxChildSize: 0.9,
+      expand: false,
+      builder: (context, scrollController) =>
+          CreatePollSheet(initial: initial, scrollController: scrollController),
+    ),
   );
 }
 
+/// The poll builder. By default it returns the finished [PollDraft] to the
+/// caller (attaching a poll to a post); [CreatePollSheet.standalone] instead
+/// picks a community and posts the poll itself.
 class CreatePollSheet extends StatefulWidget {
   final PollDraft? initial;
 
-  const CreatePollSheet({super.key, this.initial});
+  /// Set when hosted in a [DraggableScrollableSheet]: the sheet then fills
+  /// the height it is given. Without one it sizes to its content.
+  final ScrollController? scrollController;
+
+  final bool standalone;
+  final Community? community;
+
+  const CreatePollSheet({super.key, this.initial, this.scrollController})
+    : standalone = false,
+      community = null;
+
+  /// "New poll": choose a community and post the poll in one step.
+  const CreatePollSheet.standalone({super.key, this.community})
+    : standalone = true,
+      initial = null,
+      scrollController = null;
 
   @override
   State<CreatePollSheet> createState() => _CreatePollSheetState();
@@ -41,7 +72,8 @@ class _OptionField {
   }
 }
 
-class _CreatePollSheetState extends State<CreatePollSheet> {
+class _CreatePollSheetState extends State<CreatePollSheet>
+    with PostCommunitySelection {
   late final TextEditingController _questionController;
   final List<_OptionField> _options = [];
   bool _allowsMultiple = false;
@@ -53,6 +85,9 @@ class _CreatePollSheetState extends State<CreatePollSheet> {
   bool _attemptedSubmit = false;
 
   List<PollValidationError> _errors = const [];
+
+  bool _isSubmitting = false;
+  String? _submitError;
 
   @override
   void initState() {
@@ -71,6 +106,8 @@ class _CreatePollSheetState extends State<CreatePollSheet> {
     _isAnonymous = initial?.isAnonymous ?? false;
     _endsAt = initial?.endsAt;
     _revalidate();
+
+    if (widget.standalone) initCommunitySelection(widget.community);
   }
 
   @override
@@ -89,6 +126,10 @@ class _CreatePollSheetState extends State<CreatePollSheet> {
     isAnonymous: _isAnonymous,
     endsAt: _endsAt,
   );
+
+  bool get _isDirty =>
+      _questionController.text.trim().isNotEmpty ||
+      _options.any((o) => o.controller.text.trim().isNotEmpty);
 
   void _revalidate() {
     if (!mounted) return;
@@ -124,7 +165,6 @@ class _CreatePollSheetState extends State<CreatePollSheet> {
 
   void _reorder(int oldIndex, int newIndex) {
     setState(() {
-      if (newIndex > oldIndex) newIndex -= 1;
       final item = _options.removeAt(oldIndex);
       _options.insert(newIndex, item);
     });
@@ -157,7 +197,8 @@ class _CreatePollSheetState extends State<CreatePollSheet> {
     _revalidate();
   }
 
-  void _submit() {
+  Future<void> _submit() async {
+    if (_isSubmitting) return;
     setState(() => _attemptedSubmit = true);
     _revalidate();
     if (_errors.isNotEmpty) {
@@ -172,7 +213,82 @@ class _CreatePollSheetState extends State<CreatePollSheet> {
       }
       return;
     }
-    Navigator.of(context).pop(PollValidator.normalize(_draft));
+    final poll = PollValidator.normalize(_draft);
+    if (!widget.standalone) {
+      Navigator.of(context).pop(poll);
+      return;
+    }
+    await _post(poll);
+  }
+
+  Future<void> _post(PollDraft poll) async {
+    FocusScope.of(context).unfocus();
+    // Choosing where to post is part of posting, not a gate in front of it.
+    if (selectedCommunity == null && await pickCommunity() == null) return;
+    if (!mounted) return;
+
+    final community = selectedCommunity!;
+    final profileState = context.read<ProfileBloc>().state;
+    setState(() {
+      _isSubmitting = true;
+      _submitError = null;
+    });
+
+    final result = await submitPost(
+      context.read<FeedBloc>(),
+      CreatePostEvent(
+        // Poll-only posts are titled by their question; cards hide the
+        // duplicate.
+        title: poll.question,
+        authorId: profileState is ProfileLoadedState
+            ? profileState.profile.id
+            : '',
+        communityId: community.id,
+        content: '',
+        poll: poll,
+      ),
+    );
+    if (!mounted) return;
+
+    if (result is PostCreated) {
+      LastPostCommunity.write(community.id);
+      final messenger = ScaffoldMessenger.of(context);
+      context.pop(true);
+      messenger
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text("Poll posted to a/${community.name}"),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+    } else {
+      setState(() {
+        _isSubmitting = false;
+        _submitError = "Couldn't post your poll. Please try again.";
+      });
+    }
+  }
+
+  Future<void> _confirmDiscard() async {
+    final discard = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Discard poll?"),
+        content: const Text("You'll lose what you've written so far."),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text("Keep editing"),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text("Discard"),
+          ),
+        ],
+      ),
+    );
+    if ((discard ?? false) && mounted) Navigator.of(context).pop();
   }
 
   /// Which errors to surface inline right now.
@@ -189,6 +305,19 @@ class _CreatePollSheetState extends State<CreatePollSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final sheet = _buildSheet(context);
+    if (!widget.standalone) return sheet;
+
+    return PopScope(
+      canPop: !_isDirty || _isSubmitting,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) _confirmDiscard();
+      },
+      child: communityListener(child: sheet),
+    );
+  }
+
+  Widget _buildSheet(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final canAdd = _options.length < PollValidator.maxOptions;
@@ -196,257 +325,278 @@ class _CreatePollSheetState extends State<CreatePollSheet> {
     final optionsError = _attemptedSubmit
         ? PollValidator.messageFor(_errors, PollField.options)
         : null;
+    final fillsHeight = widget.scrollController != null;
 
-    return DraggableScrollableSheet(
-      initialChildSize: 0.9,
-      minChildSize: 0.5,
-      maxChildSize: 0.95,
-      expand: false,
-      builder: (context, scrollController) {
-        return Container(
-          decoration: BoxDecoration(
-            color: theme.scaffoldBackgroundColor,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+    final content = CustomScrollView(
+      controller: widget.scrollController,
+      shrinkWrap: !fillsHeight,
+      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+      slivers: [
+        SliverPadding(
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+          sliver: SliverToBoxAdapter(
+            child: TextField(
+              controller: _questionController,
+              autofocus: widget.standalone,
+              textCapitalization: TextCapitalization.sentences,
+              maxLength: PollValidator.maxQuestionLength,
+              maxLines: 3,
+              minLines: 1,
+              style: theme.textTheme.titleMedium,
+              decoration: InputDecoration(
+                labelText: 'Question',
+                hintText: 'Ask the community something…',
+                errorText: _errorFor(PollField.question),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
           ),
+        ),
+        SliverPadding(
+          padding: const EdgeInsets.fromLTRB(20, 8, 20, 4),
+          sliver: SliverToBoxAdapter(
+            child: Row(
+              children: [
+                Text(
+                  'Options',
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const Spacer(),
+                Text(
+                  '${_options.length}/${PollValidator.maxOptions}',
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        if (optionsError != null)
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            sliver: SliverToBoxAdapter(
+              child: Text(
+                optionsError,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: colorScheme.error,
+                ),
+              ),
+            ),
+          ),
+        SliverPadding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          sliver: SliverReorderableList(
+            itemCount: _options.length,
+            onReorderItem: _reorder,
+            itemBuilder: (context, index) {
+              final option = _options[index];
+              return _OptionRow(
+                key: option.key,
+                index: index,
+                controller: option.controller,
+                focusNode: option.focusNode,
+                errorText: _errorFor(PollField.option, optionIndex: index),
+                canRemove: canRemove,
+                onRemove: () => _removeOption(index),
+                onSubmitted: () {
+                  if (index == _options.length - 1) {
+                    if (canAdd) _addOption();
+                  } else {
+                    _options[index + 1].focusNode.requestFocus();
+                  }
+                },
+              );
+            },
+          ),
+        ),
+        SliverPadding(
+          padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+          sliver: SliverToBoxAdapter(
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: TextButton.icon(
+                onPressed: canAdd ? _addOption : null,
+                icon: const Icon(Icons.add),
+                label: const Text('Add option'),
+              ),
+            ),
+          ),
+        ),
+        const SliverToBoxAdapter(child: Divider()),
+        SliverToBoxAdapter(
           child: Column(
             children: [
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 12),
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: theme.dividerColor,
-                  borderRadius: BorderRadius.circular(2),
-                ),
+              SwitchListTile.adaptive(
+                value: _allowsMultiple,
+                onChanged: (v) => setState(() => _allowsMultiple = v),
+                secondary: const Icon(Icons.checklist_rounded),
+                title: const Text('Allow multiple choices'),
+                subtitle: const Text('Voters can pick more than one option'),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  children: [
-                    Icon(Icons.poll_outlined, color: colorScheme.primary),
-                    const SizedBox(width: 12),
-                    Text(
-                      widget.initial == null ? 'Create poll' : 'Edit poll',
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const Spacer(),
-                    IconButton(
-                      icon: const Icon(Icons.close),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                  ],
-                ),
+              SwitchListTile.adaptive(
+                value: _isAnonymous,
+                onChanged: (v) => setState(() => _isAnonymous = v),
+                secondary: const Icon(Icons.visibility_off_outlined),
+                title: const Text('Anonymous votes'),
+                subtitle: const Text('Only you can see who voted for what'),
               ),
-              const Divider(),
-              Expanded(
-                child: CustomScrollView(
-                  controller: scrollController,
-                  keyboardDismissBehavior:
-                      ScrollViewKeyboardDismissBehavior.onDrag,
-                  slivers: [
-                    SliverPadding(
-                      padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
-                      sliver: SliverToBoxAdapter(
-                        child: TextField(
-                          controller: _questionController,
-                          textCapitalization: TextCapitalization.sentences,
-                          maxLength: PollValidator.maxQuestionLength,
-                          maxLines: 3,
-                          minLines: 1,
-                          style: theme.textTheme.titleMedium,
-                          decoration: InputDecoration(
-                            labelText: 'Question',
-                            hintText: 'Ask the community something…',
-                            errorText: _errorFor(PollField.question),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SliverPadding(
-                      padding: const EdgeInsets.fromLTRB(20, 8, 20, 4),
-                      sliver: SliverToBoxAdapter(
-                        child: Row(
-                          children: [
-                            Text(
-                              'Options',
-                              style: theme.textTheme.titleSmall?.copyWith(
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const Spacer(),
-                            Text(
-                              '${_options.length}/${PollValidator.maxOptions}',
-                              style: theme.textTheme.labelMedium?.copyWith(
-                                color: colorScheme.onSurfaceVariant,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    if (optionsError != null)
-                      SliverPadding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        sliver: SliverToBoxAdapter(
-                          child: Text(
-                            optionsError,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: colorScheme.error,
-                            ),
-                          ),
-                        ),
-                      ),
-                    SliverPadding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      sliver: SliverReorderableList(
-                        itemCount: _options.length,
-                        onReorder: _reorder,
-                        itemBuilder: (context, index) {
-                          final option = _options[index];
-                          return _OptionRow(
-                            key: option.key,
-                            index: index,
-                            controller: option.controller,
-                            focusNode: option.focusNode,
-                            errorText: _errorFor(
-                              PollField.option,
-                              optionIndex: index,
-                            ),
-                            canRemove: canRemove,
-                            onRemove: () => _removeOption(index),
-                            onSubmitted: () {
-                              if (index == _options.length - 1) {
-                                if (canAdd) _addOption();
-                              } else {
-                                _options[index + 1].focusNode.requestFocus();
-                              }
-                            },
-                          );
+              ListTile(
+                leading: const Icon(Icons.timer_outlined),
+                title: const Text('End time'),
+                subtitle: Text(
+                  _endsAt == null
+                      ? 'No end time — poll stays open'
+                      : DateFormat('EEE, d MMM yyyy • HH:mm').format(_endsAt!),
+                  style: _errorFor(PollField.endsAt) != null
+                      ? TextStyle(color: colorScheme.error)
+                      : null,
+                ),
+                trailing: _endsAt == null
+                    ? const Icon(Icons.chevron_right)
+                    : IconButton(
+                        tooltip: 'Remove end time',
+                        icon: const Icon(Icons.close),
+                        onPressed: () {
+                          setState(() => _endsAt = null);
+                          _revalidate();
                         },
                       ),
+                onTap: _pickEndsAt,
+              ),
+              if (_errorFor(PollField.endsAt) != null)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(72, 0, 20, 8),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      _errorFor(PollField.endsAt)!,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: colorScheme.error,
+                      ),
                     ),
-                    SliverPadding(
-                      padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
-                      sliver: SliverToBoxAdapter(
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: TextButton.icon(
-                            onPressed: canAdd ? _addOption : null,
-                            icon: const Icon(Icons.add),
-                            label: const Text('Add option'),
-                          ),
+                  ),
+                ),
+              const SizedBox(height: 24),
+            ],
+          ),
+        ),
+      ],
+    );
+
+    // A Material (not a decorated Container) so the ListTiles below can
+    // paint their ink on it.
+    return Material(
+      color: theme.scaffoldBackgroundColor,
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+      child: Column(
+        mainAxisSize: fillsHeight ? MainAxisSize.max : MainAxisSize.min,
+        children: [
+          // No drag handle: the sheet can't be swiped away.
+          const SizedBox(height: 12),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              children: [
+                Icon(Icons.poll_outlined, color: colorScheme.primary),
+                const SizedBox(width: 12),
+                Text(
+                  widget.initial == null ? 'Create poll' : 'Edit poll',
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Spacer(),
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.maybePop(context),
+                ),
+              ],
+            ),
+          ),
+          if (widget.standalone)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 4, 20, 8),
+              child: CommunityPickerButton(
+                community: selectedCommunity,
+                onPressed: _isSubmitting ? () {} : pickCommunity,
+              ),
+            ),
+          const Divider(),
+          if (fillsHeight)
+            Expanded(child: content)
+          else
+            Flexible(child: content),
+          SafeArea(
+            top: false,
+            child: Container(
+              padding: EdgeInsets.fromLTRB(
+                20,
+                12,
+                20,
+                // A standalone sheet's host already lifts it above the
+                // keyboard.
+                12 +
+                    (widget.standalone
+                        ? 0
+                        : MediaQuery.viewInsetsOf(context).bottom),
+              ),
+              decoration: BoxDecoration(
+                color: theme.scaffoldBackgroundColor,
+                border: Border(top: BorderSide(color: theme.dividerColor)),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (_submitError != null)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Text(
+                        _submitError!,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: colorScheme.error,
                         ),
                       ),
                     ),
-                    const SliverToBoxAdapter(child: Divider()),
-                    SliverToBoxAdapter(
-                      child: Column(
-                        children: [
-                          SwitchListTile.adaptive(
-                            value: _allowsMultiple,
-                            onChanged: (v) =>
-                                setState(() => _allowsMultiple = v),
-                            secondary: const Icon(Icons.checklist_rounded),
-                            title: const Text('Allow multiple choices'),
-                            subtitle: const Text(
-                              'Voters can pick more than one option',
-                            ),
-                          ),
-                          SwitchListTile.adaptive(
-                            value: _isAnonymous,
-                            onChanged: (v) => setState(() => _isAnonymous = v),
-                            secondary: const Icon(
-                              Icons.visibility_off_outlined,
-                            ),
-                            title: const Text('Anonymous votes'),
-                            subtitle: const Text(
-                              'Only you can see who voted for what',
-                            ),
-                          ),
-                          ListTile(
-                            leading: const Icon(Icons.timer_outlined),
-                            title: const Text('End time'),
-                            subtitle: Text(
-                              _endsAt == null
-                                  ? 'No end time — poll stays open'
-                                  : DateFormat(
-                                      'EEE, d MMM yyyy • HH:mm',
-                                    ).format(_endsAt!),
-                              style: _errorFor(PollField.endsAt) != null
-                                  ? TextStyle(color: colorScheme.error)
-                                  : null,
-                            ),
-                            trailing: _endsAt == null
-                                ? const Icon(Icons.chevron_right)
-                                : IconButton(
-                                    tooltip: 'Remove end time',
-                                    icon: const Icon(Icons.close),
-                                    onPressed: () {
-                                      setState(() => _endsAt = null);
-                                      _revalidate();
-                                    },
-                                  ),
-                            onTap: _pickEndsAt,
-                          ),
-                          if (_errorFor(PollField.endsAt) != null)
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(72, 0, 20, 8),
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  _errorFor(PollField.endsAt)!,
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                    color: colorScheme.error,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          const SizedBox(height: 24),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SafeArea(
-                top: false,
-                child: Container(
-                  padding: EdgeInsets.fromLTRB(
-                    20,
-                    12,
-                    20,
-                    12 + MediaQuery.viewInsetsOf(context).bottom,
-                  ),
-                  decoration: BoxDecoration(
-                    color: theme.scaffoldBackgroundColor,
-                    border: Border(top: BorderSide(color: theme.dividerColor)),
-                  ),
-                  child: SizedBox(
+                  SizedBox(
                     width: double.infinity,
                     child: FilledButton.icon(
                       style: FilledButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                       ),
-                      onPressed: _submit,
-                      icon: const Icon(Icons.check),
+                      onPressed: _isSubmitting ? null : _submit,
+                      icon: _isSubmitting
+                          ? SizedBox.square(
+                              dimension: 18,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: colorScheme.onPrimary,
+                              ),
+                            )
+                          : Icon(
+                              widget.standalone
+                                  ? Icons.send_rounded
+                                  : Icons.check,
+                            ),
                       label: Text(
-                        widget.initial == null
+                        widget.standalone
+                            ? (_isSubmitting ? 'Posting…' : 'Post poll')
+                            : widget.initial == null
                             ? 'Add poll to post'
                             : 'Save poll',
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
-        );
-      },
+        ],
+      ),
     );
   }
 }
@@ -521,7 +671,7 @@ class _OptionRow extends StatelessWidget {
   }
 }
 
-/// Compact summary of a [PollDraft] shown in the Add Post screen once a poll
+/// Compact summary of a [PollDraft] shown in the Add Post sheet once a poll
 /// has been attached, with edit/remove affordances.
 class PollDraftPreview extends StatelessWidget {
   final PollDraft draft;
@@ -540,6 +690,7 @@ class PollDraftPreview extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     return Card.outlined(
+      margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onEdit,
