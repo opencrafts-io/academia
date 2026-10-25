@@ -139,17 +139,24 @@ class MainActivity : AudioServiceFragmentActivity() {
             .setAutoCancel(false)
             .setOnlyAlertOnce(true)
 
+        // Flutter normally clears this notification when a phase ends, but if
+        // the app is killed first nothing does, and the countdown chronometer
+        // keeps running into negative time. Let the system drop it instead.
         if (isRunning) {
+            val now = System.currentTimeMillis()
+            val endsAt = endsAtEpochMillis ?: now + remainingSeconds * 1000L
             builder
-                .setWhen(
-                    endsAtEpochMillis
-                        ?: System.currentTimeMillis() + remainingSeconds * 1000L,
-                )
+                .setWhen(endsAt)
                 .setShowWhen(true)
                 .setUsesChronometer(true)
                 .setChronometerCountDown(true)
+                .setTimeoutAfter(
+                    (endsAt - now).coerceAtLeast(0L) + POMODORO_OVERRUN_GRACE_MILLIS,
+                )
         } else {
-            builder.setShowWhen(false)
+            builder
+                .setShowWhen(false)
+                .setTimeoutAfter(POMODORO_PAUSED_TIMEOUT_MILLIS)
         }
 
         manager.notify(POMODORO_NOTIFICATION_ID, builder.build())
@@ -182,5 +189,9 @@ class MainActivity : AudioServiceFragmentActivity() {
         const val POMODORO_NOTIFICATION_ID = 7521
         const val POMODORO_PREFERENCES = "pomodoro_status"
         const val POMODORO_SESSION_KEY = "session_id"
+        const val POMODORO_OVERRUN_GRACE_MILLIS = 60_000L
+
+        // Matches PomodoroCubit.activityCheckInterval.
+        const val POMODORO_PAUSED_TIMEOUT_MILLIS = 3 * 60 * 60 * 1000L
     }
 }

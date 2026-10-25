@@ -26,21 +26,35 @@ class PomodoroCubit extends SafeCubit<PomodoroState> {
   final PomodoroSessionStore sessionStore;
   final PomodoroStatusSurface statusSurface;
 
+  /// How long a session may go on before the timer pauses itself and asks
+  /// whether the user is still there, so an abandoned timer can't run on
+  /// indefinitely.
+  static const activityCheckInterval = Duration(hours: 3);
+
   Future<void> get ready => _ready;
 
   Timer? _ticker;
   late final Future<void> _ready;
   DateTime? _phaseEndsAt;
   String? _sessionId;
+  DateTime? _activeSince;
   StreamSubscription<PomodoroTodoItem?>? _linkedTodoSubscription;
 
   Future<void> start() async {
     await _ready;
     if (state.isRunning) return;
 
-    _phaseEndsAt = DateTime.now().add(state.remaining);
-    _sessionId ??= DateTime.now().microsecondsSinceEpoch.toString();
-    emit(state.copyWith(isRunning: true));
+    final now = DateTime.now();
+    // Pressing play once the check is due counts as the user confirming
+    // they're still there, so the window starts over.
+    if (_activeSince == null ||
+        state.awaitingActivityCheck ||
+        _activityCheckDue(now)) {
+      _activeSince = now;
+    }
+    _phaseEndsAt = now.add(state.remaining);
+    _sessionId ??= now.microsecondsSinceEpoch.toString();
+    emit(state.copyWith(isRunning: true, awaitingActivityCheck: false));
     _ticker = Timer.periodic(const Duration(seconds: 1), (_) => _tick());
     await _persistSession();
     await _showStatus(start: true);
@@ -48,11 +62,29 @@ class PomodoroCubit extends SafeCubit<PomodoroState> {
 
   Future<void> pause() async {
     await _ready;
+    await _pause();
+  }
+
+  /// Clears a pending activity check without resuming the timer.
+  Future<void> dismissActivityCheck() async {
+    await _ready;
+    if (!state.awaitingActivityCheck) return;
+    emit(state.copyWith(awaitingActivityCheck: false));
+    await _persistSession();
+  }
+
+  Future<void> _pause({bool awaitingActivityCheck = false}) async {
     if (!state.isRunning) return;
     final remaining = _currentRemaining();
     _ticker?.cancel();
     _phaseEndsAt = null;
-    emit(state.copyWith(isRunning: false, remaining: remaining));
+    emit(
+      state.copyWith(
+        isRunning: false,
+        remaining: remaining,
+        awaitingActivityCheck: awaitingActivityCheck,
+      ),
+    );
     await _persistSession();
     await _showStatus(start: false);
   }
@@ -63,7 +95,14 @@ class PomodoroCubit extends SafeCubit<PomodoroState> {
     _ticker?.cancel();
     _phaseEndsAt = null;
     _sessionId = null;
-    emit(state.copyWith(isRunning: false, remaining: state.totalDuration));
+    _activeSince = null;
+    emit(
+      state.copyWith(
+        isRunning: false,
+        remaining: state.totalDuration,
+        awaitingActivityCheck: false,
+      ),
+    );
     if (sessionId != null) {
       await statusSurface.stop(sessionId);
     }
@@ -146,7 +185,18 @@ class PomodoroCubit extends SafeCubit<PomodoroState> {
       unawaited(_advancePhase(remainingOverride: Duration.zero));
       return;
     }
+    if (_activityCheckDue(DateTime.now())) {
+      _vibrate();
+      unawaited(_pause(awaitingActivityCheck: true));
+      return;
+    }
     emit(state.copyWith(remaining: next));
+  }
+
+  bool _activityCheckDue(DateTime now) {
+    final activeSince = _activeSince;
+    return activeSince != null &&
+        now.difference(activeSince) >= activityCheckInterval;
   }
 
   Future<void> _advancePhase({Duration? remainingOverride}) async {
@@ -251,7 +301,15 @@ class PomodoroCubit extends SafeCubit<PomodoroState> {
     final remaining = restoredRemaining.isNegative
         ? Duration.zero
         : Duration(seconds: (restoredRemaining.inMilliseconds / 1000).ceil());
-    final isRunning = snapshot.isRunning && remaining > Duration.zero;
+    _activeSince = snapshot.activeSinceEpochMillis == null
+        ? null
+        : DateTime.fromMillisecondsSinceEpoch(snapshot.activeSinceEpochMillis!);
+    final phaseRunning = snapshot.isRunning && remaining > Duration.zero;
+    // A timer left running while the app was closed may have outlived the
+    // activity window; restore it paused and ask instead of resuming.
+    final activityCheckDue =
+        phaseRunning && _activityCheckDue(DateTime.now());
+    final isRunning = phaseRunning && !activityCheckDue;
     _phaseEndsAt = isRunning ? endsAt : null;
     _sessionId = snapshot.sessionId;
 
@@ -274,6 +332,8 @@ class PomodoroCubit extends SafeCubit<PomodoroState> {
         linkedTodoItemLocalId: snapshot.linkedTodoLocalId,
         linkedTodoItemTitle: linkedItem?.title,
         trackedFocusedSeconds: linkedItem?.focusedSeconds ?? 0,
+        awaitingActivityCheck:
+            snapshot.awaitingActivityCheck || activityCheckDue,
       ),
     );
 
@@ -284,6 +344,10 @@ class PomodoroCubit extends SafeCubit<PomodoroState> {
     if (snapshot.isRunning && remaining == Duration.zero) {
       await _advancePhase(remainingOverride: Duration.zero);
       return;
+    }
+
+    if (activityCheckDue) {
+      await _persistSession();
     }
 
     if (isRunning) {
@@ -307,6 +371,8 @@ class PomodoroCubit extends SafeCubit<PomodoroState> {
       sessionsBeforeLongBreak: state.sessionsBeforeLongBreak,
       sessionId: _sessionId,
       linkedTodoLocalId: state.linkedTodoItemLocalId,
+      activeSinceEpochMillis: _activeSince?.millisecondsSinceEpoch,
+      awaitingActivityCheck: state.awaitingActivityCheck,
     ),
   );
 
