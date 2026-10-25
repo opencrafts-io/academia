@@ -530,26 +530,30 @@ class _PostCardState extends State<PostCard> {
                     },
                   ),
                 ),
-                const SizedBox(height: 8),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: LinkifiedText(
-                    text: widget.post.title,
-                    style: Theme.of(context).textTheme.titleSmall
-                        ?.copyWith(fontWeight: FontWeight.bold),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                if (widget.post.showsTitle) ...[
+                  const SizedBox(height: 8),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: LinkifiedText(
+                      text: widget.post.title,
+                      style: Theme.of(context).textTheme.titleSmall
+                          ?.copyWith(fontWeight: FontWeight.bold),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 8),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: LinkifiedText(
-                    text: widget.post.content,
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
+                ],
+                if (widget.post.showsContent) ...[
+                  const SizedBox(height: 8),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: LinkifiedText(
+                      text: widget.post.content,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                ),
+                ],
                 if (widget.post.attachments.isNotEmpty) ...[
                   const SizedBox(height: 8),
                   FeedAttachmentCarousel(attachments: widget.post.attachments),

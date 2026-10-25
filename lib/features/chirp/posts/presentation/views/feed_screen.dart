@@ -119,10 +119,24 @@ class _FeedPageState extends State<FeedPage>
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        heroTag: 'addPostBtn',
-        onPressed: () => AddPostRoute().push(context),
-        child: const Icon(Icons.add),
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          FloatingActionButton.small(
+            heroTag: 'addPollBtn',
+            tooltip: 'New poll',
+            onPressed: () => AddPostRoute(poll: true).push(context),
+            child: const Icon(Icons.poll_outlined),
+          ),
+          const SizedBox(height: 12),
+          FloatingActionButton(
+            heroTag: 'addPostBtn',
+            tooltip: 'New post',
+            onPressed: () => AddPostRoute().push(context),
+            child: const Icon(Icons.add),
+          ),
+        ],
       ),
     );
   }
