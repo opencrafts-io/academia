@@ -54,15 +54,19 @@ class PostDetailHeader extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
-              LinkifiedText(
-                text: post.title,
-                style: Theme.of(
-                  context,
-                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              LinkifiedText(text: post.content),
+              if (post.showsTitle) ...[
+                const SizedBox(height: 8),
+                LinkifiedText(
+                  text: post.title,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                ),
+              ],
+              if (post.showsContent) ...[
+                const SizedBox(height: 8),
+                LinkifiedText(text: post.content),
+              ],
             ],
           );
         },

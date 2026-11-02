@@ -19,7 +19,10 @@ mixin _$PomodoroState {
 /// after every long break.
  int get completedFocusSessions; Duration get focusDuration; Duration get shortBreakDuration; Duration get longBreakDuration;/// How many focus sessions happen before a long break is taken.
  int get sessionsBeforeLongBreak;/// The todo item this session is tracking time against, if any.
- int? get linkedTodoItemLocalId; String? get linkedTodoItemTitle; int get trackedFocusedSeconds;
+ int? get linkedTodoItemLocalId; String? get linkedTodoItemTitle; int get trackedFocusedSeconds;/// Set when the timer was paused automatically because the session has
+/// been going for `PomodoroCubit.activityCheckInterval` without the user
+/// confirming they're still there.
+ bool get awaitingActivityCheck;
 /// Create a copy of PomodoroState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -31,20 +34,20 @@ $PomodoroStateCopyWith<PomodoroState> get copyWith => _$PomodoroStateCopyWithImp
 @override
 bool operator ==(Object other) {
   final _this = this as PomodoroState;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PomodoroState&&(identical(other.phase, _this.phase) || other.phase == _this.phase)&&(identical(other.remaining, _this.remaining) || other.remaining == _this.remaining)&&(identical(other.isRunning, _this.isRunning) || other.isRunning == _this.isRunning)&&(identical(other.completedFocusSessions, _this.completedFocusSessions) || other.completedFocusSessions == _this.completedFocusSessions)&&(identical(other.focusDuration, _this.focusDuration) || other.focusDuration == _this.focusDuration)&&(identical(other.shortBreakDuration, _this.shortBreakDuration) || other.shortBreakDuration == _this.shortBreakDuration)&&(identical(other.longBreakDuration, _this.longBreakDuration) || other.longBreakDuration == _this.longBreakDuration)&&(identical(other.sessionsBeforeLongBreak, _this.sessionsBeforeLongBreak) || other.sessionsBeforeLongBreak == _this.sessionsBeforeLongBreak)&&(identical(other.linkedTodoItemLocalId, _this.linkedTodoItemLocalId) || other.linkedTodoItemLocalId == _this.linkedTodoItemLocalId)&&(identical(other.linkedTodoItemTitle, _this.linkedTodoItemTitle) || other.linkedTodoItemTitle == _this.linkedTodoItemTitle)&&(identical(other.trackedFocusedSeconds, _this.trackedFocusedSeconds) || other.trackedFocusedSeconds == _this.trackedFocusedSeconds));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PomodoroState&&(identical(other.phase, _this.phase) || other.phase == _this.phase)&&(identical(other.remaining, _this.remaining) || other.remaining == _this.remaining)&&(identical(other.isRunning, _this.isRunning) || other.isRunning == _this.isRunning)&&(identical(other.completedFocusSessions, _this.completedFocusSessions) || other.completedFocusSessions == _this.completedFocusSessions)&&(identical(other.focusDuration, _this.focusDuration) || other.focusDuration == _this.focusDuration)&&(identical(other.shortBreakDuration, _this.shortBreakDuration) || other.shortBreakDuration == _this.shortBreakDuration)&&(identical(other.longBreakDuration, _this.longBreakDuration) || other.longBreakDuration == _this.longBreakDuration)&&(identical(other.sessionsBeforeLongBreak, _this.sessionsBeforeLongBreak) || other.sessionsBeforeLongBreak == _this.sessionsBeforeLongBreak)&&(identical(other.linkedTodoItemLocalId, _this.linkedTodoItemLocalId) || other.linkedTodoItemLocalId == _this.linkedTodoItemLocalId)&&(identical(other.linkedTodoItemTitle, _this.linkedTodoItemTitle) || other.linkedTodoItemTitle == _this.linkedTodoItemTitle)&&(identical(other.trackedFocusedSeconds, _this.trackedFocusedSeconds) || other.trackedFocusedSeconds == _this.trackedFocusedSeconds)&&(identical(other.awaitingActivityCheck, _this.awaitingActivityCheck) || other.awaitingActivityCheck == _this.awaitingActivityCheck));
 }
 
 
 @override
 int get hashCode {
   final _this = this as PomodoroState;
-  return Object.hash(runtimeType,_this.phase,_this.remaining,_this.isRunning,_this.completedFocusSessions,_this.focusDuration,_this.shortBreakDuration,_this.longBreakDuration,_this.sessionsBeforeLongBreak,_this.linkedTodoItemLocalId,_this.linkedTodoItemTitle,_this.trackedFocusedSeconds);
+  return Object.hash(runtimeType,_this.phase,_this.remaining,_this.isRunning,_this.completedFocusSessions,_this.focusDuration,_this.shortBreakDuration,_this.longBreakDuration,_this.sessionsBeforeLongBreak,_this.linkedTodoItemLocalId,_this.linkedTodoItemTitle,_this.trackedFocusedSeconds,_this.awaitingActivityCheck);
 }
 
 @override
 String toString() {
   final _this = this as PomodoroState;
-  return 'PomodoroState(phase: ${_this.phase}, remaining: ${_this.remaining}, isRunning: ${_this.isRunning}, completedFocusSessions: ${_this.completedFocusSessions}, focusDuration: ${_this.focusDuration}, shortBreakDuration: ${_this.shortBreakDuration}, longBreakDuration: ${_this.longBreakDuration}, sessionsBeforeLongBreak: ${_this.sessionsBeforeLongBreak}, linkedTodoItemLocalId: ${_this.linkedTodoItemLocalId}, linkedTodoItemTitle: ${_this.linkedTodoItemTitle}, trackedFocusedSeconds: ${_this.trackedFocusedSeconds})';
+  return 'PomodoroState(phase: ${_this.phase}, remaining: ${_this.remaining}, isRunning: ${_this.isRunning}, completedFocusSessions: ${_this.completedFocusSessions}, focusDuration: ${_this.focusDuration}, shortBreakDuration: ${_this.shortBreakDuration}, longBreakDuration: ${_this.longBreakDuration}, sessionsBeforeLongBreak: ${_this.sessionsBeforeLongBreak}, linkedTodoItemLocalId: ${_this.linkedTodoItemLocalId}, linkedTodoItemTitle: ${_this.linkedTodoItemTitle}, trackedFocusedSeconds: ${_this.trackedFocusedSeconds}, awaitingActivityCheck: ${_this.awaitingActivityCheck})';
 }
 
 
@@ -55,7 +58,7 @@ abstract mixin class $PomodoroStateCopyWith<$Res>  {
   factory $PomodoroStateCopyWith(PomodoroState value, $Res Function(PomodoroState) _then) = _$PomodoroStateCopyWithImpl;
 @useResult
 $Res call({
- PomodoroPhase phase, Duration remaining, bool isRunning, int completedFocusSessions, Duration focusDuration, Duration shortBreakDuration, Duration longBreakDuration, int sessionsBeforeLongBreak, int? linkedTodoItemLocalId, String? linkedTodoItemTitle, int trackedFocusedSeconds
+ PomodoroPhase phase, Duration remaining, bool isRunning, int completedFocusSessions, Duration focusDuration, Duration shortBreakDuration, Duration longBreakDuration, int sessionsBeforeLongBreak, int? linkedTodoItemLocalId, String? linkedTodoItemTitle, int trackedFocusedSeconds, bool awaitingActivityCheck
 });
 
 
@@ -72,7 +75,7 @@ class _$PomodoroStateCopyWithImpl<$Res>
 
 /// Create a copy of PomodoroState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? phase = null,Object? remaining = null,Object? isRunning = null,Object? completedFocusSessions = null,Object? focusDuration = null,Object? shortBreakDuration = null,Object? longBreakDuration = null,Object? sessionsBeforeLongBreak = null,Object? linkedTodoItemLocalId = freezed,Object? linkedTodoItemTitle = freezed,Object? trackedFocusedSeconds = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? phase = null,Object? remaining = null,Object? isRunning = null,Object? completedFocusSessions = null,Object? focusDuration = null,Object? shortBreakDuration = null,Object? longBreakDuration = null,Object? sessionsBeforeLongBreak = null,Object? linkedTodoItemLocalId = freezed,Object? linkedTodoItemTitle = freezed,Object? trackedFocusedSeconds = null,Object? awaitingActivityCheck = null,}) {
   return _then(PomodoroState(
 phase: null == phase ? _self.phase : phase // ignore: cast_nullable_to_non_nullable
 as PomodoroPhase,remaining: null == remaining ? _self.remaining : remaining // ignore: cast_nullable_to_non_nullable
@@ -85,7 +88,8 @@ as Duration,sessionsBeforeLongBreak: null == sessionsBeforeLongBreak ? _self.ses
 as int,linkedTodoItemLocalId: freezed == linkedTodoItemLocalId ? _self.linkedTodoItemLocalId : linkedTodoItemLocalId // ignore: cast_nullable_to_non_nullable
 as int?,linkedTodoItemTitle: freezed == linkedTodoItemTitle ? _self.linkedTodoItemTitle : linkedTodoItemTitle // ignore: cast_nullable_to_non_nullable
 as String?,trackedFocusedSeconds: null == trackedFocusedSeconds ? _self.trackedFocusedSeconds : trackedFocusedSeconds // ignore: cast_nullable_to_non_nullable
-as int,
+as int,awaitingActivityCheck: null == awaitingActivityCheck ? _self.awaitingActivityCheck : awaitingActivityCheck // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -170,10 +174,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( PomodoroPhase phase,  Duration remaining,  bool isRunning,  int completedFocusSessions,  Duration focusDuration,  Duration shortBreakDuration,  Duration longBreakDuration,  int sessionsBeforeLongBreak,  int? linkedTodoItemLocalId,  String? linkedTodoItemTitle,  int trackedFocusedSeconds)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( PomodoroPhase phase,  Duration remaining,  bool isRunning,  int completedFocusSessions,  Duration focusDuration,  Duration shortBreakDuration,  Duration longBreakDuration,  int sessionsBeforeLongBreak,  int? linkedTodoItemLocalId,  String? linkedTodoItemTitle,  int trackedFocusedSeconds,  bool awaitingActivityCheck)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PomodoroState() when $default != null:
-return $default(_that.phase,_that.remaining,_that.isRunning,_that.completedFocusSessions,_that.focusDuration,_that.shortBreakDuration,_that.longBreakDuration,_that.sessionsBeforeLongBreak,_that.linkedTodoItemLocalId,_that.linkedTodoItemTitle,_that.trackedFocusedSeconds);case _:
+return $default(_that.phase,_that.remaining,_that.isRunning,_that.completedFocusSessions,_that.focusDuration,_that.shortBreakDuration,_that.longBreakDuration,_that.sessionsBeforeLongBreak,_that.linkedTodoItemLocalId,_that.linkedTodoItemTitle,_that.trackedFocusedSeconds,_that.awaitingActivityCheck);case _:
   return orElse();
 
 }
@@ -191,10 +195,10 @@ return $default(_that.phase,_that.remaining,_that.isRunning,_that.completedFocus
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( PomodoroPhase phase,  Duration remaining,  bool isRunning,  int completedFocusSessions,  Duration focusDuration,  Duration shortBreakDuration,  Duration longBreakDuration,  int sessionsBeforeLongBreak,  int? linkedTodoItemLocalId,  String? linkedTodoItemTitle,  int trackedFocusedSeconds)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( PomodoroPhase phase,  Duration remaining,  bool isRunning,  int completedFocusSessions,  Duration focusDuration,  Duration shortBreakDuration,  Duration longBreakDuration,  int sessionsBeforeLongBreak,  int? linkedTodoItemLocalId,  String? linkedTodoItemTitle,  int trackedFocusedSeconds,  bool awaitingActivityCheck)  $default,) {final _that = this;
 switch (_that) {
 case _PomodoroState():
-return $default(_that.phase,_that.remaining,_that.isRunning,_that.completedFocusSessions,_that.focusDuration,_that.shortBreakDuration,_that.longBreakDuration,_that.sessionsBeforeLongBreak,_that.linkedTodoItemLocalId,_that.linkedTodoItemTitle,_that.trackedFocusedSeconds);case _:
+return $default(_that.phase,_that.remaining,_that.isRunning,_that.completedFocusSessions,_that.focusDuration,_that.shortBreakDuration,_that.longBreakDuration,_that.sessionsBeforeLongBreak,_that.linkedTodoItemLocalId,_that.linkedTodoItemTitle,_that.trackedFocusedSeconds,_that.awaitingActivityCheck);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -211,10 +215,10 @@ return $default(_that.phase,_that.remaining,_that.isRunning,_that.completedFocus
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( PomodoroPhase phase,  Duration remaining,  bool isRunning,  int completedFocusSessions,  Duration focusDuration,  Duration shortBreakDuration,  Duration longBreakDuration,  int sessionsBeforeLongBreak,  int? linkedTodoItemLocalId,  String? linkedTodoItemTitle,  int trackedFocusedSeconds)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( PomodoroPhase phase,  Duration remaining,  bool isRunning,  int completedFocusSessions,  Duration focusDuration,  Duration shortBreakDuration,  Duration longBreakDuration,  int sessionsBeforeLongBreak,  int? linkedTodoItemLocalId,  String? linkedTodoItemTitle,  int trackedFocusedSeconds,  bool awaitingActivityCheck)?  $default,) {final _that = this;
 switch (_that) {
 case _PomodoroState() when $default != null:
-return $default(_that.phase,_that.remaining,_that.isRunning,_that.completedFocusSessions,_that.focusDuration,_that.shortBreakDuration,_that.longBreakDuration,_that.sessionsBeforeLongBreak,_that.linkedTodoItemLocalId,_that.linkedTodoItemTitle,_that.trackedFocusedSeconds);case _:
+return $default(_that.phase,_that.remaining,_that.isRunning,_that.completedFocusSessions,_that.focusDuration,_that.shortBreakDuration,_that.longBreakDuration,_that.sessionsBeforeLongBreak,_that.linkedTodoItemLocalId,_that.linkedTodoItemTitle,_that.trackedFocusedSeconds,_that.awaitingActivityCheck);case _:
   return null;
 
 }
@@ -226,7 +230,7 @@ return $default(_that.phase,_that.remaining,_that.isRunning,_that.completedFocus
 
 
 class _PomodoroState extends PomodoroState {
-  const _PomodoroState({required this.phase, required this.remaining, this.isRunning = false, this.completedFocusSessions = 0, this.focusDuration = const Duration(minutes: 25), this.shortBreakDuration = const Duration(minutes: 5), this.longBreakDuration = const Duration(minutes: 15), this.sessionsBeforeLongBreak = 4, this.linkedTodoItemLocalId, this.linkedTodoItemTitle, this.trackedFocusedSeconds = 0}): super._();
+  const _PomodoroState({required this.phase, required this.remaining, this.isRunning = false, this.completedFocusSessions = 0, this.focusDuration = const Duration(minutes: 25), this.shortBreakDuration = const Duration(minutes: 5), this.longBreakDuration = const Duration(minutes: 15), this.sessionsBeforeLongBreak = 4, this.linkedTodoItemLocalId, this.linkedTodoItemTitle, this.trackedFocusedSeconds = 0, this.awaitingActivityCheck = false}): super._();
   
 
 @override final  PomodoroPhase phase;
@@ -244,6 +248,10 @@ class _PomodoroState extends PomodoroState {
 @override final  int? linkedTodoItemLocalId;
 @override final  String? linkedTodoItemTitle;
 @override@JsonKey() final  int trackedFocusedSeconds;
+/// Set when the timer was paused automatically because the session has
+/// been going for `PomodoroCubit.activityCheckInterval` without the user
+/// confirming they're still there.
+@override@JsonKey() final  bool awaitingActivityCheck;
 
 /// Create a copy of PomodoroState
 /// with the given fields replaced by the non-null parameter values.
@@ -255,18 +263,18 @@ _$PomodoroStateCopyWith<_PomodoroState> get copyWith => __$PomodoroStateCopyWith
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PomodoroState&&(identical(other.phase, phase) || other.phase == phase)&&(identical(other.remaining, remaining) || other.remaining == remaining)&&(identical(other.isRunning, isRunning) || other.isRunning == isRunning)&&(identical(other.completedFocusSessions, completedFocusSessions) || other.completedFocusSessions == completedFocusSessions)&&(identical(other.focusDuration, focusDuration) || other.focusDuration == focusDuration)&&(identical(other.shortBreakDuration, shortBreakDuration) || other.shortBreakDuration == shortBreakDuration)&&(identical(other.longBreakDuration, longBreakDuration) || other.longBreakDuration == longBreakDuration)&&(identical(other.sessionsBeforeLongBreak, sessionsBeforeLongBreak) || other.sessionsBeforeLongBreak == sessionsBeforeLongBreak)&&(identical(other.linkedTodoItemLocalId, linkedTodoItemLocalId) || other.linkedTodoItemLocalId == linkedTodoItemLocalId)&&(identical(other.linkedTodoItemTitle, linkedTodoItemTitle) || other.linkedTodoItemTitle == linkedTodoItemTitle)&&(identical(other.trackedFocusedSeconds, trackedFocusedSeconds) || other.trackedFocusedSeconds == trackedFocusedSeconds));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PomodoroState&&(identical(other.phase, phase) || other.phase == phase)&&(identical(other.remaining, remaining) || other.remaining == remaining)&&(identical(other.isRunning, isRunning) || other.isRunning == isRunning)&&(identical(other.completedFocusSessions, completedFocusSessions) || other.completedFocusSessions == completedFocusSessions)&&(identical(other.focusDuration, focusDuration) || other.focusDuration == focusDuration)&&(identical(other.shortBreakDuration, shortBreakDuration) || other.shortBreakDuration == shortBreakDuration)&&(identical(other.longBreakDuration, longBreakDuration) || other.longBreakDuration == longBreakDuration)&&(identical(other.sessionsBeforeLongBreak, sessionsBeforeLongBreak) || other.sessionsBeforeLongBreak == sessionsBeforeLongBreak)&&(identical(other.linkedTodoItemLocalId, linkedTodoItemLocalId) || other.linkedTodoItemLocalId == linkedTodoItemLocalId)&&(identical(other.linkedTodoItemTitle, linkedTodoItemTitle) || other.linkedTodoItemTitle == linkedTodoItemTitle)&&(identical(other.trackedFocusedSeconds, trackedFocusedSeconds) || other.trackedFocusedSeconds == trackedFocusedSeconds)&&(identical(other.awaitingActivityCheck, awaitingActivityCheck) || other.awaitingActivityCheck == awaitingActivityCheck));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,phase,remaining,isRunning,completedFocusSessions,focusDuration,shortBreakDuration,longBreakDuration,sessionsBeforeLongBreak,linkedTodoItemLocalId,linkedTodoItemTitle,trackedFocusedSeconds);
+    return Object.hash(runtimeType,phase,remaining,isRunning,completedFocusSessions,focusDuration,shortBreakDuration,longBreakDuration,sessionsBeforeLongBreak,linkedTodoItemLocalId,linkedTodoItemTitle,trackedFocusedSeconds,awaitingActivityCheck);
 }
 
 @override
 String toString() {
-    return 'PomodoroState(phase: $phase, remaining: $remaining, isRunning: $isRunning, completedFocusSessions: $completedFocusSessions, focusDuration: $focusDuration, shortBreakDuration: $shortBreakDuration, longBreakDuration: $longBreakDuration, sessionsBeforeLongBreak: $sessionsBeforeLongBreak, linkedTodoItemLocalId: $linkedTodoItemLocalId, linkedTodoItemTitle: $linkedTodoItemTitle, trackedFocusedSeconds: $trackedFocusedSeconds)';
+    return 'PomodoroState(phase: $phase, remaining: $remaining, isRunning: $isRunning, completedFocusSessions: $completedFocusSessions, focusDuration: $focusDuration, shortBreakDuration: $shortBreakDuration, longBreakDuration: $longBreakDuration, sessionsBeforeLongBreak: $sessionsBeforeLongBreak, linkedTodoItemLocalId: $linkedTodoItemLocalId, linkedTodoItemTitle: $linkedTodoItemTitle, trackedFocusedSeconds: $trackedFocusedSeconds, awaitingActivityCheck: $awaitingActivityCheck)';
 }
 
 
@@ -277,7 +285,7 @@ abstract mixin class _$PomodoroStateCopyWith<$Res> implements $PomodoroStateCopy
   factory _$PomodoroStateCopyWith(_PomodoroState value, $Res Function(_PomodoroState) _then) = __$PomodoroStateCopyWithImpl;
 @override @useResult
 $Res call({
- PomodoroPhase phase, Duration remaining, bool isRunning, int completedFocusSessions, Duration focusDuration, Duration shortBreakDuration, Duration longBreakDuration, int sessionsBeforeLongBreak, int? linkedTodoItemLocalId, String? linkedTodoItemTitle, int trackedFocusedSeconds
+ PomodoroPhase phase, Duration remaining, bool isRunning, int completedFocusSessions, Duration focusDuration, Duration shortBreakDuration, Duration longBreakDuration, int sessionsBeforeLongBreak, int? linkedTodoItemLocalId, String? linkedTodoItemTitle, int trackedFocusedSeconds, bool awaitingActivityCheck
 });
 
 
@@ -294,7 +302,7 @@ class __$PomodoroStateCopyWithImpl<$Res>
 
 /// Create a copy of PomodoroState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? phase = null,Object? remaining = null,Object? isRunning = null,Object? completedFocusSessions = null,Object? focusDuration = null,Object? shortBreakDuration = null,Object? longBreakDuration = null,Object? sessionsBeforeLongBreak = null,Object? linkedTodoItemLocalId = freezed,Object? linkedTodoItemTitle = freezed,Object? trackedFocusedSeconds = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? phase = null,Object? remaining = null,Object? isRunning = null,Object? completedFocusSessions = null,Object? focusDuration = null,Object? shortBreakDuration = null,Object? longBreakDuration = null,Object? sessionsBeforeLongBreak = null,Object? linkedTodoItemLocalId = freezed,Object? linkedTodoItemTitle = freezed,Object? trackedFocusedSeconds = null,Object? awaitingActivityCheck = null,}) {
   return _then(_PomodoroState(
 phase: null == phase ? _self.phase : phase // ignore: cast_nullable_to_non_nullable
 as PomodoroPhase,remaining: null == remaining ? _self.remaining : remaining // ignore: cast_nullable_to_non_nullable
@@ -307,7 +315,8 @@ as Duration,sessionsBeforeLongBreak: null == sessionsBeforeLongBreak ? _self.ses
 as int,linkedTodoItemLocalId: freezed == linkedTodoItemLocalId ? _self.linkedTodoItemLocalId : linkedTodoItemLocalId // ignore: cast_nullable_to_non_nullable
 as int?,linkedTodoItemTitle: freezed == linkedTodoItemTitle ? _self.linkedTodoItemTitle : linkedTodoItemTitle // ignore: cast_nullable_to_non_nullable
 as String?,trackedFocusedSeconds: null == trackedFocusedSeconds ? _self.trackedFocusedSeconds : trackedFocusedSeconds // ignore: cast_nullable_to_non_nullable
-as int,
+as int,awaitingActivityCheck: null == awaitingActivityCheck ? _self.awaitingActivityCheck : awaitingActivityCheck // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

@@ -1,6 +1,6 @@
 import 'package:academia/core/core.dart';
 import 'package:academia/features/chirp/chirp.dart';
-import 'package:academia/features/profile/profile.dart';
+import 'package:profile/profile.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

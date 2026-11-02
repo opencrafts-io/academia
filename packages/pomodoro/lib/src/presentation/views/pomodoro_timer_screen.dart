@@ -26,6 +26,8 @@ class PomodoroTimerScreen extends StatefulWidget {
 }
 
 class _PomodoroTimerScreenState extends State<PomodoroTimerScreen> {
+  bool _activityCheckOpen = false;
+
   @override
   void initState() {
     super.initState();
@@ -40,6 +42,47 @@ class _PomodoroTimerScreenState extends State<PomodoroTimerScreen> {
     await cubit.ready;
     if (!mounted) return;
     await cubit.linkTodoItem(widget.todoLocalId);
+    // The timer may have paused itself while this screen wasn't open.
+    if (mounted && cubit.state.awaitingActivityCheck) {
+      unawaited(_showActivityCheck(cubit));
+    }
+  }
+
+  Future<void> _showActivityCheck(PomodoroCubit cubit) async {
+    if (_activityCheckOpen) return;
+    _activityCheckOpen = true;
+    final hours = PomodoroCubit.activityCheckInterval.inHours;
+    final keepGoing = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) => AlertDialog(
+        icon: const Icon(Icons.timer_outlined),
+        title: const Text("Still focusing?"),
+        content: Text(
+          "Your Pomodoro session has been going for over $hours hours, "
+          "so we paused the timer. Do you want to keep going?",
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: const Text("End session"),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: const Text("Keep going"),
+          ),
+        ],
+      ),
+    );
+    _activityCheckOpen = false;
+    switch (keepGoing) {
+      case true:
+        await cubit.start();
+      case false:
+        await cubit.reset();
+      case null:
+        await cubit.dismissActivityCheck();
+    }
   }
 
   Color _phaseColor(ColorScheme scheme, PomodoroPhase phase) => switch (phase) {
@@ -115,7 +158,11 @@ class _PomodoroTimerScreenState extends State<PomodoroTimerScreen> {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
 
-    return BlocBuilder<PomodoroCubit, PomodoroState>(
+    return BlocConsumer<PomodoroCubit, PomodoroState>(
+      listenWhen: (previous, current) =>
+          !previous.awaitingActivityCheck && current.awaitingActivityCheck,
+      listener: (context, state) =>
+          unawaited(_showActivityCheck(context.read<PomodoroCubit>())),
       builder: (context, state) {
         final color = _phaseColor(scheme, state.phase);
         final cubit = context.read<PomodoroCubit>();

@@ -25,6 +25,9 @@ class SharedPreferencesPomodoroSessionStore implements PomodoroSessionStore {
         sessionsBeforeLongBreak: json['sessionsBeforeLongBreak'] as int,
         sessionId: json['sessionId'] as String?,
         linkedTodoLocalId: json['linkedTodoLocalId'] as int?,
+        activeSinceEpochMillis: json['activeSinceEpochMillis'] as int?,
+        awaitingActivityCheck:
+            json['awaitingActivityCheck'] as bool? ?? false,
       );
     } on Object {
       return null;
@@ -49,6 +52,8 @@ class SharedPreferencesPomodoroSessionStore implements PomodoroSessionStore {
           'sessionsBeforeLongBreak': snapshot.sessionsBeforeLongBreak,
           'sessionId': snapshot.sessionId,
           'linkedTodoLocalId': snapshot.linkedTodoLocalId,
+          'activeSinceEpochMillis': snapshot.activeSinceEpochMillis,
+          'awaitingActivityCheck': snapshot.awaitingActivityCheck,
         }),
       );
     } on Object {

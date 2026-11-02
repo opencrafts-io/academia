@@ -14,6 +14,8 @@ class PomodoroSessionSnapshot {
     this.endsAtEpochMillis,
     this.sessionId,
     this.linkedTodoLocalId,
+    this.activeSinceEpochMillis,
+    this.awaitingActivityCheck = false,
   });
 
   final PomodoroPhase phase;
@@ -27,6 +29,11 @@ class PomodoroSessionSnapshot {
   final int sessionsBeforeLongBreak;
   final String? sessionId;
   final int? linkedTodoLocalId;
+
+  /// When the user started the session or last confirmed they're still using
+  /// it. Drives the automatic pause for abandoned timers.
+  final int? activeSinceEpochMillis;
+  final bool awaitingActivityCheck;
 }
 
 /// Stores one Pomodoro timer snapshot in the host application's local store.
