@@ -1,7 +1,7 @@
 import 'package:academia/features/institution/domain/entities/institution.dart';
 import 'package:academia/features/sherehe/domain/entities/ticket.dart';
 import 'package:academia/features/sherehe/presentation/constants/sherehe_constants.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class TicketUI {
   final Ticket ticket;

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:in_app_update/src/domain/update_campaign.dart';
 
 class AppUpdateRequiredPage extends StatelessWidget {

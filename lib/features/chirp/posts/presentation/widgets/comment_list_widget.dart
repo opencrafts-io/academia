@@ -1,5 +1,5 @@
 import 'package:academia/features/features.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:time_since/time_since.dart';
 
 class CommentsListWidget extends StatelessWidget {

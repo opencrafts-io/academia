@@ -1,6 +1,6 @@
 import 'package:auth/auth.dart';
 import 'package:auth/src/domain/password_policy.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PasswordSignInForm extends StatefulWidget {

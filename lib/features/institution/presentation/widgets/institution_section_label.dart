@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A small icon + bold, primary-colored title used for the pinned section
 /// labels (Profile, Finances, Courses) between institution home page cards.

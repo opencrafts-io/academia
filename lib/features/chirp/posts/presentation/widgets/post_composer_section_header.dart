@@ -1,5 +1,5 @@
 import 'package:academia/gen/assets.gen.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class PostComposerSectionHeader extends StatelessWidget {
   final String title;

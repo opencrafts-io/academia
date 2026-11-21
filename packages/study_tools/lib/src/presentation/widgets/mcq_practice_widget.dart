@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:material3_indicators/material3_indicators.dart';
 
 import '../../domain/entities/study_entities.dart';

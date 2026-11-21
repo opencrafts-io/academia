@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 // Import math for potential use, though not strictly needed for this path
 
 /// A CustomClipper that defines an amoeba-like shape.

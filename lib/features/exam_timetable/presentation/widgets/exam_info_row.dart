@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A compact icon + text row used to display exam metadata (day, time,
 /// venue, coordinator, etc.) inside exam cards.

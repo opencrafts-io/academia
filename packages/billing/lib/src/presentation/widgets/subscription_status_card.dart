@@ -1,5 +1,5 @@
 import 'package:billing/src/domain/domain.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class SubscriptionStatusCard extends StatelessWidget {
   const SubscriptionStatusCard({super.key, required this.status});

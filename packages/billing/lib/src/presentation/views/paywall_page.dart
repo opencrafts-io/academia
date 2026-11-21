@@ -1,7 +1,7 @@
 import 'package:billing/src/domain/domain.dart';
 import 'package:billing/src/presentation/presentation.dart';
 import 'package:billing/src/presentation/widgets/plan_widget.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material3_indicators/material3_indicators.dart';

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:ads/src/ad_service.dart';
 import 'package:ads/src/banner_ad_size.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 

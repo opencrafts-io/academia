@@ -1,7 +1,7 @@
 import 'package:academia/config/config.dart';
 import 'package:agenda/agenda.dart';
 import 'package:courses/courses.dart' as courses;
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';

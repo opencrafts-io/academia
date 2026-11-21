@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class EventImagePickerWidget extends StatelessWidget {
   final File? selectedImage;

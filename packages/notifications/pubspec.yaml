@@ -12,6 +12,7 @@ dependencies:
   awesome_notifications_core: ^0.10.1
   flutter:
     sdk: flutter
+  material_ui: ^1.0.0
   get_it: ^9.2.1
   injectable: ^3.0.0
   onesignal_flutter: ^5.3.4

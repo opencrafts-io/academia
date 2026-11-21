@@ -1,5 +1,5 @@
 import 'package:drift/drift.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A [TypeConverter] that maps Flutter [Color] objects to [int] values
 /// for storage in SQLite via Drift.

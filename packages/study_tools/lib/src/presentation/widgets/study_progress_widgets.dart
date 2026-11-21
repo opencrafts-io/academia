@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:material3_indicators/material3_indicators.dart';
 
 class StudyToolsLoadingView extends StatelessWidget {

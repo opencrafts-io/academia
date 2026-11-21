@@ -1,6 +1,6 @@
 import 'package:academia/features/sherehe/domain/entities/ticket_ui.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class AddedTicketsCard extends StatefulWidget {
   final TicketUI addedTicket;

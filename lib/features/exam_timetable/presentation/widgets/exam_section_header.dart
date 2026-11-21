@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A section title paired with a count badge, used above the upcoming and
 /// past exam lists.

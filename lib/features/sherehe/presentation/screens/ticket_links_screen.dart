@@ -1,6 +1,6 @@
 import 'package:academia/core/clippers/spinning_scallop_indicator.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 

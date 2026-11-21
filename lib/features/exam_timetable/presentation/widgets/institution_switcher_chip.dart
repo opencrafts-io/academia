@@ -1,5 +1,5 @@
 import 'package:academia/features/institution/institution.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// Shown beneath the exam timetable app bar when the user is linked to more

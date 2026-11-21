@@ -2,7 +2,7 @@ import 'package:academia/config/config.dart';
 import 'package:academia/features/institution/domain/domain.dart';
 import 'package:academia/features/sherehe/presentation/constants/sherehe_constants.dart';
 import 'package:academia/features/sherehe/presentation/utils/sherehe_institution_route_args.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 
 class TicketVisibilitySelector extends StatefulWidget {

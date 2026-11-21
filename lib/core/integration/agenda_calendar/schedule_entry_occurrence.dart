@@ -1,5 +1,5 @@
 import 'package:courses/courses.dart' as courses;
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 bool scheduleEntryOccursOnDay(courses.ScheduleEntryEntity entry, DateTime day) {
   if (courses.courseTermHasEndedOn(entry.courseTermEndDate, day)) {

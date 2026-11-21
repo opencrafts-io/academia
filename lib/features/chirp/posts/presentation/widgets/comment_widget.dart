@@ -1,5 +1,5 @@
 import 'package:academia/features/features.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class CommentWidget extends StatelessWidget {
   final Comment reply;

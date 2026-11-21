@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:app_blocker/app_blocker.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';

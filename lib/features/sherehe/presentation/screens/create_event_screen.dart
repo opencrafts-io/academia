@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:academia/features/institution/domain/entities/institution.dart';
 import 'package:profile/profile.dart';
 import 'package:academia/features/sherehe/domain/entities/ticket_ui.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_editor_plus/image_editor_plus.dart';

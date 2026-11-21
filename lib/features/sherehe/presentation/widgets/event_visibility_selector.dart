@@ -2,7 +2,7 @@ import 'package:academia/config/config.dart';
 import 'package:academia/features/institution/domain/domain.dart';
 import 'package:academia/features/sherehe/presentation/constants/sherehe_constants.dart';
 import 'package:academia/features/sherehe/presentation/widgets/modern_input_decoration.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 
 class EventVisibilitySelector extends StatefulWidget {

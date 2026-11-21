@@ -13,6 +13,7 @@ dependencies:
     path: ../analytics
   flutter:
     sdk: flutter
+  material_ui: ^1.0.0
   core:
     path: ../core/
   database:

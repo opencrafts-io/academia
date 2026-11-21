@@ -4,7 +4,7 @@ import 'package:courses/src/domain/entities/course_entity.dart';
 import 'package:courses/src/presentation/bloc/course_cubit.dart';
 import 'package:courses/src/presentation/routes/course_routes.dart';
 import 'package:courses/src/presentation/screens/sync_status_indicator.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material3_indicators/material3_indicators.dart';

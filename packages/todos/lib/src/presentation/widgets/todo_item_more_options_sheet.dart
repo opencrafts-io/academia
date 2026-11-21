@@ -1,6 +1,6 @@
 import 'package:todos/todos.dart';
 import 'package:pomodoro/pomodoro.dart' show formatFocusedDuration;
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class TodoItemMoreOptionsSheet extends StatelessWidget {
   const TodoItemMoreOptionsSheet({

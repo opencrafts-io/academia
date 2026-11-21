@@ -1,6 +1,6 @@
 import 'package:todos/todos.dart';
 import 'package:pomodoro/pomodoro.dart' as pomodoro;
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:vibration/vibration.dart';

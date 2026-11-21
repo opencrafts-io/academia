@@ -1,6 +1,6 @@
 import 'package:academia/core/core.dart';
 import 'package:core/core.dart' as core;
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:academia/features/institution/institution.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'dart:convert';

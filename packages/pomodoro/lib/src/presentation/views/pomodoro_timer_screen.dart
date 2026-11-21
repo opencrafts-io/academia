@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:ads/ads.dart';
 import 'package:material3_indicators/material3_indicators.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pomodoro/src/domain/enums/pomodoro_phase.dart';
 import 'package:pomodoro/src/presentation/cubit/pomodoro_cubit.dart';

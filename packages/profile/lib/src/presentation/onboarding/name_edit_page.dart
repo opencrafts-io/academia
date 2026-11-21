@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/widgets.dart' as flutter_widgets;
 
 import '../../domain/user_profile.dart';
 import '../bloc/profile_bloc.dart';
@@ -21,8 +22,10 @@ class NameEditPage extends StatefulWidget {
 
 class _NameEditPageState extends State<NameEditPage> {
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
-  final _usernameController = TextEditingController();
+  final flutter_widgets.TextEditingController _nameController =
+      flutter_widgets.TextEditingController();
+  final flutter_widgets.TextEditingController _usernameController =
+      flutter_widgets.TextEditingController();
   UserProfile? _profile;
   bool _saving = false;
 
@@ -39,8 +42,6 @@ class _NameEditPageState extends State<NameEditPage> {
 
   @override
   void dispose() {
-    _nameController.dispose();
-    _usernameController.dispose();
     super.dispose();
   }
 

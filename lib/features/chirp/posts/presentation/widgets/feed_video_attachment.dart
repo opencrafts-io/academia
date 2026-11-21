@@ -3,7 +3,7 @@ import 'dart:ui' as ui;
 
 import 'package:academia/features/chirp/chirp.dart';
 import 'package:cached_video_player_plus/cached_video_player_plus.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_thumbnail_video/video_thumbnail.dart' as gt;
 import 'package:loading_indicator_m3e/loading_indicator_m3e.dart';

@@ -1,5 +1,5 @@
 import 'package:todos/src/domain/domain.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A collapsible "Completed (n)" section, kept separate from active items so
 /// a finished task's due date/priority no longer reads as still pending.

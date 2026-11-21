@@ -2,7 +2,7 @@ import 'package:academia/features/exam_timetable/domain/entity/exam_timetable.da
 import 'package:academia/features/exam_timetable/presentation/widgets/countdown_timer.dart';
 import 'package:academia/features/exam_timetable/presentation/widgets/exam_card.dart';
 import 'package:academia/features/exam_timetable/presentation/widgets/exam_section_header.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Renders the scrollable, pull-to-refresh exam list: a countdown to the
 /// next exam, then the upcoming and past exams grouped under section

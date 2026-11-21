@@ -5,7 +5,7 @@ import 'package:courses/src/presentation/screens/lecturer_list_section.dart';
 import 'package:courses/src/presentation/course_host.dart';
 import 'package:courses/src/presentation/screens/course_schedule_entries_section.dart';
 import 'package:courses/src/presentation/screens/sync_status_indicator.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:material3_indicators/material3_indicators.dart';

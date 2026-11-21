@@ -1,6 +1,6 @@
 import 'package:academia/features/chirp/posts/domain/domain.dart';
 import 'package:academia/features/chirp/posts/presentation/utils/poll_validator.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 
 /// Opens the poll builder as a modal sheet. Resolves with a normalized

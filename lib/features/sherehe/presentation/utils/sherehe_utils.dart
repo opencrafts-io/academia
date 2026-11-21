@@ -1,6 +1,6 @@
 import 'package:academia/constants/constants.dart';
 import 'package:academia/features/sherehe/presentation/bloc/scanner_actions/scanner_actions_bloc.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 

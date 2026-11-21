@@ -2,7 +2,7 @@ import 'package:academia/features/institution/domain/entities/institution.dart';
 import 'package:academia/features/sherehe/presentation/constants/sherehe_constants.dart';
 import 'package:academia/features/sherehe/presentation/widgets/event_visibility_selector.dart';
 import 'package:academia/features/sherehe/presentation/widgets/modern_input_decoration.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class BasicEventDetailsPage extends StatelessWidget {
   final GlobalKey<FormState> formKey;

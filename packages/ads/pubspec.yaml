@@ -13,6 +13,7 @@ dependencies:
     path: ../core/
   flutter:
     sdk: flutter
+  material_ui: ^1.0.0
   billing:
     path: ../billing/
   get_it: ^9.2.1

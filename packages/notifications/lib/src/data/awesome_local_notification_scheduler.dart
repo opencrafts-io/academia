@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:awesome_notifications/awesome_notifications.dart' as awesome;
-import 'package:flutter/material.dart' show Color;
+import 'package:material_ui/material_ui.dart' show Color;
 
 import '../application/local_notification_scheduler.dart';
 import '../application/notification_action_handler.dart';

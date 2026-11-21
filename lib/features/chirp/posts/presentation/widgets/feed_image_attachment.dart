@@ -1,6 +1,6 @@
 import 'package:academia/features/chirp/chirp.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:loading_indicator_m3e/loading_indicator_m3e.dart';
 
 /// X.com/Reddit-style feed image: full card width, sized to the image's own

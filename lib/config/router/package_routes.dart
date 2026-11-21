@@ -17,7 +17,7 @@ import 'package:academia/core/integration/profile/screens/profile_view.dart';
 import 'package:academia/injection_container.dart';
 import 'package:profile/profile.dart' show ProfileBloc, ProfileLoadedState;
 import 'package:auth/auth.dart' show PasswordSettingsSheet, SetPasswordUsecase;
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 

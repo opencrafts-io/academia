@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class StudyLibraryHeading extends StatelessWidget {
   const StudyLibraryHeading({required this.count, this.courseLabel, super.key});

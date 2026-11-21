@@ -1,7 +1,7 @@
 import 'package:academia/features/chirp/chirp.dart';
 import 'package:academia/injection_container.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:time_since/time_since.dart';
 

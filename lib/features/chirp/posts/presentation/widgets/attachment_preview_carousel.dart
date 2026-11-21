@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:academia/features/chirp/chirp.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:gal/gal.dart';
 import 'package:get_thumbnail_video/video_thumbnail.dart' as gt;
 import 'package:image_picker/image_picker.dart';

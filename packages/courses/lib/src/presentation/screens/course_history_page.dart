@@ -1,6 +1,6 @@
 import 'package:courses/src/presentation/screens/course_list_page.dart';
 import 'package:courses/src/presentation/bloc/course_cubit.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CourseHistoryPage extends StatefulWidget {

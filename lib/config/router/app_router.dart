@@ -5,7 +5,7 @@ import 'package:academia/config/router/package_routes.dart';
 import 'package:academia/injection_container.dart';
 import 'package:analytics/analytics.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 
 import 'guards/guards.dart';

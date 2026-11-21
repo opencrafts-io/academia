@@ -1,7 +1,7 @@
 import 'package:academia/config/router/routes.dart';
 import 'package:profile/profile.dart';
 import 'package:core/core.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ExamTimetableAppBar extends StatelessWidget
     implements PreferredSizeWidget {

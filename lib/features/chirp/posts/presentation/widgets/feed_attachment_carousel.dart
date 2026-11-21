@@ -1,5 +1,5 @@
 import 'package:academia/features/chirp/chirp.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Full-bleed, X.com/Reddit-style attachment carousel for a post card. Each
 /// page is sized to that attachment's own aspect ratio; the frame animates

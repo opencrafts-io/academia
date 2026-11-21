@@ -1,6 +1,6 @@
 import 'package:auth/src/domain/password_policy.dart';
 import 'package:auth/src/domain/usecases/set_password_usecase.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 

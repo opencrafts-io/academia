@@ -1,5 +1,5 @@
 import 'package:academia/features/institution/domain/entities/institution.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ShereheInstitutionChipSelector extends StatefulWidget {
   final List<Institution> selectedInstitutions;

@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
+import 'package:flutter/material.dart' as flutter_material;
 
 class ProfileStepHeading extends StatelessWidget {
   const ProfileStepHeading({
@@ -80,6 +81,41 @@ InputDecoration profileInputDecoration({
     ),
     focusedErrorBorder: border.copyWith(
       borderSide: BorderSide(color: colors.error, width: 1.5),
+    ),
+    contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
+  );
+}
+
+flutter_material.InputDecoration profilePhoneInputDecoration({
+  required BuildContext context,
+  required String label,
+  String? hint,
+  String? helperText,
+  IconData? icon,
+  String? prefixText,
+}) {
+  final colors = Theme.of(context).colorScheme;
+  final border = flutter_material.OutlineInputBorder(
+    borderRadius: BorderRadius.circular(18),
+    borderSide: flutter_material.BorderSide.none,
+  );
+  return flutter_material.InputDecoration(
+    labelText: label,
+    hintText: hint,
+    helperText: helperText,
+    prefixIcon: icon == null ? null : Icon(icon),
+    prefixText: prefixText,
+    counterText: '',
+    filled: true,
+    fillColor: colors.surfaceContainerLow,
+    border: border,
+    enabledBorder: border,
+    focusedBorder: border,
+    errorBorder: border.copyWith(
+      borderSide: flutter_material.BorderSide(color: colors.error, width: 1.5),
+    ),
+    focusedErrorBorder: border.copyWith(
+      borderSide: flutter_material.BorderSide(color: colors.error, width: 1.5),
     ),
     contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
   );

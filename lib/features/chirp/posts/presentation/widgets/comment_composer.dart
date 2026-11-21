@@ -1,5 +1,5 @@
 import 'package:academia/features/chirp/chirp.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// The comment/reply composer docked at the bottom of the post detail
 /// screen.

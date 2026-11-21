@@ -3,7 +3,7 @@ import 'package:courses/src/domain/institution_lookup.dart';
 import 'package:courses/src/domain/usecases/course_usecases.dart';
 import 'package:courses/src/presentation/bloc/course_cubit.dart';
 import 'package:courses/src/presentation/screens/course_color_picker.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:material3_indicators/material3_indicators.dart';

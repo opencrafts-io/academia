@@ -2,7 +2,7 @@ import 'package:academia/config/config.dart';
 import 'package:academia/core/core.dart';
 import 'package:academia/features/institution/domain/entities/institution.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 

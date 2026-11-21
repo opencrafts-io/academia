@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:academia/features/chirp/posts/posts.dart';
 import 'package:profile/profile.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// Inline poll rendered inside a post card / detail view.

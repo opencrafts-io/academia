@@ -3,7 +3,7 @@ import 'package:billing/billing.dart';
 import 'package:core/config/flavor.dart';
 import 'package:core/core.dart';
 import 'package:dartz/dartz.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 

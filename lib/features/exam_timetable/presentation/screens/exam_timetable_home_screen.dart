@@ -8,7 +8,7 @@ import 'package:academia/features/exam_timetable/presentation/widgets/exam_timet
 import 'package:academia/features/exam_timetable/presentation/widgets/exam_timetable_list.dart';
 import 'package:academia/features/exam_timetable/presentation/widgets/exams_empty_state.dart';
 import 'package:academia/features/exam_timetable/presentation/widgets/institution_switcher_chip.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ExamTimetableHomeScreen extends StatefulWidget {

@@ -4,7 +4,7 @@ import 'package:academia/features/institution/institution.dart';
 import 'package:academia/injection_container.dart';
 import 'package:academia/core/integration/agenda_calendar/agenda_home_page.dart';
 import 'package:agenda/agenda.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:academia/features/features.dart';

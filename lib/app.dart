@@ -9,7 +9,8 @@ import 'package:agenda/agenda.dart' as agenda;
 import 'package:ads/ads.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as flutter_material;
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:in_app_update/in_app_update.dart';
@@ -262,12 +263,11 @@ class _AcademiaState extends State<Academia> with WidgetsBindingObserver {
 
               ColorScheme buildColorScheme({
                 required Brightness brightness,
-                ColorScheme? preferredScheme,
+                flutter_material.ColorScheme? preferredScheme,
               }) {
                 final baseScheme =
-                    preferredScheme ??
                     ColorScheme.fromSeed(
-                      seedColor: seedColor,
+                      seedColor: preferredScheme?.primary ?? seedColor,
                       brightness: brightness,
                     );
 

@@ -1,5 +1,5 @@
 import 'package:academia/features/sherehe/presentation/utils/sherehe_utils.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ShereheDetailsScheduleCard extends StatelessWidget {
   final String startDate;

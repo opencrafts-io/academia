@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A filled, rounded M3-styled text field: `surfaceContainerHighest` fill,
 /// borderless `circular(20)` shape with a 2px primary focus border, and a

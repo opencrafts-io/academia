@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phone_form_field/phone_form_field.dart';
 
@@ -110,7 +110,7 @@ class _ContactEditPageState extends State<ContactEditPage> {
               showFlag: true,
               flagSize: 20,
             ),
-            decoration: profileInputDecoration(
+            decoration: profilePhoneInputDecoration(
               context: context,
               label: 'Mobile number',
               hint: '+254 712 345 678',

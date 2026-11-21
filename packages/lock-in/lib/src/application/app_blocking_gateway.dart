@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:app_blocker/app_blocker.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:injectable/injectable.dart';
 
 import '../domain/lock_rule.dart';

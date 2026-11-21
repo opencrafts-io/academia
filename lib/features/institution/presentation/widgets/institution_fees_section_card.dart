@@ -1,5 +1,5 @@
 import 'package:academia/config/router/router.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class InstitutionFeesSectionCard extends StatelessWidget {
   const InstitutionFeesSectionCard({super.key, required this.institutionID});

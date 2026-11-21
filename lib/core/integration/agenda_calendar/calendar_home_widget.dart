@@ -2,7 +2,7 @@ import 'package:academia/constants/responsive_break_points.dart';
 import 'package:agenda/agenda.dart';
 import 'package:courses/courses.dart' as courses;
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart';

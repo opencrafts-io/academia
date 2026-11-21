@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:todos/src/domain/domain.dart';
 import 'package:pomodoro/pomodoro.dart' show formatFocusedDuration;
 import 'package:intl/intl.dart';

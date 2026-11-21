@@ -1,7 +1,7 @@
 import 'package:academia/config/config.dart';
 import 'package:academia/features/sherehe/domain/entities/invite.dart';
 import 'package:academia/features/sherehe/presentation/presentation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';

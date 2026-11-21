@@ -3,7 +3,7 @@ import 'package:courses/src/presentation/bloc/course_cubit.dart';
 import 'package:courses/src/presentation/routes/course_routes.dart';
 import 'package:courses/src/presentation/screens/course_color_picker.dart';
 import 'package:courses/src/presentation/screens/sync_status_indicator.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class WeeklyTimetablePage extends StatefulWidget {

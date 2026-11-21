@@ -1,5 +1,5 @@
 import 'package:contribution_heatmap/contribution_heatmap.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Contribution calendar for locally recorded blocked app launches.
 class AttemptHeatmap extends StatelessWidget {

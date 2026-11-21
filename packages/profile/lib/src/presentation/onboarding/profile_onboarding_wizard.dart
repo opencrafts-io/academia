@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'contact_edit_page.dart';
 import 'name_edit_page.dart';

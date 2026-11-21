@@ -1,5 +1,5 @@
 import 'package:academia/gen/assets.gen.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:profile/profile.dart' show LinkInstitutionProfileRoute;
 
 class LinkInstitutionRequiredPage extends StatelessWidget {

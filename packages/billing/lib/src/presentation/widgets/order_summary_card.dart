@@ -1,5 +1,5 @@
 import 'package:billing/src/domain/domain.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A compact order preview designed to grow from plans into products later.
 class OrderSummaryCard extends StatelessWidget {

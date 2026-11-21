@@ -1,5 +1,5 @@
 import 'package:academia/features/sherehe/presentation/widgets/genre_selector_widget.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class EventDescriptionPage extends StatelessWidget {
   final GlobalKey<FormState> formKey;

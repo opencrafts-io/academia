@@ -12,6 +12,7 @@ dependencies:
     path: ../ads
   flutter:
     sdk: flutter
+  material_ui: ^1.0.0
   core:
     path: ../core
   dartz: ^0.10.1

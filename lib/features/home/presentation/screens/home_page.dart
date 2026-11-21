@@ -9,7 +9,7 @@ import 'package:analytics/analytics.dart';
 import 'package:billing/billing.dart' as billing;
 import 'package:core/core.dart' as core;
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';

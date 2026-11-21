@@ -1,5 +1,5 @@
 import 'package:academia/features/sherehe/domain/entities/ticket.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class TicketQuantitySelector extends StatelessWidget {
   final bool isFreeEvent;

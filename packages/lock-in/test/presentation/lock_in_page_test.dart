@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:database/app_database_v2.dart';
 import 'package:database/daos/lock_in_dao.dart';
 import 'package:drift/native.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lock_in/lock_in.dart';
 import 'package:lock_in/src/presentation/lock_rule_editor_page.dart';
