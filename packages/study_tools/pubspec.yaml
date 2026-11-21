@@ -4,7 +4,7 @@ publish_to: none
 
 environment:
   sdk: ^3.13.2
-  flutter: '>=1.17.0'
+  flutter: '>=3.50.0'
 
 dependencies:
   ads:
@@ -23,7 +23,7 @@ dependencies:
     path: ../billing/
   dartz: ^0.10.1
   dio: ^5.11.0
-  file_picker: ^11.0.2
+  file_picker: ^13.3.3
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1

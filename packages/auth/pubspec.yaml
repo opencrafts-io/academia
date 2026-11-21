@@ -5,7 +5,7 @@ publish_to: none
 
 environment:
   sdk: ^3.13.2
-  flutter: ">=3.10.0"
+  flutter: ">=3.50.0"
 
 dependencies:
   analytics:
@@ -15,7 +15,7 @@ dependencies:
   core:
     path: ../core/
   dartz: ^0.10.1
-  device_info_plus: ^12.3.0
+  device_info_plus: ^13.2.0
   dio: ^5.8.0+1
   equatable: ^2.0.7
   flutter:
@@ -23,7 +23,7 @@ dependencies:
   flutter_bloc: ^9.1.1
   flutter_secure_storage: ^10.0.0
   font_awesome_flutter: ^11.0.0
-  flutter_web_auth_2: 5.0.3
+  flutter_web_auth_2: ^6.0.0
   freezed_annotation: ^3.1.0
   get_it: ^9.2.1
   injectable: ^3.0.0

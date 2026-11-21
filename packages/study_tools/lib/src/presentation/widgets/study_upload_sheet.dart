@@ -73,7 +73,9 @@ class _StudyUploadSheetState extends State<StudyUploadSheet> {
                 contentPadding: EdgeInsets.zero,
                 leading: const Icon(Icons.description_outlined),
                 title: Text(widget.file.name),
-                subtitle: Text(studyToolsFileSize(widget.file.size)),
+                subtitle: Text(
+                  studyToolsFileSize(widget.file.lengthSync() ?? 0),
+                ),
               ),
               if (widget.courses.isNotEmpty)
                 DropdownButtonFormField<String?>(

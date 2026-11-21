@@ -104,7 +104,6 @@ class AwesomeLocalNotificationScheduler
         displayOnBackground: request.presentation.showInBackground,
         displayOnForeground: request.presentation.showInForeground,
         wakeUpScreen: request.presentation.wakeUpScreen,
-        criticalAlert: request.presentation.criticalAlert,
         fullScreenIntent: request.presentation.fullScreenIntent,
         locked: request.presentation.locked,
         largeIcon: request.presentation.largeIcon,

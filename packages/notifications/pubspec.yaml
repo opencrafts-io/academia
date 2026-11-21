@@ -5,10 +5,10 @@ publish_to: none
 
 environment:
   sdk: ^3.13.2
-  flutter: ">=1.17.0"
+  flutter: ">=3.50.0"
 
 dependencies:
-  awesome_notifications: ^0.11.0
+  awesome_notifications: ^0.12.1
   awesome_notifications_core: ^0.10.1
   flutter:
     sdk: flutter

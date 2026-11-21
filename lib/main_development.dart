@@ -6,7 +6,6 @@ import 'package:academia/injection_container.dart' as di;
 import 'package:dio_request_inspector/dio_request_inspector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:desktop_webview_window/desktop_webview_window.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
@@ -34,9 +33,6 @@ void main(List<String> args) async {
             : HydratedStorageDirectory(storageDir.path),
       );
 
-      if (runWebViewTitleBarWidget(args)) {
-        return;
-      }
       runApp(
         DioRequestInspectorMain(
           inspector: di.sl<DioRequestInspector>(),

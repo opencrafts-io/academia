@@ -28,10 +28,8 @@ class FilePickerService {
         type: FileType.custom,
       );
 
-      if (result != null && result.files.isNotEmpty) {
-        return result.files.map((file) {
-          return _createAttachmentFromFile(file);
-        }).toList();
+      if (result.isNotEmpty) {
+        return Future.wait(result.map(_createAttachmentFromFile));
       }
     } catch (e) {
       Logger().e("Error picking files", error: e);
@@ -49,10 +47,8 @@ class FilePickerService {
         type: FileType.image,
       );
 
-      if (result != null && result.files.isNotEmpty) {
-        return result.files.map((file) {
-          return _createAttachmentFromFile(file);
-        }).toList();
+      if (result.isNotEmpty) {
+        return Future.wait(result.map(_createAttachmentFromFile));
       }
     } catch (e) {
       Logger().e("Error picking image(s)", error: e);
@@ -70,10 +66,8 @@ class FilePickerService {
         type: FileType.video,
       );
 
-      if (result != null && result.files.isNotEmpty) {
-        return result.files.map((file) {
-          return _createAttachmentFromFile(file);
-        }).toList();
+      if (result.isNotEmpty) {
+        return Future.wait(result.map(_createAttachmentFromFile));
       }
     } catch (e) {
       Logger().e("Error picking video(s)", error: e);
@@ -92,10 +86,8 @@ class FilePickerService {
         allowedExtensions: ['pdf', 'doc', 'docx', 'txt', 'rtf'],
       );
 
-      if (result != null && result.files.isNotEmpty) {
-        return result.files.map((file) {
-          return _createAttachmentFromFile(file);
-        }).toList();
+      if (result.isNotEmpty) {
+        return Future.wait(result.map(_createAttachmentFromFile));
       }
     } catch (e) {
       Logger().e("Error picking document(s)", error: e);
@@ -104,7 +96,7 @@ class FilePickerService {
     return [];
   }
 
-  static Attachments _createAttachmentFromFile(PlatformFile file) {
+  static Future<Attachments> _createAttachmentFromFile(PlatformFile file) async {
     final extension = path.extension(file.path ?? '').toLowerCase();
     String attachmentType = 'document'; // default
 
@@ -135,7 +127,7 @@ class FilePickerService {
       attachmentType: attachmentType,
       file: file.path ?? '', // For local files, this will be the file path
       name: file.name,
-      size: int.parse(file.size.toString()),
+      size: await file.length() ?? 0,
       createdAt: DateTime.now(),
     );
   }

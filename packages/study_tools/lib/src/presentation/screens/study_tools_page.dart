@@ -367,11 +367,10 @@ class _StudyToolsPageState extends State<StudyToolsPage> {
     final result = await FilePicker.pickFiles(
       type: FileType.custom,
       allowedExtensions: studyUploadExtensions.toList(),
-      withData: true,
     );
-    if (result == null || result.files.isEmpty || !mounted) return;
-    final file = result.files.single;
-    final validation = validateStudyUpload(file.name, file.size);
+    if (result.isEmpty || !mounted) return;
+    final file = result.single;
+    final validation = validateStudyUpload(file.name, await file.length() ?? 0);
     if (validation != null) {
       showStudyToolsSnackBar(context, validation, isError: true);
       return;

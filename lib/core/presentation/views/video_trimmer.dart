@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -55,13 +54,19 @@ class _VideoTrimmerPageState extends State<VideoTrimmerPage> {
   }
 
   void _loadVideo() {
-    _trimmer.loadVideo(videoFile: File(widget.videoPath));
+    _trimmer.loadVideo(videoPath: widget.videoPath);
   }
 
   @override
   void initState() {
     super.initState();
     _loadVideo();
+  }
+
+  @override
+  void dispose() {
+    _trimmer.dispose();
+    super.dispose();
   }
 
   @override

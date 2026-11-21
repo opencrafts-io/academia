@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:academia/app.dart';
 import 'package:core/config/flavor.dart';
 import 'package:academia/injection_container.dart' as di;
-import 'package:desktop_webview_window/desktop_webview_window.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -35,10 +34,6 @@ void main(List<String> args) async {
             ? HydratedStorageDirectory.web
             : HydratedStorageDirectory(storageDir.path),
       );
-
-      if (runWebViewTitleBarWidget(args)) {
-        return;
-      }
 
       try {
         await _initPostHog();

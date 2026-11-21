@@ -84,16 +84,10 @@ class StudyToolsRemoteDatasourceImpl implements StudyToolsRemoteDatasource {
   }) async {
     final filePart = file.path != null
         ? await MultipartFile.fromFile(file.path!, filename: file.name)
-        : file.bytes != null
-        ? MultipartFile.fromBytes(file.bytes!, filename: file.name)
-        : null;
-    if (filePart == null) {
-      return left(
-        Failure.validation(
-          message: 'The selected file is unavailable. Please choose it again.',
-        ),
-      );
-    }
+        : MultipartFile.fromBytes(
+            await file.readAsBytes(),
+            filename: file.name,
+          );
     final fields = <String, dynamic>{'file': filePart};
     if (courseId != null) fields['course_id'] = courseId;
     if (courseLabel?.trim().isNotEmpty == true) {

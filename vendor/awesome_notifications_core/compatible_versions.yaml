@@ -1,0 +1,3 @@
+dependencies:
+  awesome_notifications: 0.10.0
+  awesome_notifications_fcm: 0.10.0
